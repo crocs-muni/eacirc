@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A9268BEE-E583-4391-BE10-17F016CFC0CC}</ProjectGuid>
+    <RootNamespace>EACirc</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+    <CharacterSet>NotSet</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Data">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+    <Reference Include="System.Xml">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Circuit Evaluator\DistinguishTwoEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\ICircuitEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\PredictBitCircuitEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\PredictBitGroupParityCircuitEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\PredictAvalancheEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\PredictByteCircuitEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\PredictBytesParityCircuitEvaluator.cpp" />
+    <ClCompile Include="Circuit Evaluator\PredictHammingWeightCircuitEvaluator.cpp" />
+    <ClCompile Include="CircuitGenome.cpp" />
+    <ClCompile Include="CommonFnc.cpp" />
+    <ClCompile Include="EACirc.cpp" />
+    <ClCompile Include="EncryptorDecryptor.cpp" />
+    <ClCompile Include="Evaluator.cpp" />
+    <ClCompile Include="Random Generator\BiasRndGen.cpp" />
+    <ClCompile Include="Random Generator\IRndGen.cpp" />
+    <ClCompile Include="Random Generator\RndGen.cpp" />
+    <ClCompile Include="Standalone testers\TestDisctinctorCircuit.cpp" />
+    <ClCompile Include="status.cpp" />
+    <ClCompile Include="EstreamTestVectGener.cpp" />
+    <ClCompile Include="ITestVectGener.cpp" />
+    <ClCompile Include="stream\dragon\dragon-sboxes.cpp" />
+    <ClCompile Include="stream\dragon\dragon.cpp" />
+    <ClCompile Include="stream\cryptmt\cryptmt-v3.cpp" />
+    <ClCompile Include="stream\abc\abc-v3.cpp" />
+    <ClCompile Include="stream\trivium\trivium.cpp" />
+    <ClCompile Include="stream\grain\grain-v1.cpp" />
+    <ClCompile Include="stream\hc-128\hc-128.cpp" />
+    <ClCompile Include="stream\mickey\mickey-128-v2.cpp" />
+    <ClCompile Include="stream\rabbit\rabbit.cpp" />
+    <ClCompile Include="stream\salsa20\salsa20.cpp" />
+    <ClCompile Include="stream\sosemanuk\sosemanuk.cpp" />
+    <ClCompile Include="stream\decim\decim-v2.cpp" />
+    <ClCompile Include="stream\edon80\edon80.cpp" />
+    <ClCompile Include="stream\ffcsr\f-fcsr-h.cpp" />
+    <ClCompile Include="stream\lex\lex.cpp" />
+    <ClCompile Include="stream\pomaranch\pomaranch.cpp" />
+    <ClCompile Include="stream\achterbahn\achterbahn-128-80.cpp" />
+    <ClCompile Include="stream\dicing\dicing-v2.cpp" />
+    <ClCompile Include="stream\fubuki\fubuki.cpp" />
+    <ClCompile Include="stream\hermes\hermes.cpp" />
+    <ClCompile Include="stream\mag\mag.cpp" />
+    <ClCompile Include="stream\mir-1\mir-1.cpp" />
+    <ClCompile Include="stream\py\py6.cpp" />
+    <ClCompile Include="stream\sfinks\sfinks.cpp" />
+    <ClCompile Include="stream\tsc-4\tsc-4.cpp" />
+    <ClCompile Include="stream\wg\wg.cpp" />
+    <ClCompile Include="stream\yamb\yamb.cpp" />
+    <ClCompile Include="stream\zk-crypt\zk-crypt-v3.cpp" />
+    <ClCompile Include="ga\GA1DArrayGenome.Cpp" />
+    <ClCompile Include="ga\GA1DBinStrGenome.Cpp" />
+    <ClCompile Include="ga\GA2DArrayGenome.Cpp" />
+    <ClCompile Include="ga\GA2DBinStrGenome.Cpp" />
+    <ClCompile Include="ga\GA3DArrayGenome.Cpp" />
+    <ClCompile Include="ga\GA3DBinStrGenome.Cpp" />
+    <ClCompile Include="ga\GAAllele.Cpp" />
+    <ClCompile Include="ga\GABaseGA.Cpp" />
+    <ClCompile Include="ga\GABin2DecGenome.Cpp" />
+    <ClCompile Include="ga\gabincvt.Cpp" />
+    <ClCompile Include="ga\GABinStr.Cpp" />
+    <ClCompile Include="ga\GADCrowdingGA.Cpp" />
+    <ClCompile Include="ga\GADemeGA.Cpp" />
+    <ClCompile Include="ga\gaerror.Cpp" />
+    <ClCompile Include="ga\GAGenome.Cpp" />
+    <ClCompile Include="ga\GAIncGA.Cpp" />
+    <ClCompile Include="ga\GAList.Cpp" />
+    <ClCompile Include="ga\GAListBASE.Cpp" />
+    <ClCompile Include="ga\GAListGenome.Cpp" />
+    <ClCompile Include="ga\GAParameter.Cpp" />
+    <ClCompile Include="ga\GAPopulation.Cpp" />
+    <ClCompile Include="ga\garandom.Cpp" />
+    <ClCompile Include="ga\GARealGenome.Cpp" />
+    <ClCompile Include="ga\GAScaling.Cpp" />
+    <ClCompile Include="ga\GASelector.Cpp" />
+    <ClCompile Include="ga\GASimpleGA.Cpp" />
+    <ClCompile Include="ga\GASStateGA.Cpp" />
+    <ClCompile Include="ga\GAStatistics.Cpp" />
+    <ClCompile Include="ga\GAStringGenome.Cpp" />
+    <ClCompile Include="ga\GATree.Cpp" />
+    <ClCompile Include="ga\GATreeBASE.Cpp" />
+    <ClCompile Include="ga\GATreeGenome.Cpp" />
+    <ClCompile Include="tinyXML\tinystr.cpp" />
+    <ClCompile Include="tinyXML\tinyxml.cpp" />
+    <ClCompile Include="tinyXML\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyXML\tinyxmlparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Circuit Evaluator\DistinguishTwoEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\ICircuitEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\PredictBitCircuitEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\PredictBitGroupParityCircuitEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\PredictAvalancheEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\PredictByteCircuitEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\PredictBytesParityCircuitEvaluator.h" />
+    <ClInclude Include="Circuit Evaluator\PredictHammingWeightCircuitEvaluator.h" />
+    <ClInclude Include="EACirc.h" />
+    <ClInclude Include="EAC_circuit.h" />
+    <ClInclude Include="EncryptorDecryptor.h" />
+    <ClInclude Include="Evaluator.h" />
+    <ClInclude Include="EstreamVectGener.h" />
+    <ClInclude Include="ITestVectGener.h" />
+    <ClInclude Include="Random Generator\BiasRndGen.h" />
+    <ClInclude Include="Random Generator\IRndGen.h" />
+    <ClInclude Include="Random Generator\RndGen.h" />
+    <ClInclude Include="Standalone testers\TestDistinctorCircuit.h" />
+    <ClInclude Include="stream\cryptmt\params.h" />
+    <ClInclude Include="stream\abc\abc-tables.h" />
+    <ClInclude Include="stream\abc\abc.h" />
+    <ClInclude Include="stream\grain\grain-v1.h" />
+    <ClInclude Include="stream\sosemanuk\sosemanuk.h" />
+    <ClInclude Include="stream\decim\decimv2.h" />
+    <ClInclude Include="stream\ffcsr\ffcsrh-sync.h" />
+    <ClInclude Include="stream\pomaranch\pomaranch.h" />
+    <ClInclude Include="stream\achterbahn\achterbahn.h" />
+    <ClInclude Include="stream\mag\unrolliv.h" />
+    <ClInclude Include="stream\mag\unrollmain.h" />
+    <ClInclude Include="stream\mir-1\mir1.h" />
+    <ClInclude Include="stream\zk-crypt\ZKdef.h" />
+    <ClInclude Include="stream\zk-crypt\ZKengine.h" />
+    <ClInclude Include="CircuitGenome.h" />
+    <ClInclude Include="CommonFnc.h" />
+    <ClInclude Include="estream-interface.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="SSconstants.h" />
+    <ClInclude Include="SSGlobals.h" />
+    <ClInclude Include="status.h" />
+    <ClInclude Include="ga\ga.h" />
+    <ClInclude Include="ga\GA1DArrayGenome.h" />
+    <ClInclude Include="ga\GA1DBinStrGenome.h" />
+    <ClInclude Include="ga\GA2DArrayGenome.h" />
+    <ClInclude Include="ga\GA2DBinStrGenome.h" />
+    <ClInclude Include="ga\GA3DArrayGenome.h" />
+    <ClInclude Include="ga\GA3DBinStrGenome.h" />
+    <ClInclude Include="ga\GAAllele.h" />
+    <ClInclude Include="ga\GAArray.h" />
+    <ClInclude Include="ga\GABaseGA.h" />
+    <ClInclude Include="ga\GABin2DecGenome.h" />
+    <ClInclude Include="ga\gabincvt.h" />
+    <ClInclude Include="ga\GABinStr.h" />
+    <ClInclude Include="ga\gaconfig.h" />
+    <ClInclude Include="ga\GADCrowdingGA.h" />
+    <ClInclude Include="ga\GADemeGA.h" />
+    <ClInclude Include="ga\gaerror.h" />
+    <ClInclude Include="ga\GAEvalData.h" />
+    <ClInclude Include="ga\GAGenome.h" />
+    <ClInclude Include="ga\gaid.h" />
+    <ClInclude Include="ga\GAIncGA.h" />
+    <ClInclude Include="ga\GAList.h" />
+    <ClInclude Include="ga\GAListBASE.h" />
+    <ClInclude Include="ga\GAListGenome.h" />
+    <ClInclude Include="ga\GAMask.h" />
+    <ClInclude Include="ga\GANode.h" />
+    <ClInclude Include="ga\gaparameter.h" />
+    <ClInclude Include="ga\GAPopulation.h" />
+    <ClInclude Include="ga\garandom.h" />
+    <ClInclude Include="ga\GARealGenome.h" />
+    <ClInclude Include="ga\GAScaling.h" />
+    <ClInclude Include="ga\GASelector.h" />
+    <ClInclude Include="ga\GASimpleGA.h" />
+    <ClInclude Include="ga\GASStateGA.h" />
+    <ClInclude Include="ga\GAStatistics.h" />
+    <ClInclude Include="ga\GAStringGenome.h" />
+    <ClInclude Include="ga\GATree.h" />
+    <ClInclude Include="ga\GATreeBASE.h" />
+    <ClInclude Include="ga\GATreeGenome.h" />
+    <ClInclude Include="ga\gatypes.h" />
+    <ClInclude Include="ga\gaversion.h" />
+    <ClInclude Include="ga\std_stream.h" />
+    <ClInclude Include="tinyXML\tinystr.h" />
+    <ClInclude Include="tinyXML\tinyxml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
