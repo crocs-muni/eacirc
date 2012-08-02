@@ -1,0 +1,62 @@
+SOURCES=
+
+# === Main files ===
+
+SOURCES+= \
+CircuitGenome.cpp CommonFnc.cpp EncryptorDecryptor.cpp EstreamTestVectGener.cpp \
+Evaluator.cpp ITestVectGener.cpp status.cpp EACirc.cpp
+# Circuit Evaluator
+SOURCES+= \
+Circuit\ Evaluator/DistinguishTwoEvaluator.cpp \
+Circuit\ Evaluator/ICircuitEvaluator.cpp \
+Circuit\ Evaluator/PredictAvalancheEvaluator.cpp \
+Circuit\ Evaluator/PredictBitCircuitEvaluator.cpp \
+Circuit\ Evaluator/PredictBitGroupParityCircuitEvaluator.cpp \
+Circuit\ Evaluator/PredictByteCircuitEvaluator.cpp \
+Circuit\ Evaluator/PredictBytesParityCircuitEvaluator.cpp \
+Circuit\ Evaluator/PredictHammingWeightCircuitEvaluator.cpp
+# Random Generator
+SOURCES+= \
+Random\ Generator/BiasRndGen.cpp \
+Random\ Generator/IRndGen.cpp \
+Random\ Generator/RndGen.cpp
+# Standalone testers
+SOURCES+= \
+Standalone\ testers/TestDisctinctorCircuit.cpp
+
+# === eSTREAM cipher files ===
+
+SOURCES+= stream/abc/abc-v3.cpp				# not used
+SOURCES+= stream/achterbahn/achterbahn-128-80.cpp
+SOURCES+= stream/cryptmt/cryptmt-v3.cpp			# not used
+# cryptmt/altivec.cpp and cryptmt/sse2.cpp are included automatically, if needed
+SOURCES+= stream/decim/decim-v2.cpp
+# decim/decim-128.c not used
+SOURCES+= stream/dicing/dicing-v2.cpp
+SOURCES+= stream/dragon/dragon.cpp stream/dragon/dragon-sboxes.cpp
+SOURCES+= stream/edon80/edon80.cpp			# not used
+SOURCES+= stream/ffcsr/f-fcsr-h.cpp
+SOURCES+= stream/fubuki/fubuki.cpp
+SOURCES+= stream/grain/grain-v1.cpp
+SOURCES+= stream/hc-128/hc-128.cpp
+SOURCES+= stream/hermes/hermes.cpp
+SOURCES+= stream/lex/lex.cpp
+SOURCES+= stream/mag/mag.cpp
+SOURCES+= stream/mickey/mickey-128-v2.cpp
+SOURCES+= stream/mir-1/mir-1.cpp
+# MOUSTIQUE, NLS and POLARBEAR not implemented in EncryptorDecryptor.cpp
+# SOURCES+= stream/moustique/moustique.cpp 		# compilation ok
+# SOURCES+= stream/nls/nlsref.cpp			# compilation errors
+# SOURCES+= stream/polarbear/polar-bear.cpp 		# compilation errors
+# polarbear/aescrypt.cpp, polarbear/aestab.cpp, polarbear/whirltab.cpp included automatically in polar-bear.cpp
+SOURCES+= stream/pomaranch/pomaranch.cpp
+SOURCES+= stream/py/py6.cpp
+SOURCES+= stream/rabbit/rabbit.cpp
+SOURCES+= stream/salsa20/salsa20.cpp
+SOURCES+= stream/sfinks/sfinks.cpp
+SOURCES+= stream/sosemanuk/sosemanuk.cpp
+SOURCES+= stream/trivium/trivium.cpp
+SOURCES+= stream/tsc-4/tsc-4.cpp
+SOURCES+= stream/wg/wg.cpp
+SOURCES+= stream/yamb/yamb.cpp
+SOURCES+= stream/zk-crypt/zk-crypt-v3.cpp		# not used

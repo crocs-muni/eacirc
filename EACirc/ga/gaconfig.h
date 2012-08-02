@@ -192,7 +192,9 @@ incorporate it into the code base.
 
 // determine the compiler
 #if defined(__GNUG__) || defined(__GNUC__)
-#if __GNUC__ == 3
+#if __GNUC__ == 4
+#define GALIB_COMPILER "gcc4"
+#elif __GNUC__ == 3
 #define GALIB_COMPILER "gcc3"
 #elif __GNUC__ == 2
 #define GALIB_COMPILER "gcc2"
@@ -365,7 +367,7 @@ incorporate it into the code base.
 #define GALIB_USE_PID
 #define GALIB_USE_EMPTY_TEMPLATES
 #define GALIB_NEED_INSTANTIATION_PREFIX
-#if __GNUC__ == 3
+#if __GNUC__ > 2
 #define GALIB_USE_ANSI_HEADERS
 #define GALIB_USE_STD_NAMESPACE
 #define GALIB_USE_COMP_OPERATOR_TEMPLATES

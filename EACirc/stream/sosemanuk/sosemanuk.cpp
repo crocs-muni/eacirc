@@ -1086,7 +1086,7 @@ ECRYPT_Sosemanuk::SOSEMANUK_process_bytes(int action, void *ctxa,
 void
 ECRYPT_Sosemanuk::SOSEMANUK_keystream_bytes(SOSEMANUK_ctx *ctx, u8 *keystream, u32 length)
 {
-	static const u32 zb[SOSEMANUK_BLOCKLENGTH];
+	static const u32 zb[SOSEMANUK_BLOCKLENGTH] = {};
 
 	while (length > 0) {
 		u32 tbuf[SOSEMANUK_BLOCKLENGTH / 4];
@@ -1121,7 +1121,7 @@ ECRYPT_Sosemanuk::SOSEMANUK_process_blocks(int action, SOSEMANUK_ctx *ctx,
 void
 ECRYPT_Sosemanuk::SOSEMANUK_keystream_blocks(SOSEMANUK_ctx *ctx, u8 *keystream, u32 blocks)
 {
-	static const u32 zb[SOSEMANUK_BLOCKLENGTH / 4];
+	static const u32 zb[SOSEMANUK_BLOCKLENGTH / 4] = {};
 
 	while (blocks -- > 0) {
 		sosemanuk_internal(ctx, zb, (u32 *)keystream);

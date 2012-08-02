@@ -1,0 +1,15 @@
+# user-specific project files
+*.suo
+*.user
+# object files, linked application, build filed
+*.o
+*.obj
+*.a
+*.lib
+*.exe
+[Dd]ebug/
+[Rr]elease/
+[Bb]uild/
+EACirc/ga/BUILD
+# backup and system files
+*~

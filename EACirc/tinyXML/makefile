@@ -19,6 +19,10 @@ TINYXML_USE_STL := NO
 
 #****************************************************************************
 
+# unix
+RM     := rm -f
+# windows-equivalent
+# RM     := del /f /q
 CC     := gcc
 CXX    := g++
 LD     := g++
@@ -83,6 +87,6 @@ $(LIB): $(OBJS)
 .cpp.a:;
 
 clean:
-	-rm -f core $(OBJS) $(LIB)
+	-$(RM) core $(OBJS) $(LIB)
 
 # DO NOT DELETE THIS LINE -- make depend depends on it. 

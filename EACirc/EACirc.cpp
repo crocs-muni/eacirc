@@ -20,11 +20,15 @@
 #include "EstreamVectGener.h"
 #include "EncryptorDecryptor.h"
 #include "EAC_circuit.h"
-#include "Standalone testers\TestDistinctorCircuit.h"
+#include "Standalone testers/TestDistinctorCircuit.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
 	#define getpid() GetCurrentProcessId()
+#endif
+#ifdef __linux__
+	#include <sys/types.h>
+	#include <unistd.h>
 #endif
 
 IRndGen*         rndGen;
