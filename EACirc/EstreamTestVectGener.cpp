@@ -3,6 +3,7 @@
 #include "EACirc.h"
 #include "CommonFnc.h"
 #include "status.h"
+//libinclude (ga/GA1DArrayGenome.h)
 #include "ga/GA1DArrayGenome.h"
 #include "EstreamVectGener.h"
 #include "ITestVectGener.h"

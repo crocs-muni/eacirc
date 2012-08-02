@@ -1,6 +1,7 @@
 #ifndef CIRCUIT_GENOME_H
 #define CIRCUIT_GENOME_H
 
+//libinclude (ga/GA1DArrayGenome.h)
 #include "ga/GA1DArrayGenome.h"
 #include "SSGlobals.h"
 

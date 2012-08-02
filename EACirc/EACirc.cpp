@@ -9,7 +9,9 @@
 #include "status.h"
 #include "Random Generator/IRndGen.h"
 #include "Random Generator/BiasRndGen.h"
+//libinclude (ga/GA1DArrayGenome.h)
 #include "ga/GA1DArrayGenome.h"
+//libinclude (tinyXML/tinyxml.h)
 #include "tinyXML/tinyxml.h"
 #include "math.h"
 #include "time.h"

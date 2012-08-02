@@ -3,6 +3,7 @@
 
 #include "SSGlobals.h"
 #include "Random Generator/RndGen.h"
+//libinclude (ga/GA1DArrayGenome.h)
 #include "ga/GA1DArrayGenome.h"
 #include "EncryptorDecryptor.h"
 

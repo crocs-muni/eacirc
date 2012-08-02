@@ -7,7 +7,9 @@
 
 #include <list>
 #include <math.h>
+//libinclude (ga/GAGenome.h)
 #include "ga/GAGenome.h"
+//libinclude (ga/GASStateGA.h)
 #include "ga/GASStateGA.h"
 #include <string>
 #include <iostream>
