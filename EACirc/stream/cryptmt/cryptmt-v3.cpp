@@ -57,13 +57,13 @@ static INLINE void booter_am(u32 acc[4], u32 pos1[][4], u32 pos2[][4],
 
 #if (!defined(SLOW_CODE)) && defined(__ppc__) && defined(__ALTIVEC__)
 static int fast_code = 1;
-#include "altivec.c"
+#include "altivec.cpp"
 #elif (!defined(SLOW_CODE)) && defined(__INTEL_COMPILER)
 static int fast_code = 1;
-#include "sse2.c"
+#include "sse2.cpp"
 #elif (!defined(SLOW_CODE)) && defined(__GNUC__) && defined(__SSE__)
 static int fast_code = 1;
-#include "sse2.c"
+#include "sse2.cpp"
 #else  /* other normal C */
 static int fast_code = 0;
 static int is_simd_cpu(void) {

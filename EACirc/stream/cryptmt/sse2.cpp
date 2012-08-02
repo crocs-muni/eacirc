@@ -14,7 +14,7 @@
 
 static INLINE __m128i _mm_recursion(const __m128i *x, const __m128i *y, 
 				    __m128i z, const __m128i mask);
-static INLINE void _mm_genrand_block(ECRYPT_ctx *ctx);
+static INLINE void _mm_genrand_block(CRYPTMT_ctx *ctx);
 static INLINE void _mm_filter_16bytes(__m128i *sfmt, __m128i *p_accum,
 				      u8 cipher[], const u8 plain[],
 				      s32 count);
@@ -82,7 +82,7 @@ static INLINE void _mm_booter_am(__m128i *p_acc, __m128i *pos1, __m128i *pos2,
     _mm_store_si128(p_acc, acc);
 }
 
-static INLINE void fast_boot_up(ECRYPT_ctx *ctx, s32 length)
+static INLINE void fast_boot_up(CRYPTMT_ctx *ctx, s32 length)
 {
     s32 i, p;
 
@@ -99,7 +99,7 @@ static INLINE void fast_boot_up(ECRYPT_ctx *ctx, s32 length)
     }
 }
 
-static INLINE void _mm_genrand_block(ECRYPT_ctx * ctx)
+static INLINE void _mm_genrand_block(CRYPTMT_ctx * ctx)
 {
     int i;
     __m128i *sfmt;
@@ -120,7 +120,7 @@ static INLINE void _mm_genrand_block(ECRYPT_ctx * ctx)
     }
 }
 
-static void fast_genrand_bytes(ECRYPT_ctx * ctx, u8 cipher[], const u8 plain[],
+static void fast_genrand_bytes(CRYPTMT_ctx * ctx, u8 cipher[], const u8 plain[],
 			  u32 len)
 {
     u32 *accum;
@@ -149,7 +149,7 @@ static void fast_genrand_bytes(ECRYPT_ctx * ctx, u8 cipher[], const u8 plain[],
     }
 }
 
-static INLINE void fast_genrand_block(ECRYPT_ctx * ctx, u8 cipher[],
+static INLINE void fast_genrand_block(CRYPTMT_ctx * ctx, u8 cipher[],
 				      const u8 plain[])
 {
     _mm_genrand_block(ctx);
@@ -185,7 +185,7 @@ static int is_simd_cpu(void){
     return 1;
 }
 #endif
-static void INLINE fast_genrand_bytes_first(ECRYPT_ctx * ctx, u8 cipher[],
+static void INLINE fast_genrand_bytes_first(CRYPTMT_ctx * ctx, u8 cipher[],
 					    const u8 plain[], u32 len) {
     s32 i, p, count;
     sfmt_t *sp;
@@ -205,7 +205,7 @@ static void INLINE fast_genrand_bytes_first(ECRYPT_ctx * ctx, u8 cipher[],
     }
 }
 
-static void INLINE fast_genrand_block_first(ECRYPT_ctx * ctx, u8 cipher[],
+static void INLINE fast_genrand_block_first(CRYPTMT_ctx * ctx, u8 cipher[],
 				     const u8 plain[])
 {
     s32 p;
