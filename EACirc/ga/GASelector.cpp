@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GASelector.C,v 1.2 2004/12/29 01:54:04 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   selector.C
   mbwall 10aug94
@@ -8,12 +8,12 @@
  DESCRIPTION:
   This file defines the built-in selection objects for GAlib.
 ---------------------------------------------------------------------------- */
-#include "../ga/gaconfig.h"
-#include "../ga/GAPopulation.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GASelector.h"
-#include "../ga/garandom.h"
-#include "../ga/gaerror.h"
+#include <ga/gaconfig.h>
+#include <ga/GAPopulation.h>
+#include <ga/GAGenome.h>
+#include <ga/GASelector.h>
+#include <ga/garandom.h>
+#include <ga/gaerror.h>
 
 #if USE_DS_SELECTOR == 1
 static void GAQuickSort(unsigned int *, float *, int, int);

@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GARealGenome.C,v 1.6 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   real.C
   mbwall 11nov95
@@ -8,7 +8,7 @@
  DESCRIPTION:
    Source file for the real number specialization of the array genome.
 ---------------------------------------------------------------------------- */
-#include "../ga/GARealGenome.h"
+#include <ga/GARealGenome.h>
 
 
 // We must also specialize the allele set so that the alleles are handled
@@ -301,8 +301,8 @@ GARealBlendCrossover(const GAGenome& p1, const GAGenome& p2,
 // some compilers require a syntax different than others when forcing the 
 // instantiation (i.e. GNU wants the 'template class', borland does not).
 #ifndef GALIB_USE_AUTO_INST
-#include "../ga/GAAllele.cpp"
-#include "../ga/GA1DArrayGenome.cpp"
+#include <ga/GAAllele.cpp>
+#include <ga/GA1DArrayGenome.cpp>
 
 #if defined(__BORLANDC__)
 #define GALIB_REALGENOME_TEMPLATE_PREFACE

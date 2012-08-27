@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAAllele.C,v 1.3 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   allele.C
   mbwall 21mar95
@@ -12,8 +12,8 @@
 #define _ga_allele_C_
 
 #include <string.h>
-#include "../ga/GAAllele.h"
-#include "../ga/gaerror.h"
+#include <ga/GAAllele.h>
+#include <ga/gaerror.h>
 
 #define GA_ALLELE_CHUNK 10
 

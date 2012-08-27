@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gaconfig.h,v 1.17 2005/01/31 15:46:09 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   config.h
   mbwall 27jun95

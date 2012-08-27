@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gabincvt.C,v 1.3 2004/12/28 21:27:53 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   bincvt.C
   mbwall 29jun95
@@ -11,10 +11,11 @@
 #include <stdio.h>
 #include <limits.h>
 #include <string.h>
-#include "../ga/gaconfig.h"
-#include "../ga/gaerror.h"
-#include "../ga/gabincvt.h"
+#include <ga/gaconfig.h>
+#include <ga/gaerror.h>
+#include <ga/gabincvt.h>
 
+//edited for EACirc
 #pragma warning(disable:4996)
 
 // These numbers are machine-specific and are a function of the word length of

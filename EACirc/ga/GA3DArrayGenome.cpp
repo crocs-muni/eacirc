@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA3DArrayGenome.C,v 1.3 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   array3.C
   mbwall 25feb95
@@ -14,9 +14,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../ga/garandom.h"
-#include "../ga/GA3DArrayGenome.h"
-#include "../ga/GAMask.h"
+#include <ga/garandom.h>
+#include <ga/GA3DArrayGenome.h>
+#include <ga/GAMask.h>
 
 
 /* ----------------------------------------------------------------------------

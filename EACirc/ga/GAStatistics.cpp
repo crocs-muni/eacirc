@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAStatistics.C,v 1.2 2004/12/28 00:12:12 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   statistics.C
   mbwall 28jul94
@@ -9,8 +9,8 @@
   Definition of the statistics object.
 ---------------------------------------------------------------------------- */
 #include <string.h>
-#include "../ga/gaerror.h"
-#include "../ga/GAStatistics.h"
+#include <ga/gaerror.h>
+#include <ga/GAStatistics.h>
 
 
 

@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/garandom.C,v 1.5 2004/12/28 16:03:15 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   random.C
   mbwall 5sep95
@@ -8,7 +8,7 @@
  DESCRIPTION:
   Random number stuff for use in GAlib.
 ---------------------------------------------------------------------------- */
-#include "../ga/garandom.h"
+#include <ga/garandom.h>
 #include <time.h>
 #include <math.h>
 #include <string.h>
@@ -66,7 +66,7 @@ GARandomSeed(unsigned int s) {
   if(s == 0 && seed == 0) {
     unsigned long int tmp;
     while(seed == 0) {
-      tmp = (unsigned long)time(NULL) _GA_PID;
+      tmp = time(NULL) _GA_PID;
       for(unsigned int i=0; i<GALIB_BITS_IN_WORD*sizeof(unsigned int); i++)
 	seed += (tmp & (1 << i));
     }
@@ -312,7 +312,7 @@ garan2() {
   iy=iv[j]-idum2;
   iv[j] = idum;
   if (iy < 1) iy += IMM1;
-  if ((temp=(float)AM*iy) > RNMX) return RNMX;
+  if ((temp=AM*iy) > RNMX) return RNMX;
   else return temp;
 }
 

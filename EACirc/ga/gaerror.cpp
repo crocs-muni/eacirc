@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gaerror.C,v 1.3 2004/12/28 00:12:12 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   error.C
   mbwall 28jul94
@@ -9,7 +9,7 @@
   This file contains all of the error messages for the library.
 ---------------------------------------------------------------------------- */
 #include <string.h>
-#include "../ga/gaerror.h"
+#include <ga/gaerror.h>
 #include <stdio.h>
 
 char gaErrMsg[512];

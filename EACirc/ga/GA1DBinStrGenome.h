@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA1DBinStrGenome.h,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   binstr1.h
   mbwall 19apr95
@@ -12,8 +12,8 @@ crossover objects and all the default and built-in operators.
 #ifndef _ga_binstr1_h_
 #define _ga_binstr1_h_
 
-#include "../ga/GABinStr.h"
-#include "../ga/GAGenome.h"
+#include <ga/GABinStr.h>
+#include <ga/GAGenome.h>
 
 
 /* ----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ protected:
 
 
 
-__inline void  
+inline void  
 GA1DBinaryStringGenome::copy(const GA1DBinaryStringGenome & orig,
 			     unsigned int r, unsigned int x, unsigned int l){
   if(l > 0 && x < orig.nx && r < nx){
@@ -125,25 +125,25 @@ GA1DBinaryStringGenome::copy(const GA1DBinaryStringGenome & orig,
   }
   _evaluated = gaFalse;
 }
-__inline void  
+inline void  
 GA1DBinaryStringGenome::set(unsigned int x, unsigned int l){
   if(x + l > nx) l = nx - x;
   GABinaryString::set(x, l);
   _evaluated = gaFalse;
 }
-__inline void  
+inline void  
 GA1DBinaryStringGenome::unset(unsigned int x, unsigned int l){
   if(x + l > nx) l = nx - x;
   GABinaryString::unset(x, l);
   _evaluated = gaFalse;
 }
-__inline void  
+inline void  
 GA1DBinaryStringGenome::randomize(unsigned int x, unsigned int l){
   if(x + l > nx) l = nx - x;
   GABinaryString::randomize(x, l);
   _evaluated = gaFalse;
 }
-__inline void  
+inline void  
 GA1DBinaryStringGenome::move(unsigned int x, unsigned int srcx,unsigned int l){
   if(srcx + l > nx) l = nx - srcx;
   if(x + l > nx) l = nx - x;

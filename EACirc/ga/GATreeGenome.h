@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GATreeGenome.h,v 1.3 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   tree.h
   mbwall 25feb95
@@ -11,8 +11,8 @@
 #ifndef _ga_tree_h_
 #define _ga_tree_h_
 
-#include "../ga/GATree.h"
-#include "../ga/GAGenome.h"
+#include <ga/GATree.h>
+#include <ga/GAGenome.h>
 
 
 /* ----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ public:
 };
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GATreeGenome.cpp"
+#include <ga/GATreeGenome.cpp>
 #endif
 
 #endif

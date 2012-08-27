@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gaid.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   id.h
   mbwall 7may95
@@ -53,6 +53,7 @@ public:
   int sameClass(const GAID &b) const {return(classID() == b.classID());} 
   virtual const char * className() const {return "no class";} 
   virtual int classID() const {return 0;}
+  virtual ~GAID() { }
 };
 
 

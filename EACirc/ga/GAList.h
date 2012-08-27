@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAList.h,v 1.2 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   listtmpl.h
   mbwall 25feb95
@@ -10,8 +10,8 @@
 #ifndef _ga_listtmpl_h_
 #define _ga_listtmpl_h_
 
-#include "../ga/gaerror.h"
-#include "../ga/GAListBASE.h"
+#include <ga/gaerror.h>
+#include <ga/GAListBASE.h>
 
 /* ----------------------------------------------------------------------------
  GAList
@@ -191,7 +191,7 @@ private:
 };
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GAList.cpp"
+#include <ga/GAList.cpp>
 #endif
 
 #endif

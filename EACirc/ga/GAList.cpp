@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAList.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   listtmpl.C
   mbwall 25feb95
@@ -15,7 +15,7 @@
 #ifndef _ga_listtmpl_C_
 #define _ga_listtmpl_C_
 
-#include "../ga/GAList.h"
+#include <ga/GAList.h>
 
 extern GANodeBASE * _GAListTraverse(unsigned int index, unsigned int & cur,
 				    GANodeBASE * node);

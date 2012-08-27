@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/garandom.h,v 1.4 2004/12/28 16:03:15 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   random.h
   mbwall 29jun95
@@ -14,7 +14,7 @@ The documentation says that rand/srand is about 30% faster than random/srandom,
 but rand/srand has a significantly smaller period so you'll get less random
 results.  For the best results, use a RNG with a larger period (such as ran2).
   This is *not* implemented as a separate RNG class because I wanted to be able
-to __inline everything as much as possible.  Also, we don't need to switch RNGs
+to inline everything as much as possible.  Also, we don't need to switch RNGs
 for most purposes - I assume that compiling in the RNG is ok.  In addition, 
 many methods make use of RNG calls of a global nature - they should not contain
 a RNG, and they may not have access to a RNG other than the global functions.
@@ -45,8 +45,8 @@ then these functions scale the distribution to that deviation.  Mean is still 0
 #define _ga_random_h_
 
 #include <stdlib.h>
-#include "../ga/gatypes.h"
-#include "../ga/gaconfig.h"
+#include <ga/gatypes.h>
+#include <ga/gaconfig.h>
 
 // Here we determine which random number generator will be used.  The critical
 // parts here are the name of the random number generator (e.g. rand or random)
@@ -77,9 +77,7 @@ float garan1();
 
 #define _GA_RND             garan2
 #define _GA_RND_SEED        gasran2
-
-//void gasran2(unsigned int seed=1);
-void gasran2(unsigned int seed);
+void gasran2(unsigned int seed=1);
 float garan2();
 
 #elif defined(GALIB_USE_RAN3)
@@ -91,21 +89,20 @@ float garan3();
 
 #endif
 
-__inline int GARandomInt(){ return _GA_RND() > 0.5 ? 1 : 0; }
-
-__inline int GARandomInt(int low, int high){ 
+inline int GARandomInt(){ return _GA_RND() > 0.5 ? 1 : 0; }
+inline int GARandomInt(int low, int high){ 
   float val=STA_CAST(float,high)-STA_CAST(float,low)+(float)1; 
   val*=_GA_RND(); 
   return (STA_CAST(int,val)+low);
 }
 
-__inline double GARandomDouble(){ return _GA_RND(); }
-__inline double GARandomDouble(double low, double high){
+inline double GARandomDouble(){ return _GA_RND(); }
+inline double GARandomDouble(double low, double high){
   double val=high-low; val*=_GA_RND(); return val+low;
 }
 
-__inline float GARandomFloat(){ return _GA_RND(); }
-__inline float GARandomFloat(float low, float high){
+inline float GARandomFloat(){ return _GA_RND(); }
+inline float GARandomFloat(float low, float high){
   float val=high-low; val*=_GA_RND(); return val+low;
 }
 
@@ -138,22 +135,22 @@ __inline float GARandomFloat(float low, float high){
 
 #endif
 
-__inline int GARandomInt(){ return _GA_RND() > _GA_RND_MAX/2 ? 1 : 0; }
-__inline int GARandomInt(int low, int high){ 
+inline int GARandomInt(){ return _GA_RND() > _GA_RND_MAX/2 ? 1 : 0; }
+inline int GARandomInt(int low, int high){ 
   return low + _GA_RND() % (high-low+1);
 }
 
-__inline double GARandomDouble(){ 
+inline double GARandomDouble(){ 
   double val=_GA_RND(); val/=_GA_RND_MAX; return val;
 }
-__inline double GARandomDouble(double low, double high){
+inline double GARandomDouble(double low, double high){
   double val=high-low; val*=_GA_RND(); val/=_GA_RND_MAX; val+=low; return val;
 }
 
-__inline float GARandomFloat(){
+inline float GARandomFloat(){
   float val=_GA_RND(); val/=_GA_RND_MAX; return val;
 }
-__inline float GARandomFloat(float low, float high){
+inline float GARandomFloat(float low, float high){
   float val=high-low; val*=_GA_RND(); val/=_GA_RND_MAX; val+=low; return val;
 }
 
@@ -170,13 +167,13 @@ void GAResetRNG(unsigned int seed);
 int GARandomBit();
 double GAUnitGaussian();
 
-__inline GABoolean GAFlipCoin(float p){
+inline GABoolean GAFlipCoin(float p){
   return((p == 1.0) ? gaTrue : (p == 0.0) ? gaFalse :
 	 ((GARandomFloat() <= p) ? gaTrue : gaFalse));
 }
 
-__inline float GAGaussianFloat(float dev){ return (float)GAUnitGaussian()*dev; }
-__inline double GAGaussianDouble(double dev){ return GAUnitGaussian() * dev; }
+inline float GAGaussianFloat(float dev){ return (float)GAUnitGaussian()*dev; }
+inline double GAGaussianDouble(double dev){ return GAUnitGaussian() * dev; }
 
 const char* GAGetRNG();
 

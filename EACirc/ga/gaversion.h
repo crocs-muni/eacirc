@@ -9,11 +9,11 @@ build information from the galib object file.
 #ifndef _ga_version_h_
 #define _ga_version_h_
 
-#include "../ga/gaconfig.h"
+#include <ga/gaconfig.h>
 
 #define GALIB_LIBRARY_IDENTIFIER \
-  "$Date: 2004/12/29 16:24:43 $"\
-  "$Revision: 2.4.6 $"\
+  "$Date: 2004-12-29 11:24:43 -0500 (Wed, 29 Dec 2004) $"\
+  "$Revision: 43 $"\
   "$Configuration: " GALIB_OS "-" GALIB_CPU "-" GALIB_COMPILER " $"
 
 const char* GAConfig();

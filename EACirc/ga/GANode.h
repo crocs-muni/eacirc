@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GANode.h,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   node.h
   mbwall 25nov94
@@ -10,8 +10,8 @@
 #ifndef _ga_node_h_
 #define _ga_node_h_
 
-#include "../ga/gaconfig.h"
-#include "../ga/std_stream.h"
+#include <ga/gaconfig.h>
+#include <ga/std_stream.h>
 
 /* ----------------------------------------------------------------------------
  GANodeBASE
@@ -31,7 +31,7 @@ struct GANodeBASE {
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<<(STD_OSTREAM & os, GANodeBASE & arg){
+inline STD_OSTREAM & operator<<(STD_OSTREAM & os, GANodeBASE & arg){
   os << "  node:   " << &arg << "\n";
   os << "  next:   " << arg.next << "\n";
   os << "  prev:   " << arg.prev << "\n";

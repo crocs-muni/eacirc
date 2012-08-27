@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GASimpleGA.h,v 1.2 2004/12/28 00:12:12 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gasimple.h
   mbwall 28jul94
@@ -10,7 +10,7 @@
 #ifndef _ga_gasimple_h_
 #define _ga_gasimple_h_
 
-#include "../ga/GABaseGA.h"
+#include <ga/GABaseGA.h>
 
 class GASimpleGA : public GAGeneticAlgorithm {
 public:
@@ -61,9 +61,9 @@ protected:
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GASimpleGA & arg)
+inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GASimpleGA & arg)
 { arg.write(os); return(os); }
-__inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GASimpleGA & arg)
+inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GASimpleGA & arg)
 { arg.read(is); return(is); }
 #endif
 

@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GATree.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   treetmpl.C
   mbwall 25feb95
@@ -16,7 +16,7 @@
 #ifndef _ga_treetmpl_C_
 #define _ga_treetmpl_C_
 
-#include "../ga/GATree.h"
+#include <ga/GATree.h>
 
 extern GANodeBASE * _GATreeTraverse(unsigned int, unsigned int&, GANodeBASE *);
 //template <class T> void _GATreeDestroy(GANode<T> *);

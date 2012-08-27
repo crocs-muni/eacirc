@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAStatistics.h,v 1.3 2004/12/28 14:38:44 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   statistics.h
   mbwall 14jul95
@@ -11,12 +11,10 @@
 #ifndef _ga_statistics_h_
 #define _ga_statistics_h_
 
-#pragma warning(disable:4996)
-
-#include "../ga/gatypes.h"
-#include "../ga/gaconfig.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GAPopulation.h"
+#include <ga/gatypes.h>
+#include <ga/gaconfig.h>
+#include <ga/GAGenome.h>
+#include <ga/GAPopulation.h>
 
 
 
@@ -158,7 +156,7 @@ protected:
 
 
 
-__inline const char* GAStatistics::scoreFilename(const char* filename){
+inline const char* GAStatistics::scoreFilename(const char* filename){
   delete [] scorefile;
   scorefile = 0;
   if(filename){
@@ -168,14 +166,14 @@ __inline const char* GAStatistics::scoreFilename(const char* filename){
   return scorefile;
 }
 
-__inline float GAStatistics::convergence() const {
+inline float GAStatistics::convergence() const {
   double cnv = 0.0;
   if(nconv >= Nconv-1 && cscore[nconv%Nconv] != 0)
     cnv = (double)(cscore[(nconv+1)%Nconv]) / (double)(cscore[nconv%Nconv]);
   return (float)cnv;
 }
 
-__inline float GAStatistics::initial(int w) const {
+inline float GAStatistics::initial(int w) const {
   float val = 0.0;
   switch(w){
   case Mean:      val = aveInit; break;
@@ -188,7 +186,7 @@ __inline float GAStatistics::initial(int w) const {
   return val;
 }
 
-__inline float GAStatistics::current(int w) const {
+inline float GAStatistics::current(int w) const {
   float val = 0.0;
   switch(w){
   case Mean:      val = aveCur; break;
@@ -204,7 +202,7 @@ __inline float GAStatistics::current(int w) const {
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM & os, const GAStatistics& s)
+inline STD_OSTREAM & operator<< (STD_OSTREAM & os, const GAStatistics& s)
 { s.write(os); return os; }
 #endif
 

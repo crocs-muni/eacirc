@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAListBASE.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   listbase.C
   mbwall 10dec94
@@ -12,8 +12,8 @@
   Implement better memory mangement, faster allocation, referencing.
   Use array representation of nodes so we don't have to do so much recursion.
 ---------------------------------------------------------------------------- */
-#include "../ga/GAListBASE.h"
-#include "../ga/gaerror.h"
+#include <ga/GAListBASE.h>
+#include <ga/gaerror.h>
 
 GANodeBASE * _GAListTraverse(unsigned int index, unsigned int & cur,
 			     GANodeBASE * node);

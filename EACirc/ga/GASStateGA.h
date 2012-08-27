@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GASStateGA.h,v 1.2 2004/12/28 00:12:12 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gasteadystate.h
   mbwall 28jul94
@@ -10,7 +10,7 @@
 #ifndef _ga_gasteadystate_h_
 #define _ga_gasteadystate_h_
 
-#include "../ga/GABaseGA.h"
+#include <ga/GABaseGA.h>
 
 class GASteadyStateGA : public GAGeneticAlgorithm {
 public:
@@ -64,9 +64,9 @@ protected:
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GASteadyStateGA & arg)
+inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GASteadyStateGA & arg)
 { arg.write(os); return(os); }
-__inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GASteadyStateGA & arg)
+inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GASteadyStateGA & arg)
 { arg.read(is); return(is); }
 #endif
 

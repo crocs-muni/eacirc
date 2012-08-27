@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAGenome.h,v 1.3 2004/12/28 14:38:44 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   genome.h
   mbwall 28jul94
@@ -14,11 +14,11 @@ it should operate on the data.  See comments below for further details.
 #ifndef _ga_genome_h_
 #define _ga_genome_h_
 
-#include "../ga/gaid.h"
-#include "../ga/gaconfig.h"
-#include "../ga/gaerror.h"
-#include "../ga/GAEvalData.h"
-#include "../ga/std_stream.h"
+#include <ga/gaid.h>
+#include <ga/gaconfig.h>
+#include <ga/gaerror.h>
+#include <ga/GAEvalData.h>
+#include <ga/std_stream.h>
 
 class GAGeneticAlgorithm;
 class GAGenome;
@@ -258,9 +258,9 @@ public:
 protected:
   float _score;			// value returned by the objective function
   float _fitness;		// (possibly scaled) fitness score
-public:
+public:  
   GABoolean _evaluated;		// has this genome been evaluated?
-protected:  
+protected:
   unsigned int _neval;		// how many evaluations since initialization?
   GAGeneticAlgorithm* ga;	// the ga that is using this genome
   void* ud;		        // pointer to user data
@@ -276,15 +276,15 @@ protected:
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM& os, const GAGenome& genome)
+inline STD_OSTREAM & operator<< (STD_OSTREAM& os, const GAGenome& genome)
 { genome.write(os); return(os); }
-__inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GAGenome& genome)
+inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GAGenome& genome)
 { genome.read(is); return(is); }
 #endif
 
-__inline int operator== (const GAGenome& a, const GAGenome& b)
+inline int operator== (const GAGenome& a, const GAGenome& b)
 { return a.equal(b); }
-__inline int operator!= (const GAGenome& a, const GAGenome& b)
+inline int operator!= (const GAGenome& a, const GAGenome& b)
 { return a.notequal(b); }
 
 #endif

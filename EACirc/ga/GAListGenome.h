@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAListGenome.h,v 1.3 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   list.h
   mbwall 25feb95
@@ -11,8 +11,8 @@
 #ifndef _ga_list_h_
 #define _ga_list_h_
 
-#include "../ga/GAList.h"
-#include "../ga/GAGenome.h"
+#include <ga/GAList.h>
+#include <ga/GAGenome.h>
 
 
 /* ----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ public:
 };
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GAListGenome.cpp"
+#include <ga/GAListGenome.cpp>
 #endif
 
 #endif

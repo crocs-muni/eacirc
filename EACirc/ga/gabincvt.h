@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gabincvt.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   bincvt.h
   mbwall 29jun95
@@ -14,7 +14,7 @@ you want a different Gray coding.
 #ifndef _ga_bincvt_h_
 #define _ga_bincvt_h_
 
-#include "../ga/gatypes.h"
+#include <ga/gatypes.h>
 
 // The encoder converts a decimal value into a binary string.  The decoder
 // converts a string of bits into a decimal value.  Both types of functions

@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAPopulation.C,v 1.5 2004/12/29 16:25:42 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   population.C
   mbwall 11aug94
@@ -7,10 +7,10 @@
 ---------------------------------------------------------------------------- */
 #include <string.h>
 #include <math.h>
-#include "../ga/GAPopulation.h"
-#include "../ga/GASelector.h"
-#include "../ga/garandom.h"
-#include "../ga/GABaseGA.h"		// for the sake of flaky g++ compiler
+#include <ga/GAPopulation.h>
+#include <ga/GASelector.h>
+#include <ga/garandom.h>
+#include <ga/GABaseGA.h>		// for the sake of flaky g++ compiler
 
 // windows is promiscuous in its use of min/max, and that causes us grief.  so
 // turn of the use of min/max macros in this file.   thanks nick wienholt

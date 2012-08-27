@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAGenome.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   genome.C
   mbwall 19apr95
@@ -10,7 +10,7 @@
 documentation for deriving new classes.  Comments here are implementation-
 specific details about base class member functions.
 ---------------------------------------------------------------------------- */
-#include "../ga/GAGenome.h"
+#include <ga/GAGenome.h>
 
 //   These are the default genome operators.
 // None does anything - they just post an error message to let you know that no

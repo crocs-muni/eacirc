@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAParameter.h,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   parameters.h
   mbwall 14jul95
@@ -11,9 +11,9 @@
 #ifndef _ga_parameters_h_
 #define _ga_parameters_h_
 
-#include "../ga/gaconfig.h"
-#include "../ga/gatypes.h"
-#include "../ga/std_stream.h"
+#include <ga/gaconfig.h>
+#include <ga/gatypes.h>
+#include <ga/std_stream.h>
 
 
 /* ----------------------------------------------------------------------------
@@ -105,9 +105,9 @@ protected:
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM &os, const GAParameterList& plist)
+inline STD_OSTREAM & operator<< (STD_OSTREAM &os, const GAParameterList& plist)
 { plist.write(os); return os; }
-__inline STD_ISTREAM & operator>> (STD_ISTREAM& is, GAParameterList& plist)
+inline STD_ISTREAM & operator>> (STD_ISTREAM& is, GAParameterList& plist)
 { plist.read(is); return is; }
 #endif
 

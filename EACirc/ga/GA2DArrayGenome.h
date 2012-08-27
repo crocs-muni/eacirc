@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA2DArrayGenome.h,v 1.4 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   array2.h
   mbwall 25feb95
@@ -12,9 +12,9 @@
 #ifndef _ga_array2_h_
 #define _ga_array2_h_
 
-#include "../ga/GAArray.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GAAllele.h"
+#include <ga/GAArray.h>
+#include <ga/GAGenome.h>
+#include <ga/GAAllele.h>
 
 /* ----------------------------------------------------------------------------
 2DArrayGenome
@@ -147,7 +147,7 @@ protected:
 
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GA2DArrayGenome.cpp"
+#include <ga/GA2DArrayGenome.cpp>
 #endif
 
 #endif

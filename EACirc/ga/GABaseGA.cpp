@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GABaseGA.C,v 1.4 2004/12/29 16:24:43 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gabase.C
   mbwall 28jul94
@@ -9,9 +9,9 @@
 ---------------------------------------------------------------------------- */
 #include <stdio.h>
 #include <string.h>
-#include "GABaseGA.h"
-#include "garandom.h"
-#include "gaversion.h"	// gets the RCS string in for ident purposes
+#include <ga/GABaseGA.h>
+#include <ga/garandom.h>
+#include <ga/gaversion.h>	// gets the RCS string in for ident purposes
 
 
 //#define GA_DEBUG

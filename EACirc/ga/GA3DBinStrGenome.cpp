@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA3DBinStrGenome.C,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   binstr3.C
   mbwall 19apr95
@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "../ga/gaerror.h"
-#include "../ga/garandom.h"
-#include "../ga/GA3DBinStrGenome.h"
-#include "../ga/GAMask.h"
+#include <ga/gaerror.h>
+#include <ga/garandom.h>
+#include <ga/GA3DBinStrGenome.h>
+#include <ga/GAMask.h>
 
 
 /* ----------------------------------------------------------------------------

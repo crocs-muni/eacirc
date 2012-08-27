@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gatypes.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gatypes.h
   mbwall 29apr95

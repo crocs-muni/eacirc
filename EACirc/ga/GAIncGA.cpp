@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAIncGA.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gainc.C
   mbwall 28jul94
@@ -7,8 +7,8 @@
 
   Source file for the incremental genetic algorithm object.
 ---------------------------------------------------------------------------- */
-#include "../ga/GAIncGA.h"
-#include "../ga/garandom.h"
+#include <ga/GAIncGA.h>
+#include <ga/garandom.h>
 
 
 GAParameterList&

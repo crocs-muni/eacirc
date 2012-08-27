@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAParameter.C,v 1.3 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   parameters.C
   mbwall 28jul94
@@ -14,9 +14,9 @@ implementation.
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../ga/gaconfig.h"
-#include "../ga/gaerror.h"
-#include "../ga/GAParameter.h"
+#include <ga/gaconfig.h>
+#include <ga/gaerror.h>
+#include <ga/GAParameter.h>
 
 #define PRM_CHUNKSIZE 10
 #define BUFSIZE       1024	// size of buffer for reading pairs
@@ -630,7 +630,7 @@ GAParameterList::parse(int& argc, char *argv[], GABoolean flag){
 
 static int
 IsNumeric(const char* str){
-  for(int i=(int) strlen(str)-1; i>=0; i--)
+  for(int i=strlen(str)-1; i>=0; i--)
     if(! isdigit(str[i]) && str[i] != '.') return 0;
   return 1;
 }

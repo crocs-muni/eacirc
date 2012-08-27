@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GABin2DecGenome.C,v 1.3 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   bin2dec.C
   mbwall 19apr95
@@ -16,8 +16,8 @@ information).
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "../ga/gaerror.h"
-#include "../ga/GABin2DecGenome.h"
+#include <ga/gaerror.h>
+#include <ga/GABin2DecGenome.h>
 
 
 /* ----------------------------------------------------------------------------

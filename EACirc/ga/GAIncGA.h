@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAIncGA.h,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gainc.h
   mbwall 28jul94
@@ -32,7 +32,7 @@ replacement function should return a reference to the individual.
 #ifndef _ga_gainc_h_
 #define _ga_gainc_h_
 
-#include "../ga/GABaseGA.h"
+#include <ga/GABaseGA.h>
 
 class GAIncrementalGA : public GAGeneticAlgorithm {
 public:
@@ -85,9 +85,9 @@ protected:
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GAIncrementalGA & arg)
+inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GAIncrementalGA & arg)
 { arg.write(os); return(os); }
-__inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GAIncrementalGA & arg)
+inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GAIncrementalGA & arg)
 { arg.read(is); return(is); }
 #endif
 

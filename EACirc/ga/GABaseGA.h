@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GABaseGA.h,v 1.4 2004/12/29 16:25:22 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gabase.h
   mbwall 28jul94
@@ -10,12 +10,12 @@
 #ifndef _ga_gabase_h_
 #define _ga_gabase_h_
 
-#include "../ga/gaconfig.h"
-#include "../ga/gaid.h"
-#include "../ga/GAParameter.h"
-#include "../ga/GAStatistics.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GAPopulation.h"
+#include <ga/gaconfig.h>
+#include <ga/gaid.h>
+#include <ga/GAParameter.h>
+#include <ga/GAStatistics.h>
+#include <ga/GAGenome.h>
+#include <ga/GAPopulation.h>
 
 // When specifying parameters for a GAlib object, you can use the fullname (the
 // name used in parameters data files) or the short name (the name typically 
@@ -237,7 +237,7 @@ protected:
   GAParameterList params;
 public:
   GAPopulation *pop;
-protected:  
+protected:
   Terminator cf;		// function for determining done-ness
   void * ud;			// pointer to user data structure
 

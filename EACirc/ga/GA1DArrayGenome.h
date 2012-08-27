@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA1DArrayGenome.h,v 1.4 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   array1.h
   mbwall 25feb95
@@ -25,9 +25,9 @@ that for common instantiations (float, char).
 #ifndef _ga_array1_h_
 #define _ga_array1_h_
 
-#include "../ga/GAArray.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GAAllele.h"
+#include <ga/GAArray.h>
+#include <ga/GAGenome.h>
+#include <ga/GAAllele.h>
 
 
 /* ----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ protected:
 
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GA1DArrayGenome.cpp"
+#include <ga/GA1DArrayGenome.cpp>
 #endif
 
 #endif

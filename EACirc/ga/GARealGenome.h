@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GARealGenome.h,v 1.2 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   real.h
   mbwall 25feb95
@@ -12,8 +12,8 @@ for the real number genome.
 #ifndef _ga_real_h_
 #define _ga_real_h_
 
-#include "../ga/GAAllele.h"
-#include "../ga/GA1DArrayGenome.h"
+#include <ga/GAAllele.h>
+#include <ga/GA1DArrayGenome.h>
 
 typedef GAAlleleSet<float> GARealAlleleSet;
 typedef GAAlleleSetArray<float> GARealAlleleSetArray;
@@ -26,49 +26,49 @@ int GARealGaussianMutator(GAGenome &, float);
 // should define INSTANTIATE_STRING_GENOME in order to force the specialization
 // for this genome.
 #if defined(INSTANTIATE_REAL_GENOME)
-#include "../ga/GARealGenome.cpp"
+#include <ga/GARealGenome.C>
 #endif
 
-__inline void GARealUniformInitializer(GAGenome& g){
+inline void GARealUniformInitializer(GAGenome& g){
   GA1DArrayAlleleGenome<float>::UniformInitializer(g);
 }
-__inline void GARealOrderedInitializer(GAGenome& g){
+inline void GARealOrderedInitializer(GAGenome& g){
   GA1DArrayAlleleGenome<float>::OrderedInitializer(g);
 }
 
-__inline int GARealUniformMutator(GAGenome& g, float pmut){
+inline int GARealUniformMutator(GAGenome& g, float pmut){
   return GA1DArrayAlleleGenome<float>::FlipMutator(g, pmut);
 }
-__inline int GARealSwapMutator(GAGenome& g, float pmut){
+inline int GARealSwapMutator(GAGenome& g, float pmut){
   return GA1DArrayGenome<float>::SwapMutator(g, pmut);
 }
 
 
-__inline int GARealUniformCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealUniformCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::UniformCrossover(a,b,c,d);
 }
-__inline int GARealEvenOddCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealEvenOddCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::EvenOddCrossover(a,b,c,d);
 }
-__inline int GARealOnePointCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealOnePointCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::OnePointCrossover(a,b,c,d);
 }
-__inline int GARealTwoPointCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealTwoPointCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::TwoPointCrossover(a,b,c,d);
 }
-__inline int GARealPartialMatchCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealPartialMatchCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::PartialMatchCrossover(a,b,c,d);
 }
-__inline int GARealOrderCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealOrderCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::OrderCrossover(a,b,c,d);
 }
-__inline int GARealCycleCrossover(const GAGenome& a, const GAGenome& b,
+inline int GARealCycleCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<float>::CycleCrossover(a,b,c,d);
 }

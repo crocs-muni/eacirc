@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAStringGenome.h,v 1.2 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   string.h
   mbwall 25feb95
@@ -10,8 +10,8 @@
 #ifndef _ga_string_h_
 #define _ga_string_h_
 
-#include "../ga/GAAllele.h"
-#include "../ga/GA1DArrayGenome.h"
+#include <ga/GAAllele.h>
+#include <ga/GA1DArrayGenome.h>
 
 typedef GAAlleleSet<char> GAStringAlleleSet;
 typedef GAAlleleSet<char> GACharacterAlleleSet;
@@ -23,48 +23,48 @@ typedef GA1DArrayAlleleGenome<char> GAStringGenome;
 // should define INSTANTIATE_STRING_GENOME in order to force the specialization
 // for this genome.
 #if defined(INSTANTIATE_STRING_GENOME)
-#include "../ga/GAStringGenome.cpp"
+#include <ga/GAStringGenome.C>
 #endif
 
-__inline void GAStringUniformInitializer(GAGenome& g){
+inline void GAStringUniformInitializer(GAGenome& g){
   GA1DArrayAlleleGenome<char>::UniformInitializer(g);
 }
-__inline void GAStringOrderedInitializer(GAGenome& g){
+inline void GAStringOrderedInitializer(GAGenome& g){
   GA1DArrayAlleleGenome<char>::OrderedInitializer(g);
 }
 
-__inline int GAStringFlipMutator(GAGenome& g, float pmut){
+inline int GAStringFlipMutator(GAGenome& g, float pmut){
   return GA1DArrayAlleleGenome<char>::FlipMutator(g, pmut);
 }
-__inline int GAStringSwapMutator(GAGenome& g, float pmut){
+inline int GAStringSwapMutator(GAGenome& g, float pmut){
   return GA1DArrayGenome<char>::SwapMutator(g, pmut);
 }
 
-__inline int GAStringUniformCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringUniformCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::UniformCrossover(a,b,c,d);
 }
-__inline int GAStringEvenOddCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringEvenOddCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::EvenOddCrossover(a,b,c,d);
 }
-__inline int GAStringOnePointCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringOnePointCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::OnePointCrossover(a,b,c,d);
 }
-__inline int GAStringTwoPointCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringTwoPointCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::TwoPointCrossover(a,b,c,d);
 }
-__inline int GAStringPartialMatchCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringPartialMatchCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::PartialMatchCrossover(a,b,c,d);
 }
-__inline int GAStringOrderCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringOrderCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::OrderCrossover(a,b,c,d);
 }
-__inline int GAStringCycleCrossover(const GAGenome& a, const GAGenome& b,
+inline int GAStringCycleCrossover(const GAGenome& a, const GAGenome& b,
 				  GAGenome* c, GAGenome* d) {
   return GA1DArrayGenome<char>::CycleCrossover(a,b,c,d);
 }

@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GADCrowdingGA.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gadcrowdingga.C
   mbwall 29mar99

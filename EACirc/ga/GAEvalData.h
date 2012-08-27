@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAEvalData.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   eval.h
   mbwall 3dec95

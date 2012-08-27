@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GASimpleGA.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gasimple.C
   mbwall 28jul94
@@ -7,8 +7,8 @@
 
   Source file for the simple genetic algorithm object.
 ---------------------------------------------------------------------------- */
-#include "../ga/GASimpleGA.h"
-#include "../ga/garandom.h"
+#include <ga/GASimpleGA.h>
+#include <ga/garandom.h>
 
 
 GAParameterList&

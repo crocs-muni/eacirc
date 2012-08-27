@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAPopulation.h,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   population.h
   mbwall 3aug94
@@ -12,12 +12,12 @@ track of the fitness statistics for the genomes in the population.
 #ifndef _ga_population_h_
 #define _ga_population_h_
 
-#include "../ga/gaconfig.h"
-#include "../ga/gaid.h"
-#include "../ga/GASelector.h"
-#include "../ga/GAScaling.h"
-#include "../ga/GAEvalData.h"
-#include "../ga/GAGenome.h"
+#include <ga/gaconfig.h>
+#include <ga/gaid.h>
+#include <ga/GASelector.h>
+#include <ga/GAScaling.h>
+#include <ga/GAEvalData.h>
+#include <ga/GAGenome.h>
 
 #ifdef max
 #undef max
@@ -120,7 +120,7 @@ public:
   void flushEvalution() {
      for(int i=0; i<this->size(); i++) this->individual(i)._evaluated = gaFalse;
   }
-    
+
   int nevals() const { return neval; }
   void evaluate(GABoolean flag=gaFalse) {
     if(evaluated == gaFalse || flag == gaTrue){
@@ -191,6 +191,7 @@ protected:
   GABoolean ssorted;		// are the individuals sorted? (scaled)
   GABoolean scaled;		// has the population been scaled?
   GABoolean statted;		// are the stats valid?
+// method 'evaluated' made public for use in EACirc
 public:
   GABoolean evaluated;		// has the population been evaluated?
 protected:
@@ -225,9 +226,9 @@ protected:
 
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM & os, const GAPopulation & arg)
+inline STD_OSTREAM & operator<< (STD_OSTREAM & os, const GAPopulation & arg)
 { arg.write(os); return os; }
-__inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GAPopulation & arg)
+inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GAPopulation & arg)
 { arg.read(is); return is; }
 #endif
 

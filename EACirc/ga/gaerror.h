@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/gaerror.h,v 1.2 2004/12/28 00:12:12 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   error.h
   mbwall 7may95
@@ -12,13 +12,13 @@
 #define _ga_error_h_
 
 // DISABLE WARNING FROM GA CODES OUTSIDE OUR IMPLEMENTATION
+// disabled for use in EACirc (?)
 #pragma warning(disable:4996)
 #pragma warning(disable:4244)
 
-
-#include "../ga/gatypes.h"
-#include "../ga/gaconfig.h"
-#include "../ga/std_stream.h"
+#include <ga/gatypes.h>
+#include <ga/gaconfig.h>
+#include <ga/std_stream.h>
 
 // This object is for telling us where in the source code an error occurs.
 class GASourceLocator {
@@ -126,7 +126,7 @@ void GAReportErrors(GABoolean flag);
 #ifdef GALIB_USE_STREAMS
 void GASetErrorStream(STD_OSTREAM &);
 #else
-__inline void GASetErrorStream(){} // dummy function
+inline void GASetErrorStream(){} // dummy function
 #endif
 
 // This error string contains the text of the most recent error message.  If a

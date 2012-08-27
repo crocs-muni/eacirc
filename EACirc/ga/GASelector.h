@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GASelector.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   selector.h
   mbwall 10aug94
@@ -37,7 +37,7 @@ RouletteWheel - weighted selection where individuals with better fitness have
 #define _ga_selector_h_
 
 #include <string.h>
-#include "../ga/gaid.h"
+#include <ga/gaid.h>
 
 class GAGenome;
 class GAPopulation;

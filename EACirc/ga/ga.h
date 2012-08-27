@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/ga.h,v 1.3 2004/12/29 16:25:22 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   ga.h
   mbwall 28jul94
@@ -148,33 +148,33 @@ one copy of the genome type you want to use.
 
 // Make sure that we get the configuration into each of the galib components
 // that will be used.
-#include "../ga/gaconfig.h"
+#include <ga/gaconfig.h>
 
 // These are the headers for all of the genetic algorithm classes.
-#include "../ga/GASimpleGA.h"
-#include "../ga/GASStateGA.h"
-#include "../ga/GAIncGA.h"
-#include "../ga/GADemeGA.h"
-#include "../ga/GADCrowdingGA.h"
+#include <ga/GASimpleGA.h>
+#include <ga/GASStateGA.h>
+#include <ga/GAIncGA.h>
+#include <ga/GADemeGA.h>
+#include <ga/GADCrowdingGA.h>
 
 // Here we include the headers for all of the various genome types.
-#include "../ga/GA1DBinStrGenome.h"
-#include "../ga/GA2DBinStrGenome.h"
-#include "../ga/GA3DBinStrGenome.h"
-#include "../ga/GABin2DecGenome.h"
+#include <ga/GA1DBinStrGenome.h>
+#include <ga/GA2DBinStrGenome.h>
+#include <ga/GA3DBinStrGenome.h>
+#include <ga/GABin2DecGenome.h>
 
 #ifndef GALIB_USE_NO_TEMPLATES
-#include "../ga/GA1DArrayGenome.h"
-#include "../ga/GA2DArrayGenome.h"
-#include "../ga/GA3DArrayGenome.h"
-#include "../ga/GAListGenome.h"
-#include "../ga/GATreeGenome.h"
+#include <ga/GA1DArrayGenome.h>
+#include <ga/GA2DArrayGenome.h>
+#include <ga/GA3DArrayGenome.h>
+#include <ga/GAListGenome.h>
+#include <ga/GATreeGenome.h>
 
 // We do *not* include the headers for template specializations.  This prevents
 // unnecessary instantiations of template objects which causes grief to some
 // compilers.
-//#include "../ga/GAStringGenome.h"
-//#include "../ga/GARealGenome.h"
+//#include <ga/GAStringGenome.h>
+//#include <ga/GARealGenome.h>
 #endif
 
 #endif

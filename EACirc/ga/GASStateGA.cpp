@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GASStateGA.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   gasteadystate.C
   mbwall 28jul94
@@ -7,8 +7,8 @@
 
    Souce file for the steady-state genetic algorithm object.
 ---------------------------------------------------------------------------- */
-#include "../ga/GASStateGA.h"
-#include "../ga/garandom.h"
+#include <ga/GASStateGA.h>
+#include <ga/garandom.h>
 
 //#define GA_DEBUG
 

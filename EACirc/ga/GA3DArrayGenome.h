@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA3DArrayGenome.h,v 1.4 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   array3.h
   mbwall 25feb95
@@ -12,9 +12,9 @@
 #ifndef _ga_array3_h_
 #define _ga_array3_h_
 
-#include "../ga/GAArray.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GAAllele.h"
+#include <ga/GAArray.h>
+#include <ga/GAGenome.h>
+#include <ga/GAAllele.h>
 
 
 /* ----------------------------------------------------------------------------
@@ -157,7 +157,7 @@ protected:
 
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GA3DArrayGenome.cpp"
+#include <ga/GA3DArrayGenome.cpp>
 #endif
 
 #endif

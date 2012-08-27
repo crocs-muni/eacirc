@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAScaling.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   scaling.C
   mbwall 10aug94
@@ -15,11 +15,11 @@ objects that call us do the test themselves.  I'll leave the redundancy for
 now.
 ---------------------------------------------------------------------------- */
 #include <math.h>
-#include "../ga/gaerror.h"
-#include "../ga/GAScaling.h"
-#include "../ga/GAGenome.h"
-#include "../ga/GAPopulation.h"
-#include "../ga/GABaseGA.h"
+#include <ga/gaerror.h>
+#include <ga/GAScaling.h>
+#include <ga/GAGenome.h>
+#include <ga/GAPopulation.h>
+#include <ga/GABaseGA.h>
 
 
 float gaDefLinearScalingMultiplier   = 1.2;

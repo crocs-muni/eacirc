@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GATreeBASE.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   treebase.h
   mbwall 25nov94
@@ -10,7 +10,7 @@
 #ifndef _ga_treebase_h_
 #define _ga_treebase_h_
 
-#include "../ga/GANode.h"
+#include <ga/GANode.h>
 
 
 /* ----------------------------------------------------------------------------

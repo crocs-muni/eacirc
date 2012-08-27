@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GATree.h,v 1.2 2004/12/28 18:18:27 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   treetmpl.h
   mbwall 25feb95
@@ -10,8 +10,8 @@
 #ifndef _ga_treetmpl_h_
 #define _ga_treetmpl_h_
 
-#include "../ga/gaerror.h"
-#include "../ga/GATreeBASE.h"
+#include <ga/gaerror.h>
+#include <ga/GATreeBASE.h>
 
 /* ----------------------------------------------------------------------------
  GATree
@@ -229,7 +229,7 @@ private:
 
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GATree.cpp"
+#include <ga/GATree.cpp>
 #endif
 
 #endif

@@ -1,10 +1,10 @@
-// $Header: /home/cvs/galib/ga/std_stream.h,v 1.2 2004/12/28 16:08:43 mwall Exp $
+// $Header$
 // Copyright (c) 2005 Matthew Wall, all rights reserved
 // ----------------------------------------------------------------------------
 #ifndef _ga_std_stream_h_
 #define _ga_std_stream_h_
 
-#include "../ga/gaconfig.h"
+#include <ga/gaconfig.h>
 
 #if defined(GALIB_USE_STREAMS)
 #if defined(GALIB_USE_ANSI_HEADERS)

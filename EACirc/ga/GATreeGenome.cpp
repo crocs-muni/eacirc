@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GATreeGenome.C,v 1.3 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   tree.C
   mbwall 25feb95
@@ -13,8 +13,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../ga/GATreeGenome.h"
-#include "../ga/garandom.h"
+#include <ga/GATreeGenome.h>
+#include <ga/garandom.h>
 
 
 extern int _GATreeCompare(GANodeBASE * anode, GANodeBASE * bnode);

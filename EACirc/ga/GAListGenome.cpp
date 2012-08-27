@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAListGenome.C,v 1.3 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   list.C
   mbwall 25feb95
@@ -13,9 +13,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../ga/GAListGenome.h"
-#include "../ga/GAMask.h"
-#include "../ga/garandom.h"
+#include <ga/GAListGenome.h>
+#include <ga/GAMask.h>
+#include <ga/garandom.h>
 
 template <class T> int 
 GAListIsHole(const GAListGenome<T>&, const GAListGenome<T>&, int, int, int);

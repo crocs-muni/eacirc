@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GADCrowdingGA.h,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   dcrowdingga.h
   mbwall 29mar99
@@ -9,7 +9,7 @@
 #ifndef _ga_deterministic_crowding_ga_h_
 #define _ga_deterministic_crowding_ga_h_
 
-#include "../ga/GABaseGA.h"
+#include <ga/GABaseGA.h>
 
 class GADCrowdingGA : public GAGeneticAlgorithm {
 public:

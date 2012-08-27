@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GA2DBinStrGenome.h,v 1.2 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   binstr2.h
   mbwall 19apr95
@@ -12,8 +12,8 @@ crossover objects and all the default and built-in operators.
 #ifndef _ga_binstr2_h_
 #define _ga_binstr2_h_
 
-#include "../ga/GABinStr.h"
-#include "../ga/GAGenome.h"
+#include <ga/GABinStr.h>
+#include <ga/GAGenome.h>
 
 
 /* ----------------------------------------------------------------------------

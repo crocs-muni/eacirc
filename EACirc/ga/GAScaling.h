@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAScaling.h,v 1.2 2004/12/28 14:38:44 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   scaling.h
   mbwall 10aug94
@@ -20,10 +20,10 @@ it does know how to update itself, but it must be told when.
 #ifndef _ga_scaling_h_
 #define _ga_scaling_h_
 
-#include "../ga/gaconfig.h"
-#include "../ga/gaid.h"
-#include "../ga/gatypes.h"
-#include "../ga/GAGenome.h"
+#include <ga/gaconfig.h>
+#include <ga/gaid.h>
+#include <ga/gatypes.h>
+#include <ga/GAGenome.h>
 
 class GAPopulation;
 

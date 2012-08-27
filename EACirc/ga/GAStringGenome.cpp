@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAStringGenome.C,v 1.5 2004/12/28 22:17:30 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   string.C
   mbwall 21mar95
@@ -8,7 +8,7 @@
  DESCRIPTION:
    Source file for the string specialization of the array genome.
 ---------------------------------------------------------------------------- */
-#include "../ga/GAStringGenome.h"
+#include <ga/GAStringGenome.h>
 
 template <> const char * 
 GA1DArrayAlleleGenome<char>::className() const {return "GAStringGenome";}
@@ -91,8 +91,8 @@ GA1DArrayAlleleGenome<char>::write(STD_OSTREAM & os) const
 // some compilers require a syntax different than others when forcing the 
 // instantiation (i.e. GNU wants the 'template class', borland does not).
 #ifndef GALIB_USE_AUTO_INST
-#include "../ga/GAAllele.cpp"
-#include "../ga/GA1DArrayGenome.cpp"
+#include <ga/GAAllele.cpp>
+#include <ga/GA1DArrayGenome.cpp>
 
 #if defined(__BORLANDC__)
 #define GALIB_STRINGGENOME_TEMPLATE_PREFACE

@@ -19,7 +19,7 @@ step method.
 #ifndef _ga_gademe_h_
 #define _ga_gademe_h_
 
-#include "../ga/GABaseGA.h"
+#include <ga/GABaseGA.h>
 
 class GADemeGA : public GAGeneticAlgorithm {
 public:
@@ -96,9 +96,9 @@ protected:
 };
 
 #ifdef GALIB_USE_STREAMS
-__inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GADemeGA & arg)
+inline STD_OSTREAM & operator<< (STD_OSTREAM & os, GADemeGA & arg)
 {arg.write(os); return(os);}
-__inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GADemeGA & arg)
+inline STD_ISTREAM & operator>> (STD_ISTREAM & is, GADemeGA & arg)
 {arg.read(is); return(is);}
 #endif
 

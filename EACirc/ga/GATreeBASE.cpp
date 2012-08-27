@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GATreeBASE.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   treebase.C
   mbwall 25nov94
@@ -13,8 +13,8 @@
   Use array representation of nodes so we don't have to do so much recursion.
   Figure better way to do traversals so that we speed up the swaps.
 ---------------------------------------------------------------------------- */
-#include "../ga/GATreeBASE.h"
-#include "../ga/gaerror.h"
+#include <ga/GATreeBASE.h>
+#include <ga/gaerror.h>
 
 static int _GATreeSize(GANodeBASE *);
 static int _GATreeDepth(GANodeBASE *);
@@ -24,7 +24,7 @@ int _GATreeCompare(GANodeBASE * anode, GANodeBASE * bnode);
 
 // Traverse up the tree until we find the root node.  If the node we got was
 // NULL, return NULL.  Otherwise return the pointer to the root node.
-__inline GANodeBASE * _GARootOfNode(GANodeBASE * n){
+inline GANodeBASE * _GARootOfNode(GANodeBASE * n){
   GANodeBASE * tmp = (GANodeBASE *)0;
   if((tmp=n) != (GANodeBASE *)0){while(tmp->parent) tmp = tmp->parent;}
   return tmp;

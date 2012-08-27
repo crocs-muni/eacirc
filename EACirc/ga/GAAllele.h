@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GAAllele.h,v 1.5 2004/12/29 16:26:38 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   allele.h
   mbwall 21mar95
@@ -13,9 +13,9 @@ imply the specific implementation of the container class).
 #ifndef _ga_allele_h_
 #define _ga_allele_h_
 
-#include "../ga/gaconfig.h"
-#include "../ga/garandom.h"
-#include "../ga/std_stream.h"
+#include <ga/gaconfig.h>
+#include <ga/garandom.h>
+#include <ga/std_stream.h>
 
 class GAAllele {
 public:
@@ -200,7 +200,7 @@ operator>> (STD_ISTREAM & is, GAAlleleSet<T> & arg)
 
 
 #ifdef GALIB_USE_BORLAND_INST
-#include "../ga/GAAllele.cpp"
+#include <ga/GAAllele.cpp>
 #endif
 
 #endif

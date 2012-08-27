@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GABin2DecGenome.h,v 1.3 2004/12/28 00:12:11 mwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   bin2dec.h
   mbwall 19apr95
@@ -29,8 +29,8 @@ out, please turn off the lights).
 #ifndef _ga_bin2dec_h_
 #define _ga_bin2dec_h_
 
-#include "../ga/GA1DBinStrGenome.h"
-#include "../ga/gabincvt.h"
+#include <ga/GA1DBinStrGenome.h>
+#include <ga/gabincvt.h>
 
 #ifdef max
 #undef max
@@ -86,12 +86,12 @@ protected:
   GABin2DecPhenotypeCore *core;
 };
 
-__inline int 
+inline int 
 operator==(const GABin2DecPhenotype& a, const GABin2DecPhenotype& b) {
   return a.equal(b);
 }
 
-__inline int 
+inline int 
 operator!=(const GABin2DecPhenotype& a, const GABin2DecPhenotype& b) {
   return (a.equal(b) ? 0 : 1);
 }

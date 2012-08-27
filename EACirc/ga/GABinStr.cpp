@@ -1,4 +1,4 @@
-// $Header: /home/cvs/galib/ga/GABinStr.C,v 1.1.1.1 1999/11/11 18:56:03 mbwall Exp $
+// $Header$
 /* ----------------------------------------------------------------------------
   binstr.C
   mbwall 30jun95
@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../ga/gaerror.h"
-#include "../ga/GABinStr.h"
+#include <ga/gaerror.h>
+#include <ga/GABinStr.h>
 
 
 /* ----------------------------------------------------------------------------
