@@ -180,4 +180,4 @@ HEADERS += \
     ga/std_stream.h
 
 OTHER_FILES += \
-    config.xml config.ini
+    config.xml

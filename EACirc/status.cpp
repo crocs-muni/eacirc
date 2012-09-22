@@ -27,8 +27,8 @@ const char* ErrorToString(int error) {
         case STAT_USERDATA_BAD:                         return "STAT_USERDATA_BAD";
         case STAT_KEY_LENGTH_BAD:                       return "STAT_KEY_LENGTH_BAD";
         case STAT_DATA_TOO_LONG:                        return "STAT_DATA_TOO_LONG";
-        case STAT_INI_DATA_WRITE_FAIL:                  return "STAT_INI_DATA_WRITE_FAIL";                             
-        case STAT_INI_DATA_READ_FAIL:                   return "STAT_INI_DATA_READ_FAIL";
+        case STAT_CONFIG_DATA_WRITE_FAIL:               return "STAT_CONFIG_DATA_WRITE_FAIL";
+        case STAT_CONFIG_DATA_READ_FAIL:                return "STAT_CONFIG_DATA_READ_FAIL";
         case STAT_CODING_NOT_BIJECT:                    return "STAT_CODING_NOT_BIJECT";               
         case STAT_CODING_ALREADY_ASSIGNED:              return "STAT_CODING_ALREADY_ASSIGNED"; 
         case STAT_CONFIG_SCRIPT_INCOMPLETE:             return "STAT_CONFIG_SCRIPT_INCOMPLETE";

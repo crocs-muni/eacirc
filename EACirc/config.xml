@@ -1,30 +1,41 @@
 <?xml version="1.0" ?>
 
+<!-- EACirc run settings -->
+
 <HEADER>
   
   <SWVERSION>4,0
   </SWVERSION>
   
-  <SIMULDATE>04/08/12
+  <SIMULDATE>22-09-2012
   </SIMULDATE>
   
 </HEADER>
 
 <RANDOM_GENERATOR>
-  
   <RANDOM_SEED>0
   </RANDOM_SEED>
-  
+  <!-- above: seed to use if file LastSeed.txt is not present -->
+
+  <!-- 1/0: if set to 1, seed from following source is used
+       - file LastSeed.txt (if present)
+       - RANDOM_SEED directive (if lastSeed.txt not present) -->
   <USE_FIXED_SEED>0
   </USE_FIXED_SEED>
-  
-  <QRGBS_PATH>C:\RNG\
+  <!-- path to QRNQ data, see class rndgen
+       path must end by path separator
+       only first 10000000 B of each file are used (or less)
+       file name: <num>.bin (0<=num<=9) -->
+  <QRGBS_PATH>../../qrng/
+  <!-- C:\RNG\ -->
   </QRGBS_PATH>
-  
+  <!-- random generator to use:
+       1 Quantum RNG
+       2 Bias RNG -->
   <RNDGEN_TYPE>1 <!-- For every rand() -->
   </RNDGEN_TYPE>
-  
-  <BIAS_RNDGEN_BIAS_FACTOR>50 <!-- 0-100% -->
+  <!-- probability of generating bit 1 in Bias RNG -->
+  <BIAS_RNDGEN_BIAS_FACTOR>95 <!-- 0-100% -->
   </BIAS_RNDGEN_BIAS_FACTOR>
   
 </RANDOM_GENERATOR>
@@ -48,76 +59,77 @@
 
 <GA_CIRCUIT_CONFIG>
   
-  <NUM_LAYERS>5
-  </NUM_LAYERS>
-  
-  <NUM_SELECTOR_LAYERS>1
-  </NUM_SELECTOR_LAYERS>
-  
-  <INPUT_LAYER_SIZE>16
-  </INPUT_LAYER_SIZE>
-  
-  <INTERNAL_LAYER_SIZE>8
-  </INTERNAL_LAYER_SIZE>
-  
-  <OUTPUT_LAYER_SIZE>2
-  </OUTPUT_LAYER_SIZE>
-  
-  <NUM_LAYER_CONNECTORS>4
-  </NUM_LAYER_CONNECTORS>
-  
+  <NUM_LAYERS>5</NUM_LAYERS>
+  <NUM_SELECTOR_LAYERS>1</NUM_SELECTOR_LAYERS>
+  <INPUT_LAYER_SIZE>16</INPUT_LAYER_SIZE>
+  <INTERNAL_LAYER_SIZE>8</INTERNAL_LAYER_SIZE>
+  <OUTPUT_LAYER_SIZE>2</OUTPUT_LAYER_SIZE>
+  <NUM_LAYER_CONNECTORS>4</NUM_LAYER_CONNECTORS>
+
+  <!-- ? -->
   <PREDICTION_METHOD>5
   </PREDICTION_METHOD>
-  
+  <!-- ? -->
   <GENOME_SIZE>6400
   </GENOME_SIZE>
-  
+  <!-- ? -->
   <ALLOW_PRUNNING>1
   </ALLOW_PRUNNING>
+
+  <!-- test vector settings -->
 
   <NUM_TEST_VECTORS>1000
   </NUM_TEST_VECTORS>
   
-  <LIMIT_ALG_ROUNDS>1
-  </LIMIT_ALG_ROUNDS>
-  
-  <NUM_ALG_ROUNDS>1
-  </NUM_ALG_ROUNDS>
-  
   <SAVE_TEST_VECTORS>1
   </SAVE_TEST_VECTORS>
-  
+  <!-- 0/1: should GAlib seed chenge when regenerating test vectors? -->
   <GENER_CHANGE_SEED>0
   </GENER_CHANGE_SEED>
-  
+  <!-- 666 generate from eStream ciphers -->
   <TEST_VECTOR_GENERATION_METHOD>666
   </TEST_VECTOR_GENERATION_METHOD>
 
   <TEST_VECTOR_LENGTH>16
   </TEST_VECTOR_LENGTH>
-
+  <!-- 0/1 should test vectors be balanced
+       50% random
+       50% eStream cipher output -->
   <TEST_VECTOR_BALANCE>1
   </TEST_VECTOR_BALANCE>
 
   <!-- In case Estream test vector generation method is activated (666)-->
-  <ESTREAM_ALGORITHM>13
+  <ESTREAM_ALGORITHM>10
   </ESTREAM_ALGORITHM>
   
   <ESTREAM_ALGORITHM2>99
   </ESTREAM_ALGORITHM2>
   
+  <LIMIT_ALG_ROUNDS>1
+  </LIMIT_ALG_ROUNDS>
+
+  <NUM_ALG_ROUNDS>2
+  </NUM_ALG_ROUNDS>
+
   <NUM_ALG_ROUNDS2>0
   </NUM_ALG_ROUNDS2>
-  
+  <!--
+  0 ESTREAM_GENTYPE_ZEROS
+  1 ESTREAM_GENTYPE_ONES
+  2 ESTREAM_GENTYPE_RANDOM
+  3 ESTREAM_GENTYPE_BIASRANDOM
+  -->
   <ESTREAM_INPUTTYPE>0
   </ESTREAM_INPUTTYPE>
   
-  <ESTREAM_KEYTYPE>2
+  <ESTREAM_KEYTYPE>3
   </ESTREAM_KEYTYPE>
   
   <ESTREAM_IVTYPE>0
   </ESTREAM_IVTYPE>
-  
+  <!-- 667 TESTVECT_ESTREAM_DISTINCT
+       668 TESTVECT_ESTREAM_PREDICT_KEY
+       669 TESTVECT_ESTREAM_BITS_TO_CHANGE -->
   <ESTREAM_GENERATION_METHOD>667
   </ESTREAM_GENERATION_METHOD>
   <!-- Estream end -->
@@ -133,49 +145,22 @@
   <EVALUATE_EVERY_STEP>0
   </EVALUATE_EVERY_STEP>
   
-  <FNC_NOP>1
-  </FNC_NOP>
-  
-  <FNC_OR>1
-  </FNC_OR>
-  
-  <FNC_AND>1
-  </FNC_AND>
-  
-  <FNC_CONST>1
-  </FNC_CONST>
-  
-  <FNC_XOR>1
-  </FNC_XOR>
-  
-  <FNC_NOR>1
-  </FNC_NOR>
-  
-  <FNC_NAND>1
-  </FNC_NAND>
-  
-  <FNC_ROTL>1
-  </FNC_ROTL>
-  
-  <FNC_ROTR>1
-  </FNC_ROTR>
-  
-  <FNC_SUM>1
-  </FNC_SUM>
-  
-  <FNC_SUBS>1
-  </FNC_SUBS>
-  
-  <FNC_ADD>1
-  </FNC_ADD>
-  
-  <FNC_MULT>1
-  </FNC_MULT>
-  
-  <FNC_DIV>1
-  </FNC_DIV>
-  
-  <FNC_READX>1
-  </FNC_READX>
+  <ALLOWED_FNC>
+      <FNC_NOP>1</FNC_NOP>
+      <FNC_OR>1</FNC_OR>
+      <FNC_AND>1</FNC_AND>
+      <FNC_CONST>1</FNC_CONST>
+      <FNC_XOR>1</FNC_XOR>
+      <FNC_NOR>1</FNC_NOR>
+      <FNC_NAND>1</FNC_NAND>
+      <FNC_ROTL>1</FNC_ROTL>
+      <FNC_ROTR>1</FNC_ROTR>
+      <FNC_SUM>1</FNC_SUM>
+      <FNC_SUBS>1</FNC_SUBS>
+      <FNC_ADD>1</FNC_ADD>
+      <FNC_MULT>1</FNC_MULT>
+      <FNC_DIV>1</FNC_DIV>
+      <FNC_READX>0</FNC_READX>
+  </ALLOWED_FNC>
   
 </GA_CIRCUIT_CONFIG>

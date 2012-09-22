@@ -44,7 +44,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 
 	TiXmlDocument doc(filePath.c_str());
 	if (!doc.LoadFile())
-		return STAT_INI_DATA_READ_FAIL;
+        return STAT_CONFIG_DATA_READ_FAIL;
 
 	TiXmlElement* pElem;
 	TiXmlHandle hRoot(&doc);
@@ -61,7 +61,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 	//
 	// RANDOM GENERATOR SETTINGS
 	//
-	pElem = hRoot.FirstChild("RANDOM_GENERATOR").FirstChild().Element();
+    pElem = hRoot.FirstChild("RANDOM_GENERATOR").FirstChild().Element();
 	for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
 		if (strcmp(pElem->Value(), "RANDOM_SEED") == 0) pBasicSettings->rndGen.randomSeed = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "USE_FIXED_SEED") == 0) pBasicSettings->rndGen.useFixedSeed = (atoi(pElem->GetText())) ? 1 : 0;
@@ -81,6 +81,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 		if (strcmp(pElem->Value(), "NUM_GENERATIONS") == 0) pBasicSettings->gaConfig.nGeners = atoi(pElem->GetText());
 	}
 
+// TBD reorder settings, make sub-families
 	//
 	// GA CIRCUIT SETTINGS
 	//
@@ -113,22 +114,26 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 		if (strcmp(pElem->Value(), "TEST_VECTOR_CHANGE_GENERATION") == 0) pBasicSettings->gaCircuitConfig.testVectorChangeGener = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "TVCG_PROGRESSIVE") == 0) pBasicSettings->gaCircuitConfig.TVCGProgressive = (atoi(pElem->GetText())) ? 1 : 0;
 		if (strcmp(pElem->Value(), "EVALUATE_EVERY_STEP") == 0) pBasicSettings->gaCircuitConfig.evaluateEveryStep = (atoi(pElem->GetText())) ? 1 : 0;
-		if (strcmp(pElem->Value(), "FNC_NOP") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOP] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_OR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_OR] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_AND") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_AND] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_CONST") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_CONST] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_XOR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_XOR] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_NOR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOR] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_NAND") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NAND] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_ROTL") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ROTL] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_ROTR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ROTR] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_SUM") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_SUM] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_SUBS") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_SUBS] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_ADD") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ADD] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_MULT") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_MULT] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_DIV") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_DIV] = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "FNC_READX") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_READX] = atoi(pElem->GetText());
 	}
+
+    pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChild("ALLOWED_FNC").FirstChild().Element();
+    for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
+        if (strcmp(pElem->Value(), "FNC_NOP") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOP] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_OR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_OR] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_AND") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_AND] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_CONST") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_CONST] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_XOR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_XOR] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_NOR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOR] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_NAND") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NAND] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_ROTL") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ROTL] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_ROTR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ROTR] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_SUM") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_SUM] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_SUBS") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_SUBS] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_ADD") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ADD] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_MULT") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_MULT] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_DIV") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_DIV] = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "FNC_READX") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_READX] = atoi(pElem->GetText());
+    }
 
     return status;
 }
@@ -138,11 +143,16 @@ int main(int argc, char **argv)
 	int status = STAT_OK;
 	int resumeStatus = STAT_FILE_OPEN_FAIL;
 	unsigned long seed = 0;
+// TBD set as constant/define (2x)
 	string seedFile = "LastSeed.txt";
 	string filePath = "config.xml";
 	BASIC_INIT_DATA pBasicSettings;
 
 	status = LoadConfigScript(filePath, &pBasicSettings);
+    if (status == STAT_CONFIG_DATA_READ_FAIL) {
+        cout << "Could not read configuration data from config.xml" << endl;
+        return status;
+    }
 
 	// CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
 	pGACirc = &(pBasicSettings.gaCircuitConfig);
@@ -160,6 +170,7 @@ int main(int argc, char **argv)
 	}
 
 	// PREPARE THE LOGGING FILES
+// TBD use as constants/defines ?
     std::remove("EAC_fitnessProgress.txt");
 	std::remove("bestfitgraph.txt");
 	std::remove("avgfitgraph.txt");

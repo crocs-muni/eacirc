@@ -25,8 +25,8 @@
 #define STAT_USERDATA_BAD                       23      // DATA OBTAINED FROM USER INPUT ARE INVALID
 #define STAT_KEY_LENGTH_BAD                     24      // KEY LENGTH DIFFERS FROM EXPECTED
 #define STAT_DATA_TOO_LONG                      25      // DATA LENGTH IS BIGGER THAN MAX. ALLOWED
-#define STAT_INI_DATA_WRITE_FAIL                26      // FAIL TO WRITE DATA INTO INI FILE                             
-#define STAT_INI_DATA_READ_FAIL                 27      // FAIL TO READ DATA FROM INI FILE                    
+#define STAT_CONFIG_DATA_WRITE_FAIL             26      // FAIL TO WRITE DATA INTO CONFIG FILE
+#define STAT_CONFIG_DATA_READ_FAIL              27      // FAIL TO READ DATA FROM CONFIG FILE
 #define STAT_CODING_NOT_BIJECT                  28
 #define STAT_CODING_ALREADY_ASSIGNED            29
 #define STAT_CONFIG_SCRIPT_INCOMPLETE           30      // MISSING ITEMS IN CONFIGURATION SCRIPT    
