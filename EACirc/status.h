@@ -51,6 +51,7 @@
 #define STAT_NOT_NEIGHBOUR                      49      // NOT COMMUNICATION NEIGBOUR 
 #define STAT_INVALID_PTR                        50      // INVALID POINTER DETECTED
 #define STAT_KEY_TYPE_BAD                       51      // BAD KEY TYPE
+#define STAT_INVALID_ARGUMETS                   52      // INVALID COMMAND LINE ARGUMENTS
 
 const char* ErrorToString(int error);
 

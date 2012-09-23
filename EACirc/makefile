@@ -15,8 +15,7 @@ DEBUG		= NO
 PROFILE		= NO
 # output name for the compiled and linked application
 OUTNAME		= eacirc
-# folder name for linked application (TBD: place object files in this folder)
-BUILD_DIR	= ../build
+RUN_DIR	= ../run
 #*********************************************************************************
 
 # complation settings
@@ -54,18 +53,18 @@ libs:
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) -c -o "$@" "$<"
 
 main: $(OBJECTS)
-	mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -o $(BUILD_DIR)/$(OUTNAME) $(OBJECTS) $(INC_DIRS) $(INC_LIBS)
-	if [ ! -f $(BUILD_DIR)/config.xml ]; then cp config.xml $(BUILD_DIR)/; fi
+	mkdir -p $(RUN_DIR)
+	$(CXX) $(CXXFLAGS) -o $(RUN_DIR)/$(OUTNAME) $(OBJECTS) $(INC_DIRS) $(INC_LIBS)
+	if [ ! -f $(RUN_DIR)/config.xml ]; then cp config.xml $(RUN_DIR)/; fi
 	@echo === $(OUTNAME) was successfully built. ===
 
 clean:
 	cd ga && $(MAKE) clean
 	cd tinyXML && $(MAKE) clean
-	rm -f $(OBJECTS) $(BUILD_DIR)/$(OUTNAME)
+	rm -f $(OBJECTS) $(RUN_DIR)/$(OUTNAME)
 	@echo === Successfully cleaned. ===
 
 cleanmain:
-	rm -f $(OBJECTS) $(BUILD_DIR)/$(OUTNAME)
+	rm -f $(OBJECTS) $(RUN_DIR)/$(OUTNAME)
 	@echo === Project successfully cleaned \(libraries untouched\). ===
 

@@ -22,6 +22,7 @@ _Note:_ the "run in terminal" option must be disabled in som configurations (esp
 * Linux:  
     in project run settings edit the working directory (e.g. to "%{buildDir}/../run")  
     add cutom build step: cp (command) ../EACirc/config.xml config.xml (arguments) in %{buildDir}/../run (working dir)  
+    if planning to run from cli, add cutom build step: cp (command) EACirc %{buildDir}/../run (arguments) in %{buildDir} (working dir)  
     custom clean step: rm (command) -f *.txt *.dot *.bin *.c scores.log config.txt (arguments) in %{buildDir}/../run (working dir)
 
 ### GNU Make

@@ -50,6 +50,7 @@ const char* ErrorToString(int error) {
         case STAT_NOT_NEIGHBOUR:                        return "STAT_NOT_NEIGHBOUR";
         case STAT_INVALID_PTR:                          return "STAT_INVALID_PTR";
         case STAT_KEY_TYPE_BAD:                         return "STAT_KEY_TYPE_BAD";  
+        case STAT_INVALID_ARGUMETS:                     return "STAT_INVALID_ARGUMETS";
 		}
         // NO SPECIAL RULE MATCH                                            
         return "'unknown'";   

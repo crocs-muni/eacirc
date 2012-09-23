@@ -52,7 +52,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
     //
     //  PROGRAM VERSION AND DATE
     //
-	pElem = hRoot.FirstChild("HEADER").FirstChild().Element();
+    pElem = hRoot.FirstChild("HEADER").FirstChildElement().Element();
 	for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
 		if (strcmp(pElem->Value(), "SWVERSION") == 0) pBasicSettings->simulSWVersion = pElem->GetText();
 		if (strcmp(pElem->Value(), "SIMULDATE") == 0) pBasicSettings->simulDate = pElem->GetText();
@@ -61,7 +61,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 	//
 	// RANDOM GENERATOR SETTINGS
 	//
-    pElem = hRoot.FirstChild("RANDOM_GENERATOR").FirstChild().Element();
+    pElem = hRoot.FirstChild("RANDOM_GENERATOR").FirstChildElement().Element();
 	for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
 		if (strcmp(pElem->Value(), "RANDOM_SEED") == 0) pBasicSettings->rndGen.randomSeed = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "USE_FIXED_SEED") == 0) pBasicSettings->rndGen.useFixedSeed = (atoi(pElem->GetText())) ? 1 : 0;
@@ -73,7 +73,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 	//
 	// GA SETTINGS
 	//
-	pElem = hRoot.FirstChild("GA_CONFIG").FirstChild().Element();
+    pElem = hRoot.FirstChild("GA_CONFIG").FirstChildElement().Element();
 	for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
 		if (strcmp(pElem->Value(), "PROBABILITY_MUTATION") == 0) pBasicSettings->gaConfig.pMutt = atof(pElem->GetText());
 		if (strcmp(pElem->Value(), "PROBABILITY_CROSSING") == 0) pBasicSettings->gaConfig.pCross = atof(pElem->GetText());
@@ -81,12 +81,13 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 		if (strcmp(pElem->Value(), "NUM_GENERATIONS") == 0) pBasicSettings->gaConfig.nGeners = atoi(pElem->GetText());
 	}
 
-// TBD reorder settings, make sub-families
 	//
 	// GA CIRCUIT SETTINGS
 	//
-	pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChild().Element();
+    pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChildElement().Element();
 	for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
+        if (strcmp(pElem->Value(), "TEST_VECTOR_LENGTH") == 0) pBasicSettings->gaCircuitConfig.testVectorLength = atoi(pElem->GetText());
+        if (strcmp(pElem->Value(), "TEST_VECTOR_BALANCE") == 0) pBasicSettings->gaCircuitConfig.testVectorBalance = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "ALLOW_PRUNNING") == 0) pBasicSettings->gaCircuitConfig.allowPrunning = (atoi(pElem->GetText())) ? 1 : 0;
 		if (strcmp(pElem->Value(), "NUM_LAYERS") == 0) pBasicSettings->gaCircuitConfig.numLayers = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "NUM_SELECTOR_LAYERS") == 0) pBasicSettings->gaCircuitConfig.numSelectorLayers = atoi(pElem->GetText());
@@ -97,26 +98,36 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 		if (strcmp(pElem->Value(), "PREDICTION_METHOD") == 0) pBasicSettings->gaCircuitConfig.predictMethod = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "GENOME_SIZE") == 0) pBasicSettings->gaCircuitConfig.genomeSize = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "NUM_TEST_VECTORS") == 0) pBasicSettings->gaCircuitConfig.numTestVectors = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "LIMIT_ALG_ROUNDS") == 0) pBasicSettings->gaCircuitConfig.limitAlgRounds = (atoi(pElem->GetText())) ? 1 : 0;
-		if (strcmp(pElem->Value(), "NUM_ALG_ROUNDS") == 0) pBasicSettings->gaCircuitConfig.limitAlgRoundsCount = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "GENER_CHANGE_SEED") == 0) pBasicSettings->gaCircuitConfig.testVectorGenerChangeSeed = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "TEST_VECTOR_GENERATION_METHOD") == 0) pBasicSettings->gaCircuitConfig.testVectorGenerMethod = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "TEST_VECTOR_LENGTH") == 0) pBasicSettings->gaCircuitConfig.testVectorLength = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "TEST_VECTOR_BALANCE") == 0) pBasicSettings->gaCircuitConfig.testVectorBalance = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "ESTREAM_ALGORITHM") == 0) pBasicSettings->gaCircuitConfig.testVectorEstream = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "ESTREAM_ALGORITHM2") == 0) pBasicSettings->gaCircuitConfig.testVectorEstream2 = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "ESTREAM_INPUTTYPE") == 0) pBasicSettings->gaCircuitConfig.estreamInputType= atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "ESTREAM_KEYTYPE") == 0) pBasicSettings->gaCircuitConfig.estreamKeyType = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "ESTREAM_IVTYPE") == 0) pBasicSettings->gaCircuitConfig.estreamIVType = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "NUM_ALG_ROUNDS2") == 0) pBasicSettings->gaCircuitConfig.limitAlgRoundsCount2 = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "SAVE_TEST_VECTORS") == 0) pBasicSettings->gaCircuitConfig.saveTestVectors = atoi(pElem->GetText());
-		if (strcmp(pElem->Value(), "ESTREAM_GENERATION_METHOD") == 0) pBasicSettings->gaCircuitConfig.testVectorEstreamMethod = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "TEST_VECTOR_CHANGE_GENERATION") == 0) pBasicSettings->gaCircuitConfig.testVectorChangeGener = atoi(pElem->GetText());
 		if (strcmp(pElem->Value(), "TVCG_PROGRESSIVE") == 0) pBasicSettings->gaCircuitConfig.TVCGProgressive = (atoi(pElem->GetText())) ? 1 : 0;
 		if (strcmp(pElem->Value(), "EVALUATE_EVERY_STEP") == 0) pBasicSettings->gaCircuitConfig.evaluateEveryStep = (atoi(pElem->GetText())) ? 1 : 0;
+        if (strcmp(pElem->Value(), "TEST_VECTOR_GENERATION_METHOD") == 0) pBasicSettings->gaCircuitConfig.testVectorGenerMethod = atoi(pElem->GetText());
 	}
 
-    pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChild("ALLOWED_FNC").FirstChild().Element();
+    //
+    // ESTREAM TEST VECTOR CONFIG (IF ENABLED)
+    //
+    if (pBasicSettings->gaCircuitConfig.testVectorGenerMethod = ESTREAM_CONST) {
+        pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChild("ESTREAM_SETTINGS").FirstChildElement().Element();
+        for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
+            if (strcmp(pElem->Value(), "ESTREAM_GENERATION_METHOD") == 0) pBasicSettings->gaCircuitConfig.testVectorEstreamMethod = atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "LIMIT_ALG_ROUNDS") == 0) pBasicSettings->gaCircuitConfig.limitAlgRounds = (atoi(pElem->GetText())) ? 1 : 0;
+            if (strcmp(pElem->Value(), "NUM_ALG_ROUNDS") == 0) pBasicSettings->gaCircuitConfig.limitAlgRoundsCount = atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "NUM_ALG_ROUNDS2") == 0) pBasicSettings->gaCircuitConfig.limitAlgRoundsCount2 = atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "ESTREAM_ALGORITHM") == 0) pBasicSettings->gaCircuitConfig.testVectorEstream = atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "ESTREAM_ALGORITHM2") == 0) pBasicSettings->gaCircuitConfig.testVectorEstream2 = atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "ESTREAM_INPUTTYPE") == 0) pBasicSettings->gaCircuitConfig.estreamInputType= atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "ESTREAM_KEYTYPE") == 0) pBasicSettings->gaCircuitConfig.estreamKeyType = atoi(pElem->GetText());
+            if (strcmp(pElem->Value(), "ESTREAM_IVTYPE") == 0) pBasicSettings->gaCircuitConfig.estreamIVType = atoi(pElem->GetText());
+        }
+    }
+
+    //
+    // ALLOWED FUNCTIONS IN CIRCUIIT
+    //
+    pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChild("ALLOWED_FNC").FirstChildElement().Element();
     for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
         if (strcmp(pElem->Value(), "FNC_NOP") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOP] = atoi(pElem->GetText());
         if (strcmp(pElem->Value(), "FNC_OR") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_OR] = atoi(pElem->GetText());
@@ -158,16 +169,31 @@ int main(int argc, char **argv)
 	pGACirc = &(pBasicSettings.gaCircuitConfig);
 	pGACirc->allocate();
 
-	// STATIC CIRCUIT TESTING
-	if (argc>1 && strcmp(argv[1],"-staticcircuit") == 0) {
-		if (argc == 2) {
-			cout << "Please specify the second parameter:" << endl;
-			cout << "-distinctor		- use the circuit as distinctor" << endl;
-			return 0;
-		}
-		if (strcmp(argv[2],"-distinctor") == 0)
-			return testDistinctorCircuit(string("TestData1.txt"), string("TestData2.txt"));
-	}
+    // COMMAND LINE ARGUMENTS PROCESSING
+    //
+    bool evolutionOff = false;
+    if (argc > 1) {
+        // STATIC CIRCUIT ?
+        if (strcmp(argv[1],"-staticcircuit") == 0) {
+            if (strcmp(argv[2],"-distinctor") == 0) {
+                return testDistinctorCircuit(string("TestData1.txt"), string("TestData2.txt"));
+            } else {
+                cout << "Please specify the second parameter. Supported options:" << endl;
+                cout << "  -distinctor		(use the circuit as distinctor)" << endl;
+                return STAT_INVALID_ARGUMETS;
+            }
+        }
+        // EVOLUTION IS OFF ?
+        if (strcmp(argv[1],"-evolutionoff") == 0) {
+            evolutionOff = true;
+        } else {
+            cout << "\"" << argv[1] << "\" is not a valid argument." << endl;
+            cout << "Only valid arguments for EACirc are:" << endl;
+            cout << "  -staticcircuit  (run tests on precompiled circuit)" << endl;
+            cout << "  -evolutionoff   (do not evolve circuits)" << endl;
+            return STAT_INVALID_ARGUMETS;
+        }
+    }
 
 	// PREPARE THE LOGGING FILES
 // TBD use as constants/defines ?
@@ -282,8 +308,9 @@ int main(int argc, char **argv)
 
 		fstream fitfile;
 
-		if (argc > 1 && strcmp(argv[1],"-evolutionoff") == 0)
+        if (evolutionOff) {
 			genomeTemp = genom;
+        }
 		
         while (actGener < pBasicSettings.gaConfig.nGeners) {
 			//FRACTION FILE FOR BOINC
@@ -292,7 +319,7 @@ int main(int argc, char **argv)
 			fitfile.close();
             
 			// DO NOT EVOLVE..
-			if (argc > 1 && strcmp(argv[1],"-evolutionoff") == 0) {
+            if (evolutionOff) {
 				evaluator->generateTestVectors();
 				evaluator->evaluateStep(genom, actGener);
 				actGener++;
