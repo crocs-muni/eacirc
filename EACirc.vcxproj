@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{38FBA7EF-420A-4958-9720-F9008E3769D7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./EACirc; ./EACirc/galib; ./EACirc/tinyXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OutputFile>run\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy EACirc\config.xml run\config.xml</Command>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>EACirc EACirc/galib EACirc/tinyXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="eacirc\CircuitGenome.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\DistinguishTwoEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\ICircuitEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\PredictAvalancheEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\PredictBitCircuitEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\PredictBitGroupParityCircuitEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\PredictByteCircuitEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\PredictBytesParityCircuitEvaluator.cpp" />
+    <ClCompile Include="eacirc\circuit_evaluator\PredictHammingWeightCircuitEvaluator.cpp" />
+    <ClCompile Include="eacirc\CommonFnc.cpp" />
+    <ClCompile Include="eacirc\EACirc.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\abc\abc-v3.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\achterbahn\achterbahn-128-80.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\cryptmt\cryptmt-v3.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\decim\decim-v2.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\dicing\dicing-v2.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\dragon\dragon-sboxes.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\dragon\dragon.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\edon80\edon80.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\ffcsr\f-fcsr-h.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\fubuki\fubuki.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\grain\grain-v1.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\hc-128\hc-128.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\hermes\hermes.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\lex\lex.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\mag\mag.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\mickey\mickey-128-v2.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\mir-1\mir-1.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\pomaranch\pomaranch.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\py\py6.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\rabbit\rabbit.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\salsa20\salsa20.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\sfinks\sfinks.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\sosemanuk\sosemanuk.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\trivium\trivium.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\tsc-4\tsc-4.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\wg\wg.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\yamb\yamb.cpp" />
+    <ClCompile Include="eacirc\estream\ciphers\zk-crypt\zk-crypt-v3.cpp" />
+    <ClCompile Include="eacirc\estream\EncryptorDecryptor.cpp" />
+    <ClCompile Include="eacirc\Evaluator.cpp" />
+    <ClCompile Include="eacirc\galib\GA1DArrayGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GA1DBinStrGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GA2DArrayGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GA2DBinStrGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GA3DArrayGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GA3DBinStrGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GAAllele.cpp" />
+    <ClCompile Include="eacirc\galib\GABaseGA.cpp" />
+    <ClCompile Include="eacirc\galib\GABin2DecGenome.cpp" />
+    <ClCompile Include="eacirc\galib\gabincvt.cpp" />
+    <ClCompile Include="eacirc\galib\GABinStr.cpp" />
+    <ClCompile Include="eacirc\galib\GADCrowdingGA.cpp" />
+    <ClCompile Include="eacirc\galib\GADemeGA.cpp" />
+    <ClCompile Include="eacirc\galib\gaerror.cpp" />
+    <ClCompile Include="eacirc\galib\GAGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GAIncGA.cpp" />
+    <ClCompile Include="eacirc\galib\GAList.cpp" />
+    <ClCompile Include="eacirc\galib\GAListBASE.cpp" />
+    <ClCompile Include="eacirc\galib\GAListGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GAParameter.cpp" />
+    <ClCompile Include="eacirc\galib\GAPopulation.cpp" />
+    <ClCompile Include="eacirc\galib\garandom.cpp" />
+    <ClCompile Include="eacirc\galib\GARealGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GAScaling.cpp" />
+    <ClCompile Include="eacirc\galib\GASelector.cpp" />
+    <ClCompile Include="eacirc\galib\GASimpleGA.cpp" />
+    <ClCompile Include="eacirc\galib\GASStateGA.cpp" />
+    <ClCompile Include="eacirc\galib\GAStatistics.cpp" />
+    <ClCompile Include="eacirc\galib\GAStringGenome.cpp" />
+    <ClCompile Include="eacirc\galib\GATree.cpp" />
+    <ClCompile Include="eacirc\galib\GATreeBASE.cpp" />
+    <ClCompile Include="eacirc\galib\GATreeGenome.cpp" />
+    <ClCompile Include="eacirc\random_generator\BiasRndGen.cpp" />
+    <ClCompile Include="eacirc\random_generator\IRndGen.cpp" />
+    <ClCompile Include="eacirc\random_generator\RndGen.cpp" />
+    <ClCompile Include="eacirc\standalone_testers\TestDisctinctorCircuit.cpp" />
+    <ClCompile Include="eacirc\status.cpp" />
+    <ClCompile Include="eacirc\test_vector_generator\EstreamTestVectGener.cpp" />
+    <ClCompile Include="eacirc\test_vector_generator\ITestVectGener.cpp" />
+    <ClCompile Include="eacirc\tinyxml\tinystr.cpp" />
+    <ClCompile Include="eacirc\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="eacirc\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="eacirc\tinyxml\tinyxmlparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="eacirc\CircuitGenome.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\DistinguishTwoEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\ICircuitEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\PredictAvalancheEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\PredictBitCircuitEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\PredictBitGroupParityCircuitEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\PredictByteCircuitEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\PredictBytesParityCircuitEvaluator.h" />
+    <ClInclude Include="eacirc\circuit_evaluator\PredictHammingWeightCircuitEvaluator.h" />
+    <ClInclude Include="eacirc\CommonFnc.h" />
+    <ClInclude Include="eacirc\EACirc.h" />
+    <ClInclude Include="eacirc\EAC_circuit.h" />
+    <ClInclude Include="eacirc\estream\ciphers\abc\abc-tables.h" />
+    <ClInclude Include="eacirc\estream\ciphers\abc\abc.h" />
+    <ClInclude Include="eacirc\estream\ciphers\abc\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\achterbahn\achterbahn.h" />
+    <ClInclude Include="eacirc\estream\ciphers\achterbahn\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\cryptmt\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\cryptmt\params.h" />
+    <ClInclude Include="eacirc\estream\ciphers\decim\decimv2.h" />
+    <ClInclude Include="eacirc\estream\ciphers\decim\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\dicing\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\dragon\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\ecrypt-config.h" />
+    <ClInclude Include="eacirc\estream\ciphers\ecrypt-machine.h" />
+    <ClInclude Include="eacirc\estream\ciphers\ecrypt-portable.h" />
+    <ClInclude Include="eacirc\estream\ciphers\edon80\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\ffcsr\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\ffcsr\ffcsrh-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\fubuki\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\grain\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\grain\grain-v1.h" />
+    <ClInclude Include="eacirc\estream\ciphers\hc-128\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\hermes\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\lex\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\mag\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\mag\unrolliv.h" />
+    <ClInclude Include="eacirc\estream\ciphers\mag\unrollmain.h" />
+    <ClInclude Include="eacirc\estream\ciphers\mickey\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\mir-1\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\mir-1\mir1.h" />
+    <ClInclude Include="eacirc\estream\ciphers\pomaranch\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\pomaranch\pomaranch.h" />
+    <ClInclude Include="eacirc\estream\ciphers\py\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\rabbit\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\salsa20\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\sfinks\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\sosemanuk\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\sosemanuk\sosemanuk.h" />
+    <ClInclude Include="eacirc\estream\ciphers\trivium\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\tsc-4\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\wg\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\yamb\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\zk-crypt\ecrypt-sync.h" />
+    <ClInclude Include="eacirc\estream\ciphers\zk-crypt\ZKdef.h" />
+    <ClInclude Include="eacirc\estream\ciphers\zk-crypt\ZKengine.h" />
+    <ClInclude Include="eacirc\estream\EncryptorDecryptor.h" />
+    <ClInclude Include="eacirc\estream\estream-interface.h" />
+    <ClInclude Include="eacirc\Evaluator.h" />
+    <ClInclude Include="eacirc\galib\ga.h" />
+    <ClInclude Include="eacirc\galib\GA1DArrayGenome.h" />
+    <ClInclude Include="eacirc\galib\GA1DBinStrGenome.h" />
+    <ClInclude Include="eacirc\galib\GA2DArrayGenome.h" />
+    <ClInclude Include="eacirc\galib\GA2DBinStrGenome.h" />
+    <ClInclude Include="eacirc\galib\GA3DArrayGenome.h" />
+    <ClInclude Include="eacirc\galib\GA3DBinStrGenome.h" />
+    <ClInclude Include="eacirc\galib\GAAllele.h" />
+    <ClInclude Include="eacirc\galib\GAArray.h" />
+    <ClInclude Include="eacirc\galib\GABaseGA.h" />
+    <ClInclude Include="eacirc\galib\GABin2DecGenome.h" />
+    <ClInclude Include="eacirc\galib\gabincvt.h" />
+    <ClInclude Include="eacirc\galib\GABinStr.h" />
+    <ClInclude Include="eacirc\galib\gaconfig.h" />
+    <ClInclude Include="eacirc\galib\GADCrowdingGA.h" />
+    <ClInclude Include="eacirc\galib\GADemeGA.h" />
+    <ClInclude Include="eacirc\galib\gaerror.h" />
+    <ClInclude Include="eacirc\galib\GAEvalData.h" />
+    <ClInclude Include="eacirc\galib\GAGenome.h" />
+    <ClInclude Include="eacirc\galib\gaid.h" />
+    <ClInclude Include="eacirc\galib\GAIncGA.h" />
+    <ClInclude Include="eacirc\galib\GAList.h" />
+    <ClInclude Include="eacirc\galib\GAListBASE.h" />
+    <ClInclude Include="eacirc\galib\GAListGenome.h" />
+    <ClInclude Include="eacirc\galib\GAMask.h" />
+    <ClInclude Include="eacirc\galib\GANode.h" />
+    <ClInclude Include="eacirc\galib\GAParameter.h" />
+    <ClInclude Include="eacirc\galib\GAPopulation.h" />
+    <ClInclude Include="eacirc\galib\garandom.h" />
+    <ClInclude Include="eacirc\galib\GARealGenome.h" />
+    <ClInclude Include="eacirc\galib\GAScaling.h" />
+    <ClInclude Include="eacirc\galib\GASelector.h" />
+    <ClInclude Include="eacirc\galib\GASimpleGA.h" />
+    <ClInclude Include="eacirc\galib\GASStateGA.h" />
+    <ClInclude Include="eacirc\galib\GAStatistics.h" />
+    <ClInclude Include="eacirc\galib\GAStringGenome.h" />
+    <ClInclude Include="eacirc\galib\GATree.h" />
+    <ClInclude Include="eacirc\galib\GATreeBASE.h" />
+    <ClInclude Include="eacirc\galib\GATreeGenome.h" />
+    <ClInclude Include="eacirc\galib\gatypes.h" />
+    <ClInclude Include="eacirc\galib\gaversion.h" />
+    <ClInclude Include="eacirc\galib\std_stream.h" />
+    <ClInclude Include="eacirc\globals.h" />
+    <ClInclude Include="eacirc\random_generator\BiasRndGen.h" />
+    <ClInclude Include="eacirc\random_generator\IRndGen.h" />
+    <ClInclude Include="eacirc\random_generator\RndGen.h" />
+    <ClInclude Include="eacirc\SSconstants.h" />
+    <ClInclude Include="eacirc\SSGlobals.h" />
+    <ClInclude Include="eacirc\standalone_testers\TestDistinctorCircuit.h" />
+    <ClInclude Include="eacirc\status.h" />
+    <ClInclude Include="eacirc\test_vector_generator\EstreamVectGener.h" />
+    <ClInclude Include="eacirc\test_vector_generator\ITestVectGener.h" />
+    <ClInclude Include="eacirc\tinyxml\tinystr.h" />
+    <ClInclude Include="eacirc\tinyxml\tinyxml.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

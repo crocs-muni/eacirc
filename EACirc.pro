@@ -53,12 +53,12 @@ SOURCES += \
     EACirc/estream/ciphers/rabbit/rabbit.cpp \
     EACirc/estream/ciphers/py/py6.cpp \
     EACirc/estream/ciphers/pomaranch/pomaranch.cpp \
-#    estream/ciphers/polarbear/polar-bear.cpp \  # not implemented in EncryptorDecryptor
-#    estream/ciphers/polarbear/aescrypt.cpp \    # do not include!
-#    estream/ciphers/polarbear/aestab.cpp \      # do not include!
-#    estream/ciphers/polarbear/whirltab.cpp \    # do not include!
-#    estream/ciphers/nls/nlsref.cpp \            # not implemented in EncryptorDecryptor
-#    estream/ciphers/moustique/moustique.cpp \   # not implemented in EncryptorDecryptor
+#    EACirc/estream/ciphers/polarbear/polar-bear.cpp \  # not implemented in EncryptorDecryptor
+#    EACirc/estream/ciphers/polarbear/aescrypt.cpp \    # do not include!
+#    EACirc/estream/ciphers/polarbear/aestab.cpp \      # do not include!
+#    EACirc/estream/ciphers/polarbear/whirltab.cpp \    # do not include!
+#    EACirc/estream/ciphers/nls/nlsref.cpp \            # not implemented in EncryptorDecryptor
+#    EACirc/estream/ciphers/moustique/moustique.cpp \   # not implemented in EncryptorDecryptor
     EACirc/estream/ciphers/mir-1/mir-1.cpp \
     EACirc/estream/ciphers/mickey/mickey-128-v2.cpp \
     EACirc/estream/ciphers/mag/mag.cpp \
@@ -73,10 +73,10 @@ SOURCES += \
     EACirc/estream/ciphers/dragon/dragon-sboxes.cpp \
     EACirc/estream/ciphers/dicing/dicing-v2.cpp \
     EACirc/estream/ciphers/decim/decim-v2.cpp \
-#    estream/ciphers/decim/decim-128.c \         # do not include!
+#    EACirc/estream/ciphers/decim/decim-128.c \         # do not include!
     EACirc/estream/ciphers/cryptmt/cryptmt-v3.cpp \     # not used
-#    estream/ciphers/cryptmt/altivec.cpp \       # do not include!
-#    estream/ciphers/cryptmt/sse2.cpp            # do not include!
+#    EACirc/estream/ciphers/cryptmt/altivec.cpp \       # do not include!
+#    EACirc/estream/ciphers/cryptmt/sse2.cpp            # do not include!
     EACirc/estream/ciphers/achterbahn/achterbahn-128-80.cpp \
     EACirc/estream/ciphers/abc/abc-v3.cpp \             # not used
 # === Libraries (redundant if using pre-compiled) ===

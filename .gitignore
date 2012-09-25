@@ -3,6 +3,9 @@
 *.user
 *.Debug
 *.Release
+*.filters
+*.sdf
+*.opensdf
 Makefile
 *.bat
 # object files, linked application, build filed
