@@ -1,6 +1,10 @@
 # user-specific project files
 *.suo
 *.user
+*.Debug
+*.Release
+Makefile
+*.bat
 # object files, linked application, build filed
 *.o
 *.obj

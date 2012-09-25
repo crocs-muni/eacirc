@@ -1,7 +1,7 @@
 #include "CircuitGenome.h"
 #include "Evaluator.h"
 #include "SSGlobals.h"
-#include "ITestVectGener.h"
+#include "test_vector_generator/ITestVectGener.h"
 #include "EACirc.h"
 #include <string>
 

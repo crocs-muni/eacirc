@@ -1,0 +1,72 @@
+SOURCES=
+
+# === Main files ===
+
+SOURCES+= CircuitGenome.cpp CommonFnc.cpp Evaluator.cpp  status.cpp EACirc.cpp
+
+# Test Vector Generator
+SOURCES+= \
+test_vector_generator/ITestVectGener.cpp \
+test_vector_generator/EstreamTestVectGener.cpp
+
+# Circuit Evaluator
+SOURCES+= \
+circuit_evaluator/DistinguishTwoEvaluator.cpp \
+circuit_evaluator/ICircuitEvaluator.cpp \
+circuit_evaluator/PredictAvalancheEvaluator.cpp \
+circuit_evaluator/PredictBitCircuitEvaluator.cpp \
+circuit_evaluator/PredictBitGroupParityCircuitEvaluator.cpp \
+circuit_evaluator/PredictByteCircuitEvaluator.cpp \
+circuit_evaluator/PredictBytesParityCircuitEvaluator.cpp \
+circuit_evaluator/PredictHammingWeightCircuitEvaluator.cpp
+
+# Random Generator
+SOURCES+= \
+random_eenerator/BiasRndGen.cpp \
+random_eenerator/IRndGen.cpp \
+random_eenerator/RndGen.cpp
+
+# Standalone testers
+SOURCES+= \
+standalone_testers/TestDisctinctorCircuit.cpp
+
+# eSTREAM interface files
+SOURCES+= estream/EncryptorDecryptor.cpp 
+
+
+# === eSTREAM cipher files ===
+
+SOURCES+= estream/ciphers/abc/abc-v3.cpp				# not used
+SOURCES+= estream/ciphers/achterbahn/achterbahn-128-80.cpp
+SOURCES+= estream/ciphers/cryptmt/cryptmt-v3.cpp			# not used
+# cryptmt/altivec.cpp and cryptmt/sse2.cpp are included automatically, if needed
+SOURCES+= estream/ciphers/decim/decim-v2.cpp
+# decim/decim-128.c not used
+SOURCES+= estream/ciphers/dicing/dicing-v2.cpp
+SOURCES+= estream/ciphers/dragon/dragon.cpp estream/ciphers/dragon/dragon-sboxes.cpp
+SOURCES+= estream/ciphers/edon80/edon80.cpp			# not used
+SOURCES+= estream/ciphers/ffcsr/f-fcsr-h.cpp
+SOURCES+= estream/ciphers/fubuki/fubuki.cpp
+SOURCES+= estream/ciphers/grain/grain-v1.cpp
+SOURCES+= estream/ciphers/hc-128/hc-128.cpp
+SOURCES+= estream/ciphers/hermes/hermes.cpp
+SOURCES+= estream/ciphers/lex/lex.cpp
+SOURCES+= estream/ciphers/mag/mag.cpp
+SOURCES+= estream/ciphers/mickey/mickey-128-v2.cpp
+SOURCES+= estream/ciphers/mir-1/mir-1.cpp
+# MOUSTIQUE, NLS and POLARBEAR not implemented in EncryptorDecryptor.cpp
+# SOURCES+= estream/ciphers/moustique/moustique.cpp 		# compilation ok
+# SOURCES+= estream/ciphers/nls/nlsref.cpp			# compilation errors
+# SOURCES+= estream/ciphers/polarbear/polar-bear.cpp 		# compilation errors
+# polarbear/aescrypt.cpp, polarbear/aestab.cpp, polarbear/whirltab.cpp included automatically in polar-bear.cpp
+SOURCES+= estream/ciphers/pomaranch/pomaranch.cpp
+SOURCES+= estream/ciphers/py/py6.cpp
+SOURCES+= estream/ciphers/rabbit/rabbit.cpp
+SOURCES+= estream/ciphers/salsa20/salsa20.cpp
+SOURCES+= estream/ciphers/sfinks/sfinks.cpp
+SOURCES+= estream/ciphers/sosemanuk/sosemanuk.cpp
+SOURCES+= estream/ciphers/trivium/trivium.cpp
+SOURCES+= estream/ciphers/tsc-4/tsc-4.cpp
+SOURCES+= estream/ciphers/wg/wg.cpp
+SOURCES+= estream/ciphers/yamb/yamb.cpp
+SOURCES+= estream/ciphers/zk-crypt/zk-crypt-v3.cpp		# not used

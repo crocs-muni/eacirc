@@ -1,28 +1,29 @@
-#include "SSGlobals.h"
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "globals.h"
-#include "EACirc.h"
-#include "CommonFnc.h"
-#include "status.h"
-#include "Random Generator/IRndGen.h"
-#include "Random Generator/BiasRndGen.h"
-//libinclude (ga/GA1DArrayGenome.h)
-#include "ga/GA1DArrayGenome.h"
-//libinclude (tinyXML/tinyxml.h)
-#include "tinyXML/tinyxml.h"
 #include "math.h"
 #include "time.h"
+
+#include "EACirc.h"
+#include "SSGlobals.h"
+#include "globals.h"
+#include "CommonFnc.h"
+#include "status.h"
+#include "random_generator/IRndGen.h"
+#include "random_generator/BiasRndGen.h"
+//libinclude (galib/GA1DArrayGenome.h)
+#include "GA1DArrayGenome.h"
+//libinclude (tinyXML/tinyxml.h)
+#include "tinyxml.h"
 #include "Evaluator.h"
 #include "CircuitGenome.h"
-#include "estream-interface.h"
-#include "ITestVectGener.h"
-#include "EstreamVectGener.h"
-#include "EncryptorDecryptor.h"
+#include "estream/estream-interface.h"
+#include "test_vector_generator/ITestVectGener.h"
+#include "test_vector_generator/EstreamVectGener.h"
+#include "estream/EncryptorDecryptor.h"
 #include "EAC_circuit.h"
-#include "Standalone testers/TestDistinctorCircuit.h"
+#include "standalone_testers/TestDistinctorCircuit.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -109,7 +110,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
     //
     // ESTREAM TEST VECTOR CONFIG (IF ENABLED)
     //
-    if (pBasicSettings->gaCircuitConfig.testVectorGenerMethod = ESTREAM_CONST) {
+    if (pBasicSettings->gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {
         pElem = hRoot.FirstChild("GA_CIRCUIT_CONFIG").FirstChild("ESTREAM_SETTINGS").FirstChildElement().Element();
         for( pElem; pElem; pElem=pElem->NextSiblingElement()) {
             if (strcmp(pElem->Value(), "ESTREAM_GENERATION_METHOD") == 0) pBasicSettings->gaCircuitConfig.testVectorEstreamMethod = atoi(pElem->GetText());

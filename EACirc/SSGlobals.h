@@ -3,14 +3,14 @@
 
 #include "SSconstants.h"
 #include "status.h"
-#include "estream-interface.h"
+#include "estream/estream-interface.h"
 
 #include <list>
 #include <math.h>
-//libinclude (ga/GAGenome.h)
-#include "ga/GAGenome.h"
-//libinclude (ga/GASStateGA.h)
-#include "ga/GASStateGA.h"
+//libinclude (galib/GAGenome.h)
+#include "GAGenome.h"
+//libinclude (galib/GASStateGA.h)
+#include "GASStateGA.h"
 #include <string>
 #include <iostream>
 #include <iomanip>

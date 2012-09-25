@@ -3,7 +3,7 @@
 #include "SSGlobals.h"
 #include "EACirc.h"
 #include "CommonFnc.h"
-#include "Circuit Evaluator/ICircuitEvaluator.h"
+#include "circuit_evaluator/ICircuitEvaluator.h"
 
 void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
     unsigned long   circuit[MAX_GENOME_SIZE];    
@@ -685,15 +685,15 @@ int CircuitGenome::GetNeutralValue(unsigned long functionID, string* pOperand) {
 }
 
 int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize) {
-    int         status = STAT_OK;
-    int         pos = 0;
-    int         pos2 = 0;
+    int           status = STAT_OK;
+    unsigned int  pos = 0;
+    unsigned int  pos2 = 0;
     
     // CHECK IF CIRCUIT IS GIVEN IN FORM OF GENOM ONLY OR TEXT REPRESENTATION
 	if (textCircuit.find("[") != string::npos) {
 		// TEXT REPRESENTATION
 		*numLayers = 0;
-		while ((pos2 = textCircuit.find(";", pos)) != string::npos) {
+        while ((pos2 = textCircuit.find(";", pos)) != string::npos) {
 			string line = textCircuit.substr(pos, pos2 - pos + 1);
 			//line.TrimLeft();line.TrimRight();
 			TrimLeadingSpaces(line);
@@ -702,8 +702,8 @@ int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int*
 				// AT LEAST ONE FNC ELEMENT PRESENT => NEW layer
 				int offsetCON = (*numLayers * 2) * MAX_INTERNAL_LAYER_SIZE; 
 				int offsetFNC = (*numLayers * 2 + 1) * MAX_INTERNAL_LAYER_SIZE; 
-				int pos3 = 0;
-				int pos4 = 0;
+                unsigned int pos3 = 0;
+                unsigned int pos4 = 0;
 				int slot = 0;
 				while ((pos4 = line.find("]", pos3)) != string::npos) {
 					// PARSE ELEMENTS

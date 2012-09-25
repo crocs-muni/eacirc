@@ -2,10 +2,10 @@
 #define EACIRC_H
 
 #include "SSGlobals.h"
-#include "Random Generator/RndGen.h"
-//libinclude (ga/GA1DArrayGenome.h)
-#include "ga/GA1DArrayGenome.h"
-#include "EncryptorDecryptor.h"
+#include "random_generator/RndGen.h"
+//libinclude (galib/GA1DArrayGenome.h)
+#include "GA1DArrayGenome.h"
+#include "estream/EncryptorDecryptor.h"
 
 extern IRndGen* rndGen;
 extern IRndGen* biasRndGen;

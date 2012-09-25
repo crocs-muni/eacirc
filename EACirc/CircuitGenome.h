@@ -1,8 +1,8 @@
 #ifndef CIRCUIT_GENOME_H
 #define CIRCUIT_GENOME_H
 
-//libinclude (ga/GA1DArrayGenome.h)
-#include "ga/GA1DArrayGenome.h"
+//libinclude (galib/GA1DArrayGenome.h)
+#include "GA1DArrayGenome.h"
 #include "SSGlobals.h"
 
 class CircuitGenome {
