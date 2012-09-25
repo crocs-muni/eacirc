@@ -22,3 +22,4 @@ EACirc/ga/BUILD
 # backup and system files
 *~
 notes.txt
+*.dgml
