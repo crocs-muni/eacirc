@@ -8,7 +8,7 @@ unix{
     QMAKE_CXX = g++-4.7
 }
 QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS
-QMAKE_CXXFLAGS += -isystem ./EACirc/galib -isystem ./EACirc/tinyXML
+QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
 # to load GAlib and tinyXML as external libraries, do following:

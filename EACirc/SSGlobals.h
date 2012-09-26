@@ -144,7 +144,7 @@ typedef struct _GA_CIRCUIT {
     int         internalLayerSize;
     int         outputLayerSize;
     int         numLayerConnectors;
-    unsigned char        allowedFNC[FNC_MAX];
+    unsigned char        allowedFNC[FNC_MAX+1];
     int         predictMethod;
 	bool		allowPrunning;
 	// TESTING VECTORS PARAMETERS

@@ -2,7 +2,7 @@
 #include "BiasRndGen.h"
 #include "RndGen.h"
 #include "SSGlobals.h"
-#include "Time.h"
+//#include "Time.h"
 #include "EACirc.h"
 
 BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath) {

@@ -6,7 +6,6 @@
 *.filters
 *.sdf
 *.opensdf
-Makefile
 *.bat
 # object files, linked application, build filed
 *.o
@@ -18,7 +17,7 @@ Makefile
 [Rr]elease/
 [Bb]uild/
 [Rr]un/
-EACirc/ga/BUILD
+EACirc/galib/BUILD
 # backup and system files
 *~
 notes.txt
