@@ -1,7 +1,4 @@
-#include "CircuitGenome.h"
 #include "Evaluator.h"
-#include "SSGlobals.h"
-#include "test_vector_generator/ITestVectGener.h"
 #include "EACirc.h"
 #include <string>
 
@@ -22,8 +19,8 @@ int Evaluator::evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener)
 	float bestFit = CircuitGenome::Evaluator(genome);
 	//float bestFit = genome.score();
 
-	ofstream bestfitfile("bestfitgraph.txt", ios::app);
-	ofstream avgfitfile("avgfitgraph.txt", ios::app);
+    ofstream bestfitfile(FILE_BEST_FITNESS, ios::app);
+    ofstream avgfitfile(FILE_AVG_FITNESS, ios::app);
 	bestfitfile << actGener << "," << bestFit << endl;
 	if (pGACirc->numAvgGenerFit > 0) avgfitfile << actGener << "," << pGACirc->avgGenerFit / pGACirc->numAvgGenerFit << endl;
 	else avgfitfile << actGener << "," << "division by zero!!" << endl;
@@ -34,7 +31,7 @@ int Evaluator::evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener)
     os2 << "(" << actGener << " gen.): " << pGACirc->avgGenerFit << "/" << pGACirc->numAvgGenerFit << " avg, " << bestFit << " best, avgPredict: " << pGACirc->avgPredictions / pGACirc->numAvgGenerFit << ", totalBest: " << pGACirc->maxFit << endl;
     string message = os2.str();
 	// SAVE FITNESS PROGRESS
-	ofstream out("EAC_fitnessProgress.txt", ios::app);
+    ofstream out(FILE_FITNESS_PROGRESS, ios::app);
 	out << message << endl;
 	out.close();
 

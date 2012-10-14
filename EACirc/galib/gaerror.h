@@ -13,8 +13,8 @@
 
 // DISABLE WARNING FROM GA CODES OUTSIDE OUR IMPLEMENTATION
 // disabled for use in EACirc (?)
-#pragma warning(disable:4996)
-#pragma warning(disable:4244)
+// #pragma warning(disable:4996)
+// #pragma warning(disable:4244)
 
 #include "gatypes.h"
 #include "gaconfig.h"

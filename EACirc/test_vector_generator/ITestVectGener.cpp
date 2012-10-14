@@ -1,4 +1,3 @@
-#include "SSGlobals.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include "test_vector_generator/EstreamVectGener.h"
 #include "EACirc.h"

@@ -1,7 +1,7 @@
-#ifndef SSGLOBALS_H
-#define SSGLOBALS_H
+#ifndef EACGLOBALS_H
+#define EACGLOBALS_H
 
-#include "SSconstants.h"
+#include "EACconstants.h"
 #include "status.h"
 #include "estream/estream-interface.h"
 
@@ -27,6 +27,14 @@ typedef unsigned long DWORD;
 
 #ifndef TRUE
 #define TRUE                1
+#endif
+
+#ifndef ULONG_MAX
+#define ULONG_MAX     0xffffffffUL
+#endif
+
+#ifndef INT_MAX
+#define INT_MAX       2147483647
 #endif
 
 #ifdef _MSC_VER
@@ -83,57 +91,6 @@ typedef struct _GA_STRATEGY {
         nGeners = 0;
     }
 } GA_STRATEGY;
-
-// GA CIRCUIT CONSTANTS
-#define NUM_BITS                    8             // NUMBER OF BITS PER unsigned char
-#define NUM_TEST_SETS               1000
-#define MAX_TEST_SET_SIZE_PER_GENOM 1000   
-#define TEST_SET_SIZE               MAX_TEST_SET_SIZE_PER_GENOM * NUM_TEST_SETS
-
-#define PREDICT_BIT                 0
-#define PREDICT_BITGROUP_PARITY     1
-#define PREDICT_BYTES_PARITY        2
-#define PREDICT_HAMMING_WEIGHT      3
-#define PREDICT_BYTE				4
-#define	PREDICT_DISTINGUISH			5
-#define	PREDICT_AVALANCHE			6
-
-#define TESTVECT_MD5INV             0
-#define TESTVECT_SHA1INV            1
-#define TESTVECT_DESPLAINTEXT       2
-#define TESTVECT_TEST               3
-#define TESTVECT_MD5SHA_DISTINGUISH		4
-#define TESTVECT_MD5_RAND_DISTINGUISH   5
-#define TESTVECT_SHA1_RAND_DISTINGUISH  6
-
-//RNDGEN CONSTANTS
-#define CRNDGEN						1
-#define	BIASGEN						2
-
-#define FNC_NOP                     0
-#define FNC_OR                      1
-#define FNC_AND                     2
-#define FNC_CONST                   3
-#define FNC_XOR                     4
-#define FNC_NOR                     5
-#define FNC_NAND                    6
-#define FNC_ROTL                    7
-#define FNC_ROTR                    8
-#define FNC_BITSELECTOR             9
-#define FNC_SUM                     10
-#define FNC_SUBS                    11
-#define FNC_ADD                     12
-#define FNC_MULT                    13
-#define FNC_DIV                     14
-#define FNC_READX                   15
-#define FNC_MAX                     FNC_READX
-
-#define MAX_NUM_LAYERS              100
-#define MAX_CONNECTORS              32
-#define MAX_INTERNAL_LAYER_SIZE     32
-#define MAX_OUTPUTS                 MAX_INTERNAL_LAYER_SIZE  
-#define MAX_INPUTS                  MAX_INTERNAL_LAYER_SIZE * MAX_INTERNAL_LAYER_SIZE // IF bSectorData IS ENABLED, SEPARATE RANGE FOR EACH INPUT NODE IN FIRST LAYER IS USED  
-#define MAX_GENOME_SIZE (MAX_NUM_LAYERS * 2) * MAX_INTERNAL_LAYER_SIZE
 
 typedef struct _GA_CIRCUIT {
     // BASIC CIRCUIT PARAMS

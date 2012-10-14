@@ -1,5 +1,4 @@
 #include "PredictAvalancheEvaluator.h"
-#include "EACirc.h"
 #include "estream/EncryptorDecryptor.h"
 
 AvalancheEvaluator::AvalancheEvaluator() : ICircuitEvaluator(){
@@ -17,8 +16,8 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 
 	for (int input = 0; input < pGACirc->testVectorLength; input++) {
 		if (correctOutputs[input] != inputStreamCheck[input]) {
-			ofstream fitfile("EAC_fitnessProgress.txt", ios::app);
-			fitfile << "Error! Decrypted text doesn't match the input. See TestVectors.txt for details." << endl;
+            ofstream fitfile(FILE_FITNESS_PROGRESS, ios::app);
+            fitfile << "Error! Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS << " for details." << endl;
 			fitfile.close();
 			exit(1);
 		}
@@ -38,8 +37,8 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 
 	for (int input = 0; input < pGACirc->testVectorLength; input++) {
 		if (outputs[input] != inputStreamCheck[input]) {
-			ofstream fitfile("EAC_fitnessProgress.txt", ios::app);
-			fitfile << "Error! Decrypted text doesn't match the input. See TestVectors.txt for details." << endl;
+            ofstream fitfile(FILE_FITNESS_PROGRESS, ios::app);
+            fitfile << "Error! Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS << " for details." << endl;
 			fitfile.close();
 			exit(1);
 		}

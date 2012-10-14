@@ -1,7 +1,5 @@
 //#include "stdafx.h"
 #include "BiasRndGen.h"
-#include "RndGen.h"
-#include "SSGlobals.h"
 //#include "Time.h"
 #include "EACirc.h"
 

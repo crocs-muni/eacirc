@@ -38,7 +38,7 @@ _Note:_ the "run in terminal" option must be disabled in som configurations (esp
 
 EACirc makefile can be used on UNIX platforms only (due to shell commands and paths format), however libraries GAlib and tinyXML can be build on other platforms using equivalent of make (e.g. mingw32-make). Details provided in the makefile.
 
-EACirc requires G++-4.7 or higher. Before running 'make <target>' chceck the settings at the top of the 'makefile'.  
+EACirc requires G++-4.7 or higher. Before running 'make -f EACirc.makefile <target>' chceck the settings at the top of the 'EACirc.makefile'.  
 There are several targets for make:
 
 * all        (builds libraries, application and links everything together)

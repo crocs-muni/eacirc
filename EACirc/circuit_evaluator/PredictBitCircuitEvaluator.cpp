@@ -1,5 +1,4 @@
 #include "PredictBitCircuitEvaluator.h"
-#include "../EACirc.h"
 
 PredictBitCircuitEvaluator::PredictBitCircuitEvaluator() : ICircuitEvaluator(){
 }

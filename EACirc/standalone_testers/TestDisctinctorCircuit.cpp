@@ -1,12 +1,12 @@
-#include "SSGlobals.h"
+#include "standalone_testers/TestDistinctorCircuit.h"
+#include "EACglobals.h"
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "globals.h"
+//#include "globals.h"
 #include "EACirc.h"
 #include "CommonFnc.h"
-#include "status.h"
 #include "random_generator/IRndGen.h"
 #include "random_generator/BiasRndGen.h"
 #include "GA1DArrayGenome.h"

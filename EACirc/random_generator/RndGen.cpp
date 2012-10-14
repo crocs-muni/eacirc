@@ -1,6 +1,5 @@
 //#include "stdafx.h"
 #include "RndGen.h"
-#include "SSGlobals.h"
 #include "time.h"
 
 CRndGen::CRndGen(unsigned long seed, string QRBGSPath) {
@@ -89,11 +88,11 @@ int CRndGen::InitRandomGenerator(unsigned long seed, string QRBGSPath) {
     srand(seed);
 	
 	ifstream		file;
-	int				fileIndex = rand() % RANDOM_FILE_INDEX_MAX;
+    int				fileIndex = rand() % FILE_QRNG_DATA_INDEX_MAX;
 	
 	// CHECK FOR QUANTUM DATA SOURCE
 	ostringstream os1;
-	os1 << bQRGBSPath << fileIndex << ".bin";
+    os1 << bQRGBSPath << FILE_QRNG_DATA_PREFIX << fileIndex << FILE_QRNG_DATA_SUFFIX;
 	string fileName;
 	fileName = os1.str();
 	file.open(fileName.c_str(), fstream::in | fstream::binary);
@@ -107,21 +106,21 @@ int CRndGen::InitRandomGenerator(unsigned long seed, string QRBGSPath) {
 		file.seekg (0, ios::beg);
 
 		// READ CONTENT OF FILE
-		if (RANDOM_FILE_SIZE > length) {
+        if (RANDOM_DATA_FILE_SIZE > length) {
 			accumulator = new unsigned char[length];
 			file.read((char*)accumulator, length);
 			accLength = length;
 		}
 		else {
-			accumulator = new unsigned char[RANDOM_FILE_SIZE];
-			file.read((char*)accumulator, RANDOM_FILE_SIZE);
-			accLength = RANDOM_FILE_SIZE;
+            accumulator = new unsigned char[RANDOM_DATA_FILE_SIZE];
+            file.read((char*)accumulator, RANDOM_DATA_FILE_SIZE);
+            accLength = RANDOM_DATA_FILE_SIZE;
 		}
 		file.close();
 	}
 	else {
-		accumulator = new unsigned char[RANDOM_FILE_SIZE];
-		accLength = RANDOM_FILE_SIZE;
+        accumulator = new unsigned char[RANDOM_DATA_FILE_SIZE];
+        accLength = RANDOM_DATA_FILE_SIZE;
 		// MAX 32B INT = 256x256x256x256
 		accumulator[0] = rand()%256;
 		accumulator[1] = rand()%256;

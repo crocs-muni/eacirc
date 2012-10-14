@@ -1,7 +1,7 @@
 #ifndef EVALUATOR_H
 #define EVALUATOR_H
 
-#include "SSGlobals.h"
+#include "EACglobals.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include "CircuitGenome.h"
 

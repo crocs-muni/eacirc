@@ -3,7 +3,7 @@
 
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
-#include "SSGlobals.h"
+#include "EACglobals.h"
 
 class CircuitGenome {
 public:

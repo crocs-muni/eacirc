@@ -6,10 +6,9 @@
 #include "time.h"
 
 #include "EACirc.h"
-#include "SSGlobals.h"
-#include "globals.h"
+#include "EACglobals.h"
+//#include "globals.h"
 #include "CommonFnc.h"
-#include "status.h"
 #include "random_generator/IRndGen.h"
 #include "random_generator/BiasRndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
@@ -155,14 +154,11 @@ int main(int argc, char **argv)
 	int status = STAT_OK;
 	int resumeStatus = STAT_FILE_OPEN_FAIL;
 	unsigned long seed = 0;
-// TBD set as constant/define (2x)
-	string seedFile = "LastSeed.txt";
-	string filePath = "config.xml";
 	BASIC_INIT_DATA pBasicSettings;
 
-	status = LoadConfigScript(filePath, &pBasicSettings);
+    status = LoadConfigScript(FILE_CONFIG, &pBasicSettings);
     if (status == STAT_CONFIG_DATA_READ_FAIL) {
-        cout << "Could not read configuration data from config.xml" << endl;
+        cout << "Could not read configuration data from " << FILE_CONFIG << endl;
         return status;
     }
 
@@ -170,37 +166,37 @@ int main(int argc, char **argv)
 	pGACirc = &(pBasicSettings.gaCircuitConfig);
 	pGACirc->allocate();
 
+    //
     // COMMAND LINE ARGUMENTS PROCESSING
     //
     bool evolutionOff = false;
     if (argc > 1) {
         // STATIC CIRCUIT ?
-        if (strcmp(argv[1],"-staticcircuit") == 0) {
-            if (strcmp(argv[2],"-distinctor") == 0) {
-                return testDistinctorCircuit(string("TestData1.txt"), string("TestData2.txt"));
+        if (strcmp(argv[1],CMD_OPT_STATIC) == 0) {
+            if (strcmp(argv[2],CMD_OPT_STATIC_DISTINCTOR) == 0) {
+                return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
             } else {
                 cout << "Please specify the second parameter. Supported options:" << endl;
-                cout << "  -distinctor		(use the circuit as distinctor)" << endl;
+                cout << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
                 return STAT_INVALID_ARGUMETS;
             }
         }
         // EVOLUTION IS OFF ?
-        if (strcmp(argv[1],"-evolutionoff") == 0) {
+        if (strcmp(argv[1],CMD_OPT_EVOLUTION_OFF) == 0) {
             evolutionOff = true;
         } else {
             cout << "\"" << argv[1] << "\" is not a valid argument." << endl;
             cout << "Only valid arguments for EACirc are:" << endl;
-            cout << "  -staticcircuit  (run tests on precompiled circuit)" << endl;
-            cout << "  -evolutionoff   (do not evolve circuits)" << endl;
+            cout << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
+            cout << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
             return STAT_INVALID_ARGUMETS;
         }
     }
 
 	// PREPARE THE LOGGING FILES
-// TBD use as constants/defines ?
-    std::remove("EAC_fitnessProgress.txt");
-	std::remove("bestfitgraph.txt");
-	std::remove("avgfitgraph.txt");
+    std::remove(FILE_FITNESS_PROGRESS);
+    std::remove(FILE_BEST_FITNESS);
+    std::remove(FILE_AVG_FITNESS);
 
 	// RESTORE THE SEED
 	fstream	sfile;
@@ -209,7 +205,7 @@ int main(int argc, char **argv)
 	//with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
 	if (pBasicSettings.rndGen.useFixedSeed) {
 		if (!sfile.is_open())
-			sfile.open(seedFile.c_str(), fstream::in);
+            sfile.open(FILE_SEEDFILE, fstream::in);
 		getline(sfile, sseed);
 		cout << sseed << endl;
 		if (!sseed.empty())
@@ -242,7 +238,7 @@ int main(int argc, char **argv)
 	encryptorDecryptor = new EncryptorDecryptor();
 
 	//LOG THE SEED
-	ofstream ssfile(seedFile.c_str(), ios::app);
+    ofstream ssfile(FILE_SEEDFILE, ios::app);
 	ssfile << "----------";
 	if (pBasicSettings.rndGen.useFixedSeed)
 		ssfile << "Using fixed seed" << endl;
@@ -253,7 +249,7 @@ int main(int argc, char **argv)
 
 	//LOG THE TESTVECTGENER METHOD
 	if (pGACirc->testVectorGenerMethod == ESTREAM_CONST) {
-		ofstream out("EAC_fitnessProgress.txt", ios::app);
+        ofstream out(FILE_FITNESS_PROGRESS, ios::app);
 		out << "Using Ecrypt candidate n." << pGACirc->testVectorEstream << " (" <<  pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n." << pGACirc->testVectorEstream2 << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
 		out.close();
 	}
@@ -273,7 +269,7 @@ int main(int argc, char **argv)
 	}
 
     if (status == STAT_OK) {
-		ofstream out("EAC_fitnessProgress.txt", ios::app);
+        ofstream out(FILE_FITNESS_PROGRESS, ios::app);
 		
         // INIT EVALUATOR
 		Evaluator *evaluator = new Evaluator();
@@ -293,7 +289,7 @@ int main(int argc, char **argv)
 		ga.nGenerations(pBasicSettings.gaConfig.nGeners);
 		ga.pCrossover(pBasicSettings.gaConfig.pCross);
 		ga.pMutation(pBasicSettings.gaConfig.pMutt);
-		ga.scoreFilename("scores.log");
+        ga.scoreFilename(FILE_GALIB_SCORES);
 		ga.scoreFrequency(1);	// keep the scores of every generation
 		ga.flushFrequency(1);	// specify how often to write the score to disk 
 		ga.selectScores(GAStatistics::AllScores);
@@ -315,7 +311,7 @@ int main(int argc, char **argv)
 		
         while (actGener < pBasicSettings.gaConfig.nGeners) {
 			//FRACTION FILE FOR BOINC
-			fitfile.open("fraction_done.txt", fstream::out | ios::trunc);
+            fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
 			fitfile << ((float)(actGener))/((float)(pBasicSettings.gaConfig.nGeners));
 			fitfile.close();
             
@@ -341,7 +337,7 @@ int main(int argc, char **argv)
 
 					if (pGACirc->testVectorGenerChangeSeed == 1) {
 						//set a new seed
-						ofstream ssfile(seedFile.c_str(), ios::app);
+                        ofstream ssfile(FILE_SEEDFILE, ios::app);
 
 						rndGen->GetRandomFromInterval(4294967295, &seed);
 						GARandomSeed(seed);

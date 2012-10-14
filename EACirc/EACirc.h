@@ -1,7 +1,7 @@
 #ifndef EACIRC_H
 #define EACIRC_H
 
-#include "SSGlobals.h"
+#include "EACglobals.h"
 #include "random_generator/RndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"

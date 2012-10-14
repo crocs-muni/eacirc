@@ -2,7 +2,7 @@
 #define COMMONFNC_H
 
 #include <string>
-#include "SSGlobals.h"
+#include "EACglobals.h"
 
 using namespace std;
 

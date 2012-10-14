@@ -1,5 +1,4 @@
 #include "DistinguishTwoEvaluator.h"
-#include "../EACirc.h"
 
 DistinguishTwoEvaluator::DistinguishTwoEvaluator() : ICircuitEvaluator(){
 }

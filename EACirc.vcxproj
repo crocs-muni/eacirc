@@ -180,6 +180,8 @@
     <ClInclude Include="eacirc\circuit_evaluator\PredictBytesParityCircuitEvaluator.h" />
     <ClInclude Include="eacirc\circuit_evaluator\PredictHammingWeightCircuitEvaluator.h" />
     <ClInclude Include="eacirc\CommonFnc.h" />
+    <ClInclude Include="EACirc\EACconstants.h" />
+    <ClInclude Include="EACirc\EACglobals.h" />
     <ClInclude Include="eacirc\EACirc.h" />
     <ClInclude Include="eacirc\EAC_circuit.h" />
     <ClInclude Include="eacirc\estream\ciphers\abc\abc-tables.h" />
@@ -283,6 +285,9 @@
     <ClInclude Include="eacirc\test_vector_generator\ITestVectGener.h" />
     <ClInclude Include="eacirc\tinyxml\tinystr.h" />
     <ClInclude Include="eacirc\tinyxml\tinyxml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

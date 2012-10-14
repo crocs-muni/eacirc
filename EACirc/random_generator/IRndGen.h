@@ -1,7 +1,7 @@
 #ifndef RANDOM_GENERATOR_INTERFACE_H
 #define RANDOM_GENERATOR_INTERFACE_H
 
-#include "SSGlobals.h"
+#include "EACglobals.h"
 #include <string>
 
 class IRndGen {
@@ -9,6 +9,7 @@ class IRndGen {
 	public:
 		IRndGen();
 		IRndGen(int);
+        virtual ~IRndGen(){}
 		IRndGen* getRndGenClass(void);
 		virtual int GetRandomFromInterval(unsigned long, unsigned long *){return 0;}
 		virtual int GetRandomFromInterval(unsigned char, unsigned char *){return 0;}

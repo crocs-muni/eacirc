@@ -1,7 +1,8 @@
 #ifndef CIRCUIT_EVALUATOR_INTERFACE_H
 #define CIRCUIT_EVALUATOR_INTERFACE_H
 
-#include "../SSGlobals.h"
+#include "EACglobals.h"
+#include "EACirc.h"
 
 class ICircuitEvaluator {
 	public:

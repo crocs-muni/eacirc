@@ -1,4 +1,3 @@
-#include "SSGlobals.h"
 #include "IRndGen.h"
 #include "RndGen.h"
 #include "BiasRndGen.h"

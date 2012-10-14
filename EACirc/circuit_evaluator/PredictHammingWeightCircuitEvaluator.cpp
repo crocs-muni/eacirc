@@ -1,5 +1,4 @@
 #include "PredictHammingWeightCircuitEvaluator.h"
-#include "EACirc.h"
 
 PredictHammingWeightCircuitEvaluator::PredictHammingWeightCircuitEvaluator() : ICircuitEvaluator(){
 }

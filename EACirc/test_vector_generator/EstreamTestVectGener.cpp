@@ -1,12 +1,9 @@
-#include "SSGlobals.h"
-#include "globals.h"
+//#include "globals.h"
 #include "EACirc.h"
 #include "CommonFnc.h"
-#include "status.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "test_vector_generator/EstreamVectGener.h"
-#include "test_vector_generator/ITestVectGener.h"
 #include "estream/EncryptorDecryptor.h"
 #include "estream/estream-interface.h"
 
@@ -21,7 +18,7 @@ void EstreamTestVectGener::Init() {
 
 void EstreamTestVectGener::getTestVector(){
 
-	ofstream tvfile("TestVectors.txt", ios::app);
+    ofstream tvfile(FILE_TEST_VECTORS, ios::app);
 
 	int streamnum = 0;
 	bool error = false;
@@ -73,8 +70,8 @@ void EstreamTestVectGener::getTestVector(){
 
 			for (int input = 0; input < pGACirc->testVectorLength; input++) {
 				if (outplain[input] != plain[input]) {
-					ofstream fitfile("EAC_fitnessProgress.txt", ios::app);
-					fitfile << "Error! Decrypted text doesn't match the input. See TestVectors.txt for details." << endl;
+                    ofstream fitfile(FILE_FITNESS_PROGRESS, ios::app);
+                    fitfile << "Error! Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS << " for details." << endl;
 					fitfile.close();
 
 					// SIGNALIZE THE ERROR - WE NEED TO LOG INPUTS/OUTPUTS
@@ -111,14 +108,14 @@ void EstreamTestVectGener::getTestVector(){
 	// SAVE TEST VECTORS IN BINARY FILES
 	if (pGACirc->saveTestVectors == 1) {
 		if (streamnum == 0) {
-			ofstream itvfile("TestData.txt", ios::app | ios::binary);
+            ofstream itvfile(FILE_TEST_DATA_1, ios::app | ios::binary);
 			for (int input = 0; input < pGACirc->testVectorLength; input++) {
 					itvfile << inputs[input];
 			}
 			itvfile.close();
 		}
 		else {
-			ofstream itvfile("TestData2.txt", ios::app | ios::binary);
+            ofstream itvfile(FILE_TEST_DATA_2, ios::app | ios::binary);
 			for (int input = 0; input < pGACirc->testVectorLength; input++) {
 					itvfile << inputs[input];
 			}
@@ -162,7 +159,7 @@ void EstreamTestVectGener::generateTestVectors() {
 
 	for (int testSet = 0; testSet < pGACirc->numTestVectors; testSet++) {
 		if (pGACirc->saveTestVectors == 1) {
-			ofstream tvfile("TestVectors.txt", ios::app);
+            ofstream tvfile(FILE_TEST_VECTORS, ios::app);
 			tvfile << "Testset n." << dec << testSet << endl;
 			tvfile.close();
 		}

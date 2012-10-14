@@ -1,4 +1,3 @@
-#include "SSGlobals.h"
 #include "EACirc.h"
 #include "EncryptorDecryptor.h"
 #include "estream-interface.h"
@@ -330,7 +329,7 @@ EncryptorDecryptor::EncryptorDecryptor() {
 			ecryptarr[2+i]->ECRYPT_ivsetup(ctxarr[2+i], iv);
 
 			// ********************** logging ********************** //
-			ofstream tvfile("TestVectors.txt", ios::app);
+            ofstream tvfile(FILE_TEST_VECTORS, ios::app);
 			if (pGACirc->saveTestVectors == 1) {
 				tvfile << setfill('0');
 				if (ecryptarr[i] != NULL){
@@ -350,7 +349,7 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	}
 
 	// ******************* Save test vectors to file ********************** //
-	ofstream tvfile("TestVectors.txt", ios::app);
+    ofstream tvfile(FILE_TEST_VECTORS, ios::app);
 	if (pGACirc->saveTestVectors == 1) {
 		tvfile << "Generating test vectors with seed " << GAGetRandomSeed() << endl;
 		tvfile << "PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;

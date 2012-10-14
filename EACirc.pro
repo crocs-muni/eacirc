@@ -93,9 +93,6 @@ HEADERS += \
     EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
     EACirc/Evaluator.h \
-    EACirc/globals.h \
-    EACirc/SSconstants.h \
-    EACirc/SSGlobals.h \
     EACirc/status.h \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
@@ -180,6 +177,9 @@ HEADERS += \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
     EACirc/galib/std_stream.h \
+    EACirc/EACconstants.h \
+    EACirc/globals_unused.h \
+    EACirc/EACglobals.h
 
 OTHER_FILES += \
     EACirc/config.xml

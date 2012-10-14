@@ -1,8 +1,7 @@
 #ifndef ENCRYPTORDECRYPTOR_H
 #define ENCRYPTORDECRYPTOR_H
 
-#include "SSGlobals.h"
-#include "EACirc.h"
+#include "EACglobals.h"
 
 class EncryptorDecryptor {
 	EstreamInterface* ecryptarr[4];

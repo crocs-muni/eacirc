@@ -3,6 +3,7 @@
 *.user
 *.Debug
 *.Release
+[Mm]akefile
 *.filters
 *.sdf
 *.opensdf
@@ -20,5 +21,7 @@
 EACirc/galib/BUILD
 # backup and system files
 *~
+*.autosave
 notes.txt
 *.dgml
+*.cd

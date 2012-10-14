@@ -1,6 +1,7 @@
 #ifndef TEST_VECT_GENER_ESTREAM_H
 #define TEST_VECT_GENER_ESTREAM_H
 
+#include "EACglobals.h"
 #include "test_vector_generator/ITestVectGener.h"
 
 class EstreamTestVectGener: public ITestVectGener {

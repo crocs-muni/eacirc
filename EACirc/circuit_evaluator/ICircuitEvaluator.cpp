@@ -1,4 +1,3 @@
-#include "../SSGlobals.h"
 #include "ICircuitEvaluator.h"
 #include "PredictBitCircuitEvaluator.h"
 #include "PredictByteCircuitEvaluator.h"
@@ -7,7 +6,6 @@
 #include "PredictHammingWeightCircuitEvaluator.h"
 #include "DistinguishTwoEvaluator.h"
 #include "PredictAvalancheEvaluator.h"
-#include "../EACirc.h"
 
 ICircuitEvaluator::ICircuitEvaluator() {
 }

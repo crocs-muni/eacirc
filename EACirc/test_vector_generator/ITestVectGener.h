@@ -1,7 +1,7 @@
 #ifndef TEST_VECT_GENER_INTERFACE_H
 #define TEST_VECT_GENER_INTERFACE_H
 
-#include "SSGlobals.h"
+#include "EACglobals.h"
 
 class ITestVectGener {
 	public:
