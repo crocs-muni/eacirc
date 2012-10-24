@@ -23,6 +23,7 @@ SOURCES += \
 # === Main project files ===
     EACirc/CircuitGenome.cpp \
     EACirc/CommonFnc.cpp \
+    EACirc/Logger.cpp \
     EACirc/Evaluator.cpp \
     EACirc/status.cpp \
     EACirc/EACirc.cpp \
@@ -92,6 +93,10 @@ HEADERS += \
 # === Main project files ===
     EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
+    EACirc/EACconstants.h \
+    EACirc/globals_unused.h \
+    EACirc/EACglobals.h \
+    EACirc/Logger.h \
     EACirc/Evaluator.h \
     EACirc/status.h \
     EACirc/EACirc.h \
@@ -176,10 +181,7 @@ HEADERS += \
     EACirc/galib/GAListGenome.h EACirc/galib/GAMask.h EACirc/galib/GANode.h EACirc/galib/GAParameter.h EACirc/galib/GAPopulation.h EACirc/galib/garandom.h \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
-    EACirc/galib/std_stream.h \
-    EACirc/EACconstants.h \
-    EACirc/globals_unused.h \
-    EACirc/EACglobals.h
+    EACirc/galib/std_stream.h
 
 OTHER_FILES += \
     EACirc/config.xml

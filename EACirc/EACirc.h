@@ -12,6 +12,17 @@ extern IRndGen* biasRndGen;
 extern GA_CIRCUIT* pGACirc;
 extern EncryptorDecryptor* encryptorDecryptor;
 
+/*
+class EACirc {
+    extern IRndGen* rndGen;
+    extern IRndGen* biasRndGen;
+    extern GA_CIRCUIT* pGACirc;
+    extern EncryptorDecryptor* encryptorDecryptor;
+public:
+    int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
+};
+*/
+
 //CEACircuit();
 //~CEACircuit();
 int main(int argc, char **argv);

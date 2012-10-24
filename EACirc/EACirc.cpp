@@ -151,6 +151,9 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 
 int main(int argc, char **argv)
 {
+    // INIT LOGGER
+    eacircMainLogger = new Logger();
+
 	int status = STAT_OK;
 	int resumeStatus = STAT_FILE_OPEN_FAIL;
 	unsigned long seed = 0;
@@ -171,25 +174,36 @@ int main(int argc, char **argv)
     //
     bool evolutionOff = false;
     if (argc > 1) {
-        // STATIC CIRCUIT ?
-        if (strcmp(argv[1],CMD_OPT_STATIC) == 0) {
-            if (strcmp(argv[2],CMD_OPT_STATIC_DISTINCTOR) == 0) {
-                return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
+        int i = 0;
+        while (++i < argc) {
+            if (strcmp(argv[i],CMD_OPT_ENABLE_LOGGING) == 0) {
+                eacircMainLogger->setlogging(true);
+            } else
+            if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
+                eacircMainLogger->setOutputFile();
+            } else
+              // STATIC CIRCUIT ?
+            if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
+                if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
+                    eacircMainLogger->insert("Static circuit, distinctor mode.");
+                    return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
+                } else {
+                    cout << "Please specify the second parameter. Supported options:" << endl;
+                    cout << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
+                    return STAT_INVALID_ARGUMETS;
+                }
+            } else
+              // EVOLUTION IS OFF ?
+            if (strcmp(argv[i],CMD_OPT_EVOLUTION_OFF) == 0) {
+                evolutionOff = true;
+                eacircMainLogger->insert("Evolution turned off.");
             } else {
-                cout << "Please specify the second parameter. Supported options:" << endl;
-                cout << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
+                cout << "\"" << argv[1] << "\" is not a valid argument." << endl;
+                cout << "Only valid arguments for EACirc are:" << endl;
+                cout << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
+                cout << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
                 return STAT_INVALID_ARGUMETS;
             }
-        }
-        // EVOLUTION IS OFF ?
-        if (strcmp(argv[1],CMD_OPT_EVOLUTION_OFF) == 0) {
-            evolutionOff = true;
-        } else {
-            cout << "\"" << argv[1] << "\" is not a valid argument." << endl;
-            cout << "Only valid arguments for EACirc are:" << endl;
-            cout << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
-            cout << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
-            return STAT_INVALID_ARGUMETS;
         }
     }
 
@@ -210,16 +224,20 @@ int main(int argc, char **argv)
 		cout << sseed << endl;
 		if (!sseed.empty())
 			seed = atoi(sseed.c_str());
-		sfile.close();
+        sfile.close();
 
 		// USE STATIC SEED
-		if (!seed) seed = pBasicSettings.rndGen.randomSeed;
+        if (!seed) {
+            seed = pBasicSettings.rndGen.randomSeed;
+            eacircMainLogger->insert("Using ??-1 seed.");
+        }
 	}
 
 	srand(clock() + time(NULL) + getpid());
 	//srand((unsigned int) time(NULL));
 	if (seed == 0){
 		seed = (rand() %100000) + ((rand() %42946) *100000);
+        eacircMainLogger->insert("Using random seed");
 	}
 	
 	//INIT RNG
@@ -227,6 +245,7 @@ int main(int argc, char **argv)
 	rndGen = new IRndGen(pBasicSettings.rndGen.type);
 	rndGen = rndGen->getRndGenClass();
 	rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
+    eacircMainLogger->insert("Random generator initialized (" + rndGen->ToString() + ")");
 
 	//INIT BIAS RNDGEN
 	biasRndGen = new IRndGen(BIASGEN);
@@ -252,6 +271,7 @@ int main(int argc, char **argv)
         ofstream out(FILE_FITNESS_PROGRESS, ios::app);
 		out << "Using Ecrypt candidate n." << pGACirc->testVectorEstream << " (" <<  pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n." << pGACirc->testVectorEstream2 << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
 		out.close();
+        eacircMainLogger->insert("Using eSream candidate .");
 	}
 
 	GA1DArrayGenome<unsigned long>    genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
@@ -364,5 +384,6 @@ int main(int argc, char **argv)
 		CircuitGenome::PrintCircuit(genomeTemp,"",0,1);
     }   
 
+    delete eacircMainLogger;
     return status;
 }

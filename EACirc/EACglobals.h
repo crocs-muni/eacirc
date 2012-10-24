@@ -4,6 +4,7 @@
 #include "EACconstants.h"
 #include "status.h"
 #include "estream/estream-interface.h"
+#include "Logger.h"
 
 #include <list>
 #include <math.h>

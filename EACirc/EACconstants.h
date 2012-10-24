@@ -13,6 +13,7 @@
 #define FILE_TEST_DATA_1            "TestData1.txt"
 #define FILE_TEST_DATA_2            "TestData2.txt"
 //#define ???                         "EAC_circuit.bin"
+#define FILE_LOGFILE                "eacirc.log"
 
 // QRNG DATA (filename = $PREFIX$INDEX$DUFFIX)
 #define	FILE_QRNG_DATA_INDEX_MAX	10
@@ -26,6 +27,8 @@
 #define CMD_OPT_STATIC              "-staticcircuit"
 #define CMD_OPT_EVOLUTION_OFF       "-evolutionoff"
 #define CMD_OPT_STATIC_DISTINCTOR   "-distinctor"
+#define CMD_OPT_ENABLE_LOGGING      "-log"
+#define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 
 // GA CIRCUIT CONSTANTS
 #define NUM_BITS                    8             // NUMBER OF BITS PER unsigned char
