@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+// for documentation on using logger, see EACglobals.h
+
 Logger::~Logger() {
     out() << "Exiting EACirc." << endl;
 }
@@ -17,8 +19,9 @@ void Logger::setOutputFile(const string filePath) {
 
 void Logger::setlogging(bool state) {
     if (state == m_logging) return;
+    out() << "Logging disabled" << endl;
     m_logging = state;
-    out() << (m_logging == true ? "Logging enabled." : "Logging disabled") << endl;
+    out() << "Logging enabled." << endl;
 }
 
 string Logger::getTime() const {

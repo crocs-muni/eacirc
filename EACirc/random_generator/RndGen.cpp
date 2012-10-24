@@ -82,9 +82,12 @@ int CRndGen::InitRandomGenerator(unsigned long seed, string QRBGSPath) {
 	this->bQRGBSPath = QRBGSPath;
     
     // IF SEED NOT EXTERNALLY SUPPLIED, TAKE SYSTEM TIME
-    if (seed == 0) seed = (unsigned int) time(NULL);
+    if (seed == 0) {
+        seed = (unsigned int) time(NULL);
+        mainLogger.out() << "Warning: using system time to initialize random generator (" << this->ToString() << ")" << endl;
+    }
     
-    // INITIALIZE GENERATOR
+    // INITIALIZE INTERNAL SYSTEM GENERATOR
     srand(seed);
 	
 	ifstream		file;

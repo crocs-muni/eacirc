@@ -11,7 +11,6 @@ extern IRndGen* rndGen;
 extern IRndGen* biasRndGen;
 extern GA_CIRCUIT* pGACirc;
 extern EncryptorDecryptor* encryptorDecryptor;
-extern Logger mainLogger;
 
 //CEACircuit();
 //~CEACircuit();

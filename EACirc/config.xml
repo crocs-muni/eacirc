@@ -9,13 +9,13 @@
 
 <RANDOM_GENERATOR>
     <!-- seed to use if file LastSeed.txt is not present, 0 to take random -->
-    <RANDOM_SEED>0
+    <RANDOM_SEED>415875
     </RANDOM_SEED>
 
     <!-- 1/0: if set to 1, seed from following source is used
          - file LastSeed.txt (if present)
          - RANDOM_SEED directive (if lastSeed.txt not present) -->
-    <USE_FIXED_SEED>0
+    <USE_FIXED_SEED>1
     </USE_FIXED_SEED>
     <!-- path to QRNQ data, see class rndgen
          path must end by path separator

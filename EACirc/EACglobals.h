@@ -51,7 +51,13 @@ typedef unsigned __int64 uint64_t;
 
 
 // GENERAL LOGGING SERVICE
-#define LOG_INSERTSTRING(message)       { ofstream out("output.log", fstream::app); out << message << endl; out.close();}
+// #define LOG_INSERTSTRING(message)       { ofstream out("output.log", fstream::app); out << message << endl; out.close();}
+/* using main EACirc logger
+ *
+ * send logs to 'mainLogger.out()' via '<<'
+ * flushing 'mainLogger.out()' causes written data to be prefixed by current time and flushed to logging stream
+ */
+extern Logger mainLogger;
 
 #define STREAM_BLOCK_SIZE 16
 

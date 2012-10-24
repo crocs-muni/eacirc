@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 
     status = LoadConfigScript(FILE_CONFIG, &pBasicSettings);
     if (status == STAT_CONFIG_DATA_READ_FAIL) {
-        cout << "Could not read configuration data from " << FILE_CONFIG << endl;
+        mainLogger.out() << "Could not read configuration data from " << FILE_CONFIG << endl;
         return status;
     }
 
@@ -176,11 +176,12 @@ int main(int argc, char **argv)
         int i = 0;
         while (++i < argc) {
             if (strcmp(argv[i],CMD_OPT_LOGGING) == 0) {
+                mainLogger.setOutputStream();
                 mainLogger.setlogging(true);
             } else
             if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
-                mainLogger.setlogging(true);
                 mainLogger.setOutputFile();
+                mainLogger.setlogging(true);
             } else
               // STATIC CIRCUIT ?
             if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
@@ -188,8 +189,8 @@ int main(int argc, char **argv)
                     mainLogger.out() << "Static circuit, distinctor mode." << endl;
                     return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
                 } else {
-                    cout << "Please specify the second parameter. Supported options:" << endl;
-                    cout << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
+                    mainLogger.out() << "Please specify the second parameter. Supported options:" << endl;
+                    mainLogger.out() << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
                     return STAT_INVALID_ARGUMETS;
                 }
             } else
@@ -198,10 +199,10 @@ int main(int argc, char **argv)
                 evolutionOff = true;
                 mainLogger.out() << "Evolution turned off." << endl;
             } else {
-                cout << "\"" << argv[1] << "\" is not a valid argument." << endl;
-                cout << "Only valid arguments for EACirc are:" << endl;
-                cout << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
-                cout << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
+                mainLogger.out() << "\"" << argv[1] << "\" is not a valid argument." << endl;
+                mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
+                mainLogger.out() << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
+                mainLogger.out() << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
                 return STAT_INVALID_ARGUMETS;
             }
         }
@@ -221,6 +222,7 @@ int main(int argc, char **argv)
 		if (!sfile.is_open())
             sfile.open(FILE_SEEDFILE, fstream::in);
 		getline(sfile, sseed);
+        // why?
 		cout << sseed << endl;
 		if (!sseed.empty())
 			seed = atoi(sseed.c_str());
@@ -237,21 +239,25 @@ int main(int argc, char **argv)
 	//srand((unsigned int) time(NULL));
 	if (seed == 0){
 		seed = (rand() %100000) + ((rand() %42946) *100000);
-        mainLogger.out() << "Using random seed: " << seed << endl;
+        mainLogger.out() << "Using system-generated random seed: " << seed << endl;
 	}
 	
 	//INIT RNG
 	GARandomSeed(seed);
 	rndGen = new IRndGen(pBasicSettings.rndGen.type);
-	rndGen = rndGen->getRndGenClass();
-	rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
+    //rndGen = rndGen->getRndGenClass();
+    rndGen = rndGen->getInitializedRndGenClass(seed,pBasicSettings.rndGen.QRBGSPath);
+    //mainLogger.out() << "deterministic from now on" << endl;
+    //rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
     mainLogger.out() << "Random generator initialized (" << rndGen->ToString() << ")" <<endl;
 
 	//INIT BIAS RNDGEN
 	biasRndGen = new IRndGen(BIASGEN);
-	biasRndGen = biasRndGen->getRndGenClass();
+    //biasRndGen = biasRndGen->getRndGenClass();
+    biasRndGen = biasRndGen->getInitializedRndGenClass(seed,pBasicSettings.rndGen.QRBGSPath);
 	((BiasRndGen*)biasRndGen)->setChanceForOne(pBasicSettings.rndGen.biasFactor);
-	biasRndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
+    //biasRndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
+    mainLogger.out() << "Bias random generator initialized (" << biasRndGen->ToString() << ")" <<endl;
 
 	//INIT ENCRYPTOR/DECRYPTOR
 	encryptorDecryptor = new EncryptorDecryptor();
