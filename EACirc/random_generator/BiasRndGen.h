@@ -11,7 +11,9 @@ class BiasRndGen : public IRndGen{
 public:
 	BiasRndGen(unsigned long seed = 0, std::string QRBGSPath = "");
 	BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne);
-	~BiasRndGen();
+    BiasRndGen(const BiasRndGen&) = delete;
+    const BiasRndGen& operator =(const BiasRndGen&) = delete;
+    ~BiasRndGen();
     int GetRandomFromInterval(unsigned long highBound, unsigned long *pRandom);
     int GetRandomFromInterval(unsigned char highBound, unsigned char *pRandom);
     int GetRandomFromInterval(unsigned int highBound, int *pRandom);

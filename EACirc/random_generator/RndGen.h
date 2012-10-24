@@ -13,6 +13,8 @@ class CRndGen : public IRndGen{
 	long seed; // seed
 public:
 	CRndGen(unsigned long seed = 0, std::string QRBGSPath = "");
+    CRndGen(const CRndGen&) = delete;
+    const CRndGen& operator =(const CRndGen&) = delete;
     int GetRandomFromInterval(unsigned long highBound, unsigned long *pRandom);
     int GetRandomFromInterval(unsigned char highBound, unsigned char *pRandom);
     int GetRandomFromInterval(int highBound, int *pRandom);

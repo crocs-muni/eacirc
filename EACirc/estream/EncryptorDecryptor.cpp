@@ -1,6 +1,6 @@
 #include "EACirc.h"
 #include "EncryptorDecryptor.h"
-#include "estream-interface.h"
+#include "estreamInterface.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include <string>
 

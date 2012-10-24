@@ -11,7 +11,7 @@
 #define FUBUKI_SYNC
 
 #include "../ecrypt-portable.h"
-#include "../../estream-interface.h"
+#include "../../estreamInterface.h"
 
 /* ------------------------------------------------------------------------- */
 

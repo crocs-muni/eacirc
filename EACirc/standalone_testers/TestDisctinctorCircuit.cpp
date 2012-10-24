@@ -15,7 +15,7 @@
 #include "time.h"
 #include "Evaluator.h"
 #include "CircuitGenome.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
 #include "estream/EncryptorDecryptor.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include "test_vector_generator/EstreamVectGener.h"

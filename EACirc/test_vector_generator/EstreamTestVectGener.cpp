@@ -5,7 +5,7 @@
 #include "GA1DArrayGenome.h"
 #include "test_vector_generator/EstreamVectGener.h"
 #include "estream/EncryptorDecryptor.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
 
 EstreamTestVectGener::EstreamTestVectGener() : ITestVectGener() {
 	this->numstats = new int[2];

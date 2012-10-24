@@ -3,7 +3,8 @@ SOURCES=
 # === Main files ===
 
 SOURCES+= EACirc/CircuitGenome.cpp EACirc/CommonFnc.cpp \
-EACirc/Evaluator.cpp  EACirc/status.cpp EACirc/EACirc.cpp
+EACirc/Evaluator.cpp  EACirc/status.cpp EACirc/EACirc.cpp \
+EACirc/Logger.cpp
 
 # Test Vector Generator
 SOURCES+= \
@@ -32,8 +33,8 @@ SOURCES+= \
 EACirc/standalone_testers/TestDisctinctorCircuit.cpp
 
 # eSTREAM interface files
-SOURCES+= EACirc/estream/EncryptorDecryptor.cpp 
-
+SOURCES+= EACirc/estream/EncryptorDecryptor.cpp \
+EACirc/estream/estreamInterface.cpp
 
 # === eSTREAM cipher files ===
 

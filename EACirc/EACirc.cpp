@@ -17,7 +17,7 @@
 #include "tinyxml.h"
 #include "Evaluator.h"
 #include "CircuitGenome.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include "test_vector_generator/EstreamVectGener.h"
 #include "estream/EncryptorDecryptor.h"
@@ -33,10 +33,11 @@
 	#include <unistd.h>
 #endif
 
-IRndGen*         rndGen;
-IRndGen*         biasRndGen;
-GA_CIRCUIT*		pGACirc = NULL;
+IRndGen*                rndGen;
+IRndGen*                biasRndGen;
+GA_CIRCUIT*             pGACirc = NULL;
 EncryptorDecryptor*		encryptorDecryptor = NULL;
+Logger                  mainLogger;
 
 int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
     int     status = STAT_OK;
@@ -151,11 +152,9 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
 
 int main(int argc, char **argv)
 {
-    // INIT LOGGER
-    eacircMainLogger = new Logger();
 
 	int status = STAT_OK;
-	int resumeStatus = STAT_FILE_OPEN_FAIL;
+    //int resumeStatus = STAT_FILE_OPEN_FAIL;
 	unsigned long seed = 0;
 	BASIC_INIT_DATA pBasicSettings;
 
@@ -176,16 +175,17 @@ int main(int argc, char **argv)
     if (argc > 1) {
         int i = 0;
         while (++i < argc) {
-            if (strcmp(argv[i],CMD_OPT_ENABLE_LOGGING) == 0) {
-                eacircMainLogger->setlogging(true);
+            if (strcmp(argv[i],CMD_OPT_LOGGING) == 0) {
+                mainLogger.setlogging(true);
             } else
             if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
-                eacircMainLogger->setOutputFile();
+                mainLogger.setlogging(true);
+                mainLogger.setOutputFile();
             } else
               // STATIC CIRCUIT ?
             if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
                 if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
-                    eacircMainLogger->insert("Static circuit, distinctor mode.");
+                    mainLogger.out() << "Static circuit, distinctor mode." << endl;
                     return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
                 } else {
                     cout << "Please specify the second parameter. Supported options:" << endl;
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
               // EVOLUTION IS OFF ?
             if (strcmp(argv[i],CMD_OPT_EVOLUTION_OFF) == 0) {
                 evolutionOff = true;
-                eacircMainLogger->insert("Evolution turned off.");
+                mainLogger.out() << "Evolution turned off." << endl;
             } else {
                 cout << "\"" << argv[1] << "\" is not a valid argument." << endl;
                 cout << "Only valid arguments for EACirc are:" << endl;
@@ -229,7 +229,7 @@ int main(int argc, char **argv)
 		// USE STATIC SEED
         if (!seed) {
             seed = pBasicSettings.rndGen.randomSeed;
-            eacircMainLogger->insert("Using ??-1 seed.");
+            mainLogger.out() << "Using fixed seed: " << seed << endl;
         }
 	}
 
@@ -237,7 +237,7 @@ int main(int argc, char **argv)
 	//srand((unsigned int) time(NULL));
 	if (seed == 0){
 		seed = (rand() %100000) + ((rand() %42946) *100000);
-        eacircMainLogger->insert("Using random seed");
+        mainLogger.out() << "Using random seed: " << seed << endl;
 	}
 	
 	//INIT RNG
@@ -245,7 +245,7 @@ int main(int argc, char **argv)
 	rndGen = new IRndGen(pBasicSettings.rndGen.type);
 	rndGen = rndGen->getRndGenClass();
 	rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
-    eacircMainLogger->insert("Random generator initialized (" + rndGen->ToString() + ")");
+    mainLogger.out() << "Random generator initialized (" << rndGen->ToString() << ")" <<endl;
 
 	//INIT BIAS RNDGEN
 	biasRndGen = new IRndGen(BIASGEN);
@@ -271,10 +271,13 @@ int main(int argc, char **argv)
         ofstream out(FILE_FITNESS_PROGRESS, ios::app);
 		out << "Using Ecrypt candidate n." << pGACirc->testVectorEstream << " (" <<  pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n." << pGACirc->testVectorEstream2 << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
 		out.close();
-        eacircMainLogger->insert("Using eSream candidate .");
+        mainLogger.out() << "stream1: using " << estreamToString(pGACirc->testVectorEstream);
+        mainLogger.out() << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds)" << endl;
+        mainLogger.out() << "stream2: using " << estreamToString(pGACirc->testVectorEstream2);
+        mainLogger.out() << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
 	}
 
-	GA1DArrayGenome<unsigned long>    genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<unsigned long> genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
 
 	// LOAD genome
 	string fileName = "EAC_circuit.bin";
@@ -283,9 +286,10 @@ int main(int argc, char **argv)
 	efile.open(fileName.c_str(), fstream::in);
 	
 	if (efile.is_open()) {
+        mainLogger.out() << "Loading genome from file." << endl;
 		getline(efile, executetext);
 		CircuitGenome::ExecuteFromText(executetext, &genom);
-		efile.close();
+        efile.close();
 	}
 
     if (status == STAT_OK) {
@@ -317,6 +321,7 @@ int main(int argc, char **argv)
 		ga.initialize();
 
 		out << "GAOK" << endl;
+        mainLogger.out() << "GAlib fully initialized." << endl;
 		int		actGener = 1;
 		int		changed = 1;
 		int		evaluateNext = 0;
@@ -359,7 +364,7 @@ int main(int argc, char **argv)
 						//set a new seed
                         ofstream ssfile(FILE_SEEDFILE, ios::app);
 
-						rndGen->GetRandomFromInterval(4294967295, &seed);
+                        rndGen->GetRandomFromInterval(4294967295, &seed);
 						GARandomSeed(seed);
 						rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
 						ssfile << GAGetRandomSeed() << endl;
@@ -384,6 +389,5 @@ int main(int argc, char **argv)
 		CircuitGenome::PrintCircuit(genomeTemp,"",0,1);
     }   
 
-    delete eacircMainLogger;
     return status;
 }

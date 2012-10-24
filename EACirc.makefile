@@ -63,7 +63,7 @@ clean:
 	cd EACirc/galib && $(MAKE) clean
 	cd EACirc/tinyXML && $(MAKE) clean
 	rm -f $(OBJECTS) 
-	cd $(RUN_DIR) && rm -f scores.log *.txt *.bin *.c *.dot
+	cd $(RUN_DIR) && rm -f scores.log eacirc.log *.txt *.bin *.c *.dot
 	@echo === Successfully cleaned. ===
 
 cleanmain:

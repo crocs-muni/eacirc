@@ -9,7 +9,7 @@ class IRndGen {
 	public:
 		IRndGen();
 		IRndGen(int);
-        virtual ~IRndGen(){}
+        virtual ~IRndGen() {}
 		IRndGen* getRndGenClass(void);
 		virtual int GetRandomFromInterval(unsigned long, unsigned long *){return 0;}
 		virtual int GetRandomFromInterval(unsigned char, unsigned char *){return 0;}

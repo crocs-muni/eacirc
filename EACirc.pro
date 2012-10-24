@@ -7,7 +7,7 @@ SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but
 unix{
     QMAKE_CXX = g++-4.7
 }
-QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS
+QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS -Wall -Wextra #-Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
@@ -87,7 +87,8 @@ SOURCES += \
     EACirc/galib/gabincvt.cpp EACirc/galib/GABinStr.cpp EACirc/galib/GADCrowdingGA.cpp EACirc/galib/GADemeGA.cpp EACirc/galib/gaerror.cpp EACirc/galib/GAGenome.cpp \
     EACirc/galib/GAIncGA.cpp EACirc/galib/GAList.cpp EACirc/galib/GAListBASE.cpp EACirc/galib/GAListGenome.cpp EACirc/galib/GAParameter.cpp EACirc/galib/GAPopulation.cpp \
     EACirc/galib/garandom.cpp EACirc/galib/GARealGenome.cpp EACirc/galib/GAScaling.cpp EACirc/galib/GASelector.cpp EACirc/galib/GASimpleGA.cpp EACirc/galib/GASStateGA.cpp \
-    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp
+    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp \
+    EACirc/estream/estreamInterface.cpp
 
 HEADERS += \
 # === Main project files ===
@@ -116,7 +117,6 @@ HEADERS += \
     EACirc/random_generator/IRndGen.h \
     EACirc/random_generator/RndGen.h \
     EACirc/estream/EncryptorDecryptor.h \
-    EACirc/estream/estream-interface.h \
 # === eSTREAM cipher files ===
     EACirc/estream/ciphers/ecrypt-config.h \
     EACirc/estream/ciphers/ecrypt-machine.h \
@@ -181,7 +181,8 @@ HEADERS += \
     EACirc/galib/GAListGenome.h EACirc/galib/GAMask.h EACirc/galib/GANode.h EACirc/galib/GAParameter.h EACirc/galib/GAPopulation.h EACirc/galib/garandom.h \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
-    EACirc/galib/std_stream.h
+    EACirc/galib/std_stream.h \
+    EACirc/estream/estreamInterface.h
 
 OTHER_FILES += \
     EACirc/config.xml

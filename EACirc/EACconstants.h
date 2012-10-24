@@ -27,7 +27,7 @@
 #define CMD_OPT_STATIC              "-staticcircuit"
 #define CMD_OPT_EVOLUTION_OFF       "-evolutionoff"
 #define CMD_OPT_STATIC_DISTINCTOR   "-distinctor"
-#define CMD_OPT_ENABLE_LOGGING      "-log"
+#define CMD_OPT_LOGGING             "-log"
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 
 // GA CIRCUIT CONSTANTS

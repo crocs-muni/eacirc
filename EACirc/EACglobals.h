@@ -3,7 +3,7 @@
 
 #include "EACconstants.h"
 #include "status.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
 #include "Logger.h"
 
 #include <list>
