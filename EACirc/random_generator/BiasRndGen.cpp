@@ -2,22 +2,19 @@
 #include "BiasRndGen.h"
 //#include "Time.h"
 #include "EACirc.h"
+#include "random_generator/QuantumRndGen.h"
 
-BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath) {
-	BiasRndGen(seed,QRBGSPath,50);
+BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne) {
+    m_type = GENERATOR_BIAS;
+    m_chanceForOne = chanceForOne;
+    m_rndGen = new QuantumRndGen(seed, QRBGSPath);
 }
 
 BiasRndGen::~BiasRndGen() {
-	delete this->rndGen;
+    delete this->m_rndGen;
 }
 
-BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne) {
-    InitRandomGenerator(seed, QRBGSPath);
-	this->chanceForOne = chanceForOne;
-}
-
-
-int BiasRndGen::GetRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
+int BiasRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
     int     status = STAT_OK;
 	int		val;
 	unsigned long random = 0;
@@ -31,8 +28,8 @@ int BiasRndGen::GetRandomFromInterval(unsigned long highBound, unsigned long *pR
 			break;
 		}
 
-		rndGen->GetRandomFromInterval(100,&val);
-		if (val < chanceForOne)
+        m_rndGen->getRandomFromInterval(100,&val);
+		if (val < m_chanceForOne)
 			random|=pGACirc->precompPow[i];
 	}
 
@@ -41,22 +38,22 @@ int BiasRndGen::GetRandomFromInterval(unsigned long highBound, unsigned long *pR
 	}
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    //UpdateAccumulator();
 
     return status;
 }
 
-int BiasRndGen::GetRandomFromInterval(unsigned char highBound, unsigned char *pRandom) {
+int BiasRndGen::getRandomFromInterval(unsigned char highBound, unsigned char *pRandom) {
     int     status = STAT_OK;
     unsigned long   rand = 0;
     
-    status = GetRandomFromInterval(highBound, &rand);
+    status = getRandomFromInterval(highBound, &rand);
     *pRandom = (unsigned char) rand;
 
     return status;
 }
 
-int BiasRndGen::GetRandomFromInterval(unsigned int highBound, int *pRandom) {
+int BiasRndGen::getRandomFromInterval(int highBound, int *pRandom) {
     int     status = STAT_OK;
 	int val;
     int random = 0;
@@ -70,8 +67,8 @@ int BiasRndGen::GetRandomFromInterval(unsigned int highBound, int *pRandom) {
 			break;
 		}
 
-		rndGen->GetRandomFromInterval(100,&val);
-		if (val < chanceForOne)
+        m_rndGen->getRandomFromInterval(100,&val);
+		if (val < m_chanceForOne)
 			random|=pGACirc->precompPow[i];
 	}
 
@@ -82,12 +79,12 @@ int BiasRndGen::GetRandomFromInterval(unsigned int highBound, int *pRandom) {
 	}
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    //UpdateAccumulator();
 
     return status;
 }
 
-int BiasRndGen::GetRandomFromInterval(float highBound, float *pRandom) {
+int BiasRndGen::getRandomFromInterval(float highBound, float *pRandom) {
     int     status = STAT_OK;
 	int val;
     unsigned long random = 0;
@@ -102,8 +99,8 @@ int BiasRndGen::GetRandomFromInterval(float highBound, float *pRandom) {
 			break;
 		}
 
-		rndGen->GetRandomFromInterval(100,&val);
-		if (val < chanceForOne)
+        m_rndGen->getRandomFromInterval(100,&val);
+		if (val < m_chanceForOne)
 			random|=pGACirc->precompPow[i];
 	}
 
@@ -111,28 +108,33 @@ int BiasRndGen::GetRandomFromInterval(float highBound, float *pRandom) {
 		*pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    //UpdateAccumulator();
 
     return status;
 }
 
-int BiasRndGen::InitRandomGenerator(unsigned long seed, string QRBGSPath) {
-	this->rndGen = new CRndGen(seed, QRBGSPath);
-	return STAT_OK;
+int BiasRndGen::discartValue() {
+    return m_rndGen->discartValue();
 }
 
+int BiasRndGen::reinitRandomGenerator() {
+    return m_rndGen->reinitRandomGenerator();
+}
+
+/*
 int BiasRndGen::UpdateAccumulator() {
     return STAT_OK;
-}  
+}
+*/
 
 void BiasRndGen::setChanceForOne(int chance) {
-	chanceForOne = chance;
+	m_chanceForOne = chance;
 }
 
-string BiasRndGen::ToString() {
-	string mes = "BIAS GENERATOR ";	
+string BiasRndGen::shortDescription() const {
+    string mes = "BIAS GENERATOR ";
 	stringstream out;
-	out << chanceForOne;
+	out << m_chanceForOne;
 	mes+=out.str();
 	mes+="%";
 	return mes;

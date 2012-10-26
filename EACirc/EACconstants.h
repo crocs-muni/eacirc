@@ -10,17 +10,17 @@
 #define FILE_GALIB_SCORES           "scores.log"
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "TestVectors.txt"
-#define FILE_TEST_DATA_1            "TestData1.txt"
-#define FILE_TEST_DATA_2            "TestData2.txt"
+#define FILE_TEST_DATA_1            "TestData1.bin"
+#define FILE_TEST_DATA_2            "TestData2.bin"
 //#define ???                         "EAC_circuit.bin"
 #define FILE_LOGFILE                "eacirc.log"
 
-// QRNG DATA (filename = $PREFIX$INDEX$DUFFIX)
+// QRNG DATA (filename = $PREFIX$INDEX$DUFFIX, index starts from 0)
 #define	FILE_QRNG_DATA_INDEX_MAX	10
 #define FILE_QRNG_DATA_PREFIX       "qrng-"
 #define FILE_QRNG_DATA_SUFFIX       ".bin"
 // maximum number of bits used from random data file
-// don't set too big, also denotes size of created system random (??)
+// don't set too big, this size is read into memory
 #define RANDOM_DATA_FILE_SIZE		10000000
 
 // COMMAND LINE OPTIONS
@@ -62,8 +62,8 @@
 #define TESTVECT_SHA1_RAND_DISTINGUISH  6
 
 // RANDOM GENERATORS
-#define CRNDGEN						1
-#define	BIASGEN						2
+#define GENERATOR_QRNG				1
+#define	GENERATOR_BIAS				2
 
 // CIRCUIT FUNCTIONS
 #define FNC_NOP                     0

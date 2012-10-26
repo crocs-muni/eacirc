@@ -4,18 +4,18 @@
 
 <HEADER>
     <SWVERSION>4,0</SWVERSION>
-    <SIMULDATE>24-10-2012</SIMULDATE>
+    <SIMULDATE>26-10-2012</SIMULDATE>
 </HEADER>
 
 <RANDOM_GENERATOR>
     <!-- seed to use if file LastSeed.txt is not present, 0 to take random -->
-    <RANDOM_SEED>415875
+    <RANDOM_SEED>0
     </RANDOM_SEED>
 
     <!-- 1/0: if set to 1, seed from following source is used
          - file LastSeed.txt (if present)
          - RANDOM_SEED directive (if lastSeed.txt not present) -->
-    <USE_FIXED_SEED>1
+    <USE_FIXED_SEED>0
     </USE_FIXED_SEED>
     <!-- path to QRNQ data, see class rndgen
          path must end by path separator
@@ -38,7 +38,7 @@
     <PROBABILITY_MUTATION>0.0500000</PROBABILITY_MUTATION>
     <PROBABILITY_CROSSING>0.5000000</PROBABILITY_CROSSING>
     <POPULATION_SIZE>20</POPULATION_SIZE>
-    <NUM_GENERATIONS>10</NUM_GENERATIONS>
+    <NUM_GENERATIONS>20</NUM_GENERATIONS>
 </GA_CONFIG>
 
 <GA_CIRCUIT_CONFIG>
@@ -66,14 +66,14 @@
 
     <SAVE_TEST_VECTORS>1
     </SAVE_TEST_VECTORS>
-    <!-- 0/1: should GAlib seed chenge when regenerating test vectors? -->
+    <!-- 0/1: should GAlib seed change when regenerating test vectors? -->
     <GENER_CHANGE_SEED>0
     </GENER_CHANGE_SEED>
 
-    <TEST_VECTOR_LENGTH>256
+    <TEST_VECTOR_LENGTH>16
     </TEST_VECTOR_LENGTH>
 
-    <TEST_VECTOR_CHANGE_GENERATION>100
+    <TEST_VECTOR_CHANGE_GENERATION>10
     </TEST_VECTOR_CHANGE_GENERATION>
 
     <!-- 0/1 should test vectors be balanced

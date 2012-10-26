@@ -1,27 +1,32 @@
 #include <string>
 #include "IRndGen.h"
-#include "RndGen.h"
+#include "QuantumRndGen.h"
 
 #ifndef BIAS_RNDGEN_H
 #define BIAS_RNDGEN_H
 
 class BiasRndGen : public IRndGen{
-	CRndGen *rndGen;
-	int chanceForOne; // probability of getting bit 1 (in %)
+    IRndGen* m_rndGen;
+    int m_chanceForOne; // probability of getting bit 1 (in %)
 public:
-	BiasRndGen(unsigned long seed = 0, std::string QRBGSPath = "");
-	BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne);
+    BiasRndGen(unsigned long seed = 0, string QRBGSPath = "", int m_chanceForOne = 50);
+    // implemented in XMLProcessor:
+    BiasRndGen(const TiXmlHandle root);
     BiasRndGen(const BiasRndGen&) = delete;
     const BiasRndGen& operator =(const BiasRndGen&) = delete;
     ~BiasRndGen();
-    int GetRandomFromInterval(unsigned long highBound, unsigned long *pRandom);
-    int GetRandomFromInterval(unsigned char highBound, unsigned char *pRandom);
-    int GetRandomFromInterval(unsigned int highBound, int *pRandom);
-    int GetRandomFromInterval(float highBound, float *pRandom);
-	int InitRandomGenerator(unsigned long seed = 0, std::string QRBGSPath = "");
-	string ToString();
+
+    int getRandomFromInterval(unsigned long highBound, unsigned long *pRandom);
+    int getRandomFromInterval(unsigned char highBound, unsigned char *pRandom);
+    int getRandomFromInterval(int highBound, int *pRandom);
+    int getRandomFromInterval(float highBound, float *pRandom);
+    int discartValue();
+    int reinitRandomGenerator();
+
 	void setChanceForOne(int chance);
-    
+    string shortDescription() const;
+    // implemented in XMLProcessor:
+    TiXmlHandle exportGenerator() const;
 protected:
     int UpdateAccumulator();
 };

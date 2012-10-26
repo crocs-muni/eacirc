@@ -23,6 +23,7 @@ SOURCES += \
 # === Main project files ===
     EACirc/CircuitGenome.cpp \
     EACirc/CommonFnc.cpp \
+    EACirc/XMLProcessor.cpp \
     EACirc/Logger.cpp \
     EACirc/Evaluator.cpp \
     EACirc/status.cpp \
@@ -40,9 +41,10 @@ SOURCES += \
     EACirc/standalone_testers/TestDisctinctorCircuit.cpp \
     EACirc/random_generator/BiasRndGen.cpp \
     EACirc/random_generator/IRndGen.cpp \
-    EACirc/random_generator/RndGen.cpp \
+    EACirc/random_generator/QuantumRndGen.cpp \
     EACirc/estream/EncryptorDecryptor.cpp \
 # === eSTREAM cipher files ===
+    EACirc/estream/estreamInterface.cpp \
     EACirc/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \   # not used
     EACirc/estream/ciphers/yamb/yamb.cpp \
     EACirc/estream/ciphers/wg/wg.cpp \
@@ -87,13 +89,13 @@ SOURCES += \
     EACirc/galib/gabincvt.cpp EACirc/galib/GABinStr.cpp EACirc/galib/GADCrowdingGA.cpp EACirc/galib/GADemeGA.cpp EACirc/galib/gaerror.cpp EACirc/galib/GAGenome.cpp \
     EACirc/galib/GAIncGA.cpp EACirc/galib/GAList.cpp EACirc/galib/GAListBASE.cpp EACirc/galib/GAListGenome.cpp EACirc/galib/GAParameter.cpp EACirc/galib/GAPopulation.cpp \
     EACirc/galib/garandom.cpp EACirc/galib/GARealGenome.cpp EACirc/galib/GAScaling.cpp EACirc/galib/GASelector.cpp EACirc/galib/GASimpleGA.cpp EACirc/galib/GASStateGA.cpp \
-    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp \
-    EACirc/estream/estreamInterface.cpp
+    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp
 
 HEADERS += \
 # === Main project files ===
     EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
+    EACirc/XMLProcessor.h \
     EACirc/EACconstants.h \
     EACirc/globals_unused.h \
     EACirc/EACglobals.h \
@@ -115,9 +117,10 @@ HEADERS += \
     EACirc/standalone_testers/TestDistinctorCircuit.h \
     EACirc/random_generator/BiasRndGen.h \
     EACirc/random_generator/IRndGen.h \
-    EACirc/random_generator/RndGen.h \
+    EACirc/random_generator/QuantumRndGen.h \
     EACirc/estream/EncryptorDecryptor.h \
 # === eSTREAM cipher files ===
+    EACirc/estream/estreamInterface.h \
     EACirc/estream/ciphers/ecrypt-config.h \
     EACirc/estream/ciphers/ecrypt-machine.h \
     EACirc/estream/ciphers/ecrypt-portable.h \
@@ -182,7 +185,6 @@ HEADERS += \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
     EACirc/galib/std_stream.h \
-    EACirc/estream/estreamInterface.h
 
 OTHER_FILES += \
     EACirc/config.xml

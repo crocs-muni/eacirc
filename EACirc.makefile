@@ -10,7 +10,7 @@
 # tinyXML: Compilation settings and platform dependent variables are in tinyXML/makefile.
 #
 # DEBUG can be set to YES to include debugging info, or NO otherwise
-DEBUG		= NO
+DEBUG		= YES
 # PROFILE can be set to YES to include profiling info, or NO otherwise
 PROFILE		= NO
 # output name for the compiled and linked application
@@ -63,7 +63,7 @@ clean:
 	cd EACirc/galib && $(MAKE) clean
 	cd EACirc/tinyXML && $(MAKE) clean
 	rm -f $(OBJECTS) 
-	cd $(RUN_DIR) && rm -f scores.log eacirc.log *.txt *.bin *.c *.dot
+	cd $(RUN_DIR) && rm -f *.log *.txt *.bin *.c *.dot *.xml
 	@echo === Successfully cleaned. ===
 
 cleanmain:

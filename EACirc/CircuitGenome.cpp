@@ -133,7 +133,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                 }
                 else {
                     // FUNCTIONAL LAYERS
-                    rndGen->GetRandomFromInterval(pGACirc->precompPow[numLayerInputs], &value);
+                    rndGen->getRandomFromInterval(pGACirc->precompPow[numLayerInputs], &value);
                     //value = 0xffffffff;
                 }
                 genome.gene(offset + slot, value);
@@ -148,7 +148,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                     // FUNCTIONAL LAYER
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
-                        rndGen->GetRandomFromInterval(FNC_MAX, &value);
+                        rndGen->getRandomFromInterval(FNC_MAX, &value);
                         if (pGACirc->allowedFNC[value] != 0) { 
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
@@ -185,7 +185,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 // MUTATE CONNECTION SELECTOR (FLIP ONE SINGLE BIT == ONE CONNECTOR)
                 if (GAFlipCoin(pmut)) {
                     unsigned long temp;
-                    rndGen->GetRandomFromInterval(numLayerInputs, &value);
+                    rndGen->getRandomFromInterval(numLayerInputs, &value);
                     temp = pGACirc->precompPow[value];
                     // SWITCH RANDOMLY GENERATED BIT
                     temp ^= genome.gene(offset + slot);
@@ -197,7 +197,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 if (GAFlipCoin(pmut)) {             
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
-                        rndGen->GetRandomFromInterval(FNC_MAX, &value);
+                        rndGen->getRandomFromInterval(FNC_MAX, &value);
                         if (pGACirc->allowedFNC[value] != 0) { 
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
@@ -219,7 +219,7 @@ int CircuitGenome::Crossover(const GAGenome &p1, const GAGenome &p2, GAGenome *o
     GA1DArrayGenome<unsigned long> &offspring2 = (GA1DArrayGenome<unsigned long>&) *o2;
     
     // CROSS ONLY WHOLE LAYERS
-    int cpoint = GARandomInt(1,pGACirc->numLayers) * 2; // bod køížení (v mezích od,do)
+    int cpoint = GARandomInt(1,pGACirc->numLayers) * 2; // bod ken (v mezch od,do)
     for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
         int offset = layer * MAX_INTERNAL_LAYER_SIZE; 
 

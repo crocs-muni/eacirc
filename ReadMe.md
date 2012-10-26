@@ -24,7 +24,7 @@ _Note:_ the "run in terminal" option must be disabled in som configurations (esp
     in project run settings edit the working directory (e.g. to "%{buildDir}/../run")  
     create 2 batch files in build directory (e.g. post-build.bat and post-clean.bat) with this contents  
     post-build.bat: copy ..\EACirc\config.xml ..\run\config.xml  
-    post-clean.bat: cd ..\run && del *.txt *.dot *.bin *.c scores.log eacirc.log config.xml  
+    post-clean.bat: cd ..\run && del *.txt *.dot *.bin *.c *.log *.xml  
     add cutom build step: post-build.bat (command) in %{buildDir} (working dir)   
     custom clean step: post-clean.bat (command) in %{buildDir} (working dir)
 * Linux:  
@@ -32,7 +32,7 @@ _Note:_ the "run in terminal" option must be disabled in som configurations (esp
     in project run settings edit the working directory (e.g. to "%{buildDir}/../run")  
     add cutom build step: cp (command) ../EACirc/config.xml config.xml (arguments) in %{buildDir}/../run (working dir)  
     if planning to run from cli, add cutom build step: cp (command) EACirc %{buildDir}/run (arguments) in %{buildDir} (working dir)  
-    custom clean step: rm (command) -f *.txt *.dot *.bin *.c scores.log eacirc.log config.xml (arguments) in %{buildDir}/../run (working dir)
+    custom clean step: rm (command) -f *.txt *.dot *.bin *.c *.log *.xml (arguments) in %{buildDir}/../run (working dir)
 
 ### GNU Make
 
