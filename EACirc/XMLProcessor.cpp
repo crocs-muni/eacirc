@@ -3,11 +3,47 @@
 #include "random_generator/BiasRndGen.h"
 #include <typeinfo>
 
-QuantumRndGen::QuantumRndGen(const TiXmlHandle root) {
+QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot) {
+    m_type = GENERATOR_QRNG;
+    TiXmlElement* pElem = NULL;
 
+    pElem = pRoot->FirstChildElement("original_seed");
+    m_seed = atol(pElem->GetText());
+    pElem = pRoot->FirstChildElement("qrng");
+    m_usesQRNGData = atoi(pElem->Attribute("true_qrng")) == 1 ? true : false;
+    if (m_usesQRNGData) {
+        m_QRNGDataPath = pElem->FirstChildElement("data_path")->GetText();
+        m_fileIndex = atoi(pElem->FirstChildElement("file_index")->GetText());
+    } else {
+        m_QRNGDataPath = "";
+        m_fileIndex = 0;
+    }
+    pElem = pRoot->FirstChildElement("accumulator_state");
+    m_accLength = atoi(pElem->Attribute("length"));
+    m_accumulator = new unsigned char[m_accLength];
+    m_accPosition = atoi(pElem->Attribute("position"));
+    if (m_usesQRNGData) {
+        loadQRNGDataFile();
+    } else {
+        istringstream ss(pElem->FirstChildElement("value")->GetText());
+        unsigned int value;
+        for (int i = 0; i < m_accLength; i++) {
+            ss >> value;
+            m_accumulator[i] = value;
+        }
+    }
+    pElem = pRoot->FirstChildElement("internal_rng_state");
+    istringstream ss(pElem->GetText());
+    if (strcmp(pElem->Attribute("type"),typeid(m_internalRNG).name()) == 0) {
+        ss >> m_internalRNG;
+    } else {
+        mainLogger.out() << "Error: Incompatible system generator type - using random seed." << endl;
+        mainLogger.out() << "       required: " << typeid(m_internalRNG).name() << endl;
+        mainLogger.out() << "          found: " << pElem->Attribute("type") << endl;
+    }
 }
 
-TiXmlHandle QuantumRndGen::exportGenerator() const {
+TiXmlNode* QuantumRndGen::exportGenerator() const {
     TiXmlElement* root = new TiXmlElement("generator");
     root->SetAttribute("type",shortDescription().c_str());
 
@@ -45,7 +81,7 @@ TiXmlHandle QuantumRndGen::exportGenerator() const {
     accumulatorState->LinkEndChild(value);
     root->LinkEndChild(accumulatorState);
 
-    TiXmlElement* internalRNGstate = new TiXmlElement("internalRNGstate");
+    TiXmlElement* internalRNGstate = new TiXmlElement("internal_rng_state");
     internalRNGstate->SetAttribute("type",typeid(m_internalRNG).name());
     stringstream state;
     state << dec << left << setfill(' ');
@@ -53,14 +89,20 @@ TiXmlHandle QuantumRndGen::exportGenerator() const {
     internalRNGstate->LinkEndChild(new TiXmlText(state.str().c_str()));
     root->LinkEndChild(internalRNGstate);
 
-    return TiXmlHandle(root);
+    return root;
 }
 
-BiasRndGen::BiasRndGen(const TiXmlHandle root) {
+BiasRndGen::BiasRndGen(TiXmlNode* pRoot) {
+    m_type = GENERATOR_BIAS;
+    TiXmlElement* pElem = NULL;
 
+    pElem = pRoot->FirstChildElement("chance_for_one");
+    m_chanceForOne = atoi(pElem->GetText());
+    pElem = pRoot->FirstChildElement("generator");
+    m_rndGen = new QuantumRndGen(pElem);
 }
 
-TiXmlHandle BiasRndGen::exportGenerator() const {
+TiXmlNode* BiasRndGen::exportGenerator() const {
     TiXmlElement* root = new TiXmlElement("generator");
     root->SetAttribute("type",shortDescription().c_str());
 
@@ -71,23 +113,18 @@ TiXmlHandle BiasRndGen::exportGenerator() const {
     root->LinkEndChild(chanceForOne);
 
     root->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
+    root->LinkEndChild(m_rndGen->exportGenerator());
 
-    TiXmlHandle rndGen = m_rndGen->exportGenerator();
-    root->LinkEndChild(rndGen.ToNode());
-
-    return TiXmlHandle(root);
+    return root;
 }
 
 int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
-    int     status = STAT_OK;
-    //string	value;
+    int status = STAT_OK;
 
-    TiXmlDocument doc(filePath.c_str());
-    if (!doc.LoadFile())
-        return STAT_CONFIG_DATA_READ_FAIL;
-
+    TiXmlNode* pRoot = NULL;
+    loadXMLFile(pRoot, filePath);
+    TiXmlHandle hRoot(pRoot);
     TiXmlElement* pElem;
-    TiXmlHandle hRoot(&doc);
 
     //
     //  PROGRAM VERSION AND DATE
@@ -186,18 +223,36 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
         if (strcmp(pElem->Value(), "FNC_READX") == 0) pBasicSettings->gaCircuitConfig.allowedFNC[FNC_READX] = atoi(pElem->GetText());
     }
 
+    delete pRoot;
     return status;
 }
 
-int saveXMLFile(TiXmlHandle root, string filename) {
+int saveXMLFile(TiXmlNode* pRoot, string filename) {
     TiXmlDocument doc;
     TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
-    doc.LinkEndChild( decl );
-    doc.LinkEndChild(root.ToNode());
+    doc.LinkEndChild(decl);
+    doc.LinkEndChild(pRoot);
     bool result = doc.SaveFile(filename.c_str());
     if (!result) {
         mainLogger.out() << "Error: cannot write XML file " << filename << ".";
         return STAT_FILE_OPEN_FAIL;
     }
+    return STAT_OK;
+}
+
+int loadXMLFile(TiXmlNode*& pRoot, string filename) {
+    TiXmlDocument doc(filename.c_str());
+    if (!doc.LoadFile()) {
+        mainLogger.out() << "Error: Could not load file '" << filename << "'." << endl;
+        return STAT_FILE_OPEN_FAIL;
+    }
+    TiXmlHandle hDoc(&doc);
+    TiXmlElement* pElem=hDoc.FirstChildElement().Element();
+    if (!pElem) {
+        mainLogger.out() << "Error: No root element in XML (" << filename << ")." << endl;
+        return STAT_FILE_OPEN_FAIL;
+    }
+    pRoot = pElem->Clone();
+
     return STAT_OK;
 }

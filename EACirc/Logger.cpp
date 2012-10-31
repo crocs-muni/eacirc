@@ -4,6 +4,7 @@
 
 Logger::~Logger() {
     out() << "Exiting EACirc." << endl;
+    delete m_out;
 }
 
 void Logger::setOutputStream(ostream& outStream) {

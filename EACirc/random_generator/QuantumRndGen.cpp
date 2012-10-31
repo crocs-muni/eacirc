@@ -3,6 +3,7 @@
 #include "time.h"
 
 QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath) {
+    int status;
     m_accumulator = NULL;
     m_type = GENERATOR_QRNG;
     this->m_QRNGDataPath = QRBGSPath;
@@ -34,12 +35,17 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath) {
 
         file.close();
     } else { // QRNG data not available
-        mainLogger.out() << "Quantum random data files not found, using system generator." << endl;
+        mainLogger.out() << "Warning: Quantum random data files not found, using system generator." << endl;
         m_accLength = 4; // (max 32B), see init and update
     }
     m_accumulator = new unsigned char[m_accLength];
 
-    reinitRandomGenerator();
+    status = reinitRandomGenerator();
+
+    if (status != STAT_OK) {
+        mainLogger.out() << "Error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
+        mainLogger.out() << "       status: " << ErrorToString(status) << endl;
+    }
 }
 
 QuantumRndGen::~QuantumRndGen() {
@@ -48,7 +54,7 @@ QuantumRndGen::~QuantumRndGen() {
 
 
 int QuantumRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
-    int     status = STAT_OK;
+    int status = STAT_OK;
 
 	if (highBound != ULONG_MAX) highBound++;
     // GET FIRST DWORD FROM ACCUMULATOR     
@@ -59,13 +65,13 @@ int QuantumRndGen::getRandomFromInterval(unsigned long highBound, unsigned long 
 		if (*pRandom == highBound) *pRandom = 0;
 	}
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    status = updateAccumulator();
 
     return status;
 }
 
 int QuantumRndGen::getRandomFromInterval(unsigned char highBound, unsigned char *pRandom) {
-    int     status = STAT_OK;
+    int status = STAT_OK;
     unsigned long   rand = 0;
     
     status = getRandomFromInterval(highBound, &rand);
@@ -75,7 +81,7 @@ int QuantumRndGen::getRandomFromInterval(unsigned char highBound, unsigned char 
 }
 
 int QuantumRndGen::getRandomFromInterval(int highBound, int *pRandom) {
-    int     status = STAT_OK;
+    int status = STAT_OK;
 
 	if (highBound != INT_MAX) highBound++;
     // GET FIRST DWORD FROM ACCUMULATOR     
@@ -89,13 +95,13 @@ int QuantumRndGen::getRandomFromInterval(int highBound, int *pRandom) {
 	}
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    status = updateAccumulator();
 
     return status;
 }
 
 int QuantumRndGen::getRandomFromInterval(float highBound, float *pRandom) {
-    int     status = STAT_OK;
+    int status = STAT_OK;
 
 	if (highBound != ULONG_MAX) highBound++;
     // GET FIRST DWORD FROM ACCUMULATOR     
@@ -107,16 +113,17 @@ int QuantumRndGen::getRandomFromInterval(float highBound, float *pRandom) {
 	}
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    status = updateAccumulator();
 
     return status;
 }
 
 int QuantumRndGen::discartValue() {
-    return UpdateAccumulator();
+    return updateAccumulator();
 }
 
 int QuantumRndGen::reinitRandomGenerator() {
+    int status = STAT_OK;
     if (!m_usesQRNGData) {
         m_accPosition = 0;
         // MAX 32B INT = 256x256x256x256
@@ -125,30 +132,20 @@ int QuantumRndGen::reinitRandomGenerator() {
         m_accumulator[2] = m_internalRNG()%256;
         m_accumulator[3] = m_internalRNG()%256;
     } else {
-        ifstream file;
         m_fileIndex = m_internalRNG() % FILE_QRNG_DATA_INDEX_MAX;
-        ostringstream sFileName;
-        sFileName << m_QRNGDataPath << FILE_QRNG_DATA_PREFIX << m_fileIndex << FILE_QRNG_DATA_SUFFIX;
-        file.open(sFileName.str().c_str(), fstream::in | fstream::binary);
-        if (file.is_open()) {
-            file.read((char*)m_accumulator, m_accLength);
-            file.close();
-        } else {
-            mainLogger.out() << "Error: Cannot open QRNG data file " << sFileName.str() << "." << endl;
-            throw "QRNG data subsequent opening failure.";
-            return STAT_FILE_OPEN_FAIL;
-        }
+        status = loadQRNGDataFile();
         m_accPosition = m_internalRNG()%(m_accLength-4);
     }
-    return STAT_OK;
+    return status;
 }
 
-int QuantumRndGen::UpdateAccumulator() {
+int QuantumRndGen::updateAccumulator() {
+    int status = STAT_OK;
     if (m_usesQRNGData) {
         // using QRNG data files
         m_accPosition += 4;
         if ((m_accPosition+4) > m_accLength)
-            reinitRandomGenerator();
+            status = reinitRandomGenerator();
     } else {
         // using system generator (accPosition = 0)
         m_accumulator[m_accPosition] = m_internalRNG()%256;
@@ -157,6 +154,21 @@ int QuantumRndGen::UpdateAccumulator() {
         m_accumulator[m_accPosition+3] = m_internalRNG()%256;
     }
 	
+    return status;
+}
+
+int QuantumRndGen::loadQRNGDataFile() {
+    ifstream file;
+    ostringstream sFileName;
+    sFileName << m_QRNGDataPath << FILE_QRNG_DATA_PREFIX << m_fileIndex << FILE_QRNG_DATA_SUFFIX;
+    file.open(sFileName.str().c_str(), fstream::in | fstream::binary);
+    if (file.is_open()) {
+        file.read((char*)m_accumulator, m_accLength);
+        file.close();
+    } else {
+        mainLogger.out() << "Error: Cannot open QRNG data file " << sFileName.str() << "." << endl;
+        return STAT_FILE_OPEN_FAIL;
+    }
     return STAT_OK;
 }
 

@@ -139,9 +139,6 @@ int main(int argc, char **argv)
     biasRndGen = new BiasRndGen(seed, pBasicSettings.rndGen.QRBGSPath, pBasicSettings.rndGen.biasFactor);
     mainLogger.out() << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
 
-    //mainLogger.out() << "rndgen: " << *rndGen << endl;
-    saveXMLFile(biasRndGen->exportGenerator(),"generator.xml");
-
 	//INIT ENCRYPTOR/DECRYPTOR
 	encryptorDecryptor = new EncryptorDecryptor();
 
@@ -189,6 +186,7 @@ int main(int argc, char **argv)
 
 		out << "evalOK" << endl;
 		//  CREATE GA STRUCTS
+        mainLogger.out() << "Initialising GAlib." << endl;
 		GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
 		
 		genom.initializer(CircuitGenome::Initializer);
@@ -228,7 +226,7 @@ int main(int argc, char **argv)
             fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
 			fitfile << ((float)(actGener))/((float)(pBasicSettings.gaConfig.nGeners));
 			fitfile.close();
-            
+            Evaluator *evaluator = new Evaluator();
 			// DO NOT EVOLVE..
             if (evolutionOff) {
 				evaluator->generateTestVectors();
@@ -279,7 +277,17 @@ int main(int argc, char **argv)
 
 		//Print the circuit
 		CircuitGenome::PrintCircuit(genomeTemp,"",0,1);
+
+        delete evaluator;
     }   
 
+    delete encryptorDecryptor;
+    delete rndGen;
+    delete biasRndGen;
+
+    if (status != STAT_OK) {
+        mainLogger.out() << "Error: Program run failed." << endl;
+        mainLogger.out() << "       status: " << ErrorToString(status) << endl;
+    }
     return status;
 }

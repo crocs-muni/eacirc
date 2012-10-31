@@ -11,7 +11,7 @@ class BiasRndGen : public IRndGen{
 public:
     BiasRndGen(unsigned long seed = 0, string QRBGSPath = "", int m_chanceForOne = 50);
     // implemented in XMLProcessor:
-    BiasRndGen(const TiXmlHandle root);
+    BiasRndGen(TiXmlNode* pRoot);
     BiasRndGen(const BiasRndGen&) = delete;
     const BiasRndGen& operator =(const BiasRndGen&) = delete;
     ~BiasRndGen();
@@ -26,7 +26,7 @@ public:
 	void setChanceForOne(int chance);
     string shortDescription() const;
     // implemented in XMLProcessor:
-    TiXmlHandle exportGenerator() const;
+    TiXmlNode* exportGenerator() const;
 protected:
     int UpdateAccumulator();
 };

@@ -7,7 +7,17 @@
 
 int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings);
 
-int saveXMLFile(TiXmlHandle root, string filename);
+int saveXMLFile(TiXmlNode* pRoot, string filename);
+
+/** gets root element from XML file
+  * data structure reference by this method is allocated dynamicly
+  * CALLER is responsible for freeing!
+  *
+  * @param pRoot   parsed XML structure will put here
+  *                initially should be NULL, otherwise memory leak occurs
+  * @param filename
+  */
+int loadXMLFile(TiXmlNode*& pRoot, string filename);
 
 // also implemented in XMLProcessor.cpp:
 //

@@ -26,7 +26,7 @@ public:
     virtual int reinitRandomGenerator() = 0;
 
     virtual string shortDescription() const = 0;
-    virtual TiXmlHandle exportGenerator() const = 0;
+    virtual TiXmlNode* exportGenerator() const = 0;
 };
 
 ostream& operator <<(ostream& out, const IRndGen& generator);

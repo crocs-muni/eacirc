@@ -16,7 +16,7 @@ class QuantumRndGen : public IRndGen{
 public:
     QuantumRndGen(unsigned long m_seed = 0, string QRBGSPath = "");
     // implemented in XMLProcessor:
-    QuantumRndGen(const TiXmlHandle root);
+    QuantumRndGen(TiXmlNode* pRoot);
     QuantumRndGen(const QuantumRndGen&) = delete;
     const QuantumRndGen& operator =(const QuantumRndGen&) = delete;
     ~QuantumRndGen();
@@ -30,9 +30,10 @@ public:
 
     string shortDescription() const;
     // implemented in XMLProcessor:
-    TiXmlHandle exportGenerator() const;
+    TiXmlNode* exportGenerator() const;
 protected:
-    int UpdateAccumulator();
+    int updateAccumulator();
+    int loadQRNGDataFile();
 };
 
 #endif
