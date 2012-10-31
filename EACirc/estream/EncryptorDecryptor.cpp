@@ -9,6 +9,10 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	int numTestVectors = pGACirc->numTestVectors;
 	int numRounds = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount:-1;
 	int numRounds2 = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount2:-1;
+    for(int i = 0; i < 4; i++) {
+        ctxarr[i] = NULL;
+        ecryptarr[i] = NULL;
+    }
 	
 	int testVectorEstream = pGACirc->testVectorEstream;
 	int nR = numRounds;
@@ -356,6 +360,20 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	}
 	tvfile.close();
 	// ******************************************************************** //
+}
+
+EncryptorDecryptor::~EncryptorDecryptor() {
+    for(int i = 0; i < 4; i++) {
+        if (ecryptarr[i] != NULL) {
+            delete ecryptarr[i];
+            ecryptarr[i] = NULL;
+        }
+        if (ctxarr[i] != NULL) {
+            free(ctxarr[i]);
+            ctxarr[i] = NULL;
+        }
+    }
+
 }
 
 void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {

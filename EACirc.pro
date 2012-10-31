@@ -15,8 +15,7 @@ INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 # - comment the Libraries section in SOURCES and HEADERS
 # - change includes in all files from "galib/header.h" to "header.h"
 #   (same for tinyXML) - search for //libinclude in source files
-# - uncomment following to lines (adding the libraries)
-# QMAKE_CXXFLAGS += -isystem ../EACirc/ga -isystem ../EACirc/tinyXML
+# - uncomment following line (adding the libraries)
 # LIBS += -ltinyXML -L../EACirc/tinyXML -lga -L../EACirc/ga
 
 SOURCES += \
@@ -105,7 +104,6 @@ HEADERS += \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
     EACirc/test_vector_generator/ITestVectGener.h \
-    EACirc/test_vector_generator/EstreamVectGener.h \
     EACirc/circuit_evaluator/DistinguishTwoEvaluator.h \
     EACirc/circuit_evaluator/ICircuitEvaluator.h \
     EACirc/circuit_evaluator/PredictAvalancheEvaluator.h \
@@ -185,6 +183,7 @@ HEADERS += \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
     EACirc/galib/std_stream.h \
+    EACirc/test_vector_generator/EstreamTestVectGener.h
 
 OTHER_FILES += \
     EACirc/config.xml

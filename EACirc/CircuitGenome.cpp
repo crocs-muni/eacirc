@@ -34,7 +34,11 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     int								numPredictions = 0; 
 	int								remainingTestVectors = pGACirc->numTestVectors;
 	ICircuitEvaluator				*circEval = new ICircuitEvaluator();
-	circEval = circEval->getCircEvalClass();
+    {
+        ICircuitEvaluator* temp = circEval->getCircEvalClass();
+        delete circEval;
+        circEval = temp;
+    }
 
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
 	remainingTestVectors = pGACirc->numTestVectors;
@@ -86,6 +90,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 		}
     }
         
+    delete circEval;
     return fit;
 }
 

@@ -173,6 +173,95 @@ int QuantumRndGen::loadQRNGDataFile() {
 }
 
 string QuantumRndGen::shortDescription() const {
-    if (m_usesQRNGData) return "RANDOM - QRBS SOURCE";
-    else return "RANDOM - SYSTEM SOURCE";
+    if (m_usesQRNGData) return "true quantum generator";
+    else return "system-based random generator";
+}
+
+QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot) {
+    m_type = GENERATOR_QRNG;
+    TiXmlElement* pElem = NULL;
+
+    pElem = pRoot->FirstChildElement("original_seed");
+    m_seed = atol(pElem->GetText());
+    pElem = pRoot->FirstChildElement("qrng");
+    m_usesQRNGData = atoi(pElem->Attribute("true_qrng")) == 1 ? true : false;
+    if (m_usesQRNGData) {
+        m_QRNGDataPath = pElem->FirstChildElement("data_path")->GetText();
+        m_fileIndex = atoi(pElem->FirstChildElement("file_index")->GetText());
+    } else {
+        m_QRNGDataPath = "";
+        m_fileIndex = 0;
+    }
+    pElem = pRoot->FirstChildElement("accumulator_state");
+    m_accLength = atoi(pElem->Attribute("length"));
+    m_accumulator = new unsigned char[m_accLength];
+    m_accPosition = atoi(pElem->Attribute("position"));
+    if (m_usesQRNGData) {
+        loadQRNGDataFile();
+    } else {
+        istringstream ss(pElem->FirstChildElement("value")->GetText());
+        unsigned int value;
+        for (int i = 0; i < m_accLength; i++) {
+            ss >> value;
+            m_accumulator[i] = value;
+        }
+    }
+    pElem = pRoot->FirstChildElement("internal_rng_state");
+    istringstream ss(pElem->GetText());
+    if (strcmp(pElem->Attribute("type"),typeid(m_internalRNG).name()) == 0) {
+        ss >> m_internalRNG;
+    } else {
+        mainLogger.out() << "Error: Incompatible system generator type - state not loaded." << endl;
+        mainLogger.out() << "       required: " << typeid(m_internalRNG).name() << endl;
+        mainLogger.out() << "          found: " << pElem->Attribute("type") << endl;
+    }
+}
+
+TiXmlNode* QuantumRndGen::exportGenerator() const {
+    TiXmlElement* pRoot = new TiXmlElement("generator");
+    pRoot->SetAttribute("type",shortDescription().c_str());
+
+    TiXmlElement* originalSeed = new TiXmlElement("original_seed");
+    stringstream sSeed;
+    sSeed << m_seed;
+    originalSeed->LinkEndChild(new TiXmlText(sSeed.str().c_str()));
+    pRoot->LinkEndChild(originalSeed);
+
+    TiXmlElement* qrng = new TiXmlElement("qrng");
+    qrng->SetAttribute("true_qrng",m_usesQRNGData ? "1" : "0");
+    TiXmlElement* QRNGpath = new TiXmlElement("data_path");
+    QRNGpath->LinkEndChild(new TiXmlText(m_QRNGDataPath.c_str()));
+    qrng->LinkEndChild(QRNGpath);
+    TiXmlElement* fileIndex = new TiXmlElement("file_index");
+    stringstream sFileIndex;
+    sFileIndex << m_fileIndex;
+    fileIndex->LinkEndChild(new TiXmlText(sFileIndex.str().c_str()));
+    qrng->LinkEndChild(fileIndex);
+    pRoot->LinkEndChild(qrng);
+
+    TiXmlElement* accumulatorState = new TiXmlElement("accumulator_state");
+    accumulatorState->SetAttribute("length",m_accLength);
+    accumulatorState->SetAttribute("position",m_accPosition);
+    TiXmlElement* value = new TiXmlElement("value");
+    if (!m_usesQRNGData) {
+        stringstream sAccValue;
+        sAccValue << left << dec;
+        sAccValue << (int)m_accumulator[0] << " ";
+        sAccValue << (int)m_accumulator[1] << " ";
+        sAccValue << (int)m_accumulator[2] << " ";
+        sAccValue << (int)m_accumulator[3];
+        value->LinkEndChild(new TiXmlText(sAccValue.str().c_str()));
+    }
+    accumulatorState->LinkEndChild(value);
+    pRoot->LinkEndChild(accumulatorState);
+
+    TiXmlElement* internalRNGstate = new TiXmlElement("internal_rng_state");
+    internalRNGstate->SetAttribute("type",typeid(m_internalRNG).name());
+    stringstream state;
+    state << dec << left << setfill(' ');
+    state << m_internalRNG;
+    internalRNGstate->LinkEndChild(new TiXmlText(state.str().c_str()));
+    pRoot->LinkEndChild(internalRNGstate);
+
+    return pRoot;
 }

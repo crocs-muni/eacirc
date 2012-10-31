@@ -18,7 +18,7 @@
 #include "estream/estreamInterface.h"
 #include "estream/EncryptorDecryptor.h"
 #include "test_vector_generator/ITestVectGener.h"
-#include "test_vector_generator/EstreamVectGener.h"
+#include "test_vector_generator/EstreamTestVectGener.h"
 #include "EAC_circuit.h"
 
 //TEST THE OUTPUT FILE AGAINT TEST DATA

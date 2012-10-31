@@ -4,8 +4,14 @@
 
 Evaluator::Evaluator() {
 	this->TVG = new ITestVectGener();
-	this->TVG = (ITestVectGener*)TVG->getGenerClass();
+    ITestVectGener* temp = this->TVG->getGenerClass();
+    delete this->TVG;
+    this->TVG = temp;
 	generateTestVectors();
+}
+
+Evaluator::~Evaluator() {
+    delete this->TVG;
 }
 
 void Evaluator::generateTestVectors() {

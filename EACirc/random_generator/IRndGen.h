@@ -16,7 +16,9 @@ public:
     virtual ~IRndGen() {}
 
     static void initMainGenerator(unsigned long seed) { m_mainGenerator.seed(seed); }
+    static void initMainGenerator(TiXmlNode* pRoot);
     static unsigned long getRandomFromMainGenerator() { return m_mainGenerator(); }
+    static TiXmlNode* exportMainGenerator();
 
     virtual int getRandomFromInterval(unsigned long, unsigned long *) = 0;
     virtual int getRandomFromInterval(unsigned char, unsigned char *) = 0;

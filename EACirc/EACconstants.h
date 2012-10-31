@@ -3,6 +3,7 @@
 
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
+#define FILE_STATE                  "state.xml"
 #define FILE_SEEDFILE               "LastSeed.txt"
 #define FILE_FITNESS_PROGRESS       "EAC_fitnessProgress.txt"
 #define FILE_BEST_FITNESS           "bestfitgraph.txt"

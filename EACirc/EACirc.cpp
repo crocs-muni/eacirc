@@ -19,7 +19,7 @@
 #include "CircuitGenome.h"
 #include "estream/estreamInterface.h"
 #include "test_vector_generator/ITestVectGener.h"
-#include "test_vector_generator/EstreamVectGener.h"
+#include "test_vector_generator/EstreamTestVectGener.h"
 #include "estream/EncryptorDecryptor.h"
 #include "EAC_circuit.h"
 #include "standalone_testers/TestDistinctorCircuit.h"
@@ -126,6 +126,7 @@ int main(int argc, char **argv)
         }
 	}
 
+    //generate random seed, if none provided
     IRndGen::initMainGenerator(clock() + time(NULL) + getpid());
     if (seed == 0){
         seed = (IRndGen::getRandomFromMainGenerator() %100000) + ((IRndGen::getRandomFromMainGenerator() %42946) *100000);
@@ -169,8 +170,7 @@ int main(int argc, char **argv)
 	string fileName = "EAC_circuit.bin";
 	fstream	efile;
 	string executetext;
-	efile.open(fileName.c_str(), fstream::in);
-	
+	efile.open(fileName.c_str(), fstream::in);	
 	if (efile.is_open()) {
         mainLogger.out() << "Loading genome from file." << endl;
 		getline(efile, executetext);
@@ -178,110 +178,123 @@ int main(int argc, char **argv)
         efile.close();
 	}
 
-    if (status == STAT_OK) {
-        ofstream out(FILE_FITNESS_PROGRESS, ios::app);
-		
-        // INIT EVALUATOR
-		Evaluator *evaluator = new Evaluator();
+    ofstream out(FILE_FITNESS_PROGRESS, ios::app);
 
-		out << "evalOK" << endl;
-		//  CREATE GA STRUCTS
-        mainLogger.out() << "Initialising GAlib." << endl;
-		GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
-		
-		genom.initializer(CircuitGenome::Initializer);
-		genom.mutator(CircuitGenome::Mutator);
-		genom.crossover(CircuitGenome::Crossover);
+    // INIT EVALUATOR
+    Evaluator *evaluator = new Evaluator();
+    out << "evalOK" << endl;
 
-		GASteadyStateGA ga(genom);
-		
-		ga.populationSize(pBasicSettings.gaConfig.popSize);
-		ga.nReplacement(2 * pBasicSettings.gaConfig.popSize / 3);
-		ga.nGenerations(pBasicSettings.gaConfig.nGeners);
-		ga.pCrossover(pBasicSettings.gaConfig.pCross);
-		ga.pMutation(pBasicSettings.gaConfig.pMutt);
-        ga.scoreFilename(FILE_GALIB_SCORES);
-		ga.scoreFrequency(1);	// keep the scores of every generation
-		ga.flushFrequency(1);	// specify how often to write the score to disk 
-		ga.selectScores(GAStatistics::AllScores);
+    //  CREATE GA STRUCTS
+    mainLogger.out() << "Initialising GAlib." << endl;
+    GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
 
-		ga.initialize();
+    genom.initializer(CircuitGenome::Initializer);
+    genom.mutator(CircuitGenome::Mutator);
+    genom.crossover(CircuitGenome::Crossover);
 
-		out << "GAOK" << endl;
-        mainLogger.out() << "GAlib fully initialized." << endl;
-		int		actGener = 1;
-		int		changed = 1;
-		int		evaluateNext = 0;
-		
-		pGACirc->clearFitnessStats();
+    GASteadyStateGA ga(genom);
 
-		fstream fitfile;
+    ga.populationSize(pBasicSettings.gaConfig.popSize);
+    ga.nReplacement(2 * pBasicSettings.gaConfig.popSize / 3);
+    ga.nGenerations(pBasicSettings.gaConfig.nGeners);
+    ga.pCrossover(pBasicSettings.gaConfig.pCross);
+    ga.pMutation(pBasicSettings.gaConfig.pMutt);
+    ga.scoreFilename(FILE_GALIB_SCORES);
+    ga.scoreFrequency(1);	// keep the scores of every generation
+    ga.flushFrequency(1);	// specify how often to write the score to disk
+    ga.selectScores(GAStatistics::AllScores);
 
+    ga.initialize();
+
+    out << "GAOK" << endl;
+    mainLogger.out() << "GAlib fully initialized." << endl;
+    int		actGener = 1;
+    int		changed = 1;
+    int		evaluateNext = 0;
+
+    pGACirc->clearFitnessStats();
+
+    fstream fitfile;
+
+    if (evolutionOff) {
+        genomeTemp = genom;
+    }
+
+    while (actGener < pBasicSettings.gaConfig.nGeners) {
+        //FRACTION FILE FOR BOINC
+        fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
+        fitfile << ((float)(actGener))/((float)(pBasicSettings.gaConfig.nGeners));
+        fitfile.close();
+
+        // WHY creating new evaluator?
+        // and why new for every generation?
+        //Evaluator *evaluator = new Evaluator();
+
+        // DO NOT EVOLVE..
         if (evolutionOff) {
-			genomeTemp = genom;
-        }
-		
-        while (actGener < pBasicSettings.gaConfig.nGeners) {
-			//FRACTION FILE FOR BOINC
-            fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
-			fitfile << ((float)(actGener))/((float)(pBasicSettings.gaConfig.nGeners));
-			fitfile.close();
-            Evaluator *evaluator = new Evaluator();
-			// DO NOT EVOLVE..
-            if (evolutionOff) {
-				evaluator->generateTestVectors();
-				evaluator->evaluateStep(genom, actGener);
-				actGener++;
-			} else {
-				// RESET EVALUTION FOR ALL GENOMS
-				ga.pop->flushEvalution();
-				ga.step(); // GA evolution step
+            evaluator->generateTestVectors();
+            evaluator->evaluateStep(genom, actGener);
+            actGener++;
+        } else {
+            // RESET EVALUTION FOR ALL GENOMS
+            ga.pop->flushEvalution();
+            ga.step(); // GA evolution step
 
-				if (evaluateNext) {
-					evaluator->evaluateStep(genomeTemp, actGener);
-					evaluateNext = 0;
-				}
+            if (evaluateNext) {
+                evaluator->evaluateStep(genomeTemp, actGener);
+                evaluateNext = 0;
+            }
 
-				genomeTemp = (GA1DArrayGenome<unsigned long>&) ga.population().best();// .statistics().bestIndividual();
+            genomeTemp = (GA1DArrayGenome<unsigned long>&) ga.population().best();// .statistics().bestIndividual();
             
-				if ((pGACirc->TVCGProgressive && (changed > actGener/pGACirc->testVectorChangeGener + 1)) ||
-					(!pGACirc->TVCGProgressive && ((actGener %(pGACirc->testVectorChangeGener)) == 0))) {
+            if ((pGACirc->TVCGProgressive && (changed > actGener/pGACirc->testVectorChangeGener + 1)) ||
+                    (!pGACirc->TVCGProgressive && ((actGener %(pGACirc->testVectorChangeGener)) == 0))) {
 
-					if (pGACirc->testVectorGenerChangeSeed == 1) {
-						//set a new seed
-                        ofstream ssfile(FILE_SEEDFILE, ios::app);
+                if (pGACirc->testVectorGenerChangeSeed == 1) {
+                    //set a new seed
+                    ofstream ssfile(FILE_SEEDFILE, ios::app);
 
-                        rndGen->getRandomFromInterval(4294967295, &seed);
-						GARandomSeed(seed);
-                        // WHY RESEEDING RANDOM GENERATOR? (and why not reseeding bias generator as well?)
-                        //orig: rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
-                        delete rndGen;
-                        rndGen = new QuantumRndGen(seed,pBasicSettings.rndGen.QRBGSPath);
-						ssfile << GAGetRandomSeed() << endl;
-						ssfile.close();
-					}
+                    rndGen->getRandomFromInterval(4294967295, &seed);
+                    GARandomSeed(seed);
+                    // WHY RESEEDING RANDOM GENERATOR? (and why not reseeding bias generator as well?)
+                    //orig: rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
+                    delete rndGen;
+                    rndGen = new QuantumRndGen(seed,pBasicSettings.rndGen.QRBGSPath);
+                    ssfile << GAGetRandomSeed() << endl;
+                    ssfile.close();
+                }
 
-					// GENERATE FRESH SET AND EVALUATE ONLY THE BEST ONE
-					evaluator->generateTestVectors();
-					evaluateNext = 1;
-					changed = 0;
-				}
-				else if (pGACirc->evaluateEveryStep) evaluator->evaluateStep(genomeTemp, actGener);
-				changed++;
-				actGener++;
-			}
-		}
-		// GENERATE FRESH NEW SET AND EVALUATE THE RESULT
-		evaluator->generateTestVectors();
-		evaluator->evaluateStep(genomeTemp, actGener);
+                // GENERATE FRESH SET AND EVALUATE ONLY THE BEST ONE
+                evaluator->generateTestVectors();
+                evaluateNext = 1;
+                changed = 0;
+            }
+            else if (pGACirc->evaluateEveryStep) evaluator->evaluateStep(genomeTemp, actGener);
+            changed++;
+            actGener++;
+        }
+    }
 
-		//Print the circuit
-		CircuitGenome::PrintCircuit(genomeTemp,"",0,1);
 
-        delete evaluator;
-    }   
+    // TRY SAVING CURRENT STATE
+    TiXmlElement* pRoot = new TiXmlElement("random_generators");
+    pRoot->LinkEndChild(IRndGen::exportMainGenerator());
+    pRoot->LinkEndChild(rndGen->exportGenerator());
+    pRoot->LinkEndChild(biasRndGen->exportGenerator());
+    saveXMLFile(pRoot,FILE_STATE);
 
+    // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
+    evaluator->generateTestVectors();
+    evaluator->evaluateStep(genomeTemp, actGener);
+
+    //Print the circuit
+    CircuitGenome::PrintCircuit(genomeTemp,"",0,1);
+
+    // tidy-up
+    delete evaluator;
     delete encryptorDecryptor;
+
+    pGACirc->release();
     delete rndGen;
     delete biasRndGen;
 

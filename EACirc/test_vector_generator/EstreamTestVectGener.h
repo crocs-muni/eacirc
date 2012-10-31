@@ -11,6 +11,7 @@ class EstreamTestVectGener: public ITestVectGener {
 		int *numstats;
 	public:
 		EstreamTestVectGener();
+        ~EstreamTestVectGener();
         EstreamTestVectGener(const EstreamTestVectGener&) = delete;
         const EstreamTestVectGener& operator =(const EstreamTestVectGener&) = delete;
 		void getTestVector();

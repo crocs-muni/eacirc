@@ -10,7 +10,7 @@
 # tinyXML: Compilation settings and platform dependent variables are in tinyXML/makefile.
 #
 # DEBUG can be set to YES to include debugging info, or NO otherwise
-DEBUG		= YES
+DEBUG		= NO
 # PROFILE can be set to YES to include profiling info, or NO otherwise
 PROFILE		= NO
 # output name for the compiled and linked application
@@ -22,7 +22,7 @@ RUN_DIR		= run
 # complation settings
 #CXX			= g++
 CXX			= g++-4.7
-CXXFLAGS		= -std=c++0x # -Wall
+CXXFLAGS		= -std=c++11 # -Wall
 DEBUG_CXXFLAGS		= -g -DDEBUG
 RELEASE_CXXFLAGS	= -O3
 PROFILE_CXXFLAGS	= -p

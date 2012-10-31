@@ -7,10 +7,10 @@
 
 class CircuitGenome {
 public:
-  static void Initializer(GAGenome&);
-  static int Mutator(GAGenome&, float);
-  static float Evaluator(GAGenome&);
-  static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
+    static void Initializer(GAGenome&);
+    static int Mutator(GAGenome&, float);
+    static float Evaluator(GAGenome&);
+    static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
 public:
 	static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome);
 	static int ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize);

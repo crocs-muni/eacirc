@@ -3,13 +3,17 @@
 #include "CommonFnc.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
-#include "test_vector_generator/EstreamVectGener.h"
+#include "test_vector_generator/EstreamTestVectGener.h"
 #include "estream/EncryptorDecryptor.h"
 #include "estream/estreamInterface.h"
 
 EstreamTestVectGener::EstreamTestVectGener() : ITestVectGener() {
 	this->numstats = new int[2];
 	Init();
+}
+
+EstreamTestVectGener::~EstreamTestVectGener() {
+    delete[] this->numstats;
 }
 
 void EstreamTestVectGener::Init() {	

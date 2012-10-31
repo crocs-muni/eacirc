@@ -132,10 +132,36 @@ void BiasRndGen::setChanceForOne(int chance) {
 }
 
 string BiasRndGen::shortDescription() const {
-    string mes = "BIAS GENERATOR ";
+    string mes = "bias generetor ";
 	stringstream out;
 	out << m_chanceForOne;
 	mes+=out.str();
 	mes+="%";
 	return mes;
+}
+
+BiasRndGen::BiasRndGen(TiXmlNode* pRoot) {
+    m_type = GENERATOR_BIAS;
+    TiXmlElement* pElem = NULL;
+
+    pElem = pRoot->FirstChildElement("chance_for_one");
+    m_chanceForOne = atoi(pElem->GetText());
+    pElem = pRoot->FirstChildElement("generator");
+    m_rndGen = new QuantumRndGen(pElem);
+}
+
+TiXmlNode* BiasRndGen::exportGenerator() const {
+    TiXmlElement* root = new TiXmlElement("generator");
+    root->SetAttribute("type",shortDescription().c_str());
+
+    TiXmlElement* chanceForOne = new TiXmlElement("chance_for_one");
+    stringstream sChanceForOne;
+    sChanceForOne << m_chanceForOne;
+    chanceForOne->LinkEndChild(new TiXmlText(sChanceForOne.str().c_str()));
+    root->LinkEndChild(chanceForOne);
+
+    root->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
+    root->LinkEndChild(m_rndGen->exportGenerator());
+
+    return root;
 }
