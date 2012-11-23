@@ -2,6 +2,9 @@
 
 // for documentation on using logger, see EACglobals.h
 
+Logger::Logger() : m_logging(false), m_using_file(false),
+	m_out(new LoggerStream(this,clog)) {}
+
 Logger::~Logger() {
     out() << "Exiting EACirc." << endl;
     delete m_out;

@@ -70,7 +70,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>EACirc EACirc/galib EACirc/tinyXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>EACirc;EACirc/galib;EACirc/tinyXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -124,6 +124,7 @@
     <ClCompile Include="eacirc\estream\ciphers\yamb\yamb.cpp" />
     <ClCompile Include="eacirc\estream\ciphers\zk-crypt\zk-crypt-v3.cpp" />
     <ClCompile Include="eacirc\estream\EncryptorDecryptor.cpp" />
+    <ClCompile Include="EACirc\estream\estreamInterface.cpp" />
     <ClCompile Include="eacirc\Evaluator.cpp" />
     <ClCompile Include="eacirc\galib\GA1DArrayGenome.cpp" />
     <ClCompile Include="eacirc\galib\GA1DBinStrGenome.cpp" />
@@ -157,9 +158,10 @@
     <ClCompile Include="eacirc\galib\GATree.cpp" />
     <ClCompile Include="eacirc\galib\GATreeBASE.cpp" />
     <ClCompile Include="eacirc\galib\GATreeGenome.cpp" />
+    <ClCompile Include="EACirc\Logger.cpp" />
     <ClCompile Include="eacirc\random_generator\BiasRndGen.cpp" />
     <ClCompile Include="eacirc\random_generator\IRndGen.cpp" />
-    <ClCompile Include="eacirc\random_generator\RndGen.cpp" />
+    <ClCompile Include="EACirc\random_generator\QuantumRndGen.cpp" />
     <ClCompile Include="eacirc\standalone_testers\TestDisctinctorCircuit.cpp" />
     <ClCompile Include="eacirc\status.cpp" />
     <ClCompile Include="eacirc\test_vector_generator\EstreamTestVectGener.cpp" />
@@ -168,6 +170,7 @@
     <ClCompile Include="eacirc\tinyxml\tinyxml.cpp" />
     <ClCompile Include="eacirc\tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="eacirc\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="EACirc\XMLProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="eacirc\CircuitGenome.h" />
@@ -230,6 +233,7 @@
     <ClInclude Include="eacirc\estream\ciphers\zk-crypt\ZKengine.h" />
     <ClInclude Include="eacirc\estream\EncryptorDecryptor.h" />
     <ClInclude Include="eacirc\estream\estream-interface.h" />
+    <ClInclude Include="EACirc\estream\estreamInterface.h" />
     <ClInclude Include="eacirc\Evaluator.h" />
     <ClInclude Include="eacirc\galib\ga.h" />
     <ClInclude Include="eacirc\galib\GA1DArrayGenome.h" />
@@ -274,17 +278,21 @@
     <ClInclude Include="eacirc\galib\gaversion.h" />
     <ClInclude Include="eacirc\galib\std_stream.h" />
     <ClInclude Include="eacirc\globals.h" />
+    <ClInclude Include="EACirc\Logger.h" />
     <ClInclude Include="eacirc\random_generator\BiasRndGen.h" />
     <ClInclude Include="eacirc\random_generator\IRndGen.h" />
+    <ClInclude Include="EACirc\random_generator\QuantumRndGen.h" />
     <ClInclude Include="eacirc\random_generator\RndGen.h" />
     <ClInclude Include="eacirc\SSconstants.h" />
     <ClInclude Include="eacirc\SSGlobals.h" />
     <ClInclude Include="eacirc\standalone_testers\TestDistinctorCircuit.h" />
     <ClInclude Include="eacirc\status.h" />
+    <ClInclude Include="EACirc\test_vector_generator\EstreamTestVectGener.h" />
     <ClInclude Include="eacirc\test_vector_generator\EstreamVectGener.h" />
     <ClInclude Include="eacirc\test_vector_generator\ITestVectGener.h" />
     <ClInclude Include="eacirc\tinyxml\tinystr.h" />
     <ClInclude Include="eacirc\tinyxml\tinyxml.h" />
+    <ClInclude Include="EACirc\XMLProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

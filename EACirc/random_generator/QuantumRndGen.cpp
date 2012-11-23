@@ -2,7 +2,8 @@
 #include "QuantumRndGen.h"
 #include "time.h"
 
-QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath) {
+QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath) 
+		: m_usesQRNGData(false), m_fileIndex(0) {
     int status;
     m_accumulator = NULL;
     m_type = GENERATOR_QRNG;

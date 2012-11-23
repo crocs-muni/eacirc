@@ -6,19 +6,19 @@
 
 class QuantumRndGen : public IRndGen{
     unsigned char* m_accumulator;
-    bool m_usesQRNGData = false; // using rng output files?
+    bool m_usesQRNGData; // using rng output files?
     string m_QRNGDataPath; // path to rng output files
     int m_accLength; // real data length
     int m_accPosition; // accumulator position
     long m_seed; // seed
-    int m_fileIndex = 0; // which QRNG file is currently used?
+    int m_fileIndex; // which QRNG file is currently used?
     minstd_rand m_internalRNG;
 public:
     QuantumRndGen(unsigned long m_seed = 0, string QRBGSPath = "");
     // implemented in XMLProcessor:
     QuantumRndGen(TiXmlNode* pRoot);
-    QuantumRndGen(const QuantumRndGen&) = delete;
-    const QuantumRndGen& operator =(const QuantumRndGen&) = delete;
+    // QuantumRndGen(const QuantumRndGen&) = delete; //(not supprrted in MS VS)
+    // const QuantumRndGen& operator =(const QuantumRndGen&) = delete; //(not supprrted in MS VS)
     ~QuantumRndGen();
 
     int getRandomFromInterval(unsigned long highBound, unsigned long *pRandom);

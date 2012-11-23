@@ -7,8 +7,8 @@ typedef void* ECRYPT_ctx;
 
 class EstreamInterface {
 	public:
-        int numRounds = 0;
-        EstreamInterface() {}
+        int numRounds;
+		EstreamInterface() : numRounds(0) {}
         virtual ~EstreamInterface() {}
 		virtual void ECRYPT_init(void) = 0;
 		virtual void ECRYPT_keysetup(void* ctx, const u8 * key, u32 keysize,	u32 ivsize) = 0;

@@ -20,21 +20,21 @@ class Logger{
             Logger* m_parentLogger;
         public:
             LoggerBuffer(Logger* parentLogger, ostream& out) : m_out(out), m_parentLogger(parentLogger) {}
-            LoggerBuffer(const LoggerBuffer& copy) = delete;
-            const LoggerBuffer& operator =(const LoggerBuffer& copy) = delete;
+            // LoggerBuffer(const LoggerBuffer& copy) = delete; //(not supprrted in MS VS)
+            // const LoggerBuffer& operator =(const LoggerBuffer& copy) = delete; //(not supprrted in MS VS)
             virtual int sync ();
         };
         LoggerBuffer buffer;
     public:
         LoggerStream(Logger* parentLogger, ostream& stream) : ostream(&buffer), buffer(parentLogger, stream) {}
     };
-    bool m_logging = false;
-    bool m_using_file = false;
+    bool m_logging;
+    bool m_using_file;
     LoggerStream* m_out;
 public:
-    Logger() : m_out(new LoggerStream(this,clog)) {}
-    Logger(const Logger& copy)  = delete;
-    const Logger& operator =(const Logger& copy) = delete;
+    Logger();
+    // Logger(const Logger& copy)  = delete; //(not supprrted in MS VS)
+    // const Logger& operator =(const Logger& copy) = delete; //(not supprrted in MS VS)
     ~Logger();
     ostream& out() { return *m_out; }
     void setOutputStream(ostream& outStream = clog);

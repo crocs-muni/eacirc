@@ -12,8 +12,8 @@ class EstreamTestVectGener: public ITestVectGener {
 	public:
 		EstreamTestVectGener();
         ~EstreamTestVectGener();
-        EstreamTestVectGener(const EstreamTestVectGener&) = delete;
-        const EstreamTestVectGener& operator =(const EstreamTestVectGener&) = delete;
+        // EstreamTestVectGener(const EstreamTestVectGener&) = delete; //(not supprrted in MS VS)
+        // const EstreamTestVectGener& operator =(const EstreamTestVectGener&) = delete; //(not supprrted in MS VS)
 		void getTestVector();
 		void generateTestVectors();
 		void Init();
