@@ -7,7 +7,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
     int status = STAT_OK;
 
     TiXmlNode* pRoot = NULL;
-    loadXMLFile(pRoot, filePath);
+    status = loadXMLFile(pRoot, filePath);
     TiXmlHandle hRoot(pRoot);
     TiXmlElement* pElem;
 

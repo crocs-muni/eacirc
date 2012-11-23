@@ -39,6 +39,7 @@
     <LinkIncremental>true</LinkIncremental>
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
     <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+    <OutDir>$(SolutionDir)\run\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -159,6 +160,7 @@
     <ClCompile Include="eacirc\galib\GATreeBASE.cpp" />
     <ClCompile Include="eacirc\galib\GATreeGenome.cpp" />
     <ClCompile Include="EACirc\Logger.cpp" />
+    <ClCompile Include="EACirc\Main.cpp" />
     <ClCompile Include="eacirc\random_generator\BiasRndGen.cpp" />
     <ClCompile Include="eacirc\random_generator\IRndGen.cpp" />
     <ClCompile Include="EACirc\random_generator\QuantumRndGen.cpp" />
@@ -279,6 +281,7 @@
     <ClInclude Include="eacirc\galib\std_stream.h" />
     <ClInclude Include="eacirc\globals.h" />
     <ClInclude Include="EACirc\Logger.h" />
+    <ClInclude Include="EACirc\Main.h" />
     <ClInclude Include="eacirc\random_generator\BiasRndGen.h" />
     <ClInclude Include="eacirc\random_generator\IRndGen.h" />
     <ClInclude Include="EACirc\random_generator\QuantumRndGen.h" />
@@ -293,9 +296,6 @@
     <ClInclude Include="eacirc\tinyxml\tinystr.h" />
     <ClInclude Include="eacirc\tinyxml\tinyxml.h" />
     <ClInclude Include="EACirc\XMLProcessor.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

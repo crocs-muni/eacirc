@@ -20,6 +20,7 @@ INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
 SOURCES += \
 # === Main project files ===
+    EACirc/Main.cpp \
     EACirc/CircuitGenome.cpp \
     EACirc/CommonFnc.cpp \
     EACirc/XMLProcessor.cpp \
@@ -92,6 +93,7 @@ SOURCES += \
 
 HEADERS += \
 # === Main project files ===
+    EACirc/Main.h \
     EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
     EACirc/XMLProcessor.h \
@@ -104,6 +106,7 @@ HEADERS += \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
     EACirc/test_vector_generator/ITestVectGener.h \
+    EACirc/test_vector_generator/EstreamTestVectGener.h \
     EACirc/circuit_evaluator/DistinguishTwoEvaluator.h \
     EACirc/circuit_evaluator/ICircuitEvaluator.h \
     EACirc/circuit_evaluator/PredictAvalancheEvaluator.h \
@@ -182,8 +185,7 @@ HEADERS += \
     EACirc/galib/GAListGenome.h EACirc/galib/GAMask.h EACirc/galib/GANode.h EACirc/galib/GAParameter.h EACirc/galib/GAPopulation.h EACirc/galib/garandom.h \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
-    EACirc/galib/std_stream.h \
-    EACirc/test_vector_generator/EstreamTestVectGener.h
+    EACirc/galib/std_stream.h
 
 OTHER_FILES += \
     EACirc/config.xml

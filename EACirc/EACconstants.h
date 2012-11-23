@@ -4,7 +4,9 @@
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
 #define FILE_STATE                  "state.xml"
-#define FILE_SEEDFILE               "LastSeed.txt"
+#define FILE_STATE_INITIAL          "state-initial.xml"
+#define FILE_GENOME                 "genome.bin"
+//#define FILE_SEEDFILE               "LastSeed.txt"
 #define FILE_FITNESS_PROGRESS       "EAC_fitnessProgress.txt"
 #define FILE_BEST_FITNESS           "bestfitgraph.txt"
 #define FILE_AVG_FITNESS            "avgfitgraph.txt"
@@ -13,8 +15,12 @@
 #define FILE_TEST_VECTORS           "TestVectors.txt"
 #define FILE_TEST_DATA_1            "TestData1.bin"
 #define FILE_TEST_DATA_2            "TestData2.bin"
-//#define ???                         "EAC_circuit.bin"
+#define FILE_CIRCUIT                "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
+#define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot
 #define FILE_LOGFILE                "eacirc.log"
+
+// CIRCUIT OUTPUT SETTINGS
+#define CIRCUIT_FILENAME_PRECISION 3
 
 // QRNG DATA (filename = $PREFIX$INDEX$DUFFIX, index starts from 0)
 #define	FILE_QRNG_DATA_INDEX_MAX	10

@@ -3,6 +3,7 @@
 #include "EACirc.h"
 #include "CommonFnc.h"
 #include "circuit_evaluator/ICircuitEvaluator.h"
+#include <iomanip>
 
 void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
     unsigned long   circuit[MAX_GENOME_SIZE];    
@@ -80,7 +81,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
             
         // DISPLAY CURRENTLY BEST
 		ostringstream os2;
-		os2 << "circuit_" << fit;
+        os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
 		string filePath = os2.str();
         PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
 
@@ -98,7 +99,9 @@ void CircuitGenome::Initializer(GAGenome &g) {
     GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
     int	offset = 0;
 
-	// LOAD AND CONTINUE
+    // loading done elsewhere (manually in eacirc.run after initializing GAlib)
+    // LOAD AND CONTINUE
+    /*
 	string fileName = "EAC_circuit.bin";
 	fstream	efile;
 	string executetext;
@@ -108,7 +111,8 @@ void CircuitGenome::Initializer(GAGenome &g) {
 		CircuitGenome::ExecuteFromText(executetext, &genome);
 		efile.close();
 		return;
-	}
+    }
+    */
 
 	// CLEAR GENOM
 	for (int i = 0; i < genome.size(); i++) genome.gene(i, 0);
@@ -167,7 +171,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
 
 int CircuitGenome::Mutator(GAGenome &g, float pmut) {
     GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
-    float result = 0;
+    int result = 0;
     
     for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
         int offset = layer * MAX_INTERNAL_LAYER_SIZE; 
@@ -1184,7 +1188,7 @@ node [color=lightblue2, style=filled];\r\n";
 	//
 	//	STORE IN SPECIFIED FILES
 	//
-	if (filePath == "") filePath = "EAC_circuit";
+    if (filePath == "") filePath = FILE_BEST_CIRCUIT;
 
 	fstream	file;
 	string	newFilePath;
@@ -1265,10 +1269,11 @@ node [color=lightblue2, style=filled];\r\n";
     }
 
 
+    /*
 	//
 	//	STORE IN DEFAULT FILE
 	//
-	filePath = "EAC_circuit";
+    filePath = FILE_BEST_CIRCUIT;
 	
 	// TEXT CIRCUIT
 	//newFilePath.Format("%s.txt", filePath);
@@ -1302,6 +1307,7 @@ node [color=lightblue2, style=filled];\r\n";
 		file << visualCirc;
 		file.close();
 	}
+    */
     
     return status;
 }

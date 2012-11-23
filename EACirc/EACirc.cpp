@@ -33,167 +33,205 @@
 	#include <unistd.h>
 #endif
 
-IRndGen*                rndGen;
-IRndGen*                biasRndGen;
+IRndGen*                rndGen = NULL;
+IRndGen*                biasRndGen = NULL;
 GA_CIRCUIT*             pGACirc = NULL;
 EncryptorDecryptor*		encryptorDecryptor = NULL;
-Logger                  mainLogger;
 
-int main(int argc, char **argv)
-{
+EACirc::EACirc()
+    : m_status(STAT_OK), m_evolutionOff(false), m_loadGenome(false),
+      m_seed(0), m_evaluator(NULL), m_readyToRun(0) {
+    pGACirc = new GA_CIRCUIT;
+}
 
-	int status = STAT_OK;
-    //int resumeStatus = STAT_FILE_OPEN_FAIL;
-	unsigned long seed = 0;
-	BASIC_INIT_DATA pBasicSettings;
+EACirc::EACirc(bool evolutionOff)
+    : m_status(STAT_OK), m_evolutionOff(evolutionOff), m_loadGenome(evolutionOff),
+      m_seed(0), m_evaluator(NULL), m_readyToRun(0) {
+    // load genome, if evolution is off
+}
 
-    status = LoadConfigScript(FILE_CONFIG, &pBasicSettings);
-    if (status == STAT_CONFIG_DATA_READ_FAIL) {
+EACirc::~EACirc() {
+    delete m_evaluator;
+    delete encryptorDecryptor;
+    pGACirc->release();
+    delete rndGen;
+    delete biasRndGen;
+}
+
+int EACirc::getStatus() {
+    return m_status;
+}
+
+void EACirc::loadConfiguration(string filename) {
+    if (m_status != STAT_OK) return;
+    m_status = LoadConfigScript(filename, &pBasicSettings);
+    if (m_status != STAT_OK) {
         mainLogger.out() << "Could not read configuration data from " << FILE_CONFIG << endl;
-        return status;
+    }
+    // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
+    pGACirc = &(pBasicSettings.gaCircuitConfig);
+    pGACirc->allocate();
+    m_readyToRun |= EACIRC_CONFIG_LOADED;
+}
+
+void EACirc::loadState(string filename) {
+    if (m_status != STAT_OK) return;
+    if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
+        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
+        return;
+    }
+    // set seed
+    // init rng (3x)
+    // set to load genome
+
+    mainLogger.out() << "Not implemented yet." << endl;
+    m_status = STAT_NOT_IMPLEMENTED_YET;
+
+    // m_readyToRun |= EACIRC_INITIALIZED
+}
+
+void EACirc::saveState(string filename) {
+    if (m_status != STAT_OK) return;
+    TiXmlElement* pRoot = new TiXmlElement("random_generators");
+    pRoot->LinkEndChild(IRndGen::exportMainGenerator());
+    pRoot->LinkEndChild(rndGen->exportGenerator());
+    pRoot->LinkEndChild(biasRndGen->exportGenerator());
+    saveXMLFile(pRoot,filename);
+}
+
+void EACirc::initializeState() {
+    if (m_status != STAT_OK) return;
+    if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
+        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
+        return;
     }
 
-	// CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
-	pGACirc = &(pBasicSettings.gaCircuitConfig);
-	pGACirc->allocate();
+    /*
+    // RESTORE THE SEED
+    fstream	sfile;
+    string sseed;
+    */
 
-    //
-    // COMMAND LINE ARGUMENTS PROCESSING
-    //
-    bool evolutionOff = false;
-    if (argc > 1) {
-        int i = 0;
-        while (++i < argc) {
-            if (strcmp(argv[i],CMD_OPT_LOGGING) == 0) {
-                mainLogger.setOutputStream();
-                mainLogger.setlogging(true);
-            } else
-            if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
-                mainLogger.setOutputFile();
-                mainLogger.setlogging(true);
-            } else
-              // STATIC CIRCUIT ?
-            if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
-                if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
-                    mainLogger.out() << "Static circuit, distinctor mode." << endl;
-                    return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
-                } else {
-                    mainLogger.out() << "Please specify the second parameter. Supported options:" << endl;
-                    mainLogger.out() << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
-                    return STAT_INVALID_ARGUMETS;
-                }
-            } else
-              // EVOLUTION IS OFF ?
-            if (strcmp(argv[i],CMD_OPT_EVOLUTION_OFF) == 0) {
-                evolutionOff = true;
-                mainLogger.out() << "Evolution turned off." << endl;
-            } else {
-                mainLogger.out() << "\"" << argv[1] << "\" is not a valid argument." << endl;
-                mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
-                mainLogger.out() << "  " << CMD_OPT_LOGGING << "  (set logging to clog)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << "  (set logging to logfile)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
-                return STAT_INVALID_ARGUMETS;
-            }
-        }
-    }
-
-	// PREPARE THE LOGGING FILES
-    std::remove(FILE_FITNESS_PROGRESS);
-    std::remove(FILE_BEST_FITNESS);
-    std::remove(FILE_AVG_FITNESS);
-
-	// RESTORE THE SEED
-	fstream	sfile;
-	string sseed;
-	
-	//with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
-	if (pBasicSettings.rndGen.useFixedSeed) {
-		if (!sfile.is_open())
+    //with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
+    if (pBasicSettings.rndGen.useFixedSeed) {
+        /* // previous solution: first try to load LastSeed.txt, then seed from config.xml, then new random
+        if (!sfile.is_open())
             sfile.open(FILE_SEEDFILE, fstream::in);
-		getline(sfile, sseed);
+        getline(sfile, sseed);
         // why?
         // cout << sseed << endl;
-		if (!sseed.empty())
-			seed = atoi(sseed.c_str());
+        if (!sseed.empty())
+            seed = atoi(sseed.c_str());
         sfile.close();
 
-		// USE STATIC SEED
+        // USE STATIC SEED
         if (!seed) {
             seed = pBasicSettings.rndGen.randomSeed;
             mainLogger.out() << "Using fixed seed: " << seed << endl;
         }
-	}
-
+        */
+        m_seed = pBasicSettings.rndGen.randomSeed;
+        mainLogger.out() << "Using fixed seed: " << m_seed << endl;
+    }
     //generate random seed, if none provided
     IRndGen::initMainGenerator(clock() + time(NULL) + getpid());
-    if (seed == 0){
-        seed = (IRndGen::getRandomFromMainGenerator() %100000) + ((IRndGen::getRandomFromMainGenerator() %42946) *100000);
-        mainLogger.out() << "Using system-generated random seed: " << seed << endl;
+    if (m_seed == 0){
+        m_seed = (IRndGen::getRandomFromMainGenerator() %100000) + ((IRndGen::getRandomFromMainGenerator() %42946) *100000);
+        mainLogger.out() << "Using system-generated random seed: " << m_seed << endl;
     }
-	//INIT RNG
-	GARandomSeed(seed);
-    rndGen = new QuantumRndGen(seed, pBasicSettings.rndGen.QRBGSPath);
+
+    //INIT RNG
+    rndGen = new QuantumRndGen(m_seed, pBasicSettings.rndGen.QRBGSPath);
     mainLogger.out() << "Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
     //INIT BIAS RNDGEN
-    biasRndGen = new BiasRndGen(seed, pBasicSettings.rndGen.QRBGSPath, pBasicSettings.rndGen.biasFactor);
+    biasRndGen = new BiasRndGen(m_seed, pBasicSettings.rndGen.QRBGSPath, pBasicSettings.rndGen.biasFactor);
     mainLogger.out() << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
 
-	//INIT ENCRYPTOR/DECRYPTOR
-	encryptorDecryptor = new EncryptorDecryptor();
+    m_readyToRun |= EACIRC_INITIALIZED;
+}
 
-	//LOG THE SEED
+void EACirc::prepare() {
+    if (m_status != STAT_OK) return;
+    if ((m_readyToRun & (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED)) !=
+            (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED)) {
+        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
+        return;
+    }
+
+    mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
+    // INIT EVALUATOR and ENCRYPTOR-DECRYPTOR (according to loaded settings)
+    encryptorDecryptor = new EncryptorDecryptor();
+    m_evaluator = new Evaluator();
+
+    // PREPARE THE LOGGING FILES
+    std::remove(FILE_FITNESS_PROGRESS);
+    std::remove(FILE_BEST_FITNESS);
+    std::remove(FILE_AVG_FITNESS);
+
+    /*
+    //LOG THE SEED
     ofstream ssfile(FILE_SEEDFILE, ios::app);
-	ssfile << "----------";
-	if (pBasicSettings.rndGen.useFixedSeed)
-		ssfile << "Using fixed seed" << endl;
-	else
-		ssfile << "Using random seed" << endl;
-	ssfile << seed << endl;
-	ssfile.close();
+    ssfile << "----------";
+    if (pBasicSettings.rndGen.useFixedSeed)
+        ssfile << "Using fixed seed" << endl;
+    else
+        ssfile << "Using random seed" << endl;
+    ssfile << m_seed << endl;
+    ssfile.close();
+    */
 
-	//LOG THE TESTVECTGENER METHOD
-	if (pGACirc->testVectorGenerMethod == ESTREAM_CONST) {
+    //LOG THE TESTVECTGENER METHOD
+    if (pGACirc->testVectorGenerMethod == ESTREAM_CONST) {
         ofstream out(FILE_FITNESS_PROGRESS, ios::app);
-		out << "Using Ecrypt candidate n." << pGACirc->testVectorEstream << " (" <<  pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n." << pGACirc->testVectorEstream2 << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
-		out.close();
+        out << "Using Ecrypt candidate n." << pGACirc->testVectorEstream << " (" <<  pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n." << pGACirc->testVectorEstream2 << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
+        out.close();
         mainLogger.out() << "stream1: using " << estreamToString(pGACirc->testVectorEstream);
         mainLogger.out() << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds)" << endl;
         mainLogger.out() << "stream2: using " << estreamToString(pGACirc->testVectorEstream2);
         mainLogger.out() << " (" << pBasicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
-	}
+    }
 
-    GA1DArrayGenome<unsigned long> genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    m_readyToRun |= EACIRC_PREPARED;
+}
 
-	// LOAD genome
-	string fileName = "EAC_circuit.bin";
-	fstream	efile;
-	string executetext;
-	efile.open(fileName.c_str(), fstream::in);	
-	if (efile.is_open()) {
-        mainLogger.out() << "Loading genome from file." << endl;
-		getline(efile, executetext);
-		CircuitGenome::ExecuteFromText(executetext, &genom);
-        efile.close();
-	}
+void EACirc::run() {
+    if (m_status != STAT_OK) return;
+    if ((m_readyToRun & (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED | EACIRC_PREPARED)) !=
+            (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED | EACIRC_PREPARED)) {
+        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
+        return;
+    }
 
-    ofstream out(FILE_FITNESS_PROGRESS, ios::app);
+    // SAVE INITIAL STATE
+    saveState(FILE_STATE_INITIAL);
 
-    // INIT EVALUATOR
-    Evaluator *evaluator = new Evaluator();
-    out << "evalOK" << endl;
-
-    //  CREATE GA STRUCTS
+    // ***** GAlib INITIALIZATION *****
     mainLogger.out() << "Initialising GAlib." << endl;
+    GARandomSeed(m_seed);
+    // CREATE GA STRUCTS
+    GA1DArrayGenome<unsigned long> genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
     GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
-
+    // INIT GENOME STRUCTURES
     genom.initializer(CircuitGenome::Initializer);
     genom.mutator(CircuitGenome::Mutator);
     genom.crossover(CircuitGenome::Crossover);
-
+    // LOAD genome
+    if (m_loadGenome) {
+        fstream	genomeFile;
+        string executetext;
+        genomeFile.open(FILE_GENOME, fstream::in);
+        if (genomeFile.is_open()) {
+            mainLogger.out() << "Loading genome from file." << endl;
+            getline(genomeFile, executetext);
+            CircuitGenome::ExecuteFromText(executetext, &genom);
+            genomeFile.close();
+        } else {
+            m_status = STAT_FILE_OPEN_FAIL;
+            return;
+        }
+    }
+    // INIT MAIN GA
     GASteadyStateGA ga(genom);
-
     ga.populationSize(pBasicSettings.gaConfig.popSize);
     ga.nReplacement(2 * pBasicSettings.gaConfig.popSize / 3);
     ga.nGenerations(pBasicSettings.gaConfig.nGeners);
@@ -203,24 +241,25 @@ int main(int argc, char **argv)
     ga.scoreFrequency(1);	// keep the scores of every generation
     ga.flushFrequency(1);	// specify how often to write the score to disk
     ga.selectScores(GAStatistics::AllScores);
-
     ga.initialize();
-
-    out << "GAOK" << endl;
+    //out << "GAOK" << endl;
     mainLogger.out() << "GAlib fully initialized." << endl;
-    int		actGener = 1;
-    int		changed = 1;
-    int		evaluateNext = 0;
+    // ***** END GAlib INITIALIZATIONS *****
 
+    int actGener = 1;
+    int	changed = 1;
+    int	evaluateNext = 0;
     pGACirc->clearFitnessStats();
-
     fstream fitfile;
 
-    if (evolutionOff) {
+    if (m_evolutionOff) {
         genomeTemp = genom;
     }
 
+    mainLogger.out() << "Starting evolution." << endl;
     while (actGener < pBasicSettings.gaConfig.nGeners) {
+        actGener++;
+
         //FRACTION FILE FOR BOINC
         fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
         fitfile << ((float)(actGener))/((float)(pBasicSettings.gaConfig.nGeners));
@@ -231,17 +270,16 @@ int main(int argc, char **argv)
         //Evaluator *evaluator = new Evaluator();
 
         // DO NOT EVOLVE..
-        if (evolutionOff) {
-            evaluator->generateTestVectors();
-            evaluator->evaluateStep(genom, actGener);
-            actGener++;
+        if (m_evolutionOff) {
+            m_evaluator->generateTestVectors();
+            m_evaluator->evaluateStep(genom, actGener);
         } else {
             // RESET EVALUTION FOR ALL GENOMS
             ga.pop->flushEvalution();
             ga.step(); // GA evolution step
 
             if (evaluateNext) {
-                evaluator->evaluateStep(genomeTemp, actGener);
+                m_evaluator->evaluateStep(genomeTemp, actGener);
                 evaluateNext = 0;
             }
 
@@ -252,55 +290,33 @@ int main(int argc, char **argv)
 
                 if (pGACirc->testVectorGenerChangeSeed == 1) {
                     //set a new seed
-                    ofstream ssfile(FILE_SEEDFILE, ios::app);
-
-                    rndGen->getRandomFromInterval(4294967295, &seed);
-                    GARandomSeed(seed);
+                    //ofstream ssfile(FILE_SEEDFILE, ios::app);
+                    rndGen->getRandomFromInterval(4294967295, &m_seed);
+                    GARandomSeed(m_seed);
+                    mainLogger.out() << "GAlib reseeded (actGener = " << actGener << ")" << endl;
                     // WHY RESEEDING RANDOM GENERATOR? (and why not reseeding bias generator as well?)
                     //orig: rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
-                    delete rndGen;
-                    rndGen = new QuantumRndGen(seed,pBasicSettings.rndGen.QRBGSPath);
-                    ssfile << GAGetRandomSeed() << endl;
-                    ssfile.close();
+                    // reseed Quantum random generator
+                    // delete rndGen;
+                    // rndGen = new QuantumRndGen(seed,pBasicSettings.rndGen.QRBGSPath);
+                    // ssfile << GAGetRandomSeed() << endl;
+                    // ssfile.close();
                 }
 
                 // GENERATE FRESH SET AND EVALUATE ONLY THE BEST ONE
-                evaluator->generateTestVectors();
+                m_evaluator->generateTestVectors();
                 evaluateNext = 1;
                 changed = 0;
             }
-            else if (pGACirc->evaluateEveryStep) evaluator->evaluateStep(genomeTemp, actGener);
+            else if (pGACirc->evaluateEveryStep) m_evaluator->evaluateStep(genomeTemp, actGener);
             changed++;
-            actGener++;
         }
     }
 
-
-    // TRY SAVING CURRENT STATE
-    TiXmlElement* pRoot = new TiXmlElement("random_generators");
-    pRoot->LinkEndChild(IRndGen::exportMainGenerator());
-    pRoot->LinkEndChild(rndGen->exportGenerator());
-    pRoot->LinkEndChild(biasRndGen->exportGenerator());
-    saveXMLFile(pRoot,FILE_STATE);
-
     // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
-    evaluator->generateTestVectors();
-    evaluator->evaluateStep(genomeTemp, actGener);
+    m_evaluator->generateTestVectors();
+    m_evaluator->evaluateStep(genomeTemp, actGener);
 
-    //Print the circuit
-    CircuitGenome::PrintCircuit(genomeTemp,"",0,1);
-
-    // tidy-up
-    delete evaluator;
-    delete encryptorDecryptor;
-
-    pGACirc->release();
-    delete rndGen;
-    delete biasRndGen;
-
-    if (status != STAT_OK) {
-        mainLogger.out() << "Error: Program run failed." << endl;
-        mainLogger.out() << "       status: " << ErrorToString(status) << endl;
-    }
-    return status;
+    //Print the best circuit
+    CircuitGenome::PrintCircuit(genomeTemp,FILE_BEST_CIRCUIT,0,1);
 }

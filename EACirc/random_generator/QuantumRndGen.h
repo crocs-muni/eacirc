@@ -10,7 +10,7 @@ class QuantumRndGen : public IRndGen{
     string m_QRNGDataPath; // path to rng output files
     int m_accLength; // real data length
     int m_accPosition; // accumulator position
-    long m_seed; // seed
+    unsigned long m_seed; // seed
     int m_fileIndex; // which QRNG file is currently used?
     minstd_rand m_internalRNG;
 public:
