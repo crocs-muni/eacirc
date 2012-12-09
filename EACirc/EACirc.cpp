@@ -12,6 +12,7 @@
 #include "random_generator/IRndGen.h"
 #include "random_generator/BiasRndGen.h"
 #include "random_generator/QuantumRndGen.h"
+#include "random_generator/MD5RndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
@@ -93,7 +94,7 @@ void EACirc::loadState(string filename) {
 void EACirc::saveState(string filename) {
     if (m_status != STAT_OK) return;
     TiXmlElement* pRoot = new TiXmlElement("random_generators");
-    pRoot->LinkEndChild(IRndGen::exportMainGenerator());
+    pRoot->LinkEndChild(mainGenerator->exportGenerator());
     pRoot->LinkEndChild(rndGen->exportGenerator());
     pRoot->LinkEndChild(biasRndGen->exportGenerator());
     saveXMLFile(pRoot,filename);
@@ -113,7 +114,7 @@ void EACirc::initializeState() {
     */
 
     //with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
-    if (pBasicSettings.rndGen.useFixedSeed) {
+    if (pBasicSettings.rndGen.useFixedSeed && pBasicSettings.rndGen.randomSeed != 0) {
         /* // previous solution: first try to load LastSeed.txt, then seed from config.xml, then new random
         if (!sfile.is_open())
             sfile.open(FILE_SEEDFILE, fstream::in);
@@ -131,12 +132,12 @@ void EACirc::initializeState() {
         }
         */
         m_seed = pBasicSettings.rndGen.randomSeed;
+        mainGenerator = new MD5RndGen(m_seed);
         mainLogger.out() << "Using fixed seed: " << m_seed << endl;
-    }
-    //generate random seed, if none provided
-    IRndGen::initMainGenerator(clock() + time(NULL) + getpid());
-    if (m_seed == 0){
-        m_seed = (IRndGen::getRandomFromMainGenerator() %100000) + ((IRndGen::getRandomFromMainGenerator() %42946) *100000);
+    } else {
+        //generate random seed, if none provided
+        mainGenerator = new MD5RndGen(clock() + time(NULL) + getpid());
+        mainGenerator->getRandomFromInterval(ULONG_MAX,&m_seed);
         mainLogger.out() << "Using system-generated random seed: " << m_seed << endl;
     }
 

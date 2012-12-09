@@ -42,6 +42,8 @@ SOURCES += \
     EACirc/random_generator/BiasRndGen.cpp \
     EACirc/random_generator/IRndGen.cpp \
     EACirc/random_generator/QuantumRndGen.cpp \
+    EACirc/random_generator/MD5RndGen.cpp \
+    EACirc/random_generator/md5.cpp \
     EACirc/estream/EncryptorDecryptor.cpp \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.cpp \
@@ -98,7 +100,6 @@ HEADERS += \
     EACirc/CommonFnc.h \
     EACirc/XMLProcessor.h \
     EACirc/EACconstants.h \
-    EACirc/globals_unused.h \
     EACirc/EACglobals.h \
     EACirc/Logger.h \
     EACirc/Evaluator.h \
@@ -119,6 +120,8 @@ HEADERS += \
     EACirc/random_generator/BiasRndGen.h \
     EACirc/random_generator/IRndGen.h \
     EACirc/random_generator/QuantumRndGen.h \
+    EACirc/random_generator/MD5RndGen.h \
+    EACirc/random_generator/md5.h \
     EACirc/estream/EncryptorDecryptor.h \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.h \

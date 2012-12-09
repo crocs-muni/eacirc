@@ -1,23 +1,17 @@
 //#include "stdafx.h"
 #include "QuantumRndGen.h"
 #include "time.h"
+#include "MD5RndGen.h"
 
 QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath) 
-		: m_usesQRNGData(false), m_fileIndex(0) {
+        : IRndGen(GENERATOR_QRNG,seed), m_usesQRNGData(false), m_fileIndex(0) {
     int status;
     m_accumulator = NULL;
-    m_type = GENERATOR_QRNG;
     this->m_QRNGDataPath = QRBGSPath;
 
-    // IF SEED NOT EXTERNALLY SUPPLIED, TAKE SYSTEM TIME
-    if (seed == 0) {
-        seed = (unsigned int) time(NULL);
-        mainLogger.out() << "Warning: using system time to initialize random generator (" << this->shortDescription() << ")" << endl;
-    }
-    this->m_seed = seed;
-
-    // INITIALIZE INTERNAL SYSTEM GENERATOR
-    m_internalRNG.seed(seed);
+    // INITIALIZE INTERNAL GENERATOR
+    m_internalRNG = new MD5RndGen(seed);
+    // m_internalRNG.seed(seed);
 
     // CHECK FOR QUANTUM DATA SOURCE
     int length;
@@ -51,6 +45,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
 
 QuantumRndGen::~QuantumRndGen() {
     delete[] m_accumulator;
+    delete m_internalRNG;
 }
 
 
@@ -128,14 +123,20 @@ int QuantumRndGen::reinitRandomGenerator() {
     if (!m_usesQRNGData) {
         m_accPosition = 0;
         // MAX 32B INT = 256x256x256x256
-        m_accumulator[0] = m_internalRNG()%256;
-        m_accumulator[1] = m_internalRNG()%256;
-        m_accumulator[2] = m_internalRNG()%256;
-        m_accumulator[3] = m_internalRNG()%256;
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + 0);
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + 1);
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + 2);
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + 3);
+        //m_accumulator[0] = m_internalRNG()%256;
+        //m_accumulator[1] = m_internalRNG()%256;
+        //m_accumulator[2] = m_internalRNG()%256;
+        //m_accumulator[3] = m_internalRNG()%256;
     } else {
-        m_fileIndex = m_internalRNG() % FILE_QRNG_DATA_INDEX_MAX;
+        m_internalRNG->getRandomFromInterval(FILE_QRNG_DATA_INDEX_MAX,&m_fileIndex);
+        //m_fileIndex = m_internalRNG() % FILE_QRNG_DATA_INDEX_MAX;
         status = loadQRNGDataFile();
-        m_accPosition = m_internalRNG()%(m_accLength-4);
+        m_internalRNG->getRandomFromInterval(m_accLength-4, &m_accPosition);
+        //m_accPosition = m_internalRNG()%(m_accLength-4);
     }
     return status;
 }
@@ -149,10 +150,14 @@ int QuantumRndGen::updateAccumulator() {
             status = reinitRandomGenerator();
     } else {
         // using system generator (accPosition = 0)
-        m_accumulator[m_accPosition] = m_internalRNG()%256;
-        m_accumulator[m_accPosition+1] = m_internalRNG()%256;
-        m_accumulator[m_accPosition+2] = m_internalRNG()%256;
-        m_accumulator[m_accPosition+3] = m_internalRNG()%256;
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 0);
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 1);
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 2);
+        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 3);
+        //m_accumulator[m_accPosition] = m_internalRNG()%256;
+        //m_accumulator[m_accPosition+1] = m_internalRNG()%256;
+        //m_accumulator[m_accPosition+2] = m_internalRNG()%256;
+        //m_accumulator[m_accPosition+3] = m_internalRNG()%256;
     }
 	
     return status;
@@ -178,8 +183,8 @@ string QuantumRndGen::shortDescription() const {
     else return "system-based random generator";
 }
 
-QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot) {
-    m_type = GENERATOR_QRNG;
+QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot)
+        : IRndGen(GENERATOR_QRNG,1) {  // cannot call IRndGen with seed 0, warning would be issued
     TiXmlElement* pElem = NULL;
 
     pElem = pRoot->FirstChildElement("original_seed");
@@ -207,7 +212,10 @@ QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot) {
             m_accumulator[i] = value;
         }
     }
-    pElem = pRoot->FirstChildElement("internal_rng_state");
+    pElem = pRoot->FirstChildElement("internal_rng");
+    pElem = pElem->FirstChildElement("generator");
+    m_internalRNG = new MD5RndGen(pElem);
+    /*
     istringstream ss(pElem->GetText());
     if (strcmp(pElem->Attribute("type"),typeid(m_internalRNG).name()) == 0) {
         ss >> m_internalRNG;
@@ -216,6 +224,7 @@ QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot) {
         mainLogger.out() << "       required: " << typeid(m_internalRNG).name() << endl;
         mainLogger.out() << "          found: " << pElem->Attribute("type") << endl;
     }
+    */
 }
 
 TiXmlNode* QuantumRndGen::exportGenerator() const {
@@ -256,12 +265,15 @@ TiXmlNode* QuantumRndGen::exportGenerator() const {
     accumulatorState->LinkEndChild(value);
     pRoot->LinkEndChild(accumulatorState);
 
-    TiXmlElement* internalRNGstate = new TiXmlElement("internal_rng_state");
+    TiXmlElement* internalRNGstate = new TiXmlElement("internal_rng");
+    /*
     internalRNGstate->SetAttribute("type",typeid(m_internalRNG).name());
     stringstream state;
     state << dec << left << setfill(' ');
     state << m_internalRNG;
     internalRNGstate->LinkEndChild(new TiXmlText(state.str().c_str()));
+    */
+    internalRNGstate->LinkEndChild(m_internalRNG->exportGenerator());
     pRoot->LinkEndChild(internalRNGstate);
 
     return pRoot;

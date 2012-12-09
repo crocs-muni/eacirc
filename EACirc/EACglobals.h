@@ -5,6 +5,8 @@
 #include "status.h"
 #include "estream/estreamInterface.h"
 #include "Logger.h"
+//#include "random_generator/IRndGen.h"
+class IRndGen;
 
 #include <list>
 #include <math.h>
@@ -51,13 +53,20 @@ typedef unsigned __int64 uint64_t;
 
 
 // GENERAL LOGGING SERVICE
-// #define LOG_INSERTSTRING(message)       { ofstream out("output.log", fstream::app); out << message << endl; out.close();}
 /* using main EACirc logger
  *
  * send logs to 'mainLogger.out()' via '<<'
  * flushing 'mainLogger.out()' causes written data to be prefixed by current time and flushed to logging stream
  */
 extern Logger mainLogger;
+// RANDOM GENERATOR FOR CUSTOM USAGE
+/*
+ * is initialized at state initialization of EACirc according to external seed or system time
+ * idealy should be used ONLY for first initialization of other generators
+ *
+ * internaly is a MD5-based generator
+ */
+extern IRndGen* mainGenerator;
 
 #define STREAM_BLOCK_SIZE 16
 
@@ -247,4 +256,4 @@ typedef struct _BASIC_INIT_DATA {
 } BASIC_INIT_DATA;
 
 
-#endif
+#endif //EACGLOBALS_H

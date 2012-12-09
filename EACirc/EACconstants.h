@@ -71,6 +71,7 @@
 // RANDOM GENERATORS
 #define GENERATOR_QRNG				1
 #define	GENERATOR_BIAS				2
+#define GENERATOR_MD5               3
 
 // CIRCUIT FUNCTIONS
 #define FNC_NOP                     0

@@ -3,6 +3,7 @@
 #include "standalone_testers/TestDistinctorCircuit.h"
 
 Logger mainLogger;
+IRndGen* mainGenerator = NULL;
 
 int main(int argc, char **argv) {
     //
@@ -57,5 +58,11 @@ int main(int argc, char **argv) {
     if (eacirc.getStatus() != STAT_OK) {
         mainLogger.out() << "Error: Program run failed." << endl;
         mainLogger.out() << "       status: " << ErrorToString(eacirc.getStatus()) << endl;
+    } else {
+        mainLogger.out() << "Program run succeeded." << endl;
+    }
+
+    if (mainGenerator != NULL) {
+        delete mainGenerator;
     }
 }

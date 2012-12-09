@@ -1,8 +1,8 @@
+#ifndef QUANTUMRNDGEN_H
+#define QUANTUMRNDGEN_H
+
 #include <string>
 #include "random_generator/IRndGen.h"
-
-#ifndef RNDGEN_H
-#define RNDGEN_H
 
 class QuantumRndGen : public IRndGen{
     unsigned char* m_accumulator;
@@ -10,12 +10,11 @@ class QuantumRndGen : public IRndGen{
     string m_QRNGDataPath; // path to rng output files
     int m_accLength; // real data length
     int m_accPosition; // accumulator position
-    unsigned long m_seed; // seed
     int m_fileIndex; // which QRNG file is currently used?
-    minstd_rand m_internalRNG;
+    // minstd_rand m_internalRNG;
+    IRndGen* m_internalRNG;
 public:
-    QuantumRndGen(unsigned long m_seed = 0, string QRBGSPath = "");
-    // implemented in XMLProcessor:
+    QuantumRndGen(unsigned long seed = 0, string QRBGSPath = "");
     QuantumRndGen(TiXmlNode* pRoot);
     // QuantumRndGen(const QuantumRndGen&) = delete; //(not supprrted in MS VS)
     // const QuantumRndGen& operator =(const QuantumRndGen&) = delete; //(not supprrted in MS VS)
@@ -36,4 +35,4 @@ protected:
     int loadQRNGDataFile();
 };
 
-#endif
+#endif // QUANTUMRNDGEN_H

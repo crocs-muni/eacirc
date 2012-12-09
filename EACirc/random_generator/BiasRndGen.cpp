@@ -4,9 +4,8 @@
 #include "EACirc.h"
 #include "random_generator/QuantumRndGen.h"
 
-BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne) {
-    m_type = GENERATOR_BIAS;
-    m_chanceForOne = chanceForOne;
+BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne)
+        : IRndGen(GENERATOR_BIAS, seed), m_chanceForOne(chanceForOne) {
     m_rndGen = new QuantumRndGen(seed, QRBGSPath);
 }
 
@@ -140,8 +139,8 @@ string BiasRndGen::shortDescription() const {
 	return mes;
 }
 
-BiasRndGen::BiasRndGen(TiXmlNode* pRoot) {
-    m_type = GENERATOR_BIAS;
+BiasRndGen::BiasRndGen(TiXmlNode* pRoot)
+        : IRndGen(GENERATOR_BIAS,1) {  // cannot call IRndGen with seed 0, warning would be issued
     TiXmlElement* pElem = NULL;
 
     pElem = pRoot->FirstChildElement("chance_for_one");
