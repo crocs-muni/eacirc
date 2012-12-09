@@ -107,30 +107,8 @@ void EACirc::initializeState() {
         return;
     }
 
-    /*
-    // RESTORE THE SEED
-    fstream	sfile;
-    string sseed;
-    */
-
     //with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
     if (pBasicSettings.rndGen.useFixedSeed && pBasicSettings.rndGen.randomSeed != 0) {
-        /* // previous solution: first try to load LastSeed.txt, then seed from config.xml, then new random
-        if (!sfile.is_open())
-            sfile.open(FILE_SEEDFILE, fstream::in);
-        getline(sfile, sseed);
-        // why?
-        // cout << sseed << endl;
-        if (!sseed.empty())
-            seed = atoi(sseed.c_str());
-        sfile.close();
-
-        // USE STATIC SEED
-        if (!seed) {
-            seed = pBasicSettings.rndGen.randomSeed;
-            mainLogger.out() << "Using fixed seed: " << seed << endl;
-        }
-        */
         m_seed = pBasicSettings.rndGen.randomSeed;
         mainGenerator = new MD5RndGen(m_seed);
         mainLogger.out() << "Using fixed seed: " << m_seed << endl;
@@ -168,18 +146,6 @@ void EACirc::prepare() {
     std::remove(FILE_FITNESS_PROGRESS);
     std::remove(FILE_BEST_FITNESS);
     std::remove(FILE_AVG_FITNESS);
-
-    /*
-    //LOG THE SEED
-    ofstream ssfile(FILE_SEEDFILE, ios::app);
-    ssfile << "----------";
-    if (pBasicSettings.rndGen.useFixedSeed)
-        ssfile << "Using fixed seed" << endl;
-    else
-        ssfile << "Using random seed" << endl;
-    ssfile << m_seed << endl;
-    ssfile.close();
-    */
 
     //LOG THE TESTVECTGENER METHOD
     if (pGACirc->testVectorGenerMethod == ESTREAM_CONST) {
