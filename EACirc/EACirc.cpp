@@ -289,19 +289,12 @@ void EACirc::run() {
             if ((pGACirc->TVCGProgressive && (changed > actGener/pGACirc->testVectorChangeGener + 1)) ||
                     (!pGACirc->TVCGProgressive && ((actGener %(pGACirc->testVectorChangeGener)) == 0))) {
 
-                if (pGACirc->testVectorGenerChangeSeed == 1) {
-                    //set a new seed
-                    //ofstream ssfile(FILE_SEEDFILE, ios::app);
-                    rndGen->getRandomFromInterval(4294967295, &m_seed);
+                if (pGACirc->changeGalibSeedFrequency != 0 &&
+                        actGener % pGACirc->changeGalibSeedFrequency == 0) {
+                    saveState(FILE_STATE);
+                    rndGen->getRandomFromInterval(ULONG_MAX, &m_seed);
                     GARandomSeed(m_seed);
                     mainLogger.out() << "GAlib reseeded (actGener = " << actGener << ")" << endl;
-                    // WHY RESEEDING RANDOM GENERATOR? (and why not reseeding bias generator as well?)
-                    //orig: rndGen->InitRandomGenerator(seed,pBasicSettings.rndGen.QRBGSPath);
-                    // reseed Quantum random generator
-                    // delete rndGen;
-                    // rndGen = new QuantumRndGen(seed,pBasicSettings.rndGen.QRBGSPath);
-                    // ssfile << GAGetRandomSeed() << endl;
-                    // ssfile.close();
                 }
 
                 // GENERATE FRESH SET AND EVALUATE ONLY THE BEST ONE
