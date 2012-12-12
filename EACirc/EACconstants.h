@@ -5,6 +5,8 @@
 #define FILE_CONFIG                 "config.xml"
 #define FILE_STATE                  "state.xml"
 #define FILE_STATE_INITIAL          "state-initial.xml"
+#define FILE_POPULATION             "population.bin"
+#define FILE_POPULATION_INITIAL     "population-initial.bin"
 #define FILE_GENOME                 "genome.bin"
 //#define FILE_SEEDFILE               "LastSeed.txt"
 #define FILE_FITNESS_PROGRESS       "EAC_fitnessProgress.txt"

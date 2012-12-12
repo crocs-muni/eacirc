@@ -1556,3 +1556,35 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
     
     return status;
 }
+
+int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
+    int status = STAT_OK;
+
+    ostringstream textCicruitStream;
+    for (int i = 0; i < genome.length(); i++) {
+        textCicruitStream << genome.gene(i) << " ";
+    }
+    textCircuit = textCicruitStream.str();
+
+    return status;
+}
+
+int CircuitGenome::writePopulation(const GAPopulation& population, ostream& out) {
+    int status = STAT_OK;
+    string textCircuit;
+    for (int i = 0; i < population.size(); i++) {
+        // note: it is not necessary to call individual i in SCALED order
+        //       however then the population files differ in order ('diff' cannot be used to fing bugs)
+        GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(population.individual(i,GAPopulation::SCALED));
+        status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
+        if (status != STAT_OK) {
+            return status;
+        }
+        out << textCircuit << endl;
+    }
+    return status;
+}
+
+int CircuitGenome::readPopulation(GAPopulation& population, istream& in) {
+    return STAT_NOT_IMPLEMENTED_YET;
+}

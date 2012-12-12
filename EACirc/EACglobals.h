@@ -62,7 +62,7 @@ extern Logger mainLogger;
 // RANDOM GENERATOR FOR CUSTOM USAGE
 /*
  * is initialized at state initialization of EACirc according to external seed or system time
- * idealy should be used ONLY for first initialization of other generators
+ * idealy should be used ONLY for first initialization of other generators and GAlib
  *
  * internaly is a MD5-based generator
  */

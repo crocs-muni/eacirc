@@ -123,14 +123,10 @@ int QuantumRndGen::reinitRandomGenerator() {
     if (!m_usesQRNGData) {
         m_accPosition = 0;
         // MAX 32B INT = 256x256x256x256
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + 0);
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + 1);
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + 2);
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + 3);
-        //m_accumulator[0] = m_internalRNG()%256;
-        //m_accumulator[1] = m_internalRNG()%256;
-        //m_accumulator[2] = m_internalRNG()%256;
-        //m_accumulator[3] = m_internalRNG()%256;
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + 0);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + 1);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + 2);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + 3);
     } else {
         m_internalRNG->getRandomFromInterval(FILE_QRNG_DATA_INDEX_MAX,&m_fileIndex);
         //m_fileIndex = m_internalRNG() % FILE_QRNG_DATA_INDEX_MAX;
@@ -150,10 +146,10 @@ int QuantumRndGen::updateAccumulator() {
             status = reinitRandomGenerator();
     } else {
         // using system generator (accPosition = 0)
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 0);
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 1);
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 2);
-        m_internalRNG->getRandomFromInterval(256,m_accumulator + m_accPosition + 3);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 0);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 1);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 2);
+        m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 3);
         //m_accumulator[m_accPosition] = m_internalRNG()%256;
         //m_accumulator[m_accPosition+1] = m_internalRNG()%256;
         //m_accumulator[m_accPosition+2] = m_internalRNG()%256;

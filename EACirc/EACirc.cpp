@@ -41,13 +41,15 @@ EncryptorDecryptor*		encryptorDecryptor = NULL;
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_evolutionOff(false), m_loadGenome(false),
-      m_seed(0), m_evaluator(NULL), m_readyToRun(0) {
+      m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_gaData(NULL),
+      m_readyToRun(0), m_actGener(0) {
     pGACirc = new GA_CIRCUIT;
 }
 
 EACirc::EACirc(bool evolutionOff)
     : m_status(STAT_OK), m_evolutionOff(evolutionOff), m_loadGenome(evolutionOff),
-      m_seed(0), m_evaluator(NULL), m_readyToRun(0) {
+      m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_gaData(NULL),
+      m_readyToRun(0), m_actGener(0) {
     // load genome, if evolution is off
 }
 
@@ -72,10 +74,19 @@ void EACirc::loadConfiguration(string filename) {
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
     pGACirc = &(pBasicSettings.gaCircuitConfig);
     pGACirc->allocate();
-    m_readyToRun |= EACIRC_CONFIG_LOADED;
+
+    if (pBasicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0 &&
+            pBasicSettings.gaCircuitConfig.changeGalibSeedFrequency % pBasicSettings.gaCircuitConfig.testVectorChangeGener != 0) {
+        mainLogger.out() << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+
+    if (m_status == STAT_OK) {
+        m_readyToRun |= EACIRC_CONFIG_LOADED;
+    }
 }
 
-void EACirc::loadState(string filename) {
+void EACirc::loadState(string stateFilename, string populationFilename) {
     if (m_status != STAT_OK) return;
     if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
         m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
@@ -91,13 +102,50 @@ void EACirc::loadState(string filename) {
     // m_readyToRun |= EACIRC_INITIALIZED
 }
 
-void EACirc::saveState(string filename) {
+void EACirc::saveState(string stateFilename, string populationFilename) {
     if (m_status != STAT_OK) return;
-    TiXmlElement* pRoot = new TiXmlElement("random_generators");
-    pRoot->LinkEndChild(mainGenerator->exportGenerator());
-    pRoot->LinkEndChild(rndGen->exportGenerator());
-    pRoot->LinkEndChild(biasRndGen->exportGenerator());
-    saveXMLFile(pRoot,filename);
+
+    // SAVING STATE
+
+    TiXmlElement* pRoot = new TiXmlElement("eacirc_state");
+    TiXmlElement* pElem;
+
+    pElem = new TiXmlElement("generations_required");
+    pElem->LinkEndChild(new TiXmlText(to_string(pBasicSettings.gaConfig.nGeners).c_str()));
+    pRoot->LinkEndChild(pElem);
+    pElem = new TiXmlElement("generations_finished");
+    pElem->LinkEndChild(new TiXmlText(to_string(m_actGener).c_str()));
+    pRoot->LinkEndChild(pElem);
+    pElem = new TiXmlElement("main_seed");
+    pElem->LinkEndChild(new TiXmlText(to_string(m_originalSeed).c_str()));
+    pRoot->LinkEndChild(pElem);
+    pElem = new TiXmlElement("current_galib_seed");
+    pElem->LinkEndChild(new TiXmlText(to_string(m_currentGalibSeed).c_str()));
+    pRoot->LinkEndChild(pElem);
+
+    pElem = new TiXmlElement("random_generators");
+    pElem->LinkEndChild(mainGenerator->exportGenerator());
+    pElem->LinkEndChild(rndGen->exportGenerator());
+    pElem->LinkEndChild(biasRndGen->exportGenerator());
+    pRoot->LinkEndChild(pElem);
+
+    int status = saveXMLFile(pRoot,stateFilename);
+    if (status != STAT_OK) {
+        mainLogger.out() << "Error saving state to file " << stateFilename << "." << endl;
+        m_status = status;
+    }
+
+    // SAVING POPULATION
+    ofstream populationFile(populationFilename);
+    if (populationFile.is_open()) {
+        populationFile << pBasicSettings.gaConfig.nGeners << endl;
+        populationFile << pBasicSettings.gaCircuitConfig.genomeSize << endl;
+        CircuitGenome::writePopulation(m_gaData->population(),populationFile);
+        populationFile.close();
+    } else {
+        mainLogger.out() << "Error saving population to file " << populationFilename << "." << endl;
+        m_status = STAT_FILE_OPEN_FAIL;
+    }
 }
 
 void EACirc::initializeState() {
@@ -109,22 +157,70 @@ void EACirc::initializeState() {
 
     //with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
     if (pBasicSettings.rndGen.useFixedSeed && pBasicSettings.rndGen.randomSeed != 0) {
-        m_seed = pBasicSettings.rndGen.randomSeed;
-        mainGenerator = new MD5RndGen(m_seed);
-        mainLogger.out() << "Using fixed seed: " << m_seed << endl;
+        m_originalSeed = pBasicSettings.rndGen.randomSeed;
+        mainGenerator = new MD5RndGen(m_originalSeed);
+        mainLogger.out() << "Using fixed seed: " << m_originalSeed << endl;
     } else {
         //generate random seed, if none provided
         mainGenerator = new MD5RndGen(clock() + time(NULL) + getpid());
-        mainGenerator->getRandomFromInterval(ULONG_MAX,&m_seed);
-        mainLogger.out() << "Using system-generated random seed: " << m_seed << endl;
+        mainGenerator->getRandomFromInterval(ULONG_MAX,&m_originalSeed);
+        delete mainGenerator;
+        mainGenerator = NULL; // necessary !!!
+        mainGenerator = new MD5RndGen(m_originalSeed);
+        mainLogger.out() << "Using system-generated random seed: " << m_originalSeed << endl;
     }
 
     //INIT RNG
-    rndGen = new QuantumRndGen(m_seed, pBasicSettings.rndGen.QRBGSPath);
+    unsigned long generatorSeed;
+    mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
+    rndGen = new QuantumRndGen(generatorSeed, pBasicSettings.rndGen.QRBGSPath);
     mainLogger.out() << "Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
     //INIT BIAS RNDGEN
-    biasRndGen = new BiasRndGen(m_seed, pBasicSettings.rndGen.QRBGSPath, pBasicSettings.rndGen.biasFactor);
+    mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
+    biasRndGen = new BiasRndGen(generatorSeed, pBasicSettings.rndGen.QRBGSPath, pBasicSettings.rndGen.biasFactor);
     mainLogger.out() << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
+
+    // ***** GAlib INITIALIZATION *****
+    mainLogger.out() << "Initialising GAlib." << endl;
+    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    GARandomSeed(m_currentGalibSeed);
+    // CREATE GA STRUCTS
+    GA1DArrayGenome<unsigned long> genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    // INIT GENOME STRUCTURES
+    genom.initializer(CircuitGenome::Initializer);
+    genom.mutator(CircuitGenome::Mutator);
+    genom.crossover(CircuitGenome::Crossover);
+    // LOAD genome
+    if (m_loadGenome) {
+        fstream	genomeFile;
+        string executetext;
+        genomeFile.open(FILE_GENOME, fstream::in);
+        if (genomeFile.is_open()) {
+            mainLogger.out() << "Loading genome from file." << endl;
+            getline(genomeFile, executetext);
+            CircuitGenome::ExecuteFromText(executetext, &genom);
+            genomeFile.close();
+        } else {
+            m_status = STAT_FILE_OPEN_FAIL;
+            return;
+        }
+    }
+    // INIT MAIN GA
+    m_gaData = new GASteadyStateGA(genom);
+    m_gaData->populationSize(pBasicSettings.gaConfig.popSize);
+    m_gaData->nReplacement(2 * pBasicSettings.gaConfig.popSize / 3);
+    m_gaData->nGenerations(pBasicSettings.gaConfig.nGeners);
+    m_gaData->pCrossover(pBasicSettings.gaConfig.pCross);
+    m_gaData->pMutation(pBasicSettings.gaConfig.pMutt);
+    m_gaData->scoreFilename(FILE_GALIB_SCORES);
+    m_gaData->scoreFrequency(1);	// keep the scores of every generation
+    m_gaData->flushFrequency(1);	// specify how often to write the score to disk
+    m_gaData->selectScores(GAStatistics::AllScores);
+    m_gaData->initialize();
+    //out << "GAOK" << endl;
+    mainLogger.out() << "GAlib fully initialized." << endl;
+    // ***** END GAlib INITIALIZATIONS *****
 
     m_readyToRun |= EACIRC_INITIALIZED;
 }
@@ -170,66 +266,29 @@ void EACirc::run() {
     }
 
     // SAVE INITIAL STATE
-    saveState(FILE_STATE_INITIAL);
+    saveState(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
-    // ***** GAlib INITIALIZATION *****
-    mainLogger.out() << "Initialising GAlib." << endl;
-    GARandomSeed(m_seed);
-    // CREATE GA STRUCTS
-    GA1DArrayGenome<unsigned long> genom(pGACirc->genomeSize, CircuitGenome::Evaluator);
-    GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
-    // INIT GENOME STRUCTURES
-    genom.initializer(CircuitGenome::Initializer);
-    genom.mutator(CircuitGenome::Mutator);
-    genom.crossover(CircuitGenome::Crossover);
-    // LOAD genome
-    if (m_loadGenome) {
-        fstream	genomeFile;
-        string executetext;
-        genomeFile.open(FILE_GENOME, fstream::in);
-        if (genomeFile.is_open()) {
-            mainLogger.out() << "Loading genome from file." << endl;
-            getline(genomeFile, executetext);
-            CircuitGenome::ExecuteFromText(executetext, &genom);
-            genomeFile.close();
-        } else {
-            m_status = STAT_FILE_OPEN_FAIL;
-            return;
-        }
-    }
-    // INIT MAIN GA
-    GASteadyStateGA ga(genom);
-    ga.populationSize(pBasicSettings.gaConfig.popSize);
-    ga.nReplacement(2 * pBasicSettings.gaConfig.popSize / 3);
-    ga.nGenerations(pBasicSettings.gaConfig.nGeners);
-    ga.pCrossover(pBasicSettings.gaConfig.pCross);
-    ga.pMutation(pBasicSettings.gaConfig.pMutt);
-    ga.scoreFilename(FILE_GALIB_SCORES);
-    ga.scoreFrequency(1);	// keep the scores of every generation
-    ga.flushFrequency(1);	// specify how often to write the score to disk
-    ga.selectScores(GAStatistics::AllScores);
-    ga.initialize();
-    //out << "GAOK" << endl;
-    mainLogger.out() << "GAlib fully initialized." << endl;
-    // ***** END GAlib INITIALIZATIONS *****
-
-    int actGener = 1;
+    m_actGener = 0;
     int	changed = 1;
     int	evaluateNext = 0;
     pGACirc->clearFitnessStats();
     fstream fitfile;
 
+    GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    genome = m_gaData->population().individual(0);
+
     if (m_evolutionOff) {
-        genomeTemp = genom;
+        genomeTemp = genome;
     }
 
     mainLogger.out() << "Starting evolution." << endl;
-    while (actGener < pBasicSettings.gaConfig.nGeners) {
-        actGener++;
+    while (m_actGener < pBasicSettings.gaConfig.nGeners) {
+        m_actGener++;
 
         //FRACTION FILE FOR BOINC
         fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
-        fitfile << ((float)(actGener))/((float)(pBasicSettings.gaConfig.nGeners));
+        fitfile << ((float)(m_actGener))/((float)(pBasicSettings.gaConfig.nGeners));
         fitfile.close();
 
         // WHY creating new evaluator?
@@ -239,22 +298,23 @@ void EACirc::run() {
         // DO NOT EVOLVE..
         if (m_evolutionOff) {
             m_evaluator->generateTestVectors();
-            m_evaluator->evaluateStep(genom, actGener);
+            m_evaluator->evaluateStep(genome, m_actGener);
         } else {
             // RESET EVALUTION FOR ALL GENOMS
-            ga.pop->flushEvalution();
-            ga.step(); // GA evolution step
+            m_gaData->pop->flushEvalution();
+            m_gaData->step(); // GA evolution step
 
             if (evaluateNext) {
-                m_evaluator->evaluateStep(genomeTemp, actGener);
+                m_evaluator->evaluateStep(genomeTemp, m_actGener);
                 evaluateNext = 0;
             }
 
-            genomeTemp = (GA1DArrayGenome<unsigned long>&) ga.population().best();// .statistics().bestIndividual();
+            genomeTemp = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
             
-            if ((pGACirc->TVCGProgressive && (changed > actGener/pGACirc->testVectorChangeGener + 1)) ||
-                    (!pGACirc->TVCGProgressive && ((actGener %(pGACirc->testVectorChangeGener)) == 0))) {
+            if ((pGACirc->TVCGProgressive && (changed > m_actGener/pGACirc->testVectorChangeGener + 1)) ||
+                    (!pGACirc->TVCGProgressive && ((m_actGener %(pGACirc->testVectorChangeGener)) == 0))) {
 
+                /* original location
                 if (pGACirc->changeGalibSeedFrequency != 0 &&
                         actGener % pGACirc->changeGalibSeedFrequency == 0) {
                     saveState(FILE_STATE);
@@ -262,21 +322,31 @@ void EACirc::run() {
                     GARandomSeed(m_seed);
                     mainLogger.out() << "GAlib reseeded (actGener = " << actGener << ")" << endl;
                 }
+                */
 
                 // GENERATE FRESH SET AND EVALUATE ONLY THE BEST ONE
                 m_evaluator->generateTestVectors();
                 evaluateNext = 1;
                 changed = 0;
             }
-            else if (pGACirc->evaluateEveryStep) m_evaluator->evaluateStep(genomeTemp, actGener);
+            else if (pGACirc->evaluateEveryStep) m_evaluator->evaluateStep(genomeTemp, m_actGener);
             changed++;
+        }
+
+        if (pBasicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0
+                && m_actGener % pBasicSettings.gaCircuitConfig.changeGalibSeedFrequency == 0) {
+            mainGenerator->getRandomFromInterval(ULONG_MAX, &m_currentGalibSeed);
+            GARandomSeed(m_currentGalibSeed);
+            mainLogger.out() << "info: GAlib reseeded (actGener = " << m_actGener << ")" << endl;
+            saveState(FILE_STATE,FILE_POPULATION);
         }
     }
 
     // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
     m_evaluator->generateTestVectors();
-    m_evaluator->evaluateStep(genomeTemp, actGener);
+    m_evaluator->evaluateStep(genomeTemp, m_actGener);
 
     //Print the best circuit
     CircuitGenome::PrintCircuit(genomeTemp,FILE_BEST_CIRCUIT,0,1);
+    saveState(FILE_STATE,FILE_POPULATION);
 }

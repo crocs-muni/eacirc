@@ -1,4 +1,5 @@
 #include "MD5RndGen.h"
+#include <random>
 
 MD5RndGen::MD5RndGen(unsigned long seed)
         : IRndGen(GENERATOR_MD5, seed) {
@@ -61,14 +62,18 @@ int MD5RndGen::getRandomFromInterval(float highBound, float *pRandom) {
 
 int MD5RndGen::reinitRandomGenerator() {
     // INITIALIZE STARTUP MD5 ACUMULLATOR
-    for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
-        unsigned char value;
-        if (mainGenerator == NULL) {
-            getRandomFromInterval((unsigned char) UCHAR_MAX, &value);
-        } else {
-            mainGenerator->getRandomFromInterval((unsigned char) UCHAR_MAX, &value);
+    if (mainGenerator == NULL) {
+        // most likely this is about to become main generator
+        // must create initial state deterministicly
+        minstd_rand systemGenerator(m_seed);
+        for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
+            m_md5Accumulator[i] = systemGenerator();
         }
-        m_md5Accumulator[i] = value;
+    } else {
+        // if main generator was already initialized, use it to get new random accumulator
+        for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
+            mainGenerator->getRandomFromInterval((unsigned char) UCHAR_MAX, m_md5Accumulator+i);
+        }
     }
     return STAT_OK;
 }

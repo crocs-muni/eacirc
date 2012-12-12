@@ -44,8 +44,12 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
     for( pElem; pElem; pElem = pElem->NextSiblingElement()) {
         if (string(pElem->Value()) == "USE_FIXED_SEED")
             pBasicSettings->rndGen.useFixedSeed = (atoi(pElem->GetText())) ? true : false;
-        if (string(pElem->Value()) == "SEED")
-            pBasicSettings->rndGen.randomSeed = atol(pElem->GetText());
+        if (string(pElem->Value()) == "SEED") {
+            istringstream textSeed(pElem->GetText());
+            unsigned long seed;
+            textSeed >> seed;
+            pBasicSettings->rndGen.randomSeed = seed;
+        }
         if (string(pElem->Value()) == "PRIMARY_RANDOM_TYPE")
             pBasicSettings->rndGen.type = atoi(pElem->GetText());
         if (string(pElem->Value()) == "BIAS_RNDGEN_FACTOR")

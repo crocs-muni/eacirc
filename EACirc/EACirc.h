@@ -23,17 +23,20 @@ class EACirc {
     int m_status;
     bool m_evolutionOff;
     bool m_loadGenome;
-    unsigned long m_seed;
+    unsigned long m_originalSeed;
+    unsigned long m_currentGalibSeed;
     BASIC_INIT_DATA pBasicSettings;
     Evaluator* m_evaluator;
+    GASteadyStateGA* m_gaData;
     unsigned int m_readyToRun;
+    int m_actGener;
 public:
     EACirc();
     EACirc(bool evolutionOff);
     ~EACirc();
     void loadConfiguration(string filename);
-    void loadState(string filename);
-    void saveState(string filename);
+    void loadState(string stateFilename, string populationFilename);
+    void saveState(string stateFilename, string populationFilename);
     void initializeState();
     void prepare();
     void run();

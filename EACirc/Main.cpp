@@ -53,7 +53,6 @@ int main(int argc, char **argv) {
     eacirc.initializeState();
     eacirc.prepare();
     eacirc.run();
-    eacirc.saveState(FILE_STATE);
 
     if (eacirc.getStatus() != STAT_OK) {
         mainLogger.out() << "Error: Program run failed." << endl;
