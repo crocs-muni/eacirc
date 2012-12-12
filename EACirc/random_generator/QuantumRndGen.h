@@ -25,7 +25,6 @@ public:
     int getRandomFromInterval(int highBound, int *pRandom);
     int getRandomFromInterval(float highBound, float *pRandom);
     int discartValue();
-    int reinitRandomGenerator();
 
     string shortDescription() const;
     // implemented in XMLProcessor:
@@ -33,6 +32,7 @@ public:
 protected:
     int updateAccumulator();
     int loadQRNGDataFile();
+    int reinitRandomGenerator();
 };
 
 #endif // QUANTUMRNDGEN_H

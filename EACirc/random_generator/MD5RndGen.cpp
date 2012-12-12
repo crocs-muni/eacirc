@@ -3,7 +3,19 @@
 
 MD5RndGen::MD5RndGen(unsigned long seed)
         : IRndGen(GENERATOR_MD5, seed) {
-    reinitRandomGenerator();
+    if (mainGenerator == NULL) {
+        // most likely this is about to become main generator
+        // must create initial state deterministicly
+        minstd_rand systemGenerator(m_seed);
+        for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
+            m_md5Accumulator[i] = systemGenerator();
+        }
+    } else {
+        // if main generator was already initialized, use it to get new random accumulator
+        for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
+            mainGenerator->getRandomFromInterval((unsigned char) UCHAR_MAX, m_md5Accumulator+i);
+        }
+    }
 }
 
 int MD5RndGen::getRandomFromInterval(unsigned long highBound, unsigned long* pRandom) {
@@ -58,24 +70,6 @@ int MD5RndGen::getRandomFromInterval(float highBound, float *pRandom) {
     if (pRandom) *pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
 
     return status;
-}
-
-int MD5RndGen::reinitRandomGenerator() {
-    // INITIALIZE STARTUP MD5 ACUMULLATOR
-    if (mainGenerator == NULL) {
-        // most likely this is about to become main generator
-        // must create initial state deterministicly
-        minstd_rand systemGenerator(m_seed);
-        for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
-            m_md5Accumulator[i] = systemGenerator();
-        }
-    } else {
-        // if main generator was already initialized, use it to get new random accumulator
-        for (unsigned char i = 0; i < MD5_DIGEST_LENGTH; i++) {
-            mainGenerator->getRandomFromInterval((unsigned char) UCHAR_MAX, m_md5Accumulator+i);
-        }
-    }
-    return STAT_OK;
 }
 
 int MD5RndGen::updateAccumulator() {

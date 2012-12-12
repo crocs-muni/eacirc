@@ -18,7 +18,6 @@ public:
     int getRandomFromInterval(int, int *);
     int getRandomFromInterval(float, float *);
     int discartValue();
-    int reinitRandomGenerator();
 
     string shortDescription() const;
     TiXmlNode* exportGenerator() const;

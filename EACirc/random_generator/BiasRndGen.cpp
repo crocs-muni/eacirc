@@ -116,10 +116,6 @@ int BiasRndGen::discartValue() {
     return m_rndGen->discartValue();
 }
 
-int BiasRndGen::reinitRandomGenerator() {
-    return m_rndGen->reinitRandomGenerator();
-}
-
 /*
 int BiasRndGen::UpdateAccumulator() {
     return STAT_OK;

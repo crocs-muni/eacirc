@@ -20,7 +20,6 @@ public:
     int getRandomFromInterval(int highBound, int *pRandom);
     int getRandomFromInterval(float highBound, float *pRandom);
     int discartValue();
-    int reinitRandomGenerator();
 
 	void setChanceForOne(int chance);
     string shortDescription() const;

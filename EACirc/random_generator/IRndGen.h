@@ -27,7 +27,6 @@ public:
     virtual int getRandomFromInterval(int, int *) = 0;
     virtual int getRandomFromInterval(float, float *) = 0;
     virtual int discartValue() = 0;
-    virtual int reinitRandomGenerator() = 0;
 
     virtual string shortDescription() const = 0;
     virtual TiXmlNode* exportGenerator() const = 0;
