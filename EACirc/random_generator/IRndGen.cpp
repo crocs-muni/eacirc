@@ -1,12 +1,8 @@
 #include "IRndGen.h"
 #include "QuantumRndGen.h"
 #include "BiasRndGen.h"
+#include "MD5RndGen.h"
 #include "EACirc.h"
-
-// from time, when main generator was from <random>
-//minstd_rand IRndGen::m_mainGenerator;
-
-//MD5RndGen* IRndGen::m_mainGenerator = NULL;
 
 IRndGen::IRndGen(int type, unsigned long seed)
     : m_type(type) {
@@ -23,52 +19,33 @@ IRndGen::IRndGen(int type, unsigned long seed)
     this->m_seed = seed;
 }
 
-/*
-void IRndGen::initMainGenerator(unsigned long seed) {
-    if (seed == 0) {
-        mainLogger.out() << "Seed for main generator not provided, cannot initialize." << endl;
+IRndGen* IRndGen::parseGenerator(TiXmlElement* pRoot) {
+    const char* typeChar = pRoot->Attribute("type");
+    if (typeChar == NULL) return NULL;
+    int generatorType = atoi(typeChar);
+    IRndGen* tempGenerator = NULL;
+    switch (generatorType) {
+    case GENERATOR_QRNG: {
+            tempGenerator = new QuantumRndGen(pRoot);
+            break;
+    }
+    case GENERATOR_BIAS: {
+        tempGenerator = new BiasRndGen(pRoot);
+        break;
+    }
+    case GENERATOR_MD5: {
+        tempGenerator = new MD5RndGen(pRoot);
+        break;
+    }
+    default: {
+        mainLogger.out() << "generator load error: unknown type (" << generatorType << ")." << endl;
+        return NULL;
+    }
+    }
+    // TODO: check sanity bit
+    if (true) {
+        return tempGenerator;
     } else {
-        m_mainGenerator = new MD5RndGen(seed);
+        return NULL;
     }
 }
-*/
-
-/*
-static unsigned long IRndGen::getRandomFromMainGenerator() {
-    unsigned long random = 0;
-    m_mainGenerator->getRandomFromInterval(ULONG_MAX, &random);
-    return random;.
-}
-*/
-
-/*
-void IRndGen::initMainGenerator(TiXmlNode* pRoot) {
-    m_mainGenerator = new MD5RndGen(pRoot);
-    from time, when main generator was from <random>
-    TiXmlElement* pElem = pRoot->ToElement();
-    istringstream ss(pElem->GetText());
-    if (strcmp(pElem->Attribute("type"),typeid(m_mainGenerator).name()) == 0) {
-        ss >> m_mainGenerator;
-    } else {
-        mainLogger.out() << "Error: Incompatible system generator type - state not loaded." << endl;
-        mainLogger.out() << "       required: " << typeid(m_mainGenerator).name() << endl;
-        mainLogger.out() << "          found: " << pElem->Attribute("type") << endl;
-    }
-
-}
-*/
-
-/*
-TiXmlNode* IRndGen::exportMainGenerator() {
-    TiXmlElement* pRoot = new TiXmlElement("main_generator");
-    pRoot->LinkEndChild(m_mainGenerator->exportGenerator());
-    from time, when main generator was from <random>
-    pRoot->SetAttribute("type",typeid(m_mainGenerator).name());
-    stringstream state;
-    state << dec << left << setfill(' ');
-    state << m_mainGenerator;
-    pRoot->LinkEndChild(new TiXmlText(state.str().c_str()));
-
-    return pRoot;
-}
-*/

@@ -135,8 +135,13 @@ string BiasRndGen::shortDescription() const {
 	return mes;
 }
 
-BiasRndGen::BiasRndGen(TiXmlNode* pRoot)
+BiasRndGen::BiasRndGen(TiXmlElement* pRoot)
         : IRndGen(GENERATOR_BIAS,1) {  // cannot call IRndGen with seed 0, warning would be issued
+    if (atoi(pRoot->Attribute("type")) != m_type) {
+        // TODO: unset sanity bit
+        return;
+    }
+
     TiXmlElement* pElem = NULL;
 
     pElem = pRoot->FirstChildElement("chance_for_one");
@@ -146,17 +151,18 @@ BiasRndGen::BiasRndGen(TiXmlNode* pRoot)
 }
 
 TiXmlNode* BiasRndGen::exportGenerator() const {
-    TiXmlElement* root = new TiXmlElement("generator");
-    root->SetAttribute("type",shortDescription().c_str());
+    TiXmlElement* pRoot = new TiXmlElement("generator");
+    pRoot->SetAttribute("type",to_string(m_type).c_str());
+    pRoot->SetAttribute("description",shortDescription().c_str());
 
     TiXmlElement* chanceForOne = new TiXmlElement("chance_for_one");
     stringstream sChanceForOne;
     sChanceForOne << m_chanceForOne;
     chanceForOne->LinkEndChild(new TiXmlText(sChanceForOne.str().c_str()));
-    root->LinkEndChild(chanceForOne);
+    pRoot->LinkEndChild(chanceForOne);
 
-    root->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
-    root->LinkEndChild(m_rndGen->exportGenerator());
+    pRoot->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
+    pRoot->LinkEndChild(m_rndGen->exportGenerator());
 
-    return root;
+    return pRoot;
 }

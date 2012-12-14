@@ -179,12 +179,17 @@ string QuantumRndGen::shortDescription() const {
     else return "system-based random generator";
 }
 
-QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot)
+QuantumRndGen::QuantumRndGen(TiXmlElement *pRoot)
         : IRndGen(GENERATOR_QRNG,1) {  // cannot call IRndGen with seed 0, warning would be issued
+    if (atoi(pRoot->Attribute("type")) != m_type) {
+        // TODO: unset sanity bit
+        return;
+    }
+
     TiXmlElement* pElem = NULL;
 
     pElem = pRoot->FirstChildElement("original_seed");
-    m_seed = atol(pElem->GetText());
+    istringstream(pElem->GetText()) >> m_seed;
     pElem = pRoot->FirstChildElement("qrng");
     m_usesQRNGData = atoi(pElem->Attribute("true_qrng")) == 1 ? true : false;
     if (m_usesQRNGData) {
@@ -225,7 +230,8 @@ QuantumRndGen::QuantumRndGen(TiXmlNode* pRoot)
 
 TiXmlNode* QuantumRndGen::exportGenerator() const {
     TiXmlElement* pRoot = new TiXmlElement("generator");
-    pRoot->SetAttribute("type",shortDescription().c_str());
+    pRoot->SetAttribute("type",to_string(m_type).c_str());
+    pRoot->SetAttribute("description",shortDescription().c_str());
 
     TiXmlElement* originalSeed = new TiXmlElement("original_seed");
     stringstream sSeed;

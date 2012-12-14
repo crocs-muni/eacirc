@@ -7,7 +7,8 @@ Evaluator::Evaluator() {
     ITestVectGener* temp = this->TVG->getGenerClass();
     delete this->TVG;
     this->TVG = temp;
-	generateTestVectors();
+    // no need, test vectors are generated in the first generation
+    //generateTestVectors();
 }
 
 Evaluator::~Evaluator() {

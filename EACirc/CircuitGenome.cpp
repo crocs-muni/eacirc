@@ -1569,6 +1569,22 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
     return status;
 }
 
+int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
+    unsigned long circuit[pGACirc->genomeSize];
+
+    memset(circuit, 0, sizeof(circuit));
+    CircuitGenome::ParseCircuit(textCircuit, circuit, &(pGACirc->numLayers), &(pGACirc->internalLayerSize), &(pGACirc->outputLayerSize));
+
+    // TODO: always keep real genome size, not constant from config file
+    // ACTUAL SIZE OF GENOM
+    // pGACirc->genomeSize = (pGACirc->numLayers * 2) * MAX_INTERNAL_LAYER_SIZE;
+
+    for (int i = 0; i < pGACirc->genomeSize; i++) genome.gene(i, circuit[i]);
+
+    // TODO: add circiut parsing status
+    return STAT_OK;
+}
+
 int CircuitGenome::writePopulation(const GAPopulation& population, ostream& out) {
     int status = STAT_OK;
     string textCircuit;
@@ -1586,5 +1602,26 @@ int CircuitGenome::writePopulation(const GAPopulation& population, ostream& out)
 }
 
 int CircuitGenome::readPopulation(GAPopulation& population, istream& in) {
-    return STAT_NOT_IMPLEMENTED_YET;
+    int populationSize = 0;
+    string line;
+    getline(in,line);
+    istringstream(line) >> populationSize;
+    getline(in,line);
+    istringstream(line) >> pGACirc->genomeSize;
+    // TODO: genome size check
+
+    GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    // INIT GENOME STRUCTURES
+    genome.initializer(CircuitGenome::Initializer);
+    genome.mutator(CircuitGenome::Mutator);
+    genome.crossover(CircuitGenome::Crossover);
+    // LOAD genomes
+    string textCircuit;
+    for (int i = 0; i < populationSize; i++) {
+        getline(in, textCircuit);
+        CircuitGenome::readGenome(genome,textCircuit);
+        population.add(genome);
+    }
+
+    return STAT_OK;
 }

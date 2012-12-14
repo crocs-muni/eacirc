@@ -25,25 +25,25 @@ class EACirc {
     bool m_loadGenome;
     unsigned long m_originalSeed;
     unsigned long m_currentGalibSeed;
-    BASIC_INIT_DATA pBasicSettings;
+    BASIC_INIT_DATA basicSettings;
     Evaluator* m_evaluator;
     GASteadyStateGA* m_gaData;
     unsigned int m_readyToRun;
     int m_actGener;
+    void loadInitialState(string stateFilename, string populationFilename);
+    void createNewInitialState();
+    void recreateGAlib();
 public:
     EACirc();
     EACirc(bool evolutionOff);
     ~EACirc();
     void loadConfiguration(string filename);
-    void loadState(string stateFilename, string populationFilename);
     void saveState(string stateFilename, string populationFilename);
     void initializeState();
     void prepare();
     void run();
     int getStatus();
 };
-
-int main(int argc, char **argv);
 
 //static UINT RunGACircuit(LPVOID pParam);
 //static int ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome); 

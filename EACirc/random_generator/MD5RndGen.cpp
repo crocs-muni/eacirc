@@ -92,13 +92,17 @@ string MD5RndGen::shortDescription() const {
     return "MD5-based generator";
 }
 
-MD5RndGen::MD5RndGen(TiXmlNode* pRoot)
+MD5RndGen::MD5RndGen(TiXmlElement* pRoot)
     : IRndGen(GENERATOR_MD5,1) {  // cannot call IRndGen with seed 0, warning would be issued
+    if (atoi(pRoot->Attribute("type")) != m_type) {
+        // TODO: unset sanity bit
+        return;
+    }
 
     TiXmlElement* pElem = NULL;
 
     pElem = pRoot->FirstChildElement("original_seed");
-    m_seed = atol(pElem->GetText());
+    istringstream(pElem->GetText()) >> m_seed;
 
     pElem = pRoot->FirstChildElement("accumulator_state");
     if (atol(pElem->Attribute("length")) != MD5_DIGEST_LENGTH) {
@@ -107,7 +111,7 @@ MD5RndGen::MD5RndGen(TiXmlNode* pRoot)
         mainLogger.out() << "          found: " << pElem->Attribute("length") << endl;
     } else {
         istringstream ss(pElem->GetText());
-        unsigned char value;
+        unsigned int value;
         for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
             ss >> value;
             m_md5Accumulator[i] = value;
@@ -117,7 +121,8 @@ MD5RndGen::MD5RndGen(TiXmlNode* pRoot)
 
 TiXmlNode* MD5RndGen::exportGenerator() const {
     TiXmlElement* pRoot = new TiXmlElement("generator");
-    pRoot->SetAttribute("type",shortDescription().c_str());
+    pRoot->SetAttribute("type",to_string(m_type).c_str());
+    pRoot->SetAttribute("description",shortDescription().c_str());
 
     TiXmlElement* originalSeed = new TiXmlElement("original_seed");
     stringstream sSeed;

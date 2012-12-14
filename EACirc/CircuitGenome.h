@@ -24,6 +24,7 @@ public:
 	static int GetNeutralValue(unsigned long functionID, string* pOperand);
     static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]);
     static int writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+    static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
     // note: readGenome = ExecuteFromText (+/-)
     static int writePopulation(const GAPopulation& population, ostream& out);
     static int readPopulation(GAPopulation& pPopulation, istream& in);
