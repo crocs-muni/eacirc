@@ -4,7 +4,7 @@ SOURCES=
 
 SOURCES+= EACirc/CircuitGenome.cpp EACirc/CommonFnc.cpp \
 EACirc/Evaluator.cpp EACirc/status.cpp EACirc/EACirc.cpp \
-EACirc/Logger.cpp EACirc/XMLProcessor.cpp Main.cpp
+EACirc/Logger.cpp EACirc/XMLProcessor.cpp EACirc/Main.cpp
 
 # Test Vector Generator
 SOURCES+= \
