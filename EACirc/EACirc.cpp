@@ -91,64 +91,8 @@ void EACirc::loadConfiguration(string filename) {
     }
 }
 
-void EACirc::loadInitialState(string stateFilename, string populationFilename) {
-    if (m_status != STAT_OK) return;
-    if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
-        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
-        return;
-    }
 
-    TiXmlNode* pRoot = NULL;
-    loadXMLFile(pRoot,stateFilename);
-    TiXmlElement* pElem = pRoot->FirstChildElement();
-
-    for( pElem; pElem; pElem = pElem->NextSiblingElement()) {
-        // restore main seed
-        if (string(pElem->Value()) == "main_seed") {
-            istringstream(pElem->GetText()) >> m_originalSeed;
-            basicSettings.rndGen.randomSeed = m_originalSeed;
-        }
-        // restore current galib seed
-        if (string(pElem->Value()) == "current_galib_seed") {
-            istringstream(pElem->GetText()) >> m_currentGalibSeed;
-        }
-        // initialize random generators (main, quantum, bias)
-        if (string(pElem->Value()) == "random_generators") {
-            TiXmlElement* pElem2 = pElem->FirstChildElement();
-            mainGenerator = IRndGen::parseGenerator(pElem2);
-            pElem2 = pElem2->NextSiblingElement();
-            rndGen = IRndGen::parseGenerator(pElem2);
-            pElem2 = pElem2->NextSiblingElement();
-            biasRndGen = IRndGen::parseGenerator(pElem2);
-        }
-    }
-    mainLogger.out() << "State successfully loaded from file " << stateFilename << "." << endl;
-
-    // load population
-    GAPopulation population;
-    ifstream populationFile(populationFilename);
-    if (populationFile.is_open()) {
-        CircuitGenome::readPopulation(population,populationFile);
-        seedAndResetGAlib(population);
-
-        mainLogger.out() << "Population successfully loaded from file " << populationFilename << "." << endl;
-        mainLogger.out() << "GAlib fully initialized." << endl;
-        // ***** END GAlib INITIALIZATIONS *****
-    } else {
-        mainLogger.out() << "error: Cannot read population from file " << populationFilename << "." << endl;
-        m_status = STAT_FILE_OPEN_FAIL;
-    }
-
-    if (m_status == STAT_OK) {
-        m_readyToRun |= EACIRC_INITIALIZED;
-    }
-}
-
-void EACirc::saveState(string stateFilename, string populationFilename) {
-    if (m_status != STAT_OK) return;
-
-    // SAVING STATE
-
+void EACirc::saveState(string filename) {
     TiXmlElement* pRoot = new TiXmlElement("eacirc_state");
     TiXmlElement* pElem;
 
@@ -171,96 +115,155 @@ void EACirc::saveState(string stateFilename, string populationFilename) {
     pElem->LinkEndChild(biasRndGen->exportGenerator());
     pRoot->LinkEndChild(pElem);
 
-    int status = saveXMLFile(pRoot,stateFilename);
-    if (status != STAT_OK) {
-        mainLogger.out() << "Error saving state to file " << stateFilename << "." << endl;
-        m_status = status;
+    m_status = saveXMLFile(pRoot,filename);
+    if (m_status != STAT_OK) {
+        mainLogger.out() << "Error saving state to file " << filename << "." << endl;
+        return;
     }
-
-    // SAVING POPULATION
-    ofstream populationFile(populationFilename);
-    if (populationFile.is_open()) {
-        populationFile << basicSettings.gaConfig.popSize << endl;
-        populationFile << basicSettings.gaCircuitConfig.genomeSize << endl;
-        CircuitGenome::writePopulation(m_gaData->population(),populationFile);
-        populationFile.close();
-    } else {
-        mainLogger.out() << "Error saving population to file " << populationFilename << "." << endl;
-        m_status = STAT_FILE_OPEN_FAIL;
-    }
+    mainLogger.out() << "State successfully saved to file " << filename << "." << endl;
 }
 
-void EACirc::createNewInitialState() {
-    if (m_status != STAT_OK) return;
-    if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
-        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
+void EACirc::loadState(string filename) {
+    TiXmlNode* pRoot = NULL;
+    m_status = loadXMLFile(pRoot,filename);
+    if (m_status != STAT_OK) {
+        mainLogger.out() << "error: Could not load state from file " << filename << "." << endl;
         return;
     }
 
-    //with useFixedSeed, a seed file is used, upon fail, randomseed argument is used
+    TiXmlElement* pElem = pRoot->FirstChildElement();
+    for( pElem; pElem; pElem = pElem->NextSiblingElement()) {
+        // restore main seed
+        if (string(pElem->Value()) == "main_seed") {
+            istringstream(pElem->GetText()) >> m_originalSeed;
+            basicSettings.rndGen.randomSeed = m_originalSeed;
+        }
+        // restore current galib seed
+        if (string(pElem->Value()) == "current_galib_seed") {
+            istringstream(pElem->GetText()) >> m_currentGalibSeed;
+        }
+        // initialize random generators (main, quantum, bias)
+        if (string(pElem->Value()) == "random_generators") {
+            TiXmlElement* pElem2 = pElem->FirstChildElement();
+            mainGenerator = IRndGen::parseGenerator(pElem2);
+            pElem2 = pElem2->NextSiblingElement();
+            rndGen = IRndGen::parseGenerator(pElem2);
+            pElem2 = pElem2->NextSiblingElement();
+            biasRndGen = IRndGen::parseGenerator(pElem2);
+        }
+    }
+    mainLogger.out() << "State successfully loaded from file " << filename << "." << endl;
+}
+
+void EACirc::createState() {
+    // INIT MAIN GENERATOR
+    // if useFixedSeed and proper seed was specified, use it
     if (basicSettings.rndGen.useFixedSeed && basicSettings.rndGen.randomSeed != 0) {
         m_originalSeed = basicSettings.rndGen.randomSeed;
         mainGenerator = new MD5RndGen(m_originalSeed);
         mainLogger.out() << "Using fixed seed: " << m_originalSeed << endl;
     } else {
-        //generate random seed, if none provided
+        // generate random seed, if none provided
         mainGenerator = new MD5RndGen(clock() + time(NULL) + getpid());
         mainGenerator->getRandomFromInterval(ULONG_MAX,&m_originalSeed);
         delete mainGenerator;
-        mainGenerator = NULL; // necessary !!!
+        mainGenerator = NULL; // necessary !!! (see guts of MD5RndGen)
         mainGenerator = new MD5RndGen(m_originalSeed);
         mainLogger.out() << "Using system-generated random seed: " << m_originalSeed << endl;
     }
 
-    //INIT RNG
+    // INIT RNG
     unsigned long generatorSeed;
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, basicSettings.rndGen.QRBGSPath);
     mainLogger.out() << "Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
-    //INIT BIAS RNDGEN
+    // INIT BIAS RNDGEN
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     biasRndGen = new BiasRndGen(generatorSeed, basicSettings.rndGen.QRBGSPath, basicSettings.rndGen.biasFactor);
     mainLogger.out() << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
 
-    // ***** GAlib INITIALIZATION 1 *****
-    mainLogger.out() << "creating population for GAlib." << endl;
+    // GENERATE SEED FOR GALIB
     mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    mainLogger.out() << "State successfully initialized." << endl;
+}
+
+void EACirc::savePopulation(string filename) {
+    ofstream populationFile(filename);
+    if (!populationFile.is_open()) {
+        mainLogger.out() << "Error saving population to file " << filename << "." << endl;
+        m_status = STAT_FILE_OPEN_FAIL;
+        return;
+    }
+    populationFile << basicSettings.gaConfig.popSize << endl;
+    populationFile << basicSettings.gaCircuitConfig.genomeSize << endl;
+    m_status = CircuitGenome::writePopulation(m_gaData->population(),populationFile);
+    if (m_status != STAT_OK) {
+        mainLogger.out() << "Error saving population to file " << filename << "." << endl;
+        populationFile.close();
+        return;
+    }
+    populationFile.close();
+    mainLogger.out() << "Population successfully saved to file " << filename << "." << endl;
+}
+
+void EACirc::loadPopulation(string filename) {
+    GAPopulation population;
+    ifstream populationFile(filename);
+    if (!populationFile.is_open()) {
+        mainLogger.out() << "error: Cannot read population from file " << filename << "." << endl;
+        m_status = STAT_FILE_OPEN_FAIL;
+    }
+    CircuitGenome::readPopulation(population,populationFile);
+    seedAndResetGAlib(population);
+    mainLogger.out() << "Population successfully loaded from file " << filename << "." << endl;
+}
+
+void EACirc::createPopulation() {
+    // seed GAlib (initializations may require random numbers)
     GARandomSeed(m_currentGalibSeed);
-    // CREATE GA STRUCTS
+    // temporary structure for genome (empty or loaded from file)
     GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
-    // INIT GENOME STRUCTURES
     genome.initializer(CircuitGenome::Initializer);
     genome.mutator(CircuitGenome::Mutator);
     genome.crossover(CircuitGenome::Crossover);
-    // LOAD genome
+
+    // load genome, if needed
     if (m_loadGenome) {
         fstream	genomeFile;
         string executetext;
         genomeFile.open(FILE_GENOME, fstream::in);
-        if (genomeFile.is_open()) {
-            mainLogger.out() << "Loading genome from file." << endl;
-            getline(genomeFile, executetext);
-            CircuitGenome::ExecuteFromText(executetext, &genome);
-            genomeFile.close();
-        } else {
+        if (!genomeFile.is_open()) {
             m_status = STAT_FILE_OPEN_FAIL;
+            mainLogger.out() << "Error: Could not open genome file " << FILE_GENOME << "." << endl;
             return;
         }
-    }
-    // INIT MAIN GA
-    GAPopulation population(genome,1);
-    if (!m_loadGenome) {
+        getline(genomeFile, executetext);
+        CircuitGenome::ExecuteFromText(executetext, &genome);
+        genomeFile.close();
+        mainLogger.out() << "Genome successfully loaded file" << FILE_GENOME << "." << endl;
+
+        // create population
+        GAPopulation population(genome,1);
+        // generate new seed because initializations may have used some randomness
+        mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+        seedAndResetGAlib(population);
+    } else {
+        GAPopulation population(genome,1);
+        // create genetic algorithm and initialize population
         seedAndResetGAlib(population);
         m_gaData->initialize();
-    }
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
-    seedAndResetGAlib(m_gaData->population());
-    mainLogger.out() << "GAlib fully initialized." << endl;
-    // ***** END GAlib INITIALIZATIONS *****
 
-    if (m_status == STAT_OK) {
-        m_readyToRun |= EACIRC_INITIALIZED;
+        // generate new seed because initializations may have used some randomness
+        mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+        seedAndResetGAlib(m_gaData->population());
     }
+    mainLogger.out() << "Population successfully initialized." << endl;
+}
+
+void EACirc::saveProgress(string stateFilename, string populationFilename) {
+    if (m_status != STAT_OK) return;
+    saveState(stateFilename);
+    savePopulation(populationFilename);
 }
 
 void EACirc::initializeState() {
@@ -269,10 +272,17 @@ void EACirc::initializeState() {
         m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
         return;
     }
+
     if (basicSettings.loadState) {
-        loadInitialState(FILE_STATE,FILE_POPULATION);
+        loadState(FILE_STATE);
+        loadPopulation(FILE_POPULATION);
     } else {
-        createNewInitialState();
+        createState();
+        createPopulation();
+    }
+
+    if (m_status == STAT_OK) {
+        m_readyToRun |= EACIRC_INITIALIZED;
     }
 }
 
@@ -335,7 +345,6 @@ void EACirc::seedAndResetGAlib(GAPopulation population) {
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->flushFrequency(1);	// specify how often to write the score to disk
     m_gaData->selectScores(GAStatistics::AllScores);
-
     mainLogger.out() << "info: GAlib seeded and reset." << endl;
 }
 
@@ -348,7 +357,7 @@ void EACirc::run() {
     }
 
     // SAVE INITIAL STATE
-    saveState(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
+    saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
     //m_actGener = 1;
     int	changed = 1;
@@ -423,7 +432,7 @@ void EACirc::run() {
                 && m_actGener % basicSettings.gaCircuitConfig.changeGalibSeedFrequency == 0) {
             mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
-            saveState(FILE_STATE,FILE_POPULATION);
+            saveProgress(FILE_STATE,FILE_POPULATION);
         }
     }
 

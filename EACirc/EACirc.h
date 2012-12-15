@@ -30,19 +30,25 @@ class EACirc {
     GASteadyStateGA* m_gaData;
     unsigned int m_readyToRun;
     int m_actGener;
-    void loadInitialState(string stateFilename, string populationFilename);
-    void createNewInitialState();
+
     void seedAndResetGAlib(GAPopulation population);
+
+    void saveState(string filename);
+    void loadState(string filename);
+    void createState();
+    void savePopulation(string filename);
+    void loadPopulation(string filename);
+    void createPopulation();
 public:
     EACirc();
     EACirc(bool evolutionOff);
     ~EACirc();
     void loadConfiguration(string filename);
-    void saveState(string stateFilename, string populationFilename);
     void initializeState();
     void prepare();
     void run();
     int getStatus();
+    void saveProgress(string stateFilename, string populationFilename);
 };
 
 //static UINT RunGACircuit(LPVOID pParam);
