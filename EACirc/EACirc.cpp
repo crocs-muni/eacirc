@@ -124,31 +124,15 @@ void EACirc::loadInitialState(string stateFilename, string populationFilename) {
     }
     mainLogger.out() << "State successfully loaded from file " << stateFilename << "." << endl;
 
-    // seed galib
-    GARandomSeed(m_currentGalibSeed);
-
     // load population
     GAPopulation population;
     ifstream populationFile(populationFilename);
     if (populationFile.is_open()) {
         CircuitGenome::readPopulation(population,populationFile);
-        m_gaData = new GASteadyStateGA(population);
+        seedAndResetGAlib(population);
+
         mainLogger.out() << "Population successfully loaded from file " << populationFilename << "." << endl;
-
-        // initialize GAlib
-        m_gaData->populationSize(basicSettings.gaConfig.popSize);
-        m_gaData->nReplacement(2 * basicSettings.gaConfig.popSize / 3);
-        m_gaData->nGenerations(basicSettings.gaConfig.nGeners);
-        m_gaData->pCrossover(basicSettings.gaConfig.pCross);
-        m_gaData->pMutation(basicSettings.gaConfig.pMutt);
-        m_gaData->scoreFilename(FILE_GALIB_SCORES);
-        m_gaData->scoreFrequency(1);	// keep the scores of every generation
-        m_gaData->flushFrequency(1);	// specify how often to write the score to disk
-        m_gaData->selectScores(GAStatistics::AllScores);
-        // m_gaData->initialize(); // genomes already initialized !!!!
-
         mainLogger.out() << "GAlib fully initialized." << endl;
-
         // ***** END GAlib INITIALIZATIONS *****
     } else {
         mainLogger.out() << "error: Cannot read population from file " << populationFilename << "." << endl;
@@ -264,26 +248,14 @@ void EACirc::createNewInitialState() {
         }
     }
     // INIT MAIN GA
-    m_gaData = new GASteadyStateGA(genome);
-    mainLogger.out() << "Population created." << endl;
-
-    m_gaData->populationSize(basicSettings.gaConfig.popSize);
-    m_gaData->nReplacement(2 * basicSettings.gaConfig.popSize / 3);
-    m_gaData->nGenerations(basicSettings.gaConfig.nGeners);
-    m_gaData->pCrossover(basicSettings.gaConfig.pCross);
-    m_gaData->pMutation(basicSettings.gaConfig.pMutt);
-    m_gaData->scoreFilename(FILE_GALIB_SCORES);
-    m_gaData->scoreFrequency(1);	// keep the scores of every generation
-    m_gaData->flushFrequency(1);	// specify how often to write the score to disk
-    m_gaData->selectScores(GAStatistics::AllScores);
-    m_gaData->initialize();
-    mainLogger.out() << "GAlib fully initialized." << endl;
-
-    /*
+    GAPopulation population(genome,1);
+    if (!m_loadGenome) {
+        seedAndResetGAlib(population);
+        m_gaData->initialize();
+    }
     mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
-    GARandomSeed(m_currentGalibSeed);
-    */
-
+    seedAndResetGAlib(m_gaData->population());
+    mainLogger.out() << "GAlib fully initialized." << endl;
     // ***** END GAlib INITIALIZATIONS *****
 
     if (m_status == STAT_OK) {
@@ -341,15 +313,19 @@ void EACirc::prepare() {
     }
 }
 
-void EACirc::recreateGAlib() {
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+void EACirc::seedAndResetGAlib(GAPopulation population) {
+    // set GAlib seed
     GARandomSeed(m_currentGalibSeed);
-
-    GAPopulation recovery = m_gaData->population();
-    recovery.touch();
-    delete m_gaData;
-    // INIT MAIN GA
-    m_gaData = new GASteadyStateGA(recovery);
+    // reset population stats
+    population.touch();
+    // delete any previous instance of genetic algorithm
+    if (m_gaData != NULL) {
+        delete m_gaData;
+        m_gaData = NULL;
+    }
+    // create new instance of genetic algorithm
+    m_gaData = new GASteadyStateGA(population);
+    // initialize the new genetic algorithm
     m_gaData->populationSize(basicSettings.gaConfig.popSize);
     m_gaData->nReplacement(2 * basicSettings.gaConfig.popSize / 3);
     m_gaData->nGenerations(basicSettings.gaConfig.nGeners);
@@ -359,9 +335,8 @@ void EACirc::recreateGAlib() {
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->flushFrequency(1);	// specify how often to write the score to disk
     m_gaData->selectScores(GAStatistics::AllScores);
-    //m_gaData->initialize();
 
-    mainLogger.out() << "GAlib recreated and reseeded." << endl;
+    mainLogger.out() << "info: GAlib seeded and reset." << endl;
 }
 
 void EACirc::run() {
@@ -370,11 +345,6 @@ void EACirc::run() {
             (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED | EACIRC_PREPARED)) {
         m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
         return;
-    }
-
-    if (!basicSettings.loadState) {
-        //recreate galib
-        recreateGAlib();
     }
 
     // SAVE INITIAL STATE
@@ -432,11 +402,6 @@ void EACirc::run() {
             if (m_actGener %(pGACirc->testVectorChangeGener) == 0) {
                 evaluateNow = true;
             }
-            // need to evaluate right after file loading, so that we can call for the best individual
-            if (basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0
-                    && m_actGener % basicSettings.gaCircuitConfig.changeGalibSeedFrequency == 1) {
-                evaluateNow = true;
-            }
         }
         // variable for computing when TVCGProgressive = true
         changed++;
@@ -456,10 +421,8 @@ void EACirc::run() {
         // if needed, reseed GAlib and save state and population
         if (basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0
                 && m_actGener % basicSettings.gaCircuitConfig.changeGalibSeedFrequency == 0) {
-            recreateGAlib();
-            //mainGenerator->getRandomFromInterval(ULONG_MAX, &m_currentGalibSeed);
-            //GARandomSeed(m_currentGalibSeed);
-            //mainLogger.out() << "info: GAlib reseeded (actGener = " << m_actGener << ")" << endl;
+            mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+            seedAndResetGAlib(m_gaData->population());
             saveState(FILE_STATE,FILE_POPULATION);
         }
     }

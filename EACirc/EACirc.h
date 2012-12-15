@@ -32,7 +32,7 @@ class EACirc {
     int m_actGener;
     void loadInitialState(string stateFilename, string populationFilename);
     void createNewInitialState();
-    void recreateGAlib();
+    void seedAndResetGAlib(GAPopulation population);
 public:
     EACirc();
     EACirc(bool evolutionOff);
