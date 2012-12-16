@@ -1,6 +1,6 @@
 #include "EACirc.h"
 #include "EncryptorDecryptor.h"
-#include "estream-interface.h"
+#include "estreamInterface.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include <string>
 
@@ -9,6 +9,10 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	int numTestVectors = pGACirc->numTestVectors;
 	int numRounds = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount:-1;
 	int numRounds2 = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount2:-1;
+    for(int i = 0; i < 4; i++) {
+        ctxarr[i] = NULL;
+        ecryptarr[i] = NULL;
+    }
 	
 	int testVectorEstream = pGACirc->testVectorEstream;
 	int nR = numRounds;
@@ -18,9 +22,9 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_ONES)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
 	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_RANDOM)
-		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->GetRandomFromInterval(255, &(iv[input]));
+		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
 	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_BIASRANDOM)
-		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->GetRandomFromInterval(255, &(iv[input]));
+		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
 
 	for (int i=0; i<2; i++) {
 	   if (i == 1) {
@@ -318,9 +322,9 @@ EncryptorDecryptor::EncryptorDecryptor() {
 			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_ONES)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
 			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_RANDOM)
-				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->GetRandomFromInterval(255, &(key[input]));
+				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
 			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_BIASRANDOM)
-				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->GetRandomFromInterval(255, &(key[input]));
+				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
 			
 
 			ecryptarr[i]->ECRYPT_keysetup(ctxarr[i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
@@ -356,6 +360,20 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	}
 	tvfile.close();
 	// ******************************************************************** //
+}
+
+EncryptorDecryptor::~EncryptorDecryptor() {
+    for(int i = 0; i < 4; i++) {
+        if (ecryptarr[i] != NULL) {
+            delete ecryptarr[i];
+            ecryptarr[i] = NULL;
+        }
+        if (ctxarr[i] != NULL) {
+            free(ctxarr[i]);
+            ctxarr[i] = NULL;
+        }
+    }
+
 }
 
 void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {

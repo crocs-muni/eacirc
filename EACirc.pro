@@ -7,7 +7,8 @@ SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but
 unix{
     QMAKE_CXX = g++-4.7
 }
-QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS
+QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
+QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS -Wall -Wextra #-Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
@@ -15,14 +16,16 @@ INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 # - comment the Libraries section in SOURCES and HEADERS
 # - change includes in all files from "galib/header.h" to "header.h"
 #   (same for tinyXML) - search for //libinclude in source files
-# - uncomment following to lines (adding the libraries)
-# QMAKE_CXXFLAGS += -isystem ../EACirc/ga -isystem ../EACirc/tinyXML
+# - uncomment following line (adding the libraries)
 # LIBS += -ltinyXML -L../EACirc/tinyXML -lga -L../EACirc/ga
 
 SOURCES += \
 # === Main project files ===
+    EACirc/Main.cpp \
     EACirc/CircuitGenome.cpp \
     EACirc/CommonFnc.cpp \
+    EACirc/XMLProcessor.cpp \
+    EACirc/Logger.cpp \
     EACirc/Evaluator.cpp \
     EACirc/status.cpp \
     EACirc/EACirc.cpp \
@@ -39,9 +42,12 @@ SOURCES += \
     EACirc/standalone_testers/TestDisctinctorCircuit.cpp \
     EACirc/random_generator/BiasRndGen.cpp \
     EACirc/random_generator/IRndGen.cpp \
-    EACirc/random_generator/RndGen.cpp \
+    EACirc/random_generator/QuantumRndGen.cpp \
+    EACirc/random_generator/MD5RndGen.cpp \
+    EACirc/random_generator/md5.cpp \
     EACirc/estream/EncryptorDecryptor.cpp \
 # === eSTREAM cipher files ===
+    EACirc/estream/estreamInterface.cpp \
     EACirc/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \   # not used
     EACirc/estream/ciphers/yamb/yamb.cpp \
     EACirc/estream/ciphers/wg/wg.cpp \
@@ -90,14 +96,19 @@ SOURCES += \
 
 HEADERS += \
 # === Main project files ===
+    EACirc/Main.h \
     EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
+    EACirc/XMLProcessor.h \
+    EACirc/EACconstants.h \
+    EACirc/EACglobals.h \
+    EACirc/Logger.h \
     EACirc/Evaluator.h \
     EACirc/status.h \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
     EACirc/test_vector_generator/ITestVectGener.h \
-    EACirc/test_vector_generator/EstreamVectGener.h \
+    EACirc/test_vector_generator/EstreamTestVectGener.h \
     EACirc/circuit_evaluator/DistinguishTwoEvaluator.h \
     EACirc/circuit_evaluator/ICircuitEvaluator.h \
     EACirc/circuit_evaluator/PredictAvalancheEvaluator.h \
@@ -109,10 +120,12 @@ HEADERS += \
     EACirc/standalone_testers/TestDistinctorCircuit.h \
     EACirc/random_generator/BiasRndGen.h \
     EACirc/random_generator/IRndGen.h \
-    EACirc/random_generator/RndGen.h \
+    EACirc/random_generator/QuantumRndGen.h \
+    EACirc/random_generator/MD5RndGen.h \
+    EACirc/random_generator/md5.h \
     EACirc/estream/EncryptorDecryptor.h \
-    EACirc/estream/estream-interface.h \
 # === eSTREAM cipher files ===
+    EACirc/estream/estreamInterface.h \
     EACirc/estream/ciphers/ecrypt-config.h \
     EACirc/estream/ciphers/ecrypt-machine.h \
     EACirc/estream/ciphers/ecrypt-portable.h \
@@ -176,10 +189,7 @@ HEADERS += \
     EACirc/galib/GAListGenome.h EACirc/galib/GAMask.h EACirc/galib/GANode.h EACirc/galib/GAParameter.h EACirc/galib/GAPopulation.h EACirc/galib/garandom.h \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
-    EACirc/galib/std_stream.h \
-    EACirc/EACconstants.h \
-    EACirc/globals_unused.h \
-    EACirc/EACglobals.h
+    EACirc/galib/std_stream.h
 
 OTHER_FILES += \
     EACirc/config.xml

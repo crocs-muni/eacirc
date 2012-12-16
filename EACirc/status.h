@@ -52,6 +52,7 @@
 #define STAT_INVALID_PTR                        50      // INVALID POINTER DETECTED
 #define STAT_KEY_TYPE_BAD                       51      // BAD KEY TYPE
 #define STAT_INVALID_ARGUMETS                   52      // INVALID COMMAND LINE ARGUMENTS
+#define STAT_CONFIG_INCORRECT                   53      // CONFIGURATION IS NOT CORRECT
 
 const char* ErrorToString(int error);
 

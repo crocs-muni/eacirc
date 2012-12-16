@@ -7,12 +7,12 @@
 
 class CircuitGenome {
 public:
-  static void Initializer(GAGenome&);
-  static int Mutator(GAGenome&, float);
-  static float Evaluator(GAGenome&);
-  static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
+    static void Initializer(GAGenome&);
+    static int Mutator(GAGenome&, float);
+    static float Evaluator(GAGenome&);
+    static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
 public:
-	static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome);
+    static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
 	static int ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize);
 	static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char usePredictorMask[MAX_OUTPUTS] = NULL, int bPruneCircuit = FALSE);
 	static int GetFunctionLabel(unsigned long functionID, unsigned long connections, string* pLabel);
@@ -22,6 +22,11 @@ public:
 	static int HasImplicitConnection(unsigned long functionID);
 	static int IsOperand(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
 	static int GetNeutralValue(unsigned long functionID, string* pOperand);
-	static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]);  
+    static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]);
+    static int writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+    static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+    // note: readGenome = ExecuteFromText (+/-)
+    static int writePopulation(const GAPopulation& population, ostream& out);
+    static int readPopulation(GAPopulation& pPopulation, istream& in);
 };
 #endif

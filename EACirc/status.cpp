@@ -51,6 +51,7 @@ const char* ErrorToString(int error) {
         case STAT_INVALID_PTR:                          return "STAT_INVALID_PTR";
         case STAT_KEY_TYPE_BAD:                         return "STAT_KEY_TYPE_BAD";  
         case STAT_INVALID_ARGUMETS:                     return "STAT_INVALID_ARGUMETS";
+        case STAT_CONFIG_INCORRECT:                     return "STAT_CONFIG_INCORRECT";
 		}
         // NO SPECIAL RULE MATCH                                            
         return "'unknown'";   

@@ -1,22 +1,35 @@
 #ifndef RANDOM_GENERATOR_INTERFACE_H
 #define RANDOM_GENERATOR_INTERFACE_H
 
-#include "EACglobals.h"
+//#include "EACglobals.h"
 #include <string>
+#include <random>
+#include "XMLProcessor.h"
+#include "CommonFnc.h"
 
 class IRndGen {
-	int type;
-	public:
-		IRndGen();
-		IRndGen(int);
-        virtual ~IRndGen(){}
-		IRndGen* getRndGenClass(void);
-		virtual int GetRandomFromInterval(unsigned long, unsigned long *){return 0;}
-		virtual int GetRandomFromInterval(unsigned char, unsigned char *){return 0;}
-		virtual int GetRandomFromInterval(int, int *){return 0;}
-		virtual int GetRandomFromInterval(float, float *){return 0;}
-		virtual int InitRandomGenerator(unsigned long seed = 0, std::string QRBGSPath = ""){return 0;}
-		virtual string ToString(){return "";}
+//private:
+//    static MD5RndGen* m_mainGenerator;
+protected:
+    int m_type; // generator type, see EACirc constants
+    unsigned long m_seed; // original seed
+public:
+    IRndGen(int type, unsigned long seed);
+    virtual ~IRndGen() {}
+
+    static IRndGen* parseGenerator(TiXmlElement* pRoot);
+
+    virtual int getRandomFromInterval(unsigned long, unsigned long *) = 0;
+    virtual int getRandomFromInterval(unsigned char, unsigned char *) = 0;
+    virtual int getRandomFromInterval(int, int *) = 0;
+    virtual int getRandomFromInterval(float, float *) = 0;
+    virtual int discartValue() = 0;
+
+    virtual string shortDescription() const = 0;
+    virtual TiXmlNode* exportGenerator() const = 0;
 };
+
+ostream& operator <<(ostream& out, const IRndGen& generator);
+istream& operator >>(istream& in, IRndGen& generator);
 
 #endif

@@ -3,7 +3,10 @@
 
 #include "EACconstants.h"
 #include "status.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
+#include "Logger.h"
+//#include "random_generator/IRndGen.h"
+class IRndGen;
 
 #include <list>
 #include <math.h>
@@ -50,7 +53,20 @@ typedef unsigned __int64 uint64_t;
 
 
 // GENERAL LOGGING SERVICE
-#define LOG_INSERTSTRING(message)       { ofstream out("output.log", fstream::app); out << message << endl; out.close();}
+/* using main EACirc logger
+ *
+ * send logs to 'mainLogger.out()' via '<<'
+ * flushing 'mainLogger.out()' causes written data to be prefixed by current time and flushed to logging stream
+ */
+extern Logger mainLogger;
+// RANDOM GENERATOR FOR CUSTOM USAGE
+/*
+ * is initialized at state initialization of EACirc according to external seed or system time
+ * idealy should be used ONLY for first initialization of other generators and GAlib
+ *
+ * internaly is a MD5-based generator
+ */
+extern IRndGen* mainGenerator;
 
 #define STREAM_BLOCK_SIZE 16
 
@@ -107,7 +123,7 @@ typedef struct _GA_CIRCUIT {
 	// TESTING VECTORS PARAMETERS
     int         numTestVectors;
     unsigned char**      testVectors;
-	int			testVectorGenerChangeSeed; // whether to change seed every new generation
+    int			changeGalibSeedFrequency; // how often to change GAlib seed and save state
     int         testVectorGenerMethod;
 	int			testVectorLength;
 	int			testVectorBalance;
@@ -159,7 +175,7 @@ typedef struct _GA_CIRCUIT {
 		testVectorEstream = 0;
 		testVectorEstream2 = 0;
 		testVectorEstreamMethod = 0;
-		testVectorGenerChangeSeed = 0;
+        changeGalibSeedFrequency = 0;
 		estreamKeyType = ESTREAM_GENTYPE_ZEROS;
 		estreamInputType = ESTREAM_GENTYPE_ZEROS;
 		estreamIVType = ESTREAM_GENTYPE_ZEROS;
@@ -215,6 +231,7 @@ typedef struct _GA_CIRCUIT {
 typedef struct _BASIC_INIT_DATA {
     string simulSWVersion;
     string simulDate;
+    bool loadState;
 
     // RANDOM SEED VALUE
     RANDOM_GENERATOR    rndGen;
@@ -232,6 +249,7 @@ typedef struct _BASIC_INIT_DATA {
     void clear() {
         simulSWVersion = "";
         simulDate = "";
+        loadState = false;
 
         rndGen.clear();
 		gaConfig.clear();
@@ -240,4 +258,4 @@ typedef struct _BASIC_INIT_DATA {
 } BASIC_INIT_DATA;
 
 
-#endif
+#endif //EACGLOBALS_H

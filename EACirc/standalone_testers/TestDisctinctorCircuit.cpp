@@ -15,10 +15,10 @@
 #include "time.h"
 #include "Evaluator.h"
 #include "CircuitGenome.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
 #include "estream/EncryptorDecryptor.h"
 #include "test_vector_generator/ITestVectGener.h"
-#include "test_vector_generator/EstreamVectGener.h"
+#include "test_vector_generator/EstreamTestVectGener.h"
 #include "EAC_circuit.h"
 
 //TEST THE OUTPUT FILE AGAINT TEST DATA
@@ -36,8 +36,8 @@ int testDistinctorCircuit(string filename1, string filename2) {
     file2.open(filename2, fstream::in | fstream::binary);
 
     if (!file.is_open() || !file2.is_open()) {
-        cout << "Could not find/open file." << endl;
-        cout << "Required files: " << filename1.c_str() << ", " << filename2.c_str() << endl;
+        mainLogger.out() << "Could not find/open file." << endl;
+        mainLogger.out() << "Required files: " << filename1.c_str() << ", " << filename2.c_str() << endl;
         return STAT_FILE_OPEN_FAIL;
     }
 

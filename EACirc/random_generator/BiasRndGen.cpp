@@ -2,24 +2,20 @@
 #include "BiasRndGen.h"
 //#include "Time.h"
 #include "EACirc.h"
+#include "random_generator/QuantumRndGen.h"
 
-BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath) {
-	BiasRndGen(seed,QRBGSPath,50);
+BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne)
+        : IRndGen(GENERATOR_BIAS, seed), m_chanceForOne(chanceForOne) {
+    m_rndGen = new QuantumRndGen(seed, QRBGSPath);
 }
 
 BiasRndGen::~BiasRndGen() {
-	delete this->rndGen;
+    delete this->m_rndGen;
 }
 
-BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne) {
-    InitRandomGenerator(seed, QRBGSPath);
-	this->chanceForOne = chanceForOne;
-}
-
-
-int BiasRndGen::GetRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
-    int     status = STAT_OK;
-	int		val;
+int BiasRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
+    int status = STAT_OK;
+    int val;
 	unsigned long random = 0;
 	if (pRandom) *pRandom = 0;
 	else return status;
@@ -31,8 +27,8 @@ int BiasRndGen::GetRandomFromInterval(unsigned long highBound, unsigned long *pR
 			break;
 		}
 
-		rndGen->GetRandomFromInterval(100,&val);
-		if (val < chanceForOne)
+        m_rndGen->getRandomFromInterval(100,&val);
+		if (val < m_chanceForOne)
 			random|=pGACirc->precompPow[i];
 	}
 
@@ -41,23 +37,23 @@ int BiasRndGen::GetRandomFromInterval(unsigned long highBound, unsigned long *pR
 	}
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    //UpdateAccumulator();
 
     return status;
 }
 
-int BiasRndGen::GetRandomFromInterval(unsigned char highBound, unsigned char *pRandom) {
-    int     status = STAT_OK;
+int BiasRndGen::getRandomFromInterval(unsigned char highBound, unsigned char *pRandom) {
+    int status = STAT_OK;
     unsigned long   rand = 0;
     
-    status = GetRandomFromInterval(highBound, &rand);
+    status = getRandomFromInterval(highBound, &rand);
     *pRandom = (unsigned char) rand;
 
     return status;
 }
 
-int BiasRndGen::GetRandomFromInterval(unsigned int highBound, int *pRandom) {
-    int     status = STAT_OK;
+int BiasRndGen::getRandomFromInterval(int highBound, int *pRandom) {
+    int status = STAT_OK;
 	int val;
     int random = 0;
 	if (pRandom) *pRandom = 0;
@@ -70,8 +66,8 @@ int BiasRndGen::GetRandomFromInterval(unsigned int highBound, int *pRandom) {
 			break;
 		}
 
-		rndGen->GetRandomFromInterval(100,&val);
-		if (val < chanceForOne)
+        m_rndGen->getRandomFromInterval(100,&val);
+		if (val < m_chanceForOne)
 			random|=pGACirc->precompPow[i];
 	}
 
@@ -82,13 +78,13 @@ int BiasRndGen::GetRandomFromInterval(unsigned int highBound, int *pRandom) {
 	}
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    //UpdateAccumulator();
 
     return status;
 }
 
-int BiasRndGen::GetRandomFromInterval(float highBound, float *pRandom) {
-    int     status = STAT_OK;
+int BiasRndGen::getRandomFromInterval(float highBound, float *pRandom) {
+    int status = STAT_OK;
 	int val;
     unsigned long random = 0;
 	if (pRandom) *pRandom = 0;
@@ -102,8 +98,8 @@ int BiasRndGen::GetRandomFromInterval(float highBound, float *pRandom) {
 			break;
 		}
 
-		rndGen->GetRandomFromInterval(100,&val);
-		if (val < chanceForOne)
+        m_rndGen->getRandomFromInterval(100,&val);
+		if (val < m_chanceForOne)
 			random|=pGACirc->precompPow[i];
 	}
 
@@ -111,29 +107,62 @@ int BiasRndGen::GetRandomFromInterval(float highBound, float *pRandom) {
 		*pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
 
 	// UPDATE ACCUMULATOR
-    UpdateAccumulator();
+    //UpdateAccumulator();
 
     return status;
 }
 
-int BiasRndGen::InitRandomGenerator(unsigned long seed, string QRBGSPath) {
-	this->rndGen = new CRndGen(seed, QRBGSPath);
-	return STAT_OK;
+int BiasRndGen::discartValue() {
+    return m_rndGen->discartValue();
 }
 
+/*
 int BiasRndGen::UpdateAccumulator() {
     return STAT_OK;
-}  
+}
+*/
 
 void BiasRndGen::setChanceForOne(int chance) {
-	chanceForOne = chance;
+	m_chanceForOne = chance;
 }
 
-string BiasRndGen::ToString() {
-	string mes = "BIAS GENERATOR ";	
+string BiasRndGen::shortDescription() const {
+    string mes = "bias generetor ";
 	stringstream out;
-	out << chanceForOne;
+	out << m_chanceForOne;
 	mes+=out.str();
 	mes+="%";
 	return mes;
+}
+
+BiasRndGen::BiasRndGen(TiXmlElement* pRoot)
+        : IRndGen(GENERATOR_BIAS,1) {  // cannot call IRndGen with seed 0, warning would be issued
+    if (atoi(pRoot->Attribute("type")) != m_type) {
+        // TODO: unset sanity bit
+        return;
+    }
+
+    TiXmlElement* pElem = NULL;
+
+    pElem = pRoot->FirstChildElement("chance_for_one");
+    m_chanceForOne = atoi(pElem->GetText());
+    pElem = pRoot->FirstChildElement("generator");
+    m_rndGen = new QuantumRndGen(pElem);
+}
+
+TiXmlNode* BiasRndGen::exportGenerator() const {
+    TiXmlElement* pRoot = new TiXmlElement("generator");
+    pRoot->SetAttribute("type",toString(m_type).c_str());
+    pRoot->SetAttribute("description",shortDescription().c_str());
+
+    TiXmlElement* chanceForOne = new TiXmlElement("chance_for_one");
+    stringstream sChanceForOne;
+    sChanceForOne << m_chanceForOne;
+    chanceForOne->LinkEndChild(new TiXmlText(sChanceForOne.str().c_str()));
+    pRoot->LinkEndChild(chanceForOne);
+
+    pRoot->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
+    pRoot->LinkEndChild(m_rndGen->exportGenerator());
+
+    return pRoot;
 }

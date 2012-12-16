@@ -10,7 +10,7 @@
 #include "ecrypt-sync.h"
 #include "../ecrypt-portable.h"
 #include "dragon-sboxes.cpp"
-#include "../../estream-interface.h"
+#include "../../estreamInterface.h"
 
 /**
  * The DRAGON_OFFSET macro calculates the position of the 

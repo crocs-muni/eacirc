@@ -6,6 +6,7 @@
 class ITestVectGener {
 	public:
 		ITestVectGener();
+        virtual ~ITestVectGener() {}
 		ITestVectGener* getGenerClass(void);
 		virtual void generateTestVectors(void) {}
 };

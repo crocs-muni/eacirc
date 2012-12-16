@@ -22,7 +22,7 @@ RUN_DIR		= run
 # complation settings
 #CXX			= g++
 CXX			= g++-4.7
-CXXFLAGS		= -std=c++0x # -Wall
+CXXFLAGS		= -std=c++11 # -Wall
 DEBUG_CXXFLAGS		= -g -DDEBUG
 RELEASE_CXXFLAGS	= -O3
 PROFILE_CXXFLAGS	= -p
@@ -63,7 +63,7 @@ clean:
 	cd EACirc/galib && $(MAKE) clean
 	cd EACirc/tinyXML && $(MAKE) clean
 	rm -f $(OBJECTS) 
-	cd $(RUN_DIR) && rm -f scores.log *.txt *.bin *.c *.dot
+	cd $(RUN_DIR) && rm -f *.log *.txt *.bin *.c *.dot *.xml
 	@echo === Successfully cleaned. ===
 
 cleanmain:

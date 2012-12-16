@@ -9,6 +9,7 @@ class Evaluator {
 		ITestVectGener *TVG;
 	public:
 		Evaluator();
+        ~Evaluator();
 		void generateTestVectors();
 		int evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener);
 };

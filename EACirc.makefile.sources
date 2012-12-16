@@ -3,7 +3,8 @@ SOURCES=
 # === Main files ===
 
 SOURCES+= EACirc/CircuitGenome.cpp EACirc/CommonFnc.cpp \
-EACirc/Evaluator.cpp  EACirc/status.cpp EACirc/EACirc.cpp
+EACirc/Evaluator.cpp EACirc/status.cpp EACirc/EACirc.cpp \
+EACirc/Logger.cpp EACirc/XMLProcessor.cpp EACirc/Main.cpp
 
 # Test Vector Generator
 SOURCES+= \
@@ -25,15 +26,17 @@ EACirc/circuit_evaluator/PredictHammingWeightCircuitEvaluator.cpp
 SOURCES+= \
 EACirc/random_generator/BiasRndGen.cpp \
 EACirc/random_generator/IRndGen.cpp \
-EACirc/random_generator/RndGen.cpp
+EACirc/random_generator/QuantumRndGen.cpp \
+EACirc/random_generator/MD5RndGen.cpp \
+EACirc/random_generator/md5.cpp
 
 # Standalone testers
 SOURCES+= \
 EACirc/standalone_testers/TestDisctinctorCircuit.cpp
 
 # eSTREAM interface files
-SOURCES+= EACirc/estream/EncryptorDecryptor.cpp 
-
+SOURCES+= EACirc/estream/EncryptorDecryptor.cpp \
+EACirc/estream/estreamInterface.cpp
 
 # === eSTREAM cipher files ===
 

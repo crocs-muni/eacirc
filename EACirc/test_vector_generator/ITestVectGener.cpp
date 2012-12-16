@@ -1,5 +1,5 @@
 #include "test_vector_generator/ITestVectGener.h"
-#include "test_vector_generator/EstreamVectGener.h"
+#include "test_vector_generator/EstreamTestVectGener.h"
 #include "EACirc.h"
 
 ITestVectGener::ITestVectGener() {

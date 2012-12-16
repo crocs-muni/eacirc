@@ -3,13 +3,17 @@
 #include "CommonFnc.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
-#include "test_vector_generator/EstreamVectGener.h"
+#include "test_vector_generator/EstreamTestVectGener.h"
 #include "estream/EncryptorDecryptor.h"
-#include "estream/estream-interface.h"
+#include "estream/estreamInterface.h"
 
 EstreamTestVectGener::EstreamTestVectGener() : ITestVectGener() {
 	this->numstats = new int[2];
 	Init();
+}
+
+EstreamTestVectGener::~EstreamTestVectGener() {
+    delete[] this->numstats;
 }
 
 void EstreamTestVectGener::Init() {	
@@ -35,7 +39,7 @@ void EstreamTestVectGener::getTestVector(){
 			else if (pGACirc->testVectorBalance && (numstats[1] >= pGACirc->numTestVectors/2))
 				streamnum = 0;
 			else
-				rndGen->GetRandomFromInterval(1, &streamnum);
+				rndGen->getRandomFromInterval(1, &streamnum);
 			numstats[streamnum]++;
 			//Signalize the correct value
 			for (int output = 0; output < pGACirc->numOutputs; output++) outputs[output] = streamnum * 0xff;
@@ -51,9 +55,9 @@ void EstreamTestVectGener::getTestVector(){
 				else if (pGACirc->estreamInputType == ESTREAM_GENTYPE_ONES)
 					for (int input = 0; input < pGACirc->testVectorLength; input++) plain[input] = 0x01;
 				else if (pGACirc->estreamInputType == ESTREAM_GENTYPE_RANDOM)
-					for (int input = 0; input < pGACirc->testVectorLength; input++) rndGen->GetRandomFromInterval(255, &(plain[input]));
+					for (int input = 0; input < pGACirc->testVectorLength; input++) rndGen->getRandomFromInterval(255, &(plain[input]));
 				else if (pGACirc->estreamInputType == ESTREAM_GENTYPE_BIASRANDOM)
-					for (int input = 0; input < pGACirc->testVectorLength; input++) biasRndGen->GetRandomFromInterval(255, &(plain[input]));
+					for (int input = 0; input < pGACirc->testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
 	
 				encryptorDecryptor->encrypt(plain,inputs,streamnum);
 				encryptorDecryptor->decrypt(inputs,outplain,streamnum+2);
@@ -61,9 +65,9 @@ void EstreamTestVectGener::getTestVector(){
 			}
 			else { // RANDOM
 				if (pGACirc->saveTestVectors == 1)
-					tvfile << "(RANDOM INPUT - " << rndGen->ToString() << "):";
+                    tvfile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
 				for (int input = 0; input < pGACirc->testVectorLength; input++) {
-					rndGen->GetRandomFromInterval(255, &outplain[input]);
+					rndGen->getRandomFromInterval(255, &outplain[input]);
 					plain[input] = inputs[input] = outplain[input];
 				}
 			}
@@ -90,9 +94,9 @@ void EstreamTestVectGener::getTestVector(){
 			else if (pGACirc->estreamInputType == ESTREAM_GENTYPE_ONES)
 				for (int input = 0; input < pGACirc->testVectorLength; input++) inputs[input] = 0x01;
 			else if (pGACirc->estreamInputType == ESTREAM_GENTYPE_RANDOM)
-				for (int input = 0; input < pGACirc->testVectorLength; input++) rndGen->GetRandomFromInterval(255, &(inputs[input]));
+				for (int input = 0; input < pGACirc->testVectorLength; input++) rndGen->getRandomFromInterval(255, &(inputs[input]));
 			else if (pGACirc->estreamInputType == ESTREAM_GENTYPE_BIASRANDOM)
-				for (int input = 0; input < pGACirc->testVectorLength; input++) biasRndGen->GetRandomFromInterval(255, &(inputs[input]));
+				for (int input = 0; input < pGACirc->testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(inputs[input]));
 
 			// WE NEED TO LET EVALUATOR KNOW THE INPUTS
 			for (int input = 0; input < pGACirc->testVectorLength; input++)

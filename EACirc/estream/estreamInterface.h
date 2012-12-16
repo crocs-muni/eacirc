@@ -7,8 +7,9 @@ typedef void* ECRYPT_ctx;
 
 class EstreamInterface {
 	public:
-		int numRounds;
-		//EstreamInterface() {};
+        int numRounds;
+		EstreamInterface() : numRounds(0) {}
+        virtual ~EstreamInterface() {}
 		virtual void ECRYPT_init(void) = 0;
 		virtual void ECRYPT_keysetup(void* ctx, const u8 * key, u32 keysize,	u32 ivsize) = 0;
 		virtual void ECRYPT_ivsetup(void* ctx, const u8 * iv) = 0;
@@ -57,6 +58,8 @@ class EstreamInterface {
 #define ESTREAM_GENTYPE_RANDOM 2
 #define ESTREAM_GENTYPE_BIASRANDOM 3
 
+// eStream cipher constants
+const char* estreamToString(int cipher);
 #define ESTREAM_ABC 1
 #define ESTREAM_ACHTERBAHN 2
 #define ESTREAM_CRYPTMT 3

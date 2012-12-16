@@ -11,7 +11,7 @@
 #define MIR1_SYNC
 
 #include "../ecrypt-portable.h"
-#include "../../estream-interface.h"
+#include "../../estreamInterface.h"
 
 #ifndef _Mir1_DATASTRUCTURES_AND_TYPES_DEFINED
 #define _Mir1_DATASTRUCTURES_AND_TYPES_DEFINED

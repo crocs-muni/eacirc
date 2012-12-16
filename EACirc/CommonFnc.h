@@ -13,4 +13,12 @@ void TrimLeadingSpaces(string& str);
 void TrimTrailingSpaces(string& str);
 double StringToDouble(string &s, bool failIfLeftoverChars = true);
 
+template < typename T >
+string toString(T value) {
+    stringstream ss;
+    ss << left << dec;
+    ss << value;
+    return ss.str();
+}
+
 #endif

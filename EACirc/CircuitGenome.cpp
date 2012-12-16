@@ -3,6 +3,7 @@
 #include "EACirc.h"
 #include "CommonFnc.h"
 #include "circuit_evaluator/ICircuitEvaluator.h"
+#include <iomanip>
 
 void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
     unsigned long   circuit[MAX_GENOME_SIZE];    
@@ -34,7 +35,11 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     int								numPredictions = 0; 
 	int								remainingTestVectors = pGACirc->numTestVectors;
 	ICircuitEvaluator				*circEval = new ICircuitEvaluator();
-	circEval = circEval->getCircEvalClass();
+    {
+        ICircuitEvaluator* temp = circEval->getCircEvalClass();
+        delete circEval;
+        circEval = temp;
+    }
 
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
 	remainingTestVectors = pGACirc->numTestVectors;
@@ -76,7 +81,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
             
         // DISPLAY CURRENTLY BEST
 		ostringstream os2;
-		os2 << "circuit_" << fit;
+        os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
 		string filePath = os2.str();
         PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
 
@@ -86,6 +91,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 		}
     }
         
+    delete circEval;
     return fit;
 }
 
@@ -93,7 +99,9 @@ void CircuitGenome::Initializer(GAGenome &g) {
     GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
     int	offset = 0;
 
-	// LOAD AND CONTINUE
+    // loading done elsewhere (manually in eacirc.run after initializing GAlib)
+    // LOAD AND CONTINUE
+    /*
 	string fileName = "EAC_circuit.bin";
 	fstream	efile;
 	string executetext;
@@ -103,7 +111,8 @@ void CircuitGenome::Initializer(GAGenome &g) {
 		CircuitGenome::ExecuteFromText(executetext, &genome);
 		efile.close();
 		return;
-	}
+    }
+    */
 
 	// CLEAR GENOM
 	for (int i = 0; i < genome.size(); i++) genome.gene(i, 0);
@@ -133,7 +142,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                 }
                 else {
                     // FUNCTIONAL LAYERS
-                    rndGen->GetRandomFromInterval(pGACirc->precompPow[numLayerInputs], &value);
+                    rndGen->getRandomFromInterval(pGACirc->precompPow[numLayerInputs], &value);
                     //value = 0xffffffff;
                 }
                 genome.gene(offset + slot, value);
@@ -148,7 +157,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                     // FUNCTIONAL LAYER
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
-                        rndGen->GetRandomFromInterval(FNC_MAX, &value);
+                        rndGen->getRandomFromInterval(FNC_MAX, &value);
                         if (pGACirc->allowedFNC[value] != 0) { 
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
@@ -162,7 +171,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
 
 int CircuitGenome::Mutator(GAGenome &g, float pmut) {
     GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
-    float result = 0;
+    int result = 0;
     
     for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
         int offset = layer * MAX_INTERNAL_LAYER_SIZE; 
@@ -185,7 +194,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 // MUTATE CONNECTION SELECTOR (FLIP ONE SINGLE BIT == ONE CONNECTOR)
                 if (GAFlipCoin(pmut)) {
                     unsigned long temp;
-                    rndGen->GetRandomFromInterval(numLayerInputs, &value);
+                    rndGen->getRandomFromInterval(numLayerInputs, &value);
                     temp = pGACirc->precompPow[value];
                     // SWITCH RANDOMLY GENERATED BIT
                     temp ^= genome.gene(offset + slot);
@@ -197,7 +206,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 if (GAFlipCoin(pmut)) {             
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
-                        rndGen->GetRandomFromInterval(FNC_MAX, &value);
+                        rndGen->getRandomFromInterval(FNC_MAX, &value);
                         if (pGACirc->allowedFNC[value] != 0) { 
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
@@ -219,7 +228,7 @@ int CircuitGenome::Crossover(const GAGenome &p1, const GAGenome &p2, GAGenome *o
     GA1DArrayGenome<unsigned long> &offspring2 = (GA1DArrayGenome<unsigned long>&) *o2;
     
     // CROSS ONLY WHOLE LAYERS
-    int cpoint = GARandomInt(1,pGACirc->numLayers) * 2; // bod køížení (v mezích od,do)
+    int cpoint = GARandomInt(1,pGACirc->numLayers) * 2; // bod ken (v mezch od,do)
     for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
         int offset = layer * MAX_INTERNAL_LAYER_SIZE; 
 
@@ -1179,7 +1188,7 @@ node [color=lightblue2, style=filled];\r\n";
 	//
 	//	STORE IN SPECIFIED FILES
 	//
-	if (filePath == "") filePath = "EAC_circuit";
+    if (filePath == "") filePath = FILE_BEST_CIRCUIT;
 
 	fstream	file;
 	string	newFilePath;
@@ -1260,10 +1269,11 @@ node [color=lightblue2, style=filled];\r\n";
     }
 
 
+    /*
 	//
 	//	STORE IN DEFAULT FILE
 	//
-	filePath = "EAC_circuit";
+    filePath = FILE_BEST_CIRCUIT;
 	
 	// TEXT CIRCUIT
 	//newFilePath.Format("%s.txt", filePath);
@@ -1297,6 +1307,7 @@ node [color=lightblue2, style=filled];\r\n";
 		file << visualCirc;
 		file.close();
 	}
+    */
     
     return status;
 }
@@ -1544,4 +1555,74 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
     }
     
     return status;
+}
+
+int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
+    int status = STAT_OK;
+
+    ostringstream textCicruitStream;
+    for (int i = 0; i < genome.length(); i++) {
+        textCicruitStream << genome.gene(i) << " ";
+    }
+    textCircuit = textCicruitStream.str();
+
+    return status;
+}
+
+int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
+    unsigned long* circuit = new unsigned long[pGACirc->genomeSize];
+
+    memset(circuit, 0, sizeof(circuit));
+    CircuitGenome::ParseCircuit(textCircuit, circuit, &(pGACirc->numLayers), &(pGACirc->internalLayerSize), &(pGACirc->outputLayerSize));
+
+    // TODO: always keep real genome size, not constant from config file
+    // ACTUAL SIZE OF GENOM
+    // pGACirc->genomeSize = (pGACirc->numLayers * 2) * MAX_INTERNAL_LAYER_SIZE;
+
+    for (int i = 0; i < pGACirc->genomeSize; i++) genome.gene(i, circuit[i]);
+
+	delete circuit;
+    // TODO: add circiut parsing status
+    return STAT_OK;
+}
+
+int CircuitGenome::writePopulation(const GAPopulation& population, ostream& out) {
+    int status = STAT_OK;
+    string textCircuit;
+    for (int i = 0; i < population.size(); i++) {
+        // note: it is not necessary to call individual i in SCALED order
+        //       however then the population files differ in order ('diff' cannot be used to fing bugs)
+        GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(population.individual(i,GAPopulation::SCALED));
+        status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
+        if (status != STAT_OK) {
+            return status;
+        }
+        out << textCircuit << endl;
+    }
+    return status;
+}
+
+int CircuitGenome::readPopulation(GAPopulation& population, istream& in) {
+    int populationSize = 0;
+    string line;
+    getline(in,line);
+    istringstream(line) >> populationSize;
+    getline(in,line);
+    istringstream(line) >> pGACirc->genomeSize;
+    // TODO: genome size check
+
+    GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    // INIT GENOME STRUCTURES
+    genome.initializer(CircuitGenome::Initializer);
+    genome.mutator(CircuitGenome::Mutator);
+    genome.crossover(CircuitGenome::Crossover);
+    // LOAD genomes
+    string textCircuit;
+    for (int i = 0; i < populationSize; i++) {
+        getline(in, textCircuit);
+        CircuitGenome::readGenome(genome,textCircuit);
+        population.add(genome);
+    }
+
+    return STAT_OK;
 }

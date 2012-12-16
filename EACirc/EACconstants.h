@@ -3,29 +3,41 @@
 
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
-#define FILE_SEEDFILE               "LastSeed.txt"
+#define FILE_STATE                  "state.xml"
+#define FILE_STATE_INITIAL          "state-initial.xml"
+#define FILE_POPULATION             "population.bin"
+#define FILE_POPULATION_INITIAL     "population-initial.bin"
+#define FILE_GENOME                 "genome.bin"
+//#define FILE_SEEDFILE               "LastSeed.txt"
 #define FILE_FITNESS_PROGRESS       "EAC_fitnessProgress.txt"
 #define FILE_BEST_FITNESS           "bestfitgraph.txt"
 #define FILE_AVG_FITNESS            "avgfitgraph.txt"
 #define FILE_GALIB_SCORES           "scores.log"
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "TestVectors.txt"
-#define FILE_TEST_DATA_1            "TestData1.txt"
-#define FILE_TEST_DATA_2            "TestData2.txt"
-//#define ???                         "EAC_circuit.bin"
+#define FILE_TEST_DATA_1            "TestData1.bin"
+#define FILE_TEST_DATA_2            "TestData2.bin"
+#define FILE_CIRCUIT                "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
+#define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot
+#define FILE_LOGFILE                "eacirc.log"
 
-// QRNG DATA (filename = $PREFIX$INDEX$DUFFIX)
+// CIRCUIT OUTPUT SETTINGS
+#define CIRCUIT_FILENAME_PRECISION 3
+
+// QRNG DATA (filename = $PREFIX$INDEX$DUFFIX, index starts from 0)
 #define	FILE_QRNG_DATA_INDEX_MAX	10
 #define FILE_QRNG_DATA_PREFIX       "qrng-"
 #define FILE_QRNG_DATA_SUFFIX       ".bin"
 // maximum number of bits used from random data file
-// don't set too big, also denotes size of created system random (??)
+// don't set too big, this size is read into memory
 #define RANDOM_DATA_FILE_SIZE		10000000
 
 // COMMAND LINE OPTIONS
 #define CMD_OPT_STATIC              "-staticcircuit"
 #define CMD_OPT_EVOLUTION_OFF       "-evolutionoff"
 #define CMD_OPT_STATIC_DISTINCTOR   "-distinctor"
+#define CMD_OPT_LOGGING             "-log"
+#define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 
 // GA CIRCUIT CONSTANTS
 #define NUM_BITS                    8             // NUMBER OF BITS PER unsigned char
@@ -59,8 +71,9 @@
 #define TESTVECT_SHA1_RAND_DISTINGUISH  6
 
 // RANDOM GENERATORS
-#define CRNDGEN						1
-#define	BIASGEN						2
+#define GENERATOR_QRNG				1
+#define	GENERATOR_BIAS				2
+#define GENERATOR_MD5               3
 
 // CIRCUIT FUNCTIONS
 #define FNC_NOP                     0

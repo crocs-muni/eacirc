@@ -7,8 +7,9 @@
 class ICircuitEvaluator {
 	public:
 		ICircuitEvaluator();
+        virtual ~ICircuitEvaluator() {}
 		ICircuitEvaluator* getCircEvalClass(void);
-		virtual void evaluateCircuit(unsigned char*, unsigned char*, unsigned char*, int*, int*, int* = NULL) {};
+        virtual void evaluateCircuit(unsigned char*, unsigned char*, unsigned char*, int*, int*, int* = NULL) {}
 };
 
 #endif
