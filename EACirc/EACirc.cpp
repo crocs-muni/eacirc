@@ -97,16 +97,16 @@ void EACirc::saveState(string filename) {
     TiXmlElement* pElem;
 
     pElem = new TiXmlElement("generations_required");
-    pElem->LinkEndChild(new TiXmlText(to_string(basicSettings.gaConfig.nGeners).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.nGeners).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("generations_finished");
-    pElem->LinkEndChild(new TiXmlText(to_string(m_actGener).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(m_actGener).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("main_seed");
-    pElem->LinkEndChild(new TiXmlText(to_string(m_originalSeed).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(m_originalSeed).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("current_galib_seed");
-    pElem->LinkEndChild(new TiXmlText(to_string(m_currentGalibSeed).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(m_currentGalibSeed).c_str()));
     pRoot->LinkEndChild(pElem);
 
     pElem = new TiXmlElement("random_generators");

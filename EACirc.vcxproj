@@ -19,11 +19,15 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -42,7 +46,8 @@
     <OutDir>$(SolutionDir)\run\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\run\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -71,10 +76,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>EACirc;EACirc/galib;EACirc/tinyXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>./EACirc; ./EACirc/galib; ./EACirc/tinyXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -82,6 +89,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>run\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -163,6 +171,8 @@
     <ClCompile Include="EACirc\Main.cpp" />
     <ClCompile Include="eacirc\random_generator\BiasRndGen.cpp" />
     <ClCompile Include="eacirc\random_generator\IRndGen.cpp" />
+    <ClCompile Include="EACirc\random_generator\md5.cpp" />
+    <ClCompile Include="EACirc\random_generator\MD5RndGen.cpp" />
     <ClCompile Include="EACirc\random_generator\QuantumRndGen.cpp" />
     <ClCompile Include="eacirc\standalone_testers\TestDisctinctorCircuit.cpp" />
     <ClCompile Include="eacirc\status.cpp" />
@@ -284,6 +294,8 @@
     <ClInclude Include="EACirc\Main.h" />
     <ClInclude Include="eacirc\random_generator\BiasRndGen.h" />
     <ClInclude Include="eacirc\random_generator\IRndGen.h" />
+    <ClInclude Include="EACirc\random_generator\md5.h" />
+    <ClInclude Include="EACirc\random_generator\MD5RndGen.h" />
     <ClInclude Include="EACirc\random_generator\QuantumRndGen.h" />
     <ClInclude Include="eacirc\random_generator\RndGen.h" />
     <ClInclude Include="eacirc\SSconstants.h" />

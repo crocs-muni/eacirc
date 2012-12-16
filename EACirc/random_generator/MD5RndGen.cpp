@@ -121,7 +121,7 @@ MD5RndGen::MD5RndGen(TiXmlElement* pRoot)
 
 TiXmlNode* MD5RndGen::exportGenerator() const {
     TiXmlElement* pRoot = new TiXmlElement("generator");
-    pRoot->SetAttribute("type",to_string(m_type).c_str());
+    pRoot->SetAttribute("type",toString(m_type).c_str());
     pRoot->SetAttribute("description",shortDescription().c_str());
 
     TiXmlElement* originalSeed = new TiXmlElement("original_seed");

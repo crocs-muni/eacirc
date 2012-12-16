@@ -5,7 +5,7 @@
 #include <string>
 #include <random>
 #include "XMLProcessor.h"
-//#include "MD5RndGen.h"
+#include "CommonFnc.h"
 
 class IRndGen {
 //private:

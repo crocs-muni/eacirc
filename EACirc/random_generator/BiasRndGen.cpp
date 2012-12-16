@@ -152,7 +152,7 @@ BiasRndGen::BiasRndGen(TiXmlElement* pRoot)
 
 TiXmlNode* BiasRndGen::exportGenerator() const {
     TiXmlElement* pRoot = new TiXmlElement("generator");
-    pRoot->SetAttribute("type",to_string(m_type).c_str());
+    pRoot->SetAttribute("type",toString(m_type).c_str());
     pRoot->SetAttribute("description",shortDescription().c_str());
 
     TiXmlElement* chanceForOne = new TiXmlElement("chance_for_one");

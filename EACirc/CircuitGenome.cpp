@@ -1570,7 +1570,7 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
 }
 
 int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
-    unsigned long circuit[pGACirc->genomeSize];
+    unsigned long* circuit = new unsigned long[pGACirc->genomeSize];
 
     memset(circuit, 0, sizeof(circuit));
     CircuitGenome::ParseCircuit(textCircuit, circuit, &(pGACirc->numLayers), &(pGACirc->internalLayerSize), &(pGACirc->outputLayerSize));
@@ -1581,6 +1581,7 @@ int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& te
 
     for (int i = 0; i < pGACirc->genomeSize; i++) genome.gene(i, circuit[i]);
 
+	delete circuit;
     // TODO: add circiut parsing status
     return STAT_OK;
 }
