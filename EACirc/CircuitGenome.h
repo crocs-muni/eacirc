@@ -23,10 +23,39 @@ public:
 	static int IsOperand(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
 	static int GetNeutralValue(unsigned long functionID, string* pOperand);
     static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]);
+
+    /** saves genome to string in binary format
+      * @param genome       genome to print
+      * @param textCircuit  printed genome (original contents overwritten)
+      * @return status
+      */
     static int writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+
+    /** reads genome in binary fromat from string
+      * genome parameters (number of layers, genome size, etc.) are taken from main settings
+      * - genome is prolonged by zeroes if needed
+      * @param genome       read genome (contents overwritten)
+      * @param textCircuit  string to read circuit from
+      * @return status
+      */
     static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
-    // note: readGenome = ExecuteFromText (+/-)
+
+    /** writes population to stream in binary format
+      * - prefixed by population and genome sizes
+      * - individual genomes are ordered (SCLAED), so if needed, scaing is done before writing
+      * @param population   population to write
+      * @param out          stream for writing
+      * @return status
+      */
     static int writePopulation(const GAPopulation& population, ostream& out);
-    static int readPopulation(GAPopulation& pPopulation, istream& in);
+
+    /** reads population in binary format from stream
+      * - population should be prefixed by size and genome size
+      * - chechs if loaded genomes have correct genome size
+      * @param population   read population (contents overwritten)
+      * @param in           stream for reading
+      * @return status
+      */
+    static int readPopulation(GAPopulation& population, istream& in);
 };
 #endif

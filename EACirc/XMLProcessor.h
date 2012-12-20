@@ -5,26 +5,33 @@
 #include "tinyxml.h"
 #include "EACglobals.h"
 
-int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings);
+/** loads configuration data from file to settings structure
+  *
+  * @param filename         file to read from
+  * @param pBasicSettings   pointer to allocated settings structure where to save loaded data
+  * @return status
+  */
+int LoadConfigScript(const string filename, BASIC_INIT_DATA* pBasicSettings);
 
-int saveXMLFile(TiXmlNode* pRoot, string filename);
+/** saves given XML structure to file
+  * automatically add XML declaration
+  *
+  * @param pRoot        pointer to root element of the structure to be saved
+  *                     (this tree structure is not deallocated)
+  * @param filename     file to save to (contents overwritten)
+  * @return status
+  */
+int saveXMLFile(TiXmlNode* pRoot, const string filename);
 
 /** gets root element from XML file
   * data structure reference by this method is allocated dynamicly
   * CALLER is responsible for freeing!
   *
-  * @param pRoot   parsed XML structure will put here
-  *                initially should be NULL, otherwise memory leak occurs
-  * @param filename
+  * @param pRoot        parsed XML structure will put here
+  *                     initially should be NULL, otherwise memory leak occurs
+  * @param filename     file where to load from
+  * @return status
   */
-int loadXMLFile(TiXmlNode*& pRoot, string filename);
-
-// also implemented in XMLProcessor.cpp:
-//
-// QunatumRndGen::QunatumRndGen(const TiXmlHandle root);
-// TiXmlHandle QunatumRndGen::exportGenerator();
-//
-// BiasRndGen::BiasRndGen(const TiXmlHandle root);
-// TiXmlHandle BiasRndGen::exportGenerator();
+int loadXMLFile(TiXmlNode*& pRoot, const string filename);
 
 #endif // XMLPROCESSOR_H

@@ -43,7 +43,7 @@ EACirc::EACirc()
     : m_status(STAT_OK), m_evolutionOff(false), m_loadGenome(false),
       m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0) {
-    pGACirc = new GA_CIRCUIT;
+    // pGACirc = new GA_CIRCUIT;
 }
 
 EACirc::EACirc(bool evolutionOff)
@@ -61,11 +61,11 @@ EACirc::~EACirc() {
     delete biasRndGen;
 }
 
-int EACirc::getStatus() {
+int EACirc::getStatus() const {
     return m_status;
 }
 
-void EACirc::loadConfiguration(string filename) {
+void EACirc::loadConfiguration(const string filename) {
     if (m_status != STAT_OK) return;
     m_status = LoadConfigScript(filename, &basicSettings);
     if (m_status != STAT_OK) {
@@ -92,7 +92,7 @@ void EACirc::loadConfiguration(string filename) {
 }
 
 
-void EACirc::saveState(string filename) {
+int EACirc::saveState(const string filename) const {
     TiXmlElement* pRoot = new TiXmlElement("eacirc_state");
     TiXmlElement* pElem;
 
@@ -115,15 +115,16 @@ void EACirc::saveState(string filename) {
     pElem->LinkEndChild(biasRndGen->exportGenerator());
     pRoot->LinkEndChild(pElem);
 
-    m_status = saveXMLFile(pRoot,filename);
-    if (m_status != STAT_OK) {
+    int status = saveXMLFile(pRoot,filename);
+    if (status != STAT_OK) {
         mainLogger.out() << "Error saving state to file " << filename << "." << endl;
-        return;
+    } else {
+        mainLogger.out() << "State successfully saved to file " << filename << "." << endl;
     }
-    mainLogger.out() << "State successfully saved to file " << filename << "." << endl;
+    return status;
 }
 
-void EACirc::loadState(string filename) {
+void EACirc::loadState(const string filename) {
     TiXmlNode* pRoot = NULL;
     m_status = loadXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
@@ -187,26 +188,28 @@ void EACirc::createState() {
     mainLogger.out() << "State successfully initialized." << endl;
 }
 
-void EACirc::savePopulation(string filename) {
+int EACirc::savePopulation(const string filename) const {
     ofstream populationFile(filename);
+    int status = STAT_OK;
     if (!populationFile.is_open()) {
         mainLogger.out() << "Error saving population to file " << filename << "." << endl;
-        m_status = STAT_FILE_OPEN_FAIL;
-        return;
+        status = STAT_FILE_OPEN_FAIL;
+        return status;
     }
     populationFile << basicSettings.gaConfig.popSize << endl;
     populationFile << basicSettings.gaCircuitConfig.genomeSize << endl;
-    m_status = CircuitGenome::writePopulation(m_gaData->population(),populationFile);
+    status = CircuitGenome::writePopulation(m_gaData->population(),populationFile);
     if (m_status != STAT_OK) {
         mainLogger.out() << "Error saving population to file " << filename << "." << endl;
         populationFile.close();
-        return;
+        return status;
     }
     populationFile.close();
     mainLogger.out() << "Population successfully saved to file " << filename << "." << endl;
+    return status;
 }
 
-void EACirc::loadPopulation(string filename) {
+void EACirc::loadPopulation(const string filename) {
     GAPopulation population;
     ifstream populationFile(filename);
     if (!populationFile.is_open()) {
@@ -222,7 +225,7 @@ void EACirc::createPopulation() {
     // seed GAlib (initializations may require random numbers)
     GARandomSeed(m_currentGalibSeed);
     // temporary structure for genome (empty or loaded from file)
-    GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<unsigned long> genome(basicSettings.gaCircuitConfig.genomeSize, CircuitGenome::Evaluator);
     genome.initializer(CircuitGenome::Initializer);
     genome.mutator(CircuitGenome::Mutator);
     genome.crossover(CircuitGenome::Crossover);
@@ -260,10 +263,14 @@ void EACirc::createPopulation() {
     mainLogger.out() << "Population successfully initialized." << endl;
 }
 
-void EACirc::saveProgress(string stateFilename, string populationFilename) {
-    if (m_status != STAT_OK) return;
-    saveState(stateFilename);
-    savePopulation(populationFilename);
+int EACirc::saveProgress(const string stateFilename, const string populationFilename) const {
+    if (m_status != STAT_OK) return m_status;
+    int status = STAT_OK;
+    status = saveState(stateFilename);
+    if (status == STAT_OK) {
+        status = savePopulation(populationFilename);
+    }
+    return status;
 }
 
 void EACirc::initializeState() {
@@ -308,13 +315,16 @@ void EACirc::prepare() {
     std::remove(FILE_AVG_FITNESS);
 
     //LOG THE TESTVECTGENER METHOD
-    if (pGACirc->testVectorGenerMethod == ESTREAM_CONST) {
+    if (basicSettings.gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {
         ofstream out(FILE_FITNESS_PROGRESS, ios::app);
-        out << "Using Ecrypt candidate n." << pGACirc->testVectorEstream << " (" <<  basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n." << pGACirc->testVectorEstream2 << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
+        out << "Using Ecrypt candidate n." << basicSettings.gaCircuitConfig.testVectorEstream;
+        out << " (" <<  basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n.";
+        out << basicSettings.gaCircuitConfig.testVectorEstream2 << " (";
+        out << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
         out.close();
-        mainLogger.out() << "stream1: using " << estreamToString(pGACirc->testVectorEstream);
+        mainLogger.out() << "stream1: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream);
         mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds)" << endl;
-        mainLogger.out() << "stream2: using " << estreamToString(pGACirc->testVectorEstream2);
+        mainLogger.out() << "stream2: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream2);
         mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
     }
 
@@ -323,18 +333,19 @@ void EACirc::prepare() {
     }
 }
 
-void EACirc::seedAndResetGAlib(GAPopulation population) {
+void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     // set GAlib seed
     GARandomSeed(m_currentGalibSeed);
+    // init new instance of gentetic algorithm
+    GASteadyStateGA* gaTemp = new GASteadyStateGA(population);
     // reset population stats
-    population.touch();
+    gaTemp->pop->touch();
     // delete any previous instance of genetic algorithm
     if (m_gaData != NULL) {
         delete m_gaData;
         m_gaData = NULL;
     }
-    // create new instance of genetic algorithm
-    m_gaData = new GASteadyStateGA(population);
+    m_gaData = gaTemp;
     // initialize the new genetic algorithm
     m_gaData->populationSize(basicSettings.gaConfig.popSize);
     m_gaData->nReplacement(2 * basicSettings.gaConfig.popSize / 3);
@@ -357,16 +368,16 @@ void EACirc::run() {
     }
 
     // SAVE INITIAL STATE
-    saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
+    m_status = saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
     //m_actGener = 1;
     int	changed = 1;
     bool evaluateNow = false;
-    pGACirc->clearFitnessStats();
+    basicSettings.gaCircuitConfig.clearFitnessStats();
     fstream fitfile;
 
-    GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
-    GA1DArrayGenome<unsigned long> genomeTemp(pGACirc->genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<unsigned long> genome(basicSettings.gaCircuitConfig.genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<unsigned long> genomeTemp(basicSettings.gaCircuitConfig.genomeSize, CircuitGenome::Evaluator);
     genome = m_gaData->population().individual(0);
 
     if (m_evolutionOff) {
@@ -389,15 +400,15 @@ void EACirc::run() {
         }
 
         // GENERATE TEST VECTORS IF NEEDED
-        if (pGACirc->TVCGProgressive) {
+        if (basicSettings.gaCircuitConfig.TVCGProgressive) {
             // TODO: understand and correct
-            if (changed > m_actGener/pGACirc->testVectorChangeGener + 1) {
+            if (changed > m_actGener/basicSettings.gaCircuitConfig.testVectorChangeGener + 1) {
                 m_evaluator->generateTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
         } else {
-            if (m_actGener %(pGACirc->testVectorChangeGener) == 1) {
+            if (m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeGener) == 1) {
 
                 //temporary
                 mainLogger.out() << "info: recreating Encryptor-Decryptor." << endl;
@@ -408,7 +419,12 @@ void EACirc::run() {
 
                 m_evaluator->generateTestVectors();
             }
-            if (m_actGener %(pGACirc->testVectorChangeGener) == 0) {
+            if ( basicSettings.gaCircuitConfig.evaluateBeforeTestVectorChange &&
+                 m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeGener) == 0) {
+                evaluateNow = true;
+            }
+            if (!basicSettings.gaCircuitConfig.evaluateBeforeTestVectorChange &&
+                 m_actGener % (basicSettings.gaCircuitConfig.testVectorChangeGener) == 1) {
                 evaluateNow = true;
             }
         }
@@ -422,7 +438,7 @@ void EACirc::run() {
 
         genomeTemp = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
 
-        if (evaluateNow || pGACirc->evaluateEveryStep) {
+        if (evaluateNow || basicSettings.gaCircuitConfig.evaluateEveryStep) {
             m_evaluator->evaluateStep(genomeTemp, m_actGener);
             evaluateNow = false;
         }
@@ -432,7 +448,7 @@ void EACirc::run() {
                 && m_actGener % basicSettings.gaCircuitConfig.changeGalibSeedFrequency == 0) {
             mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
-            saveProgress(FILE_STATE,FILE_POPULATION);
+            m_status = saveProgress(FILE_STATE,FILE_POPULATION);
         }
     }
 
@@ -443,5 +459,5 @@ void EACirc::run() {
 
     //Print the best circuit
     //CircuitGenome::PrintCircuit(genomeTemp,FILE_BEST_CIRCUIT,0,1);
-    //saveState(FILE_STATE,FILE_POPULATION);
+    //m_status = saveState(FILE_STATE,FILE_POPULATION);
 }

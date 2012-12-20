@@ -1570,6 +1570,10 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
 }
 
 int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
+    if (genome.size() != pGACirc->genomeSize) {
+        mainLogger.out() << "error: Incorrect genome size. Cannot read genome." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
     unsigned long* circuit = new unsigned long[pGACirc->genomeSize];
 
     memset(circuit, 0, sizeof(circuit));
@@ -1604,12 +1608,16 @@ int CircuitGenome::writePopulation(const GAPopulation& population, ostream& out)
 
 int CircuitGenome::readPopulation(GAPopulation& population, istream& in) {
     int populationSize = 0;
+    int fileGenomeSize = 0;
     string line;
     getline(in,line);
     istringstream(line) >> populationSize;
     getline(in,line);
-    istringstream(line) >> pGACirc->genomeSize;
-    // TODO: genome size check
+    istringstream(line) >> fileGenomeSize;
+    if (fileGenomeSize != pGACirc->genomeSize) {
+        mainLogger.out() << "error when loading population: Genomes size incorrect." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
 
     GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
     // INIT GENOME STRUCTURES

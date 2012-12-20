@@ -138,6 +138,7 @@ typedef struct _GA_CIRCUIT {
     int         testVectorChangeGener;  // generate fresh new test set every x-th generation
 	bool		TVCGProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
 	bool		evaluateEveryStep; // evaluation is done only with changing test vectors by default - use with care!
+    bool        evaluateBeforeTestVectorChange; // should evaluation before ar after test vectors chagne be written to file?
     int         numBestPredictors;
 	bool		limitAlgRounds;
 	int			limitAlgRoundsCount;
@@ -183,6 +184,7 @@ typedef struct _GA_CIRCUIT {
         testVectorChangeGener = 0;
 		TVCGProgressive = false;
 		evaluateEveryStep = false;
+        evaluateBeforeTestVectorChange = false;
         numBestPredictors = 1;
 		limitAlgRounds = false;
 		limitAlgRoundsCount = -1;

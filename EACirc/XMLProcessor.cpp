@@ -3,11 +3,11 @@
 #include "random_generator/BiasRndGen.h"
 #include <typeinfo>
 
-int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
+int LoadConfigScript(const string filename, BASIC_INIT_DATA* pBasicSettings) {
     int status = STAT_OK;
 
     TiXmlNode* pRoot = NULL;
-    status = loadXMLFile(pRoot, filePath);
+    status = loadXMLFile(pRoot, filename);
     TiXmlHandle hRoot(pRoot);
     TiXmlElement* pElem;
 
@@ -129,6 +129,8 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
             pBasicSettings->gaCircuitConfig.testVectorBalance = atoi(pElem->GetText());
         if (string(pElem->Value()) == "EVALUATE_EVERY_STEP")
             pBasicSettings->gaCircuitConfig.evaluateEveryStep = (atoi(pElem->GetText())) ? true : false;
+        if (string(pElem->Value()) == "EVALUATE_BEFORE_TEST_VECTOR_CHANGE")
+            pBasicSettings->gaCircuitConfig.evaluateBeforeTestVectorChange = (atoi(pElem->GetText())) ? true : false;
     }
 
     //
@@ -162,7 +164,7 @@ int LoadConfigScript(string filePath, BASIC_INIT_DATA* pBasicSettings) {
     return status;
 }
 
-int saveXMLFile(TiXmlNode* pRoot, string filename) {
+int saveXMLFile(TiXmlNode* pRoot, const string filename) {
     TiXmlDocument doc;
     TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
     doc.LinkEndChild(decl);
@@ -175,7 +177,7 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
     return STAT_OK;
 }
 
-int loadXMLFile(TiXmlNode*& pRoot, string filename) {
+int loadXMLFile(TiXmlNode*& pRoot, const string filename) {
     TiXmlDocument doc(filename.c_str());
     if (!doc.LoadFile()) {
         mainLogger.out() << "Error: Could not load file '" << filename << "'." << endl;
