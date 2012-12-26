@@ -2,12 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "math.h"
-#include "time.h"
+#include <cmath>
+#include <ctime>
 
 #include "EACirc.h"
 #include "EACglobals.h"
-//#include "globals.h"
 #include "CommonFnc.h"
 #include "random_generator/IRndGen.h"
 #include "random_generator/BiasRndGen.h"
@@ -310,9 +309,16 @@ void EACirc::prepare() {
     m_evaluator = new Evaluator();
 
     // PREPARE THE LOGGING FILES
-    std::remove(FILE_FITNESS_PROGRESS);
-    std::remove(FILE_BEST_FITNESS);
-    std::remove(FILE_AVG_FITNESS);
+    std::remove(FILE_BOINC_FRACTION_DONE);
+    if (!basicSettings.loadState) {
+        std::remove(FILE_FITNESS_PROGRESS);
+        std::remove(FILE_BEST_FITNESS);
+        std::remove(FILE_AVG_FITNESS);
+        std::remove(FILE_GALIB_SCORES);
+        std::remove(FILE_TEST_VECTORS);
+        std::remove(FILE_TEST_DATA_1);
+        std::remove(FILE_TEST_DATA_2);
+    }
 
     //LOG THE TESTVECTGENER METHOD
     if (basicSettings.gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {

@@ -9,17 +9,18 @@
 class IRndGen;
 
 #include <list>
-#include <math.h>
-//libinclude (galib/GAGenome.h)
-#include "GAGenome.h"
-//libinclude (galib/GASStateGA.h)
-#include "GASStateGA.h"
+#include <cmath>
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+
+//libinclude (galib/GAGenome.h)
+#include "GAGenome.h"
+//libinclude (galib/GASStateGA.h)
+#include "GASStateGA.h"
 using namespace std;
 
 typedef unsigned long DWORD;
