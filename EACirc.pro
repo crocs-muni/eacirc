@@ -46,6 +46,8 @@ SOURCES += \
     EACirc/random_generator/MD5RndGen.cpp \
     EACirc/random_generator/md5.cpp \
     EACirc/estream/EncryptorDecryptor.cpp \
+# === testing using CATCH framework ===
+    EACirc/self_tests/tests.cpp \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.cpp \
     EACirc/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \   # not used
@@ -124,6 +126,8 @@ HEADERS += \
     EACirc/random_generator/MD5RndGen.h \
     EACirc/random_generator/md5.h \
     EACirc/estream/EncryptorDecryptor.h \
+# === CATCH testing framework ===
+    EACirc/self_tests/catch.hpp \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.h \
     EACirc/estream/ciphers/ecrypt-config.h \

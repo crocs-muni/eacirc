@@ -38,6 +38,7 @@
 #define CMD_OPT_STATIC_DISTINCTOR   "-distinctor"
 #define CMD_OPT_LOGGING             "-log"
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
+#define CMD_OPT_SELF_TEST           "-test"
 
 // GA CIRCUIT CONSTANTS
 #define NUM_BITS                    8             // NUMBER OF BITS PER unsigned char

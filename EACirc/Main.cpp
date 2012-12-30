@@ -2,6 +2,9 @@
 #include "EACirc.h"
 #include "standalone_testers/TestDistinctorCircuit.h"
 
+#define CATCH_CONFIG_RUNNER
+#include "self_tests/catch.hpp"
+
 Logger mainLogger;
 IRndGen* mainGenerator = NULL;
 
@@ -13,15 +16,21 @@ int main(int argc, char **argv) {
     if (argc > 1) {
         int i = 0;
         while (++i < argc) {
+            // RUN SELF-TESTS
+            if (strcmp(argv[i],CMD_OPT_SELF_TEST) == 0) {
+                return Catch::Main(argc-i,argv+i);
+            }
+            // LOGGING TO CLOG
             if (strcmp(argv[i],CMD_OPT_LOGGING) == 0) {
                 mainLogger.setOutputStream();
                 mainLogger.setlogging(true);
             } else
+            // LOGGING TO FILE
             if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
                 mainLogger.setOutputFile();
                 mainLogger.setlogging(true);
             } else
-              // STATIC CIRCUIT ?
+            // STATIC CIRCUIT
             if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
                 if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
                     mainLogger.out() << "Static circuit, distinctor mode." << endl;
@@ -32,12 +41,13 @@ int main(int argc, char **argv) {
                     return STAT_INVALID_ARGUMETS;
                 }
             } else
-              // EVOLUTION IS OFF ?
+            // EVOLUTION OFF
             if (strcmp(argv[i],CMD_OPT_EVOLUTION_OFF) == 0) {
                 evolutionOff = true;
                 mainLogger.out() << "Evolution turned off." << endl;
             } else {
-                mainLogger.out() << "\"" << argv[1] << "\" is not a valid argument." << endl;
+            // INCORRECT CLI OPTION
+                mainLogger.out() << "\"" << argv[i] << "\" is not a valid argument." << endl;
                 mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
                 mainLogger.out() << "  " << CMD_OPT_LOGGING << "  (set logging to clog)" << endl;
                 mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << "  (set logging to logfile)" << endl;
