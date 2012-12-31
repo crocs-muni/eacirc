@@ -123,7 +123,8 @@ double StringToDouble(string &s, bool failIfLeftoverChars) {
    // check for right format and leftover characters
    if (!(i >> x) || (failIfLeftoverChars && i.get(c))) {
        mainLogger.out() << "StringToDouble(\"" << s << "\")" << endl;
-	   exit(1);
+       //exit(1);
+       x = 0;
    }
      
    return x;

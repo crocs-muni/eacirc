@@ -39,10 +39,9 @@ int loadXMLFile(TiXmlNode*& pRoot, string filename);
   *
   * @param pRoot        root of the XML tree
   * @param path         path to requested node/attribute
-  * @param value        retrieved node/attribute value (content overwritten)
-  * @return status
+  * @return value       retrieved node/attribute value (empty string in case of not existing node)
   */
-int getXMLElementValue(TiXmlNode*& pRoot, string path, string& value);
+string getXMLElementValue(TiXmlNode*& pRoot, string path);
 
 /** set value of XML element or attribute according to path similar to xPath
   * path syntax: "node/node/node" or "node/@attribute"

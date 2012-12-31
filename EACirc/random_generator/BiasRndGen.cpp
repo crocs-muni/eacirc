@@ -135,19 +135,15 @@ string BiasRndGen::shortDescription() const {
 	return mes;
 }
 
-BiasRndGen::BiasRndGen(TiXmlElement* pRoot)
+BiasRndGen::BiasRndGen(TiXmlNode* pRoot)
         : IRndGen(GENERATOR_BIAS,1) {  // cannot call IRndGen with seed 0, warning would be issued
-    if (atoi(pRoot->Attribute("type")) != m_type) {
-        // TODO: unset sanity bit
+    if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
+        mainLogger.out() << "error: incompatible generator types." << endl;
         return;
     }
 
-    TiXmlElement* pElem = NULL;
-
-    pElem = pRoot->FirstChildElement("chance_for_one");
-    m_chanceForOne = atoi(pElem->GetText());
-    pElem = pRoot->FirstChildElement("generator");
-    m_rndGen = new QuantumRndGen(pElem);
+    m_chanceForOne = atoi(getXMLElementValue(pRoot,"chance_for_one").c_str());
+    m_rndGen = new QuantumRndGen(getXMLElement(pRoot,"internal_rng/generator"));
 }
 
 TiXmlNode* BiasRndGen::exportGenerator() const {
@@ -162,7 +158,9 @@ TiXmlNode* BiasRndGen::exportGenerator() const {
     pRoot->LinkEndChild(chanceForOne);
 
     pRoot->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
-    pRoot->LinkEndChild(m_rndGen->exportGenerator());
+    TiXmlElement* pElem = new TiXmlElement("internal_rng");
+    pElem->LinkEndChild(m_rndGen->exportGenerator());
+    pRoot->LinkEndChild(pElem);
 
     return pRoot;
 }

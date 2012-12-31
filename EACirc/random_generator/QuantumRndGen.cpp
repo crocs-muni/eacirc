@@ -179,53 +179,36 @@ string QuantumRndGen::shortDescription() const {
     else return "system-based random generator";
 }
 
-QuantumRndGen::QuantumRndGen(TiXmlElement *pRoot)
+QuantumRndGen::QuantumRndGen(TiXmlNode *pRoot)
         : IRndGen(GENERATOR_QRNG,1) {  // cannot call IRndGen with seed 0, warning would be issued
-    if (atoi(pRoot->Attribute("type")) != m_type) {
-        // TODO: unset sanity bit
+    if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
+        mainLogger.out() << "error: incompatible generator types." << endl;
         return;
     }
 
-    TiXmlElement* pElem = NULL;
-
-    pElem = pRoot->FirstChildElement("original_seed");
-    istringstream(pElem->GetText()) >> m_seed;
-    pElem = pRoot->FirstChildElement("qrng");
-    m_usesQRNGData = atoi(pElem->Attribute("true_qrng")) == 1 ? true : false;
+    istringstream(getXMLElementValue(pRoot,"original_seed")) >> m_seed;
+    m_usesQRNGData = atoi(getXMLElementValue(pRoot,"qrng/@true_qrng").c_str()) == 1 ? true : false;
     if (m_usesQRNGData) {
-        m_QRNGDataPath = pElem->FirstChildElement("data_path")->GetText();
-        m_fileIndex = atoi(pElem->FirstChildElement("file_index")->GetText());
+        m_QRNGDataPath = getXMLElementValue(pRoot,"qrng/data_path");
+        m_fileIndex = atoi(getXMLElementValue(pRoot,"qrng/file_index").c_str());
     } else {
         m_QRNGDataPath = "";
         m_fileIndex = 0;
     }
-    pElem = pRoot->FirstChildElement("accumulator_state");
-    m_accLength = atoi(pElem->Attribute("length"));
+    m_accLength = atoi(getXMLElementValue(pRoot,"accumulator_state/@length").c_str());
     m_accumulator = new unsigned char[m_accLength];
-    m_accPosition = atoi(pElem->Attribute("position"));
+    m_accPosition = atoi(getXMLElementValue(pRoot,"accumulator_state/@position").c_str());
     if (m_usesQRNGData) {
         loadQRNGDataFile();
     } else {
-        istringstream ss(pElem->FirstChildElement("value")->GetText());
+        istringstream ss(getXMLElementValue(pRoot,"accumulator_state/value"));
         unsigned int value;
         for (int i = 0; i < m_accLength; i++) {
             ss >> value;
             m_accumulator[i] = value;
         }
     }
-    pElem = pRoot->FirstChildElement("internal_rng");
-    pElem = pElem->FirstChildElement("generator");
-    m_internalRNG = new MD5RndGen(pElem);
-    /*
-    istringstream ss(pElem->GetText());
-    if (strcmp(pElem->Attribute("type"),typeid(m_internalRNG).name()) == 0) {
-        ss >> m_internalRNG;
-    } else {
-        mainLogger.out() << "Error: Incompatible system generator type - state not loaded." << endl;
-        mainLogger.out() << "       required: " << typeid(m_internalRNG).name() << endl;
-        mainLogger.out() << "          found: " << pElem->Attribute("type") << endl;
-    }
-    */
+    m_internalRNG = new MD5RndGen(getXMLElement(pRoot,"internal_rng/generator"));
 }
 
 TiXmlNode* QuantumRndGen::exportGenerator() const {

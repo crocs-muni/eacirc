@@ -10,7 +10,7 @@ class BiasRndGen : public IRndGen{
     int m_chanceForOne; // probability of getting bit 1 (in %)
 public:
     BiasRndGen(unsigned long seed = 0, string QRBGSPath = "", int m_chanceForOne = 50);
-    BiasRndGen(TiXmlElement *pRoot);
+    BiasRndGen(TiXmlNode *pRoot);
     // BiasRndGen(const BiasRndGen&) = delete; //(not supprrted in MS VS)
     // const BiasRndGen& operator =(const BiasRndGen&) = delete; //(not supprrted in MS VS)
     ~BiasRndGen();

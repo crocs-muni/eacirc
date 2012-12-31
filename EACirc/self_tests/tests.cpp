@@ -13,9 +13,7 @@ TEST_CASE("xml/xpath","using simple variation of xpath to get/set element and at
     string location = "INFO/VERSION";
     TiXmlNode* pRoot = NULL;
     REQUIRE(loadXMLFile(pRoot,FILE_CONFIG) == STAT_OK);
-    string loaded;
-    REQUIRE(getXMLElementValue(pRoot,location,loaded) == STAT_OK);
-    CHECK(loaded == "5.0");
+    CHECK(getXMLElementValue(pRoot,location) == "5.0");
 
     string newData = "new data here!";
     REQUIRE(setXMLElementValue(pRoot,location,newData) == STAT_OK);
@@ -25,8 +23,6 @@ TEST_CASE("xml/xpath","using simple variation of xpath to get/set element and at
     REQUIRE(saveXMLFile(pRoot,FILE_CONFIG) == STAT_OK);
 
     REQUIRE(loadXMLFile(pRoot,FILE_CONFIG) == STAT_OK);
-    REQUIRE(getXMLElementValue(pRoot,location,loaded) == STAT_OK);
-    CHECK(loaded == newData);
-    REQUIRE(getXMLElementValue(pRoot,location+"/@"+attrName,loaded) == STAT_OK);
-    CHECK(loaded == attrValue);
+    CHECK(getXMLElementValue(pRoot,location) == newData);
+    CHECK(getXMLElementValue(pRoot,location+"/@"+attrName) == attrValue);
 }

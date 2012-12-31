@@ -766,7 +766,11 @@ int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int*
 
 		// GENOM ONLY 
 		int offset = 0;
-		while ((pos2 = textCircuit.find(" ", pos)) != string::npos) {
+        //while ((pos2 = textCircuit.find(" ", pos)) != string::npos) {
+        while (offset < pGACirc->genomeSize) {
+            pos2 = textCircuit.find(" ", pos);
+            // manual change: commented line above substituted for 2 lines just above
+
 			string value = textCircuit.substr(pos, pos2 - pos + 1);
 			//value.TrimLeft();value.TrimRight();
 			TrimLeadingSpaces(value);

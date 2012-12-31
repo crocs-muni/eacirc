@@ -19,15 +19,17 @@ IRndGen::IRndGen(int type, unsigned long seed)
     this->m_seed = seed;
 }
 
-IRndGen* IRndGen::parseGenerator(TiXmlElement* pRoot) {
-    const char* typeChar = pRoot->Attribute("type");
-    if (typeChar == NULL) return NULL;
-    int generatorType = atoi(typeChar);
+IRndGen* IRndGen::parseGenerator(TiXmlNode* pRoot) {
+    if (pRoot == NULL) {
+        mainLogger.out() << "generator load error: NULL pointer." << endl;
+        return NULL;
+    }
+    int generatorType = atoi(getXMLElementValue(pRoot,"@type").c_str());
     IRndGen* tempGenerator = NULL;
     switch (generatorType) {
     case GENERATOR_QRNG: {
-            tempGenerator = new QuantumRndGen(pRoot);
-            break;
+        tempGenerator = new QuantumRndGen(pRoot);
+        break;
     }
     case GENERATOR_BIAS: {
         tempGenerator = new BiasRndGen(pRoot);
@@ -42,10 +44,5 @@ IRndGen* IRndGen::parseGenerator(TiXmlElement* pRoot) {
         return NULL;
     }
     }
-    // TODO: check sanity bit
-    if (true) {
-        return tempGenerator;
-    } else {
-        return NULL;
-    }
+    return tempGenerator;
 }

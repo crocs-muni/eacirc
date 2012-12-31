@@ -94,6 +94,7 @@ void EACirc::loadConfiguration(const string filename) {
 int EACirc::saveState(const string filename) const {
     TiXmlElement* pRoot = new TiXmlElement("eacirc_state");
     TiXmlElement* pElem;
+    TiXmlElement* pElem2;
 
     pElem = new TiXmlElement("generations_required");
     pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.nGeners).c_str()));
@@ -109,9 +110,15 @@ int EACirc::saveState(const string filename) const {
     pRoot->LinkEndChild(pElem);
 
     pElem = new TiXmlElement("random_generators");
-    pElem->LinkEndChild(mainGenerator->exportGenerator());
-    pElem->LinkEndChild(rndGen->exportGenerator());
-    pElem->LinkEndChild(biasRndGen->exportGenerator());
+    pElem2 = new TiXmlElement("main_generator");
+    pElem2->LinkEndChild(mainGenerator->exportGenerator());
+    pElem->LinkEndChild(pElem2);
+    pElem2 = new TiXmlElement("rndgen");
+    pElem2->LinkEndChild(rndGen->exportGenerator());
+    pElem->LinkEndChild(pElem2);
+    pElem2 = new TiXmlElement("biasrndgen");
+    pElem2->LinkEndChild(biasRndGen->exportGenerator());
+    pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
 
     int status = saveXMLFile(pRoot,filename);
@@ -131,27 +138,16 @@ void EACirc::loadState(const string filename) {
         return;
     }
 
-    TiXmlElement* pElem = pRoot->FirstChildElement();
-    for( pElem; pElem; pElem = pElem->NextSiblingElement()) {
-        // restore main seed
-        if (string(pElem->Value()) == "main_seed") {
-            istringstream(pElem->GetText()) >> m_originalSeed;
-            basicSettings.rndGen.randomSeed = m_originalSeed;
-        }
-        // restore current galib seed
-        if (string(pElem->Value()) == "current_galib_seed") {
-            istringstream(pElem->GetText()) >> m_currentGalibSeed;
-        }
-        // initialize random generators (main, quantum, bias)
-        if (string(pElem->Value()) == "random_generators") {
-            TiXmlElement* pElem2 = pElem->FirstChildElement();
-            mainGenerator = IRndGen::parseGenerator(pElem2);
-            pElem2 = pElem2->NextSiblingElement();
-            rndGen = IRndGen::parseGenerator(pElem2);
-            pElem2 = pElem2->NextSiblingElement();
-            biasRndGen = IRndGen::parseGenerator(pElem2);
-        }
-    }
+    // restore main seed
+    istringstream(getXMLElementValue(pRoot,"main_seed")) >> m_originalSeed;
+    basicSettings.rndGen.randomSeed = m_originalSeed;
+    // restore current galib seed
+    istringstream(getXMLElementValue(pRoot,"current_galib_seed")) >> m_currentGalibSeed;
+    // initialize random generators (main, quantum, bias)
+    mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
+    rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
+    biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
+
     mainLogger.out() << "State successfully loaded from file " << filename << "." << endl;
 }
 
