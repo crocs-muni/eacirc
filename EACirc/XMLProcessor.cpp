@@ -3,7 +3,7 @@
 #include "random_generator/BiasRndGen.h"
 #include <typeinfo>
 
-int LoadConfigScript(const string filename, BASIC_INIT_DATA* pBasicSettings) {
+int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings) {
     int status = STAT_OK;
 
     TiXmlNode* pRoot = NULL;
@@ -164,7 +164,7 @@ int LoadConfigScript(const string filename, BASIC_INIT_DATA* pBasicSettings) {
     return status;
 }
 
-int saveXMLFile(TiXmlNode* pRoot, const string filename) {
+int saveXMLFile(TiXmlNode* pRoot, string filename) {
     TiXmlDocument doc;
     TiXmlDeclaration* decl = new TiXmlDeclaration( "1.0", "", "" );
     doc.LinkEndChild(decl);
@@ -177,7 +177,7 @@ int saveXMLFile(TiXmlNode* pRoot, const string filename) {
     return STAT_OK;
 }
 
-int loadXMLFile(TiXmlNode*& pRoot, const string filename) {
+int loadXMLFile(TiXmlNode*& pRoot, string filename) {
     TiXmlDocument doc(filename.c_str());
     if (!doc.LoadFile()) {
         mainLogger.out() << "Error: Could not load file '" << filename << "'." << endl;
@@ -192,4 +192,54 @@ int loadXMLFile(TiXmlNode*& pRoot, const string filename) {
     pRoot = pElem->Clone();
 
     return STAT_OK;
+}
+
+int getXMLElementValue(TiXmlNode*& pRoot, string path, string& value) {
+    value = "";
+    TiXmlNode* pNode = getXMLElement(pRoot,path);
+    if (pNode == NULL) {
+        mainLogger.out() << "error: no value at " << path << " in given XML." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
+    if (path.find('@') == path.npos) {
+        // getting text node
+        value = pNode->ToElement()->GetText();
+    } else {
+        // getting attribute
+        value = pNode->ToElement()->Attribute(path.substr(path.find('@')+1,path.length()-path.find('@')-1).c_str());
+    }
+    return STAT_OK;
+}
+
+int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value) {
+    TiXmlNode* pNode = getXMLElement(pRoot,path);
+    if (pNode == NULL) {
+        mainLogger.out() << "error: no value at " << path << " in given XML." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
+    if (path.find('@') == path.npos) {
+        // setting text node
+        TiXmlText* pText = pNode->FirstChild()->ToText();
+        if (pText == NULL) {
+            mainLogger.out() << "error: node at " << path << " is not a leaf in XML." << endl;
+            return STAT_INCOMPATIBLE_PARAMETER;
+        }
+        pText->SetValue(value.c_str());
+    } else {
+        // setting attribute
+        pNode->ToElement()->SetAttribute(path.substr(path.find('@')+1,path.length()-path.find('@')-1).c_str(),value.c_str());
+    }
+    return STAT_OK;
+}
+
+TiXmlNode* getXMLElement(TiXmlNode* pRoot, string path) {
+    TiXmlHandle handle(pRoot);
+    path = path.substr(0,path.rfind("/@"));
+    istringstream xpath(path);
+    string nodeValue;
+    while (!xpath.eof()) {
+        getline(xpath,nodeValue,'/');
+        handle = handle.FirstChild(nodeValue.c_str());
+    }
+    return handle.Node();
 }

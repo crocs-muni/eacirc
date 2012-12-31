@@ -11,7 +11,7 @@
   * @param pBasicSettings   pointer to allocated settings structure where to save loaded data
   * @return status
   */
-int LoadConfigScript(const string filename, BASIC_INIT_DATA* pBasicSettings);
+int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings);
 
 /** saves given XML structure to file
   * automatically add XML declaration
@@ -21,7 +21,7 @@ int LoadConfigScript(const string filename, BASIC_INIT_DATA* pBasicSettings);
   * @param filename     file to save to (contents overwritten)
   * @return status
   */
-int saveXMLFile(TiXmlNode* pRoot, const string filename);
+int saveXMLFile(TiXmlNode* pRoot, string filename);
 
 /** gets root element from XML file
   * data structure reference by this method is allocated dynamicly
@@ -32,6 +32,35 @@ int saveXMLFile(TiXmlNode* pRoot, const string filename);
   * @param filename     file where to load from
   * @return status
   */
-int loadXMLFile(TiXmlNode*& pRoot, const string filename);
+int loadXMLFile(TiXmlNode*& pRoot, string filename);
+
+/** get string value of XML element or attribute according to path similar to xPath
+  * path syntax: "node/node/node" or "node/@attribute"
+  *
+  * @param pRoot        root of the XML tree
+  * @param path         path to requested node/attribute
+  * @param value        retrieved node/attribute value (content overwritten)
+  * @return status
+  */
+int getXMLElementValue(TiXmlNode*& pRoot, string path, string& value);
+
+/** set value of XML element or attribute according to path similar to xPath
+  * path syntax: "node/node/node" or "node/@attribute"
+  *
+  * @param pRoot        root of the XML tree
+  * @param path         path to requested node/attribute
+  * @param value        new node/attribute value
+  * @return status
+  */
+int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value);
+
+/** loaclize node in XML tree
+  *
+  * @param pRoot        root of the XML tree
+  * @param path         path to requested node
+  * @return pointer to requested node (attribute name in path is ignored)
+  *         NULL if given path is invalid
+  */
+TiXmlNode* getXMLElement(TiXmlNode* pRoot, string path);
 
 #endif // XMLPROCESSOR_H
