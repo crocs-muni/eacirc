@@ -38,6 +38,9 @@ EACirc/standalone_testers/TestDisctinctorCircuit.cpp
 SOURCES+= EACirc/estream/EncryptorDecryptor.cpp \
 EACirc/estream/estreamInterface.cpp
 
+# testing with CATCH
+SOURCES+= EACirc/self_tests/tests.cpp
+
 # === eSTREAM cipher files ===
 
 SOURCES+= EACirc/estream/ciphers/abc/abc-v3.cpp				# not used

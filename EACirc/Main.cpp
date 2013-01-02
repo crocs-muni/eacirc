@@ -70,8 +70,4 @@ int main(int argc, char **argv) {
     } else {
         mainLogger.out() << "Program run succeeded." << endl;
     }
-
-    if (mainGenerator != NULL) {
-        delete mainGenerator;
-    }
 }

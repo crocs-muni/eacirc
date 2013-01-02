@@ -53,11 +53,20 @@ EACirc::EACirc(bool evolutionOff)
 }
 
 EACirc::~EACirc() {
+    delete m_gaData;
+    m_gaData = NULL;
     delete m_evaluator;
+    m_evaluator = NULL;
     delete encryptorDecryptor;
+    encryptorDecryptor = NULL;
     pGACirc->release();
+    pGACirc = NULL;
     delete rndGen;
+    rndGen = NULL;
     delete biasRndGen;
+    biasRndGen = NULL;
+    delete mainGenerator;
+    mainGenerator = NULL;
 }
 
 int EACirc::getStatus() const {
@@ -462,4 +471,7 @@ void EACirc::run() {
     //Print the best circuit
     //CircuitGenome::PrintCircuit(genomeTemp,FILE_BEST_CIRCUIT,0,1);
     //m_status = saveState(FILE_STATE,FILE_POPULATION);
+
+    // forbid another run (object is in undefined state state)
+    m_readyToRun = 0;
 }

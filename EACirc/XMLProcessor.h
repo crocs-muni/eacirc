@@ -17,7 +17,7 @@ int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings);
   * automatically add XML declaration
   *
   * @param pRoot        pointer to root element of the structure to be saved
-  *                     (this tree structure is not deallocated)
+  *                     (this tree structure IS deallocated !!!)
   * @param filename     file to save to (contents overwritten)
   * @return status
   */

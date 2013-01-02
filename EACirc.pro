@@ -128,6 +128,7 @@ HEADERS += \
     EACirc/estream/EncryptorDecryptor.h \
 # === CATCH testing framework ===
     EACirc/self_tests/catch.hpp \
+    EACirc/self_tests/tests.h \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.h \
     EACirc/estream/ciphers/ecrypt-config.h \
