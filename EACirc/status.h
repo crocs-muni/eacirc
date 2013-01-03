@@ -41,6 +41,7 @@
 #define STAT_INVALID_ARGUMETS                   52      // INVALID COMMAND LINE ARGUMENTS
 #define STAT_CONFIG_INCORRECT                   53      // CONFIGURATION IS NOT CORRECT
 #define STAT_INCOMPATIBLE_PARAMETER             54      // PARAMETER LOADED/FOUND IS NOT COMPATIBLE
+#define STAT_FILE_WRITE_FAIL                    55      // FILE COULD NOT BE SAVED
 
 const char* ErrorToString(int error);
 

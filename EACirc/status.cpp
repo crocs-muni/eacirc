@@ -40,6 +40,7 @@ const char* ErrorToString(int error) {
         case STAT_INVALID_ARGUMETS:                     return "STAT_INVALID_ARGUMETS";
         case STAT_CONFIG_INCORRECT:                     return "STAT_CONFIG_INCORRECT";
         case STAT_INCOMPATIBLE_PARAMETER:               return "STAT_INCOMPATIBLE_PARAMETER";
+        case STAT_FILE_WRITE_FAIL:                      return "STAT_FILE_WRITE_FAIL";
 		}
         // NO SPECIAL RULE MATCH                                            
         return "'unknown'";   

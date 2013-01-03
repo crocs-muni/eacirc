@@ -4,15 +4,49 @@
 #include <string>
 using std::string;
 #include "catch.hpp"
+#include "EACglobals.h"
 
+#define BACKUP_SUFFIX ".2"
+
+/** compare contents of given files line by line
+  * if files differ in more than 5 lines, comparation is terminated
+  *
+  * @param filename1
+  * @param filename2
+  */
 void compareFilesByLine(string filename1, string filename2);
+
+/** backup given file (rename with BACKUP-SUFFIX)
+  * any previous version of backup-file is overwritten
+  *
+  * @param filename
+  * @return status
+  */
+int backupFile(string filename);
+
+/** backup common result files
+  * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_BEST_FITNESS, FILE_AVG_FITNESS, FILE_STATE, FILE_POPULATION
+  */
+void backupResults();
+
+/** compare common result files with their backuped versions
+  * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_BEST_FITNESS, FILE_AVG_FITNESS, FILE_STATE, FILE_POPULATION
+  */
+void compareResults();
+
+/** run EACirc computation
+  * perform all nedded steps (create, load, initialize, prepare, run)
+  *
+  * @return status from finished EACirc run
+  */
+int runEACirc();
 
 // to be moved into Project class (each project will be supposed to provide a string with basic configuration)
 // hm, automatic determinism testing for new projects? make a test suite for each project?
 // to be considered.
 class basicConfiguration {
 public:
-    static const string estream() {
+    static int estream() {
         string config =
 "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
 "<EACIRC>"
@@ -88,7 +122,13 @@ public:
 "    <IV_TYPE>0</IV_TYPE>"
 "</ESTREAM>"
 "</EACIRC>";
-        return config;
+        ofstream configFile(FILE_CONFIG);
+        if (!configFile.is_open()) {
+            return STAT_FILE_WRITE_FAIL;
+        }
+        configFile << config;
+        configFile.close();
+        return STAT_OK;
     }
 };
 

@@ -157,6 +157,7 @@ void EACirc::loadState(const string filename) {
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
 
+    delete pRoot;
     mainLogger.out() << "State successfully loaded from file " << filename << "." << endl;
 }
 
@@ -287,8 +288,16 @@ void EACirc::initializeState() {
     if (basicSettings.loadState) {
         loadState(FILE_STATE);
         loadPopulation(FILE_POPULATION);
+        mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
+        // encryptorDecryptor should not be initialized (extra usage of random generator!)
+        // encryptorDecryptor = new EncryptorDecryptor();
+        m_evaluator = new Evaluator();
     } else {
         createState();
+        mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
+        encryptorDecryptor = new EncryptorDecryptor();
+        m_evaluator = new Evaluator();
+        m_evaluator->generateTestVectors();
         createPopulation();
     }
 
@@ -304,14 +313,6 @@ void EACirc::prepare() {
         m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
         return;
     }
-
-    /* temporaroly moving to run cycle, since random keys are generated only on creation of EncryptorDecryptor
-      TODO: remake tenerating of test vectors so that IV and KEY is also generated when needed
-    mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
-    // INIT EVALUATOR and ENCRYPTOR-DECRYPTOR (according to loaded settings)
-    encryptorDecryptor = new EncryptorDecryptor();
-    */
-    m_evaluator = new Evaluator();
 
     // PREPARE THE LOGGING FILES
     std::remove(FILE_BOINC_FRACTION_DONE);
@@ -381,7 +382,7 @@ void EACirc::run() {
     // SAVE INITIAL STATE
     m_status = saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
-    //m_actGener = 1;
+    m_actGener = 0;
     int	changed = 1;
     bool evaluateNow = false;
     basicSettings.gaCircuitConfig.clearFitnessStats();
@@ -422,6 +423,8 @@ void EACirc::run() {
             if (m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeGener) == 1) {
 
                 //temporary
+                /* temporaroly moving to run cycle, since random keys are generated only on creation of EncryptorDecryptor
+                  TODO: remake tenerating of test vectors so that IV and KEY is also generated when needed */
                 mainLogger.out() << "info: recreating Encryptor-Decryptor." << endl;
                 // INIT EVALUATOR and ENCRYPTOR-DECRYPTOR (according to loaded settings)
                 if (encryptorDecryptor != NULL) delete encryptorDecryptor;
@@ -471,7 +474,4 @@ void EACirc::run() {
     //Print the best circuit
     //CircuitGenome::PrintCircuit(genomeTemp,FILE_BEST_CIRCUIT,0,1);
     //m_status = saveState(FILE_STATE,FILE_POPULATION);
-
-    // forbid another run (object is in undefined state state)
-    m_readyToRun = 0;
 }

@@ -1,16 +1,17 @@
 #include <iostream>
 
 #include "tests.h"
-#include "EACglobals.h"
 #include "XMLProcessor.h"
 #include "EACirc.h"
 
 void compareFilesByLine(string filename1, string filename2) {
-    SCOPED_INFO("################################");
-    SCOPED_INFO("Comparing files " << filename1 << " and " << filename2 << ".");
     string line1,line2;
     ifstream file1(filename1);
     ifstream file2(filename2);
+    if (!file1.is_open() || !file2.is_open()) {
+        WARN("Could not open files " << filename1 << " and " << filename2 << ".");
+        return;
+    }
     int differCount = 0;
     while ((!file1.eof() || !file2.eof()) && differCount <=5 ) {
         getline(file1,line1);
@@ -18,6 +19,7 @@ void compareFilesByLine(string filename1, string filename2) {
         if (line1 != line2) {
             differCount++;
         }
+        SCOPED_INFO("Comparing files " << filename1 << " and " << filename2 << ".");
         CHECK(line1 == line2);
     }
     if (differCount > 5) {
@@ -25,6 +27,44 @@ void compareFilesByLine(string filename1, string filename2) {
     }
     file1.close();
     file2.close();
+}
+
+int backupFile(string filename) {
+    string backupFilename = filename + BACKUP_SUFFIX;
+    remove(backupFilename.c_str());
+    if (rename(filename.c_str(),backupFilename.c_str()) != 0) {
+        return STAT_FILE_WRITE_FAIL;
+    }
+    return STAT_OK;
+}
+
+void backupResults() {
+    CHECK(backupFile(FILE_GALIB_SCORES) == STAT_OK);
+    CHECK(backupFile(FILE_FITNESS_PROGRESS) == STAT_OK);
+    CHECK(backupFile(FILE_BEST_FITNESS) == STAT_OK);
+    CHECK(backupFile(FILE_AVG_FITNESS) == STAT_OK);
+    CHECK(backupFile(FILE_STATE) == STAT_OK);
+    CHECK(backupFile(FILE_POPULATION) == STAT_OK);
+}
+
+void compareResults() {
+    compareFilesByLine(FILE_GALIB_SCORES,string(FILE_GALIB_SCORES)+BACKUP_SUFFIX);
+    compareFilesByLine(FILE_FITNESS_PROGRESS,string(FILE_FITNESS_PROGRESS)+BACKUP_SUFFIX);
+    compareFilesByLine(FILE_BEST_FITNESS,string(FILE_BEST_FITNESS)+BACKUP_SUFFIX);
+    compareFilesByLine(FILE_AVG_FITNESS,string(FILE_AVG_FITNESS)+BACKUP_SUFFIX);
+    compareFilesByLine(FILE_STATE,string(FILE_STATE)+BACKUP_SUFFIX);
+    compareFilesByLine(FILE_POPULATION,string(FILE_POPULATION)+BACKUP_SUFFIX);
+}
+
+int runEACirc() {
+    WARN("######## Running EACirc ########");
+    EACirc eacirc(false);
+    eacirc.loadConfiguration(FILE_CONFIG);
+    eacirc.initializeState();
+    eacirc.prepare();
+    eacirc.run();
+    WARN("######## Ending EACirc (error: " << eacirc.getStatus() << " ) ########");
+    return eacirc.getStatus();
 }
 
 TEST_CASE("stupid/number equalities", "different numbers are not equal") {
@@ -55,60 +95,59 @@ TEST_CASE("xml/xpath","using simple variation of xpath to get/set element and at
 
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
     // general preparations
-    ofstream config(FILE_CONFIG);
-    config << basicConfiguration::estream();
-    config.close();
+    REQUIRE(basicConfiguration::estream() == STAT_OK);
     TiXmlNode* pRootConfig = NULL;
-    EACirc* eacirc = NULL;
     // prepare run 1
-    //REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
-    loadXMLFile(pRootConfig,FILE_CONFIG);
-    setXMLElementValue(pRootConfig,"MAIN/LOAD_STATE","0");
-    setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","1");
-    saveXMLFile(pRootConfig,FILE_CONFIG);
+    REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_STATE","0") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","0") == STAT_OK);
+    REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
     // run 1
-    eacirc = new EACirc(false);
-    eacirc->loadConfiguration(FILE_CONFIG);
-    eacirc->initializeState();
-    eacirc->prepare();
-    eacirc->run();
-    delete eacirc;
-    eacirc = NULL;
+    REQUIRE(runEACirc() == STAT_OK);
     // rename files to be compared
-    remove((string(FILE_GALIB_SCORES)+"_2").c_str());
-    remove((string(FILE_FITNESS_PROGRESS)+"_2").c_str());
-    remove((string(FILE_STATE)+"_2").c_str());
-    remove((string(FILE_STATE_INITIAL)+"_2").c_str());
-    remove((string(FILE_POPULATION)+"_2").c_str());
-    remove((string(FILE_POPULATION_INITIAL)+"_2").c_str());
-    rename(FILE_GALIB_SCORES,(string(FILE_GALIB_SCORES)+"_2").c_str());
-    rename(FILE_FITNESS_PROGRESS,(string(FILE_FITNESS_PROGRESS)+"_2").c_str());
-    rename(FILE_STATE,(string(FILE_STATE)+"_2").c_str());
-    rename(FILE_STATE_INITIAL,(string(FILE_STATE_INITIAL)+"_2").c_str());
-    rename(FILE_POPULATION,(string(FILE_POPULATION)+"_2").c_str());
-    rename(FILE_POPULATION_INITIAL,(string(FILE_POPULATION_INITIAL)+"_2").c_str());
+    backupResults();
+    REQUIRE(backupFile(FILE_STATE_INITIAL) == STAT_OK);
+    REQUIRE(backupFile(FILE_POPULATION_INITIAL) == STAT_OK);
     // prepare run 2
-    loadXMLFile(pRootConfig,FILE_CONFIG);
+    REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     TiXmlNode* pRootState = NULL;
-    //setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","1");
-    loadXMLFile(pRootState,string(FILE_STATE_INITIAL)+"_2");
+    REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","1") == STAT_OK);
+    REQUIRE(loadXMLFile(pRootState,string(FILE_STATE_INITIAL)+BACKUP_SUFFIX) == STAT_OK);
     string seed = getXMLElementValue(pRootState,"main_seed");
-    //setXMLElementValue(pRootConfig,"RANDOM/SEED",seed);
-    saveXMLFile(pRootConfig,FILE_CONFIG);
+    REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/SEED",seed) == STAT_OK);
+    REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
     delete pRootState;
     // run 2
-    eacirc = new EACirc(false);
-    eacirc->loadConfiguration(FILE_CONFIG);
-    eacirc->initializeState();
-    eacirc->prepare();
-    eacirc->run();
+    REQUIRE(runEACirc() == STAT_OK);
     // compare results
-    compareFilesByLine(FILE_GALIB_SCORES,string(FILE_GALIB_SCORES)+"_2");
-    compareFilesByLine(FILE_FITNESS_PROGRESS,string(FILE_FITNESS_PROGRESS)+"_2");
-    compareFilesByLine(FILE_STATE,string(FILE_STATE)+"_2");
-    compareFilesByLine(FILE_STATE_INITIAL,string(FILE_STATE_INITIAL)+"_2");
-    compareFilesByLine(FILE_POPULATION,string(FILE_POPULATION)+"_2");
-    compareFilesByLine(FILE_POPULATION_INITIAL,string(FILE_POPULATION_INITIAL)+"_2");
+    compareResults();
+    compareFilesByLine(FILE_STATE_INITIAL,string(FILE_STATE_INITIAL)+BACKUP_SUFFIX);
+    compareFilesByLine(FILE_POPULATION_INITIAL,string(FILE_POPULATION_INITIAL)+BACKUP_SUFFIX);
+}
+
+TEST_CASE("determinism/load-state","running and running from loaded state") {
+    // general preparations
+    basicConfiguration::estream();
+    TiXmlNode* pRootConfig = NULL;
+    // prepare run 1
+    REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_STATE","0") == STAT_OK);
+    REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    pRootConfig = NULL;
+    // run 1
+    REQUIRE(runEACirc() == STAT_OK);
+    // rename files to be compared
+    backupResults();
+    // prepare run 2
+    REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_STATE","1") == STAT_OK);
+    REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    pRootConfig = NULL;
+    REQUIRE(rename(FILE_STATE_INITIAL,FILE_STATE) == STAT_OK);
+    REQUIRE(rename(FILE_POPULATION_INITIAL,FILE_POPULATION) == STAT_OK);
+    // run 2
+    REQUIRE(runEACirc() == STAT_OK);
+    compareResults();
 }

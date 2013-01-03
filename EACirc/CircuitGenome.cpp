@@ -395,7 +395,10 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
         }
     }
     
-    Evaluator(prunnedGenome);    
+    // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope start
+    //Evaluator(prunnedGenome);
+    // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope end
+
     pGACirc->prunningInProgress = FALSE;
     return status;
 }
@@ -1589,7 +1592,7 @@ int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& te
 
     for (int i = 0; i < pGACirc->genomeSize; i++) genome.gene(i, circuit[i]);
 
-	delete circuit;
+    delete[] circuit;
     // TODO: add circiut parsing status
     return STAT_OK;
 }
