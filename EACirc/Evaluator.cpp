@@ -35,7 +35,7 @@ int Evaluator::evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener)
 	avgfitfile.close();
 
 	ostringstream os2;
-    os2 << "(" << actGener << " gen.): " << pGACirc->avgGenerFit << "/" << pGACirc->numAvgGenerFit << " avg, " << bestFit << " best, avgPredict: " << pGACirc->avgPredictions / pGACirc->numAvgGenerFit << ", totalBest: " << pGACirc->maxFit << endl;
+    os2 << "(" << actGener << " gen.): " << pGACirc->avgGenerFit << "/" << pGACirc->numAvgGenerFit << " avg, " << bestFit << " best, avgPredict: " << pGACirc->avgPredictions / pGACirc->numAvgGenerFit << ", totalBest: " << pGACirc->maxFit;
     string message = os2.str();
 	// SAVE FITNESS PROGRESS
     ofstream out(FILE_FITNESS_PROGRESS, ios::app);

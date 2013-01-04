@@ -39,6 +39,8 @@ class EACirc {
     unsigned int m_readyToRun;
     //! generation currently computed
     int m_actGener;
+    //! generations completed in previous runs
+    int m_oldGenerations;
 
     /** reinstantialized genetic algorithm object and resets population stats
       * - GAlib is reseeded by current seed at the beginning

@@ -68,27 +68,29 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 	} else {
 		fit = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;
 	}
-        
-    // include into average fitness of whole generation
-	(pGACirc->avgGenerFit) += fit;
-	(pGACirc->numAvgGenerFit)++;
-	(pGACirc->avgPredictions) += numPredictions;
 
-    if (fit > pGACirc->bestGenerFit) pGACirc->bestGenerFit = fit;
+    if (!pGACirc->prunningInProgress) {
+        // include into average fitness of whole generation
+        (pGACirc->avgGenerFit) += fit;
+        (pGACirc->numAvgGenerFit)++;
+        (pGACirc->avgPredictions) += numPredictions;
 
-	if (pGACirc->maxFit < fit) {
-        pGACirc->maxFit = fit;
-            
-        // DISPLAY CURRENTLY BEST
-		ostringstream os2;
-        os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
-		string filePath = os2.str();
-        PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
+        if (fit > pGACirc->bestGenerFit) pGACirc->bestGenerFit = fit;
 
-		if (pGACirc->allowPrunning) {
-			filePath += "_prunned";
-			PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
-		}
+        if (pGACirc->maxFit < fit) {
+            pGACirc->maxFit = fit;
+
+            // DISPLAY CURRENTLY BEST
+            ostringstream os2;
+            os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
+            string filePath = os2.str();
+            PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
+
+            if (pGACirc->allowPrunning) {
+                filePath += "_prunned";
+                PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
+            }
+        }
     }
         
     delete circEval;

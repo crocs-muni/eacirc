@@ -41,14 +41,14 @@ EncryptorDecryptor*		encryptorDecryptor = NULL;
 EACirc::EACirc()
     : m_status(STAT_OK), m_evolutionOff(false), m_loadGenome(false),
       m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_gaData(NULL),
-      m_readyToRun(0), m_actGener(0) {
+      m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
     // pGACirc = new GA_CIRCUIT;
 }
 
 EACirc::EACirc(bool evolutionOff)
     : m_status(STAT_OK), m_evolutionOff(evolutionOff), m_loadGenome(evolutionOff),
       m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_gaData(NULL),
-      m_readyToRun(0), m_actGener(0) {
+      m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
     // load genome, if evolution is off
 }
 
@@ -106,10 +106,10 @@ int EACirc::saveState(const string filename) const {
     TiXmlElement* pElem2;
 
     pElem = new TiXmlElement("generations_required");
-    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.nGeners).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.nGeners + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("generations_finished");
-    pElem->LinkEndChild(new TiXmlText(toString(m_actGener).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(m_actGener + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("main_seed");
     pElem->LinkEndChild(new TiXmlText(toString(m_originalSeed).c_str()));
@@ -147,6 +147,8 @@ void EACirc::loadState(const string filename) {
         return;
     }
 
+    // restore generations done
+    m_oldGenerations = atol(getXMLElementValue(pRoot,"generations_finished").c_str());
     // restore main seed
     istringstream(getXMLElementValue(pRoot,"main_seed")) >> m_originalSeed;
     basicSettings.rndGen.randomSeed = m_originalSeed;
@@ -328,12 +330,14 @@ void EACirc::prepare() {
 
     //LOG THE TESTVECTGENER METHOD
     if (basicSettings.gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {
-        ofstream out(FILE_FITNESS_PROGRESS, ios::app);
-        out << "Using Ecrypt candidate n." << basicSettings.gaCircuitConfig.testVectorEstream;
-        out << " (" <<  basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n.";
-        out << basicSettings.gaCircuitConfig.testVectorEstream2 << " (";
-        out << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" <<  endl;
-        out.close();
+        if (!basicSettings.loadState) {
+            ofstream out(FILE_FITNESS_PROGRESS, ios::app);
+            out << "Using Ecrypt candidate n." << basicSettings.gaCircuitConfig.testVectorEstream;
+            out << " (" <<  basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n.";
+            out << basicSettings.gaCircuitConfig.testVectorEstream2 << " (";
+            out << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
+            out.close();
+        }
         mainLogger.out() << "stream1: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream);
         mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds)" << endl;
         mainLogger.out() << "stream2: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream2);
@@ -382,7 +386,6 @@ void EACirc::run() {
     // SAVE INITIAL STATE
     m_status = saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
-    m_actGener = 0;
     int	changed = 1;
     bool evaluateNow = false;
     basicSettings.gaCircuitConfig.clearFitnessStats();
@@ -453,7 +456,7 @@ void EACirc::run() {
         genomeTemp = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
 
         if (evaluateNow || basicSettings.gaCircuitConfig.evaluateEveryStep) {
-            m_evaluator->evaluateStep(genomeTemp, m_actGener);
+            m_evaluator->evaluateStep(genomeTemp, m_actGener + m_oldGenerations);
             evaluateNow = false;
         }
 
