@@ -140,6 +140,17 @@ TEST_CASE("determinism/load-state","running and running from loaded state") {
     REQUIRE(runEACirc() == STAT_OK);
     // rename files to be compared
     backupResults();
+    // copy file header for FILE_FITNESS_PROGRESS
+    {
+        ofstream fitProg(FILE_FITNESS_PROGRESS);
+        ifstream fitProgOrig(string(FILE_FITNESS_PROGRESS)+BACKUP_SUFFIX);
+        REQUIRE((fitProg.is_open() && fitProgOrig.is_open()));
+        string line;
+        getline(fitProgOrig,line);
+        fitProg << line << endl;
+        fitProg.close();
+        fitProgOrig.close();
+    }
     // prepare run 2
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_STATE","1") == STAT_OK);

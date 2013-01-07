@@ -230,7 +230,7 @@ void EACirc::loadPopulation(const string filename) {
 
 void EACirc::createPopulation() {
     // seed GAlib (initializations may require random numbers)
-    GARandomSeed(m_currentGalibSeed);
+    GAResetRNG(m_currentGalibSeed);
     // temporary structure for genome (empty or loaded from file)
     GA1DArrayGenome<unsigned long> genome(basicSettings.gaCircuitConfig.genomeSize, CircuitGenome::Evaluator);
     genome.initializer(CircuitGenome::Initializer);
@@ -351,7 +351,7 @@ void EACirc::prepare() {
 
 void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     // set GAlib seed
-    GARandomSeed(m_currentGalibSeed);
+    GAResetRNG(m_currentGalibSeed);
     // init new instance of gentetic algorithm
     GASteadyStateGA* gaTemp = new GASteadyStateGA(population);
     // reset population stats
