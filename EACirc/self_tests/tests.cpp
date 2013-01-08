@@ -57,21 +57,18 @@ void compareResults() {
 }
 
 int runEACirc() {
-    WARN("######## Running EACirc ########");
+	if (mainLogger.getLogging()) {
+		WARN("######## Running EACirc ########");
+	}
     EACirc eacirc(false);
     eacirc.loadConfiguration(FILE_CONFIG);
     eacirc.initializeState();
     eacirc.prepare();
     eacirc.run();
-    WARN("######## Ending EACirc (error: " << eacirc.getStatus() << " ) ########");
+	if (mainLogger.getLogging()) {
+		WARN("######## Ending EACirc (error: " << eacirc.getStatus() << " ) ########");
+	}
     return eacirc.getStatus();
-}
-
-TEST_CASE("stupid/number equalities", "different numbers are not equal") {
-    int number = 5;
-    for (int i=1; i<5; i++) {
-        CHECK(i !=number);
-    }
 }
 
 TEST_CASE("xml/xpath","using simple variation of xpath to get/set element and attribute values in XML") {
