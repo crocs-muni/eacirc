@@ -12,7 +12,6 @@ int main(int argc, char **argv) {
     //
     // COMMAND LINE ARGUMENTS PROCESSING
     //
-    bool evolutionOff = false;
     if (argc > 1) {
         int i = 0;
         while (++i < argc) {
@@ -40,11 +39,6 @@ int main(int argc, char **argv) {
                     mainLogger.out() << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
                     return STAT_INVALID_ARGUMETS;
                 }
-            } else
-            // EVOLUTION OFF
-            if (strcmp(argv[i],CMD_OPT_EVOLUTION_OFF) == 0) {
-                evolutionOff = true;
-                mainLogger.out() << "Evolution turned off." << endl;
             } else {
             // INCORRECT CLI OPTION
                 mainLogger.out() << "\"" << argv[i] << "\" is not a valid argument." << endl;
@@ -52,13 +46,13 @@ int main(int argc, char **argv) {
                 mainLogger.out() << "  " << CMD_OPT_LOGGING << "  (set logging to clog)" << endl;
                 mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << "  (set logging to logfile)" << endl;
                 mainLogger.out() << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_EVOLUTION_OFF << "  (do not evolve circuits)" << endl;
+                mainLogger.out() << "  " << CMD_OPT_SELF_TEST << "  (run self-tests, use " << CMD_OPT_SELF_TEST << " -h to display options)" << endl;
                 return STAT_INVALID_ARGUMETS;
             }
         }
     }
 
-    EACirc eacirc(evolutionOff);
+    EACirc eacirc;
     eacirc.loadConfiguration(FILE_CONFIG);
     eacirc.initializeState();
     eacirc.prepare();

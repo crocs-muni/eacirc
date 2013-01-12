@@ -3,7 +3,6 @@
 
 #include "EACglobals.h"
 #include "random_generator/IRndGen.h"
-//#include "random_generator/QuantumRndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "Evaluator.h"
@@ -21,10 +20,6 @@ extern EncryptorDecryptor* encryptorDecryptor;
 class EACirc {
     //! current error status
     int m_status;
-    //! is evolution on? TODO: move to main settings?
-    bool m_evolutionOff;
-    //! should genome be loaded at the beginning? TODO: move to main settings?
-    bool m_loadGenome;
     //! main seed for this computation (can be reproduced with this seed and settings)
     unsigned long m_originalSeed;
     //! seed used to reseed GAlib the last time
@@ -45,7 +40,7 @@ class EACirc {
     /** reinstantialized genetic algorithm object and resets population stats
       * - GAlib is reseeded by current seed at the beginning
       * @param population   will be used to init new instance of genetic algorithm
-      *                     (given by reference to ease computation)
+      *                     (given by reference, copied to new GA object)
       */
     void seedAndResetGAlib(const GAPopulation& population);
 
@@ -54,15 +49,16 @@ class EACirc {
       * - main seed, current galib seed
       * - number of generations required and finished
       * @param filename     file to write to (contents overwritten)
-      * @return status
+      * @note sets eventual error code in m_status
       */
-    int saveState(const string filename) const;
+    void saveState(const string filename);
 
     /** loads state from file
       * - creates random generators
       * - restores main seed and currnet galib seed
       * - GAlib is not yet reseeded!
       * @param filename     file to read from
+      * @note sets eventual error code in m_status
       */
     void loadState(const string filename);
 
@@ -70,6 +66,7 @@ class EACirc {
       * - generate main seed if needed
       * - create all random generatos needed
       * - seed GAlib with newly generated seed
+      * @note sets eventual error code in m_status
       */
     void createState();
 
@@ -77,49 +74,55 @@ class EACirc {
       * - population size
       * - genome size
       * - full genome for each individual in a population
+      * - individual genomes are ordered (SCLAED), so if needed, scaing is done before writing
       * @param filename     file to write to (contents overwritten)
-      * @return status
+      * @note sets eventual error code in m_status
       */
-    int savePopulation(const string filename) const;
+    void savePopulation(const string filename);
 
     /** load population from file
-      * full genome is loaded fro each saved individual
+      * full genome is loaded for each saved individual
+      * - checks if loaded genomes have correct genome size
+      * - checks if file provides at least as many genomes as stated in the file header
       * - GAlib seeded and reset
       * @param filename     file to read from (binary population)
+      * @note sets eventual error code in m_status
       */
     void loadPopulation(const string filename);
 
     /** creates new initial population according to settings
       * - seeds galib
-      * - load single genome if needed
-      * TODO: change to loading population of size 1?
       * - reseed and reset GAlib with newly generated seed
+      * @note sets eventual error code in m_status
       */
     void createPopulation();
 public:
     EACirc();
-    EACirc(bool evolutionOff);
     ~EACirc();
 
     /** loads configuration from xml file to settings attribute
       * checks basic consistency of the settings
       * @param filename     configuration file to use
+      * @note sets eventual error code in m_status
       */
     void loadConfiguration(const string filename);
 
     /** according to settings either loads state and population
       * or creates new initial state and population
       * must be called after loading settings
+      * @note sets eventual error code in m_status
       */
     void initializeState();
 
     /** does the necessary peparations needed just before running
       * must be called after initializing state (either loading or creating)
+      * @note sets eventual error code in m_status
       */
     void prepare();
 
     /** runs the main program loop accoring to settings
       * must be run after preparing
+      * @note sets eventual error code in m_status
       */
     void run();
 
@@ -131,8 +134,9 @@ public:
     /** save computation (current state and population) to allow recommencing later
       * @param stateFilename        file to save the state (contents overwritten)
       * @param populationFilename   file to save the population (contents overwritten)
+      * @note sets eventual error code in m_status
       */
-    int saveProgress(const string stateFilename, const string populationFilename) const;
+    void saveProgress(const string stateFilename, const string populationFilename);
 };
 
 #endif

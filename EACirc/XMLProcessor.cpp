@@ -23,7 +23,8 @@ int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings) {
     //
     // MAIN SETTINGS
     //
-    pBasicSettings->loadState = (atoi(getXMLElementValue(pRoot,"MAIN/LOAD_STATE").c_str())) ? true : false;
+    pBasicSettings->recommenceComputation = (atoi(getXMLElementValue(pRoot,"MAIN/RECOMMENCE_COMPUTATION").c_str())) ? true : false;
+    pBasicSettings->loadInitialPopulation = (atoi(getXMLElementValue(pRoot,"MAIN/LOAD_INITIAL_POPULATION").c_str())) ? true : false;
     pBasicSettings->gaConfig.nGeners = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
     pBasicSettings->gaCircuitConfig.changeGalibSeedFrequency = atol(getXMLElementValue(pRoot,"MAIN/SAVE_STATE_FREQ").c_str());
     pBasicSettings->gaCircuitConfig.testVectorGenerMethod = atol(getXMLElementValue(pRoot,"MAIN/TEST_VECTOR_GENERATION_METHOD").c_str());
@@ -40,6 +41,7 @@ int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings) {
     //
     // GA SETTINGS
     //
+    pBasicSettings->gaConfig.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;
     pBasicSettings->gaConfig.pMutt = atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
     pBasicSettings->gaConfig.pCross = atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
     pBasicSettings->gaConfig.popSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());

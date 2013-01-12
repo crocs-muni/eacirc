@@ -96,6 +96,7 @@ typedef struct _GA_STRATEGY {
     float               pCross;
     int                 popSize;
     int                 nGeners;
+    bool                evolutionOff;
     
 	_GA_STRATEGY(void) {
         clear();
@@ -106,6 +107,7 @@ typedef struct _GA_STRATEGY {
         pCross = 0;
         popSize = 0;
         nGeners = 0;
+        evolutionOff = false;
     }
 } GA_STRATEGY;
 
@@ -155,7 +157,7 @@ typedef struct _GA_CIRCUIT {
     float     avgGenerFit;
     int       numAvgGenerFit;
     int       avgPredictions;
-    
+
     bool      prunningInProgress;
 
     _GA_CIRCUIT(void) {
@@ -234,7 +236,8 @@ typedef struct _GA_CIRCUIT {
 typedef struct _BASIC_INIT_DATA {
     string simulSWVersion;
     string simulDate;
-    bool loadState;
+    bool recommenceComputation;
+    bool loadInitialPopulation;
 
     // RANDOM SEED VALUE
     RANDOM_GENERATOR    rndGen;
@@ -252,7 +255,8 @@ typedef struct _BASIC_INIT_DATA {
     void clear() {
         simulSWVersion = "";
         simulDate = "";
-        loadState = false;
+        recommenceComputation = false;
+        loadInitialPopulation = false;
 
         rndGen.clear();
 		gaConfig.clear();

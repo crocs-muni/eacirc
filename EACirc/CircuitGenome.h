@@ -39,23 +39,5 @@ public:
       * @return status
       */
     static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
-
-    /** writes population to stream in binary format
-      * - prefixed by population and genome sizes
-      * - individual genomes are ordered (SCLAED), so if needed, scaing is done before writing
-      * @param population   population to write
-      * @param out          stream for writing
-      * @return status
-      */
-    static int writePopulation(const GAPopulation& population, ostream& out);
-
-    /** reads population in binary format from stream
-      * - population should be prefixed by size and genome size
-      * - chechs if loaded genomes have correct genome size
-      * @param population   read population (contents overwritten)
-      * @param in           stream for reading
-      * @return status
-      */
-    static int readPopulation(GAPopulation& population, istream& in);
 };
 #endif

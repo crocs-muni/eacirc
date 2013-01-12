@@ -5,10 +5,9 @@
 #define FILE_CONFIG                 "config.xml"
 #define FILE_STATE                  "state.xml"
 #define FILE_STATE_INITIAL          "state-initial.xml"
-#define FILE_POPULATION             "population.bin"
-#define FILE_POPULATION_INITIAL     "population-initial.bin"
+#define FILE_POPULATION             "population.xml"
+#define FILE_POPULATION_INITIAL     "population-initial.xml"
 #define FILE_GENOME                 "genome.bin"
-//#define FILE_SEEDFILE               "LastSeed.txt"
 #define FILE_FITNESS_PROGRESS       "EAC_fitnessProgress.txt"
 #define FILE_BEST_FITNESS           "bestfitgraph.txt"
 #define FILE_AVG_FITNESS            "avgfitgraph.txt"
@@ -34,7 +33,6 @@
 
 // COMMAND LINE OPTIONS
 #define CMD_OPT_STATIC              "-staticcircuit"
-#define CMD_OPT_EVOLUTION_OFF       "-evolutionoff"
 #define CMD_OPT_STATIC_DISTINCTOR   "-distinctor"
 #define CMD_OPT_LOGGING             "-log"
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
