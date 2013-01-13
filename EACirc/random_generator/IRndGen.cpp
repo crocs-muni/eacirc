@@ -10,18 +10,18 @@ IRndGen::IRndGen(int type, unsigned long seed)
     if (seed == 0) {
         if (mainGenerator != NULL) {
             mainGenerator->getRandomFromInterval(ULONG_MAX,&seed);
-            mainLogger.out() << "Warning: generator of type " << m_type << " initialized from Main Generator." << endl;
+            mainLogger.out() << "warning: Generator of type " << m_type << " initialized from Main Generator." << endl;
         } else {
-            mainLogger.out() << "Error: main generator not available, no seeding performed! (generator type " << m_type << ")" << endl;
+            mainLogger.out() << "error: Nain generator not available, no seeding performed! (generator type " << m_type << ")" << endl;
         }
-        //mainLogger.out() << "Warning: using system time to initialize random generator (type " << m_type << ")." << endl;
+        //mainLogger.out() << "warning: Using system time to initialize random generator (type " << m_type << ")." << endl;
     }
     this->m_seed = seed;
 }
 
 IRndGen* IRndGen::parseGenerator(TiXmlNode* pRoot) {
     if (pRoot == NULL) {
-        mainLogger.out() << "generator load error: NULL pointer." << endl;
+        mainLogger.out() << "error: Generator could not load - NULL pointer." << endl;
         return NULL;
     }
     int generatorType = atoi(getXMLElementValue(pRoot,"@type").c_str());
@@ -40,7 +40,7 @@ IRndGen* IRndGen::parseGenerator(TiXmlNode* pRoot) {
         break;
     }
     default: {
-        mainLogger.out() << "generator load error: unknown type (" << generatorType << ")." << endl;
+        mainLogger.out() << "error: Generator could not load - unknown type (" << generatorType << ")." << endl;
         return NULL;
     }
     }

@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
             // STATIC CIRCUIT
             if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
                 if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
-                    mainLogger.out() << "Static circuit, distinctor mode." << endl;
+                    mainLogger.out() << "info: Static circuit, distinctor mode." << endl;
                     return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
                 } else {
                     mainLogger.out() << "Please specify the second parameter. Supported options:" << endl;
@@ -62,6 +62,6 @@ int main(int argc, char **argv) {
         mainLogger.out() << "Error: Program run failed." << endl;
         mainLogger.out() << "       status: " << ErrorToString(eacirc.getStatus()) << endl;
     } else {
-        mainLogger.out() << "Program run succeeded." << endl;
+        mainLogger.out() << "info: Program run succeeded." << endl;
     }
 }

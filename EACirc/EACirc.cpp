@@ -68,7 +68,7 @@ void EACirc::loadConfiguration(const string filename) {
     if (m_status != STAT_OK) return;
     m_status = LoadConfigScript(filename, &basicSettings);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "Could not read configuration data from " << FILE_CONFIG << endl;
+        mainLogger.out() << "error: Could not read configuration data from " << FILE_CONFIG << "." << endl;
     }
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
     pGACirc = &(basicSettings.gaCircuitConfig);
@@ -80,12 +80,12 @@ void EACirc::loadConfiguration(const string filename) {
 
     if (basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0 &&
             basicSettings.gaCircuitConfig.changeGalibSeedFrequency % basicSettings.gaCircuitConfig.testVectorChangeGener != 0) {
-        mainLogger.out() << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
+        mainLogger.out() << "error: GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (basicSettings.gaCircuitConfig.TVCGProgressive == 1 &&
             basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0) {
-        mainLogger.out() << "Prograsive teste vector generation cannot be used when saving state." << endl;
+        mainLogger.out() << "error: Prograsive teste vector generation cannot be used when saving state." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
 
@@ -127,9 +127,9 @@ void EACirc::saveState(const string filename) {
 
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "Error saving state to file " << filename << "." << endl;
+        mainLogger.out() << "error: Cannot save state to file " << filename << "." << endl;
     } else {
-        mainLogger.out() << "State successfully saved to file " << filename << "." << endl;
+        mainLogger.out() << "info: State successfully saved to file " << filename << "." << endl;
     }
 }
 
@@ -154,7 +154,7 @@ void EACirc::loadState(const string filename) {
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
 
     delete pRoot;
-    mainLogger.out() << "State successfully loaded from file " << filename << "." << endl;
+    mainLogger.out() << "info: State successfully loaded from file " << filename << "." << endl;
 }
 
 void EACirc::createState() {
@@ -163,7 +163,7 @@ void EACirc::createState() {
     if (basicSettings.rndGen.useFixedSeed && basicSettings.rndGen.randomSeed != 0) {
         m_originalSeed = basicSettings.rndGen.randomSeed;
         mainGenerator = new MD5RndGen(m_originalSeed);
-        mainLogger.out() << "Using fixed seed: " << m_originalSeed << endl;
+        mainLogger.out() << "info: Using fixed seed: " << m_originalSeed << endl;
     } else {
         // generate random seed, if none provided
         mainGenerator = new MD5RndGen(clock() + time(NULL) + getpid());
@@ -171,22 +171,22 @@ void EACirc::createState() {
         delete mainGenerator;
         mainGenerator = NULL; // necessary !!! (see guts of MD5RndGen)
         mainGenerator = new MD5RndGen(m_originalSeed);
-        mainLogger.out() << "Using system-generated random seed: " << m_originalSeed << endl;
+        mainLogger.out() << "info: Using system-generated random seed: " << m_originalSeed << endl;
     }
 
     // INIT RNG
     unsigned long generatorSeed;
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, basicSettings.rndGen.QRBGSPath);
-    mainLogger.out() << "Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
+    mainLogger.out() << "info: Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
     // INIT BIAS RNDGEN
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     biasRndGen = new BiasRndGen(generatorSeed, basicSettings.rndGen.QRBGSPath, basicSettings.rndGen.biasFactor);
-    mainLogger.out() << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
+    mainLogger.out() << "info: Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
 
     // GENERATE SEED FOR GALIB
     mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
-    mainLogger.out() << "State successfully initialized." << endl;
+    mainLogger.out() << "info: State successfully initialized." << endl;
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -221,7 +221,7 @@ void EACirc::savePopulation(const string filename) {
     if (m_status != STAT_OK) {
         mainLogger.out() << "error: Cannot save population to file " << filename << "." << endl;
     } else {
-        mainLogger.out() << "Population successfully saved to file " << filename << "." << endl;
+        mainLogger.out() << "info: Population successfully saved to file " << filename << "." << endl;
     }
 }
 
@@ -265,7 +265,7 @@ void EACirc::loadPopulation(const string filename) {
     }
     seedAndResetGAlib(population);
     delete pRoot;
-    mainLogger.out() << "Population successfully loaded from file " << filename << "." << endl;
+    mainLogger.out() << "info: Population successfully loaded from file " << filename << "." << endl;
 }
 
 void EACirc::createPopulation() {
@@ -279,13 +279,13 @@ void EACirc::createPopulation() {
     GAPopulation population(genome,basicSettings.gaConfig.popSize);
     // create genetic algorithm and initialize population
     seedAndResetGAlib(population);
-    mainLogger.out() << "Initializing population." << endl;
+    mainLogger.out() << "info: Initializing population." << endl;
     m_gaData->initialize();
     // reset GAlib seed
     mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
 
-    mainLogger.out() << "Population successfully initialized." << endl;
+    mainLogger.out() << "info: Population successfully initialized." << endl;
 }
 
 void EACirc::saveProgress(const string stateFilename, const string populationFilename) {
@@ -309,12 +309,12 @@ void EACirc::initializeState() {
     // load or create POPULATION
     if (basicSettings.loadInitialPopulation) {
         loadPopulation(FILE_POPULATION);
-        mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
+        mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
         // encryptorDecryptor should not be initialized (extra usage of random generator!)
         // encryptorDecryptor = new EncryptorDecryptor();
         m_evaluator = new Evaluator();
     } else {
-        mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
+        mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
         encryptorDecryptor = new EncryptorDecryptor();
         m_evaluator = new Evaluator();
         m_evaluator->generateTestVectors();
@@ -356,9 +356,9 @@ void EACirc::prepare() {
             out << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
             out.close();
         }
-        mainLogger.out() << "stream1: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream);
+        mainLogger.out() << "info: stream1: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream);
         mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds)" << endl;
-        mainLogger.out() << "stream2: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream2);
+        mainLogger.out() << "info: stream2: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream2);
         mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
     }
 
@@ -412,10 +412,10 @@ void EACirc::run() {
     GA1DArrayGenome<unsigned long> genomeBest(basicSettings.gaCircuitConfig.genomeSize, CircuitGenome::Evaluator);
     genomeBest = m_gaData->population().individual(0);
 
-    mainLogger.out() << "Starting evolution." << endl;
+    mainLogger.out() << "info: Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= basicSettings.gaConfig.nGeners; m_actGener++) {
         if (m_status != STAT_OK) {
-            mainLogger.out() << "Ooops, something went wrong, stopping. " << "(error: " << ErrorToString(m_status) << " )." << endl;
+            mainLogger.out() << "error: Ooops, something went wrong, stopping. " << "(error: " << ErrorToString(m_status) << " )." << endl;
             break;
         }
 

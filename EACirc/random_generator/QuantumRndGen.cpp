@@ -30,7 +30,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
 
         file.close();
     } else { // QRNG data not available
-        mainLogger.out() << "Warning: Quantum random data files not found, using system generator." << endl;
+        mainLogger.out() << "warning: Quantum random data files not found, using system generator." << endl;
         m_accLength = 4; // (max 32B), see init and update
     }
     m_accumulator = new unsigned char[m_accLength];
@@ -38,7 +38,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
     status = reinitRandomGenerator();
 
     if (status != STAT_OK) {
-        mainLogger.out() << "Error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
+        mainLogger.out() << "error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
         mainLogger.out() << "       status: " << ErrorToString(status) << endl;
     }
 }
@@ -168,7 +168,7 @@ int QuantumRndGen::loadQRNGDataFile() {
         file.read((char*)m_accumulator, m_accLength);
         file.close();
     } else {
-        mainLogger.out() << "Error: Cannot open QRNG data file " << sFileName.str() << "." << endl;
+        mainLogger.out() << "error: Cannot open QRNG data file " << sFileName.str() << "." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     return STAT_OK;
@@ -182,7 +182,7 @@ string QuantumRndGen::shortDescription() const {
 QuantumRndGen::QuantumRndGen(TiXmlNode *pRoot)
         : IRndGen(GENERATOR_QRNG,1) {  // cannot call IRndGen with seed 0, warning would be issued
     if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
-        mainLogger.out() << "error: incompatible generator types." << endl;
+        mainLogger.out() << "error: Incompatible generator types." << endl;
         return;
     }
 

@@ -48,6 +48,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\run\</OutDir>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -66,8 +68,11 @@
       <OutputFile>run\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <CustomBuildStep>
-      <Command>copy EACirc\config.xml run\config.xml</Command>
+      <Command>copy EACirc\config.xml $(OutDir)\config.xml</Command>
       <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Message>Copying configuration file</Message>
+      <Outputs>$(OutDir)\config.xml</Outputs>
+      <Inputs>EACirc\config.xml</Inputs>
     </CustomBuildStep>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -91,6 +96,13 @@
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>run\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
+    <CustomBuildStep>
+      <Command>copy EACirc\config.xml $(OutDir)\config.xml</Command>
+      <Message>Copying configuration file</Message>
+      <Outputs>$(OutDir)\config.xml</Outputs>
+      <Inputs>EACirc\config.xml</Inputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="eacirc\CircuitGenome.cpp" />
@@ -311,6 +323,9 @@
     <ClInclude Include="eacirc\tinyxml\tinystr.h" />
     <ClInclude Include="eacirc\tinyxml\tinyxml.h" />
     <ClInclude Include="EACirc\XMLProcessor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="EACirc\config.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -116,7 +116,7 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
     doc.LinkEndChild(pRoot);
     bool result = doc.SaveFile(filename.c_str());
     if (!result) {
-        mainLogger.out() << "Error: cannot write XML file " << filename << ".";
+        mainLogger.out() << "error: Cannot write XML file " << filename << ".";
         return STAT_FILE_OPEN_FAIL;
     }
     return STAT_OK;
@@ -125,13 +125,13 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
 int loadXMLFile(TiXmlNode*& pRoot, string filename) {
     TiXmlDocument doc(filename.c_str());
     if (!doc.LoadFile()) {
-        mainLogger.out() << "Error: Could not load file '" << filename << "'." << endl;
+        mainLogger.out() << "error: Could not load file '" << filename << "'." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     TiXmlHandle hDoc(&doc);
     TiXmlElement* pElem=hDoc.FirstChildElement().Element();
     if (!pElem) {
-        mainLogger.out() << "Error: No root element in XML (" << filename << ")." << endl;
+        mainLogger.out() << "error: No root element in XML (" << filename << ")." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     pRoot = pElem->Clone();
