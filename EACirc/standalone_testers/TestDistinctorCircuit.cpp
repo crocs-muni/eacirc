@@ -36,8 +36,8 @@ int testDistinctorCircuit(string filename1, string filename2) {
     file2.open(filename2, fstream::in | fstream::binary);
 
     if (!file.is_open() || !file2.is_open()) {
-        mainLogger.out() << "Could not find/open file." << endl;
-        mainLogger.out() << "Required files: " << filename1.c_str() << ", " << filename2.c_str() << endl;
+        mainLogger.out() << "error: Could not find/open file." << endl;
+        mainLogger.out() << "       Required files: " << filename1.c_str() << ", " << filename2.c_str() << endl;
         return STAT_FILE_OPEN_FAIL;
     }
 
@@ -79,7 +79,7 @@ int testDistinctorCircuit(string filename1, string filename2) {
 
     match = 0;
     predictors = 0;
-    results << " ===Testset 2 ===" << endl;
+    results << " === Testset 2 ===" << endl;
     for (i=0; i<length2;i+=pGACirc->testVectorLength) {
         for (int e=0; e<pGACirc->testVectorLength; e++){
             inputs[e] = accumulator2[i+e];

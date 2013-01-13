@@ -17,7 +17,7 @@ public:
     IRndGen(int type, unsigned long seed);
     virtual ~IRndGen() {}
 
-    static IRndGen* parseGenerator(TiXmlElement* pRoot);
+    static IRndGen* parseGenerator(TiXmlNode* pRoot);
 
     virtual int getRandomFromInterval(unsigned long, unsigned long *) = 0;
     virtual int getRandomFromInterval(unsigned char, unsigned char *) = 0;

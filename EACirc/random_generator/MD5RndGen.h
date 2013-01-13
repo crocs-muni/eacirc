@@ -8,7 +8,7 @@ class MD5RndGen : public IRndGen {
     MD5_DIGEST m_md5Accumulator; // accumulator for MD5
 public:
     MD5RndGen(unsigned long seed = 0);
-    MD5RndGen(TiXmlElement *pRoot);
+    MD5RndGen(TiXmlNode* pRoot);
     // MD5RndGen(const MD5RndGen&) = delete; //(not supprrted in MS VS)
     // const MD5RndGen& operator =(const MD5RndGen&) = delete; //(not supprrted in MS VS)
     ~MD5RndGen() {}

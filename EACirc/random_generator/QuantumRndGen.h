@@ -15,7 +15,7 @@ class QuantumRndGen : public IRndGen{
     IRndGen* m_internalRNG;
 public:
     QuantumRndGen(unsigned long seed = 0, string QRBGSPath = "");
-    QuantumRndGen(TiXmlElement* pRoot);
+    QuantumRndGen(TiXmlNode* pRoot);
     // QuantumRndGen(const QuantumRndGen&) = delete; //(not supprrted in MS VS)
     // const QuantumRndGen& operator =(const QuantumRndGen&) = delete; //(not supprrted in MS VS)
     ~QuantumRndGen();

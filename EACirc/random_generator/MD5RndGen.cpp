@@ -92,25 +92,21 @@ string MD5RndGen::shortDescription() const {
     return "MD5-based generator";
 }
 
-MD5RndGen::MD5RndGen(TiXmlElement* pRoot)
+MD5RndGen::MD5RndGen(TiXmlNode *pRoot)
     : IRndGen(GENERATOR_MD5,1) {  // cannot call IRndGen with seed 0, warning would be issued
-    if (atoi(pRoot->Attribute("type")) != m_type) {
-        // TODO: unset sanity bit
+    if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
+        mainLogger.out() << "error: Incompatible generator types." << endl;
         return;
     }
 
-    TiXmlElement* pElem = NULL;
+    istringstream(getXMLElementValue(pRoot,"original_seed")) >> m_seed;
 
-    pElem = pRoot->FirstChildElement("original_seed");
-    istringstream(pElem->GetText()) >> m_seed;
-
-    pElem = pRoot->FirstChildElement("accumulator_state");
-    if (atol(pElem->Attribute("length")) != MD5_DIGEST_LENGTH) {
-        mainLogger.out() << "Error: Incompatible accumulator length - state not loaded." << endl;
+    if (atol(getXMLElementValue(pRoot,"accumulator_state/@length").c_str()) != MD5_DIGEST_LENGTH) {
+        mainLogger.out() << "error: Incompatible accumulator length - state not loaded." << endl;
         mainLogger.out() << "       required: " << MD5_DIGEST_LENGTH << endl;
-        mainLogger.out() << "          found: " << pElem->Attribute("length") << endl;
+        mainLogger.out() << "          found: " << getXMLElementValue(pRoot,"accumulator_state/@length") << endl;
     } else {
-        istringstream ss(pElem->GetText());
+        istringstream ss(getXMLElementValue(pRoot,"accumulator_state"));
         unsigned int value;
         for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
             ss >> value;

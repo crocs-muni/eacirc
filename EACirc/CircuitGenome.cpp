@@ -68,27 +68,29 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 	} else {
 		fit = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;
 	}
-        
-    // include into average fitness of whole generation
-	(pGACirc->avgGenerFit) += fit;
-	(pGACirc->numAvgGenerFit)++;
-	(pGACirc->avgPredictions) += numPredictions;
 
-    if (fit > pGACirc->bestGenerFit) pGACirc->bestGenerFit = fit;
+    if (!pGACirc->prunningInProgress) {
+        // include into average fitness of whole generation
+        (pGACirc->avgGenerFit) += fit;
+        (pGACirc->numAvgGenerFit)++;
+        (pGACirc->avgPredictions) += numPredictions;
 
-	if (pGACirc->maxFit < fit) {
-        pGACirc->maxFit = fit;
-            
-        // DISPLAY CURRENTLY BEST
-		ostringstream os2;
-        os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
-		string filePath = os2.str();
-        PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
+        if (fit > pGACirc->bestGenerFit) pGACirc->bestGenerFit = fit;
 
-		if (pGACirc->allowPrunning) {
-			filePath += "_prunned";
-			PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
-		}
+        if (pGACirc->maxFit < fit) {
+            pGACirc->maxFit = fit;
+
+            // DISPLAY CURRENTLY BEST
+            ostringstream os2;
+            os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
+            string filePath = os2.str();
+            PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
+
+            if (pGACirc->allowPrunning) {
+                filePath += "_prunned";
+                PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
+            }
+        }
     }
         
     delete circEval;
@@ -395,7 +397,10 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
         }
     }
     
-    Evaluator(prunnedGenome);    
+    // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope start
+    //Evaluator(prunnedGenome);
+    // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope end
+
     pGACirc->prunningInProgress = FALSE;
     return status;
 }
@@ -766,7 +771,11 @@ int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int*
 
 		// GENOM ONLY 
 		int offset = 0;
-		while ((pos2 = textCircuit.find(" ", pos)) != string::npos) {
+        //while ((pos2 = textCircuit.find(" ", pos)) != string::npos) {
+        while (offset < pGACirc->genomeSize) {
+            pos2 = textCircuit.find(" ", pos);
+            // manual change: commented line above substituted for 2 lines just above
+
 			string value = textCircuit.substr(pos, pos2 - pos + 1);
 			//value.TrimLeft();value.TrimRight();
 			TrimLeadingSpaces(value);
@@ -1570,6 +1579,10 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
 }
 
 int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
+    if (genome.size() != pGACirc->genomeSize) {
+        mainLogger.out() << "error: Incorrect genome size. Cannot read genome." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
     unsigned long* circuit = new unsigned long[pGACirc->genomeSize];
 
     memset(circuit, 0, sizeof(circuit));
@@ -1581,48 +1594,7 @@ int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& te
 
     for (int i = 0; i < pGACirc->genomeSize; i++) genome.gene(i, circuit[i]);
 
-	delete circuit;
+    delete[] circuit;
     // TODO: add circiut parsing status
-    return STAT_OK;
-}
-
-int CircuitGenome::writePopulation(const GAPopulation& population, ostream& out) {
-    int status = STAT_OK;
-    string textCircuit;
-    for (int i = 0; i < population.size(); i++) {
-        // note: it is not necessary to call individual i in SCALED order
-        //       however then the population files differ in order ('diff' cannot be used to fing bugs)
-        GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(population.individual(i,GAPopulation::SCALED));
-        status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
-        if (status != STAT_OK) {
-            return status;
-        }
-        out << textCircuit << endl;
-    }
-    return status;
-}
-
-int CircuitGenome::readPopulation(GAPopulation& population, istream& in) {
-    int populationSize = 0;
-    string line;
-    getline(in,line);
-    istringstream(line) >> populationSize;
-    getline(in,line);
-    istringstream(line) >> pGACirc->genomeSize;
-    // TODO: genome size check
-
-    GA1DArrayGenome<unsigned long> genome(pGACirc->genomeSize, CircuitGenome::Evaluator);
-    // INIT GENOME STRUCTURES
-    genome.initializer(CircuitGenome::Initializer);
-    genome.mutator(CircuitGenome::Mutator);
-    genome.crossover(CircuitGenome::Crossover);
-    // LOAD genomes
-    string textCircuit;
-    for (int i = 0; i < populationSize; i++) {
-        getline(in, textCircuit);
-        CircuitGenome::readGenome(genome,textCircuit);
-        population.add(genome);
-    }
-
     return STAT_OK;
 }

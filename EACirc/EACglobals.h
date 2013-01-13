@@ -9,17 +9,18 @@
 class IRndGen;
 
 #include <list>
-#include <math.h>
-//libinclude (galib/GAGenome.h)
-#include "GAGenome.h"
-//libinclude (galib/GASStateGA.h)
-#include "GASStateGA.h"
+#include <cmath>
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+
+//libinclude (galib/GAGenome.h)
+#include "GAGenome.h"
+//libinclude (galib/GASStateGA.h)
+#include "GASStateGA.h"
 using namespace std;
 
 typedef unsigned long DWORD;
@@ -95,6 +96,7 @@ typedef struct _GA_STRATEGY {
     float               pCross;
     int                 popSize;
     int                 nGeners;
+    bool                evolutionOff;
     
 	_GA_STRATEGY(void) {
         clear();
@@ -105,6 +107,7 @@ typedef struct _GA_STRATEGY {
         pCross = 0;
         popSize = 0;
         nGeners = 0;
+        evolutionOff = false;
     }
 } GA_STRATEGY;
 
@@ -138,6 +141,7 @@ typedef struct _GA_CIRCUIT {
     int         testVectorChangeGener;  // generate fresh new test set every x-th generation
 	bool		TVCGProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
 	bool		evaluateEveryStep; // evaluation is done only with changing test vectors by default - use with care!
+    bool        evaluateBeforeTestVectorChange; // should evaluation before ar after test vectors chagne be written to file?
     int         numBestPredictors;
 	bool		limitAlgRounds;
 	int			limitAlgRoundsCount;
@@ -153,7 +157,7 @@ typedef struct _GA_CIRCUIT {
     float     avgGenerFit;
     int       numAvgGenerFit;
     int       avgPredictions;
-    
+
     bool      prunningInProgress;
 
     _GA_CIRCUIT(void) {
@@ -183,6 +187,7 @@ typedef struct _GA_CIRCUIT {
         testVectorChangeGener = 0;
 		TVCGProgressive = false;
 		evaluateEveryStep = false;
+        evaluateBeforeTestVectorChange = false;
         numBestPredictors = 1;
 		limitAlgRounds = false;
 		limitAlgRoundsCount = -1;
@@ -231,7 +236,8 @@ typedef struct _GA_CIRCUIT {
 typedef struct _BASIC_INIT_DATA {
     string simulSWVersion;
     string simulDate;
-    bool loadState;
+    bool recommenceComputation;
+    bool loadInitialPopulation;
 
     // RANDOM SEED VALUE
     RANDOM_GENERATOR    rndGen;
@@ -249,7 +255,8 @@ typedef struct _BASIC_INIT_DATA {
     void clear() {
         simulSWVersion = "";
         simulDate = "";
-        loadState = false;
+        recommenceComputation = false;
+        loadInitialPopulation = false;
 
         rndGen.clear();
 		gaConfig.clear();

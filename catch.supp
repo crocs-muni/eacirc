@@ -1,0 +1,36 @@
+{
+   Catch/ReporterRegistrar (reachables)
+   Memcheck:Leak
+   ...
+   fun:_ZN5Catch17ReporterRegistrarINS*
+   ...
+}
+{
+   Catch/AutoReg (reachables)
+   Memcheck:Leak
+   ...
+   fun:_ZN5Catch7AutoReg*
+   ...
+}
+{
+   Catch/specific1 (reachables)
+   Memcheck:Leak
+   fun:_Znwj
+   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC1EPKcRKSaIcE
+   fun:_GLOBAL__sub_I__ZN5Catch7AutoRegC2EPFvvEPKcS4_RKNS_14SourceLineInfoE
+   fun:__libc_csu_init
+   fun:(below main)
+}
+{
+   Catch/specific2 (reachables)
+   Memcheck:Leak
+   fun:_Znwj
+   fun:_ZNSs4_Rep9_S_createEjjRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC1EPKcRKSaIcE
+   fun:_GLOBAL__sub_I__Z18compareFilesByLineSsSs
+   fun:__libc_csu_init
+   fun:(below main)
+}

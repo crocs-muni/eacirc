@@ -39,13 +39,14 @@ SOURCES += \
     EACirc/circuit_evaluator/PredictByteCircuitEvaluator.cpp \
     EACirc/circuit_evaluator/PredictBytesParityCircuitEvaluator.cpp \
     EACirc/circuit_evaluator/PredictHammingWeightCircuitEvaluator.cpp \
-    EACirc/standalone_testers/TestDisctinctorCircuit.cpp \
     EACirc/random_generator/BiasRndGen.cpp \
     EACirc/random_generator/IRndGen.cpp \
     EACirc/random_generator/QuantumRndGen.cpp \
     EACirc/random_generator/MD5RndGen.cpp \
     EACirc/random_generator/md5.cpp \
     EACirc/estream/EncryptorDecryptor.cpp \
+# === testing using CATCH framework ===
+    EACirc/self_tests/tests.cpp \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.cpp \
     EACirc/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \   # not used
@@ -92,7 +93,8 @@ SOURCES += \
     EACirc/galib/gabincvt.cpp EACirc/galib/GABinStr.cpp EACirc/galib/GADCrowdingGA.cpp EACirc/galib/GADemeGA.cpp EACirc/galib/gaerror.cpp EACirc/galib/GAGenome.cpp \
     EACirc/galib/GAIncGA.cpp EACirc/galib/GAList.cpp EACirc/galib/GAListBASE.cpp EACirc/galib/GAListGenome.cpp EACirc/galib/GAParameter.cpp EACirc/galib/GAPopulation.cpp \
     EACirc/galib/garandom.cpp EACirc/galib/GARealGenome.cpp EACirc/galib/GAScaling.cpp EACirc/galib/GASelector.cpp EACirc/galib/GASimpleGA.cpp EACirc/galib/GASStateGA.cpp \
-    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp
+    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp \
+    EACirc/standalone_testers/TestDistinctorCircuit.cpp
 
 HEADERS += \
 # === Main project files ===
@@ -124,6 +126,9 @@ HEADERS += \
     EACirc/random_generator/MD5RndGen.h \
     EACirc/random_generator/md5.h \
     EACirc/estream/EncryptorDecryptor.h \
+# === CATCH testing framework ===
+    EACirc/self_tests/catch.hpp \
+    EACirc/self_tests/tests.h \
 # === eSTREAM cipher files ===
     EACirc/estream/estreamInterface.h \
     EACirc/estream/ciphers/ecrypt-config.h \

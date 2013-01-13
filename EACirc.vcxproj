@@ -48,6 +48,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\run\</OutDir>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,8 +67,11 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <CustomBuildStep>
-      <Command>copy ./EACirc/config.xml ./run/config.xml</Command>
+      <Command>copy EACirc\config.xml $(OutDir)\config.xml</Command>
       <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Message>Copying configuration file</Message>
+      <Outputs>$(OutDir)\config.xml</Outputs>
+      <Inputs>EACirc\config.xml</Inputs>
     </CustomBuildStep>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -91,7 +96,11 @@
       <OutputFile>run\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <CustomBuildStep>
-      <Command>copy ./EACirc/config.xml ./run/config.xml</Command>
+      <Command>copy EACirc\config.xml $(OutDir)\config.xml</Command>
+      <Message>Copying configuration file</Message>
+      <Outputs>$(OutDir)\config.xml</Outputs>
+      <Inputs>EACirc\config.xml</Inputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -176,7 +185,8 @@
     <ClCompile Include="EACirc\random_generator\md5.cpp" />
     <ClCompile Include="EACirc\random_generator\MD5RndGen.cpp" />
     <ClCompile Include="EACirc\random_generator\QuantumRndGen.cpp" />
-    <ClCompile Include="eacirc\standalone_testers\TestDisctinctorCircuit.cpp" />
+    <ClCompile Include="EACirc\self_tests\tests.cpp" />
+    <ClCompile Include="EACirc\standalone_testers\TestDistinctorCircuit.cpp" />
     <ClCompile Include="eacirc\status.cpp" />
     <ClCompile Include="eacirc\test_vector_generator\EstreamTestVectGener.cpp" />
     <ClCompile Include="eacirc\test_vector_generator\ITestVectGener.cpp" />
@@ -300,6 +310,8 @@
     <ClInclude Include="EACirc\random_generator\MD5RndGen.h" />
     <ClInclude Include="EACirc\random_generator\QuantumRndGen.h" />
     <ClInclude Include="eacirc\random_generator\RndGen.h" />
+    <ClInclude Include="EACirc\self_tests\catch.hpp" />
+    <ClInclude Include="EACirc\self_tests\tests.h" />
     <ClInclude Include="eacirc\SSconstants.h" />
     <ClInclude Include="eacirc\SSGlobals.h" />
     <ClInclude Include="eacirc\standalone_testers\TestDistinctorCircuit.h" />
@@ -310,6 +322,9 @@
     <ClInclude Include="eacirc\tinyxml\tinystr.h" />
     <ClInclude Include="eacirc\tinyxml\tinyxml.h" />
     <ClInclude Include="EACirc\XMLProcessor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="EACirc\config.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
