@@ -175,7 +175,7 @@
     <ClCompile Include="EACirc\random_generator\MD5RndGen.cpp" />
     <ClCompile Include="EACirc\random_generator\QuantumRndGen.cpp" />
     <ClCompile Include="EACirc\self_tests\tests.cpp" />
-    <ClCompile Include="eacirc\standalone_testers\TestDisctinctorCircuit.cpp" />
+    <ClCompile Include="EACirc\standalone_testers\TestDistinctorCircuit.cpp" />
     <ClCompile Include="eacirc\status.cpp" />
     <ClCompile Include="eacirc\test_vector_generator\EstreamTestVectGener.cpp" />
     <ClCompile Include="eacirc\test_vector_generator\ITestVectGener.cpp" />

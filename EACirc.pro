@@ -39,7 +39,6 @@ SOURCES += \
     EACirc/circuit_evaluator/PredictByteCircuitEvaluator.cpp \
     EACirc/circuit_evaluator/PredictBytesParityCircuitEvaluator.cpp \
     EACirc/circuit_evaluator/PredictHammingWeightCircuitEvaluator.cpp \
-    EACirc/standalone_testers/TestDisctinctorCircuit.cpp \
     EACirc/random_generator/BiasRndGen.cpp \
     EACirc/random_generator/IRndGen.cpp \
     EACirc/random_generator/QuantumRndGen.cpp \
@@ -94,7 +93,8 @@ SOURCES += \
     EACirc/galib/gabincvt.cpp EACirc/galib/GABinStr.cpp EACirc/galib/GADCrowdingGA.cpp EACirc/galib/GADemeGA.cpp EACirc/galib/gaerror.cpp EACirc/galib/GAGenome.cpp \
     EACirc/galib/GAIncGA.cpp EACirc/galib/GAList.cpp EACirc/galib/GAListBASE.cpp EACirc/galib/GAListGenome.cpp EACirc/galib/GAParameter.cpp EACirc/galib/GAPopulation.cpp \
     EACirc/galib/garandom.cpp EACirc/galib/GARealGenome.cpp EACirc/galib/GAScaling.cpp EACirc/galib/GASelector.cpp EACirc/galib/GASimpleGA.cpp EACirc/galib/GASStateGA.cpp \
-    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp
+    EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp \
+    EACirc/standalone_testers/TestDistinctorCircuit.cpp
 
 HEADERS += \
 # === Main project files ===

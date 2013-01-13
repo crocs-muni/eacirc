@@ -74,6 +74,10 @@ void EACirc::loadConfiguration(const string filename) {
     pGACirc = &(basicSettings.gaCircuitConfig);
     pGACirc->allocate();
 
+    if (basicSettings.recommenceComputation || basicSettings.gaConfig.evolutionOff) {
+        basicSettings.loadInitialPopulation = true;
+    }
+
     if (basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0 &&
             basicSettings.gaCircuitConfig.changeGalibSeedFrequency % basicSettings.gaCircuitConfig.testVectorChangeGener != 0) {
         mainLogger.out() << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
@@ -303,7 +307,7 @@ void EACirc::initializeState() {
         createState();
     }
     // load or create POPULATION
-    if (basicSettings.recommenceComputation || basicSettings.loadInitialPopulation) {
+    if (basicSettings.loadInitialPopulation) {
         loadPopulation(FILE_POPULATION);
         mainLogger.out() << "Initializing Evaluator and Encryptor-Decryptor." << endl;
         // encryptorDecryptor should not be initialized (extra usage of random generator!)

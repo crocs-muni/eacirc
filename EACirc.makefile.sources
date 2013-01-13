@@ -32,7 +32,7 @@ EACirc/random_generator/md5.cpp
 
 # Standalone testers
 SOURCES+= \
-EACirc/standalone_testers/TestDisctinctorCircuit.cpp
+EACirc/standalone_testers/TestDistinctorCircuit.cpp
 
 # eSTREAM interface files
 SOURCES+= EACirc/estream/EncryptorDecryptor.cpp \
