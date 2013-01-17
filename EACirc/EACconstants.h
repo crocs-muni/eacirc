@@ -1,6 +1,10 @@
 #ifndef EACCONSTANTS_H
 #define EACCONSTANTS_H
 
+// PROJECTS
+#define PROJECT_ESTREAM             101
+#define PROJECT_SHA3                102
+
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
 #define FILE_STATE                  "state.xml"

@@ -8,11 +8,11 @@
 #include "CommonFnc.h"
 
 class IRndGen {
-//private:
-//    static MD5RndGen* m_mainGenerator;
 protected:
-    int m_type; // generator type, see EACirc constants
-    unsigned long m_seed; // original seed
+    //! generator type, see EACirc constants
+    int m_type;
+    //! original seed used when generator was created
+    unsigned long m_seed;
 public:
     IRndGen(int type, unsigned long seed);
     virtual ~IRndGen() {}

@@ -89,6 +89,11 @@ void EACirc::loadConfiguration(const string filename) {
         m_status = STAT_CONFIG_INCORRECT;
     }
 
+    if (m_status != STAT_OK) return;
+
+    // init project
+    // load project config
+
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_CONFIG_LOADED;
     }
