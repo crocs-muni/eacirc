@@ -324,7 +324,9 @@
     <ClInclude Include="EACirc\XMLProcessor.h" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="EACirc\config.xml" />
+    <Xml Include="EACirc\config.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

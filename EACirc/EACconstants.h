@@ -16,7 +16,7 @@
 #define FILE_TEST_DATA_1            "test-vecotrs1.bin"
 #define FILE_TEST_DATA_2            "test-vectors2.bin"
 #define FILE_CIRCUIT                "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
-#define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot
+#define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_LOGFILE                "eacirc.log"
 
 // CIRCUIT OUTPUT SETTINGS
