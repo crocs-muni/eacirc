@@ -3,7 +3,7 @@
 
 #include "EACconstants.h"
 #include "status.h"
-#include "estream/estreamInterface.h"
+//#include "estream/estreamInterface.h"
 #include "Logger.h"
 //#include "random_generator/IRndGen.h"
 class IRndGen;
@@ -72,30 +72,30 @@ extern IRndGen* mainGenerator;
 #define STREAM_BLOCK_SIZE 16
 
 typedef struct _RANDOM_GENERATOR {
-    unsigned long       randomSeed;
+    unsigned long       seed;
     bool        useFixedSeed;
 	string		QRBGSPath;
-	int type;
-	int biasFactor;
+    int primaryRandomType;
+    int biasRndGenFactor;
 
     _RANDOM_GENERATOR(void) {
         clear();
     }
 
     void clear() {
-        randomSeed = 0;
-		type = 1;
-		biasFactor = 50;
+        seed = 0;
+        primaryRandomType = 1;
+        biasRndGenFactor = 50;
         useFixedSeed = false;
     }
 
 } RANDOM_GENERATOR;
 
 typedef struct _GA_STRATEGY {
-    float               pMutt;
-    float               pCross;
-    int                 popSize;
-    int                 nGeners;
+    float               probMutationt;
+    float               probCrossing;
+    int                 popupationSize;
+    int                 numGenerations;
     bool                evolutionOff;
     
 	_GA_STRATEGY(void) {
@@ -103,10 +103,10 @@ typedef struct _GA_STRATEGY {
     }
     
     void clear() {
-        pMutt = 0;
-        pCross = 0;
-        popSize = 0;
-        nGeners = 0;
+        probMutationt = 0;
+        probCrossing = 0;
+        popupationSize = 0;
+        numGenerations = 0;
         evolutionOff = false;
     }
 } GA_STRATEGY;
@@ -115,9 +115,9 @@ typedef struct _GA_CIRCUIT {
     // BASIC CIRCUIT PARAMS
     int         numLayers;  
     int         numSelectorLayers;
-    int         numInputs;
+    int         sizeInputLayer;
     int         numOutputs;
-    int         internalLayerSize;
+    int         sizeLayer;
     int         outputLayerSize;
     int         numLayerConnectors;
     unsigned char        allowedFNC[FNC_MAX+1];
@@ -129,22 +129,12 @@ typedef struct _GA_CIRCUIT {
     int			changeGalibSeedFrequency; // how often to change GAlib seed and save state
     int         testVectorGenerMethod;
 	int			testVectorLength;
-	int			testVectorBalance;
-	int			testVectorEstream;
-	int			testVectorEstream2;
-	int			estreamKeyType; //what type of data to fill the key/plain/iv
-	int			estreamInputType;
-	int			estreamIVType;
-	int			saveTestVectors;
-	int			testVectorEstreamMethod;
-	int			limitAlgRoundsCount2;
+    int			saveTestVectors;
     int         testVectorChangeGener;  // generate fresh new test set every x-th generation
 	bool		TVCGProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
 	bool		evaluateEveryStep; // evaluation is done only with changing test vectors by default - use with care!
     bool        evaluateBeforeTestVectorChange; // should evaluation before ar after test vectors chagne be written to file?
     int         numBestPredictors;
-	bool		limitAlgRounds;
-	int			limitAlgRoundsCount;
 	bool		representBitAsBytes;
 	// SPEED-UP PRECOMPUTATION 
     unsigned long       precompPow[MAX_CONNECTORS];      // PRECOMPUTED VALUES UP TO 2^32
@@ -163,9 +153,9 @@ typedef struct _GA_CIRCUIT {
     _GA_CIRCUIT(void) {
         numLayers = MAX_NUM_LAYERS;
         numSelectorLayers = 1;
-        numInputs = MAX_INTERNAL_LAYER_SIZE;
+        sizeInputLayer = MAX_INTERNAL_LAYER_SIZE;
         numOutputs = MAX_INTERNAL_LAYER_SIZE;
-        internalLayerSize = MAX_INTERNAL_LAYER_SIZE;
+        sizeLayer = MAX_INTERNAL_LAYER_SIZE;
         outputLayerSize = MAX_OUTPUTS;
         predictMethod = 0;
         memset(allowedFNC, 1, sizeof(allowedFNC)); // allow all functions by default
@@ -176,21 +166,13 @@ typedef struct _GA_CIRCUIT {
         testVectorGenerMethod = 0;
 		testVectorLength = MAX_INPUTS;
 		testVectorBalance = 0;
-		testVectorEstream = 0;
-		testVectorEstream2 = 0;
-		testVectorEstreamMethod = 0;
         changeGalibSeedFrequency = 0;
-		estreamKeyType = ESTREAM_GENTYPE_ZEROS;
-		estreamInputType = ESTREAM_GENTYPE_ZEROS;
-		estreamIVType = ESTREAM_GENTYPE_ZEROS;
 		saveTestVectors = 0;
         testVectorChangeGener = 0;
 		TVCGProgressive = false;
 		evaluateEveryStep = false;
         evaluateBeforeTestVectorChange = false;
         numBestPredictors = 1;
-		limitAlgRounds = false;
-		limitAlgRoundsCount = -1;
 		representBitAsBytes = false;
 
         genomeSize = MAX_GENOME_SIZE;
@@ -234,10 +216,11 @@ typedef struct _GA_CIRCUIT {
 } GA_CIRCUIT;
 
 typedef struct _BASIC_INIT_DATA {
-    string simulSWVersion;
-    string simulDate;
+    string swVersion;
+    string computationDate;
     bool recommenceComputation;
     bool loadInitialPopulation;
+    int projectType;
 
     // RANDOM SEED VALUE
     RANDOM_GENERATOR    rndGen;
@@ -253,10 +236,11 @@ typedef struct _BASIC_INIT_DATA {
     }
 
     void clear() {
-        simulSWVersion = "";
-        simulDate = "";
+        swVersion = "";
+        computationDate = "";
         recommenceComputation = false;
         loadInitialPopulation = false;
+        projectType = 0;
 
         rndGen.clear();
 		gaConfig.clear();
