@@ -116,22 +116,20 @@ typedef struct _GA_CIRCUIT {
     int         numLayers;  
     int         numSelectorLayers;
     int         sizeInputLayer;
-    int         numOutputs;
+    int         sizeOutputLayer;
     int         sizeLayer;
-    int         outputLayerSize;
-    int         numLayerConnectors;
-    unsigned char        allowedFNC[FNC_MAX+1];
-    int         predictMethod;
+    int         numConnectors;
+    unsigned char        allowedFunctions[FNC_MAX+1];
+    int         predictionMethod;
 	bool		allowPrunning;
 	// TESTING VECTORS PARAMETERS
     int         numTestVectors;
     unsigned char**      testVectors;
     int			changeGalibSeedFrequency; // how often to change GAlib seed and save state
-    int         testVectorGenerMethod;
 	int			testVectorLength;
     int			saveTestVectors;
-    int         testVectorChangeGener;  // generate fresh new test set every x-th generation
-	bool		TVCGProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
+    int         testVectorChangeFreq;  // generate fresh new test set every x-th generation
+    bool		testVectorChangeProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
 	bool		evaluateEveryStep; // evaluation is done only with changing test vectors by default - use with care!
     bool        evaluateBeforeTestVectorChange; // should evaluation before ar after test vectors chagne be written to file?
     int         numBestPredictors;
@@ -154,22 +152,20 @@ typedef struct _GA_CIRCUIT {
         numLayers = MAX_NUM_LAYERS;
         numSelectorLayers = 1;
         sizeInputLayer = MAX_INTERNAL_LAYER_SIZE;
-        numOutputs = MAX_INTERNAL_LAYER_SIZE;
+        sizeOutputLayer = MAX_INTERNAL_LAYER_SIZE;
         sizeLayer = MAX_INTERNAL_LAYER_SIZE;
-        outputLayerSize = MAX_OUTPUTS;
-        predictMethod = 0;
-        memset(allowedFNC, 1, sizeof(allowedFNC)); // allow all functions by default
+        sizeOutputLayer = MAX_OUTPUTS;
+        predictionMethod = 0;
+        memset(allowedFunctions, 1, sizeof(allowedFunctions)); // allow all functions by default
         
 		allowPrunning = true;
         numTestVectors = 100;
         testVectors = NULL;
-        testVectorGenerMethod = 0;
 		testVectorLength = MAX_INPUTS;
-		testVectorBalance = 0;
         changeGalibSeedFrequency = 0;
 		saveTestVectors = 0;
-        testVectorChangeGener = 0;
-		TVCGProgressive = false;
+        testVectorChangeFreq = 0;
+        testVectorChangeProgressive = false;
 		evaluateEveryStep = false;
         evaluateBeforeTestVectorChange = false;
         numBestPredictors = 1;

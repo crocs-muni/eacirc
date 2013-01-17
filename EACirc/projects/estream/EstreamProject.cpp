@@ -54,7 +54,7 @@ int EstreamProject::generateTestVectors() {
         for (int input = 0; input < MAX_INPUTS; input++) {
             pGACirc->testVectors[testSet][input] = inputs[input];
         }
-        for (int output = 0; output < pGACirc->numOutputs; output++)
+        for (int output = 0; output < pGACirc->sizeOutputLayer; output++)
             pGACirc->testVectors[testSet][MAX_INPUTS+output] = outputs[output];
     }
     return STAT_OK;
@@ -82,7 +82,7 @@ void EstreamProject::getTestVector(){
                 rndGen->getRandomFromInterval(1, &streamnum);
             numstats[streamnum]++;
             //Signalize the correct value
-            for (int output = 0; output < pGACirc->numOutputs; output++) outputs[output] = streamnum * 0xff;
+            for (int output = 0; output < pGACirc->sizeOutputLayer; output++) outputs[output] = streamnum * 0xff;
 
             //generate the plaintext for stream
             if ((streamnum == 0 && pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) ||

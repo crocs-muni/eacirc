@@ -64,7 +64,7 @@ int testDistinctorCircuit(string filename1, string filename2) {
             inputs[e] = accumulator[i+e];
         }
         circuit(inputs, outputs);
-        for (int e=0; e<pGACirc->outputLayerSize; e++){
+        for (int e=0; e<pGACirc->sizeOutputLayer; e++){
             if (outputs[e] <= UCHAR_MAX/2) {
                 match++;
             }
@@ -85,7 +85,7 @@ int testDistinctorCircuit(string filename1, string filename2) {
             inputs[e] = accumulator2[i+e];
         }
         circuit(inputs, outputs);
-        for (int e=0; e<pGACirc->outputLayerSize; e++) {
+        for (int e=0; e<pGACirc->sizeOutputLayer; e++) {
             if (outputs[e] > UCHAR_MAX/2) {
                 match++;
             }

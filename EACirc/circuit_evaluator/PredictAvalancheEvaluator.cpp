@@ -61,7 +61,7 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 	int ppMatch = 0;
 
 	// COMPARE THE STREAMS
-	for (int out = 0; out < pGACirc->outputLayerSize; out++) {
+	for (int out = 0; out < pGACirc->sizeOutputLayer; out++) {
 		for (int bit = 0; bit < NUM_BITS; bit++) {
 			// COMPARE VALUE ON bit-th POSITION
 			if ((inputStream[out] & (unsigned char) pGACirc->precompPow[bit]) == (outputStream[out] & (unsigned char) pGACirc->precompPow[bit]))

@@ -86,11 +86,11 @@ void EACirc::loadConfiguration(const string filename) {
     }
 
     if (basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0 &&
-            basicSettings.gaCircuitConfig.changeGalibSeedFrequency % basicSettings.gaCircuitConfig.testVectorChangeGener != 0) {
+            basicSettings.gaCircuitConfig.changeGalibSeedFrequency % basicSettings.gaCircuitConfig.testVectorChangeFreq != 0) {
         mainLogger.out() << "error: GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    if (basicSettings.gaCircuitConfig.TVCGProgressive == 1 &&
+    if (basicSettings.gaCircuitConfig.testVectorChangeProgressive == 1 &&
             basicSettings.gaCircuitConfig.changeGalibSeedFrequency != 0) {
         mainLogger.out() << "error: Prograsive teste vector generation cannot be used when saving state." << endl;
         m_status = STAT_CONFIG_INCORRECT;
@@ -488,16 +488,16 @@ void EACirc::run() {
         }
 
         // GENERATE TEST VECTORS IF NEEDED
-        if (basicSettings.gaCircuitConfig.TVCGProgressive) {
+        if (basicSettings.gaCircuitConfig.testVectorChangeProgressive) {
             // TODO: understand and correct
-            if (changed > m_actGener/basicSettings.gaCircuitConfig.testVectorChangeGener + 1) {
+            if (changed > m_actGener/basicSettings.gaCircuitConfig.testVectorChangeFreq + 1) {
                 m_project->generateTestVectors();
                 //m_evaluator->generateTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
         } else {
-            if (m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeGener) == 1) {
+            if (m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeFreq) == 1) {
 
                 //temporary
                 /* temporaroly moving to run cycle, since random keys are generated only on creation of EncryptorDecryptor
@@ -512,11 +512,11 @@ void EACirc::run() {
                 //m_evaluator->generateTestVectors();
             }
             if ( basicSettings.gaCircuitConfig.evaluateBeforeTestVectorChange &&
-                 m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeGener) == 0) {
+                 m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeFreq) == 0) {
                 evaluateNow = true;
             }
             if (!basicSettings.gaCircuitConfig.evaluateBeforeTestVectorChange &&
-                 m_actGener % (basicSettings.gaCircuitConfig.testVectorChangeGener) == 1) {
+                 m_actGener % (basicSettings.gaCircuitConfig.testVectorChangeFreq) == 1) {
                 evaluateNow = true;
             }
         }

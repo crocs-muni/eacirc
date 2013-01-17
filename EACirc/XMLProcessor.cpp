@@ -18,7 +18,6 @@ void LoadConfigScript(TiXmlNode *pRoot, BASIC_INIT_DATA* pBasicSettings) {
     pBasicSettings->loadInitialPopulation = (atoi(getXMLElementValue(pRoot,"MAIN/LOAD_INITIAL_POPULATION").c_str())) ? true : false;
     pBasicSettings->gaConfig.numGenerations = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
     pBasicSettings->gaCircuitConfig.changeGalibSeedFrequency = atol(getXMLElementValue(pRoot,"MAIN/SAVE_STATE_FREQ").c_str());
-    pBasicSettings->gaCircuitConfig.testVectorGenerMethod = atol(getXMLElementValue(pRoot,"MAIN/TEST_VECTOR_GENERATION_METHOD").c_str());
     pBasicSettings->rndGen.QRBGSPath = getXMLElementValue(pRoot,"MAIN/QRNG_PATH");
 
     //
@@ -43,39 +42,39 @@ void LoadConfigScript(TiXmlNode *pRoot, BASIC_INIT_DATA* pBasicSettings) {
     pBasicSettings->gaCircuitConfig.numLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_LAYERS").c_str());
     pBasicSettings->gaCircuitConfig.numSelectorLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_SELECTOR_LAYERS").c_str());
     pBasicSettings->gaCircuitConfig.sizeLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_LAYER").c_str());
-    pBasicSettings->gaCircuitConfig.outputLayerSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
+    pBasicSettings->gaCircuitConfig.sizeOutputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
     pBasicSettings->gaCircuitConfig.sizeInputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
-    pBasicSettings->gaCircuitConfig.numLayerConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
-    pBasicSettings->gaCircuitConfig.predictMethod = atoi(getXMLElementValue(pRoot,"CIRCUIT/PREDICTION_METHOD").c_str());
+    pBasicSettings->gaCircuitConfig.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
+    pBasicSettings->gaCircuitConfig.predictionMethod = atoi(getXMLElementValue(pRoot,"CIRCUIT/PREDICTION_METHOD").c_str());
     pBasicSettings->gaCircuitConfig.genomeSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/GENOME_SIZE").c_str());
     pBasicSettings->gaCircuitConfig.allowPrunning = (atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOW_PRUNNING").c_str())) ? true : false;
 
     //
     // ALLOWED FUNCTIONS
     //
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_OR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_OR").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_AND] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_AND").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_CONST] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_CONST").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_XOR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_XOR").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NOR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOR").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_NAND] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NAND").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ROTL] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ROTL").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ROTR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ROTR").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_SUM] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUM").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_SUBS] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUBS").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_ADD] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ADD").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_MULT] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_MULT").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_DIV] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_DIV").c_str());
-    pBasicSettings->gaCircuitConfig.allowedFNC[FNC_READX] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_READX").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_OR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_OR").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_AND] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_AND").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_CONST] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_CONST").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_XOR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_XOR").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_NOR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOR").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_NAND] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NAND").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_ROTL] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ROTL").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_ROTR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ROTR").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_SUM] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUM").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_SUBS] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUBS").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_ADD] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ADD").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_MULT] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_MULT").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_DIV] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_DIV").c_str());
+    pBasicSettings->gaCircuitConfig.allowedFunctions[FNC_READX] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_READX").c_str());
 
     //
     // TEST VECTORS
     //
     pBasicSettings->gaCircuitConfig.testVectorLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_LENGTH").c_str());
     pBasicSettings->gaCircuitConfig.numTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/NUM_TEST_VECTORS").c_str());
-    pBasicSettings->gaCircuitConfig.testVectorChangeGener = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_FREQ").c_str());
-    pBasicSettings->gaCircuitConfig.TVCGProgressive = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_PROGRESSIVE").c_str())) ? true : false;
+    pBasicSettings->gaCircuitConfig.testVectorChangeFreq = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_FREQ").c_str());
+    pBasicSettings->gaCircuitConfig.testVectorChangeProgressive = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_PROGRESSIVE").c_str())) ? true : false;
     pBasicSettings->gaCircuitConfig.saveTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SAVE_TEST_VECTORS").c_str());
     pBasicSettings->gaCircuitConfig.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pBasicSettings->gaCircuitConfig.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;

@@ -11,7 +11,7 @@ ICircuitEvaluator::ICircuitEvaluator() {
 }
 
 ICircuitEvaluator* ICircuitEvaluator::getCircEvalClass(void) {
-	switch (pGACirc->predictMethod) {
+	switch (pGACirc->predictionMethod) {
 		case PREDICT_BIT:
 			return new PredictBitCircuitEvaluator();
 			break;

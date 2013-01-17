@@ -24,21 +24,21 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
     predictParity = (predictParity & 0x01) ? 1 : 0; 
             
     // COMPUTE REAL PAIRITY OF SIGNALIZED BITS
-    for (int out = 1; out < pGACirc->outputLayerSize; out++) {
+    for (int out = 1; out < pGACirc->sizeOutputLayer; out++) {
         if (outputs[out] & 0x80) { // mask out highest bit (used/not used flag)
             // THIS OUTPUT WILL BE USED 
             // OBTAIN VALUE OF ENCODED BIT
             offsetBit = outputs[out] & 0x7f;  // take all bits except used/not used bit
                     
             // CHECK IF THIS BIT WAS NOT ALREADY USED AND DO NOT EXCEED THE NUMBER OF BITS IN OUTPUT
-            if (usedBits[offsetBit] == 0 && (offsetBit < pGACirc->numOutputs * NUM_BITS)) {
+            if (usedBits[offsetBit] == 0 && (offsetBit < pGACirc->sizeOutputLayer * NUM_BITS)) {
                 // MARK THIS BIT AS USED TO PREVENT MULTIPLE SELECTION OF THE SAME BITS
                 usedBits[offsetBit] = 1;
                         
                 offsetBlock = (int) offsetBit / NUM_BITS;
                 offsetBit = offsetBit - (offsetBlock * NUM_BITS);
                 assert(offsetBit < NUM_BITS);
-                assert(offsetBlock < pGACirc->numOutputs);
+                assert(offsetBlock < pGACirc->sizeOutputLayer);
 
                 if (correctOutputs[offsetBlock] & (unsigned char) pGACirc->precompPow[offsetBit]) {
                     // SIGNALIZED BIT HAS VALUE 1

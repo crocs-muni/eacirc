@@ -8,7 +8,7 @@ void PredictHammingWeightCircuitEvaluator::evaluateCircuit(unsigned char* output
     int predictWeight = 0;
     int correctWeight = 0;
             
-    for (int out = 0; out < pGACirc->outputLayerSize; out++) {
+    for (int out = 0; out < pGACirc->sizeOutputLayer; out++) {
 		if (usePredictorsMask[out] == 1) {
 			predictWeight = 0;
 			correctWeight = 0;
