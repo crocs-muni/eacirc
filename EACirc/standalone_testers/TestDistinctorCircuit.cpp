@@ -13,12 +13,9 @@
 #include "tinyxml.h"
 #include "math.h"
 #include "time.h"
-#include "Evaluator.h"
 #include "CircuitGenome.h"
 #include "projects/estream/estreamInterface.h"
 #include "projects/estream/EncryptorDecryptor.h"
-#include "test_vector_generator/ITestVectGener.h"
-#include "test_vector_generator/EstreamTestVectGener.h"
 #include "EAC_circuit.h"
 
 //TEST THE OUTPUT FILE AGAINT TEST DATA

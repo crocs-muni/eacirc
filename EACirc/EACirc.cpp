@@ -15,7 +15,6 @@
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
-#include "Evaluator.h"
 #include "CircuitGenome.h"
 #include "EAC_circuit.h"
 #include "standalone_testers/TestDistinctorCircuit.h"
@@ -36,7 +35,7 @@ GA_CIRCUIT*             pGACirc = NULL;
 //EncryptorDecryptor*		encryptorDecryptor = NULL;
 
 EACirc::EACirc()
-    : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_project(NULL), m_gaData(NULL),
+    : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
 }
 
@@ -144,6 +143,8 @@ void EACirc::saveState(const string filename) {
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
 
+    // save project
+
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
         mainLogger.out() << "error: Cannot save state to file " << filename << "." << endl;
@@ -171,6 +172,8 @@ void EACirc::loadState(const string filename) {
     mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
+
+    // load project
 
     delete pRoot;
     mainLogger.out() << "info: State successfully loaded from file " << filename << "." << endl;
@@ -206,6 +209,8 @@ void EACirc::createState() {
     // GENERATE SEED FOR GALIB
     mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     mainLogger.out() << "info: State successfully initialized." << endl;
+    // INIT PROJECT
+    m_project->initialzeProjectState();
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -328,17 +333,9 @@ void EACirc::initializeState() {
     // load or create POPULATION
     if (basicSettings.loadInitialPopulation) {
         loadPopulation(FILE_POPULATION);
-        mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
-        // encryptorDecryptor should not be initialized (extra usage of random generator!)
-        // encryptorDecryptor = new EncryptorDecryptor();
-        //m_evaluator = new Evaluator();
     } else {
-        //mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
-        //encryptorDecryptor = new EncryptorDecryptor();
-        //m_evaluator = new Evaluator();
-        m_project->initialzeProjectState();
         m_project->generateTestVectors();
-        //m_evaluator->generateTestVectors();
+        mainLogger.out() << "info: initial test vectors generated." << endl;
         createPopulation();
     }
 
@@ -366,24 +363,6 @@ void EACirc::prepare() {
         std::remove(FILE_TEST_DATA_1);
         std::remove(FILE_TEST_DATA_2);
     }
-
-    //LOG THE TESTVECTGENER METHOD
-    /*
-    if (basicSettings.gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {
-        if (!basicSettings.recommenceComputation) {
-            ofstream out(FILE_FITNESS_PROGRESS, ios::app);
-            out << "Using Ecrypt candidate n." << basicSettings.gaCircuitConfig.testVectorEstream;
-            out << " (" <<  basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds) AND candidate n.";
-            out << basicSettings.gaCircuitConfig.testVectorEstream2 << " (";
-            out << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
-            out.close();
-        }
-        mainLogger.out() << "info: stream1: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream);
-        mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount << " rounds)" << endl;
-        mainLogger.out() << "info: stream2: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream2);
-        mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
-    }
-    */
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
@@ -481,9 +460,7 @@ void EACirc::run() {
         // DO NOT EVOLVE..
         if (basicSettings.gaConfig.evolutionOff) {
             m_project->generateTestVectors();
-            //m_evaluator->generateTestVectors();
             evaluateStep(genomeBest, m_actGener);
-            //m_evaluator->evaluateStep(genomeBest, m_actGener);
             continue;
         }
 
@@ -492,24 +469,13 @@ void EACirc::run() {
             // TODO: understand and correct
             if (changed > m_actGener/basicSettings.gaCircuitConfig.testVectorChangeFreq + 1) {
                 m_project->generateTestVectors();
-                //m_evaluator->generateTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
         } else {
             if (m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeFreq) == 1) {
-
-                //temporary
-                /* temporaroly moving to run cycle, since random keys are generated only on creation of EncryptorDecryptor
-                  TODO: remake tenerating of test vectors so that IV and KEY is also generated when needed */
-                mainLogger.out() << "info: recreating Encryptor-Decryptor." << endl;
-                // INIT EVALUATOR and ENCRYPTOR-DECRYPTOR (according to loaded settings)
-                //if (encryptorDecryptor != NULL) delete encryptorDecryptor;
-                //encryptorDecryptor = NULL;
-                //encryptorDecryptor = new EncryptorDecryptor();
-
                 m_project->generateTestVectors();
-                //m_evaluator->generateTestVectors();
+                mainLogger.out() << "info: test vectors regenerated." << endl;
             }
             if ( basicSettings.gaCircuitConfig.evaluateBeforeTestVectorChange &&
                  m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeFreq) == 0) {
@@ -532,7 +498,6 @@ void EACirc::run() {
 
         if (evaluateNow || basicSettings.gaCircuitConfig.evaluateEveryStep) {
             evaluateStep(genomeBest, m_actGener + m_oldGenerations);
-            //m_evaluator->evaluateStep(genomeBest, m_actGener + m_oldGenerations);
             evaluateNow = false;
         }
 

@@ -25,7 +25,7 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     estreamSettings.testVectorEstreamMethod = atoi(getXMLElementValue(pRoot,"ESTREAM/ESTREAM_USAGE_TYPE").c_str());
     estreamSettings.testVectorEstream = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str());
     estreamSettings.testVectorEstream2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_2").c_str());
-    estreamSettings.testVectorBalance = atoi(getXMLElementValue(pRoot,"ESTREAMS/BALLANCED_TEST_VECTORS").c_str());
+    estreamSettings.testVectorBalance = atoi(getXMLElementValue(pRoot,"ESTREAM/BALLANCED_TEST_VECTORS").c_str());
     estreamSettings.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"ESTREAM/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
     estreamSettings.limitAlgRoundsCount = atoi(getXMLElementValue(pRoot,"ESTREAM/ROUNDS_ALG_1").c_str());
     estreamSettings.limitAlgRoundsCount2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ROUNDS_ALG_2").c_str());
@@ -186,8 +186,8 @@ void EstreamProject::getTestVector(){
         }
 
         int tvg = 0;
-        if (streamnum == 0) tvg = pGACirc->testVectorEstream;
-        else tvg = pGACirc->testVectorEstream2;
+        if (streamnum == 0) tvg = pEstreamSettings->testVectorEstream;
+        else tvg = pEstreamSettings->testVectorEstream2;
         tvfile << setfill('0');
 
         if (memcmp(inputs,plain,pGACirc->testVectorLength) != 0) {

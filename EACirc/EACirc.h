@@ -5,7 +5,6 @@
 #include "random_generator/IRndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
-#include "Evaluator.h"
 //#include "estream/EncryptorDecryptor.h"
 #include "projects/IProject.h"
 
@@ -27,8 +26,6 @@ class EACirc {
     unsigned long m_currentGalibSeed;
     //! structure of main settings
     BASIC_INIT_DATA basicSettings;
-    //! evaluator
-    Evaluator* m_evaluator;
     //! project
     IProject* m_project;
     //! genetics algorithm instance
