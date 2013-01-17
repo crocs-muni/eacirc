@@ -17,12 +17,9 @@
 #include "XMLProcessor.h"
 #include "Evaluator.h"
 #include "CircuitGenome.h"
-#include "estream/estreamInterface.h"
-#include "test_vector_generator/ITestVectGener.h"
-#include "test_vector_generator/EstreamTestVectGener.h"
-#include "estream/EncryptorDecryptor.h"
 #include "EAC_circuit.h"
 #include "standalone_testers/TestDistinctorCircuit.h"
+#include "projects/IProject.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -36,20 +33,22 @@
 IRndGen*                rndGen = NULL;
 IRndGen*                biasRndGen = NULL;
 GA_CIRCUIT*             pGACirc = NULL;
-EncryptorDecryptor*		encryptorDecryptor = NULL;
+//EncryptorDecryptor*		encryptorDecryptor = NULL;
 
 EACirc::EACirc()
-    : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_gaData(NULL),
+    : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_evaluator(NULL), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
 }
 
 EACirc::~EACirc() {
     if (m_gaData) delete m_gaData;
     m_gaData = NULL;
-    if (m_evaluator) delete m_evaluator;
-    m_evaluator = NULL;
-    if (encryptorDecryptor) delete encryptorDecryptor;
-    encryptorDecryptor = NULL;
+    //if (m_evaluator) delete m_evaluator;
+    //m_evaluator = NULL;
+    if (m_project) delete m_project;
+    m_project = NULL;
+    //if (encryptorDecryptor) delete encryptorDecryptor;
+    //encryptorDecryptor = NULL;
     if (pGACirc) pGACirc->release();
     pGACirc = NULL;
     if (rndGen) delete rndGen;
@@ -66,7 +65,15 @@ int EACirc::getStatus() const {
 
 void EACirc::loadConfiguration(const string filename) {
     if (m_status != STAT_OK) return;
-    m_status = LoadConfigScript(filename, &basicSettings);
+
+    TiXmlNode* pRoot = NULL;
+    m_status = loadXMLFile(pRoot, filename);
+    if (m_status != STAT_OK) {
+        mainLogger.out() << "error: cannot load configuration." << endl;
+        return;
+    }
+
+    LoadConfigScript(pRoot, &basicSettings);
     if (m_status != STAT_OK) {
         mainLogger.out() << "error: Could not read configuration data from " << FILE_CONFIG << "." << endl;
     }
@@ -91,8 +98,15 @@ void EACirc::loadConfiguration(const string filename) {
 
     if (m_status != STAT_OK) return;
 
-    // init project
-    // load project config
+    m_project = IProject::getProject(basicSettings.projectType);
+    if (m_project == NULL) {
+        m_status = STAT_PROJECT_ERROR;
+        return;
+    }
+    m_status = m_project->loadProjectConfiguration(pRoot);
+
+    // must free memory manually!
+    delete pRoot;
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_CONFIG_LOADED;
@@ -106,7 +120,7 @@ void EACirc::saveState(const string filename) {
     TiXmlElement* pElem2;
 
     pElem = new TiXmlElement("generations_required");
-    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.nGeners + m_oldGenerations).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.numGenerations + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("generations_finished");
     pElem->LinkEndChild(new TiXmlText(toString(m_actGener + m_oldGenerations).c_str()));
@@ -150,7 +164,7 @@ void EACirc::loadState(const string filename) {
     m_oldGenerations = atol(getXMLElementValue(pRoot,"generations_finished").c_str());
     // restore main seed
     istringstream(getXMLElementValue(pRoot,"main_seed")) >> m_originalSeed;
-    basicSettings.rndGen.randomSeed = m_originalSeed;
+    basicSettings.rndGen.seed = m_originalSeed;
     // restore current galib seed
     istringstream(getXMLElementValue(pRoot,"current_galib_seed")) >> m_currentGalibSeed;
     // initialize random generators (main, quantum, bias)
@@ -165,8 +179,8 @@ void EACirc::loadState(const string filename) {
 void EACirc::createState() {
     // INIT MAIN GENERATOR
     // if useFixedSeed and proper seed was specified, use it
-    if (basicSettings.rndGen.useFixedSeed && basicSettings.rndGen.randomSeed != 0) {
-        m_originalSeed = basicSettings.rndGen.randomSeed;
+    if (basicSettings.rndGen.useFixedSeed && basicSettings.rndGen.seed != 0) {
+        m_originalSeed = basicSettings.rndGen.seed;
         mainGenerator = new MD5RndGen(m_originalSeed);
         mainLogger.out() << "info: Using fixed seed: " << m_originalSeed << endl;
     } else {
@@ -186,7 +200,7 @@ void EACirc::createState() {
     mainLogger.out() << "info: Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
     // INIT BIAS RNDGEN
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
-    biasRndGen = new BiasRndGen(generatorSeed, basicSettings.rndGen.QRBGSPath, basicSettings.rndGen.biasFactor);
+    biasRndGen = new BiasRndGen(generatorSeed, basicSettings.rndGen.QRBGSPath, basicSettings.rndGen.biasRndGenFactor);
     mainLogger.out() << "info: Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
 
     // GENERATE SEED FOR GALIB
@@ -200,14 +214,14 @@ void EACirc::savePopulation(const string filename) {
     TiXmlElement* pElem2 = NULL;
 
     pElem = new TiXmlElement("population_size");
-    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.popSize).c_str()));
+    pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaConfig.popupationSize).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("genome_size");
     pElem->LinkEndChild(new TiXmlText(toString(basicSettings.gaCircuitConfig.genomeSize).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("population");
     string textCircuit;
-    for (int i = 0; i < basicSettings.gaConfig.popSize; i++) {
+    for (int i = 0; i < basicSettings.gaConfig.popupationSize; i++) {
         // note: it is not necessary to call individual i in SCALED order
         //       however then the population files differ in order ('diff' cannot be used to fing bugs)
         GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
@@ -281,7 +295,7 @@ void EACirc::createPopulation() {
     genome.initializer(CircuitGenome::Initializer);
     genome.mutator(CircuitGenome::Mutator);
     genome.crossover(CircuitGenome::Crossover);
-    GAPopulation population(genome,basicSettings.gaConfig.popSize);
+    GAPopulation population(genome,basicSettings.gaConfig.popupationSize);
     // create genetic algorithm and initialize population
     seedAndResetGAlib(population);
     mainLogger.out() << "info: Initializing population." << endl;
@@ -317,12 +331,14 @@ void EACirc::initializeState() {
         mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
         // encryptorDecryptor should not be initialized (extra usage of random generator!)
         // encryptorDecryptor = new EncryptorDecryptor();
-        m_evaluator = new Evaluator();
+        //m_evaluator = new Evaluator();
     } else {
-        mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
-        encryptorDecryptor = new EncryptorDecryptor();
-        m_evaluator = new Evaluator();
-        m_evaluator->generateTestVectors();
+        //mainLogger.out() << "info: Initializing Evaluator and Encryptor-Decryptor." << endl;
+        //encryptorDecryptor = new EncryptorDecryptor();
+        //m_evaluator = new Evaluator();
+        m_project->initialzeProjectState();
+        m_project->generateTestVectors();
+        //m_evaluator->generateTestVectors();
         createPopulation();
     }
 
@@ -352,6 +368,7 @@ void EACirc::prepare() {
     }
 
     //LOG THE TESTVECTGENER METHOD
+    /*
     if (basicSettings.gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {
         if (!basicSettings.recommenceComputation) {
             ofstream out(FILE_FITNESS_PROGRESS, ios::app);
@@ -366,6 +383,7 @@ void EACirc::prepare() {
         mainLogger.out() << "info: stream2: using " << estreamToString(basicSettings.gaCircuitConfig.testVectorEstream2);
         mainLogger.out() << " (" << basicSettings.gaCircuitConfig.limitAlgRoundsCount2 << " rounds)" << endl;
     }
+    */
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
@@ -386,17 +404,48 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     }
     m_gaData = gaTemp;
     // initialize the new genetic algorithm
-    m_gaData->populationSize(basicSettings.gaConfig.popSize);
-    m_gaData->nReplacement(2 * basicSettings.gaConfig.popSize / 3);
-    m_gaData->nGenerations(basicSettings.gaConfig.nGeners);
-    m_gaData->pCrossover(basicSettings.gaConfig.pCross);
-    m_gaData->pMutation(basicSettings.gaConfig.pMutt);
+    m_gaData->populationSize(basicSettings.gaConfig.popupationSize);
+    m_gaData->nReplacement(2 * basicSettings.gaConfig.popupationSize / 3);
+    m_gaData->nGenerations(basicSettings.gaConfig.numGenerations);
+    m_gaData->pCrossover(basicSettings.gaConfig.probCrossing);
+    m_gaData->pMutation(basicSettings.gaConfig.probMutationt);
     m_gaData->scoreFilename(FILE_GALIB_SCORES);
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->flushFrequency(1);	// specify how often to write the score to disk
     m_gaData->selectScores(GAStatistics::AllScores);
     mainLogger.out() << "info: GAlib seeded and reset." << endl;
 }
+
+int EACirc::evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener) {
+
+    pGACirc->bestGenerFit = 0;
+
+    float bestFit = CircuitGenome::Evaluator(genome);
+    //float bestFit = genome.score();
+
+    ofstream bestfitfile(FILE_BEST_FITNESS, ios::app);
+    ofstream avgfitfile(FILE_AVG_FITNESS, ios::app);
+    bestfitfile << actGener << "," << bestFit << endl;
+    if (pGACirc->numAvgGenerFit > 0) avgfitfile << actGener << "," << pGACirc->avgGenerFit / pGACirc->numAvgGenerFit << endl;
+    else avgfitfile << actGener << "," << "division by zero!!" << endl;
+    bestfitfile.close();
+    avgfitfile.close();
+
+    ostringstream os2;
+    os2 << "(" << actGener << " gen.): " << pGACirc->avgGenerFit << "/" << pGACirc->numAvgGenerFit << " avg, " << bestFit << " best, avgPredict: " << pGACirc->avgPredictions / pGACirc->numAvgGenerFit << ", totalBest: " << pGACirc->maxFit;
+    string message = os2.str();
+    // SAVE FITNESS PROGRESS
+    ofstream out(FILE_FITNESS_PROGRESS, ios::app);
+    out << message << endl;
+    out.close();
+
+    pGACirc->avgGenerFit = 0;
+    pGACirc->numAvgGenerFit = 0;
+    pGACirc->avgPredictions = 0;
+
+    return 0;
+}
+
 
 void EACirc::run() {
     if (m_status != STAT_OK) return;
@@ -418,7 +467,7 @@ void EACirc::run() {
     genomeBest = m_gaData->population().individual(0);
 
     mainLogger.out() << "info: Starting evolution." << endl;
-    for (m_actGener = 1; m_actGener <= basicSettings.gaConfig.nGeners; m_actGener++) {
+    for (m_actGener = 1; m_actGener <= basicSettings.gaConfig.numGenerations; m_actGener++) {
         if (m_status != STAT_OK) {
             mainLogger.out() << "error: Ooops, something went wrong, stopping. " << "(error: " << ErrorToString(m_status) << " )." << endl;
             break;
@@ -426,13 +475,15 @@ void EACirc::run() {
 
         //FRACTION FILE FOR BOINC
         fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
-        fitfile << ((float)(m_actGener))/((float)(basicSettings.gaConfig.nGeners));
+        fitfile << ((float)(m_actGener))/((float)(basicSettings.gaConfig.numGenerations));
         fitfile.close();
 
         // DO NOT EVOLVE..
         if (basicSettings.gaConfig.evolutionOff) {
-            m_evaluator->generateTestVectors();
-            m_evaluator->evaluateStep(genomeBest, m_actGener);
+            m_project->generateTestVectors();
+            //m_evaluator->generateTestVectors();
+            evaluateStep(genomeBest, m_actGener);
+            //m_evaluator->evaluateStep(genomeBest, m_actGener);
             continue;
         }
 
@@ -440,7 +491,8 @@ void EACirc::run() {
         if (basicSettings.gaCircuitConfig.TVCGProgressive) {
             // TODO: understand and correct
             if (changed > m_actGener/basicSettings.gaCircuitConfig.testVectorChangeGener + 1) {
-                m_evaluator->generateTestVectors();
+                m_project->generateTestVectors();
+                //m_evaluator->generateTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
@@ -452,11 +504,12 @@ void EACirc::run() {
                   TODO: remake tenerating of test vectors so that IV and KEY is also generated when needed */
                 mainLogger.out() << "info: recreating Encryptor-Decryptor." << endl;
                 // INIT EVALUATOR and ENCRYPTOR-DECRYPTOR (according to loaded settings)
-                if (encryptorDecryptor != NULL) delete encryptorDecryptor;
-                encryptorDecryptor = NULL;
-                encryptorDecryptor = new EncryptorDecryptor();
+                //if (encryptorDecryptor != NULL) delete encryptorDecryptor;
+                //encryptorDecryptor = NULL;
+                //encryptorDecryptor = new EncryptorDecryptor();
 
-                m_evaluator->generateTestVectors();
+                m_project->generateTestVectors();
+                //m_evaluator->generateTestVectors();
             }
             if ( basicSettings.gaCircuitConfig.evaluateBeforeTestVectorChange &&
                  m_actGener %(basicSettings.gaCircuitConfig.testVectorChangeGener) == 0) {
@@ -478,7 +531,8 @@ void EACirc::run() {
         genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
 
         if (evaluateNow || basicSettings.gaCircuitConfig.evaluateEveryStep) {
-            m_evaluator->evaluateStep(genomeBest, m_actGener + m_oldGenerations);
+            evaluateStep(genomeBest, m_actGener + m_oldGenerations);
+            //m_evaluator->evaluateStep(genomeBest, m_actGener + m_oldGenerations);
             evaluateNow = false;
         }
 

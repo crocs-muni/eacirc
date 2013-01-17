@@ -14,6 +14,7 @@ public:
     virtual string shortDescription() const = 0;
     virtual int loadProjectConfiguration(TiXmlNode* pRoot);
     virtual int generateTestVectors() = 0;
+    virtual int initialzeProjectState();
     virtual TiXmlNode* saveProjectState() const;
     virtual int loadProjectState(TiXmlNode* pRoot);
     static IProject* getProject(int projectType);

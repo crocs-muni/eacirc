@@ -1,5 +1,5 @@
 #include "PredictAvalancheEvaluator.h"
-#include "estream/EncryptorDecryptor.h"
+#include "projects/estream/EncryptorDecryptor.h"
 
 AvalancheEvaluator::AvalancheEvaluator() : ICircuitEvaluator(){
 }
@@ -9,6 +9,11 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 	unsigned char* inputStreamCheck = new unsigned char[pGACirc->testVectorLength];
 	unsigned char* outputStream = new unsigned char[pGACirc->testVectorLength];
 	unsigned char* outputStreamCheck = new unsigned char[pGACirc->testVectorLength];
+
+    // EDITED when creating infrastructure for projects
+    // edit BEGIN
+    EncryptorDecryptor* encryptorDecryptor = new EncryptorDecryptor;
+    // edit END
 
 	// OUTPUT LAYER CONTAINS CHANGED TV TO ENCRYPT
 	encryptorDecryptor->encrypt(correctOutputs,inputStream,0);
@@ -73,4 +78,9 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 	delete[] outputStream;
 	delete[] inputStreamCheck;
 	delete[] outputStreamCheck;
+
+    // EDITED when creating infrastructure for projects
+    // edit BEGIN
+    delete encryptorDecryptor;
+    // edit END
 }

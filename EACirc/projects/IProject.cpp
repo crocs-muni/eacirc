@@ -18,6 +18,10 @@ TiXmlNode* IProject::saveProjectState() const {
     return pNode;
 }
 
+int IProject::initialzeProjectState() {
+    return STAT_OK;
+}
+
 int IProject::loadProjectState(TiXmlNode *pRoot) {
     int loadedType = atoi(getXMLElementValue(pRoot,"@type").c_str());
     if ( loadedType != m_type) {
@@ -39,7 +43,7 @@ IProject* IProject::getProject(int projectType) {
         break;
     default:
         mainLogger.out() << "error: Cannot initialize project - unknown type (" << projectType << ")." << endl;
-        project = NULL;
+        return NULL;
         break;
     }
     mainLogger.out() << "info: Project successfully initialized. (" << project->shortDescription() << ")" << endl;

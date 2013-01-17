@@ -3,29 +3,20 @@
 #include "random_generator/BiasRndGen.h"
 #include <typeinfo>
 
-int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings) {
-    int status = STAT_OK;
-
-    string value;
-    TiXmlNode* pRoot = NULL;
-    status = loadXMLFile(pRoot, filename);
-    if (status != STAT_OK) {
-        mainLogger.out() << "error: cannot load configuration." << endl;
-        return status;
-    }
-
+void LoadConfigScript(TiXmlNode *pRoot, BASIC_INIT_DATA* pBasicSettings) {
     //
     // PROGRAM VERSION AND DATE
     //
-    pBasicSettings->simulDate = getXMLElementValue(pRoot,"INFO/DATE");
-    pBasicSettings->simulSWVersion = getXMLElementValue(pRoot,"INFO/VERSION");
+    pBasicSettings->computationDate = getXMLElementValue(pRoot,"INFO/DATE");
+    pBasicSettings->swVersion = getXMLElementValue(pRoot,"INFO/VERSION");
 
     //
     // MAIN SETTINGS
     //
+    pBasicSettings->projectType = atoi(getXMLElementValue(pRoot,"MAIN/PROJECT").c_str());
     pBasicSettings->recommenceComputation = (atoi(getXMLElementValue(pRoot,"MAIN/RECOMMENCE_COMPUTATION").c_str())) ? true : false;
     pBasicSettings->loadInitialPopulation = (atoi(getXMLElementValue(pRoot,"MAIN/LOAD_INITIAL_POPULATION").c_str())) ? true : false;
-    pBasicSettings->gaConfig.nGeners = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
+    pBasicSettings->gaConfig.numGenerations = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
     pBasicSettings->gaCircuitConfig.changeGalibSeedFrequency = atol(getXMLElementValue(pRoot,"MAIN/SAVE_STATE_FREQ").c_str());
     pBasicSettings->gaCircuitConfig.testVectorGenerMethod = atol(getXMLElementValue(pRoot,"MAIN/TEST_VECTOR_GENERATION_METHOD").c_str());
     pBasicSettings->rndGen.QRBGSPath = getXMLElementValue(pRoot,"MAIN/QRNG_PATH");
@@ -34,26 +25,26 @@ int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings) {
     // RANDOM GENERATOR SETTINGS
     //
     pBasicSettings->rndGen.useFixedSeed = (atoi(getXMLElementValue(pRoot,"RANDOM/USE_FIXED_SEED").c_str())) ? true : false;
-    istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pBasicSettings->rndGen.randomSeed;
-    pBasicSettings->rndGen.type = atoi(getXMLElementValue(pRoot,"RANDOM/PRIMARY_RANDOM_TYPE").c_str());
-    pBasicSettings->rndGen.biasFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
+    istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pBasicSettings->rndGen.seed;
+    pBasicSettings->rndGen.primaryRandomType = atoi(getXMLElementValue(pRoot,"RANDOM/PRIMARY_RANDOM_TYPE").c_str());
+    pBasicSettings->rndGen.biasRndGenFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
 
     //
     // GA SETTINGS
     //
     pBasicSettings->gaConfig.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;
-    pBasicSettings->gaConfig.pMutt = atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
-    pBasicSettings->gaConfig.pCross = atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
-    pBasicSettings->gaConfig.popSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());
+    pBasicSettings->gaConfig.probMutationt = atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
+    pBasicSettings->gaConfig.probCrossing = atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
+    pBasicSettings->gaConfig.popupationSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());
 
     //
     // GA CIRCUIT SETTINGS
     //
     pBasicSettings->gaCircuitConfig.numLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_LAYERS").c_str());
-    pBasicSettings->gaCircuitConfig.numSelectorLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_SELECT_LAYERS").c_str());
-    pBasicSettings->gaCircuitConfig.internalLayerSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_LAYER").c_str());
+    pBasicSettings->gaCircuitConfig.numSelectorLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_SELECTOR_LAYERS").c_str());
+    pBasicSettings->gaCircuitConfig.sizeLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_LAYER").c_str());
     pBasicSettings->gaCircuitConfig.outputLayerSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
-    pBasicSettings->gaCircuitConfig.numInputs = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
+    pBasicSettings->gaCircuitConfig.sizeInputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
     pBasicSettings->gaCircuitConfig.numLayerConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
     pBasicSettings->gaCircuitConfig.predictMethod = atoi(getXMLElementValue(pRoot,"CIRCUIT/PREDICTION_METHOD").c_str());
     pBasicSettings->gaCircuitConfig.genomeSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/GENOME_SIZE").c_str());
@@ -86,27 +77,8 @@ int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings) {
     pBasicSettings->gaCircuitConfig.testVectorChangeGener = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_FREQ").c_str());
     pBasicSettings->gaCircuitConfig.TVCGProgressive = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_PROGRESSIVE").c_str())) ? true : false;
     pBasicSettings->gaCircuitConfig.saveTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SAVE_TEST_VECTORS").c_str());
-    pBasicSettings->gaCircuitConfig.testVectorBalance = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/BALLANCED_TEST_VECTORS").c_str());
     pBasicSettings->gaCircuitConfig.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pBasicSettings->gaCircuitConfig.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
-
-    //
-    // ESTREAM TEST VECTOR CONFIG (IF ENABLED)
-    //
-    if (pBasicSettings->gaCircuitConfig.testVectorGenerMethod == ESTREAM_CONST) {
-        pBasicSettings->gaCircuitConfig.testVectorEstreamMethod = atoi(getXMLElementValue(pRoot,"ESTREAM/ESTREAM_USAGE_TYPE").c_str());
-        pBasicSettings->gaCircuitConfig.testVectorEstream = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str());
-        pBasicSettings->gaCircuitConfig.testVectorEstream2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_2").c_str());
-        pBasicSettings->gaCircuitConfig.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"ESTREAM/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
-        pBasicSettings->gaCircuitConfig.limitAlgRoundsCount = atoi(getXMLElementValue(pRoot,"ESTREAM/ROUNDS_ALG_1").c_str());
-        pBasicSettings->gaCircuitConfig.limitAlgRoundsCount2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ROUNDS_ALG_2").c_str());
-        pBasicSettings->gaCircuitConfig.estreamInputType= atoi(getXMLElementValue(pRoot,"ESTREAM/PLAINTEXT_TYPE").c_str());
-        pBasicSettings->gaCircuitConfig.estreamKeyType = atoi(getXMLElementValue(pRoot,"ESTREAM/KEY_TYPE").c_str());
-        pBasicSettings->gaCircuitConfig.estreamIVType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
-    }
-
-    delete pRoot;
-    return status;
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {

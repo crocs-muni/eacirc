@@ -6,12 +6,13 @@
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "Evaluator.h"
-#include "estream/EncryptorDecryptor.h"
+//#include "estream/EncryptorDecryptor.h"
+#include "projects/IProject.h"
 
 extern IRndGen* rndGen;
 extern IRndGen* biasRndGen;
 extern GA_CIRCUIT* pGACirc;
-extern EncryptorDecryptor* encryptorDecryptor;
+//extern EncryptorDecryptor* encryptorDecryptor;
 
 #define EACIRC_CONFIG_LOADED 0x01
 #define EACIRC_PREPARED 0x02
@@ -26,8 +27,10 @@ class EACirc {
     unsigned long m_currentGalibSeed;
     //! structure of main settings
     BASIC_INIT_DATA basicSettings;
-    //! evaluaor
+    //! evaluator
     Evaluator* m_evaluator;
+    //! project
+    IProject* m_project;
     //! genetics algorithm instance
     GASteadyStateGA* m_gaData;
     //! state of preparations we are in (config loaded? state initialized? see defines)
@@ -96,6 +99,8 @@ class EACirc {
       * @note sets eventual error code in m_status
       */
     void createPopulation();
+
+    int evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener);
 public:
     EACirc();
     ~EACirc();

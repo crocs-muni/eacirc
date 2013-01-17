@@ -3,32 +3,33 @@
 #include "estreamInterface.h"
 #include "test_vector_generator/ITestVectGener.h"
 #include <string>
+#include "EstreamProject.h"
 
 EncryptorDecryptor::EncryptorDecryptor() {
 
-	int numTestVectors = pGACirc->numTestVectors;
-	int numRounds = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount:-1;
-	int numRounds2 = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount2:-1;
+    int numTestVectors = pGACirc->numTestVectors;
+    int numRounds = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount:-1;
+    int numRounds2 = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount2:-1;
     for(int i = 0; i < 4; i++) {
         ctxarr[i] = NULL;
         ecryptarr[i] = NULL;
     }
 	
-	int testVectorEstream = pGACirc->testVectorEstream;
+    int testVectorEstream = pEstreamSettings->testVectorEstream;
 	int nR = numRounds;
 
-	if (pGACirc->estreamIVType == ESTREAM_GENTYPE_ZEROS)
+    if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_ZEROS)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
-	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_ONES)
+    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_ONES)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
-	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_RANDOM)
+    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_RANDOM)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
-	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_BIASRANDOM)
+    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_BIASRANDOM)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
 
 	for (int i=0; i<2; i++) {
 	   if (i == 1) {
-			   testVectorEstream = pGACirc->testVectorEstream2;
+               testVectorEstream = pEstreamSettings->testVectorEstream2;
 			   nR = numRounds2;
 		}
 	   switch (testVectorEstream) {
@@ -317,13 +318,13 @@ EncryptorDecryptor::EncryptorDecryptor() {
 			ecryptarr[2+i]->numRounds = nR;
 			ecryptarr[2+i]->ECRYPT_init();
 
-			if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_ZEROS)
+            if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_ZEROS)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
-			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_ONES)
+            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_ONES)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
-			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_RANDOM)
+            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_RANDOM)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
-			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_BIASRANDOM)
+            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_BIASRANDOM)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
 			
 

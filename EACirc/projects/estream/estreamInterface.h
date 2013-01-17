@@ -1,7 +1,7 @@
 #ifndef ESTREAM_INTERFACE_H
 #define ESTREAM_INTERFACE_H
 
-#include "estream/ciphers/ecrypt-portable.h"
+#include "projects/estream/ciphers/ecrypt-portable.h"
 
 typedef void* ECRYPT_ctx;
 
@@ -17,33 +17,33 @@ class EstreamInterface {
 		virtual void ECRYPT_decrypt_bytes(void* ctx, const u8 * ciphertext, u8 * plaintext, u32 msglen) = 0;
 };
 
-#include "estream/ciphers/abc/ecrypt-sync.h"
-#include "estream/ciphers/achterbahn/ecrypt-sync.h"
-#include "estream/ciphers/cryptmt/ecrypt-sync.h"
-#include "estream/ciphers/decim/ecrypt-sync.h"
-#include "estream/ciphers/dicing/ecrypt-sync.h"
-#include "estream/ciphers/dragon/ecrypt-sync.h"
-#include "estream/ciphers/edon80/ecrypt-sync.h"
-#include "estream/ciphers/ffcsr/ecrypt-sync.h"
-#include "estream/ciphers/fubuki/ecrypt-sync.h"
-#include "estream/ciphers/grain/ecrypt-sync.h"
-#include "estream/ciphers/hc-128/ecrypt-sync.h"
-#include "estream/ciphers/hermes/ecrypt-sync.h"
-#include "estream/ciphers/lex/ecrypt-sync.h"
-#include "estream/ciphers/mag/ecrypt-sync.h"
-#include "estream/ciphers/mickey/ecrypt-sync.h"
-#include "estream/ciphers/mir-1/ecrypt-sync.h"
-#include "estream/ciphers/pomaranch/ecrypt-sync.h"
-#include "estream/ciphers/py/ecrypt-sync.h"
-#include "estream/ciphers/rabbit/ecrypt-sync.h"
-#include "estream/ciphers/salsa20/ecrypt-sync.h"
-#include "estream/ciphers/sfinks/ecrypt-sync.h"
-#include "estream/ciphers/sosemanuk/ecrypt-sync.h"
-#include "estream/ciphers/trivium/ecrypt-sync.h"
-#include "estream/ciphers/tsc-4/ecrypt-sync.h"
-#include "estream/ciphers/wg/ecrypt-sync.h"
-#include "estream/ciphers/yamb/ecrypt-sync.h"
-#include "estream/ciphers/zk-crypt/ecrypt-sync.h"
+#include "projects/estream/ciphers/abc/ecrypt-sync.h"
+#include "projects/estream/ciphers/achterbahn/ecrypt-sync.h"
+#include "projects/estream/ciphers/cryptmt/ecrypt-sync.h"
+#include "projects/estream/ciphers/decim/ecrypt-sync.h"
+#include "projects/estream/ciphers/dicing/ecrypt-sync.h"
+#include "projects/estream/ciphers/dragon/ecrypt-sync.h"
+#include "projects/estream/ciphers/edon80/ecrypt-sync.h"
+#include "projects/estream/ciphers/ffcsr/ecrypt-sync.h"
+#include "projects/estream/ciphers/fubuki/ecrypt-sync.h"
+#include "projects/estream/ciphers/grain/ecrypt-sync.h"
+#include "projects/estream/ciphers/hc-128/ecrypt-sync.h"
+#include "projects/estream/ciphers/hermes/ecrypt-sync.h"
+#include "projects/estream/ciphers/lex/ecrypt-sync.h"
+#include "projects/estream/ciphers/mag/ecrypt-sync.h"
+#include "projects/estream/ciphers/mickey/ecrypt-sync.h"
+#include "projects/estream/ciphers/mir-1/ecrypt-sync.h"
+#include "projects/estream/ciphers/pomaranch/ecrypt-sync.h"
+#include "projects/estream/ciphers/py/ecrypt-sync.h"
+#include "projects/estream/ciphers/rabbit/ecrypt-sync.h"
+#include "projects/estream/ciphers/salsa20/ecrypt-sync.h"
+#include "projects/estream/ciphers/sfinks/ecrypt-sync.h"
+#include "projects/estream/ciphers/sosemanuk/ecrypt-sync.h"
+#include "projects/estream/ciphers/trivium/ecrypt-sync.h"
+#include "projects/estream/ciphers/tsc-4/ecrypt-sync.h"
+#include "projects/estream/ciphers/wg/ecrypt-sync.h"
+#include "projects/estream/ciphers/yamb/ecrypt-sync.h"
+#include "projects/estream/ciphers/zk-crypt/ecrypt-sync.h"
 
 //constant for TEST_VECTOR_GENERATION_METHOD settings
 #define ESTREAM_CONST 666

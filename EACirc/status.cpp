@@ -21,6 +21,7 @@ const char* ErrorToString(int error) {
     case STAT_INCOMPATIBLE_PARAMETER:   return "STAT_INCOMPATIBLE_PARAMETER";
     case STAT_FILE_WRITE_FAIL:          return "STAT_FILE_WRITE_FAIL";
     case STAT_CONFIG_SCRIPT_INCOMPLETE: return "STAT_CONFIG_SCRIPT_INCOMPLETE";
+    case STAT_PROJECT_ERROR:            return "STAT_PROJECT_ERRoR";
     }
     // NO SPECIAL RULE MATCH
     return "'unknown'";
