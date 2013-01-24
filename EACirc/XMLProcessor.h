@@ -8,9 +8,9 @@
 /** loads configuration data from file to settings structure
   *
   * @param pRoot            root of the XML tree
-  * @param pBasicSettings   pointer to allocated settings structure where to save loaded data
+  * @param pSettings   pointer to allocated settings structure where to save loaded data
   */
-void LoadConfigScript(TiXmlNode* pRoot, BASIC_INIT_DATA* pBasicSettings);
+void LoadConfigScript(TiXmlNode* pRoot, SETTINGS* pSettings);
 
 /** saves given XML structure to file
   * automatically add XML declaration

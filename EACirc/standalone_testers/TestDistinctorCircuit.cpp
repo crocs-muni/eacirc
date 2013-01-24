@@ -56,18 +56,18 @@ int testDistinctorCircuit(string filename1, string filename2) {
     int match = 0;
     int predictors = 0;
     results << "=== Testset 1 ===" << endl;
-    for (i=0; i<length;i+=pGACirc->testVectorLength) {
-        for (int e=0; e<pGACirc->testVectorLength; e++) {
+    for (i=0; i<length;i+=pGACirc->settings->testVectors.testVectorLength) {
+        for (int e=0; e<pGACirc->settings->testVectors.testVectorLength; e++) {
             inputs[e] = accumulator[i+e];
         }
         circuit(inputs, outputs);
-        for (int e=0; e<pGACirc->sizeOutputLayer; e++){
+        for (int e=0; e<pGACirc->settings->circuit.sizeOutputLayer; e++){
             if (outputs[e] <= UCHAR_MAX/2) {
                 match++;
             }
             predictors++;
         }
-        if (i > 0 && (i%(pGACirc->numTestVectors*pGACirc->testVectorLength) == 0)) {
+        if (i > 0 && (i%(pGACirc->settings->testVectors.numTestVectors*pGACirc->settings->testVectors.testVectorLength) == 0)) {
             results << "Match: " << match << ", Predictors: " << predictors << ", Fitness: " << float(match)/float(predictors)<< endl;
             match = 0;
             predictors = 0;
@@ -77,18 +77,18 @@ int testDistinctorCircuit(string filename1, string filename2) {
     match = 0;
     predictors = 0;
     results << " === Testset 2 ===" << endl;
-    for (i=0; i<length2;i+=pGACirc->testVectorLength) {
-        for (int e=0; e<pGACirc->testVectorLength; e++){
+    for (i=0; i<length2;i+=pGACirc->settings->testVectors.testVectorLength) {
+        for (int e=0; e<pGACirc->settings->testVectors.testVectorLength; e++){
             inputs[e] = accumulator2[i+e];
         }
         circuit(inputs, outputs);
-        for (int e=0; e<pGACirc->sizeOutputLayer; e++) {
+        for (int e=0; e<pGACirc->settings->circuit.sizeOutputLayer; e++) {
             if (outputs[e] > UCHAR_MAX/2) {
                 match++;
             }
             predictors++;
         }
-        if (i > 0 && (i%(pGACirc->numTestVectors*pGACirc->testVectorLength) == 0)) {
+        if (i > 0 && (i%(pGACirc->settings->testVectors.numTestVectors*pGACirc->settings->testVectors.testVectorLength) == 0)) {
             results << "Match: " << match << ", Predictors: " << predictors << ", Fitness: " << float(match)/float(predictors)<< endl;
             match = 0;
             predictors = 0;

@@ -3,6 +3,7 @@
 
 #include "EACglobals.h"
 #include "estreamInterface.h"
+#include "EstreamConstants.h"
 
 class EncryptorDecryptor {
 	EstreamInterface* ecryptarr[4];

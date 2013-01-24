@@ -8,7 +8,7 @@ void PredictBytesParityCircuitEvaluator::evaluateCircuit(unsigned char* outputs,
     int predictParity = 0;
     int correctParity = 0;
             
-    for (int out = 0; out < pGACirc->sizeOutputLayer; out++) {
+    for (int out = 0; out < pGACirc->settings->circuit.sizeOutputLayer; out++) {
 		if (usePredictorsMask[out] == 1) {
 			predictParity = 0;
 			correctParity = 0;

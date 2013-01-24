@@ -11,6 +11,8 @@
 #define ESTREAM_GENTYPE_RANDOM 2
 #define ESTREAM_GENTYPE_BIASRANDOM 3
 
+#define STREAM_BLOCK_SIZE 16
+
 // eStream cipher constants
 #define ESTREAM_ABC 1
 #define ESTREAM_ACHTERBAHN 2

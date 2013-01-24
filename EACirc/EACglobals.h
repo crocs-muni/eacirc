@@ -3,7 +3,6 @@
 
 #include "EACconstants.h"
 #include "status.h"
-//#include "estream/estreamInterface.h"
 #include "Logger.h"
 //#include "random_generator/IRndGen.h"
 class IRndGen;
@@ -60,93 +59,212 @@ typedef unsigned __int64 uint64_t;
  * flushing 'mainLogger.out()' causes written data to be prefixed by current time and flushed to logging stream
  */
 extern Logger mainLogger;
-// RANDOM GENERATOR FOR CUSTOM USAGE
-/*
- * is initialized at state initialization of EACirc according to external seed or system time
- * idealy should be used ONLY for first initialization of other generators and GAlib
- *
- * internaly is a MD5-based generator
- */
-extern IRndGen* mainGenerator;
 
-#define STREAM_BLOCK_SIZE 16
-
-typedef struct _RANDOM_GENERATOR {
-    unsigned long       seed;
-    bool        useFixedSeed;
-	string		QRBGSPath;
-    int primaryRandomType;
-    int biasRndGenFactor;
-
-    _RANDOM_GENERATOR(void) {
-        clear();
+//! settings corresponding to EACIRC/INFO
+typedef struct _SETTINGS_INFO {
+    string swVersion;               //! EACirc framework version
+    string computationDate;         //! date of computation
+    string notes;                   //! user defined notes
+    _SETTINGS_INFO(void) {
+        swVersion="unknown";
+        computationDate="unknown";
+        notes = "";
     }
+} SETTINGS_INFO;
 
-    void clear() {
-        seed = 0;
-        primaryRandomType = 1;
-        biasRndGenFactor = 50;
+//! settings corresponding to EACIRC/MAIN
+typedef struct _SETTINGS_MAIN {
+    int projectType;                //! project used to generate test vectors
+    int evaluatorType;              //! evaluator used in fitness computation
+    bool recommenceComputation;     //! is this continuation of previous computation?
+    bool loadInitialPopulation;     //! should initial population be loaded instead of randomly generated?
+    int numGenerations;             //! number of generations to evolve
+    int saveStateFrequency;         //! frequency of reseeding GAlib and saving state
+    _SETTINGS_MAIN(void) {
+        projectType = PROJECT_PREGENERATED_TV;
+        evaluatorType = EVALUATOR_HAMMING_WEIGHT;
+        recommenceComputation = false;
+        loadInitialPopulation = false;
+        numGenerations = 0;
+        saveStateFrequency = 0;
+    }
+} SETTINGS_MAIN;
+
+//! settings corresponding to EACIRC/RANDOM
+typedef struct _SETTINGS_RANDOM {
+    bool useFixedSeed;              //! should computation start from fixed seed instead of generating one?
+    unsigned long seed;             //! seed to start from
+//    int primaryRandomType;          //! type of random for each rand()
+    int biasRndGenFactor;           //! bias factor for general bias generator
+    string qrngPath;                //! path to pregenerated quantum random data
+    _SETTINGS_RANDOM(void) {
         useFixedSeed = false;
+        seed = 0;
+//        primaryRandomType = 1;
+        biasRndGenFactor = 50;
+        qrngPath = "";
     }
+} SETTINGS_RANDOM;
 
-} RANDOM_GENERATOR;
-
-typedef struct _GA_STRATEGY {
-    float               probMutationt;
-    float               probCrossing;
-    int                 popupationSize;
-    int                 numGenerations;
-    bool                evolutionOff;
-    
-	_GA_STRATEGY(void) {
-        clear();
-    }
-    
-    void clear() {
-        probMutationt = 0;
+//! settings corresponding to EACIRC/GA
+typedef struct _SETTINGS_GA {
+    bool evolutionOff;              //! should evolution be turned off?
+    float probMutation;             //! probability of genome mutation
+    float probCrossing;             //! proprability of genome crossing
+    int popupationSize;             //! number of individuals in population
+    _SETTINGS_GA(void) {
+        evolutionOff = false;
+        probMutation = 0;
         probCrossing = 0;
         popupationSize = 0;
-        numGenerations = 0;
-        evolutionOff = false;
     }
-} GA_STRATEGY;
+} SETTINGS_GA;
+
+//! settings corresponding to EACIRC/CIRCUIT
+typedef struct _SETTINGS_CIRCUIT {
+    int genomeSize;                 //! size of individual genome
+    int numLayers;                  //! number of layers in circuit
+    int numSelectorLayers;          //! number of input layers
+    int sizeLayer;                  //! general layer size
+    int sizeInputLayer;             //! number if inputs
+    int sizeOutputLayer;            //! number of outputs
+    int numConnectors;              //! how many connectors (? TBD)
+    bool allowPrunning;             //! allow prunning when writing circuit?
+    unsigned char allowedFunctions[FNC_MAX+1];  //! functions allowed in circuit
+    _SETTINGS_CIRCUIT(void) {
+        genomeSize = MAX_GENOME_SIZE;
+        numLayers = MAX_NUM_LAYERS;
+        numSelectorLayers = 1;
+        sizeLayer = MAX_INTERNAL_LAYER_SIZE;
+        sizeInputLayer = MAX_INTERNAL_LAYER_SIZE;
+        sizeOutputLayer = MAX_OUTPUTS;
+        numConnectors = 0;
+        memset(allowedFunctions, 1, sizeof(allowedFunctions)); // all allowed by default
+    }
+} SETTINGS_CIRCUIT;
+
+//! settings corresponding to EACIRC/TEST_VECTORS
+typedef struct _SETTINGS_TEST_VECTORS {
+    int testVectorLength;                   //! test vector length (in bytes)
+    int numTestVectors;                     //! number of test vectors in a testing set
+    int testVectorChangeFreq;               //! how often to re-generate test vectors?
+    bool testVectorChangeProgressive;       //! change vectors more often in the beginning and less often in the end
+    bool saveTestVectors;                   //! should test vecotrs be saved?
+    bool evaluateBeforeTestVectorChange;    //! should evaluation before or after test vectors change be written to file?
+    bool evaluateEveryStep;                 //! evaluate every step
+    _SETTINGS_TEST_VECTORS(void) {
+        testVectorLength = MAX_INPUTS;
+        numTestVectors = 100;
+        testVectorChangeFreq = 0;
+        testVectorChangeProgressive = false;
+        saveTestVectors = true;
+        evaluateBeforeTestVectorChange = false;
+        evaluateEveryStep = false;
+    }
+} SETTINGS_TEST_VECTORS;
+
+//! all program run settings
+typedef struct _SETTINGS {
+    SETTINGS_INFO info;
+    SETTINGS_MAIN main;
+    SETTINGS_RANDOM random;
+    SETTINGS_GA ga;
+    SETTINGS_CIRCUIT circuit;
+    SETTINGS_TEST_VECTORS testVectors;
+    void* project;
+    _SETTINGS(void) {
+        project = NULL;
+    }
+} SETTINGS;
+
+typedef struct _STATISTICS {
+    int numBestPredictors;          //! TBD
+    float maxFit;                   //! TBD
+    float bestGenerFit;             //! TBD
+    float avgGenerFit;              //! TBD
+    int numAvgGenerFit;             //! TBD
+    int avgPredictions;             //! TBD
+    bool prunningInProgress;        //! is prunning currently in progress?
+    _STATISTICS(void) {
+        clear();
+    }
+    void clear() {
+        numBestPredictors = 0;
+        maxFit = 0;
+        bestGenerFit = 0;
+        avgGenerFit = 0;
+        numAvgGenerFit = 0;
+        avgPredictions = 0;
+        prunningInProgress = false;
+    }
+} STATISTICS;
+
+typedef struct _GLOBALS {
+    SETTINGS* settings;                         //! pointer to SETTINGS in EACirc object
+    STATISTICS stats;                           //! current run statistics
+    unsigned char** testVectors;                //! current test vector set
+    unsigned long precompPow[MAX_CONNECTORS];   //! precomputed values up to 2^32
+    unsigned long powEffectiveMask;             //! TBD
+    _GLOBALS(void) {
+        // precompute powers for reasonable values (2^0-2^31)
+        for (int bit = 0; bit < MAX_CONNECTORS; bit++) {
+            precompPow[bit] = (unsigned long) pow(2, (float) bit);
+            powEffectiveMask |= precompPow[bit];
+        }
+        testVectors = NULL;
+    }
+    void allocate() {
+        if (testVectors != NULL) release();
+        testVectors = new unsigned char*[settings->testVectors.numTestVectors];
+        for (int i = 0; i < settings->testVectors.numTestVectors; i++) testVectors[i] = new unsigned char[MAX_INPUTS + MAX_OUTPUTS];
+    }
+    void release() {
+        if (testVectors != NULL) {
+            for (int i = 0; i < settings->testVectors.numTestVectors; i++) delete[] testVectors[i];
+            delete[] testVectors;
+            testVectors = NULL;
+        }
+    }
+} GLOBALS;
+
+/*
 
 typedef struct _GA_CIRCUIT {
     // BASIC CIRCUIT PARAMS
-    int         numLayers;  
-    int         numSelectorLayers;
-    int         sizeInputLayer;
-    int         sizeOutputLayer;
-    int         sizeLayer;
-    int         numConnectors;
-    unsigned char        allowedFunctions[FNC_MAX+1];
-    int         predictionMethod;
-	bool		allowPrunning;
+//    int         numLayers;
+  //  int         numSelectorLayers;
+    //int         sizeInputLayer;
+   // int         sizeOutputLayer;
+   // int         sizeLayer;
+  //  int         numConnectors;
+ //   unsigned char        allowedFunctions[FNC_MAX+1];
+ //   int         predictionMethod;
+//	bool		allowPrunning;
 	// TESTING VECTORS PARAMETERS
-    int         numTestVectors;
-    unsigned char**      testVectors;
-    int			changeGalibSeedFrequency; // how often to change GAlib seed and save state
-	int			testVectorLength;
-    int			saveTestVectors;
-    int         testVectorChangeFreq;  // generate fresh new test set every x-th generation
-    bool		testVectorChangeProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
-	bool		evaluateEveryStep; // evaluation is done only with changing test vectors by default - use with care!
-    bool        evaluateBeforeTestVectorChange; // should evaluation before ar after test vectors chagne be written to file?
-    int         numBestPredictors;
+//    int         numTestVectors;
+    //unsigned char**      testVectors;
+    //int			changeGalibSeedFrequency; // how often to change GAlib seed and save state
+    //int			testVectorLength;
+    //int			saveTestVectors;
+    //int         testVectorChangeFreq;  // generate fresh new test set every x-th generation
+    //bool		testVectorChangeProgressive; // change vectors more often in the beginning and less often in the end - use testVectorChangeGener to adjust
+    //bool		evaluateEveryStep; // evaluation is done only with changing test vectors by default - use with care!
+   // bool        evaluateBeforeTestVectorChange; // should evaluation before ar after test vectors chagne be written to file?
+ //   int         numBestPredictors;
 	bool		representBitAsBytes;
 	// SPEED-UP PRECOMPUTATION 
-    unsigned long       precompPow[MAX_CONNECTORS];      // PRECOMPUTED VALUES UP TO 2^32
-    unsigned long       powEffectiveMask;
+  //  unsigned long       precompPow[MAX_CONNECTORS];      // PRECOMPUTED VALUES UP TO 2^32
+ //   unsigned long       powEffectiveMask;
 	// PARAMETERS OF GENOM FOR THIS CIRCUIT	
-	int         genomeSize;
+    //int         genomeSize;
     // INFO ABOUT FITNESS
-    float     maxFit;
-    float     bestGenerFit;
-    float     avgGenerFit;
-    int       numAvgGenerFit;
-    int       avgPredictions;
+ //   float     maxFit;
+ //   float     bestGenerFit;
+ //   float     avgGenerFit;
+ //   int       numAvgGenerFit;
+ //   int       avgPredictions;
 
-    bool      prunningInProgress;
+//    bool      prunningInProgress;
 
     _GA_CIRCUIT(void) {
         numLayers = MAX_NUM_LAYERS;
@@ -212,11 +330,11 @@ typedef struct _GA_CIRCUIT {
 } GA_CIRCUIT;
 
 typedef struct _BASIC_INIT_DATA {
-    string swVersion;
-    string computationDate;
-    bool recommenceComputation;
-    bool loadInitialPopulation;
-    int projectType;
+//    string swVersion;
+//    string computationDate;
+//    bool recommenceComputation;
+//    bool loadInitialPopulation;
+//    int projectType;
 
     // RANDOM SEED VALUE
     RANDOM_GENERATOR    rndGen;
@@ -243,6 +361,6 @@ typedef struct _BASIC_INIT_DATA {
     }
 
 } BASIC_INIT_DATA;
-
+*/
 
 #endif //EACGLOBALS_H

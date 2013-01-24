@@ -6,7 +6,7 @@
 
 EncryptorDecryptor::EncryptorDecryptor() {
 
-    int numTestVectors = pGACirc->numTestVectors;
+    int numTestVectors = pGACirc->settings->testVectors.numTestVectors;
     int numRounds = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount:-1;
     int numRounds2 = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount2:-1;
     for(int i = 0; i < 4; i++) {
@@ -327,14 +327,14 @@ EncryptorDecryptor::EncryptorDecryptor() {
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
 			
 
-			ecryptarr[i]->ECRYPT_keysetup(ctxarr[i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
+            ecryptarr[i]->ECRYPT_keysetup(ctxarr[i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
 			ecryptarr[i]->ECRYPT_ivsetup(ctxarr[i], iv);
 			ecryptarr[2+i]->ECRYPT_keysetup(ctxarr[2+i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
 			ecryptarr[2+i]->ECRYPT_ivsetup(ctxarr[2+i], iv);
 
 			// ********************** logging ********************** //
             ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-			if (pGACirc->saveTestVectors == 1) {
+            if (pGACirc->settings->testVectors.saveTestVectors) {
 				tvfile << setfill('0');
 				if (ecryptarr[i] != NULL){
 					tvfile << "Key " << i << ":";
@@ -354,7 +354,7 @@ EncryptorDecryptor::EncryptorDecryptor() {
 
 	// ******************* Save test vectors to file ********************** //
     ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-	if (pGACirc->saveTestVectors == 1) {
+    if (pGACirc->settings->testVectors.saveTestVectors) {
 		tvfile << "Generating test vectors with seed " << GAGetRandomSeed() << endl;
 		tvfile << "PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
 	}
@@ -377,7 +377,7 @@ EncryptorDecryptor::~EncryptorDecryptor() {
 }
 
 void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
-	if (!length) length = pGACirc->testVectorLength;
+    if (!length) length = pGACirc->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))
@@ -387,7 +387,7 @@ void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, in
 }
 
 void EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
-	if (!length) length = pGACirc->testVectorLength;
+    if (!length) length = pGACirc->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum])) 

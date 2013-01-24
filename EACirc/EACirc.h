@@ -8,10 +8,17 @@
 //#include "estream/EncryptorDecryptor.h"
 #include "projects/IProject.h"
 
+// RANDOM GENERATOR FOR CUSTOM USAGE
+/*
+ * is initialized at state initialization of EACirc according to external seed or system time
+ * idealy should be used ONLY for first initialization of other generators and GAlib
+ *
+ * internaly is a MD5-based generator
+ */
+extern IRndGen* mainGenerator;
 extern IRndGen* rndGen;
 extern IRndGen* biasRndGen;
-extern GA_CIRCUIT* pGACirc;
-//extern EncryptorDecryptor* encryptorDecryptor;
+extern GLOBALS* pGACirc;
 
 #define EACIRC_CONFIG_LOADED 0x01
 #define EACIRC_PREPARED 0x02
@@ -25,7 +32,7 @@ class EACirc {
     //! seed used to reseed GAlib the last time
     unsigned long m_currentGalibSeed;
     //! structure of main settings
-    BASIC_INIT_DATA basicSettings;
+    SETTINGS m_settings;
     //! project
     IProject* m_project;
     //! genetics algorithm instance
