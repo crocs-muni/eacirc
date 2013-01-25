@@ -3,7 +3,7 @@
 #include "standalone_testers/TestDistinctorCircuit.h"
 
 #define CATCH_CONFIG_RUNNER
-#include "self_tests/catch.hpp"
+#include "self_tests/Catch.h"
 
 Logger mainLogger;
 IRndGen* mainGenerator = NULL;

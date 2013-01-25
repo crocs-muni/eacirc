@@ -8,18 +8,18 @@ void PredictHammingWeightCircuitEvaluator::evaluateCircuit(unsigned char* output
     int predictWeight = 0;
     int correctWeight = 0;
             
-    for (int out = 0; out < pGACirc->settings->circuit.sizeOutputLayer; out++) {
+    for (int out = 0; out < pGlobals->settings->circuit.sizeOutputLayer; out++) {
 		if (usePredictorsMask[out] == 1) {
 			predictWeight = 0;
 			correctWeight = 0;
 			// GET PREDICTION OF WEIGHT 
 			for (int bit = 0; bit < NUM_BITS; bit++) {
-				if (outputs[out] & (unsigned char) pGACirc->precompPow[bit]) predictWeight++;
+				if (outputs[out] & (unsigned char) pGlobals->precompPow[bit]) predictWeight++;
 			}
 	                
 			// GET REAL WEIGHT 
 			for (int bit = 0; bit < NUM_BITS; bit++) {
-				if (correctOutputs[out] & (unsigned char) pGACirc->precompPow[bit]) correctWeight++;
+				if (correctOutputs[out] & (unsigned char) pGlobals->precompPow[bit]) correctWeight++;
 			}
 
 			// OBTAIN POINTS FOR CORRECTNESS - IF COMPLETELY MATCH, THAN MAXIMUM POINTS ARE OBTAINED

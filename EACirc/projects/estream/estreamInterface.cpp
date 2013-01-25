@@ -1,4 +1,4 @@
-#include "estreamInterface.h"
+#include "EstreamInterface.h"
 
 const char* estreamToString(int cipher) {
     switch (cipher) {

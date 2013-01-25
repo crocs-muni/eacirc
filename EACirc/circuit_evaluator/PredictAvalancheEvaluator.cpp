@@ -5,10 +5,10 @@ AvalancheEvaluator::AvalancheEvaluator() : ICircuitEvaluator(){
 }
 
 void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
-    unsigned char* inputStream = new unsigned char[pGACirc->settings->testVectors.testVectorLength];
-    unsigned char* inputStreamCheck = new unsigned char[pGACirc->settings->testVectors.testVectorLength];
-    unsigned char* outputStream = new unsigned char[pGACirc->settings->testVectors.testVectorLength];
-    unsigned char* outputStreamCheck = new unsigned char[pGACirc->settings->testVectors.testVectorLength];
+    unsigned char* inputStream = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
+    unsigned char* inputStreamCheck = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
+    unsigned char* outputStream = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
+    unsigned char* outputStreamCheck = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
 
     // EDITED when creating infrastructure for projects
     // edit BEGIN
@@ -61,10 +61,10 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 	int ppMatch = 0;
 
 	// COMPARE THE STREAMS
-    for (int out = 0; out < pGACirc->settings->circuit.sizeOutputLayer; out++) {
+    for (int out = 0; out < pGlobals->settings->circuit.sizeOutputLayer; out++) {
 		for (int bit = 0; bit < NUM_BITS; bit++) {
 			// COMPARE VALUE ON bit-th POSITION
-			if ((inputStream[out] & (unsigned char) pGACirc->precompPow[bit]) == (outputStream[out] & (unsigned char) pGACirc->precompPow[bit]))
+			if ((inputStream[out] & (unsigned char) pGlobals->precompPow[bit]) == (outputStream[out] & (unsigned char) pGlobals->precompPow[bit]))
 				ppMatch++;
 			else 
 	            ppMatch--;

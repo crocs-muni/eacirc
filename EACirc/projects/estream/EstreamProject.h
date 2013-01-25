@@ -3,10 +3,8 @@
 
 #include "projects/IProject.h"
 #include "EncryptorDecryptor.h"
-#include "estreamInterface.h"
+#include "EstreamInterface.h"
 #include "EstreamConstants.h"
-
-extern ESTREAM_SETTINGS* pEstreamSettings;
 
 class EstreamProject : public IProject {
 private:

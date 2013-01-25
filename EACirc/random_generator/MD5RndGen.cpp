@@ -1,4 +1,5 @@
 #include "MD5RndGen.h"
+#include "EACirc.h"
 #include <random>
 
 MD5RndGen::MD5RndGen(unsigned long seed)

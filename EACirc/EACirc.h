@@ -5,21 +5,37 @@
 #include "random_generator/IRndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
-//#include "estream/EncryptorDecryptor.h"
+//libinclude (galib/GASStateGA.h)
+#include "GASStateGA.h"
 #include "projects/IProject.h"
 
-// RANDOM GENERATOR FOR CUSTOM USAGE
-/*
- * is initialized at state initialization of EACirc according to external seed or system time
- * idealy should be used ONLY for first initialization of other generators and GAlib
- *
- * internaly is a MD5-based generator
- */
+/** main random generator
+  * - initialized at state initialization of EACirc according to external seed or system time
+  * - idealy should be used ONLY for first initialization of other generators, GAlib, projects, etc.
+  * - MD5-based generator internally
+  */
 extern IRndGen* mainGenerator;
-extern IRndGen* rndGen;
-extern IRndGen* biasRndGen;
-extern GLOBALS* pGACirc;
 
+/** unbiased random generator
+  * - initialized at state initialization of EACirc
+  * - all-purpose random generator (unbiased)
+  */
+extern IRndGen* rndGen;
+
+/** biased random generator
+  * - initialized at state initialization of EACirc
+  * - all-purpose random generator (biased)
+  */
+extern IRndGen* biasRndGen;
+
+/** globally accessible memory
+  * - EACirc settings
+  * - test vectors
+  * - surrent statistics
+  */
+extern GLOBALS* pGlobals;
+
+//! constants for EACirc configuration state
 #define EACIRC_CONFIG_LOADED 0x01
 #define EACIRC_PREPARED 0x02
 #define EACIRC_INITIALIZED 0x04
@@ -104,7 +120,10 @@ class EACirc {
       */
     void createPopulation();
 
-    int evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener);
+    /** evolution step evaluation
+      * - writes to stats files
+      */
+    void evaluateStep();
 public:
     EACirc();
     ~EACirc();

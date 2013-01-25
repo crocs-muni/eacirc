@@ -69,4 +69,6 @@ typedef struct _ESTREAM_SETTINGS {
     }
 } ESTREAM_SETTINGS;
 
+extern ESTREAM_SETTINGS* pEstreamSettings;
+
 #endif // ESTREAMCONSTANTS_H

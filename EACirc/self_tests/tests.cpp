@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "tests.h"
+#include "Tests.h"
 #include "XMLProcessor.h"
 #include "EACirc.h"
 

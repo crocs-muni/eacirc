@@ -29,17 +29,17 @@
 	#include <unistd.h>
 #endif
 
-IRndGen*                rndGen = NULL;
-IRndGen*                biasRndGen = NULL;
-GLOBALS*             pGACirc = NULL;
+IRndGen* rndGen = NULL;
+IRndGen* biasRndGen = NULL;
+GLOBALS* pGlobals = NULL;
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
-    if (pGACirc != NULL) {
+    if (pGlobals != NULL) {
         mainLogger.out() << "warning: Globals not NULL. Overwriting." << endl;
     }
-    pGACirc = new GLOBALS;
+    pGlobals = new GLOBALS;
 }
 
 EACirc::~EACirc() {
@@ -47,8 +47,8 @@ EACirc::~EACirc() {
     m_gaData = NULL;
     if (m_project) delete m_project;
     m_project = NULL;
-    if (pGACirc) pGACirc->release();
-    pGACirc = NULL;
+    if (pGlobals) pGlobals->release();
+    pGlobals = NULL;
     if (rndGen) delete rndGen;
     rndGen = NULL;
     if (biasRndGen) delete biasRndGen;
@@ -76,7 +76,7 @@ void EACirc::loadConfiguration(const string filename) {
         mainLogger.out() << "error: Could not read configuration data from " << FILE_CONFIG << "." << endl;
     }
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
-    pGACirc->settings = &m_settings;
+    pGlobals->settings = &m_settings;
     //pGACirc->allocate();
 
     if (m_settings.main.recommenceComputation || m_settings.ga.evolutionOff) {
@@ -105,7 +105,7 @@ void EACirc::loadConfiguration(const string filename) {
     m_status = m_project->loadProjectConfiguration(pRoot);
 
     // allocate space for testVecotrs
-    pGACirc->allocate();
+    pGlobals->allocate();
 
     // must free memory manually!
     delete pRoot;
@@ -398,35 +398,36 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     mainLogger.out() << "info: GAlib seeded and reset." << endl;
 }
 
-int EACirc::evaluateStep(GA1DArrayGenome<unsigned long> genome, int actGener) {
-
-    pGACirc->stats.bestGenerFit = 0;
+void EACirc::evaluateStep() {
+    int totalGeneration = m_actGener + m_oldGenerations;
+    pGlobals->stats.bestGenerFit = 0;
+    GA1DArrayGenome<unsigned long> genome = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();
 
     float bestFit = CircuitGenome::Evaluator(genome);
     //float bestFit = genome.score();
 
     ofstream bestfitfile(FILE_BEST_FITNESS, ios::app);
     ofstream avgfitfile(FILE_AVG_FITNESS, ios::app);
-    bestfitfile << actGener << "," << bestFit << endl;
-    if (pGACirc->stats.numAvgGenerFit > 0) avgfitfile << actGener << "," << pGACirc->stats.avgGenerFit / pGACirc->stats.numAvgGenerFit << endl;
-    else avgfitfile << actGener << "," << "division by zero!!" << endl;
+    bestfitfile << totalGeneration << "," << bestFit << endl;
+    if (pGlobals->stats.numAvgGenerFit > 0) avgfitfile << totalGeneration << "," << pGlobals->stats.avgGenerFit / pGlobals->stats.numAvgGenerFit << endl;
+    else avgfitfile << totalGeneration << "," << "division by zero!!" << endl;
     bestfitfile.close();
     avgfitfile.close();
 
     ostringstream os2;
-    os2 << "(" << actGener << " gen.): " << pGACirc->stats.avgGenerFit << "/" << pGACirc->stats.numAvgGenerFit << " avg, " << bestFit << " best, avgPredict: " << pGACirc->stats.avgPredictions / pGACirc->stats.numAvgGenerFit << ", totalBest: " << pGACirc->stats.maxFit;
+    os2 << "(" << totalGeneration << " gen.): " << pGlobals->stats.avgGenerFit << "/" << pGlobals->stats.numAvgGenerFit;
+    os2 << " avg, " << bestFit << " best, avgPredict: " << pGlobals->stats.avgPredictions / pGlobals->stats.numAvgGenerFit;
+    os2 << ", totalBest: " << pGlobals->stats.maxFit;
     string message = os2.str();
     // SAVE FITNESS PROGRESS
     ofstream out(FILE_FITNESS_PROGRESS, ios::app);
     out << message << endl;
     out.close();
 
-    pGACirc->stats.clear();
+    pGlobals->stats.clear();
     //pGACirc->avgGenerFit = 0;
     //pGACirc->numAvgGenerFit = 0;
     //pGACirc->avgPredictions = 0;
-
-    return 0;
 }
 
 
@@ -443,11 +444,11 @@ void EACirc::run() {
 
     int	changed = 1;
     bool evaluateNow = false;
-    pGACirc->stats.clear();
+    pGlobals->stats.clear();
     fstream fitfile;
 
-    GA1DArrayGenome<unsigned long> genomeBest(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
-    genomeBest = m_gaData->population().individual(0);
+    //GA1DArrayGenome<unsigned long> genomeBest(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
+    //genomeBest = m_gaData->population().individual(0);
 
     mainLogger.out() << "info: Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
@@ -461,10 +462,10 @@ void EACirc::run() {
         fitfile << ((float)(m_actGener))/((float)(m_settings.main.numGenerations));
         fitfile.close();
 
-        // DO NOT EVOLVE..
+        // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_project->generateTestVectors();
-            evaluateStep(genomeBest, m_actGener);
+            evaluateStep();
             continue;
         }
 
@@ -498,10 +499,10 @@ void EACirc::run() {
         // GA evolution step
         m_gaData->step();
 
-        genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
+        //genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
 
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
-            evaluateStep(genomeBest, m_actGener + m_oldGenerations);
+            evaluateStep();
             evaluateNow = false;
         }
 

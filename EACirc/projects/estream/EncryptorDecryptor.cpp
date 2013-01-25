@@ -1,12 +1,12 @@
 #include "EACirc.h"
 #include "EncryptorDecryptor.h"
-#include "estreamInterface.h"
+#include "EstreamInterface.h"
 #include <string>
 #include "EstreamProject.h"
 
 EncryptorDecryptor::EncryptorDecryptor() {
 
-    int numTestVectors = pGACirc->settings->testVectors.numTestVectors;
+    int numTestVectors = pGlobals->settings->testVectors.numTestVectors;
     int numRounds = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount:-1;
     int numRounds2 = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount2:-1;
     for(int i = 0; i < 4; i++) {
@@ -334,7 +334,7 @@ EncryptorDecryptor::EncryptorDecryptor() {
 
 			// ********************** logging ********************** //
             ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-            if (pGACirc->settings->testVectors.saveTestVectors) {
+            if (pGlobals->settings->testVectors.saveTestVectors) {
 				tvfile << setfill('0');
 				if (ecryptarr[i] != NULL){
 					tvfile << "Key " << i << ":";
@@ -354,7 +354,7 @@ EncryptorDecryptor::EncryptorDecryptor() {
 
 	// ******************* Save test vectors to file ********************** //
     ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-    if (pGACirc->settings->testVectors.saveTestVectors) {
+    if (pGlobals->settings->testVectors.saveTestVectors) {
 		tvfile << "Generating test vectors with seed " << GAGetRandomSeed() << endl;
 		tvfile << "PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
 	}
@@ -377,7 +377,7 @@ EncryptorDecryptor::~EncryptorDecryptor() {
 }
 
 void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
-    if (!length) length = pGACirc->settings->testVectors.testVectorLength;
+    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))
@@ -387,7 +387,7 @@ void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, in
 }
 
 void EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
-    if (!length) length = pGACirc->settings->testVectors.testVectorLength;
+    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum])) 

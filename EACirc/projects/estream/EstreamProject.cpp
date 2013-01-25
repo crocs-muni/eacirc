@@ -45,8 +45,8 @@ int EstreamProject::generateTestVectors() {
     this->numstats[0] = 0;
     this->numstats[1] = 0;
 
-    for (int testSet = 0; testSet < pGACirc->settings->testVectors.numTestVectors; testSet++) {
-        if (pGACirc->settings->testVectors.saveTestVectors == 1) {
+    for (int testSet = 0; testSet < pGlobals->settings->testVectors.numTestVectors; testSet++) {
+        if (pGlobals->settings->testVectors.saveTestVectors == 1) {
             ofstream tvfile(FILE_TEST_VECTORS, ios::app);
             tvfile << "Testset n." << dec << testSet << endl;
             tvfile.close();
@@ -54,10 +54,10 @@ int EstreamProject::generateTestVectors() {
 
         getTestVector();
         for (int input = 0; input < MAX_INPUTS; input++) {
-            pGACirc->testVectors[testSet][input] = inputs[input];
+            pGlobals->testVectors[testSet][input] = inputs[input];
         }
-        for (int output = 0; output < pGACirc->settings->circuit.sizeOutputLayer; output++)
-            pGACirc->testVectors[testSet][MAX_INPUTS+output] = outputs[output];
+        for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++)
+            pGlobals->testVectors[testSet][MAX_INPUTS+output] = outputs[output];
     }
     return STAT_OK;
 }
@@ -73,37 +73,37 @@ void EstreamProject::getTestVector(){
     u8 outplain[MAX_INPUTS];// = new u8[STREAM_BLOCK_SIZE];
 
     switch (pEstreamSettings->testVectorEstreamMethod) {
-        case TESTVECT_ESTREAM_DISTINCT:
+        case ESTREAM_DISTINCT:
 
             //SHALL WE BALANCE TEST VECTORS?
-            if (pEstreamSettings->testVectorBalance && (numstats[0] >= pGACirc->settings->testVectors.numTestVectors/2))
+            if (pEstreamSettings->testVectorBalance && (numstats[0] >= pGlobals->settings->testVectors.numTestVectors/2))
                 streamnum = 1;
-            else if (pEstreamSettings->testVectorBalance && (numstats[1] >= pGACirc->settings->testVectors.numTestVectors/2))
+            else if (pEstreamSettings->testVectorBalance && (numstats[1] >= pGlobals->settings->testVectors.numTestVectors/2))
                 streamnum = 0;
             else
                 rndGen->getRandomFromInterval(1, &streamnum);
             numstats[streamnum]++;
             //Signalize the correct value
-            for (int output = 0; output < pGACirc->settings->circuit.sizeOutputLayer; output++) outputs[output] = streamnum * 0xff;
+            for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++) outputs[output] = streamnum * 0xff;
 
             //generate the plaintext for stream
             if ((streamnum == 0 && pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) ||
                 (streamnum == 1 && pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) ) {
-                if (pGACirc->settings->testVectors.saveTestVectors == 1)
+                if (pGlobals->settings->testVectors.saveTestVectors == 1)
                     tvfile  << "(alg n." << ((streamnum==0)?pEstreamSettings->testVectorEstream:pEstreamSettings->testVectorEstream2) << " - " << ((streamnum==0)?pEstreamSettings->limitAlgRoundsCount:pEstreamSettings->limitAlgRoundsCount2) << " rounds): ";
 
                 switch (pEstreamSettings->estreamInputType) {
                 case ESTREAM_GENTYPE_ZEROS:
-                    for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) plain[input] = 0x00;
+                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) plain[input] = 0x00;
                     break;
                 case ESTREAM_GENTYPE_ONES:
-                    for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) plain[input] = 0x01;
+                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) plain[input] = 0x01;
                     break;
                 case ESTREAM_GENTYPE_RANDOM:
-                    for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(plain[input]));
+                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(plain[input]));
                     break;
                 case ESTREAM_GENTYPE_BIASRANDOM:
-                    for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
+                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
                     break;
                 default:
                     mainLogger.out() << "error: unknown input type for " << shortDescription() << endl;
@@ -115,15 +115,15 @@ void EstreamProject::getTestVector(){
 
             }
             else { // RANDOM
-                if (pGACirc->settings->testVectors.saveTestVectors == 1)
+                if (pGlobals->settings->testVectors.saveTestVectors == 1)
                     tvfile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
-                for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) {
+                for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                     rndGen->getRandomFromInterval(255, &outplain[input]);
                     plain[input] = inputs[input] = outplain[input];
                 }
             }
 
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) {
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                 if (outplain[input] != plain[input]) {
                     ofstream fitfile(FILE_FITNESS_PROGRESS, ios::app);
                     fitfile << "Error! Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS << " for details." << endl;
@@ -138,20 +138,20 @@ void EstreamProject::getTestVector(){
 
             break;
 
-    case TESTVECT_ESTREAM_BITS_TO_CHANGE:
+    case ESTREAM_BITS_TO_CHANGE:
         //generate the plaintext
         switch (pEstreamSettings->estreamInputType) {
         case ESTREAM_GENTYPE_ZEROS:
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) inputs[input] = 0x00;
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) inputs[input] = 0x00;
             break;
         case ESTREAM_GENTYPE_ONES:
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) inputs[input] = 0x01;
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) inputs[input] = 0x01;
             break;
         case ESTREAM_GENTYPE_RANDOM:
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(inputs[input]));
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(inputs[input]));
             break;
         case ESTREAM_GENTYPE_BIASRANDOM:
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(inputs[input]));
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(inputs[input]));
             break;
         default:
             mainLogger.out() << "error: unknown input type for " << shortDescription() << endl;
@@ -159,7 +159,7 @@ void EstreamProject::getTestVector(){
         }
 
         // WE NEED TO LET EVALUATOR KNOW THE INPUTS
-        for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++)
+        for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
             outputs[input] = inputs[input];
 
         break;
@@ -171,17 +171,17 @@ void EstreamProject::getTestVector(){
     }
 
     // SAVE TEST VECTORS IN BINARY FILES
-    if (pGACirc->settings->testVectors.saveTestVectors == 1) {
+    if (pGlobals->settings->testVectors.saveTestVectors == 1) {
         if (streamnum == 0) {
             ofstream itvfile(FILE_TEST_DATA_1, ios::app | ios::binary);
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) {
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                     itvfile << inputs[input];
             }
             itvfile.close();
         }
         else {
             ofstream itvfile(FILE_TEST_DATA_2, ios::app | ios::binary);
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) {
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                     itvfile << inputs[input];
             }
             itvfile.close();
@@ -192,18 +192,18 @@ void EstreamProject::getTestVector(){
         else tvg = pEstreamSettings->testVectorEstream2;
         tvfile << setfill('0');
 
-        if (memcmp(inputs,plain,pGACirc->settings->testVectors.testVectorLength) != 0) {
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++)
+        if (memcmp(inputs,plain,pGlobals->settings->testVectors.testVectorLength) != 0) {
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
             tvfile << setw(2) << hex << (int)(plain[input]);
             tvfile << "::";
         }
 
-        for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++)
+        for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
             tvfile << setw(2) << hex << (int)(inputs[input]);
 
-        if (memcmp(inputs,outplain,pGACirc->settings->testVectors.testVectorLength) != 0) {
+        if (memcmp(inputs,outplain,pGlobals->settings->testVectors.testVectorLength) != 0) {
             tvfile << "::";
-            for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++)
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
             tvfile << setw(2) << hex << (int)(outplain[input]);
         }
         tvfile << endl;

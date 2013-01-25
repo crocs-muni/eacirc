@@ -3,7 +3,7 @@
 
 #include <string>
 using std::string;
-#include "catch.hpp"
+#include "Catch.h"
 #include "EACglobals.h"
 
 #define BACKUP_SUFFIX ".2"

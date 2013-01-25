@@ -26,7 +26,7 @@ SOURCES += \
     EACirc/CommonFnc.cpp \
     EACirc/XMLProcessor.cpp \
     EACirc/Logger.cpp \
-    EACirc/status.cpp \
+    EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/circuit_evaluator/DistinguishTwoEvaluator.cpp \
     EACirc/circuit_evaluator/ICircuitEvaluator.cpp \
@@ -43,9 +43,13 @@ SOURCES += \
     EACirc/random_generator/md5.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
 # === testing using CATCH framework ===
-    EACirc/self_tests/tests.cpp \
+    EACirc/self_tests/Tests.cpp \
+# === project files ===
+    EACirc/projects/IProject.cpp \
+    EACirc/projects/sha3/Sha3Project.cpp \
+    EACirc/projects/estream/EstreamProject.cpp \
+    EACirc/projects/estream/EstreamInterface.cpp \
 # === eSTREAM cipher files ===
-    EACirc/projects/estream/estreamInterface.cpp \
     EACirc/projects/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \   # not used
     EACirc/projects/estream/ciphers/yamb/yamb.cpp \
     EACirc/projects/estream/ciphers/wg/wg.cpp \
@@ -91,13 +95,10 @@ SOURCES += \
     EACirc/galib/GAIncGA.cpp EACirc/galib/GAList.cpp EACirc/galib/GAListBASE.cpp EACirc/galib/GAListGenome.cpp EACirc/galib/GAParameter.cpp EACirc/galib/GAPopulation.cpp \
     EACirc/galib/garandom.cpp EACirc/galib/GARealGenome.cpp EACirc/galib/GAScaling.cpp EACirc/galib/GASelector.cpp EACirc/galib/GASimpleGA.cpp EACirc/galib/GASStateGA.cpp \
     EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp \
-    EACirc/standalone_testers/TestDistinctorCircuit.cpp \
-    EACirc/projects/IProject.cpp \
-    EACirc/projects/estream/EstreamProject.cpp \
-    EACirc/projects/sha3/Sha3Project.cpp
+    EACirc/standalone_testers/TestDistinctorCircuit.cpp
 
 HEADERS += \
-# === Main project files ===
+# === Main EACirc files ===
     EACirc/Main.h \
     EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
@@ -105,7 +106,7 @@ HEADERS += \
     EACirc/EACconstants.h \
     EACirc/EACglobals.h \
     EACirc/Logger.h \
-    EACirc/status.h \
+    EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
     EACirc/circuit_evaluator/DistinguishTwoEvaluator.h \
@@ -124,10 +125,15 @@ HEADERS += \
     EACirc/random_generator/md5.h \
     EACirc/projects/estream/EncryptorDecryptor.h \
 # === CATCH testing framework ===
-    EACirc/self_tests/catch.hpp \
-    EACirc/self_tests/tests.h \
+    EACirc/self_tests/Catch.h \
+    EACirc/self_tests/Tests.h \
+# === project files ===
+    EACirc/projects/IProject.h \
+    EACirc/projects/sha3/Sha3Project.h \
+    EACirc/projects/estream/EstreamProject.h \
+    EACirc/projects/estream/EstreamConstants.h \
+    EACirc/projects/estream/EstreamInterface.h \
 # === eSTREAM cipher files ===
-    EACirc/projects/estream/estreamInterface.h \
     EACirc/projects/estream/ciphers/ecrypt-config.h \
     EACirc/projects/estream/ciphers/ecrypt-machine.h \
     EACirc/projects/estream/ciphers/ecrypt-portable.h \
@@ -191,11 +197,7 @@ HEADERS += \
     EACirc/galib/GAListGenome.h EACirc/galib/GAMask.h EACirc/galib/GANode.h EACirc/galib/GAParameter.h EACirc/galib/GAPopulation.h EACirc/galib/garandom.h \
     EACirc/galib/GARealGenome.h EACirc/galib/GAScaling.h EACirc/galib/GASelector.h EACirc/galib/GASimpleGA.h EACirc/galib/GASStateGA.h EACirc/galib/GAStatistics.h \
     EACirc/galib/GAStringGenome.h EACirc/galib/GATree.h EACirc/galib/GATreeBASE.h EACirc/galib/GATreeGenome.h EACirc/galib/gatypes.h EACirc/galib/gaversion.h \
-    EACirc/galib/std_stream.h \
-    EACirc/projects/IProject.h \
-    EACirc/projects/estream/EstreamProject.h \
-    EACirc/projects/sha3/Sha3Project.h \
-    EACirc/projects/estream/EstreamConstants.h
+    EACirc/galib/std_stream.h
 
 OTHER_FILES += \
     EACirc/config.xml

@@ -2,7 +2,7 @@
 #define ENCRYPTORDECRYPTOR_H
 
 #include "EACglobals.h"
-#include "estreamInterface.h"
+#include "EstreamInterface.h"
 #include "EstreamConstants.h"
 
 class EncryptorDecryptor {
