@@ -147,6 +147,7 @@ void EACirc::saveState(const string filename) {
     pRoot->LinkEndChild(pElem);
 
     // save project
+    pRoot->LinkEndChild(m_project->saveProjectState());
 
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
@@ -177,6 +178,7 @@ void EACirc::loadState(const string filename) {
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
 
     // load project
+    m_status = m_project->loadProjectState(getXMLElement(pRoot,"project"));
 
     delete pRoot;
     mainLogger.out() << "info: State successfully loaded from file " << filename << "." << endl;
@@ -337,7 +339,7 @@ void EACirc::initializeState() {
     if (m_settings.main.loadInitialPopulation) {
         loadPopulation(FILE_POPULATION);
     } else {
-        m_project->generateTestVectors();
+        m_project->generateAndSaveTestVectors();
         mainLogger.out() << "info: Initial test vectors generated." << endl;
         createPopulation();
     }
@@ -464,7 +466,7 @@ void EACirc::run() {
 
         // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
-            m_project->generateTestVectors();
+            m_project->generateAndSaveTestVectors();
             evaluateStep();
             continue;
         }
@@ -473,13 +475,13 @@ void EACirc::run() {
         if (m_settings.testVectors.testVectorChangeProgressive) {
             // TODO: understand and correct
             if (changed > m_actGener/m_settings.testVectors.testVectorChangeFreq + 1) {
-                m_project->generateTestVectors();
+                m_project->generateAndSaveTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
         } else {
             if (m_actGener %(m_settings.testVectors.testVectorChangeFreq) == 1) {
-                m_project->generateTestVectors();
+                m_project->generateAndSaveTestVectors();
                 mainLogger.out() << "info: Test vectors regenerated." << endl;
             }
             if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
@@ -518,7 +520,7 @@ void EACirc::run() {
     // commented for testing purposes of saving state
 
     // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
-    //m_evaluator->generateTestVectors();
+    //m_evaluator->generateAndSaveTestVectors();
     //m_evaluator->evaluateStep(genomeBest, m_actGener);
 
     //Print the best circuit

@@ -8,6 +8,20 @@ class IProject {
 protected:
     //! project type, see EACirc constants
     int m_type;
+
+private:
+    /** generate new set of test vectors
+      * -> generated vectors to be saved in globally reachable memory (pGlobals->testVectors)
+      * implementation in project required!
+      * @return status
+      */
+    virtual int generateTestVectors() = 0;
+
+    /** save current test vectors to file
+      * @return status
+      */
+    int saveTestVectors() const;
+
 public:
     /** general project constructor, sets project type
       * @param type     project constant
@@ -51,12 +65,15 @@ public:
       */
     virtual TiXmlNode* saveProjectState() const;
 
-    /** generate new set of test vectors
-      * -> generated vectors to be saved in globally reachable memory (pGlobals->testVectors)
-      * implementation in project required!
+    /** generate new test vectors and save them if required
       * @return status
       */
-    virtual int generateTestVectors() = 0;
+    int generateAndSaveTestVectors();
+
+    /** constatnt of active project
+      * @return project constant
+      */
+    int getProjectType() const;
 
     /** static function to get project instance
       */

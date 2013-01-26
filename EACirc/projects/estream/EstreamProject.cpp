@@ -34,6 +34,9 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     estreamSettings.estreamIVType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
     pEstreamSettings = &estreamSettings;
 
+    // bind project settings into global settings
+    pGlobals->settings->project = (void*) pEstreamSettings;
+
     return STAT_OK;
 }
 

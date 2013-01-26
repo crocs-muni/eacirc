@@ -3,7 +3,7 @@
 #include "random_generator/BiasRndGen.h"
 #include <typeinfo>
 
-void LoadConfigScript(TiXmlNode *pRoot, SETTINGS *pSettings) {
+void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     //
     // PROGRAM VERSION AND DATE
     //

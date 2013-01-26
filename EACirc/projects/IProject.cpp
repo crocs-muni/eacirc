@@ -1,5 +1,6 @@
 #include "IProject.h"
 #include "CommonFnc.h"
+#include "EACirc.h"
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
 
@@ -48,4 +49,27 @@ IProject* IProject::getProject(int projectType) {
     }
     mainLogger.out() << "info: Project successfully initialized. (" << project->shortDescription() << ")" << endl;
     return project;
+}
+
+int IProject::getProjectType() const {
+    return m_type;
+}
+
+int IProject::generateAndSaveTestVectors() {
+    int status = STAT_OK;
+    if ((status = generateTestVectors()) != STAT_OK) {
+        mainLogger.out() << "error: Test vector generation failed." << endl;
+        return status;
+    }
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        status = saveTestVectors();
+    }
+    return status;
+}
+
+int IProject::saveTestVectors() const {
+
+    // TBD: save test vectors from pGlobals->testVectors to file in standardized format
+
+    return STAT_OK;
 }
