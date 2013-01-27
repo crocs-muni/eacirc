@@ -9,32 +9,6 @@
 #include "GASStateGA.h"
 #include "projects/IProject.h"
 
-/** main random generator
-  * - initialized at state initialization of EACirc according to external seed or system time
-  * - idealy should be used ONLY for first initialization of other generators, GAlib, projects, etc.
-  * - MD5-based generator internally
-  */
-extern IRndGen* mainGenerator;
-
-/** unbiased random generator
-  * - initialized at state initialization of EACirc
-  * - all-purpose random generator (unbiased)
-  */
-extern IRndGen* rndGen;
-
-/** biased random generator
-  * - initialized at state initialization of EACirc
-  * - all-purpose random generator (biased)
-  */
-extern IRndGen* biasRndGen;
-
-/** globally accessible memory
-  * - EACirc settings
-  * - test vectors
-  * - surrent statistics
-  */
-extern GLOBALS* pGlobals;
-
 //! constants for EACirc configuration state
 #define EACIRC_CONFIG_LOADED 0x01
 #define EACIRC_PREPARED 0x02

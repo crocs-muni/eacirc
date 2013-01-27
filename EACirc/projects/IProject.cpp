@@ -1,6 +1,5 @@
 #include "IProject.h"
 #include "CommonFnc.h"
-#include "EACirc.h"
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
 

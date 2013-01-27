@@ -4,15 +4,13 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-//#include "globals.h"
-#include "EACirc.h"
+#include <cmath>
+#include <ctime>
 #include "CommonFnc.h"
 #include "random_generator/IRndGen.h"
 #include "random_generator/BiasRndGen.h"
 #include "GA1DArrayGenome.h"
 #include "tinyxml.h"
-#include "math.h"
-#include "time.h"
 #include "CircuitGenome.h"
 #include "projects/estream/estreamInterface.h"
 #include "projects/estream/EncryptorDecryptor.h"

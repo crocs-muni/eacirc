@@ -5,8 +5,12 @@
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
 
+// global variable definitions
 Logger mainLogger;
 IRndGen* mainGenerator = NULL;
+IRndGen* rndGen = NULL;
+IRndGen* biasRndGen = NULL;
+GLOBALS* pGlobals = NULL;
 
 int main(int argc, char **argv) {
     //

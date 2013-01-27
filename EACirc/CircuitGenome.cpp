@@ -1,5 +1,4 @@
 #include "CircuitGenome.h"
-#include "EACirc.h"
 #include "CommonFnc.h"
 #include "circuit_evaluator/ICircuitEvaluator.h"
 #include <iomanip>

@@ -2,7 +2,8 @@
 #include "QuantumRndGen.h"
 #include "BiasRndGen.h"
 #include "MD5RndGen.h"
-#include "EACirc.h"
+#include "EACglobals.h"
+#include "XMLProcessor.h"
 
 IRndGen::IRndGen(int type, unsigned long seed)
     : m_type(type) {

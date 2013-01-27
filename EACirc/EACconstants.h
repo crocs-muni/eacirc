@@ -1,6 +1,33 @@
 #ifndef EACCONSTANTS_H
 #define EACCONSTANTS_H
 
+typedef unsigned long DWORD;
+
+#ifndef FALSE
+#define FALSE               0
+#endif
+
+#ifndef TRUE
+#define TRUE                1
+#endif
+
+#ifndef ULONG_MAX
+#define ULONG_MAX     0xffffffffUL
+#endif
+
+#ifndef INT_MAX
+#define INT_MAX       2147483647
+#endif
+
+#ifdef _MSC_VER
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
 // PROJECTS
 #define PROJECT_PREGENERATED_TV     100
 #define PROJECT_ESTREAM             101

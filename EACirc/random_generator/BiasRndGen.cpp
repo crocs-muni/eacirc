@@ -1,7 +1,6 @@
-//#include "stdafx.h"
 #include "BiasRndGen.h"
-//#include "Time.h"
-#include "EACirc.h"
+#include "EACglobals.h"
+#include "XMLProcessor.h"
 #include "random_generator/QuantumRndGen.h"
 
 BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne)

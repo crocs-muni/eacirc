@@ -1,6 +1,5 @@
 #include "EstreamProject.h"
 #include "EstreamConstants.h"
-#include "EACirc.h"
 
 ESTREAM_SETTINGS* pEstreamSettings = NULL;
 

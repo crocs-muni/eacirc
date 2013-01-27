@@ -1,8 +1,8 @@
-#include "EACirc.h"
 #include "EncryptorDecryptor.h"
 #include "EstreamInterface.h"
-#include <string>
 #include "EstreamProject.h"
+#include "garandom.h"
+#include <string>
 
 EncryptorDecryptor::EncryptorDecryptor() {
 

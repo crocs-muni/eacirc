@@ -4,44 +4,54 @@
 #include "EACconstants.h"
 #include "Status.h"
 #include "Logger.h"
-
+#include "random_generator/IRndGen.h"
 #include <cmath>
 #include <cstring>
-
 using namespace std;
 
-typedef unsigned long DWORD;
+// forward declarations
+typedef struct _SETTINGS_INFO SETTINGS_INFO;
+typedef struct _SETTINGS_MAIN SETTINGS_MAIN;
+typedef struct _SETTINGS_RANDOM SETTINGS_RANDOM;
+typedef struct _SETTINGS_GA SETTINGS_GA;
+typedef struct _SETTINGS_CIRCUIT SETTINGS_CIRCUIT;
+typedef struct _SETTINGS_TEST_VECTORS SETTINGS_TEST_VECTORS;
+typedef struct _SETTINGS SETTINGS;
+typedef struct _STATISTICS STATISTICS;
+typedef struct _GLOBALS GLOBALS;
 
-#ifndef FALSE
-#define FALSE               0
-#endif
-
-#ifndef TRUE
-#define TRUE                1
-#endif
-
-#ifndef ULONG_MAX
-#define ULONG_MAX     0xffffffffUL
-#endif
-
-#ifndef INT_MAX
-#define INT_MAX       2147483647
-#endif
-
-#ifdef _MSC_VER
-typedef __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef __int64 int64_t;
-typedef unsigned __int64 uint64_t;
-#else
-#include <stdint.h>
-#endif
-
+// declarations of global variables (definitions in Main.cpp)
 /** main EACirc logging service
   * - send logs to 'mainLogger.out()' via '<<'
   * - flushing 'mainLogger.out()' causes written data to be prefixed by current time and flushed to logging stream
   */
 extern Logger mainLogger;
+
+/** main random generator
+  * - initialized at state initialization of EACirc according to external seed or system time
+  * - idealy should be used ONLY for first initialization of other generators, GAlib, projects, etc.
+  * - MD5-based generator internally
+  */
+extern IRndGen* mainGenerator;
+
+/** unbiased random generator
+  * - initialized at state initialization of EACirc
+  * - all-purpose random generator (unbiased)
+  */
+extern IRndGen* rndGen;
+
+/** biased random generator
+  * - initialized at state initialization of EACirc
+  * - all-purpose random generator (biased)
+  */
+extern IRndGen* biasRndGen;
+
+/** globally accessible memory
+  * - EACirc settings
+  * - test vectors
+  * - surrent statistics
+  */
+extern GLOBALS* pGlobals;
 
 //! settings corresponding to EACIRC/INFO
 typedef struct _SETTINGS_INFO {
@@ -77,13 +87,11 @@ typedef struct _SETTINGS_MAIN {
 typedef struct _SETTINGS_RANDOM {
     bool useFixedSeed;              //! should computation start from fixed seed instead of generating one?
     unsigned long seed;             //! seed to start from
-//    int primaryRandomType;          //! type of random for each rand()
     int biasRndGenFactor;           //! bias factor for general bias generator
     string qrngPath;                //! path to pregenerated quantum random data
     _SETTINGS_RANDOM(void) {
         useFixedSeed = false;
         seed = 0;
-//        primaryRandomType = 1;
         biasRndGenFactor = 50;
         qrngPath = "";
     }

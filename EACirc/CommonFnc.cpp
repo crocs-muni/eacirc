@@ -4,6 +4,7 @@
 #include <math.h>
 #include <sstream>
 #include <exception>
+#include <EACglobals.h>
 
 
 using namespace std;
