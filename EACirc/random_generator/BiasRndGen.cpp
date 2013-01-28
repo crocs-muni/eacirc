@@ -1,7 +1,6 @@
-//#include "stdafx.h"
 #include "BiasRndGen.h"
-//#include "Time.h"
-#include "EACirc.h"
+#include "EACglobals.h"
+#include "XMLProcessor.h"
 #include "random_generator/QuantumRndGen.h"
 
 BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne)
@@ -22,14 +21,14 @@ int BiasRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pR
 
 	for (int i=0; i<32; i++){
 		//NO NEED TO CONTINUE, WE CAN RETURN DIRECTLY FIRST I VALUES
-		if ((highBound+1) == pGACirc->precompPow[i]){
+		if ((highBound+1) == pGlobals->precompPow[i]){
 			*pRandom = random;
 			break;
 		}
 
         m_rndGen->getRandomFromInterval(100,&val);
 		if (val < m_chanceForOne)
-			random|=pGACirc->precompPow[i];
+			random|=pGlobals->precompPow[i];
 	}
 
 	if (*pRandom == 0) {
@@ -61,14 +60,14 @@ int BiasRndGen::getRandomFromInterval(int highBound, int *pRandom) {
 
 	for (int i=0; i<31; i++){
 		//NO NEED TO CONTINUE, WE CAN RETURN DIRECTLY FIRST I VALUES OF RANDOM
-		if ((highBound+1) == pGACirc->precompPow[i]){
+		if ((highBound+1) == pGlobals->precompPow[i]){
 			*pRandom = random;
 			break;
 		}
 
         m_rndGen->getRandomFromInterval(100,&val);
 		if (val < m_chanceForOne)
-			random|=pGACirc->precompPow[i];
+			random|=pGlobals->precompPow[i];
 	}
 
 	if (*pRandom == 0) {
@@ -93,14 +92,14 @@ int BiasRndGen::getRandomFromInterval(float highBound, float *pRandom) {
 
 	for (int i=0; i<32; i++) {
 		//NO NEED TO CONTINUE, WE CAN RETURN DIRECTLY FIRST I VALUES OF RANDOM
-		if ((highBound+1) == pGACirc->precompPow[i]){
+		if ((highBound+1) == pGlobals->precompPow[i]){
 			*pRandom = random;
 			break;
 		}
 
         m_rndGen->getRandomFromInterval(100,&val);
 		if (val < m_chanceForOne)
-			random|=pGACirc->precompPow[i];
+			random|=pGlobals->precompPow[i];
 	}
 
 	if (*pRandom == 0)

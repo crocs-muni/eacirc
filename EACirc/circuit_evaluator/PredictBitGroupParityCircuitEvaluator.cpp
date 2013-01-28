@@ -19,28 +19,28 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
             
     // GET PREDICTION OF PARITY (parity of first output bit) 
     for (int bit = 0; bit < NUM_BITS; bit++) {
-        if (outputs[0] & (unsigned char) pGACirc->precompPow[bit]) predictParity++;
+        if (outputs[0] & (unsigned char) pGlobals->precompPow[bit]) predictParity++;
     }
     predictParity = (predictParity & 0x01) ? 1 : 0; 
             
     // COMPUTE REAL PAIRITY OF SIGNALIZED BITS
-    for (int out = 1; out < pGACirc->outputLayerSize; out++) {
+    for (int out = 1; out < pGlobals->settings->circuit.sizeOutputLayer; out++) {
         if (outputs[out] & 0x80) { // mask out highest bit (used/not used flag)
             // THIS OUTPUT WILL BE USED 
             // OBTAIN VALUE OF ENCODED BIT
             offsetBit = outputs[out] & 0x7f;  // take all bits except used/not used bit
                     
             // CHECK IF THIS BIT WAS NOT ALREADY USED AND DO NOT EXCEED THE NUMBER OF BITS IN OUTPUT
-            if (usedBits[offsetBit] == 0 && (offsetBit < pGACirc->numOutputs * NUM_BITS)) {
+            if (usedBits[offsetBit] == 0 && (offsetBit < pGlobals->settings->circuit.sizeOutputLayer * NUM_BITS)) {
                 // MARK THIS BIT AS USED TO PREVENT MULTIPLE SELECTION OF THE SAME BITS
                 usedBits[offsetBit] = 1;
                         
                 offsetBlock = (int) offsetBit / NUM_BITS;
                 offsetBit = offsetBit - (offsetBlock * NUM_BITS);
                 assert(offsetBit < NUM_BITS);
-                assert(offsetBlock < pGACirc->numOutputs);
+                assert(offsetBlock < pGlobals->settings->circuit.sizeOutputLayer);
 
-                if (correctOutputs[offsetBlock] & (unsigned char) pGACirc->precompPow[offsetBit]) {
+                if (correctOutputs[offsetBlock] & (unsigned char) pGlobals->precompPow[offsetBit]) {
                     // SIGNALIZED BIT HAS VALUE 1
                     correctParity++;
                 }

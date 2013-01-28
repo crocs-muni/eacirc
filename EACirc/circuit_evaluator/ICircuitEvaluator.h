@@ -2,7 +2,6 @@
 #define CIRCUIT_EVALUATOR_INTERFACE_H
 
 #include "EACglobals.h"
-#include "EACirc.h"
 
 class ICircuitEvaluator {
 	public:

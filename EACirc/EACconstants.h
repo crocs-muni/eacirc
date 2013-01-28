@@ -1,6 +1,38 @@
 #ifndef EACCONSTANTS_H
 #define EACCONSTANTS_H
 
+typedef unsigned long DWORD;
+
+#ifndef FALSE
+#define FALSE               0
+#endif
+
+#ifndef TRUE
+#define TRUE                1
+#endif
+
+#ifndef ULONG_MAX
+#define ULONG_MAX     0xffffffffUL
+#endif
+
+#ifndef INT_MAX
+#define INT_MAX       2147483647
+#endif
+
+#ifdef _MSC_VER
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int64 uint64_t;
+#else
+#include <stdint.h>
+#endif
+
+// PROJECTS
+#define PROJECT_PREGENERATED_TV     100
+#define PROJECT_ESTREAM             101
+#define PROJECT_SHA3                102
+
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
 #define FILE_STATE                  "state.xml"
@@ -51,14 +83,14 @@
 #define MAX_INPUTS                  MAX_INTERNAL_LAYER_SIZE * MAX_INTERNAL_LAYER_SIZE // IF bSectorData IS ENABLED, SEPARATE RANGE FOR EACH INPUT NODE IN FIRST LAYER IS USED
 #define MAX_GENOME_SIZE (MAX_NUM_LAYERS * 2) * MAX_INTERNAL_LAYER_SIZE
 
-// PREDICTORS
-#define PREDICT_BIT                 0
-#define PREDICT_BITGROUP_PARITY     1
-#define PREDICT_BYTES_PARITY        2
-#define PREDICT_HAMMING_WEIGHT      3
-#define PREDICT_BYTE				4
-#define	PREDICT_DISTINGUISH			5
-#define	PREDICT_AVALANCHE			6
+// EVALUATORS
+#define EVALUATOR_BIT               0
+#define EVALUATOR_BITGROUP_PARITY   1
+#define EVALUATOR_BYTES_PARITY      2
+#define EVALUATOR_HAMMING_WEIGHT    3
+#define EVALUATOR_BYTE              4
+#define EVALUATOR_DISTINGUISH       5
+#define EVALUATOR_AVALANCHE         6
 
 #define TESTVECT_MD5INV             0
 #define TESTVECT_SHA1INV            1

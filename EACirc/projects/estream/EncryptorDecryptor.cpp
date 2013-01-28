@@ -1,34 +1,34 @@
-#include "EACirc.h"
 #include "EncryptorDecryptor.h"
-#include "estreamInterface.h"
-#include "test_vector_generator/ITestVectGener.h"
+#include "EstreamInterface.h"
+#include "EstreamProject.h"
+#include "garandom.h"
 #include <string>
 
 EncryptorDecryptor::EncryptorDecryptor() {
 
-	int numTestVectors = pGACirc->numTestVectors;
-	int numRounds = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount:-1;
-	int numRounds2 = (pGACirc->limitAlgRounds == 1)?pGACirc->limitAlgRoundsCount2:-1;
+    int numTestVectors = pGlobals->settings->testVectors.numTestVectors;
+    int numRounds = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount:-1;
+    int numRounds2 = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount2:-1;
     for(int i = 0; i < 4; i++) {
         ctxarr[i] = NULL;
         ecryptarr[i] = NULL;
     }
 	
-	int testVectorEstream = pGACirc->testVectorEstream;
+    int testVectorEstream = pEstreamSettings->testVectorEstream;
 	int nR = numRounds;
 
-	if (pGACirc->estreamIVType == ESTREAM_GENTYPE_ZEROS)
+    if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_ZEROS)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
-	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_ONES)
+    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_ONES)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
-	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_RANDOM)
+    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_RANDOM)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
-	else if (pGACirc->estreamIVType == ESTREAM_GENTYPE_BIASRANDOM)
+    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_BIASRANDOM)
 		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
 
 	for (int i=0; i<2; i++) {
 	   if (i == 1) {
-			   testVectorEstream = pGACirc->testVectorEstream2;
+               testVectorEstream = pEstreamSettings->testVectorEstream2;
 			   nR = numRounds2;
 		}
 	   switch (testVectorEstream) {
@@ -317,24 +317,24 @@ EncryptorDecryptor::EncryptorDecryptor() {
 			ecryptarr[2+i]->numRounds = nR;
 			ecryptarr[2+i]->ECRYPT_init();
 
-			if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_ZEROS)
+            if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_ZEROS)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
-			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_ONES)
+            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_ONES)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
-			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_RANDOM)
+            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_RANDOM)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
-			else if (pGACirc->estreamKeyType == ESTREAM_GENTYPE_BIASRANDOM)
+            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_BIASRANDOM)
 				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
 			
 
-			ecryptarr[i]->ECRYPT_keysetup(ctxarr[i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
+            ecryptarr[i]->ECRYPT_keysetup(ctxarr[i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
 			ecryptarr[i]->ECRYPT_ivsetup(ctxarr[i], iv);
 			ecryptarr[2+i]->ECRYPT_keysetup(ctxarr[2+i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
 			ecryptarr[2+i]->ECRYPT_ivsetup(ctxarr[2+i], iv);
 
 			// ********************** logging ********************** //
             ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-			if (pGACirc->saveTestVectors == 1) {
+            if (pGlobals->settings->testVectors.saveTestVectors) {
 				tvfile << setfill('0');
 				if (ecryptarr[i] != NULL){
 					tvfile << "Key " << i << ":";
@@ -354,7 +354,7 @@ EncryptorDecryptor::EncryptorDecryptor() {
 
 	// ******************* Save test vectors to file ********************** //
     ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-	if (pGACirc->saveTestVectors == 1) {
+    if (pGlobals->settings->testVectors.saveTestVectors) {
 		tvfile << "Generating test vectors with seed " << GAGetRandomSeed() << endl;
 		tvfile << "PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
 	}
@@ -377,7 +377,7 @@ EncryptorDecryptor::~EncryptorDecryptor() {
 }
 
 void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
-	if (!length) length = pGACirc->testVectorLength;
+    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))
@@ -387,7 +387,7 @@ void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, in
 }
 
 void EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
-	if (!length) length = pGACirc->testVectorLength;
+    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum])) 

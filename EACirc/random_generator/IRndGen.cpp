@@ -2,7 +2,8 @@
 #include "QuantumRndGen.h"
 #include "BiasRndGen.h"
 #include "MD5RndGen.h"
-#include "EACirc.h"
+#include "EACglobals.h"
+#include "XMLProcessor.h"
 
 IRndGen::IRndGen(int type, unsigned long seed)
     : m_type(type) {
@@ -27,22 +28,18 @@ IRndGen* IRndGen::parseGenerator(TiXmlNode* pRoot) {
     int generatorType = atoi(getXMLElementValue(pRoot,"@type").c_str());
     IRndGen* tempGenerator = NULL;
     switch (generatorType) {
-    case GENERATOR_QRNG: {
+    case GENERATOR_QRNG:
         tempGenerator = new QuantumRndGen(pRoot);
         break;
-    }
-    case GENERATOR_BIAS: {
+    case GENERATOR_BIAS:
         tempGenerator = new BiasRndGen(pRoot);
         break;
-    }
-    case GENERATOR_MD5: {
+    case GENERATOR_MD5:
         tempGenerator = new MD5RndGen(pRoot);
         break;
-    }
-    default: {
+    default:
         mainLogger.out() << "error: Generator could not load - unknown type (" << generatorType << ")." << endl;
         return NULL;
-    }
     }
     return tempGenerator;
 }

@@ -6,16 +6,13 @@
 #include "EACglobals.h"
 
 /** loads configuration data from file to settings structure
-  *
-  * @param filename         file to read from
-  * @param pBasicSettings   pointer to allocated settings structure where to save loaded data
-  * @return status
+  * @param pRoot            root of the XML tree
+  * @param pSettings   pointer to allocated settings structure where to save loaded data
   */
-int LoadConfigScript(string filename, BASIC_INIT_DATA* pBasicSettings);
+void LoadConfigScript(TiXmlNode* pRoot, SETTINGS* pSettings);
 
 /** saves given XML structure to file
   * automatically add XML declaration
-  *
   * @param pRoot        pointer to root element of the structure to be saved
   *                     (this tree structure IS deallocated !!!)
   * @param filename     file to save to (contents overwritten)
@@ -26,7 +23,6 @@ int saveXMLFile(TiXmlNode* pRoot, string filename);
 /** gets root element from XML file
   * data structure reference by this method is allocated dynamicly
   * CALLER is responsible for freeing!
-  *
   * @param pRoot        parsed XML structure will put here
   *                     initially should be NULL, otherwise memory leak occurs
   * @param filename     file where to load from
@@ -36,7 +32,6 @@ int loadXMLFile(TiXmlNode*& pRoot, string filename);
 
 /** get string value of XML element or attribute according to path similar to xPath
   * path syntax: "node/node/node" or "node/@attribute"
-  *
   * @param pRoot        root of the XML tree
   * @param path         path to requested node/attribute
   * @return value       retrieved node/attribute value (empty string in case of not existing node)
@@ -45,7 +40,6 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path);
 
 /** set value of XML element or attribute according to path similar to xPath
   * path syntax: "node/node/node" or "node/@attribute"
-  *
   * @param pRoot        root of the XML tree
   * @param path         path to requested node/attribute
   * @param value        new node/attribute value
@@ -53,8 +47,7 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path);
   */
 int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value);
 
-/** loaclize node in XML tree
-  *
+/** localize node in XML tree
   * @param pRoot        root of the XML tree
   * @param path         path to requested node
   * @return pointer to requested node (attribute name in path is ignored)

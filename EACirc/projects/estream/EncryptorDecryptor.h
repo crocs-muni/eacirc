@@ -2,6 +2,8 @@
 #define ENCRYPTORDECRYPTOR_H
 
 #include "EACglobals.h"
+#include "EstreamInterface.h"
+#include "EstreamConstants.h"
 
 class EncryptorDecryptor {
 	EstreamInterface* ecryptarr[4];

@@ -1,6 +1,4 @@
 #include "CircuitGenome.h"
-#include "Evaluator.h"
-#include "EACirc.h"
 #include "CommonFnc.h"
 #include "circuit_evaluator/ICircuitEvaluator.h"
 #include <iomanip>
@@ -10,16 +8,17 @@ void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned
     string          message;
 
     memset(circuit, 0, sizeof(circuit));
-	ParseCircuit(textCircuit, circuit, &(pGACirc->numLayers), &(pGACirc->internalLayerSize), &(pGACirc->outputLayerSize));
+    ParseCircuit(textCircuit, circuit, &(pGlobals->settings->circuit.numLayers),
+                 &(pGlobals->settings->circuit.sizeLayer), &(pGlobals->settings->circuit.sizeOutputLayer));
     
     // ACTUAL SIZE OF GENOM
-    pGACirc->genomeSize = (pGACirc->numLayers * 2) * MAX_INTERNAL_LAYER_SIZE;
+    pGlobals->settings->circuit.genomeSize = (pGlobals->settings->circuit.numLayers * 2) * MAX_INTERNAL_LAYER_SIZE;
     
-    for (int i = 0; i < pGACirc->genomeSize; i++) genome->gene(i, circuit[i]);
+    for (int i = 0; i < pGlobals->settings->circuit.genomeSize; i++) genome->gene(i, circuit[i]);
 
 //	PrintCircuit();
     
-    pGACirc->clearFitnessStats();
+    pGlobals->stats.clear();
 }
 
 float CircuitGenome::Evaluator(GAGenome &g) {
@@ -33,7 +32,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     unsigned char					correctOutputs[MAX_OUTPUTS];  
     int								match = 0;
     int								numPredictions = 0; 
-	int								remainingTestVectors = pGACirc->numTestVectors;
+    int								remainingTestVectors = pGlobals->settings->testVectors.numTestVectors;
 	ICircuitEvaluator				*circEval = new ICircuitEvaluator();
     {
         ICircuitEvaluator* temp = circEval->getCircEvalClass();
@@ -42,7 +41,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     }
 
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
-	remainingTestVectors = pGACirc->numTestVectors;
+    remainingTestVectors = pGlobals->settings->testVectors.numTestVectors;
 
     match = 0;
 	int match1 = 0;
@@ -50,9 +49,9 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     numPredictions = 0;
     for (int testSet = 0; testSet < remainingTestVectors; testSet++) { 
         // LOAD TEST SET INTO inputs
-		memcpy(inputs, pGACirc->testVectors[testSet], MAX_INPUTS);
+        memcpy(inputs, pGlobals->testVectors[testSet], MAX_INPUTS);
         // LOAD TEST SET INTO outputs
-        memcpy(correctOutputs, pGACirc->testVectors[testSet] + MAX_INPUTS, MAX_OUTPUTS);
+        memcpy(correctOutputs, pGlobals->testVectors[testSet] + MAX_INPUTS, MAX_OUTPUTS);
             
         // EXECUTE CIRCUIT
         status = ExecuteCircuit(&genome, inputs, outputs);
@@ -62,23 +61,23 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     }
 
 	// COMPARE CIRCUIT INPUTS AND OUTPUTS, IF SAME, SET FITNESS TO 0
-	int inOutCompare = memcmp(inputs, outputs, pGACirc->outputLayerSize);
+    int inOutCompare = memcmp(inputs, outputs, pGlobals->settings->circuit.sizeOutputLayer);
 	if (inOutCompare == 0) {
 		fit = 0;
 	} else {
 		fit = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;
 	}
 
-    if (!pGACirc->prunningInProgress) {
+    if (!pGlobals->stats.prunningInProgress) {
         // include into average fitness of whole generation
-        (pGACirc->avgGenerFit) += fit;
-        (pGACirc->numAvgGenerFit)++;
-        (pGACirc->avgPredictions) += numPredictions;
+        (pGlobals->stats.avgGenerFit) += fit;
+        (pGlobals->stats.numAvgGenerFit)++;
+        (pGlobals->stats.avgPredictions) += numPredictions;
 
-        if (fit > pGACirc->bestGenerFit) pGACirc->bestGenerFit = fit;
+        if (fit > pGlobals->stats.bestGenerFit) pGlobals->stats.bestGenerFit = fit;
 
-        if (pGACirc->maxFit < fit) {
-            pGACirc->maxFit = fit;
+        if (pGlobals->stats.maxFit < fit) {
+            pGlobals->stats.maxFit = fit;
 
             // DISPLAY CURRENTLY BEST
             ostringstream os2;
@@ -86,7 +85,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
             string filePath = os2.str();
             PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
 
-            if (pGACirc->allowPrunning) {
+            if (pGlobals->settings->circuit.allowPrunning) {
                 filePath += "_prunned";
                 PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
             }
@@ -121,37 +120,37 @@ void CircuitGenome::Initializer(GAGenome &g) {
     
 	// INITIALIZE ALL LAYERS
 
-    for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
+    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
         offset = layer * MAX_INTERNAL_LAYER_SIZE; 
         // LAST LAYER CAN HAVE DIFFERENT NUMBER OF FUNCTIONS
         int numLayerInputs = 0;
         if (layer == 0) {
             // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
             //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize; 
-            numLayerInputs = pGACirc->numInputs;
+            numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
         }
-        else numLayerInputs = pGACirc->internalLayerSize;
+        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
         
-        int numFncInLayer = ((layer == 2 * pGACirc->numLayers - 1) || (layer == 2 * pGACirc->numLayers - 2)) ? pGACirc->outputLayerSize : pGACirc->internalLayerSize;
+        int numFncInLayer = ((layer == 2 * pGlobals->settings->circuit.numLayers - 1) || (layer == 2 * pGlobals->settings->circuit.numLayers - 2)) ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
 
         for (int slot = 0; slot < numFncInLayer; slot++) {
             unsigned long   value;
             if (layer % 2 == 0) {
                 // CONNECTION SUB-LAYER
-                if (layer / 2 < pGACirc->numSelectorLayers) {
+                if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
                     // SELECTOR LAYER - TAKE INPUT ONLY FROM PREVIOUS NODE IN SAME COORDINATES
-                    value = pGACirc->precompPow[slot];
+                    value = pGlobals->precompPow[slot];
                 }
                 else {
                     // FUNCTIONAL LAYERS
-                    rndGen->getRandomFromInterval(pGACirc->precompPow[numLayerInputs], &value);
+                    rndGen->getRandomFromInterval(pGlobals->precompPow[numLayerInputs], &value);
                     //value = 0xffffffff;
                 }
                 genome.gene(offset + slot, value);
             }
             else {
                 // FUNCTION SUB-LAYER, SET ONLY ALLOWED FUNCTIONS  
-                if (layer / 2 < pGACirc->numSelectorLayers) {
+                if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
                     // SELECTOR LAYER - PASS INPUT WITHOUT CHANGES (ONLY SIMPLE COMPOSITION OF INPUTS IS ALLOWED)
                     genome.gene(offset + slot, FNC_XOR);
                 }
@@ -160,7 +159,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
                         rndGen->getRandomFromInterval(FNC_MAX, &value);
-                        if (pGACirc->allowedFNC[value] != 0) { 
+                        if (pGlobals->settings->circuit.allowedFunctions[value] != 0) {
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
                         }
@@ -175,18 +174,18 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
     GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
     int result = 0;
     
-    for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
+    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
         int offset = layer * MAX_INTERNAL_LAYER_SIZE; 
 
         int numLayerInputs = 0;
         if (layer == 0) {
             // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
             //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize; 
-            numLayerInputs = pGACirc->numInputs;
+            numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
         }
-        else numLayerInputs = pGACirc->internalLayerSize;
+        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
-        int numFncInLayer = ((layer == 2 * pGACirc->numLayers - 1) || (layer == 2 * pGACirc->numLayers - 2)) ? pGACirc->outputLayerSize : pGACirc->internalLayerSize;
+        int numFncInLayer = ((layer == 2 * pGlobals->settings->circuit.numLayers - 1) || (layer == 2 * pGlobals->settings->circuit.numLayers - 2)) ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
 
         for (int slot = 0; slot < numFncInLayer; slot++) {
             unsigned long value;
@@ -197,7 +196,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 if (GAFlipCoin(pmut)) {
                     unsigned long temp;
                     rndGen->getRandomFromInterval(numLayerInputs, &value);
-                    temp = pGACirc->precompPow[value];
+                    temp = pGlobals->precompPow[value];
                     // SWITCH RANDOMLY GENERATED BIT
                     temp ^= genome.gene(offset + slot);
                     genome.gene(offset + slot, temp);
@@ -209,7 +208,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
                         rndGen->getRandomFromInterval(FNC_MAX, &value);
-                        if (pGACirc->allowedFNC[value] != 0) { 
+                        if (pGlobals->settings->circuit.allowedFunctions[value] != 0) {
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
                         }
@@ -230,8 +229,8 @@ int CircuitGenome::Crossover(const GAGenome &p1, const GAGenome &p2, GAGenome *o
     GA1DArrayGenome<unsigned long> &offspring2 = (GA1DArrayGenome<unsigned long>&) *o2;
     
     // CROSS ONLY WHOLE LAYERS
-    int cpoint = GARandomInt(1,pGACirc->numLayers) * 2; // bod ken (v mezch od,do)
-    for (int layer = 0; layer < 2 * pGACirc->numLayers; layer++) {
+    int cpoint = GARandomInt(1,pGlobals->settings->circuit.numLayers) * 2; // bod ken (v mezch od,do)
+    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
         int offset = layer * MAX_INTERNAL_LAYER_SIZE; 
 
         if (layer <= cpoint) {
@@ -315,7 +314,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
         prunnedGenome.gene(i, genome.gene(i)); 
     }
 
-    if (pGACirc->prunningInProgress) { 
+    if (pGlobals->stats.prunningInProgress) {
         // WE ARE ALREDY PERFORMING PRUNING - DO NOT CONTINUE TO PREVENT OVERLAPS
     }
     else {
@@ -323,7 +322,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
         // METHOD - TRY TO TEMPORARY REMOVE CONNECTION/FUNCTION AND TEST FITNESS CHANGES
         //
         
-        pGACirc->prunningInProgress = TRUE;        
+        pGlobals->stats.prunningInProgress = true;
         
 		float origFit = Evaluator(prunnedGenome);
         
@@ -364,7 +363,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         unsigned long   tempOrigValue = origValue;  // WILL HOLD MASK OF INPORTANT CONNECTIONS
                         // CONNECTION LAYER - TRY TO REMOVE CONNECTIONS GRADUALLY
                         for (int conn = 0; conn < MAX_CONNECTORS; conn++) {
-                            unsigned long   newValue = tempOrigValue & (~pGACirc->precompPow[conn]);
+                            unsigned long   newValue = tempOrigValue & (~pGlobals->precompPow[conn]);
                             
                             if (newValue != tempOrigValue) {
                                 prunnedGenome.gene(i, newValue);
@@ -401,7 +400,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
     //Evaluator(prunnedGenome);
     // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope end
 
-    pGACirc->prunningInProgress = FALSE;
+    pGlobals->stats.prunningInProgress = false;
     return status;
 }
 
@@ -415,8 +414,8 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_
 	
 	// ADD OUTPUT NODES
     // VISUAL CIRC: CONNECT OUTPUT LAYER
-    int offsetFNC = (2 * pGACirc->numLayers - 1) * MAX_INTERNAL_LAYER_SIZE; 
-    for (int i = 0; i < pGACirc->outputLayerSize; i++) {
+    int offsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * MAX_INTERNAL_LAYER_SIZE;
+    for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (usePredictorMask == NULL || usePredictorMask[i] == 1) {
 			// ADD THIS ONE TO LIST OF USED NODES 
 			displayNodes[offsetFNC + i] = 1;	
@@ -425,7 +424,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_
 	
 	
 	// PROCESS ALL LAYERS FROM BACK
-    for (int layer = 2 * pGACirc->numLayers - 1; layer > 0; layer = layer - 2) {
+    for (int layer = 2 * pGlobals->settings->circuit.numLayers - 1; layer > 0; layer = layer - 2) {
         int offsetCON = (layer-1) * MAX_INTERNAL_LAYER_SIZE; 
         int offsetFNC = (layer) * MAX_INTERNAL_LAYER_SIZE; 
 
@@ -434,16 +433,16 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_
         if (layer == 1) {
             // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
             //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize; 
-            numLayerInputs = pGACirc->numInputs;
+            numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
         }
-        else numLayerInputs = pGACirc->internalLayerSize;
+        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
         // actual number of functions in layer - different for the last "output" layer
-        int numFncInLayer = (layer == (2 * pGACirc->numLayers - 1)) ? pGACirc->outputLayerSize : pGACirc->internalLayerSize; 
+        int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
 
         // SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
-	    int	numLayerConnectors = pGACirc->numLayerConnectors;
-        if (layer / 2 < pGACirc->numSelectorLayers) {
+        int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
+        if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
             numLayerConnectors = numLayerInputs;    
         }
 	    int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -502,7 +501,7 @@ int CircuitGenome::HasConnection(unsigned long functionID, unsigned long connect
     
     // DEFAULT: IF SIGNALIZED IN MASK, THAN ALLOW CONNECTION
     // SELECTED INSTRUCTION MAY CHANGE LATER
-    if (connectionMask & (unsigned long) pGACirc->precompPow[bit]) status = TRUE;
+    if (connectionMask & (unsigned long) pGlobals->precompPow[bit]) status = TRUE;
     
     // IMPLICIT CONNECTION MAY EXIST
     switch (functionID) {
@@ -570,7 +569,7 @@ int CircuitGenome::IsOperand(unsigned long functionID, unsigned long connectionM
     
     // DEFAULT: IF SIGNALIZED IN MASK, THAN ALLOW CONNECTION
     // SELECTED INSTRUCTION MAY CHANGE LATER
-    if (connectionMask & (unsigned long) pGACirc->precompPow[bit]) status = TRUE;
+    if (connectionMask & (unsigned long) pGlobals->precompPow[bit]) status = TRUE;
     
     // IMPLICIT CONNECTION MAY EXIST
     switch (functionID) {
@@ -772,7 +771,7 @@ int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int*
 		// GENOM ONLY 
 		int offset = 0;
         //while ((pos2 = textCircuit.find(" ", pos)) != string::npos) {
-        while (offset < pGACirc->genomeSize) {
+        while (offset < pGlobals->settings->circuit.genomeSize) {
             pos2 = textCircuit.find(" ", pos);
             // manual change: commented line above substituted for 2 lines just above
 
@@ -812,7 +811,7 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char useP
     //
     // PRUNE CIRCUIT IF REQUIRED
     //
-	if (pGACirc->allowPrunning && bPruneCircuit) {
+    if (pGlobals->settings->circuit.allowPrunning && bPruneCircuit) {
         // PRUNE
         status = PruneCircuit(inputGenome, genome);    
         bCodeCircuit = TRUE;
@@ -843,7 +842,7 @@ node [color=lightblue2, style=filled];\r\n";
     if (bCodeCircuit) codeCirc += "static void circuit(unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]) {\n";
 
     message += "\r\n";
-    for (int layer = 1; layer < 2 * pGACirc->numLayers; layer = layer + 2) {
+    for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
         int offsetCON = (layer-1) * MAX_INTERNAL_LAYER_SIZE; 
         int offsetFNC = (layer) * MAX_INTERNAL_LAYER_SIZE; 
 
@@ -851,7 +850,7 @@ node [color=lightblue2, style=filled];\r\n";
         if (layer == 1) {
             // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
             //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize; 
-            numLayerInputs = pGACirc->numInputs;
+            numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
             
 			// VISUAL CIRC: INPUTS 
 			for (int i = 0; i < numLayerInputs; i++) {
@@ -875,11 +874,11 @@ node [color=lightblue2, style=filled];\r\n";
     		codeCirc += "\n";
 			
         }
-        else numLayerInputs = pGACirc->internalLayerSize;
+        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
-        int numFncs = pGACirc->internalLayerSize;
+        int numFncs = pGlobals->settings->circuit.sizeLayer;
         // IF DISPLAYING THE LAST LAYER, THEN DISPLAY ONLY 'INTERNAL_LAYER_SIZE' FNC (OTHERS ARE UNUSED)
-        if (layer == (2 * pGACirc->numLayers - 1)) numFncs = pGACirc->outputLayerSize;
+        if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numFncs = pGlobals->settings->circuit.sizeOutputLayer;
 
 		//
 		// VISUAL CIRC: PUT ALL NODES FROM SAME LAYER INTO SAME RANK
@@ -905,8 +904,8 @@ node [color=lightblue2, style=filled];\r\n";
 			GetFunctionLabel(genome.gene(offsetFNC + slot), genome.gene(offsetCON + slot), &value);
             
 			// SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
-			int	numLayerConnectors = pGACirc->numLayerConnectors;
-			if (layer / 2 < pGACirc->numSelectorLayers) {
+            int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
+            if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
 				numLayerConnectors = numLayerInputs;    
 			}
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -1147,7 +1146,7 @@ node [color=lightblue2, style=filled];\r\n";
     if (bCodeCircuit) codeCirc += "\n";
     
     // VISUAL CIRC: CONNECT OUTPUT LAYER
-    for (int i = 0; i < pGACirc->outputLayerSize; i++) {
+    for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (usePredictorMask == NULL || usePredictorMask[i] == 1) {
 			//value2.Format("node [color=red];\r\n");
 			value2 = "node [color=red];\r\n"; 
@@ -1164,13 +1163,13 @@ node [color=lightblue2, style=filled];\r\n";
 			ostringstream os29;
 			os29 << i << "_OUT";
 			actualSlotID = os29.str();
-		    int prevOffsetFNC = (2 * pGACirc->numLayers - 1) * MAX_INTERNAL_LAYER_SIZE; 
-		    int prevOffsetCON = (2 * pGACirc->numLayers - 2) * MAX_INTERNAL_LAYER_SIZE; 
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * MAX_INTERNAL_LAYER_SIZE;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * MAX_INTERNAL_LAYER_SIZE;
 		    string		value;
 		    GetFunctionLabel(genome.gene(prevOffsetFNC + i), genome.gene(prevOffsetCON + i), &value);
-		    //previousSlotID.Format("%d_%d_%s", pGACirc->numLayers, i, value);
+            //previousSlotID.Format("%d_%d_%s", pGACirc->settings->circuit.numLayers, i, value);
 			ostringstream os30;
-			os30 << (pGACirc->numLayers) << "_" << i << "_" << value;
+            os30 << (pGlobals->settings->circuit.numLayers) << "_" << i << "_" << value;
 			previousSlotID = os30.str();
 		    //value2.Format("\"%s\" -> \"%s\";\r\n", actualSlotID, previousSlotID);
 			ostringstream os31;
@@ -1325,14 +1324,14 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
     int     status = STAT_OK;
     unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
-    int     sectorLength = pGACirc->numInputs;
+    int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
     unsigned char    localInputs[MAX_INPUTS];
     
     memset(outputs, 0, MAX_OUTPUTS);
     
     // ALL IN ONE RUN
     numSectors = 1;
-    sectorLength = pGACirc->numInputs;
+    sectorLength = pGlobals->settings->circuit.sizeInputLayer;
     
     for (int sector = 0; sector < numSectors; sector++) { 
         // PREPARE INPUTS FOR ACTUAL RUN OF CIRCUIT
@@ -1342,13 +1341,13 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
         }
         else {
             // USE STATE (OUTPUT) AS FIRST PART OF INPUT
-            memcpy(localInputs, outputs, pGACirc->outputLayerSize);
+            memcpy(localInputs, outputs, pGlobals->settings->circuit.sizeOutputLayer);
             // ADD FRESH INPUT DATA
-            memcpy(localInputs + pGACirc->outputLayerSize, inputs + sector * sectorLength, sectorLength);
+            memcpy(localInputs + pGlobals->settings->circuit.sizeOutputLayer, inputs + sector * sectorLength, sectorLength);
         }
         
         // EVALUATE CIRCUIT
-        for (int layer = 1; layer < 2 * pGACirc->numLayers; layer = layer + 2) {
+        for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
             int offsetCON = (layer-1) * MAX_INTERNAL_LAYER_SIZE; 
             int offsetFNC = (layer) * MAX_INTERNAL_LAYER_SIZE; 
             memset(outputs, 0, MAX_INTERNAL_LAYER_SIZE);
@@ -1358,16 +1357,16 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
             if (layer == 1) {
                 // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
                 //if (pCircuit->bSectorInputData) numLayerInputs = pCircuit->internalLayerSize; 
-                numLayerInputs = pGACirc->numInputs;
+                numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
             }
-            else numLayerInputs = pGACirc->internalLayerSize;
+            else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
             // actual number of functions in layer - different for the last "output" layer
-            int numFncInLayer = (layer == (2 * pGACirc->numLayers - 1)) ? pGACirc->outputLayerSize : pGACirc->internalLayerSize; 
+            int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
 
             // SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
-    	    int	numLayerConnectors = pGACirc->numLayerConnectors;
-            if (layer / 2 < pGACirc->numSelectorLayers) {
+            int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
+            if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
                 numLayerConnectors = numLayerInputs;    
             }
     	    int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -1410,7 +1409,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                     case FNC_OR: {
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result |= localInputs[connectOffset + bit];
                             }
                         }
@@ -1420,7 +1419,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         result = ~0; // ASSIGN ALL ONES AS STARTING VALUE TO PERFORM result &= LATER
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION, THEN TAKE INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result &= localInputs[connectOffset + bit];
                             }
                         }
@@ -1434,7 +1433,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                     case FNC_XOR: {
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result ^= localInputs[connectOffset + bit];
                             }
                         }
@@ -1443,7 +1442,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                     case FNC_NOR: {
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result |= ~(localInputs[connectOffset + bit]);
                             }
                         }
@@ -1453,7 +1452,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         result = ~0; // ASSIGN ALL ONES AS STARTING VALUE TO PERFORM result &= LATER
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result &= ~(localInputs[connectOffset + bit]);
                             }
                         }
@@ -1482,7 +1481,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         // SUM ALL INPUTS
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result += localInputs[connectOffset + bit];
                             }
                         }
@@ -1494,7 +1493,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         result = localInputs[slot];
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result -= localInputs[connectOffset + bit];
                             }
                         }
@@ -1506,7 +1505,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         result = localInputs[slot];
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result += localInputs[connectOffset + bit];
                             }
                         }
@@ -1518,7 +1517,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         result = localInputs[slot];
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 result *= localInputs[connectOffset + bit];
                             }
                         }
@@ -1530,7 +1529,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         result = localInputs[slot];
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+                            if (connect & (unsigned long) pGlobals->precompPow[bit]) {
                                 if (localInputs[connectOffset + bit] != 0) {
                                     result /= localInputs[connectOffset + bit];
                                 }
@@ -1542,14 +1541,15 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
 						// READ x-th byte
 						result = localInputs[slot];
 						for (int bit = 0; bit < stopBit; bit++) {
-							if (connect & (unsigned long) pGACirc->precompPow[bit]) {
+							if (connect & (unsigned long) pGlobals->precompPow[bit]) {
 								result += localInputs[connectOffset + bit];
 							}
 						}
-						result = inputs[result % pGACirc->numInputs];
+                        result = inputs[result % pGlobals->settings->circuit.sizeInputLayer];
                         break;
 					}
                     default: {
+                        mainLogger.out() << "error: Unknown function in circuit. (" << pGenome->gene(offsetFNC + slot) << ")" << endl;
                         assert(FALSE);
                         break;
                     }
@@ -1558,7 +1558,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                 outputs[slot] = result;
             }
             // PREPARE INPUTS FOR NEXT LAYER FROM OUTPUTS
-            memcpy(localInputs, outputs, pGACirc->internalLayerSize);
+            memcpy(localInputs, outputs, pGlobals->settings->circuit.sizeLayer);
 			//cout << endl;
         }
     }
@@ -1579,20 +1579,20 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
 }
 
 int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
-    if (genome.size() != pGACirc->genomeSize) {
+    if (genome.size() != pGlobals->settings->circuit.genomeSize) {
         mainLogger.out() << "error: Incorrect genome size. Cannot read genome." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
-    unsigned long* circuit = new unsigned long[pGACirc->genomeSize];
+    unsigned long* circuit = new unsigned long[pGlobals->settings->circuit.genomeSize];
 
     memset(circuit, 0, sizeof(circuit));
-    CircuitGenome::ParseCircuit(textCircuit, circuit, &(pGACirc->numLayers), &(pGACirc->internalLayerSize), &(pGACirc->outputLayerSize));
+    CircuitGenome::ParseCircuit(textCircuit, circuit, &(pGlobals->settings->circuit.numLayers), &(pGlobals->settings->circuit.sizeLayer), &(pGlobals->settings->circuit.sizeOutputLayer));
 
     // TODO: always keep real genome size, not constant from config file
     // ACTUAL SIZE OF GENOM
-    // pGACirc->genomeSize = (pGACirc->numLayers * 2) * MAX_INTERNAL_LAYER_SIZE;
+    // pGACirc->settings->circuit.genomeSize = (pGACirc->settings->circuit.numLayers * 2) * MAX_INTERNAL_LAYER_SIZE;
 
-    for (int i = 0; i < pGACirc->genomeSize; i++) genome.gene(i, circuit[i]);
+    for (int i = 0; i < pGlobals->settings->circuit.genomeSize; i++) genome.gene(i, circuit[i]);
 
     delete[] circuit;
     // TODO: add circiut parsing status

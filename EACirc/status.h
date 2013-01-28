@@ -19,6 +19,7 @@
 #define STAT_INCOMPATIBLE_PARAMETER             15      // PARAMETER LOADED/FOUND IS NOT COMPATIBLE
 #define STAT_FILE_WRITE_FAIL                    16      // FILE COULD NOT BE SAVED
 #define STAT_CONFIG_SCRIPT_INCOMPLETE           17      // CONFIGURATION FILE IS INCOMPLETE
+#define STAT_PROJECT_ERROR                      18      // ERROR IN PROJECT CLASSES
 
 const char* ErrorToString(int error);
 

@@ -1,4 +1,6 @@
 #include "MD5RndGen.h"
+#include "EACglobals.h"
+#include "XMLProcessor.h"
 #include <random>
 
 MD5RndGen::MD5RndGen(unsigned long seed)
