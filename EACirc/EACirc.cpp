@@ -518,7 +518,7 @@ void EACirc::run() {
     // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
     //m_evaluator->generateAndSaveTestVectors();
     //m_evaluator->evaluateStep(genomeBest, m_actGener);
-    //genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
+    GA1DArrayGenome<unsigned long> genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
     //Print the best circuit
     CircuitGenome::PrintCircuit(genomeBest,FILE_BEST_CIRCUIT,0,1);
     //m_status = saveState(FILE_STATE,FILE_POPULATION);
