@@ -6,7 +6,7 @@ Logger::Logger() : m_logging(false), m_using_file(false),
 	m_out(new LoggerStream(this,clog)) {}
 
 Logger::~Logger() {
-    out() << "Exiting EACirc." << endl;
+    out() << "info: Exiting EACirc." << endl;
     delete m_out;
 }
 
@@ -23,9 +23,9 @@ void Logger::setOutputFile(const string filePath) {
 
 void Logger::setlogging(bool state) {
     if (state == m_logging) return;
-    out() << "Logging disabled" << endl;
+    out() << "info: Logging disabled" << endl;
     m_logging = state;
-    out() << "Logging enabled." << endl;
+    out() << "info: Logging enabled." << endl;
 }
 
 string Logger::getTime() const {

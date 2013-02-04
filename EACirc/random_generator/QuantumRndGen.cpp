@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include "QuantumRndGen.h"
 #include "time.h"
 #include "MD5RndGen.h"
@@ -18,9 +17,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
     // CHECK FOR QUANTUM DATA SOURCE
     int length;
     ifstream file;
-    ostringstream sFileName;
-    sFileName << m_QRNGDataPath << FILE_QRNG_DATA_PREFIX << m_fileIndex << FILE_QRNG_DATA_SUFFIX;
-    file.open(sFileName.str().c_str(), fstream::in | fstream::binary);
+    file.open(getQRNGDataFileName(m_fileIndex).c_str(), fstream::in | fstream::binary);
     if (file.is_open()) { // using QRNG data
         m_usesQRNGData = true;
 
@@ -32,7 +29,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
 
         file.close();
     } else { // QRNG data not available
-        mainLogger.out() << "warning: Quantum random data files not found, using system generator." << endl;
+        mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
         m_accLength = 4; // (max 32B), see init and update
     }
     m_accumulator = new unsigned char[m_accLength];
@@ -50,6 +47,20 @@ QuantumRndGen::~QuantumRndGen() {
     delete m_internalRNG;
 }
 
+string QuantumRndGen::getQRNGDataFileName(int fileIndex) {
+    ostringstream sFileName;
+    int indexWidth;
+    if (pGlobals->settings->random.qrngFilesMaxIndex == 0) {
+        indexWidth = 1;
+    } else {
+        indexWidth =  floor(log10(pGlobals->settings->random.qrngFilesMaxIndex)) + 1;
+    }
+    sFileName << m_QRNGDataPath << FILE_QRNG_DATA_PREFIX;
+    sFileName << dec << right << setw(indexWidth) << setfill('0') << fileIndex;
+    sFileName << FILE_QRNG_DATA_SUFFIX;
+
+    return sFileName.str();
+}
 
 int QuantumRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
     int status = STAT_OK;
@@ -130,11 +141,11 @@ int QuantumRndGen::reinitRandomGenerator() {
         m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + 2);
         m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + 3);
     } else {
-        m_internalRNG->getRandomFromInterval(FILE_QRNG_DATA_INDEX_MAX,&m_fileIndex);
-        //m_fileIndex = m_internalRNG() % FILE_QRNG_DATA_INDEX_MAX;
-        status = loadQRNGDataFile();
+        do {
+            m_internalRNG->getRandomFromInterval(pGlobals->settings->random.qrngFilesMaxIndex,&m_fileIndex);
+            status = loadQRNGDataFile();
+        } while (status != STAT_OK);
         m_internalRNG->getRandomFromInterval(m_accLength-4, &m_accPosition);
-        //m_accPosition = m_internalRNG()%(m_accLength-4);
     }
     return status;
 }
@@ -152,10 +163,6 @@ int QuantumRndGen::updateAccumulator() {
         m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 1);
         m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 2);
         m_internalRNG->getRandomFromInterval(UCHAR_MAX,m_accumulator + m_accPosition + 3);
-        //m_accumulator[m_accPosition] = m_internalRNG()%256;
-        //m_accumulator[m_accPosition+1] = m_internalRNG()%256;
-        //m_accumulator[m_accPosition+2] = m_internalRNG()%256;
-        //m_accumulator[m_accPosition+3] = m_internalRNG()%256;
     }
 	
     return status;
@@ -163,14 +170,12 @@ int QuantumRndGen::updateAccumulator() {
 
 int QuantumRndGen::loadQRNGDataFile() {
     ifstream file;
-    ostringstream sFileName;
-    sFileName << m_QRNGDataPath << FILE_QRNG_DATA_PREFIX << m_fileIndex << FILE_QRNG_DATA_SUFFIX;
-    file.open(sFileName.str().c_str(), fstream::in | fstream::binary);
+    file.open(getQRNGDataFileName(m_fileIndex).c_str(), fstream::in | fstream::binary);
     if (file.is_open()) {
         file.read((char*)m_accumulator, m_accLength);
         file.close();
     } else {
-        mainLogger.out() << "error: Cannot open QRNG data file " << sFileName.str() << "." << endl;
+        mainLogger.out() << "warning: Cannot open QRNG data file " << getQRNGDataFileName(m_fileIndex) << "." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     return STAT_OK;
@@ -253,13 +258,6 @@ TiXmlNode* QuantumRndGen::exportGenerator() const {
     pRoot->LinkEndChild(accumulatorState);
 
     TiXmlElement* internalRNGstate = new TiXmlElement("internal_rng");
-    /*
-    internalRNGstate->SetAttribute("type",typeid(m_internalRNG).name());
-    stringstream state;
-    state << dec << left << setfill(' ');
-    state << m_internalRNG;
-    internalRNGstate->LinkEndChild(new TiXmlText(state.str().c_str()));
-    */
     internalRNGstate->LinkEndChild(m_internalRNG->exportGenerator());
     pRoot->LinkEndChild(internalRNGstate);
 

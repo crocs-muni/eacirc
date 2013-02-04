@@ -5,14 +5,23 @@
 #include "random_generator/IRndGen.h"
 
 class QuantumRndGen : public IRndGen{
+private:
+    //! temporary data (accumulator)
     unsigned char* m_accumulator;
-    bool m_usesQRNGData; // using rng output files?
-    string m_QRNGDataPath; // path to rng output files
-    int m_accLength; // real data length
-    int m_accPosition; // accumulator position
-    int m_fileIndex; // which QRNG file is currently used?
-    // minstd_rand m_internalRNG;
+    //! using rng output files?
+    bool m_usesQRNGData;
+    //! path to rng output files
+    string m_QRNGDataPath;
+    //! real data length in accumulator
+    int m_accLength;
+    //! current accumulator position
+    int m_accPosition;
+    //! which QRNG file is currently used?
+    int m_fileIndex;
+    //! internal MD5 generator if quantum files not found
     IRndGen* m_internalRNG;
+    //! get filename of random file with index with path
+    string getQRNGDataFileName(int fileIndex);
 public:
     QuantumRndGen(unsigned long seed = 0, string QRBGSPath = "");
     QuantumRndGen(TiXmlNode* pRoot);

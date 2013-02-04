@@ -89,11 +89,13 @@ typedef struct _SETTINGS_RANDOM {
     unsigned long seed;             //! seed to start from
     int biasRndGenFactor;           //! bias factor for general bias generator
     string qrngPath;                //! path to pregenerated quantum random data
+    int qrngFilesMaxIndex;          //! maximal index of qrng data file
     _SETTINGS_RANDOM(void) {
         useFixedSeed = false;
         seed = 0;
         biasRndGenFactor = 50;
         qrngPath = "";
+        qrngFilesMaxIndex = 0;
     }
 } SETTINGS_RANDOM;
 

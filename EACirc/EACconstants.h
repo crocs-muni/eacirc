@@ -54,13 +54,16 @@ typedef unsigned __int64 uint64_t;
 // CIRCUIT OUTPUT SETTINGS
 #define CIRCUIT_FILENAME_PRECISION 3
 
-// QRNG DATA (filename = $PREFIX$INDEX$DUFFIX, index starts from 0)
-#define	FILE_QRNG_DATA_INDEX_MAX	10
-#define FILE_QRNG_DATA_PREFIX       "qrng-"
+// QRNG DATA
+// filename = $PREFIX$INDEX$DUFFIX
+// index starts from 0 to maximal value save in main settings
+// index number should be prefixed by zeroes (to equal length as max index)
+#define FILE_QRNG_DATA_PREFIX       ""
 #define FILE_QRNG_DATA_SUFFIX       ".bin"
 // maximum number of bits used from random data file
 // don't set too big, this size is read into memory
-#define RANDOM_DATA_FILE_SIZE		10000000
+// currently 10MB
+#define RANDOM_DATA_FILE_SIZE		10485760
 
 // COMMAND LINE OPTIONS
 #define CMD_OPT_STATIC              "-staticcircuit"

@@ -28,6 +28,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pSettings->random.seed;
     pSettings->random.biasRndGenFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
     pSettings->random.qrngPath = getXMLElementValue(pRoot,"RANDOM/QRNG_PATH");
+    pSettings->random.qrngFilesMaxIndex = atoi(getXMLElementValue(pRoot,"RANDOM/QRNG_MAX_INDEX").c_str());
 
     //
     // GA SETTINGS
