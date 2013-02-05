@@ -65,10 +65,10 @@ int EstreamProject::generateTestVectors() {
     this->numstats[0] = 0;
     this->numstats[1] = 0;
 
-    for (int testSet = 0; testSet < pGlobals->settings->testVectors.numTestVectors; testSet++) {
+    for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
         if (pGlobals->settings->testVectors.saveTestVectors == 1) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
-            tvfile << "Testset n." << dec << testSet << endl;
+            tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();
         }
 
@@ -81,10 +81,10 @@ int EstreamProject::generateTestVectors() {
         }
 
         for (int input = 0; input < MAX_INPUTS; input++) {
-            pGlobals->testVectors[testSet][input] = inputs[input];
+            pGlobals->testVectors[testVectorNumber][input] = inputs[input];
         }
         for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++)
-            pGlobals->testVectors[testSet][MAX_INPUTS+output] = outputs[output];
+            pGlobals->testVectors[testVectorNumber][MAX_INPUTS+output] = outputs[output];
     }
     return STAT_OK;
 }
@@ -139,6 +139,15 @@ int EstreamProject::getTestVector(){
                 if (status != STAT_OK) return status;
                 status = encryptorDecryptor->decrypt(inputs,outplain,streamnum+2);
                 if (status != STAT_OK) return status;
+
+                // check if plaintext = encrypted-decrypted plaintext
+                for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
+                    if (outplain[input] != plain[input]) {
+                        mainLogger.out() << "error: Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
+                        tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
+                        break;
+                    }
+                }
             }
             else { // RANDOM
                 if (pGlobals->settings->testVectors.saveTestVectors == 1)
@@ -148,15 +157,6 @@ int EstreamProject::getTestVector(){
                     plain[input] = inputs[input] = outplain[input];
                 }
             }
-
-            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
-                if (outplain[input] != plain[input]) {
-                    mainLogger.out() << "error: Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
-                    tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
-                    break;
-                }
-            }
-
             break;
 
     case ESTREAM_BITS_TO_CHANGE:
@@ -192,7 +192,7 @@ int EstreamProject::getTestVector(){
     }
 
     // SAVE TEST VECTORS IN BINARY FILES
-    if (pGlobals->settings->testVectors.saveTestVectors == 1) {
+    if (pGlobals->settings->testVectors.saveTestVectors) {
         if (streamnum == 0) {
             ofstream itvfile(FILE_TEST_DATA_1, ios::app | ios::binary);
             for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
@@ -207,7 +207,10 @@ int EstreamProject::getTestVector(){
             }
             itvfile.close();
         }
+    }
 
+    // save human-readable test vector
+    if (pGlobals->settings->testVectors.saveTestVectors) {
         int tvg = 0;
         if (streamnum == 0) tvg = pEstreamSettings->testVectorEstream;
         else tvg = pEstreamSettings->testVectorEstream2;
@@ -229,7 +232,7 @@ int EstreamProject::getTestVector(){
         }
         tvFile << endl;
     }
-
     tvFile.close();
+
     return STAT_OK;
 }
