@@ -4,9 +4,7 @@
 #include "garandom.h"
 #include <string>
 
-EncryptorDecryptor::EncryptorDecryptor() {
-
-    int numTestVectors = pGlobals->settings->testVectors.numTestVectors;
+EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
     int numRounds = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount:-1;
     int numRounds2 = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount2:-1;
     for(int i = 0; i < 4; i++) {
@@ -16,15 +14,6 @@ EncryptorDecryptor::EncryptorDecryptor() {
 	
     int testVectorEstream = pEstreamSettings->testVectorEstream;
 	int nR = numRounds;
-
-    if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_ZEROS)
-		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
-    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_ONES)
-		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
-    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_RANDOM)
-		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
-    else if (pEstreamSettings->estreamIVType == ESTREAM_GENTYPE_BIASRANDOM)
-		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
 
 	for (int i=0; i<2; i++) {
 	   if (i == 1) {
@@ -316,50 +305,29 @@ EncryptorDecryptor::EncryptorDecryptor() {
 			ecryptarr[i]->ECRYPT_init();
 			ecryptarr[2+i]->numRounds = nR;
 			ecryptarr[2+i]->ECRYPT_init();
-
-            if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_ZEROS)
-				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
-            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_ONES)
-				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
-            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_RANDOM)
-				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
-            else if (pEstreamSettings->estreamKeyType == ESTREAM_GENTYPE_BIASRANDOM)
-				for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
-			
-
-            ecryptarr[i]->ECRYPT_keysetup(ctxarr[i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
-			ecryptarr[i]->ECRYPT_ivsetup(ctxarr[i], iv);
-			ecryptarr[2+i]->ECRYPT_keysetup(ctxarr[2+i], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);//pGACirc->numInputs, 16);
-			ecryptarr[2+i]->ECRYPT_ivsetup(ctxarr[2+i], iv);
-
-			// ********************** logging ********************** //
-            ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-            if (pGlobals->settings->testVectors.saveTestVectors) {
-				tvfile << setfill('0');
-				if (ecryptarr[i] != NULL){
-					tvfile << "Key " << i << ":";
-					for (int input = 0; input < STREAM_BLOCK_SIZE; input++) 
-						tvfile << setw(2) << hex << (int)(key[input]);
-					tvfile << endl;
-					tvfile << "IV " << i << ":";
-					for (int input = 0; input < STREAM_BLOCK_SIZE; input++) 
-						tvfile << setw(2) << hex << (int)(iv[input]);
-					tvfile << endl;
-				}
-			}
-			tvfile.close();
 		}
 
 	}
 
-	// ******************* Save test vectors to file ********************** //
-    ofstream tvfile(FILE_TEST_VECTORS, ios::app);
+    // generate header to human-readable test-vector file
     if (pGlobals->settings->testVectors.saveTestVectors) {
-		tvfile << "Generating test vectors with seed " << GAGetRandomSeed() << endl;
-		tvfile << "PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
-	}
-	tvfile.close();
-	// ******************************************************************** //
+        ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
+        tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
+        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->testVectorEstream);
+        if (pEstreamSettings->limitAlgRounds) {
+            tvFile << " (" << pEstreamSettings->limitAlgRoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->testVectorEstream2);
+        if (pEstreamSettings->limitAlgRounds) {
+            tvFile << " (" << pEstreamSettings->limitAlgRoundsCount2 << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "Test vectors formatted as PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
+        tvFile.close();
+    }
 }
 
 EncryptorDecryptor::~EncryptorDecryptor() {
@@ -373,10 +341,105 @@ EncryptorDecryptor::~EncryptorDecryptor() {
             ctxarr[i] = NULL;
         }
     }
-
 }
 
-void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
+int EncryptorDecryptor::setupIV() {
+    switch (pEstreamSettings->estreamIVType) {
+    case ESTREAM_GENTYPE_ZEROS:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
+        break;
+    case ESTREAM_GENTYPE_ONES:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
+        break;
+    case ESTREAM_GENTYPE_RANDOM:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
+        break;
+    case ESTREAM_GENTYPE_BIASRANDOM:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
+        break;
+    default:
+        mainLogger.out() << "error: Unknown IV type (" << pEstreamSettings->estreamIVType << ")." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
+
+    // human-readable test vector logging
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
+        tvFile << setfill('0');
+        tvFile << "setting IV: ";
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
+            tvFile << setw(2) << hex << (int)(iv[input]);
+        tvFile << endl;
+        tvFile.close();
+    }
+
+    if (pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) {
+        ecryptarr[0]->ECRYPT_ivsetup(ctxarr[0], iv);
+        ecryptarr[2]->ECRYPT_ivsetup(ctxarr[2], iv);
+    }
+    if (pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) {
+        ecryptarr[1]->ECRYPT_ivsetup(ctxarr[1], iv);
+        ecryptarr[3]->ECRYPT_ivsetup(ctxarr[3], iv);
+    }
+
+    m_setIV = true;
+    return STAT_OK;
+}
+
+int EncryptorDecryptor::setupKey() {
+    switch (pEstreamSettings->estreamKeyType) {
+    case ESTREAM_GENTYPE_ZEROS:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
+        break;
+    case ESTREAM_GENTYPE_ONES:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
+        break;
+    case ESTREAM_GENTYPE_RANDOM:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
+        break;
+    case ESTREAM_GENTYPE_BIASRANDOM:
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
+        break;
+    default:
+        mainLogger.out() << "error: Unknown key type (" << pEstreamSettings->estreamKeyType << ")." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+        break;
+    }
+
+    // human-readable test vector logging
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
+        tvFile << setfill('0');
+        tvFile << "setting key: ";
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
+            tvFile << setw(2) << hex << (int)(key[input]);
+        tvFile << endl;
+        tvFile.close();
+    }
+
+    if (pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) {
+        ecryptarr[0]->ECRYPT_keysetup(ctxarr[0], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        ecryptarr[2]->ECRYPT_keysetup(ctxarr[2], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+    }
+    if (pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) {
+        ecryptarr[1]->ECRYPT_keysetup(ctxarr[1], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        ecryptarr[3]->ECRYPT_keysetup(ctxarr[3], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+    }
+
+    m_setKey = true;
+    return STAT_OK;
+}
+
+int EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
+    if (!m_setIV) {
+        mainLogger.out() << "error: Initialization vector is not set!" << endl;
+        return STAT_PROJECT_ERROR;
+    }
+    if (!m_setKey) {
+        mainLogger.out() << "error: Key is not set!" << endl;
+        return STAT_PROJECT_ERROR;
+    }
+
     if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
@@ -384,9 +447,19 @@ void EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, in
 		((ECRYPT_ABC*)ecryptarr[streamnum])->ABC_process_bytes(0,(ABC_ctx*)ctxarr[streamnum],plain,cipher, length*8);
 	else
 		ecryptarr[streamnum]->ECRYPT_encrypt_bytes(ctxarr[streamnum], plain, cipher, length);
+    return STAT_OK;
 }
 
-void EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
+int EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
+    if (!m_setIV) {
+        mainLogger.out() << "error: Initialization vector is not set!" << endl;
+        return STAT_PROJECT_ERROR;
+    }
+    if (!m_setKey) {
+        mainLogger.out() << "error: Key is not set!" << endl;
+        return STAT_PROJECT_ERROR;
+    }
+
     if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
@@ -394,4 +467,5 @@ void EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, in
 		((ECRYPT_ABC*)ecryptarr[streamnum])->ABC_process_bytes(1,(ABC_ctx*)ctxarr[streamnum],cipher,plain, length*8);
 	else
 		ecryptarr[streamnum]->ECRYPT_decrypt_bytes(ctxarr[streamnum], cipher, plain, length);
+    return STAT_OK;
 }

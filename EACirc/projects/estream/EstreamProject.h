@@ -13,12 +13,14 @@ private:
     int *numstats;
     EncryptorDecryptor* encryptorDecryptor;
     ESTREAM_SETTINGS estreamSettings;
-    void getTestVector();
+    int getTestVector();
 public:
     EstreamProject();
     ~EstreamProject();
     string shortDescription() const;
     int loadProjectConfiguration(TiXmlNode* pRoot);
+    int initializeProject();
+    int initializeProjectState();
     int generateTestVectors();
 };
 

@@ -11,6 +11,10 @@ int IProject::loadProjectConfiguration(TiXmlNode *pRoot) {
     return STAT_OK;
 }
 
+int IProject::initializeProject() {
+    return STAT_OK;
+}
+
 TiXmlNode* IProject::saveProjectState() const {
     TiXmlElement* pNode = new TiXmlElement("project");
     pNode->SetAttribute("type",toString(m_type).c_str());
@@ -18,7 +22,7 @@ TiXmlNode* IProject::saveProjectState() const {
     return pNode;
 }
 
-int IProject::initialzeProjectState() {
+int IProject::initializeProjectState() {
     return STAT_OK;
 }
 

@@ -103,11 +103,19 @@ public:
     ~EACirc();
 
     /** loads configuration from xml file to settings attribute
+      * (also loads project settings)
       * checks basic consistency of the settings
       * @param filename     configuration file to use
       * @note sets eventual error code in m_status
       */
     void loadConfiguration(const string filename);
+
+    /** does the necessary peparations needed just before running
+      * (also initializes project)
+      * must be called after loading settings and before state initialization
+      * @note sets eventual error code in m_status
+      */
+    void prepare();
 
     /** according to settings either loads state and population
       * or creates new initial state and population
@@ -115,12 +123,6 @@ public:
       * @note sets eventual error code in m_status
       */
     void initializeState();
-
-    /** does the necessary peparations needed just before running
-      * must be called after initializing state (either loading or creating)
-      * @note sets eventual error code in m_status
-      */
-    void prepare();
 
     /** runs the main program loop accoring to settings
       * must be run after preparing

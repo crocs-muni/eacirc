@@ -23,7 +23,7 @@ void compareFilesByLine(string filename1, string filename2) {
         CHECK(line1 == line2);
     }
     if (differCount > 5) {
-        WARN("Given files (" << filename1 << ", " << filename2 << " differ in more than 5 lines!");
+        WARN("Given files (" << filename1 << ", " << filename2 << " differ in more than 6 lines!");
     }
     file1.close();
     file2.close();
@@ -62,8 +62,8 @@ int runEACirc() {
 	}
     EACirc eacirc;
     eacirc.loadConfiguration(FILE_CONFIG);
-    eacirc.initializeState();
     eacirc.prepare();
+    eacirc.initializeState();
     eacirc.run();
 	if (mainLogger.getLogging()) {
 		WARN("######## Ending EACirc (error: " << eacirc.getStatus() << " ) ########");

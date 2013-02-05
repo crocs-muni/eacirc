@@ -210,8 +210,8 @@ void EACirc::createState() {
     // GENERATE SEED FOR GALIB
     mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     mainLogger.out() << "info: State successfully initialized." << endl;
-    // INIT PROJECT
-    m_project->initialzeProjectState();
+    // INIT PROJECT STATE
+    m_project->initializeProjectState();
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -321,7 +321,8 @@ void EACirc::saveProgress(const string stateFilename, const string populationFil
 
 void EACirc::initializeState() {
     if (m_status != STAT_OK) return;
-    if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
+    if ((m_readyToRun & (EACIRC_CONFIG_LOADED | EACIRC_PREPARED)) !=
+            (EACIRC_CONFIG_LOADED | EACIRC_PREPARED)) {
         m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
         return;
     }
@@ -347,8 +348,7 @@ void EACirc::initializeState() {
 
 void EACirc::prepare() {
     if (m_status != STAT_OK) return;
-    if ((m_readyToRun & (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED)) !=
-            (EACIRC_CONFIG_LOADED | EACIRC_INITIALIZED)) {
+    if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
         m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
         return;
     }
@@ -361,9 +361,12 @@ void EACirc::prepare() {
         std::remove(FILE_AVG_FITNESS);
         std::remove(FILE_GALIB_SCORES);
         std::remove(FILE_TEST_VECTORS);
+        std::remove(FILE_TEST_VECTORS_HR);
         std::remove(FILE_TEST_DATA_1);
         std::remove(FILE_TEST_DATA_2);
     }
+
+    m_status = m_project->initializeProject();
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
@@ -440,9 +443,14 @@ void EACirc::run() {
     // SAVE INITIAL STATE
     saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
+    // clear scores
+    pGlobals->stats.clear();
+    if (!pGlobals->settings->main.recommenceComputation) {
+        std::remove(FILE_GALIB_SCORES);
+    }
+
     int	changed = 1;
     bool evaluateNow = false;
-    pGlobals->stats.clear();
     fstream fitfile;
 
     //GA1DArrayGenome<unsigned long> genomeBest(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);

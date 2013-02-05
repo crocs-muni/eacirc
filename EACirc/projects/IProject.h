@@ -45,11 +45,19 @@ public:
       */
     virtual int loadProjectConfiguration(TiXmlNode* pRoot);
 
-    /** initialize project (called just once, before evolution)
+    /** initialize project itself
+      * called once, after configuration loading
+      * called REGARDLESS of recommencing/not recommencong computation
+      * @return status;
+      */
+    virtual int initializeProject();
+
+    /** initialize project state (called just once, before evolution)
+      * NOT called at all, when computation is recommenced
       * default implementation: do nothing
       * @return status
       */
-    virtual int initialzeProjectState();
+    virtual int initializeProjectState();
 
     /** load project state (previously saved by this project)
       * default implementation: check project constant, load nothing

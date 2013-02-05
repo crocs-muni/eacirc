@@ -58,8 +58,8 @@ int main(int argc, char **argv) {
 
     EACirc eacirc;
     eacirc.loadConfiguration(FILE_CONFIG);
-    eacirc.initializeState();
     eacirc.prepare();
+    eacirc.initializeState();
     eacirc.run();
 
     if (eacirc.getStatus() != STAT_OK) {

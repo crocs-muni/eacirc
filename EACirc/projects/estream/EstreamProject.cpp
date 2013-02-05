@@ -31,6 +31,7 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     estreamSettings.estreamInputType= atoi(getXMLElementValue(pRoot,"ESTREAM/PLAINTEXT_TYPE").c_str());
     estreamSettings.estreamKeyType = atoi(getXMLElementValue(pRoot,"ESTREAM/KEY_TYPE").c_str());
     estreamSettings.estreamIVType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
+    estreamSettings.cipherInitializationFrequency = atoi(getXMLElementValue(pRoot,"ESTREAM/CIPHER_INIT_FREQ").c_str());
     pEstreamSettings = &estreamSettings;
 
     // bind project settings into global settings
@@ -39,9 +40,26 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     return STAT_OK;
 }
 
-int EstreamProject::generateTestVectors() {
-    if (encryptorDecryptor) delete encryptorDecryptor;
+int EstreamProject::initializeProject() {
     encryptorDecryptor = new EncryptorDecryptor;
+    return STAT_OK;
+}
+
+int EstreamProject::initializeProjectState() {
+    int status = STAT_OK;
+    if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
+        status = encryptorDecryptor->setupKey();
+        if (status != STAT_OK) return status;
+        status = encryptorDecryptor->setupIV();
+    }
+    return status;
+}
+
+int EstreamProject::generateTestVectors() {
+    if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
+        encryptorDecryptor->setupKey();
+        encryptorDecryptor->setupIV();
+    }
 
     // USED FOR BALANCING TEST VECTORS
     this->numstats[0] = 0;
@@ -49,12 +67,19 @@ int EstreamProject::generateTestVectors() {
 
     for (int testSet = 0; testSet < pGlobals->settings->testVectors.numTestVectors; testSet++) {
         if (pGlobals->settings->testVectors.saveTestVectors == 1) {
-            ofstream tvfile(FILE_TEST_VECTORS, ios::app);
+            ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Testset n." << dec << testSet << endl;
             tvfile.close();
         }
 
-        getTestVector();
+        if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_ENCRYPT) {
+            encryptorDecryptor->setupKey();
+            encryptorDecryptor->setupIV();
+        }
+        if (getTestVector() != STAT_OK) {
+            return STAT_PROJECT_ERROR;
+        }
+
         for (int input = 0; input < MAX_INPUTS; input++) {
             pGlobals->testVectors[testSet][input] = inputs[input];
         }
@@ -64,15 +89,12 @@ int EstreamProject::generateTestVectors() {
     return STAT_OK;
 }
 
-void EstreamProject::getTestVector(){
-
-    ofstream tvfile(FILE_TEST_VECTORS, ios::app);
-
+int EstreamProject::getTestVector(){
+    ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
     int streamnum = 0;
-    bool error = false;
 
-    u8 plain[MAX_INPUTS];// = new u8[STREAM_BLOCK_SIZE];
-    u8 outplain[MAX_INPUTS];// = new u8[STREAM_BLOCK_SIZE];
+    u8 plain[MAX_INPUTS];
+    u8 outplain[MAX_INPUTS];
 
     switch (pEstreamSettings->testVectorEstreamMethod) {
         case ESTREAM_DISTINCT:
@@ -92,7 +114,7 @@ void EstreamProject::getTestVector(){
             if ((streamnum == 0 && pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) ||
                 (streamnum == 1 && pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) ) {
                 if (pGlobals->settings->testVectors.saveTestVectors == 1)
-                    tvfile  << "(alg n." << ((streamnum==0)?pEstreamSettings->testVectorEstream:pEstreamSettings->testVectorEstream2) << " - " << ((streamnum==0)?pEstreamSettings->limitAlgRoundsCount:pEstreamSettings->limitAlgRoundsCount2) << " rounds): ";
+                    tvFile  << "(alg n." << ((streamnum==0)?pEstreamSettings->testVectorEstream:pEstreamSettings->testVectorEstream2) << " - " << ((streamnum==0)?pEstreamSettings->limitAlgRoundsCount:pEstreamSettings->limitAlgRoundsCount2) << " rounds): ";
 
                 switch (pEstreamSettings->estreamInputType) {
                 case ESTREAM_GENTYPE_ZEROS:
@@ -108,17 +130,19 @@ void EstreamProject::getTestVector(){
                     for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
                     break;
                 default:
-                    mainLogger.out() << "error: unknown input type for " << shortDescription() << endl;
-                    return;
+                    mainLogger.out() << "error: Inknown plaintext type for " << shortDescription() << endl;
+                    return STAT_INCOMPATIBLE_PARAMETER;
                 }
 
-                encryptorDecryptor->encrypt(plain,inputs,streamnum);
-                encryptorDecryptor->decrypt(inputs,outplain,streamnum+2);
-
+                int status = STAT_OK;
+                status = encryptorDecryptor->encrypt(plain,inputs,streamnum);
+                if (status != STAT_OK) return status;
+                status = encryptorDecryptor->decrypt(inputs,outplain,streamnum+2);
+                if (status != STAT_OK) return status;
             }
             else { // RANDOM
                 if (pGlobals->settings->testVectors.saveTestVectors == 1)
-                    tvfile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
+                    tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
                 for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                     rndGen->getRandomFromInterval(255, &outplain[input]);
                     plain[input] = inputs[input] = outplain[input];
@@ -127,13 +151,8 @@ void EstreamProject::getTestVector(){
 
             for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                 if (outplain[input] != plain[input]) {
-                    ofstream fitfile(FILE_FITNESS_PROGRESS, ios::app);
-                    fitfile << "Error! Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS << " for details." << endl;
-                    fitfile.close();
-
-                    // SIGNALIZE THE ERROR - WE NEED TO LOG INPUTS/OUTPUTS
-                    error = true;
-                    //exit(1);
+                    mainLogger.out() << "error: Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
+                    tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
                     break;
                 }
             }
@@ -157,7 +176,7 @@ void EstreamProject::getTestVector(){
             break;
         default:
             mainLogger.out() << "error: unknown input type for " << shortDescription() << endl;
-            return;
+            return STAT_INCOMPATIBLE_PARAMETER;
         }
 
         // WE NEED TO LET EVALUATOR KNOW THE INPUTS
@@ -167,8 +186,8 @@ void EstreamProject::getTestVector(){
         break;
 
     default:
-        mainLogger.out() << "error: unknown testVectorEstreamMethod in " << shortDescription() << endl;
-        assert(false);
+        mainLogger.out() << "error: unknown testVectorEstreamMethod (" << pEstreamSettings->testVectorEstreamMethod << ") in " << shortDescription() << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
         break;
     }
 
@@ -192,29 +211,25 @@ void EstreamProject::getTestVector(){
         int tvg = 0;
         if (streamnum == 0) tvg = pEstreamSettings->testVectorEstream;
         else tvg = pEstreamSettings->testVectorEstream2;
-        tvfile << setfill('0');
+        tvFile << setfill('0');
 
         if (memcmp(inputs,plain,pGlobals->settings->testVectors.testVectorLength) != 0) {
             for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
-            tvfile << setw(2) << hex << (int)(plain[input]);
-            tvfile << "::";
+            tvFile << setw(2) << hex << (int)(plain[input]);
+            tvFile << "::";
         }
 
         for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
-            tvfile << setw(2) << hex << (int)(inputs[input]);
+            tvFile << setw(2) << hex << (int)(inputs[input]);
 
         if (memcmp(inputs,outplain,pGlobals->settings->testVectors.testVectorLength) != 0) {
-            tvfile << "::";
+            tvFile << "::";
             for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
-            tvfile << setw(2) << hex << (int)(outplain[input]);
+            tvFile << setw(2) << hex << (int)(outplain[input]);
         }
-        tvfile << endl;
+        tvFile << endl;
     }
 
-    tvfile.close();
-
-    // THERE WAS AN ERROR, EXIT...
-    if (error) exit(1);
-
-    return;
+    tvFile.close();
+    return STAT_OK;
 }
