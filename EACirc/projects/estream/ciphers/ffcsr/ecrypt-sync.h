@@ -11,7 +11,7 @@
 #define FFCSR_SYNC
 
 #include "../ecrypt-portable.h"
-#include "../../estreamInterface.h"
+#include "../../EstreamInterface.h"
 
 /* ------------------------------------------------------------------------- */
 
