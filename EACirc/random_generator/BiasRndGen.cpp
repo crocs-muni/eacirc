@@ -60,7 +60,7 @@ int BiasRndGen::getRandomFromInterval(int highBound, int *pRandom) {
 
 	for (int i=0; i<31; i++){
 		//NO NEED TO CONTINUE, WE CAN RETURN DIRECTLY FIRST I VALUES OF RANDOM
-		if ((highBound+1) == pGlobals->precompPow[i]){
+        if ((unsigned long) (highBound+1) == pGlobals->precompPow[i]){
 			*pRandom = random;
 			break;
 		}

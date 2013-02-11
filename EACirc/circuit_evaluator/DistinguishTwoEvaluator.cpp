@@ -1,5 +1,5 @@
 #include "DistinguishTwoEvaluator.h"
-
+#include <limits.h>
 DistinguishTwoEvaluator::DistinguishTwoEvaluator() : ICircuitEvaluator(){
 }
 

@@ -38,6 +38,7 @@
 #include "../ecrypt-portable.h"
 #include "../../estreamInterface.h"
 
+
 /* ------------------------------------------------------------------------- */
 
 /* Cipher parameters */

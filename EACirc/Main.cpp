@@ -1,6 +1,7 @@
 #include "Main.h"
 #include "EACirc.h"
 #include "standalone_testers/TestDistinctorCircuit.h"
+#include <unistd.h>
 
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
@@ -13,6 +14,10 @@ IRndGen* biasRndGen = NULL;
 GLOBALS* pGlobals = NULL;
 
 int main(int argc, char **argv) {
+    usleep(3000);
+//    int a;
+//    cin >> a;
+
     //
     // COMMAND LINE ARGUMENTS PROCESSING
     //

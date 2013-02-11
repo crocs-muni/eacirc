@@ -1,4 +1,5 @@
 #include "QuantumRndGen.h"
+#include <limits.h>
 #include "time.h"
 #include "MD5RndGen.h"
 #include "EACglobals.h"

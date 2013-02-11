@@ -14,6 +14,9 @@
 
 /* ------------------------------------------------------------------------- */
 
+
+
+
 /*
  * *** WARNING *** 
  *
@@ -46,6 +49,7 @@
 #define M64TO64_CONVERT M64TO64_LITTLE
 #define SF SR
 #define SB SL
+
 
 #define LOAD_IVLEN(len) (U32V(len))
 #define STORE_IVLEN(len) (U64V(len))

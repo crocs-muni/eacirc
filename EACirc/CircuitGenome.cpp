@@ -2,6 +2,7 @@
 #include "CommonFnc.h"
 #include "circuit_evaluator/ICircuitEvaluator.h"
 #include <iomanip>
+#include <limits.h>
 
 void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
     unsigned long   circuit[MAX_GENOME_SIZE];    

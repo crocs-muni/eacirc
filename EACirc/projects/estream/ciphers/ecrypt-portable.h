@@ -307,4 +307,13 @@ typedef unsigned I64T u64;
 
 /* ------------------------------------------------------------------------- */
 
+// Force define of U64C if not defined before
+#ifndef U64C
+    #define U64C(v) (v##U)
+#endif
+
+#ifndef u64
+    typedef unsigned long long int  u64;
+#endif
+
 #endif

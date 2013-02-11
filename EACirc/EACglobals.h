@@ -220,4 +220,6 @@ typedef struct _GLOBALS {
     }
 } GLOBALS;
 
+
+
 #endif //EACGLOBALS_H
