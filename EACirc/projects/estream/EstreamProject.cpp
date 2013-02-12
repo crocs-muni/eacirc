@@ -32,6 +32,7 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     estreamSettings.estreamKeyType = atoi(getXMLElementValue(pRoot,"ESTREAM/KEY_TYPE").c_str());
     estreamSettings.estreamIVType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
     estreamSettings.cipherInitializationFrequency = atoi(getXMLElementValue(pRoot,"ESTREAM/CIPHER_INIT_FREQ").c_str());
+    estreamSettings.generateStream = (atoi(getXMLElementValue(pRoot,"ESTREAM/GENERATE_STREAM").c_str())) ? true : false;
     pEstreamSettings = &estreamSettings;
 
     // bind project settings into global settings
@@ -55,7 +56,36 @@ int EstreamProject::initializeProjectState() {
     return status;
 }
 
+int EstreamProject::setupPlaintext() {
+    switch (pEstreamSettings->estreamInputType) {
+    case ESTREAM_GENTYPE_ZEROS:
+        for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) plain[input] = 0x00;
+        break;
+    case ESTREAM_GENTYPE_ONES:
+        for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) plain[input] = 0x01;
+        break;
+    case ESTREAM_GENTYPE_RANDOM:
+        for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(plain[input]));
+        break;
+    case ESTREAM_GENTYPE_BIASRANDOM:
+        for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
+        break;
+    default:
+        mainLogger.out() << "error: Unknown plaintext type for " << shortDescription() << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    }
+
+    return STAT_OK;
+}
+
 int EstreamProject::generateTestVectors() {
+    int status = STAT_OK;
+
+    if (pEstreamSettings->generateStream) {
+        status = generateCipherDataStream();
+        mainLogger.out() << "warning: Generation of stream of cipher data finished." << endl;
+    }
+
     if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
         encryptorDecryptor->setupKey();
         encryptorDecryptor->setupIV();
@@ -72,7 +102,7 @@ int EstreamProject::generateTestVectors() {
             tvfile.close();
         }
 
-        if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_ENCRYPT) {
+        if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
             encryptorDecryptor->setupKey();
             encryptorDecryptor->setupIV();
         }
@@ -86,16 +116,13 @@ int EstreamProject::generateTestVectors() {
         for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++)
             pGlobals->testVectors[testVectorNumber][MAX_INPUTS+output] = outputs[output];
     }
-    return STAT_OK;
+    return status;
 }
 
 int EstreamProject::getTestVector(){
+    int status = STAT_OK;
     ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
     int streamnum = 0;
-
-    u8 plain[MAX_INPUTS];
-    u8 outplain[MAX_INPUTS];
-
     switch (pEstreamSettings->testVectorEstreamMethod) {
         case ESTREAM_DISTINCT:
 
@@ -116,25 +143,8 @@ int EstreamProject::getTestVector(){
                 if (pGlobals->settings->testVectors.saveTestVectors == 1)
                     tvFile  << "(alg n." << ((streamnum==0)?pEstreamSettings->testVectorEstream:pEstreamSettings->testVectorEstream2) << " - " << ((streamnum==0)?pEstreamSettings->limitAlgRoundsCount:pEstreamSettings->limitAlgRoundsCount2) << " rounds): ";
 
-                switch (pEstreamSettings->estreamInputType) {
-                case ESTREAM_GENTYPE_ZEROS:
-                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) plain[input] = 0x00;
-                    break;
-                case ESTREAM_GENTYPE_ONES:
-                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) plain[input] = 0x01;
-                    break;
-                case ESTREAM_GENTYPE_RANDOM:
-                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(plain[input]));
-                    break;
-                case ESTREAM_GENTYPE_BIASRANDOM:
-                    for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
-                    break;
-                default:
-                    mainLogger.out() << "error: Inknown plaintext type for " << shortDescription() << endl;
-                    return STAT_INCOMPATIBLE_PARAMETER;
-                }
-
-                int status = STAT_OK;
+                status = setupPlaintext();
+                if (status != STAT_OK) return status;
                 status = encryptorDecryptor->encrypt(plain,inputs,streamnum);
                 if (status != STAT_OK) return status;
                 status = encryptorDecryptor->decrypt(inputs,outplain,streamnum+2);
@@ -160,24 +170,8 @@ int EstreamProject::getTestVector(){
             break;
 
     case ESTREAM_BITS_TO_CHANGE:
-        //generate the plaintext
-        switch (pEstreamSettings->estreamInputType) {
-        case ESTREAM_GENTYPE_ZEROS:
-            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) inputs[input] = 0x00;
-            break;
-        case ESTREAM_GENTYPE_ONES:
-            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) inputs[input] = 0x01;
-            break;
-        case ESTREAM_GENTYPE_RANDOM:
-            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) rndGen->getRandomFromInterval(255, &(inputs[input]));
-            break;
-        case ESTREAM_GENTYPE_BIASRANDOM:
-            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(inputs[input]));
-            break;
-        default:
-            mainLogger.out() << "error: unknown input type for " << shortDescription() << endl;
-            return STAT_INCOMPATIBLE_PARAMETER;
-        }
+        status = setupPlaintext();
+        if (status != STAT_OK) return status;
 
         // WE NEED TO LET EVALUATOR KNOW THE INPUTS
         for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++)
@@ -235,4 +229,65 @@ int EstreamProject::getTestVector(){
     tvFile.close();
 
     return STAT_OK;
+}
+
+int EstreamProject::generateCipherDataStream() {
+    if (pEstreamSettings->testVectorEstream == ESTREAM_RANDOM) {
+        mainLogger.out() << "error: You cannot generate stream from random, you must specify a cipher." << endl;
+        return STAT_INCOMPATIBLE_PARAMETER;
+    } else {
+        mainLogger.out() << "info: You are generating stream for " << estreamToString(pEstreamSettings->testVectorEstream);
+        if (!pEstreamSettings->limitAlgRounds) {
+            mainLogger.out() << " (unlimitted version)" << endl;
+        } else {
+            mainLogger.out() << " (" << pEstreamSettings->limitAlgRoundsCount << " rounds)" << endl;
+        }
+    }
+
+    int status = STAT_OK;
+    int streamnum = 0;
+
+    if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
+        status = encryptorDecryptor->setupKey();
+        if (status != STAT_OK) return status;
+        encryptorDecryptor->setupIV();
+        if (status != STAT_OK) return status;
+    }
+
+    while (true) {
+        if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
+            status = encryptorDecryptor->setupKey();
+            if (status != STAT_OK) return status;
+            encryptorDecryptor->setupIV();
+            if (status != STAT_OK) return status;
+        }
+
+        for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
+            if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
+                status = encryptorDecryptor->setupKey();
+                if (status != STAT_OK) return status;
+                encryptorDecryptor->setupIV();
+                if (status != STAT_OK) return status;
+            }
+
+            status = setupPlaintext();
+            if (status != STAT_OK) return status;
+            status = encryptorDecryptor->encrypt(plain,inputs,streamnum);
+            if (status != STAT_OK) return status;
+            status = encryptorDecryptor->decrypt(inputs,outplain,streamnum+2);
+            if (status != STAT_OK) return status;
+
+            // check if plaintext = encrypted-decrypted plaintext
+            for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
+                if (outplain[input] != plain[input]) {
+                    mainLogger.out() << "error: Decrypted text doesn't match the input." << endl;
+                    break;
+                }
+            }
+
+            for (int index = 0; index < pGlobals->settings->testVectors.testVectorLength; index++) {
+                cout << inputs[index];
+            }
+        }
+    }
 }

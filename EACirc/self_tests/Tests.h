@@ -124,6 +124,7 @@ public:
 "    <PLAINTEXT_TYPE>0</PLAINTEXT_TYPE>"
 "    <KEY_TYPE>2</KEY_TYPE>"
 "    <IV_TYPE>0</IV_TYPE>"
+"    <GENERATE_STREAM>0</GENERATE_STREAM>"
 "</ESTREAM>"
 "</EACIRC>";
         ofstream configFile(FILE_CONFIG);

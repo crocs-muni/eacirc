@@ -9,7 +9,7 @@
 // constants for cipher initialization frequency
 #define ESTREAM_INIT_CIPHERS_ONCE           0
 #define ESTREAM_INIT_CIPHERS_FOR_SET        1
-#define ESTREAM_INIT_CIPHERS_FOR_ENCRYPT    2
+#define ESTREAM_INIT_CIPHERS_FOR_VECTOR     2
 
 // eStream data types (for key, iv, plaintext)
 #define ESTREAM_GENTYPE_ZEROS       0
@@ -62,6 +62,7 @@ typedef struct _ESTREAM_SETTINGS {
     int limitAlgRoundsCount2;
     bool testVectorBalance;
     int cipherInitializationFrequency;
+    bool generateStream;
 
     _ESTREAM_SETTINGS(void) {
         testVectorEstream = 0;
@@ -75,6 +76,7 @@ typedef struct _ESTREAM_SETTINGS {
         limitAlgRoundsCount2 = -1;
         testVectorBalance = false;
         cipherInitializationFrequency = ESTREAM_INIT_CIPHERS_ONCE;
+        generateStream = false;
     }
 } ESTREAM_SETTINGS;
 
