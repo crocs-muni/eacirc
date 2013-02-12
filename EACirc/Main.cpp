@@ -1,7 +1,8 @@
 #include "Main.h"
 #include "EACirc.h"
 #include "standalone_testers/TestDistinctorCircuit.h"
-#include <unistd.h>
+#include <thread>
+//#include <unistd.h> // unistd is not in VS compiler!
 
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
@@ -14,9 +15,8 @@ IRndGen* biasRndGen = NULL;
 GLOBALS* pGlobals = NULL;
 
 int main(int argc, char **argv) {
-    usleep(3000);
-//    int a;
-//    cin >> a;
+    //usleep(3000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
     //
     // COMMAND LINE ARGUMENTS PROCESSING
