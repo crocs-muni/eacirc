@@ -30,6 +30,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
 
         file.close();
     } else { // QRNG data not available
+        m_QRNGDataPath = "";
         mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
         m_accLength = 4; // (max 32B), see init and update
     }
