@@ -27,8 +27,8 @@ DEBUG_CXXFLAGS		= -g -DDEBUG
 RELEASE_CXXFLAGS	= -O3
 PROFILE_CXXFLAGS	= -p
 
-# libs and source
-include EACirc.makefile.sources
+# libs and source (loaded from Qt project file)
+include EACirc.pro
 OBJECTS		=$(SOURCES:.cpp=.o)
 INC_DIRS	= -IEACirc -IEACirc/galib -IEACirc/tinyXML
 INC_LIBS	= -LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML

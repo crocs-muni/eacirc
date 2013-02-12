@@ -43,7 +43,10 @@ EACirc::~EACirc() {
     m_gaData = NULL;
     if (m_project) delete m_project;
     m_project = NULL;
-    if (pGlobals) pGlobals->release();
+    if (pGlobals) {
+        pGlobals->release();
+        delete pGlobals;
+    }
     pGlobals = NULL;
     if (rndGen) delete rndGen;
     rndGen = NULL;

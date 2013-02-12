@@ -114,7 +114,7 @@ int loadXMLFile(TiXmlNode*& pRoot, string filename) {
 string getXMLElementValue(TiXmlNode*& pRoot, string path) {
     TiXmlNode* pNode = getXMLElement(pRoot,path);
     if (pNode == NULL) {
-        mainLogger.out() << "error: no value at " << path << " in given XML." << endl;
+        mainLogger.out() << "warning: no value at " << path << " in given XML." << endl;
         return "";
     }
     if (path.find('@') == path.npos) {
@@ -125,7 +125,7 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
         string attrName = path.substr(path.find('@')+1,path.length()-path.find('@')-1).c_str();
         const char* attrValue = pNode->ToElement()->Attribute(attrName.c_str());
         if (attrValue == NULL) {
-            mainLogger.out() << "error: there is no attribute named " << attrName << "." << endl;
+            mainLogger.out() << "warning: there is no attribute named " << attrName << "." << endl;
             return "";
         }
         return string(attrValue);
@@ -136,14 +136,14 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
 int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value) {
     TiXmlNode* pNode = getXMLElement(pRoot,path);
     if (pNode == NULL) {
-        mainLogger.out() << "error: no value at " << path << " in given XML." << endl;
+        mainLogger.out() << "warning: no value at " << path << " in given XML." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
     if (path.find('@') == path.npos) {
         // setting text node
         TiXmlText* pText = pNode->FirstChild()->ToText();
         if (pText == NULL) {
-            mainLogger.out() << "error: node at " << path << " is not a leaf in XML." << endl;
+            mainLogger.out() << "warning: node at " << path << " is not a leaf in XML." << endl;
             return STAT_INCOMPATIBLE_PARAMETER;
         }
         pText->SetValue(value.c_str());

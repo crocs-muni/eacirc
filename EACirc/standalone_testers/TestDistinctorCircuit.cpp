@@ -12,7 +12,7 @@
 #include "GA1DArrayGenome.h"
 #include "tinyxml.h"
 #include "CircuitGenome.h"
-#include "projects/estream/estreamInterface.h"
+#include "projects/estream/EstreamInterface.h"
 #include "projects/estream/EncryptorDecryptor.h"
 #include "EAC_circuit.h"
 

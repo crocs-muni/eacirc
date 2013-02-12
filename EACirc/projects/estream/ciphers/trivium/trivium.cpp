@@ -10,7 +10,7 @@
 
 #include "ecrypt-sync.h"
 #include "../ecrypt-portable.h"
-#include "../../estreamInterface.h"
+#include "../../EstreamInterface.h"
 
 /* ------------------------------------------------------------------------- */
 
