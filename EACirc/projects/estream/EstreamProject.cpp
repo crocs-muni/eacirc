@@ -33,6 +33,8 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     estreamSettings.estreamIVType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
     estreamSettings.cipherInitializationFrequency = atoi(getXMLElementValue(pRoot,"ESTREAM/CIPHER_INIT_FREQ").c_str());
     estreamSettings.generateStream = (atoi(getXMLElementValue(pRoot,"ESTREAM/GENERATE_STREAM").c_str())) ? true : false;
+    istringstream ss(getXMLElementValue(pRoot,"ESTREAM/STREAM_SIZE"));
+    ss >> estreamSettings.streamSize;
     pEstreamSettings = &estreamSettings;
 
     // bind project settings into global settings
@@ -81,9 +83,14 @@ int EstreamProject::setupPlaintext() {
 int EstreamProject::generateTestVectors() {
     int status = STAT_OK;
 
+    // if set so, do not generate test vectors but generate data strean to cout
     if (pEstreamSettings->generateStream) {
         status = generateCipherDataStream();
-        mainLogger.out() << "warning: Generation of stream of cipher data finished." << endl;
+        if (status != STAT_OK) {
+            return status;
+        } else {
+            return STAT_INTENTIONAL_EXIT;
+        }
     }
 
     if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
@@ -233,10 +240,10 @@ int EstreamProject::getTestVector(){
 
 int EstreamProject::generateCipherDataStream() {
     if (pEstreamSettings->testVectorEstream == ESTREAM_RANDOM) {
-        mainLogger.out() << "error: You cannot generate stream from random, you must specify a cipher." << endl;
+        mainLogger.out() << "error: Cannot generate stream from random, cipher must be specified." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     } else {
-        mainLogger.out() << "info: You are generating stream for " << estreamToString(pEstreamSettings->testVectorEstream);
+        mainLogger.out() << "info: Generating stream for " << estreamToString(pEstreamSettings->testVectorEstream);
         if (!pEstreamSettings->limitAlgRounds) {
             mainLogger.out() << " (unlimitted version)" << endl;
         } else {
@@ -254,14 +261,14 @@ int EstreamProject::generateCipherDataStream() {
         if (status != STAT_OK) return status;
     }
 
-    while (true) {
+    unsigned long alreadyGenerated = 0;
+    while (pEstreamSettings->streamSize == 0 ? true : alreadyGenerated < pEstreamSettings->streamSize) {
         if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
             status = encryptorDecryptor->setupKey();
             if (status != STAT_OK) return status;
             encryptorDecryptor->setupIV();
             if (status != STAT_OK) return status;
         }
-
         for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
             if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
                 status = encryptorDecryptor->setupKey();
@@ -284,10 +291,13 @@ int EstreamProject::generateCipherDataStream() {
                     break;
                 }
             }
-
             for (int index = 0; index < pGlobals->settings->testVectors.testVectorLength; index++) {
                 cout << inputs[index];
             }
+            alreadyGenerated += pGlobals->settings->testVectors.testVectorLength;
         }
     }
+    mainLogger.out() << "info: Cipher data stream generation ended. (" << alreadyGenerated << ")" << endl;
+
+    return STAT_OK;
 }

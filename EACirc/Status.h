@@ -20,6 +20,7 @@
 #define STAT_FILE_WRITE_FAIL                    16      // FILE COULD NOT BE SAVED
 #define STAT_CONFIG_SCRIPT_INCOMPLETE           17      // CONFIGURATION FILE IS INCOMPLETE
 #define STAT_PROJECT_ERROR                      18      // ERROR IN PROJECT CLASSES
+#define STAT_INTENTIONAL_EXIT                   19      // EXITING EACIRC INTENTIONALLY
 
 const char* ErrorToString(int error);
 

@@ -297,6 +297,7 @@ void EACirc::loadPopulation(const string filename) {
 }
 
 void EACirc::createPopulation() {
+    if (m_status != STAT_OK) return;
     // seed GAlib (initializations may require random numbers)
     GAResetRNG(m_currentGalibSeed);
     // temporary structure for genome (empty or loaded from file)
@@ -339,7 +340,7 @@ void EACirc::initializeState() {
     if (m_settings.main.loadInitialPopulation) {
         loadPopulation(FILE_POPULATION);
     } else {
-        m_project->generateAndSaveTestVectors();
+        m_status = m_project->generateAndSaveTestVectors();
         mainLogger.out() << "info: Initial test vectors generated." << endl;
         createPopulation();
     }
@@ -403,6 +404,7 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
 }
 
 void EACirc::evaluateStep() {
+    if (m_status != STAT_OK) return;
     int totalGeneration = m_actGener + m_oldGenerations;
     pGlobals->stats.bestGenerFit = 0;
     GA1DArrayGenome<unsigned long> genome = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();
@@ -473,7 +475,7 @@ void EACirc::run() {
 
         // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
-            m_project->generateAndSaveTestVectors();
+            m_status = m_project->generateAndSaveTestVectors();
             evaluateStep();
             continue;
         }
@@ -482,13 +484,13 @@ void EACirc::run() {
         if (m_settings.testVectors.testVectorChangeProgressive) {
             // TODO: understand and correct
             if (changed > m_actGener/m_settings.testVectors.testVectorChangeFreq + 1) {
-                m_project->generateAndSaveTestVectors();
+                m_status = m_project->generateAndSaveTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
         } else {
             if (m_actGener %(m_settings.testVectors.testVectorChangeFreq) == 1) {
-                m_project->generateAndSaveTestVectors();
+                m_status = m_project->generateAndSaveTestVectors();
                 mainLogger.out() << "info: Test vectors regenerated." << endl;
             }
             if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
@@ -527,7 +529,7 @@ void EACirc::run() {
     // commented for testing purposes of saving state
 
     // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
-    //m_evaluator->generateAndSaveTestVectors();
+    //m_status = m_evaluator->generateAndSaveTestVectors();
     //m_evaluator->evaluateStep(genomeBest, m_actGener);
     GA1DArrayGenome<unsigned long> genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
     //Print the best circuit

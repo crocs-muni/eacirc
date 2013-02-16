@@ -125,6 +125,7 @@ public:
 "    <KEY_TYPE>2</KEY_TYPE>"
 "    <IV_TYPE>0</IV_TYPE>"
 "    <GENERATE_STREAM>0</GENERATE_STREAM>"
+"    <STREAM_SIZE>1024</STREAM_SIZE>"
 "</ESTREAM>"
 "</EACIRC>";
         ofstream configFile(FILE_CONFIG);

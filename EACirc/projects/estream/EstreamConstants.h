@@ -63,6 +63,7 @@ typedef struct _ESTREAM_SETTINGS {
     bool testVectorBalance;
     int cipherInitializationFrequency;
     bool generateStream;
+    unsigned long streamSize;
 
     _ESTREAM_SETTINGS(void) {
         testVectorEstream = 0;
@@ -77,6 +78,7 @@ typedef struct _ESTREAM_SETTINGS {
         testVectorBalance = false;
         cipherInitializationFrequency = ESTREAM_INIT_CIPHERS_ONCE;
         generateStream = false;
+        streamSize = 0;
     }
 } ESTREAM_SETTINGS;
 
