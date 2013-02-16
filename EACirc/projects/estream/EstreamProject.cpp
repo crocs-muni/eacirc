@@ -161,7 +161,10 @@ int EstreamProject::getTestVector(){
                 for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                     if (outplain[input] != plain[input]) {
                         mainLogger.out() << "error: Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
-                        tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
+                        if (pGlobals->settings->testVectors.saveTestVectors) {
+                            tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
+                        }
+                        status = STAT_PROJECT_ERROR;
                         break;
                     }
                 }
@@ -235,7 +238,7 @@ int EstreamProject::getTestVector(){
     }
     tvFile.close();
 
-    return STAT_OK;
+    return status;
 }
 
 int EstreamProject::generateCipherDataStream() {
