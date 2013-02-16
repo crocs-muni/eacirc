@@ -90,7 +90,7 @@ getAvgTable run scores =
 
 getStableGen :: Scores -> Int
 getStableGen scores =
-  generation $ if null stable then last scores else head stable 
+  if null stable then -1 else generation $ head stable 
   where stable = until allBigger dropSmall $ filterScores scores
         allBigger = all ((>= stableGenTheshold) . maxFit) . take 50
         dropSmall = dropWhile (\info -> maxFit info < stableGenTheshold) . 
@@ -123,9 +123,10 @@ processFolder path = do
         formatTable stats = tableHeader ++ "\n" ++ unlines stats
         tableHeader = "note: Following table displays averages for all runs.\n"++
                       "run\taverage\tmaximum\tminimum"
-        formatStableGen stats = if null stats then "No stable generation found.\n"
-                                else stableGenHeader ++ (unwords $ map show stats) ++
-                                     "\naverage: " ++ (show . average $ map fromIntegral stats) ++ "\n"
+        formatStableGen stats = if noStable stats then "No stable generation found.\n"
+                                else stableGenHeader ++ (unwords $ map (\x -> iff (x == -1) "-" (show x)) stats) ++
+                                     "\naverage: " ++ (show . average . map fromIntegral $ filter (>0) stats) ++ "\n"
+        noStable = null . filter (>0)
         stableGenHeader = "Stable generations (after test vector change, "++
                           "fit does not drop below " ++ show stableGenTheshold ++ " for " ++ 
                           show (50 * testVectorChangeFreq) ++ " gens):\n"
