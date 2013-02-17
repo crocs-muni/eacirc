@@ -1,8 +1,8 @@
 #! /bin/bash
 
-VERSION=1.2
+VERSION=1.3
 PARENTDIR=../../boinc/_processed
-BASEHTML=http://centaur.fi.muni.cz:8000/
+BASEHTML=http://centaur.fi.muni.cz:8000
 
 echo "Results downloader for LaBAK@BOINC, version "$VERSION
 if [ $# -eq 0 ]
@@ -30,7 +30,7 @@ do
 		continue		
 	fi
 	echo "Downloading results from LaBAK@BOINC for source html: "$SOURCEHTML
-	CLEAN=$SOURCEHTML.clean
+	CLEAN=.$SOURCEHTML.clean
 	# clean HTML
 	hxclean $SOURCEHTML >$CLEAN
 	ITEM=0
@@ -46,13 +46,14 @@ do
 		FILES=`echo $ROW | sed 's/<a[^>]*>\([^<>]*\)<\/a>/\1 /g'`
 		for FILE in $FILES
 		do
-			 echo $FILE
+			# echo $FILE
 			SED="s/.*<a\([^>]*\)>"$FILE"<\/a>.*/\1/"
 			URL1=`echo $ROW | sed $SED`
 			URL2=`echo $URL1 | sed 's/[^"]*"\([^"]*\)".*/\1/'`
-			 echo $BASEHTML$URL2
-			 echo $DIR/$FILE
-			# wget -q $BASEHTML$URL2 -O$DIR/$FILE
+			# echo $BASEHTML$URL2
+			# echo $DIR/$FILE
+			# echo
+			wget -q $BASEHTML$URL2 -O$DIR/$FILE
 		done
 	done
 	rm $CLEAN

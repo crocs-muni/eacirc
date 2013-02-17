@@ -1,7 +1,7 @@
 import System.FilePath (pathSeparator)
 import System.Posix.Files (fileExist)
 import System.Environment (getArgs)
-import Data.List (isInfixOf)
+import Data.List (isInfixOf, intercalate)
 import Control.Monad (foldM)
 
 scoreFilename :: String
@@ -25,19 +25,19 @@ maxRuns = 30
 logSuspects :: [String]
 logSuspects = ["warning","error"]
 
-data GenerationInfo = Info {
-  generation :: Int,
+data GenerationRunInfo = Info {
+  generationRun :: Int,
   avgFit :: Float,
   maxFit :: Float,
   minFit :: Float
 } deriving (Show, Eq)
 
-type Scores=[GenerationInfo]
+type Scores=[GenerationRunInfo]
 
 data RunStats = Stats {
   errors :: [String],
   stableGen :: [Int],
-  avgTable :: [String]
+  avgTable :: [GenerationRunInfo]
 } deriving (Show, Eq)
 
 emptyRunStats :: RunStats
@@ -62,7 +62,8 @@ processRun path run = do
                        stableGen=[getStableGen scores], 
                        avgTable=[getAvgTable run scores]}
         else
-          return Stats{errors=errors, stableGen=[], avgTable=[show run ++ "\tscoreFile does not exist!"]}
+          return Stats{errors=errors, stableGen=[], avgTable=[Info{generationRun=run,
+                       avgFit= -1, maxFit= -1, minFit= -1}]}
     else return Stats{errors=["Run " ++ show run ++ " does not exist!"],
                       stableGen=[],
                       avgTable=[]}
@@ -70,27 +71,28 @@ processRun path run = do
 
 parseScoreFile :: String -> Scores
 parseScoreFile = zipWith build [1..] . map (take 4 . words) . lines
-  where build :: Int -> [String] -> GenerationInfo
-        build g [_,a,ma,mi] = Info{generation=g, avgFit=(read a), maxFit=(read ma), minFit=(read mi)}
+  where build :: Int -> [String] -> GenerationRunInfo
+        build g [_,a,ma,mi] = Info{generationRun=g, avgFit=(read a), maxFit=(read ma), minFit=(read mi)}
         build _ x = error (show x)
 
-filterScores :: [GenerationInfo] -> [GenerationInfo]
-filterScores = filter ((== 1) . (flip mod testVectorChangeFreq) . generation)
+filterScores :: [GenerationRunInfo] -> [GenerationRunInfo]
+filterScores = filter ((== 1) . (flip mod testVectorChangeFreq) . generationRun)
 
-getAverages :: [GenerationInfo] -> [Float]
+getAverages :: [GenerationRunInfo] -> [Float]
 getAverages info = map makeAvg [avgFit, maxFit, minFit]
-  where makeAvg :: (GenerationInfo -> Float) -> Float
+  where makeAvg :: (GenerationRunInfo -> Float) -> Float
         makeAvg f = average $ map f info
 
-getAvgTable :: Int -> Scores -> String
+getAvgTable :: Int -> Scores -> GenerationRunInfo
 getAvgTable run scores = 
   formatResults . getAverages $ filterScores scores
-    where formatResults :: [Float] -> String
-          formatResults stats = show run ++ concatMap (('\t':). show) stats
+    where formatResults :: [Float] -> GenerationRunInfo
+          formatResults [avgF, maxF, minF] = Info{generationRun=run, avgFit=avgF, maxFit=maxF, minFit=minF}
+          formatResults x = error $ concatMap show x
 
 getStableGen :: Scores -> Int
 getStableGen scores =
-  if null stable then -1 else generation $ head stable 
+  if null stable then -1 else generationRun $ head stable 
   where stable = until allBigger dropSmall $ filterScores scores
         allBigger = all ((>= stableGenTheshold) . maxFit) . take 50
         dropSmall = dropWhile (\info -> maxFit info < stableGenTheshold) . 
@@ -120,7 +122,9 @@ processFolder path = do
         job = reverse . takeWhile (not . (==pathSeparator)) . tail $ reverse path
         formatErrors stats = if null stats then "No error suspercts found.\n"
                        else "Error suspects in this job:\n" ++ unlines stats
-        formatTable stats = tableHeader ++ "\n" ++ unlines stats
+        formatTable stats = unlines $ tableHeader : map formatAvgRow stats ++ [avgAvgRow stats]
+        formatAvgRow row = intercalate "\t" $ (show $ generationRun row) : map (show . flip ($) row) [avgFit,maxFit,minFit]
+        avgAvgRow stats = "avg:" ++ concatMap (('\t':) . show . average . flip ($) stats . map) [avgFit,maxFit,minFit]
         tableHeader = "note: Following table displays averages for all runs.\n"++
                       "run\taverage\tmaximum\tminimum"
         formatStableGen stats = if noStable stats then "No stable generation found.\n"
