@@ -11,7 +11,6 @@ public:
     static int Mutator(GAGenome&, float);
     static float Evaluator(GAGenome&);
     static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
-public:
     static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
 	static int ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize);
 	static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char usePredictorMask[MAX_OUTPUTS] = NULL, int bPruneCircuit = FALSE);
@@ -39,5 +38,14 @@ public:
       * @return status
       */
     static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+
+private:
+    /** saves circuit as generation with size 1
+      * - CAREFUL: code duplicity with Eacirc.cpp!
+      * @param genome       genome to save
+      * @param filemane     destination filename
+      * @return status
+      */
+    static int saveCircuitAsPopulation(const GA1DArrayGenome<unsigned long> &genome, const string filename);
 };
 #endif

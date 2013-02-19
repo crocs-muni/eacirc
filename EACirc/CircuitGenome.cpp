@@ -1,8 +1,10 @@
+#include <iomanip>
 #include "CircuitGenome.h"
 #include "CommonFnc.h"
 #include "circuit_evaluator/ICircuitEvaluator.h"
-#include <iomanip>
-#include <limits.h>
+#include "XMLProcessor.h"
+// libinclude ("galib/GAPopulation.h")
+#include "GAPopulation.h"
 
 void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
     unsigned long   circuit[MAX_GENOME_SIZE];    
@@ -1187,42 +1189,19 @@ node [color=lightblue2, style=filled];\r\n";
             }
 		}
     }
-    
     if (bCodeCircuit) codeCirc += "\n}";
-    
     message += "\r\n";
-
     visualCirc += "}";
 
 	//
-	//	STORE IN SPECIFIED FILES
+    //	ACTUAL WRITING TO DISK
 	//
     if (filePath == "") filePath = FILE_BEST_CIRCUIT;
 
 	fstream	file;
 	string	newFilePath;
 
-	/*int num=0;
-	while (true) {
-
-		std::string s;
-		std::stringstream out;
-		out << ++num;
-		s = out.str();
-
-		ifstream ifile(s + filePath + ".txt");
-		if (!ifile) break;
-	} 
-
-	std::string s;
-	std::stringstream out;
-	out << num;
-	s = out.str();
-	filePath = s + filePath;
-	*/
-
-	// TEXT CIRCUIT
-	//newFilePath.Format("%s.txt", filePath);
+    // WRITE FINAL: TEXT CIRCUIT
 	newFilePath = filePath + ".txt";
 	file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
 	if (file.is_open()) {
@@ -1230,43 +1209,10 @@ node [color=lightblue2, style=filled];\r\n";
 		file.close();
 	}
 
-	// BINARY GENOM
-	//newFilePath.Format("%s.bin", filePath);
-	newFilePath = filePath + ".bin";
-	message = "";
-	file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
-	if (file.is_open()) {
-	    for (int i = 0; i < genome.length(); i++) {
-			//file << (genome.gene(i)) << " ";
-			ostringstream os33;
-			os33 << genome.gene(i) << " ";
-			value = os33.str();
-			file << value;
-			message += value;
-	    }
-		file.close();
-	}
-    message += "\r\n";
+    // WRITE FINAL: BINARY GENOME (POPULATION)
+    status = saveCircuitAsPopulation(genome,filePath + ".xml");
 
-	// GRAPHVIZ FILE
-	//newFilePath.Format("%s.dot", filePath);
-	newFilePath = filePath + ".dot";
-	file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
-	if (file.is_open()) {
-		file << visualCirc;
-		file.close();
-	}
-    // DRAW CIRCUIT, IF DOT IS INSTALLED
-    /*string cmdLine;
-    string pngFilePath;
-	//pngFilePath.Format("%s.png", filePath);
-	pngFilePath = filePath + ".png";
-    //cmdLine.Format("dot -Tpng %s -o %s -Gsize=1000", newFilePath, pngFilePath);
-	cmdLine = "dot -Tpng " + newFilePath + " -o " + pngFilePath + " -Gsize=1000";
-	WinExec(cmdLine, 0);*/
-
-
-	// C FILE
+    // WRITE FINAL: C FILE
 	if (bCodeCircuit) {
 	    //newFilePath.Format("%s.c", filePath);
 		newFilePath = filePath + ".c";
@@ -1277,46 +1223,22 @@ node [color=lightblue2, style=filled];\r\n";
 	    }
     }
 
+    // WRITE FINAL: GRAPHVIZ FILE
+    newFilePath = filePath + ".dot";
+    file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
+    if (file.is_open()) {
+        file << visualCirc;
+        file.close();
+    }
 
-    /*
-	//
-	//	STORE IN DEFAULT FILE
-	//
-    filePath = FILE_BEST_CIRCUIT;
-	
-	// TEXT CIRCUIT
-	//newFilePath.Format("%s.txt", filePath);
-	newFilePath = filePath + ".txt";
-	file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
-	if (file.is_open()) {
-		file << message;	
-		file.close();
-	}
-
-	// BINARY GENOM
-	//newFilePath.Format("%s.bin", filePath);
-	newFilePath = filePath + ".bin";
-	file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
-	if (file.is_open()) {
-	    for (int i = 0; i < genome.length(); i++) {
-			//value.Format("%u ", genome.gene(i));
-			ostringstream os33;
-			os33 << genome.gene(i) << " ";
-			value = os33.str();
-			file << value;
-	    }
-		file.close();
-	}
-
-	// GRAPHVIZ FILE
-	//newFilePath.Format("%s.dot", filePath);
-	newFilePath = filePath + ".dot";
-	file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
-	if (file.is_open()) {
-		file << visualCirc;
-		file.close();
-	}
-    */
+    // DRAW CIRCUIT, IF DOT IS INSTALLED
+    /*string cmdLine;
+    string pngFilePath;
+    //pngFilePath.Format("%s.png", filePath);
+    pngFilePath = filePath + ".png";
+    //cmdLine.Format("dot -Tpng %s -o %s -Gsize=1000", newFilePath, pngFilePath);
+    cmdLine = "dot -Tpng " + newFilePath + " -o " + pngFilePath + " -Gsize=1000";
+    WinExec(cmdLine, 0);*/
     
     return status;
 }
@@ -1564,6 +1486,39 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
         }
     }
     
+    return status;
+}
+
+int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<unsigned long>& genome, const string filename) {
+    int status = STAT_OK;
+    TiXmlElement* pRoot = new TiXmlElement("eacirc_population");
+    TiXmlElement* pElem = NULL;
+    TiXmlElement* pElem2 = NULL;
+
+    pElem = new TiXmlElement("population_size");
+    pElem->LinkEndChild(new TiXmlText("1"));
+    pRoot->LinkEndChild(pElem);
+    pElem = new TiXmlElement("genome_size");
+    pElem->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.genomeSize).c_str()));
+    pRoot->LinkEndChild(pElem);
+    pElem = new TiXmlElement("population");
+    string textCircuit;
+    GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &genome;
+    status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
+    if (status != STAT_OK) {
+        mainLogger.out() << "error: Could not save circuit fo file " << filename << "." << endl;
+        return status;
+    }
+    pElem2 = new TiXmlElement("genome");
+    pElem2->LinkEndChild(new TiXmlText(textCircuit.c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+
+    status = saveXMLFile(pRoot, filename);
+    if (status != STAT_OK) {
+        mainLogger.out() << "error: Cannot save circuit to file " << filename << "." << endl;
+        return status;
+    }
     return status;
 }
 

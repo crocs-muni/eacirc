@@ -5,8 +5,8 @@
 #include <string>
 
 EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
-    int numRounds = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount:-1;
-    int numRounds2 = (pEstreamSettings->limitAlgRounds == 1)?pEstreamSettings->limitAlgRoundsCount2:-1;
+    int numRounds = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->limitAlgRoundsCount : -1;
+    int numRounds2 = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->limitAlgRoundsCount2 : -1;
     for(int i = 0; i < 4; i++) {
         ctxarr[i] = NULL;
         ecryptarr[i] = NULL;
@@ -61,6 +61,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				DECIM_ctx* ctxa2 = (DECIM_ctx*)malloc(sizeof(DECIM_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+           // if unlimited, set correct number of round
+                if (nR == -1) nR = 8;
 				break;}
 		   case ESTREAM_DICING: {
 				ECRYPT_Dicing* ecryptx = new ECRYPT_Dicing();
@@ -121,6 +123,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				GRAIN_ctx* ctxa2 = (GRAIN_ctx*)malloc(sizeof(GRAIN_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+           // if unlimited, set correct number of round
+                if (nR == -1) nR = 13;
 				break;}
 		   case ESTREAM_HC128: {
 				ECRYPT_HC128* ecryptx = new ECRYPT_HC128();
@@ -221,6 +225,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				SALSA_ctx* ctxa2 = (SALSA_ctx*)malloc(sizeof(SALSA_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+           // if unlimited, set correct number of round
+                if (nR == -1) nR = 12;
 				break;}
 		   case ESTREAM_SFINKS: {
 				ECRYPT_Sfinks* ecryptx = new ECRYPT_Sfinks();
@@ -261,6 +267,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				TSC4_ctx* ctxa2 = (TSC4_ctx*)malloc(sizeof(TSC4_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+           // if unlimited, set correct number of round
+                if (nR == -1) nR = 32;
 				break;}
 		   case ESTREAM_WG: {
 				ECRYPT_Wg* ecryptx = new ECRYPT_Wg();
@@ -299,6 +307,10 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 			   assert(false);
 			   break;
 		}
+
+        if (nR == -1) {
+            mainLogger.out() << "warning: Number of rounds probably incorrectly set (" << nR << "). See code and/or manual." << endl;
+        }
 
 		if (testVectorEstream != ESTREAM_RANDOM) {
 			ecryptarr[i]->numRounds = nR;

@@ -1,10 +1,10 @@
 #! /bin/bash
 
 VERSION=1.0
-RESULTS_SUFFIX=".results"
+RESULTS_SUFFIX=".diehard"
 
 # dieharder settings
-TESTS="0 1 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17"
+TESTS="0 1 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17" 
 PSAMPLES=1
 GENERATOR=201
 FLAGS_HEADER=511

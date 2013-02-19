@@ -1,5 +1,4 @@
 #include "QuantumRndGen.h"
-#include <limits.h>
 #include "time.h"
 #include "MD5RndGen.h"
 #include "EACglobals.h"
@@ -13,7 +12,6 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
 
     // INITIALIZE INTERNAL GENERATOR
     m_internalRNG = new MD5RndGen(seed);
-    // m_internalRNG.seed(seed);
 
     // CHECK FOR QUANTUM DATA SOURCE
     int length;

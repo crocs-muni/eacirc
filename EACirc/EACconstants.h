@@ -1,6 +1,8 @@
 #ifndef EACCONSTANTS_H
 #define EACCONSTANTS_H
 
+#include <limits.h>
+
 typedef unsigned long DWORD;
 
 #ifndef FALSE

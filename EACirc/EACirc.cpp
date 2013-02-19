@@ -102,6 +102,7 @@ void EACirc::loadConfiguration(const string filename) {
         return;
     }
     m_status = m_project->loadProjectConfiguration(pRoot);
+    mainLogger.out() << "info: Project configuration loaded. (" << m_project->shortDescription() << ")" << endl;
 
     // allocate space for testVecotrs
     pGlobals->allocate();
@@ -215,6 +216,7 @@ void EACirc::createState() {
     mainLogger.out() << "info: State successfully initialized." << endl;
     // INIT PROJECT STATE
     m_project->initializeProjectState();
+    mainLogger.out() << "info: Project intial state setup successful. (" << m_project->shortDescription() << ")" << endl;
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -232,7 +234,7 @@ void EACirc::savePopulation(const string filename) {
     string textCircuit;
     for (int i = 0; i < m_settings.ga.popupationSize; i++) {
         // note: it is not necessary to call individual i in SCALED order
-        //       however then the population files differ in order ('diff' cannot be used to fing bugs)
+        //       however then the population files differ in order ('diff' cannot be used to finding bugs)
         GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
         m_status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
         if (m_status != STAT_OK) {
@@ -371,6 +373,7 @@ void EACirc::prepare() {
     }
 
     m_status = m_project->initializeProject();
+    mainLogger.out() << "info: Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
