@@ -113,6 +113,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				FUBUKI_ctx* ctxa2 = (FUBUKI_ctx*)malloc(sizeof(FUBUKI_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+		   // if unlimited, set correct number of round
+                if (nR == -1) nR = 4;
 				break;}
 		   case ESTREAM_GRAIN: {
 				ECRYPT_Grain* ecryptx = new ECRYPT_Grain();
@@ -145,6 +147,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				HERMES_ctx* ctxa2 = (HERMES_ctx*)malloc(sizeof(HERMES_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+		   // if unlimited, set correct number of round
+                if (nR == -1) nR = 10;
 				break;}
 		   case ESTREAM_LEX: {
 				ECRYPT_Lex* ecryptx = new ECRYPT_Lex();
