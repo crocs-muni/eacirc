@@ -30,7 +30,7 @@ do
 		continue		
 	fi
 	echo "Downloading results from LaBAK@BOINC for source html: "$SOURCEHTML
-	CLEAN=.$SOURCEHTML.clean
+	CLEAN=$SOURCEHTML.clean
 	# clean HTML
 	hxclean $SOURCEHTML >$CLEAN
 	ITEM=0
