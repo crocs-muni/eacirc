@@ -51,8 +51,8 @@
 #define ESTREAM_RANDOM          99
 
 typedef struct _ESTREAM_SETTINGS {
-    int testVectorEstream;
-    int testVectorEstream2;
+    int testVectorAlgorithm;
+    int testVectorAlgorithm2;
     int testVectorEstreamMethod;
     int estreamKeyType;
     int estreamInputType;
@@ -66,8 +66,8 @@ typedef struct _ESTREAM_SETTINGS {
     unsigned long streamSize;
 
     _ESTREAM_SETTINGS(void) {
-        testVectorEstream = 0;
-        testVectorEstream2 = 0;
+        testVectorAlgorithm = 0;
+        testVectorAlgorithm2 = 0;
         testVectorEstreamMethod = 0;
         estreamKeyType = ESTREAM_GENTYPE_ZEROS;
         estreamInputType = ESTREAM_GENTYPE_ZEROS;

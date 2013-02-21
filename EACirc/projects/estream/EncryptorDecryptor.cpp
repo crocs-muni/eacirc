@@ -12,15 +12,15 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
         ecryptarr[i] = NULL;
     }
 	
-    int testVectorEstream = pEstreamSettings->testVectorEstream;
+    int testVectorAlg = pEstreamSettings->testVectorAlgorithm;
 	int nR = numRounds;
 
 	for (int i=0; i<2; i++) {
 	   if (i == 1) {
-               testVectorEstream = pEstreamSettings->testVectorEstream2;
+               testVectorAlg = pEstreamSettings->testVectorAlgorithm2;
 			   nR = numRounds2;
 		}
-	   switch (testVectorEstream) {
+       switch (testVectorAlg) {
 		   case ESTREAM_ABC: {
 				ECRYPT_ABC* ecryptx = new ECRYPT_ABC();
 				ABC_ctx* ctxa = (ABC_ctx*)malloc(sizeof(ABC_ctx));
@@ -306,6 +306,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 			   break;}
 		   case ESTREAM_RANDOM:
 				ecryptarr[i] = NULL;
+           // set correct number of rounds to prevent warning
+                nR = 0;
 				break;
 		   default:
 			   assert(false);
@@ -316,7 +318,7 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
             mainLogger.out() << "warning: Number of rounds probably incorrectly set (" << nR << "). See code and/or manual." << endl;
         }
 
-		if (testVectorEstream != ESTREAM_RANDOM) {
+        if (testVectorAlg != ESTREAM_RANDOM) {
 			ecryptarr[i]->numRounds = nR;
 			ecryptarr[i]->ECRYPT_init();
 			ecryptarr[2+i]->numRounds = nR;
@@ -329,13 +331,13 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
     if (pGlobals->settings->testVectors.saveTestVectors) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
-        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->testVectorEstream);
+        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->testVectorAlgorithm);
         if (pEstreamSettings->limitAlgRounds) {
             tvFile << " (" << pEstreamSettings->limitAlgRoundsCount << " rounds)" << endl;
         } else {
             tvFile << " (unlimited version)" << endl;
         }
-        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->testVectorEstream2);
+        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->testVectorAlgorithm2);
         if (pEstreamSettings->limitAlgRounds) {
             tvFile << " (" << pEstreamSettings->limitAlgRoundsCount2 << " rounds)" << endl;
         } else {
@@ -389,11 +391,11 @@ int EncryptorDecryptor::setupIV() {
         tvFile.close();
     }
 
-    if (pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) {
+    if (pEstreamSettings->testVectorAlgorithm != ESTREAM_RANDOM) {
         ecryptarr[0]->ECRYPT_ivsetup(ctxarr[0], iv);
         ecryptarr[2]->ECRYPT_ivsetup(ctxarr[2], iv);
     }
-    if (pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) {
+    if (pEstreamSettings->testVectorAlgorithm2 != ESTREAM_RANDOM) {
         ecryptarr[1]->ECRYPT_ivsetup(ctxarr[1], iv);
         ecryptarr[3]->ECRYPT_ivsetup(ctxarr[3], iv);
     }
@@ -433,11 +435,11 @@ int EncryptorDecryptor::setupKey() {
         tvFile.close();
     }
 
-    if (pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) {
+    if (pEstreamSettings->testVectorAlgorithm != ESTREAM_RANDOM) {
         ecryptarr[0]->ECRYPT_keysetup(ctxarr[0], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
         ecryptarr[2]->ECRYPT_keysetup(ctxarr[2], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }
-    if (pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) {
+    if (pEstreamSettings->testVectorAlgorithm2 != ESTREAM_RANDOM) {
         ecryptarr[1]->ECRYPT_keysetup(ctxarr[1], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
         ecryptarr[3]->ECRYPT_keysetup(ctxarr[3], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }

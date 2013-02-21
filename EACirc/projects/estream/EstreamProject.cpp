@@ -22,8 +22,8 @@ string EstreamProject::shortDescription() const {
 
 int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     estreamSettings.testVectorEstreamMethod = atoi(getXMLElementValue(pRoot,"ESTREAM/ESTREAM_USAGE_TYPE").c_str());
-    estreamSettings.testVectorEstream = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str());
-    estreamSettings.testVectorEstream2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_2").c_str());
+    estreamSettings.testVectorAlgorithm = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str());
+    estreamSettings.testVectorAlgorithm2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_2").c_str());
     estreamSettings.testVectorBalance = (atoi(getXMLElementValue(pRoot,"ESTREAM/BALLANCED_TEST_VECTORS").c_str())) ? true : false;
     estreamSettings.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"ESTREAM/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
     estreamSettings.limitAlgRoundsCount = atoi(getXMLElementValue(pRoot,"ESTREAM/ROUNDS_ALG_1").c_str());
@@ -145,10 +145,10 @@ int EstreamProject::getTestVector(){
             for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++) outputs[output] = streamnum * 0xff;
 
             //generate the plaintext for stream
-            if ((streamnum == 0 && pEstreamSettings->testVectorEstream != ESTREAM_RANDOM) ||
-                (streamnum == 1 && pEstreamSettings->testVectorEstream2 != ESTREAM_RANDOM) ) {
+            if ((streamnum == 0 && pEstreamSettings->testVectorAlgorithm != ESTREAM_RANDOM) ||
+                (streamnum == 1 && pEstreamSettings->testVectorAlgorithm2 != ESTREAM_RANDOM) ) {
                 if (pGlobals->settings->testVectors.saveTestVectors == 1)
-                    tvFile  << "(alg n." << ((streamnum==0)?pEstreamSettings->testVectorEstream:pEstreamSettings->testVectorEstream2) << " - " << ((streamnum==0)?pEstreamSettings->limitAlgRoundsCount:pEstreamSettings->limitAlgRoundsCount2) << " rounds): ";
+                    tvFile  << "(alg n." << ((streamnum==0)?pEstreamSettings->testVectorAlgorithm:pEstreamSettings->testVectorAlgorithm2) << " - " << ((streamnum==0)?pEstreamSettings->limitAlgRoundsCount:pEstreamSettings->limitAlgRoundsCount2) << " rounds): ";
 
                 status = setupPlaintext();
                 if (status != STAT_OK) return status;
@@ -216,8 +216,8 @@ int EstreamProject::getTestVector(){
     // save human-readable test vector
     if (pGlobals->settings->testVectors.saveTestVectors) {
         int tvg = 0;
-        if (streamnum == 0) tvg = pEstreamSettings->testVectorEstream;
-        else tvg = pEstreamSettings->testVectorEstream2;
+        if (streamnum == 0) tvg = pEstreamSettings->testVectorAlgorithm;
+        else tvg = pEstreamSettings->testVectorAlgorithm2;
         tvFile << setfill('0');
 
         if (memcmp(inputs,plain,pGlobals->settings->testVectors.testVectorLength) != 0) {
@@ -242,11 +242,11 @@ int EstreamProject::getTestVector(){
 }
 
 int EstreamProject::generateCipherDataStream() {
-    if (pEstreamSettings->testVectorEstream == ESTREAM_RANDOM) {
+    if (pEstreamSettings->testVectorAlgorithm == ESTREAM_RANDOM) {
         mainLogger.out() << "error: Cannot generate stream from random, cipher must be specified." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     } else {
-        mainLogger.out() << "info: Generating stream for " << estreamToString(pEstreamSettings->testVectorEstream);
+        mainLogger.out() << "info: Generating stream for " << estreamToString(pEstreamSettings->testVectorAlgorithm);
         if (!pEstreamSettings->limitAlgRounds) {
             mainLogger.out() << " (unlimitted version)" << endl;
         } else {
