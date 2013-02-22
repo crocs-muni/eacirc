@@ -13,8 +13,55 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
     // INITIALIZE INTERNAL GENERATOR
     m_internalRNG = new MD5RndGen(seed);
 
-    // CHECK FOR QUANTUM DATA SOURCE
+    checkQRNGdataAvailability();
+    m_accumulator = new unsigned char[m_accLength];
+    status = reinitRandomGenerator();
+
+    if (status != STAT_OK) {
+        mainLogger.out() << "error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
+        mainLogger.out() << "       status: " << ErrorToString(status) << endl;
+    }
+}
+
+QuantumRndGen::~QuantumRndGen() {
+    delete[] m_accumulator;
+    delete m_internalRNG;
+}
+
+void QuantumRndGen::checkQRNGdataAvailability() {
     int length;
+    int separatorPosition;
+    string paths = m_QRNGDataPath;
+    while (!paths.empty()) {
+        string currentPath = paths.substr(0,paths.find(FILE_PATH_SEPARATOR));
+        if ((separatorPosition = paths.find(FILE_PATH_SEPARATOR)) == paths.npos) {
+            paths = "";
+        } else {
+            paths = paths.substr(separatorPosition+1,paths.npos-separatorPosition-1);
+        }
+        m_QRNGDataPath = currentPath;
+        ifstream file;
+        string path = getQRNGDataFileName(m_fileIndex);
+        file.open(getQRNGDataFileName(m_fileIndex).c_str(), fstream::in | fstream::binary);
+        if (file.is_open()) { // using QRNG data
+            m_usesQRNGData = true;
+            // DETERMINE DATA LENGTH
+            file.seekg (0, ios::end);
+            length = file.tellg();
+            file.seekg (0, ios::beg);
+            m_accLength = min(RANDOM_DATA_FILE_SIZE,length);
+            file.close();
+            mainLogger.out() << "info: Quantum random data found at \"" << currentPath << "\"." << endl;
+            return;
+        }
+    }
+
+    // QRNG data not available
+    m_QRNGDataPath = "";
+    mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
+    m_accLength = 4; // (max 32B), see init and update
+
+    /*
     ifstream file;
     file.open(getQRNGDataFileName(m_fileIndex).c_str(), fstream::in | fstream::binary);
     if (file.is_open()) { // using QRNG data
@@ -32,19 +79,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
         mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
         m_accLength = 4; // (max 32B), see init and update
     }
-    m_accumulator = new unsigned char[m_accLength];
-
-    status = reinitRandomGenerator();
-
-    if (status != STAT_OK) {
-        mainLogger.out() << "error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
-        mainLogger.out() << "       status: " << ErrorToString(status) << endl;
-    }
-}
-
-QuantumRndGen::~QuantumRndGen() {
-    delete[] m_accumulator;
-    delete m_internalRNG;
+    */
 }
 
 string QuantumRndGen::getQRNGDataFileName(int fileIndex) {

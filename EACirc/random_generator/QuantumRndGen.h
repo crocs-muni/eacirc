@@ -22,6 +22,8 @@ private:
     IRndGen* m_internalRNG;
     //! get filename of random file with index with path
     string getQRNGDataFileName(int fileIndex);
+    //! check whether qrng data are available and set attributes accordingly
+    void checkQRNGdataAvailability();
 public:
     QuantumRndGen(unsigned long seed = 0, string QRBGSPath = "");
     QuantumRndGen(TiXmlNode* pRoot);

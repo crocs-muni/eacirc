@@ -67,6 +67,8 @@ typedef unsigned __int64 uint64_t;
 // index number should be prefixed by zeroes (to equal length as max index)
 #define FILE_QRNG_DATA_PREFIX       "Random"
 #define FILE_QRNG_DATA_SUFFIX       ".bin"
+// separator berween more paths
+#define FILE_PATH_SEPARATOR         ";"
 // maximum number of bits used from random data file
 // don't set too big, this size is read into memory
 // currently 10MB
