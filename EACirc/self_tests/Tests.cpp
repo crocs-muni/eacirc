@@ -185,3 +185,31 @@ TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 g
     // compare results
     compareResults();
 }
+
+TEST_CASE("determinism/tv-pregeneration","general run vs. run with the same pre-generated test vectors") {
+    // general preparations
+    basicConfiguration::estream();
+    TiXmlNode* pRootConfig = NULL;
+    // prepare run 1
+    REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","0") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/NUM_GENERATIONS","40") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/SAVE_STATE_FREQ","10") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","1") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/SEED","123456789") == STAT_OK);
+    REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    pRootConfig = NULL;
+    // run 1
+    REQUIRE(runEACirc() == STAT_OK);
+    // rename files to be compared
+    backupResults();
+    // prepare run 2
+    REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT","100") == STAT_OK);
+    REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
+    pRootConfig = NULL;
+    // run 2
+    REQUIRE(runEACirc() == STAT_OK);
+    // compare results
+    compareResults();
+}

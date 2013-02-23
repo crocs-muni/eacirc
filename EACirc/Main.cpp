@@ -10,6 +10,7 @@
 // global variable definitions
 Logger mainLogger;
 IRndGen* mainGenerator = NULL;
+IRndGen* galibGenerator = NULL;
 IRndGen* rndGen = NULL;
 IRndGen* biasRndGen = NULL;
 GLOBALS* pGlobals = NULL;

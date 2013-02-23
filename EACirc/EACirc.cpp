@@ -52,6 +52,8 @@ EACirc::~EACirc() {
     rndGen = NULL;
     if (biasRndGen) delete biasRndGen;
     biasRndGen = NULL;
+    if (galibGenerator) delete galibGenerator;
+    galibGenerator = NULL;
     if (mainGenerator) delete mainGenerator;
     mainGenerator = NULL;
 }
@@ -138,6 +140,9 @@ void EACirc::saveState(const string filename) {
     pElem2 = new TiXmlElement("main_generator");
     pElem2->LinkEndChild(mainGenerator->exportGenerator());
     pElem->LinkEndChild(pElem2);
+    pElem2 = new TiXmlElement("galib_generator");
+    pElem2->LinkEndChild(galibGenerator->exportGenerator());
+    pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("rndgen");
     pElem2->LinkEndChild(rndGen->exportGenerator());
     pElem->LinkEndChild(pElem2);
@@ -174,6 +179,7 @@ void EACirc::loadState(const string filename) {
     istringstream(getXMLElementValue(pRoot,"current_galib_seed")) >> m_currentGalibSeed;
     // initialize random generators (main, quantum, bias)
     mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
+    galibGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/galib_generator/generator"));
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
 
@@ -201,18 +207,22 @@ void EACirc::createState() {
         mainLogger.out() << "info: Using system-generated random seed: " << m_originalSeed << endl;
     }
 
-    // INIT RNG
     unsigned long generatorSeed;
+    // INIT GALIBRNG
+    mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
+    galibGenerator = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
+    mainLogger.out() << "info: GAlib generator initialized (" << galibGenerator->shortDescription() << ")" << endl;
+    // INIT RNG
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
-    mainLogger.out() << "info: Random generator initialized (" << rndGen->shortDescription() << ")" <<endl;
+    mainLogger.out() << "info: Random generator initialized (" << rndGen->shortDescription() << ")" << endl;
     // INIT BIAS RNDGEN
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     biasRndGen = new BiasRndGen(generatorSeed, m_settings.random.qrngPath, m_settings.random.biasRndGenFactor);
-    mainLogger.out() << "info: Bias random generator initialized (" << biasRndGen->shortDescription() << ")" <<endl;
+    mainLogger.out() << "info: Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
 
     // GENERATE SEED FOR GALIB
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     mainLogger.out() << "info: State successfully initialized." << endl;
     // INIT PROJECT STATE
     m_project->initializeProjectState();
@@ -313,7 +323,7 @@ void EACirc::createPopulation() {
     mainLogger.out() << "info: Initializing population." << endl;
     m_gaData->initialize();
     // reset GAlib seed
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
 
     mainLogger.out() << "info: Population successfully initialized." << endl;
@@ -522,7 +532,7 @@ void EACirc::run() {
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
                 && m_actGener % m_settings.main.saveStateFrequency == 0) {
-            mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+            galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
             saveProgress(FILE_STATE,FILE_POPULATION);
         }

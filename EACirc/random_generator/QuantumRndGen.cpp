@@ -41,7 +41,6 @@ void QuantumRndGen::checkQRNGdataAvailability() {
         }
         m_QRNGDataPath = currentPath;
         ifstream file;
-        string path = getQRNGDataFileName(m_fileIndex);
         file.open(getQRNGDataFileName(m_fileIndex).c_str(), fstream::in | fstream::binary);
         if (file.is_open()) { // using QRNG data
             m_usesQRNGData = true;
@@ -60,26 +59,6 @@ void QuantumRndGen::checkQRNGdataAvailability() {
     m_QRNGDataPath = "";
     mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
     m_accLength = 4; // (max 32B), see init and update
-
-    /*
-    ifstream file;
-    file.open(getQRNGDataFileName(m_fileIndex).c_str(), fstream::in | fstream::binary);
-    if (file.is_open()) { // using QRNG data
-        m_usesQRNGData = true;
-
-        // DETERMINE DATA LENGTH
-        file.seekg (0, ios::end);
-        length = file.tellg();
-        file.seekg (0, ios::beg);
-        m_accLength = min(RANDOM_DATA_FILE_SIZE,length);
-
-        file.close();
-    } else { // QRNG data not available
-        m_QRNGDataPath = "";
-        mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
-        m_accLength = 4; // (max 32B), see init and update
-    }
-    */
 }
 
 string QuantumRndGen::getQRNGDataFileName(int fileIndex) {

@@ -34,15 +34,25 @@ extern Logger mainLogger;
   */
 extern IRndGen* mainGenerator;
 
+/** random generator for galib seeding
+  * - initialized at state initialization of EACirc
+  * - used ONLY for GA stuff (GAlib seeding, genome initialization, mutation, crossover)
+  * - NEVER use for other purposes
+  * - unbiased generator (quantum or MD5-based)
+  */
+extern IRndGen* galibGenerator;
+
 /** unbiased random generator
   * - initialized at state initialization of EACirc
   * - all-purpose random generator (unbiased)
+  * - to be used by 'project' modules (test vector generation)
   */
 extern IRndGen* rndGen;
 
 /** biased random generator
   * - initialized at state initialization of EACirc
   * - all-purpose random generator (biased)
+  * - to be used by 'project' modules (test vector generation)
   */
 extern IRndGen* biasRndGen;
 

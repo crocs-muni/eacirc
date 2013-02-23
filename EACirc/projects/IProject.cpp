@@ -103,7 +103,7 @@ int IProject::generateAndSaveTestVectors() {
         mainLogger.out() << "error: Test vector generation failed." << endl;
         return status;
     }
-    if (pGlobals->settings->testVectors.saveTestVectors) {
+    if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
         status = saveTestVectors();
     }
     return status;

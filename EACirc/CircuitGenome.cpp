@@ -103,26 +103,10 @@ void CircuitGenome::Initializer(GAGenome &g) {
     GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
     int	offset = 0;
 
-    // loading done elsewhere (manually in eacirc.run after initializing GAlib)
-    // LOAD AND CONTINUE
-    /*
-	string fileName = "EAC_circuit.bin";
-	fstream	efile;
-	string executetext;
-	efile.open(fileName.c_str(), fstream::in);
-	if (efile.is_open()) {
-		getline(efile, executetext);
-		CircuitGenome::ExecuteFromText(executetext, &genome);
-		efile.close();
-		return;
-    }
-    */
-
 	// CLEAR GENOM
 	for (int i = 0; i < genome.size(); i++) genome.gene(i, 0);
     
 	// INITIALIZE ALL LAYERS
-
     for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
         offset = layer * MAX_INTERNAL_LAYER_SIZE; 
         // LAST LAYER CAN HAVE DIFFERENT NUMBER OF FUNCTIONS
@@ -146,7 +130,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                 }
                 else {
                     // FUNCTIONAL LAYERS
-                    rndGen->getRandomFromInterval(pGlobals->precompPow[numLayerInputs], &value);
+                    galibGenerator->getRandomFromInterval(pGlobals->precompPow[numLayerInputs], &value);
                     //value = 0xffffffff;
                 }
                 genome.gene(offset + slot, value);
@@ -161,7 +145,7 @@ void CircuitGenome::Initializer(GAGenome &g) {
                     // FUNCTIONAL LAYER
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
-                        rndGen->getRandomFromInterval(FNC_MAX, &value);
+                        galibGenerator->getRandomFromInterval(FNC_MAX, &value);
                         if (pGlobals->settings->circuit.allowedFunctions[value] != 0) {
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
@@ -198,7 +182,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 // MUTATE CONNECTION SELECTOR (FLIP ONE SINGLE BIT == ONE CONNECTOR)
                 if (GAFlipCoin(pmut)) {
                     unsigned long temp;
-                    rndGen->getRandomFromInterval(numLayerInputs, &value);
+                    galibGenerator->getRandomFromInterval(numLayerInputs, &value);
                     temp = pGlobals->precompPow[value];
                     // SWITCH RANDOMLY GENERATED BIT
                     temp ^= genome.gene(offset + slot);
@@ -210,7 +194,7 @@ int CircuitGenome::Mutator(GAGenome &g, float pmut) {
                 if (GAFlipCoin(pmut)) {             
                     int bFNCNotSet = TRUE;
                     while (bFNCNotSet) {
-                        rndGen->getRandomFromInterval(FNC_MAX, &value);
+                        galibGenerator->getRandomFromInterval(FNC_MAX, &value);
                         if (pGlobals->settings->circuit.allowedFunctions[value] != 0) {
                             genome.gene(offset + slot, value);
                             bFNCNotSet = FALSE;
