@@ -28,7 +28,6 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/standalone_testers/TestDistinctorCircuit.cpp \
-    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp
 
 # === evaluators ===
 SOURCES += \
@@ -56,10 +55,11 @@ SOURCES += \
 # === project files ===
 SOURCES += \
     EACirc/projects/IProject.cpp \
-    EACirc/projects/sha3/Sha3Project.cpp \
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
-    EACirc/projects/estream/EstreamInterface.cpp
+    EACirc/projects/estream/EstreamInterface.cpp \
+    EACirc/projects/sha3/Sha3Project.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -105,6 +105,99 @@ SOURCES += \
 #    EACirc/projects/estream/ciphers/cryptmt/cryptmt-v3.cpp \
 #    EACirc/projects/estream/ciphers/abc/abc-v3.cpp \
 
+# === SHA-3 hash function files ===
+SOURCES += \
+    EACirc/projects/sha3/hash_functions/Abacus/Abacus_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/ARIRANG/Arirang_OP32.c \
+    EACirc/projects/sha3/hash_functions/ARIRANG/Arirang_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Aurora/Aurora_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Blake/Blake_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Blender/Blender_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/BMW/BMW_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Boole/Boole_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Cheetah/Cheetah_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/CHI/chi-fast32.c \
+    EACirc/projects/sha3/hash_functions/CHI/Chi_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/CRUNCH/const_32.c \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_224.c \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_256.c \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_384.c \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_512.c \
+    EACirc/projects/sha3/hash_functions/CRUNCH/Crunch_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/CubeHash/CubeHash_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/DCH/DCH_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/ECHO/Echo_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/ECOH/ecoh.param.cpp \
+    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/EDON/Edon_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.c \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/ESSENCE/essence_compress_256.c \
+    EACirc/projects/sha3/hash_functions/ESSENCE/essence_compress_512.c \
+    EACirc/projects/sha3/hash_functions/ESSENCE/essence_L_tables.c \
+    EACirc/projects/sha3/hash_functions/ESSENCE/Essence_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_256.c \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_384.c \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_512.c \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue.c \
+    EACirc/projects/sha3/hash_functions/Fugue/Fugue_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Grostl/Grostl_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Hamsi/hamsi-exp.c \
+    EACirc/projects/sha3/hash_functions/Hamsi/Hamsi_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Hamsi/hamsi-tables.c \
+    EACirc/projects/sha3/hash_functions/Hamsi/i.hamsi-ref.c \
+    EACirc/projects/sha3/hash_functions/JH/JH_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakDuplex.c \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakF-1600-opt32.c \
+    EACirc/projects/sha3/hash_functions/Keccak/Keccak_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakSponge.c \
+    EACirc/projects/sha3/hash_functions/Khichidi/khichidi_core.cpp \
+    EACirc/projects/sha3/hash_functions/Khichidi/Khichidi_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Lane/Lane_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Lesamnta/Lesamnta_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Luffa/Luffa_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/LUX/Lux_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/MCSSHA3/Mcssha_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/MD6/md6_compress.c \
+    EACirc/projects/sha3/hash_functions/MD6/md6_mode.c \
+    EACirc/projects/sha3/hash_functions/MD6/MD6_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/MeshHash/MeshHash_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/NaSHA/Nasha_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Sarmal/Sarmal_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Shabal/Shabal_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Shamata/Shamata_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/SHAvite3/SHAvite_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/SIMD/optimized.c \
+    EACirc/projects/sha3/hash_functions/SIMD/Simd_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Skein/skein_block.cpp \
+    EACirc/projects/sha3/hash_functions/Skein/skein.cpp \
+    EACirc/projects/sha3/hash_functions/Skein/skein_debug.cpp \
+    EACirc/projects/sha3/hash_functions/Skein/Skein_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/SpectralHash/SpectralHash_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/StreamHash/StreamHash_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.c \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/TIB3/inupfin256.c \
+    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
+    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Twister/Twister_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Vortex/vortex_core.c \
+    EACirc/projects/sha3/hash_functions/Vortex/vortex_misc.c \
+    EACirc/projects/sha3/hash_functions/Vortex/Vortex_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/Vortex/vortex_tables.c \
+    EACirc/projects/sha3/hash_functions/WaMM/BitArray.c \
+    EACirc/projects/sha3/hash_functions/WaMM/ReverseBits.c \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMM.c \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMErrorMessage.c \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMOperator.c \
+    EACirc/projects/sha3/hash_functions/WaMM/Wamm_sha3.cpp \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMTappingPrimes.c \
+    EACirc/projects/sha3/hash_functions/Waterfall/Waterfall_sha3.cpp \
+
 # === Libraries (redundant if using pre-compiled) ===
 SOURCES += \
     EACirc/tinyXML/tinystr.cpp EACirc/tinyXML/tinyxml.cpp EACirc/tinyXML/tinyxmlerror.cpp EACirc/tinyXML/tinyxmlparser.cpp \
@@ -128,7 +221,6 @@ HEADERS += \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
     EACirc/standalone_testers/TestDistinctorCircuit.h \
-    EACirc/projects/pregenerated_tv/PregeneratedTvProject.h
 
 # === evaluators ===
 HEADERS += \
@@ -157,11 +249,13 @@ HEADERS += \
 # === project files ===
 HEADERS += \
     EACirc/projects/IProject.h \
-    EACirc/projects/sha3/Sha3Project.h \
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.h \
     EACirc/projects/estream/EstreamProject.h \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
+    EACirc/projects/sha3/Sha3Project.h \
+    EACirc/projects/sha3/Sha3Interface.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \
@@ -228,6 +322,127 @@ HEADERS += \
 #    EACirc/projects/estream/ciphers/abc/abc.h \                 # not used
 #    EACirc/projects/estream/ciphers/abc/abc-tables.h \          # not used
 #    EACirc/projects/estream/ciphers/abc/ecrypt-sync.h \         # not used
+
+# === SHA-3 hash function files ===
+HEADERS += \
+    EACirc/projects/sha3/hash_functions/Abacus/Abacus_sha3.h \
+    EACirc/projects/sha3/hash_functions/ARIRANG/Arirang_OP32.h \
+    EACirc/projects/sha3/hash_functions/ARIRANG/Arirang_sha3.h \
+    EACirc/projects/sha3/hash_functions/Aurora/Aurora_sha3.h \
+    EACirc/projects/sha3/hash_functions/Blake/Blake_sha3.h \
+    EACirc/projects/sha3/hash_functions/Blender/Blender_sha3.h \
+    EACirc/projects/sha3/hash_functions/BMW/BMW_sha3.h \
+    EACirc/projects/sha3/hash_functions/Boole/Boole_sha3.h \
+    EACirc/projects/sha3/hash_functions/Cheetah/Cheetah_sha3.h \
+    EACirc/projects/sha3/hash_functions/CHI/chi.h \
+    EACirc/projects/sha3/hash_functions/CHI/Chi_sha3.h \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_224.h \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_256.h \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_384.h \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_512.h \
+    EACirc/projects/sha3/hash_functions/CRUNCH/Crunch_sha3.h \
+    EACirc/projects/sha3/hash_functions/CRUNCH/crunch_type.h \
+    EACirc/projects/sha3/hash_functions/CubeHash/CubeHash_sha3.h \
+    EACirc/projects/sha3/hash_functions/DCH/DCH_sha3.h \
+    EACirc/projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.h \
+    EACirc/projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.h \
+    EACirc/projects/sha3/hash_functions/ECHO/Echo_sha3.h \
+    EACirc/projects/sha3/hash_functions/ECOH/ecoh.h \
+    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.h \
+    EACirc/projects/sha3/hash_functions/EDON/Edon_sha3.h \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.h \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.h \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/portEnRUPT.h \
+    EACirc/projects/sha3/hash_functions/ESSENCE/essence.h \
+    EACirc/projects/sha3/hash_functions/ESSENCE/Essence_sha3.h \
+    EACirc/projects/sha3/hash_functions/Fugue/aestab.h \
+    EACirc/projects/sha3/hash_functions/Fugue/aestab_t.h \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_256.h \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_384.h \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_512.h \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue.h \
+    EACirc/projects/sha3/hash_functions/Fugue/Fugue_sha3.h \
+    EACirc/projects/sha3/hash_functions/Fugue/fugue_t.h \
+    EACirc/projects/sha3/hash_functions/Grostl/brg_endian.h \
+    EACirc/projects/sha3/hash_functions/Grostl/brg_types.h \
+    EACirc/projects/sha3/hash_functions/Grostl/Grostl_sha3.h \
+    EACirc/projects/sha3/hash_functions/Grostl/tables.h \
+    EACirc/projects/sha3/hash_functions/Hamsi/hamsi.h \
+    EACirc/projects/sha3/hash_functions/Hamsi/hamsi-internals.h \
+    EACirc/projects/sha3/hash_functions/Hamsi/Hamsi_sha3.h \
+    EACirc/projects/sha3/hash_functions/Hamsi/hamsi-tables.h \
+    EACirc/projects/sha3/hash_functions/JH/JH_sha3.h \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakSponge.h \
+    EACirc/projects/sha3/hash_functions/Keccak/brg_endian.h \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakDuplex.h \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakF-1600-interface.h \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakF-1600-int-set.h \
+    EACirc/projects/sha3/hash_functions/Keccak/KeccakF-1600-opt32-settings.h \
+    EACirc/projects/sha3/hash_functions/Keccak/Keccak_sha3.h \
+    EACirc/projects/sha3/hash_functions/Khichidi/common.h \
+    EACirc/projects/sha3/hash_functions/Khichidi/khichidi_core.h \
+    EACirc/projects/sha3/hash_functions/Khichidi/Khichidi_sha3.h \
+    EACirc/projects/sha3/hash_functions/Lane/Lane_sha3.h \
+    EACirc/projects/sha3/hash_functions/Lesamnta/Lesamnta_sha3.h \
+    EACirc/projects/sha3/hash_functions/Luffa/Luffa_sha3.h \
+#    EACirc/projects/sha3/hash_functions/LUX/Lux_sha3.h \
+    EACirc/projects/sha3/hash_functions/MCSSHA3/Mcssha_sha3.h \
+    EACirc/projects/sha3/hash_functions/MD6/inttypes.h \
+    EACirc/projects/sha3/hash_functions/MD6/md6.h \
+    EACirc/projects/sha3/hash_functions/MD6/MD6_sha3.h \
+    EACirc/projects/sha3/hash_functions/MD6/stdint.h \
+    EACirc/projects/sha3/hash_functions/MeshHash/MeshHash_sha3.h \
+    EACirc/projects/sha3/hash_functions/NaSHA/brg_endian.h \
+    EACirc/projects/sha3/hash_functions/NaSHA/brg_types.h \
+    EACirc/projects/sha3/hash_functions/NaSHA/Nasha_sha3.h \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/DoBlockModMix.h \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.h \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/SHA3_ref.h \
+    EACirc/projects/sha3/hash_functions/Sarmal/Sarmal_sha3.h \
+    EACirc/projects/sha3/hash_functions/Shabal/Shabal_sha3.h \
+    EACirc/projects/sha3/hash_functions/Shamata/Shamata_sha3.h \
+    EACirc/projects/sha3/hash_functions/SHAvite3/AESround.h \
+    EACirc/projects/sha3/hash_functions/SHAvite3/portable.h \
+    EACirc/projects/sha3/hash_functions/SHAvite3/SHAvite3-256.h \
+    EACirc/projects/sha3/hash_functions/SHAvite3/SHAvite3-512.h \
+    EACirc/projects/sha3/hash_functions/SHAvite3/SHAvite_sha3.h \
+    EACirc/projects/sha3/hash_functions/SIMD/compat.h \
+    EACirc/projects/sha3/hash_functions/SIMD/Simd_sha3.h \
+    EACirc/projects/sha3/hash_functions/SIMD/tables.h \
+    EACirc/projects/sha3/hash_functions/Skein/brg_endian.h \
+    EACirc/projects/sha3/hash_functions/Skein/brg_types.h \
+    EACirc/projects/sha3/hash_functions/Skein/skein_debug.h \
+    EACirc/projects/sha3/hash_functions/Skein/skein.h \
+    EACirc/projects/sha3/hash_functions/Skein/skein_iv.h \
+    EACirc/projects/sha3/hash_functions/Skein/skein_port.h \
+    EACirc/projects/sha3/hash_functions/Skein/Skein_sha3.h \
+    EACirc/projects/sha3/hash_functions/SpectralHash/SpectralHash_sha3.h \
+    EACirc/projects/sha3/hash_functions/SpectralHash/spectral_structs.h \
+    EACirc/projects/sha3/hash_functions/StreamHash/sbox32.h \
+    EACirc/projects/sha3/hash_functions/StreamHash/StreamHash_sha3.h \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/inttypes.h \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/stdbool.h \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/stdint.h \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.h \
+    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h \
+    EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.h \
+    EACirc/projects/sha3/hash_functions/TIB3/inupfin.h \
+    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.h \
+    EACirc/projects/sha3/hash_functions/Twister/Twister_sha3.h \
+    EACirc/projects/sha3/hash_functions/Twister/twister_tables.h \
+    EACirc/projects/sha3/hash_functions/Vortex/int_types.h \
+    EACirc/projects/sha3/hash_functions/Vortex/vortex_core.h \
+    EACirc/projects/sha3/hash_functions/Vortex/vortex_misc.h \
+    EACirc/projects/sha3/hash_functions/Vortex/Vortex_sha3.h \
+    EACirc/projects/sha3/hash_functions/WaMM/BitArray.h \
+    EACirc/projects/sha3/hash_functions/WaMM/ReverseBits.h \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMConstants.h \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMErrorMessage.h \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMM.h \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMOperator.h \
+    EACirc/projects/sha3/hash_functions/WaMM/Wamm_sha3.h \
+    EACirc/projects/sha3/hash_functions/WaMM/WaMMTappingPrimes.h \
+    EACirc/projects/sha3/hash_functions/Waterfall/Waterfall_sha3.h \
 
 # === Libraries (redundant if using pre-compiled) ===
 HEADERS += \
