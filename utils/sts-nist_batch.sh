@@ -53,6 +53,8 @@ do
 	if [ -f $STS_RESULTS_FILE ]
 	then
 		mv $STS_RESULTS_FILE $RESULTSFILE
+	else
+		echo "Results file \""$STS_RESULTS_FILE"\" does not exist!"
 	fi
 	if [ -f $LOGFILE ]
 	then
