@@ -5,19 +5,19 @@
 #include <string>
 
 EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
-    int numRounds = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->limitAlgRoundsCount : -1;
-    int numRounds2 = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->limitAlgRoundsCount2 : -1;
+    int numRounds = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->alg1RoundsCount : -1;
+    int numRounds2 = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->alg2RoundsCount : -1;
     for(int i = 0; i < 4; i++) {
         ctxarr[i] = NULL;
         ecryptarr[i] = NULL;
     }
 	
-    int testVectorAlg = pEstreamSettings->testVectorAlgorithm;
+    int testVectorAlg = pEstreamSettings->algorithm1;
 	int nR = numRounds;
 
 	for (int i=0; i<2; i++) {
 	   if (i == 1) {
-               testVectorAlg = pEstreamSettings->testVectorAlgorithm2;
+               testVectorAlg = pEstreamSettings->algorithm2;
 			   nR = numRounds2;
 		}
        switch (testVectorAlg) {
@@ -331,15 +331,15 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
     if (pGlobals->settings->testVectors.saveTestVectors) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
-        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->testVectorAlgorithm);
+        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->algorithm1);
         if (pEstreamSettings->limitAlgRounds) {
-            tvFile << " (" << pEstreamSettings->limitAlgRoundsCount << " rounds)" << endl;
+            tvFile << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
         } else {
             tvFile << " (unlimited version)" << endl;
         }
-        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->testVectorAlgorithm2);
+        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->algorithm2);
         if (pEstreamSettings->limitAlgRounds) {
-            tvFile << " (" << pEstreamSettings->limitAlgRoundsCount2 << " rounds)" << endl;
+            tvFile << " (" << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
         } else {
             tvFile << " (unlimited version)" << endl;
         }
@@ -362,7 +362,7 @@ EncryptorDecryptor::~EncryptorDecryptor() {
 }
 
 int EncryptorDecryptor::setupIV() {
-    switch (pEstreamSettings->estreamIVType) {
+    switch (pEstreamSettings->ivType) {
     case ESTREAM_GENTYPE_ZEROS:
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
         break;
@@ -376,7 +376,7 @@ int EncryptorDecryptor::setupIV() {
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown IV type (" << pEstreamSettings->estreamIVType << ")." << endl;
+        mainLogger.out() << "error: Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
 
@@ -391,11 +391,11 @@ int EncryptorDecryptor::setupIV() {
         tvFile.close();
     }
 
-    if (pEstreamSettings->testVectorAlgorithm != ESTREAM_RANDOM) {
+    if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
         ecryptarr[0]->ECRYPT_ivsetup(ctxarr[0], iv);
         ecryptarr[2]->ECRYPT_ivsetup(ctxarr[2], iv);
     }
-    if (pEstreamSettings->testVectorAlgorithm2 != ESTREAM_RANDOM) {
+    if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
         ecryptarr[1]->ECRYPT_ivsetup(ctxarr[1], iv);
         ecryptarr[3]->ECRYPT_ivsetup(ctxarr[3], iv);
     }
@@ -405,7 +405,7 @@ int EncryptorDecryptor::setupIV() {
 }
 
 int EncryptorDecryptor::setupKey() {
-    switch (pEstreamSettings->estreamKeyType) {
+    switch (pEstreamSettings->keyType) {
     case ESTREAM_GENTYPE_ZEROS:
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
         break;
@@ -419,7 +419,7 @@ int EncryptorDecryptor::setupKey() {
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown key type (" << pEstreamSettings->estreamKeyType << ")." << endl;
+        mainLogger.out() << "error: Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
         break;
     }
@@ -435,11 +435,11 @@ int EncryptorDecryptor::setupKey() {
         tvFile.close();
     }
 
-    if (pEstreamSettings->testVectorAlgorithm != ESTREAM_RANDOM) {
+    if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
         ecryptarr[0]->ECRYPT_keysetup(ctxarr[0], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
         ecryptarr[2]->ECRYPT_keysetup(ctxarr[2], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }
-    if (pEstreamSettings->testVectorAlgorithm2 != ESTREAM_RANDOM) {
+    if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
         ecryptarr[1]->ECRYPT_keysetup(ctxarr[1], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
         ecryptarr[3]->ECRYPT_keysetup(ctxarr[3], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }

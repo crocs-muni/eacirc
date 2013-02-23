@@ -366,13 +366,12 @@ void EACirc::prepare() {
         std::remove(FILE_BEST_FITNESS);
         std::remove(FILE_AVG_FITNESS);
         std::remove(FILE_GALIB_SCORES);
-        std::remove(FILE_TEST_VECTORS);
         std::remove(FILE_TEST_VECTORS_HR);
         std::remove(FILE_TEST_DATA_1);
         std::remove(FILE_TEST_DATA_2);
     }
 
-    m_status = m_project->initializeProject();
+    m_status = m_project->initializeProjectMain();
     mainLogger.out() << "info: Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
 
     if (m_status == STAT_OK) {

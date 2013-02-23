@@ -3,7 +3,25 @@
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
 
-IProject::IProject(int type) : m_type(type) {}
+IProject::IProject(int type) : m_type(type) {
+    if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
+        ofstream tvFile;
+        tvFile.open(FILE_TEST_VECTORS, ios_base::trunc);
+        if (!tvFile.is_open()) {
+            mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return;
+        }
+        tvFile << dec << left;
+        tvFile << (pGlobals->settings->main.numGenerations / pGlobals->settings->testVectors.testVectorChangeFreq + 1);
+        tvFile << " \t\t(number of test vector sets)" << endl;
+        tvFile << pGlobals->settings->testVectors.numTestVectors << " \t\t(number of test vectors in a set)" << endl;
+        tvFile << MAX_INPUTS << " \t\t(maximal number of inputs)" << endl;
+        tvFile << MAX_OUTPUTS << " \t\t(maximal number of outputs)" << endl;
+        tvFile << pGlobals->settings->testVectors.testVectorLength << " \t\t(number of tv input bytes)" << endl;
+        tvFile << pGlobals->settings->circuit.sizeOutputLayer << " \t\t(number of tv output bytes)" << endl;
+        tvFile.close();
+    }
+}
 
 IProject::~IProject() {}
 
@@ -13,6 +31,23 @@ int IProject::loadProjectConfiguration(TiXmlNode *pRoot) {
 
 int IProject::initializeProject() {
     return STAT_OK;
+}
+
+int IProject::initializeProjectMain() {
+    int status = STAT_OK;
+    status = initializeProject();
+    if (status != STAT_OK) return status;
+    if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
+        ofstream tvFile;
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app);
+        if (!tvFile.is_open()) {
+            mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << endl;
+        tvFile.close();
+    }
+    return status;
 }
 
 TiXmlNode* IProject::saveProjectState() const {
@@ -71,8 +106,19 @@ int IProject::generateAndSaveTestVectors() {
 }
 
 int IProject::saveTestVectors() const {
-
-    // TBD: save test vectors from pGlobals->testVectors to file in standardized format
-
+    ofstream tvFile;
+    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+    if (!tvFile.is_open()) {
+        mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
+        tvFile.write((char*)(pGlobals->testVectors[testVectorNumber]),MAX_INPUTS + MAX_OUTPUTS);
+    }
+    if (tvFile.fail()) {
+        mainLogger.out() << "error: Problem when saving test vectors." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    tvFile.close();
     return STAT_OK;
 }

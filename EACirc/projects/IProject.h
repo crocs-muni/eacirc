@@ -22,8 +22,19 @@ private:
       */
     int saveTestVectors() const;
 
+    /** initialize project itself
+      * called once, after configuration loading
+      * called REGARDLESS of recommencing/not recommencong computation
+      * project can here write own configuration notes to test vectors file
+      * called by initializeProjectMain();
+      * default implemetation: do nothing
+      * @return status;
+      */
+    virtual int initializeProject();
+
 public:
     /** general project constructor, sets project type
+      * - if enabled, creates header for test vectors file
       * @param type     project constant
       */
     IProject(int type);
@@ -45,12 +56,15 @@ public:
       */
     virtual int loadProjectConfiguration(TiXmlNode* pRoot);
 
-    /** initialize project itself
-      * called once, after configuration loading
-      * called REGARDLESS of recommencing/not recommencong computation
+    /** initialize project
+      * - called once, after configuration loading
+      * - calls project initialization (virtual function initializeProject();)
+      * - maked header structure in test vector file
+      * - called REGARDLESS of recommencing/not recommencong computation
+      * - called by initializeProjectMain();
       * @return status;
       */
-    virtual int initializeProject();
+    int initializeProjectMain();
 
     /** initialize project state (called just once, before evolution)
       * NOT called at all, when computation is recommenced

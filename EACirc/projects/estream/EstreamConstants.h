@@ -51,32 +51,32 @@
 #define ESTREAM_RANDOM          99
 
 typedef struct _ESTREAM_SETTINGS {
-    int testVectorAlgorithm;
-    int testVectorAlgorithm2;
-    int testVectorEstreamMethod;
-    int estreamKeyType;
-    int estreamInputType;
-    int estreamIVType;
-    bool limitAlgRounds;
-    int limitAlgRoundsCount;
-    int limitAlgRoundsCount2;
-    bool testVectorBalance;
+    int estreamUsageType;
     int cipherInitializationFrequency;
+    int algorithm1;
+    int algorithm2;
+    bool ballancedTestVectors;
+    bool limitAlgRounds;
+    int alg1RoundsCount;
+    int alg2RoundsCount;
+    int keyType;
+    int plaintextType;
+    int ivType;
     bool generateStream;
     unsigned long streamSize;
 
     _ESTREAM_SETTINGS(void) {
-        testVectorAlgorithm = 0;
-        testVectorAlgorithm2 = 0;
-        testVectorEstreamMethod = 0;
-        estreamKeyType = ESTREAM_GENTYPE_ZEROS;
-        estreamInputType = ESTREAM_GENTYPE_ZEROS;
-        estreamIVType = ESTREAM_GENTYPE_ZEROS;
-        limitAlgRounds = false;
-        limitAlgRoundsCount = -1;
-        limitAlgRoundsCount2 = -1;
-        testVectorBalance = false;
+        estreamUsageType = 0;
         cipherInitializationFrequency = ESTREAM_INIT_CIPHERS_ONCE;
+        algorithm1 = 0;
+        algorithm2 = 0;
+        ballancedTestVectors = false;
+        limitAlgRounds = false;
+        alg1RoundsCount = -1;
+        alg2RoundsCount = -1;
+        keyType = ESTREAM_GENTYPE_ZEROS;
+        plaintextType = ESTREAM_GENTYPE_ZEROS;
+        ivType = ESTREAM_GENTYPE_ZEROS;
         generateStream = false;
         streamSize = 0;
     }
