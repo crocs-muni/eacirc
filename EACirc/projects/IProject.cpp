@@ -1,5 +1,6 @@
 #include "IProject.h"
 #include "CommonFnc.h"
+#include "pregenerated_tv/PregeneratedTvProject.h"
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
 
@@ -74,6 +75,9 @@ int IProject::loadProjectState(TiXmlNode *pRoot) {
 IProject* IProject::getProject(int projectType) {
     IProject* project = NULL;
     switch (projectType) {
+    case PROJECT_PREGENERATED_TV:
+        project = new PregeneratedTvProject();
+        break;
     case PROJECT_ESTREAM:
         project = new EstreamProject();
         break;

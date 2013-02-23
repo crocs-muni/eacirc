@@ -27,7 +27,8 @@ SOURCES += \
     EACirc/Logger.cpp \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
-    EACirc/standalone_testers/TestDistinctorCircuit.cpp
+    EACirc/standalone_testers/TestDistinctorCircuit.cpp \
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp
 
 # === evaluators ===
 SOURCES += \
@@ -127,6 +128,7 @@ HEADERS += \
     EACirc/EACirc.h \
     EACirc/EAC_circuit.h \
     EACirc/standalone_testers/TestDistinctorCircuit.h \
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.h
 
 # === evaluators ===
 HEADERS += \

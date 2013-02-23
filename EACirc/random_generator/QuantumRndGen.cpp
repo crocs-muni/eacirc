@@ -30,7 +30,7 @@ QuantumRndGen::~QuantumRndGen() {
 
 void QuantumRndGen::checkQRNGdataAvailability() {
     int length;
-    int separatorPosition;
+    unsigned int separatorPosition;
     string paths = m_QRNGDataPath;
     while (!paths.empty()) {
         string currentPath = paths.substr(0,paths.find(FILE_PATH_SEPARATOR));

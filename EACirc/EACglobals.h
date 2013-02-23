@@ -209,7 +209,10 @@ typedef struct _GLOBALS {
     void allocate() {
         if (testVectors != NULL) release();
         testVectors = new unsigned char*[settings->testVectors.numTestVectors];
-        for (int i = 0; i < settings->testVectors.numTestVectors; i++) testVectors[i] = new unsigned char[MAX_INPUTS + MAX_OUTPUTS];
+        for (int i = 0; i < settings->testVectors.numTestVectors; i++) {
+            testVectors[i] = new unsigned char[MAX_INPUTS + MAX_OUTPUTS];
+            memset(testVectors[i],0,MAX_INPUTS + MAX_OUTPUTS);
+        }
     }
     void release() {
         if (testVectors != NULL) {

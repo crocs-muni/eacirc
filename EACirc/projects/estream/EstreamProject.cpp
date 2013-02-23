@@ -6,6 +6,8 @@ ESTREAM_SETTINGS* pEstreamSettings = NULL;
 // TODO clean-up initialization section
 EstreamProject::EstreamProject()
     : IProject(PROJECT_ESTREAM) {
+    memset(inputs,0,MAX_INPUTS);
+    memset(outputs,0,MAX_OUTPUTS);
     encryptorDecryptor = NULL;
     this->numstats = new int[2];
 }
