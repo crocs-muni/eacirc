@@ -9,6 +9,9 @@
 #if defined( _MSC_VER )
 typedef unsigned long bmw_u_int32_t;
 typedef unsigned long long bmw_u_int64_t;
+#elif defined( __WIN32__ )                  // EACIRC: manual edit, 3 lines added
+typedef unsigned long bmw_u_int32_t;
+typedef unsigned long long bmw_u_int64_t;
 #else
 #include <sys/types.h>
 typedef u_int32_t bmw_u_int32_t;
