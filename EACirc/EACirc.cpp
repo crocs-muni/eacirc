@@ -476,7 +476,7 @@ void EACirc::run() {
     mainLogger.out() << "info: Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
         if (m_status != STAT_OK) {
-            mainLogger.out() << "error: Ooops, something went wrong, stopping. " << "(error: " << ErrorToString(m_status) << " )." << endl;
+            mainLogger.out() << "error: Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << " )." << endl;
             break;
         }
 

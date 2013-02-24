@@ -66,7 +66,7 @@ int runEACirc() {
     eacirc.initializeState();
     eacirc.run();
 	if (mainLogger.getLogging()) {
-		WARN("######## Ending EACirc (error: " << eacirc.getStatus() << " ) ########");
+        WARN("######## Ending EACirc (status: " << statusToString(eacirc.getStatus()) << " ) ########");
 	}
     return eacirc.getStatus();
 }

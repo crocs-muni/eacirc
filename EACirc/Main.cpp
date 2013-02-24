@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
 
     if (eacirc.getStatus() != STAT_OK) {
         mainLogger.out() << "error: Program run failed." << endl;
-        mainLogger.out() << "       status: " << ErrorToString(eacirc.getStatus()) << endl;
+        mainLogger.out() << "       status: " << statusToString(eacirc.getStatus()) << endl;
     } else {
         mainLogger.out() << "info: Program run succeeded." << endl;
     }

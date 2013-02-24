@@ -181,6 +181,7 @@
     <ClCompile Include="EACirc\projects\estream\EstreamInterface.cpp" />
     <ClCompile Include="EACirc\projects\estream\EstreamProject.cpp" />
     <ClCompile Include="EACirc\projects\IProject.cpp" />
+    <ClCompile Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.cpp" />
     <ClCompile Include="EACirc\projects\sha3\Sha3Project.cpp" />
     <ClCompile Include="EACirc\random_generator\BiasRndGen.cpp" />
     <ClCompile Include="EACirc\random_generator\IRndGen.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="EACirc\projects\estream\EstreamConstants.h" />
     <ClInclude Include="EACirc\projects\estream\EstreamInterface.h" />
     <ClInclude Include="EACirc\projects\estream\EstreamProject.h" />
+    <ClInclude Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.h" />
     <ClInclude Include="EACirc\projects\sha3\CircuitGenome.h" />
     <ClInclude Include="EACirc\circuit_evaluator\DistinguishTwoEvaluator.h" />
     <ClInclude Include="EACirc\circuit_evaluator\ICircuitEvaluator.h" />

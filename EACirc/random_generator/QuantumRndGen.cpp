@@ -19,7 +19,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
 
     if (status != STAT_OK) {
         mainLogger.out() << "error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
-        mainLogger.out() << "       status: " << ErrorToString(status) << endl;
+        mainLogger.out() << "       status: " << statusToString(status) << endl;
     }
 }
 

@@ -22,6 +22,6 @@
 #define STAT_PROJECT_ERROR                      18      // ERROR IN PROJECT CLASSES
 #define STAT_INTENTIONAL_EXIT                   19      // EXITING EACIRC INTENTIONALLY
 
-const char* ErrorToString(int error);
+const char* statusToString(int error);
 
 #endif

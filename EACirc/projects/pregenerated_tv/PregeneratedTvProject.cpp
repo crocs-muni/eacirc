@@ -94,6 +94,17 @@ int PregeneratedTvProject::initializeProject() {
     } else {
         mainLogger.out() << "info: Settings for project match." << endl;
     }
+
+    // switch data read mode
+    int dataPosition = m_tvFile.tellg();
+    m_tvFile.close();
+    m_tvFile.open(FILE_TEST_VECTORS, ios_base::binary);
+    if (!m_tvFile.is_open()) {
+        mainLogger.out() << "error: Cannot open file with pre-generated test vectors (" << FILE_TEST_VECTORS << ")!" << endl;
+        return STAT_FILE_OPEN_FAIL;
+    }
+    m_tvFile.seekg(dataPosition);
+
     return STAT_OK;
 }
 
@@ -101,7 +112,6 @@ int PregeneratedTvProject::generateTestVectors() {
     if (!m_tvFile.is_open()) {
         return STAT_PROJECT_ERROR;
     }
-
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
         m_tvFile.read((char*)(pGlobals->testVectors[testVectorNumber]),MAX_INPUTS + MAX_OUTPUTS);
     }
