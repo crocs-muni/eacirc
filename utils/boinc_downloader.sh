@@ -1,6 +1,6 @@
 #! /bin/bash
 
-VERSION=1.4
+VERSION=1.5
 PARENTDIR=../../boinc/_processed
 BASEHTML=http://centaur.fi.muni.cz:8000
 
@@ -37,7 +37,8 @@ do
 	while true 
 	do
 		ITEM=$[$ITEM + 1]
-		DIR=`cat $CLEAN | hxselect .line-ok:nth-child\($ITEM\) td:nth-child\(2\) a | sed ':a;N;$!ba;s/[\r]\n/ /g' | sed 's/[^>]*>[ \t]*\([^<> \t]*\)[ \t]*<\/[^<]*/\1/' | sed 's/\([^[]*\)\[\(.*\)\]/\1\/\2/'`
+		DIR=`cat $CLEAN | hxselect .line-ok:nth-child\($ITEM\) td:nth-child\(2\) a | sed ':a;N;$!ba;s/[\r]\n/ /g'`
+		DIR=`echo $DIR | sed 's/[^>]*>[ \t]*\([^<> \t]*\)[ \t]*<\/[^<]*/\1/' | sed 's/\([^[]*\)\[\(.*\)\]/\1\/\2/'`
 		if [ -z "$DIR" ]; then break; fi
 		DIR=$PARENTDIR/$DIR
 		echo =\> Processing $DIR

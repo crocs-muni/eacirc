@@ -1,6 +1,6 @@
 #! /bin/bash
 
-VERSION=1.0
+VERSION=1.2
 RESULTS_FILE="errors.log"
 CONFIG_FILE="config.xml"
 
@@ -28,14 +28,17 @@ do
 	echo "=> processing experiment "$FILE
 	FOUND=0
 	cd $FILE
-	rm $RESULTS_FILE
+	if [ -f $RESULTS_FILE ]
+	then
+		rm $RESULTS_FILE
+	fi
 	for RUN in *
 	do
 		if [ ! -d $RUN ]
 		then
 			continue
 		fi
-		DIFFERENCES=		
+		DIFFERENCES=""	
 		for RUN2 in *
 		do
 			if [ ! -d $RUN2 -o $RUN = $RUN2 ]
@@ -46,13 +49,13 @@ do
 			DIFF_COUNT=`diff $RUN"/"$CONFIG_FILE $RUN2"/"$CONFIG_FILE | wc -l`
 			if [ $DIFF_COUNT -ne 0 ]
 			then
-				DIFFERENCES=$DIFFERENCES" "$RUN2"["$DIFF_COUNT"]"
+				DIFFERENCES="$DIFFERENCES $RUN2($DIFF_COUNT)"
 				FOUND=1
 			fi
 		done
 		if [ ! -z "$DIFFERENCES" ]
 		then
-			echo $CONFIG_FILE" in "$RUN" differs from runs "$DIFFERENCES >>$RESULTS_FILE
+			echo $CONFIG_FILE" in run "$RUN" differs from runs"$DIFFERENCES >>$RESULTS_FILE
 		fi
 	done
 	if [ $FOUND -eq 0 ]
