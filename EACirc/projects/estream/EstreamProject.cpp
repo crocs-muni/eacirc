@@ -8,6 +8,8 @@ EstreamProject::EstreamProject()
     : IProject(PROJECT_ESTREAM) {
     memset(inputs,0,MAX_INPUTS);
     memset(outputs,0,MAX_OUTPUTS);
+    memset(plain,0,MAX_INPUTS);
+    memset(outplain,0,MAX_INPUTS);
     encryptorDecryptor = NULL;
     this->numstats = new int[2];
 }

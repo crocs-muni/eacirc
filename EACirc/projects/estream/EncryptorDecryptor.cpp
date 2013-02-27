@@ -159,6 +159,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				LEX_ctx* ctxa2 = (LEX_ctx*)malloc(sizeof(LEX_ctx));
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
+           // if unlimited, set correct number of round
+                if (nR == -1) nR = 13;
 				break;}
 		   case ESTREAM_MAG: {
 				ECRYPT_Mag* ecryptx = new ECRYPT_Mag();
