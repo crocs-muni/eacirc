@@ -168,7 +168,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
            // if unlimited, set correct number of round
-                if (nR == -1) nR = 13;
+                // typically 10 rounds, up to 14 possible, but internal constant would have to be changed
+                if (nR == -1) nR = 10;
 				break;}
 		   case ESTREAM_MAG: {
 				ECRYPT_Mag* ecryptx = new ECRYPT_Mag();
@@ -490,8 +491,8 @@ int EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int
 
     if (!length) length = pGlobals->settings->testVectors.testVectorLength;
 	// WRONG IMPLEMENTATION OF ABC:
-	//typeof hax
-	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum])) 
+    //typeof hax
+    if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))
 		((ECRYPT_ABC*)ecryptarr[streamnum])->ABC_process_bytes(1,(ABC_ctx*)ctxarr[streamnum],cipher,plain, length*8);
 	else
 		ecryptarr[streamnum]->ECRYPT_decrypt_bytes(ctxarr[streamnum], cipher, plain, length);
