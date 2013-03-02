@@ -153,10 +153,18 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 		   case ESTREAM_LEX: {
 				ECRYPT_Lex* ecryptx = new ECRYPT_Lex();
 				LEX_ctx* ctxa = (LEX_ctx*)malloc(sizeof(LEX_ctx));
+           // clear LEX structures (for unsupported number of rounds)
+                for (int i = 0; i<NUMWORDS ;i++) {
+                    ctxa->ks[i] = 0;
+                }
 				ecryptarr[i] = ecryptx;
 				ctxarr[i] = (void*)ctxa;
 				ECRYPT_Lex* ecryptx2 = new ECRYPT_Lex();
 				LEX_ctx* ctxa2 = (LEX_ctx*)malloc(sizeof(LEX_ctx));
+           // clear LEX structures (for unsupported number of rounds)
+                for (int i = 0; i<NUMWORDS ;i++) {
+                    ctxa2->ks[i] = 0;
+                }
 				ecryptarr[2+i] = ecryptx2;
 				ctxarr[2+i] = (void*)ctxa2;
            // if unlimited, set correct number of round

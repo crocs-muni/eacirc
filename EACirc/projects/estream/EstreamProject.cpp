@@ -139,8 +139,9 @@ int EstreamProject::generateTestVectors() {
             encryptorDecryptor->setupKey();
             encryptorDecryptor->setupIV();
         }
-        if (getTestVector() != STAT_OK) {
-            return STAT_PROJECT_ERROR;
+        status = getTestVector();
+        if (status != STAT_OK) {
+            return status;
         }
 
         for (int input = 0; input < MAX_INPUTS; input++) {

@@ -43,6 +43,9 @@ float CircuitGenome::Evaluator(GAGenome &g) {
         circEval = temp;
     }
 
+    memset(inputs,0,MAX_INPUTS);
+    memset(outputs,0,MAX_OUTPUTS);
+    memset(correctOutputs,0,MAX_OUTPUTS);
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
     remainingTestVectors = pGlobals->settings->testVectors.numTestVectors;
 
