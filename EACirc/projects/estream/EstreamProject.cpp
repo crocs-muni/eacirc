@@ -49,28 +49,30 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
 
 int EstreamProject::initializeProject() {
     encryptorDecryptor = new EncryptorDecryptor;
-    // write project config to test vector file
-    ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app);
-    if (!tvFile.is_open()) {
-        mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        // write project config to test vector file
+        ofstream tvFile;
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app);
+        if (!tvFile.is_open()) {
+            mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+        tvFile << pEstreamSettings->estreamUsageType << " \t\t(eStream usage type)" << endl;
+        tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
+        tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
+        tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
+        tvFile << pEstreamSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+        tvFile << pEstreamSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+        if (pEstreamSettings->limitAlgRounds) {
+            tvFile << pEstreamSettings->alg1RoundsCount << " \t\t(algorithm1: " << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
+            tvFile << pEstreamSettings->alg2RoundsCount << " \t\t(algorithm2: " << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
+        }
+        tvFile << pEstreamSettings->plaintextType << " \t\t(plaintext type)" << endl;
+        tvFile << pEstreamSettings->keyType << " \t\t(key type)" << endl;
+        tvFile << pEstreamSettings->ivType << " \t\t(IV type)" << endl;
+        tvFile.close();
     }
-    tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-    tvFile << pEstreamSettings->estreamUsageType << " \t\t(eStream usage type)" << endl;
-    tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
-    tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
-    tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
-    tvFile << pEstreamSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
-    tvFile << pEstreamSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
-    if (pEstreamSettings->limitAlgRounds) {
-        tvFile << pEstreamSettings->alg1RoundsCount << " \t\t(algorithm1: " << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
-        tvFile << pEstreamSettings->alg2RoundsCount << " \t\t(algorithm2: " << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
-    }
-    tvFile << pEstreamSettings->plaintextType << " \t\t(plaintext type)" << endl;
-    tvFile << pEstreamSettings->keyType << " \t\t(key type)" << endl;
-    tvFile << pEstreamSettings->ivType << " \t\t(IV type)" << endl;
-    tvFile.close();
     return STAT_OK;
 }
 
