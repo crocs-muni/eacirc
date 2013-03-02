@@ -606,9 +606,9 @@ void LEX_ivsetup(void* ctxa, int Nr, const u32 pt[], u32 ct[]) {
 void rijndaelEncrypt(LEX_ctx* ctx,  int Nr, const u32 pt[], u32 ct[]) {
 
 	u32 s0, s1, s2, s3, t0, t1, t2, t3;
-        u32 *rk;
-
-        rk = ctx -> subkeys;
+    t0=0; t1=0; t2=0; t3=0;
+    u32 *rk;
+    rk = ctx -> subkeys;
     
 	/* The first subkey is not XORed. This makes all LEX rounds identical (up to even/odd distinction). */
       

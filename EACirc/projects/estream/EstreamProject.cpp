@@ -302,6 +302,7 @@ int EstreamProject::generateCipherDataStream() {
             if (status != STAT_OK) return status;
         }
         for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
+            if (status != STAT_OK) break;
             if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
                 status = encryptorDecryptor->setupKey();
                 if (status != STAT_OK) return status;
@@ -319,6 +320,7 @@ int EstreamProject::generateCipherDataStream() {
             // check if plaintext = encrypted-decrypted plaintext
             for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                 if (outplain[input] != plain[input]) {
+                    status = STAT_PROJECT_ERROR;
                     mainLogger.out() << "error: Decrypted text doesn't match the input." << endl;
                     break;
                 }
@@ -331,5 +333,5 @@ int EstreamProject::generateCipherDataStream() {
     }
     mainLogger.out() << "info: Cipher data stream generation ended. (" << alreadyGenerated << ")" << endl;
 
-    return STAT_OK;
+    return status;
 }
