@@ -7,14 +7,6 @@
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
 
-// global variable definitions
-Logger mainLogger;
-IRndGen* mainGenerator = NULL;
-IRndGen* galibGenerator = NULL;
-IRndGen* rndGen = NULL;
-IRndGen* biasRndGen = NULL;
-GLOBALS* pGlobals = NULL;
-
 int main(int argc, char **argv) {
     //usleep(3000);
 	std::this_thread::sleep_for(std::chrono::milliseconds(3));
@@ -42,7 +34,7 @@ int main(int argc, char **argv) {
             // STATIC CIRCUIT
             if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
                 if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
-                    mainLogger.out() << "info: Static circuit, distinctor mode." << endl;
+                    mainLogger.out(LOGGER_INFO) << "Static circuit, distinctor mode." << endl;
                     return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
                 } else {
                     mainLogger.out() << "Please specify the second parameter. Supported options:" << endl;
@@ -69,9 +61,9 @@ int main(int argc, char **argv) {
     eacirc.run();
 
     if (eacirc.getStatus() != STAT_OK) {
-        mainLogger.out() << "error: Program run failed." << endl;
+        mainLogger.out(LOGGER_ERROR) << "EACirc run failed." << endl;
         mainLogger.out() << "       status: " << statusToString(eacirc.getStatus()) << endl;
     } else {
-        mainLogger.out() << "info: Program run succeeded." << endl;
+        mainLogger.out(LOGGER_INFO) << "EACirc run succeeded." << endl;
     }
 }

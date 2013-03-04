@@ -326,7 +326,7 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 		}
 
         if (nR == -1) {
-            mainLogger.out() << "warning: Number of rounds probably incorrectly set (" << nR << "). See code and/or manual." << endl;
+            mainLogger.out(LOGGER_WARNING) << "Number of rounds probably incorrectly set (" << nR << "). See code and/or manual." << endl;
         }
 
         if (testVectorAlg != ESTREAM_RANDOM) {
@@ -387,7 +387,7 @@ int EncryptorDecryptor::setupIV() {
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
 
@@ -430,7 +430,7 @@ int EncryptorDecryptor::setupKey() {
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
         break;
     }
@@ -461,11 +461,11 @@ int EncryptorDecryptor::setupKey() {
 
 int EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
     if (!m_setIV) {
-        mainLogger.out() << "error: Initialization vector is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Initialization vector is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
     if (!m_setKey) {
-        mainLogger.out() << "error: Key is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Key is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
 
@@ -481,11 +481,11 @@ int EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int
 
 int EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
     if (!m_setIV) {
-        mainLogger.out() << "error: Initialization vector is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Initialization vector is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
     if (!m_setKey) {
-        mainLogger.out() << "error: Key is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Key is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
 

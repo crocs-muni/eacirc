@@ -1459,7 +1459,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                         break;
 					}
                     default: {
-                        mainLogger.out() << "error: Unknown function in circuit. (" << pGenome->gene(offsetFNC + slot) << ")" << endl;
+                        mainLogger.out(LOGGER_ERROR) << "Unknown function in circuit. (" << pGenome->gene(offsetFNC + slot) << ")" << endl;
                         assert(FALSE);
                         break;
                     }
@@ -1493,7 +1493,7 @@ int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<unsigned long>&
     GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &genome;
     status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
     if (status != STAT_OK) {
-        mainLogger.out() << "error: Could not save circuit fo file " << filename << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not save circuit fo file " << filename << "." << endl;
         return status;
     }
     pElem2 = new TiXmlElement("genome");
@@ -1503,7 +1503,7 @@ int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<unsigned long>&
 
     status = saveXMLFile(pRoot, filename);
     if (status != STAT_OK) {
-        mainLogger.out() << "error: Cannot save circuit to file " << filename << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot save circuit to file " << filename << "." << endl;
         return status;
     }
     return status;
@@ -1523,7 +1523,7 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
 
 int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
     if (genome.size() != pGlobals->settings->circuit.genomeSize) {
-        mainLogger.out() << "error: Incorrect genome size. Cannot read genome." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Incorrect genome size. Cannot read genome." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
     unsigned long* circuit = new unsigned long[pGlobals->settings->circuit.genomeSize];

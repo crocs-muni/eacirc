@@ -7,7 +7,7 @@ void PredictBitCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigne
 	// OUTPUT LAYER ENCODES DIRECTLY THE EXPECTED BITS
 	// COUNT NUMBER OF CORRECT BITS 
     for (int out = 0; out < pGlobals->settings->circuit.sizeOutputLayer; out++) {
-		for (int bit = 0; bit < NUM_BITS; bit++) {
+		for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
 			if (usePredictorsMask[out] == 1) {
 				// COMPARE VALUE ON bit-th POSITION
 				if ((outputs[out] & (unsigned char) pGlobals->precompPow[bit]) == (correctOutputs[out] & (unsigned char) pGlobals->precompPow[bit])) {

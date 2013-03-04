@@ -12,15 +12,15 @@ void PredictBytesParityCircuitEvaluator::evaluateCircuit(unsigned char* outputs,
 		if (usePredictorsMask[out] == 1) {
 			predictParity = 0;
 			correctParity = 0;
-			// GET PREDICTION OF PARITY, if hamming weight > NUM_BITS/2 then parity = 0, otherwise pariy = 1
-			for (int bit = 0; bit < NUM_BITS; bit++) {
+			// GET PREDICTION OF PARITY, if hamming weight > BITS_IN_UCHAR/2 then parity = 0, otherwise pariy = 1
+			for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
 				if (outputs[out] & (unsigned char) pGlobals->precompPow[bit]) predictParity++;
 			}
-			if (predictParity > (NUM_BITS / 2)) predictParity = 0;
+			if (predictParity > (BITS_IN_UCHAR / 2)) predictParity = 0;
 			else predictParity = 1;
 	                
 			// GET REAL PARITY 
-			for (int bit = 0; bit < NUM_BITS; bit++) {
+			for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
 				if (correctOutputs[out] & (unsigned char) pGlobals->precompPow[bit]) correctParity++;
 			}
 			correctParity = (correctParity & 0x01) ? 1 : 0; 

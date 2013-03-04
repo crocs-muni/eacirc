@@ -18,7 +18,7 @@ QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
     status = reinitRandomGenerator();
 
     if (status != STAT_OK) {
-        mainLogger.out() << "error: Random generator initialization failed. Subsequent program behavious undefined!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Random generator initialization failed. Subsequent program behavious undefined!" << endl;
         mainLogger.out() << "       status: " << statusToString(status) << endl;
     }
 }
@@ -50,14 +50,14 @@ void QuantumRndGen::checkQRNGdataAvailability() {
             file.seekg (0, ios::beg);
             m_accLength = min(RANDOM_DATA_FILE_SIZE,length);
             file.close();
-            mainLogger.out() << "info: Quantum random data found at \"" << currentPath << "\"." << endl;
+            mainLogger.out(LOGGER_INFO) << "Quantum random data found at \"" << currentPath << "\"." << endl;
             return;
         }
     }
 
     // QRNG data not available
     m_QRNGDataPath = "";
-    mainLogger.out() << "warning: Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
+    mainLogger.out(LOGGER_WARNING) << "Quantum random data files not found (" << getQRNGDataFileName(m_fileIndex) << "), using system generator." << endl;
     m_accLength = 4; // (max 32B), see init and update
 }
 
@@ -189,7 +189,7 @@ int QuantumRndGen::loadQRNGDataFile() {
         file.read((char*)m_accumulator, m_accLength);
         file.close();
     } else {
-        mainLogger.out() << "warning: Cannot open QRNG data file " << getQRNGDataFileName(m_fileIndex) << "." << endl;
+        mainLogger.out(LOGGER_WARNING) << "Cannot open QRNG data file " << getQRNGDataFileName(m_fileIndex) << "." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     return STAT_OK;
@@ -203,7 +203,7 @@ string QuantumRndGen::shortDescription() const {
 QuantumRndGen::QuantumRndGen(TiXmlNode *pRoot)
         : IRndGen(GENERATOR_QRNG,1) {  // cannot call IRndGen with seed 0, warning would be issued
     if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
-        mainLogger.out() << "error: Incompatible generator types." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Incompatible generator types." << endl;
         return;
     }
 

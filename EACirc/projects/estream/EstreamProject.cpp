@@ -54,7 +54,7 @@ int EstreamProject::initializeProject() {
         ofstream tvFile;
         tvFile.open(FILE_TEST_VECTORS, ios_base::app);
         if (!tvFile.is_open()) {
-            mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return STAT_FILE_WRITE_FAIL;
         }
         tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
@@ -101,7 +101,7 @@ int EstreamProject::setupPlaintext() {
         for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) biasRndGen->getRandomFromInterval(255, &(plain[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown plaintext type for " << shortDescription() << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown plaintext type for " << shortDescription() << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
 
@@ -189,7 +189,7 @@ int EstreamProject::getTestVector(){
                 // check if plaintext = encrypted-decrypted plaintext
                 for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                     if (outplain[input] != plain[input]) {
-                        mainLogger.out() << "error: Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
+                        mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
                         if (pGlobals->settings->testVectors.saveTestVectors) {
                             tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
                         }
@@ -219,7 +219,7 @@ int EstreamProject::getTestVector(){
         break;
 
     default:
-        mainLogger.out() << "error: unknown testVectorEstreamMethod (" << pEstreamSettings->estreamUsageType << ") in " << shortDescription() << endl;
+        mainLogger.out(LOGGER_ERROR) << "unknown testVectorEstreamMethod (" << pEstreamSettings->estreamUsageType << ") in " << shortDescription() << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
         break;
     }
@@ -272,10 +272,10 @@ int EstreamProject::getTestVector(){
 
 int EstreamProject::generateCipherDataStream() {
     if (pEstreamSettings->algorithm1 == ESTREAM_RANDOM) {
-        mainLogger.out() << "error: Cannot generate stream from random, cipher must be specified." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot generate stream from random, cipher must be specified." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     } else {
-        mainLogger.out() << "info: Generating stream for " << estreamToString(pEstreamSettings->algorithm1);
+        mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(pEstreamSettings->algorithm1);
         if (!pEstreamSettings->limitAlgRounds) {
             mainLogger.out() << " (unlimitted version)" << endl;
         } else {
@@ -321,7 +321,7 @@ int EstreamProject::generateCipherDataStream() {
             for (int input = 0; input < pGlobals->settings->testVectors.testVectorLength; input++) {
                 if (outplain[input] != plain[input]) {
                     status = STAT_PROJECT_ERROR;
-                    mainLogger.out() << "error: Decrypted text doesn't match the input." << endl;
+                    mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
                     break;
                 }
             }
@@ -331,7 +331,7 @@ int EstreamProject::generateCipherDataStream() {
             alreadyGenerated += pGlobals->settings->testVectors.testVectorLength;
         }
     }
-    mainLogger.out() << "info: Cipher data stream generation ended. (" << alreadyGenerated << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Cipher data stream generation ended. (" << alreadyGenerated << ")" << endl;
 
     return status;
 }

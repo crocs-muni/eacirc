@@ -98,14 +98,14 @@ string MD5RndGen::shortDescription() const {
 MD5RndGen::MD5RndGen(TiXmlNode *pRoot)
     : IRndGen(GENERATOR_MD5,1) {  // cannot call IRndGen with seed 0, warning would be issued
     if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
-        mainLogger.out() << "error: Incompatible generator types." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Incompatible generator types." << endl;
         return;
     }
 
     istringstream(getXMLElementValue(pRoot,"original_seed")) >> m_seed;
 
     if (atol(getXMLElementValue(pRoot,"accumulator_state/@length").c_str()) != MD5_DIGEST_LENGTH) {
-        mainLogger.out() << "error: Incompatible accumulator length - state not loaded." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Incompatible accumulator length - state not loaded." << endl;
         mainLogger.out() << "       required: " << MD5_DIGEST_LENGTH << endl;
         mainLogger.out() << "          found: " << getXMLElementValue(pRoot,"accumulator_state/@length") << endl;
     } else {

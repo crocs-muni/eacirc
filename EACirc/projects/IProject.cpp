@@ -9,12 +9,12 @@ IProject::IProject(int type) : m_type(type) {
         ofstream tvFile;
         tvFile.open(FILE_TEST_VECTORS, ios_base::trunc);
         if (!tvFile.is_open()) {
-            mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return;
         }
         tvFile << dec << left;
-        tvFile << (pGlobals->settings->main.numGenerations / pGlobals->settings->testVectors.testVectorChangeFreq + 1);
-        tvFile << " \t\t(number of test vector sets)" << endl;
+        tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator type)" << endl;
+        tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
         tvFile << pGlobals->settings->testVectors.numTestVectors << " \t\t(number of test vectors in a set)" << endl;
         tvFile << MAX_INPUTS << " \t\t(maximal number of inputs)" << endl;
         tvFile << MAX_OUTPUTS << " \t\t(maximal number of outputs)" << endl;
@@ -42,7 +42,7 @@ int IProject::initializeProjectMain() {
         ofstream tvFile;
         tvFile.open(FILE_TEST_VECTORS, ios_base::app);
         if (!tvFile.is_open()) {
-            mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return STAT_FILE_WRITE_FAIL;
         }
         tvFile << endl;
@@ -65,7 +65,7 @@ int IProject::initializeProjectState() {
 int IProject::loadProjectState(TiXmlNode *pRoot) {
     int loadedType = atoi(getXMLElementValue(pRoot,"@type").c_str());
     if ( loadedType != m_type) {
-        mainLogger.out() << "error: Incompatible project type." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Incompatible project type." << endl;
         mainLogger.out() << "       required: " << m_type << "  given: " << loadedType << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
@@ -85,11 +85,11 @@ IProject* IProject::getProject(int projectType) {
         project = new Sha3Project();
         break;
     default:
-        mainLogger.out() << "error: Cannot initialize project - unknown type (" << projectType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
         return NULL;
         break;
     }
-    mainLogger.out() << "info: Project successfully initialized. (" << project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project successfully initialized. (" << project->shortDescription() << ")" << endl;
     return project;
 }
 
@@ -100,7 +100,7 @@ int IProject::getProjectType() const {
 int IProject::generateAndSaveTestVectors() {
     int status = STAT_OK;
     if ((status = generateTestVectors()) != STAT_OK) {
-        mainLogger.out() << "error: Test vector generation failed." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Test vector generation failed." << endl;
         return status;
     }
     if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
@@ -113,14 +113,14 @@ int IProject::saveTestVectors() const {
     ofstream tvFile;
     tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
     if (!tvFile.is_open()) {
-        mainLogger.out() << "error: Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
         tvFile.write((char*)(pGlobals->testVectors[testVectorNumber]),MAX_INPUTS + MAX_OUTPUTS);
     }
     if (tvFile.fail()) {
-        mainLogger.out() << "error: Problem when saving test vectors." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile.close();

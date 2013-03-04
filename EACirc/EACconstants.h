@@ -25,6 +25,10 @@ typedef unsigned long DWORD;
 #define INT_MAX       2147483647
 #endif
 
+#ifndef BITS_IN_UCHAR
+#define BITS_IN_UCHAR 8
+#endif
+
 #ifdef _MSC_VER
 typedef __int32 int32_t;
 typedef unsigned __int32 uint32_t;
@@ -80,12 +84,6 @@ typedef unsigned __int64 uint64_t;
 #define CMD_OPT_LOGGING             "-log"
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 #define CMD_OPT_SELF_TEST           "-test"
-
-// GA CIRCUIT CONSTANTS
-#define NUM_BITS                    8             // NUMBER OF BITS PER unsigned char
-#define NUM_TEST_SETS               1000
-#define MAX_TEST_SET_SIZE_PER_GENOM 1000
-#define TEST_SET_SIZE               MAX_TEST_SET_SIZE_PER_GENOM * NUM_TEST_SETS
 
 // CIRCUIT LIMITS
 #define MAX_NUM_LAYERS              100

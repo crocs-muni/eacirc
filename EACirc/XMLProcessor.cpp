@@ -80,6 +80,9 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->testVectors.saveTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SAVE_TEST_VECTORS").c_str()) ? true : false;
     pSettings->testVectors.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
+
+    // UPDATE EXTRA INFO
+    pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.testVectorChangeFreq;
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {
@@ -89,7 +92,7 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
     doc.LinkEndChild(pRoot);
     bool result = doc.SaveFile(filename.c_str());
     if (!result) {
-        mainLogger.out() << "error: Cannot write XML file " << filename << ".";
+        mainLogger.out(LOGGER_ERROR) << "Cannot write XML file " << filename << ".";
         return STAT_FILE_OPEN_FAIL;
     }
     return STAT_OK;
@@ -98,13 +101,13 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
 int loadXMLFile(TiXmlNode*& pRoot, string filename) {
     TiXmlDocument doc(filename.c_str());
     if (!doc.LoadFile()) {
-        mainLogger.out() << "error: Could not load file '" << filename << "'." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not load file '" << filename << "'." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     TiXmlHandle hDoc(&doc);
     TiXmlElement* pElem=hDoc.FirstChildElement().Element();
     if (!pElem) {
-        mainLogger.out() << "error: No root element in XML (" << filename << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "No root element in XML (" << filename << ")." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     pRoot = pElem->Clone();
@@ -115,7 +118,7 @@ int loadXMLFile(TiXmlNode*& pRoot, string filename) {
 string getXMLElementValue(TiXmlNode*& pRoot, string path) {
     TiXmlNode* pNode = getXMLElement(pRoot,path);
     if (pNode == NULL) {
-        mainLogger.out() << "warning: no value at " << path << " in given XML." << endl;
+        mainLogger.out(LOGGER_WARNING) << "no value at " << path << " in given XML." << endl;
         return "";
     }
     if (path.find('@') == path.npos) {
@@ -126,7 +129,7 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
         string attrName = path.substr(path.find('@')+1,path.length()-path.find('@')-1).c_str();
         const char* attrValue = pNode->ToElement()->Attribute(attrName.c_str());
         if (attrValue == NULL) {
-            mainLogger.out() << "warning: there is no attribute named " << attrName << "." << endl;
+            mainLogger.out(LOGGER_WARNING) << "there is no attribute named " << attrName << "." << endl;
             return "";
         }
         return string(attrValue);
@@ -137,14 +140,14 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
 int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value) {
     TiXmlNode* pNode = getXMLElement(pRoot,path);
     if (pNode == NULL) {
-        mainLogger.out() << "warning: no value at " << path << " in given XML." << endl;
+        mainLogger.out(LOGGER_WARNING) << "no value at " << path << " in given XML." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
     if (path.find('@') == path.npos) {
         // setting text node
         TiXmlText* pText = pNode->FirstChild()->ToText();
         if (pText == NULL) {
-            mainLogger.out() << "warning: node at " << path << " is not a leaf in XML." << endl;
+            mainLogger.out(LOGGER_WARNING) << "node at " << path << " is not a leaf in XML." << endl;
             return STAT_INCOMPATIBLE_PARAMETER;
         }
         pText->SetValue(value.c_str());

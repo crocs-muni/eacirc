@@ -28,7 +28,8 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/standalone_testers/TestDistinctorCircuit.cpp \
-    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
+    EACirc/EACglobals.cpp
 
 # === evaluators ===
 SOURCES += \

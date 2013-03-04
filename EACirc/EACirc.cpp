@@ -33,7 +33,7 @@ EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
     if (pGlobals != NULL) {
-        mainLogger.out() << "warning: Globals not NULL. Overwriting." << endl;
+        mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
     pGlobals = new GLOBALS;
 }
@@ -68,17 +68,16 @@ void EACirc::loadConfiguration(const string filename) {
     TiXmlNode* pRoot = NULL;
     m_status = loadXMLFile(pRoot, filename);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "error: cannot load configuration." << endl;
+        mainLogger.out(LOGGER_ERROR) << "cannot load configuration." << endl;
         return;
     }
 
     LoadConfigScript(pRoot, &m_settings);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "error: Could not read configuration data from " << FILE_CONFIG << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not read configuration data from " << FILE_CONFIG << "." << endl;
     }
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
     pGlobals->settings = &m_settings;
-    //pGACirc->allocate();
 
     if (m_settings.main.recommenceComputation || m_settings.ga.evolutionOff) {
         m_settings.main.loadInitialPopulation = true;
@@ -86,12 +85,12 @@ void EACirc::loadConfiguration(const string filename) {
 
     if (m_settings.main.saveStateFrequency != 0 &&
             m_settings.main.saveStateFrequency % m_settings.testVectors.testVectorChangeFreq != 0) {
-        mainLogger.out() << "error: GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
+        mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_settings.testVectors.testVectorChangeProgressive &&
             m_settings.main.saveStateFrequency != 0) {
-        mainLogger.out() << "error: Progressive test vector generation cannot be used when saving state." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Progressive test vector generation cannot be used when saving state." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
 
@@ -100,11 +99,11 @@ void EACirc::loadConfiguration(const string filename) {
     m_project = IProject::getProject(m_settings.main.projectType);
     if (m_project == NULL) {
         m_status = STAT_PROJECT_ERROR;
-        mainLogger.out() << "error: Could not load project." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not load project." << endl;
         return;
     }
     m_status = m_project->loadProjectConfiguration(pRoot);
-    mainLogger.out() << "info: Project configuration loaded. (" << m_project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project configuration loaded. (" << m_project->shortDescription() << ")" << endl;
 
     // allocate space for testVecotrs
     pGlobals->allocate();
@@ -156,9 +155,9 @@ void EACirc::saveState(const string filename) {
 
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "error: Cannot save state to file " << filename << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot save state to file " << filename << "." << endl;
     } else {
-        mainLogger.out() << "info: State successfully saved to file " << filename << "." << endl;
+        mainLogger.out(LOGGER_INFO) << "State successfully saved to file " << filename << "." << endl;
     }
 }
 
@@ -166,7 +165,7 @@ void EACirc::loadState(const string filename) {
     TiXmlNode* pRoot = NULL;
     m_status = loadXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "error: Could not load state from file " << filename << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not load state from file " << filename << "." << endl;
         return;
     }
 
@@ -187,7 +186,7 @@ void EACirc::loadState(const string filename) {
     m_status = m_project->loadProjectState(getXMLElement(pRoot,"project"));
 
     delete pRoot;
-    mainLogger.out() << "info: State successfully loaded from file " << filename << "." << endl;
+    mainLogger.out(LOGGER_INFO) << "State successfully loaded from file " << filename << "." << endl;
 }
 
 void EACirc::createState() {
@@ -196,7 +195,7 @@ void EACirc::createState() {
     if (m_settings.random.useFixedSeed && m_settings.random.seed != 0) {
         m_originalSeed = m_settings.random.seed;
         mainGenerator = new MD5RndGen(m_originalSeed);
-        mainLogger.out() << "info: Using fixed seed: " << m_originalSeed << endl;
+        mainLogger.out(LOGGER_INFO) << "Using fixed seed: " << m_originalSeed << endl;
     } else {
         // generate random seed, if none provided
         mainGenerator = new MD5RndGen(clock() + time(NULL) + getpid());
@@ -204,29 +203,29 @@ void EACirc::createState() {
         delete mainGenerator;
         mainGenerator = NULL; // necessary !!! (see guts of MD5RndGen)
         mainGenerator = new MD5RndGen(m_originalSeed);
-        mainLogger.out() << "info: Using system-generated random seed: " << m_originalSeed << endl;
+        mainLogger.out(LOGGER_INFO) << "Using system-generated random seed: " << m_originalSeed << endl;
     }
 
     unsigned long generatorSeed;
     // INIT GALIBRNG
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     galibGenerator = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
-    mainLogger.out() << "info: GAlib generator initialized (" << galibGenerator->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "GAlib generator initialized (" << galibGenerator->shortDescription() << ")" << endl;
     // INIT RNG
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
-    mainLogger.out() << "info: Random generator initialized (" << rndGen->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Random generator initialized (" << rndGen->shortDescription() << ")" << endl;
     // INIT BIAS RNDGEN
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     biasRndGen = new BiasRndGen(generatorSeed, m_settings.random.qrngPath, m_settings.random.biasRndGenFactor);
-    mainLogger.out() << "info: Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
 
     // GENERATE SEED FOR GALIB
     galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
-    mainLogger.out() << "info: State successfully initialized." << endl;
+    mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
     m_project->initializeProjectState();
-    mainLogger.out() << "info: Project intial state setup successful. (" << m_project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project intial state setup successful. (" << m_project->shortDescription() << ")" << endl;
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -248,7 +247,7 @@ void EACirc::savePopulation(const string filename) {
         GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
         m_status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
         if (m_status != STAT_OK) {
-            mainLogger.out() << "error: Could not save genome in population to file " << filename << "." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
             return;
         }
         pElem2 = new TiXmlElement("genome");
@@ -259,9 +258,9 @@ void EACirc::savePopulation(const string filename) {
 
     m_status = saveXMLFile(pRoot, filename);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "error: Cannot save population to file " << filename << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot save population to file " << filename << "." << endl;
     } else {
-        mainLogger.out() << "info: Population successfully saved to file " << filename << "." << endl;
+        mainLogger.out(LOGGER_INFO) << "Population successfully saved to file " << filename << "." << endl;
     }
 }
 
@@ -269,13 +268,13 @@ void EACirc::loadPopulation(const string filename) {
     TiXmlNode* pRoot = NULL;
     m_status = loadXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
-        mainLogger.out() << "error: Could not load state from file " << filename << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not load state from file " << filename << "." << endl;
         return;
     }
     int savedPopulationSize = atoi(getXMLElementValue(pRoot,"population_size").c_str());
     int savedGenomeSize = atoi(getXMLElementValue(pRoot,"genome_size").c_str());
     if (savedGenomeSize != m_settings.circuit.genomeSize) {
-        mainLogger.out() << "error: Cannot load population - incompatible genome size." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible genome size." << endl;
         mainLogger.out() << "       given genome size: " << savedGenomeSize << endl;
         mainLogger.out() << "       required genome size: " << m_settings.circuit.genomeSize << endl;
         m_status = STAT_INCOMPATIBLE_PARAMETER;
@@ -293,7 +292,7 @@ void EACirc::loadPopulation(const string filename) {
     string textCircuit;
     for (int i = 0; i < savedPopulationSize; i++) {
         if (pGenome->GetText() == NULL) {
-            mainLogger.out() << "error: Too few genomes in population - expecting " << savedPopulationSize << "." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Too few genomes in population - expecting " << savedPopulationSize << "." << endl;
             m_status = STAT_INCOMPATIBLE_PARAMETER;
             delete pRoot;
             return;
@@ -305,7 +304,7 @@ void EACirc::loadPopulation(const string filename) {
     }
     seedAndResetGAlib(population);
     delete pRoot;
-    mainLogger.out() << "info: Population successfully loaded from file " << filename << "." << endl;
+    mainLogger.out(LOGGER_INFO) << "Population successfully loaded from file " << filename << "." << endl;
 }
 
 void EACirc::createPopulation() {
@@ -320,13 +319,13 @@ void EACirc::createPopulation() {
     GAPopulation population(genome,m_settings.ga.popupationSize);
     // create genetic algorithm and initialize population
     seedAndResetGAlib(population);
-    mainLogger.out() << "info: Initializing population." << endl;
+    mainLogger.out(LOGGER_INFO) << "Initializing population." << endl;
     m_gaData->initialize();
     // reset GAlib seed
     galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
 
-    mainLogger.out() << "info: Population successfully initialized." << endl;
+    mainLogger.out(LOGGER_INFO) << "Population successfully initialized." << endl;
 }
 
 void EACirc::saveProgress(const string stateFilename, const string populationFilename) {
@@ -353,7 +352,7 @@ void EACirc::initializeState() {
         loadPopulation(FILE_POPULATION);
     } else {
         m_status = m_project->generateAndSaveTestVectors();
-        mainLogger.out() << "info: Initial test vectors generated." << endl;
+        mainLogger.out(LOGGER_INFO) << "Initial test vectors generated." << endl;
         createPopulation();
     }
 
@@ -382,7 +381,7 @@ void EACirc::prepare() {
     }
 
     m_status = m_project->initializeProjectMain();
-    mainLogger.out() << "info: Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
@@ -412,7 +411,7 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->flushFrequency(1);	// specify how often to write the score to disk
     m_gaData->selectScores(GAStatistics::AllScores);
-    mainLogger.out() << "info: GAlib seeded and reset." << endl;
+    mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
 }
 
 void EACirc::evaluateStep() {
@@ -473,10 +472,10 @@ void EACirc::run() {
     //GA1DArrayGenome<unsigned long> genomeBest(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
     //genomeBest = m_gaData->population().individual(0);
 
-    mainLogger.out() << "info: Starting evolution." << endl;
+    mainLogger.out(LOGGER_INFO) << "Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
         if (m_status != STAT_OK) {
-            mainLogger.out() << "error: Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << " )." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << " )." << endl;
             break;
         }
 
@@ -503,7 +502,7 @@ void EACirc::run() {
         } else {
             if (m_actGener %(m_settings.testVectors.testVectorChangeFreq) == 1) {
                 m_status = m_project->generateAndSaveTestVectors();
-                mainLogger.out() << "info: Test vectors regenerated." << endl;
+                mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
             if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
                  m_actGener %(m_settings.testVectors.testVectorChangeFreq) == 0) {

@@ -52,7 +52,7 @@ int BYTE_ConvertFromHexStringToArray(string hexaString, unsigned char* pArray, u
 				std::istringstream iss(hexNum);
 
 				if(!(iss>>std::hex>>num)){
-                    mainLogger.out() << "error: BYTE_ConvertFromHexStringToArray: Invalid argument!" << endl;
+                    mainLogger.out(LOGGER_ERROR) << "BYTE_ConvertFromHexStringToArray: Invalid argument!" << endl;
 					exit(1);
 				}
         
@@ -123,7 +123,7 @@ double StringToDouble(string &s, bool failIfLeftoverChars) {
    char c;
    // check for right format and leftover characters
    if (!(i >> x) || (failIfLeftoverChars && i.get(c))) {
-       mainLogger.out() << "error: StringToDouble(\"" << s << "\".)" << endl;
+       mainLogger.out(LOGGER_ERROR) << "StringToDouble(\"" << s << "\".)" << endl;
        //exit(1);
        x = 0;
    }

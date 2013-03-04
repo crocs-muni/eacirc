@@ -14,11 +14,11 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
     int offsetBit = 0;
     int numBitsPredicted = 0;
             
-    unsigned char usedBits[MAX_OUTPUTS * NUM_BITS];
+    unsigned char usedBits[MAX_OUTPUTS * BITS_IN_UCHAR];
     memset(usedBits, 0, sizeof(usedBits));
             
     // GET PREDICTION OF PARITY (parity of first output bit) 
-    for (int bit = 0; bit < NUM_BITS; bit++) {
+    for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
         if (outputs[0] & (unsigned char) pGlobals->precompPow[bit]) predictParity++;
     }
     predictParity = (predictParity & 0x01) ? 1 : 0; 
@@ -31,13 +31,13 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
             offsetBit = outputs[out] & 0x7f;  // take all bits except used/not used bit
                     
             // CHECK IF THIS BIT WAS NOT ALREADY USED AND DO NOT EXCEED THE NUMBER OF BITS IN OUTPUT
-            if (usedBits[offsetBit] == 0 && (offsetBit < pGlobals->settings->circuit.sizeOutputLayer * NUM_BITS)) {
+            if (usedBits[offsetBit] == 0 && (offsetBit < pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR)) {
                 // MARK THIS BIT AS USED TO PREVENT MULTIPLE SELECTION OF THE SAME BITS
                 usedBits[offsetBit] = 1;
                         
-                offsetBlock = (int) offsetBit / NUM_BITS;
-                offsetBit = offsetBit - (offsetBlock * NUM_BITS);
-                assert(offsetBit < NUM_BITS);
+                offsetBlock = (int) offsetBit / BITS_IN_UCHAR;
+                offsetBit = offsetBit - (offsetBlock * BITS_IN_UCHAR);
+                assert(offsetBit < BITS_IN_UCHAR);
                 assert(offsetBlock < pGlobals->settings->circuit.sizeOutputLayer);
 
                 if (correctOutputs[offsetBlock] & (unsigned char) pGlobals->precompPow[offsetBit]) {

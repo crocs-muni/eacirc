@@ -13,17 +13,17 @@ void PredictHammingWeightCircuitEvaluator::evaluateCircuit(unsigned char* output
 			predictWeight = 0;
 			correctWeight = 0;
 			// GET PREDICTION OF WEIGHT 
-			for (int bit = 0; bit < NUM_BITS; bit++) {
+			for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
 				if (outputs[out] & (unsigned char) pGlobals->precompPow[bit]) predictWeight++;
 			}
 	                
 			// GET REAL WEIGHT 
-			for (int bit = 0; bit < NUM_BITS; bit++) {
+			for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
 				if (correctOutputs[out] & (unsigned char) pGlobals->precompPow[bit]) correctWeight++;
 			}
 
 			// OBTAIN POINTS FOR CORRECTNESS - IF COMPLETELY MATCH, THAN MAXIMUM POINTS ARE OBTAINED
-			int points = NUM_BITS - abs(predictWeight - correctWeight);
+			int points = BITS_IN_UCHAR - abs(predictWeight - correctWeight);
 			*pMatch += points;
 			if (predictorMatch != NULL) (predictorMatch[out])+= points;
 			(*pTotalPredictCount)++;         

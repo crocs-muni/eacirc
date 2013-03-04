@@ -137,7 +137,7 @@ string BiasRndGen::shortDescription() const {
 BiasRndGen::BiasRndGen(TiXmlNode* pRoot)
         : IRndGen(GENERATOR_BIAS,1) {  // cannot call IRndGen with seed 0, warning would be issued
     if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
-        mainLogger.out() << "error: incompatible generator types." << endl;
+        mainLogger.out(LOGGER_ERROR) << "incompatible generator types." << endl;
         return;
     }
 

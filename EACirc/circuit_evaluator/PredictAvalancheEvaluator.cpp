@@ -62,7 +62,7 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 
 	// COMPARE THE STREAMS
     for (int out = 0; out < pGlobals->settings->circuit.sizeOutputLayer; out++) {
-		for (int bit = 0; bit < NUM_BITS; bit++) {
+		for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
 			// COMPARE VALUE ON bit-th POSITION
 			if ((inputStream[out] & (unsigned char) pGlobals->precompPow[bit]) == (outputStream[out] & (unsigned char) pGlobals->precompPow[bit]))
 				ppMatch++;
