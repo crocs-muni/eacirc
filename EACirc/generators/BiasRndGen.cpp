@@ -1,7 +1,7 @@
 #include "BiasRndGen.h"
 #include "EACglobals.h"
 #include "XMLProcessor.h"
-#include "random_generator/QuantumRndGen.h"
+#include "generators/QuantumRndGen.h"
 
 BiasRndGen::BiasRndGen(unsigned long seed, string QRBGSPath, int chanceForOne)
         : IRndGen(GENERATOR_BIAS, seed), m_chanceForOne(chanceForOne) {

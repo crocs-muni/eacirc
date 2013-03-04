@@ -1,6 +1,5 @@
 #include "Main.h"
 #include "EACirc.h"
-#include "standalone_testers/TestDistinctorCircuit.h"
 #include <thread>
 //#include <unistd.h> // unistd is not in VS compiler!
 
@@ -30,24 +29,12 @@ int main(int argc, char **argv) {
             if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
                 mainLogger.setOutputFile();
                 mainLogger.setlogging(true);
-            } else
-            // STATIC CIRCUIT
-            if (strcmp(argv[i],CMD_OPT_STATIC) == 0) {
-                if (argc >= i && strcmp(argv[i+1],CMD_OPT_STATIC_DISTINCTOR) == 0) {
-                    mainLogger.out(LOGGER_INFO) << "Static circuit, distinctor mode." << endl;
-                    return testDistinctorCircuit(string(FILE_TEST_DATA_1), string(FILE_TEST_DATA_2));
-                } else {
-                    mainLogger.out() << "Please specify the second parameter. Supported options:" << endl;
-                    mainLogger.out() << "  " << CMD_OPT_STATIC_DISTINCTOR << "  (use the circuit as distinctor)" << endl;
-                    return STAT_INVALID_ARGUMETS;
-                }
             } else {
             // INCORRECT CLI OPTION
                 mainLogger.out() << "\"" << argv[i] << "\" is not a valid argument." << endl;
                 mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
                 mainLogger.out() << "  " << CMD_OPT_LOGGING << "  (set logging to clog)" << endl;
                 mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << "  (set logging to logfile)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_STATIC << "  (run tests on precompiled circuit)" << endl;
                 mainLogger.out() << "  " << CMD_OPT_SELF_TEST << "  (run self-tests, use " << CMD_OPT_SELF_TEST << " -h to display options)" << endl;
                 return STAT_INVALID_ARGUMETS;
             }

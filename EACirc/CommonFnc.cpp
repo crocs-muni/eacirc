@@ -1,10 +1,9 @@
-//#include "stdafx.h"
 #include "CommonFnc.h"
 #include <string>
 #include <math.h>
 #include <sstream>
 #include <exception>
-#include <EACglobals.h>
+#include "EACglobals.h"
 
 
 using namespace std;

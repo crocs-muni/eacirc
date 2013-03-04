@@ -2,7 +2,6 @@
 #define COMMONFNC_H
 
 #include <string>
-//#include "EACglobals.h"
 #include <iostream>
 #include <sstream>
 

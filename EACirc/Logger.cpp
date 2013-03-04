@@ -6,7 +6,7 @@ Logger::Logger() : m_logging(false), m_using_file(false),
 	m_out(new LoggerStream(this,clog)) {}
 
 Logger::~Logger() {
-    out() << "info: Exiting EACirc." << endl;
+    out(LOGGER_INFO) << "Exiting." << endl;
     delete m_out;
 }
 

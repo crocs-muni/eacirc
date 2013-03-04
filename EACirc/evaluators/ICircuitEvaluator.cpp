@@ -5,7 +5,7 @@
 #include "PredictBytesParityCircuitEvaluator.h"
 #include "PredictHammingWeightCircuitEvaluator.h"
 #include "DistinguishTwoEvaluator.h"
-#include "PredictAvalancheEvaluator.h"
+//#include "PredictAvalancheEvaluator.h"
 
 ICircuitEvaluator::ICircuitEvaluator() {
 }
@@ -31,9 +31,11 @@ ICircuitEvaluator* ICircuitEvaluator::getCircEvalClass(void) {
 			return new DistinguishTwoEvaluator();
 			break;
         case EVALUATOR_AVALANCHE:
-			return new AvalancheEvaluator();
+            return NULL;
+            //return new AvalancheEvaluator();
+            break;
 		default:
-            assert(FALSE);
+            mainLogger.out(LOGGER_ERROR) << "Unknown evaluator type \"" << pGlobals->settings->main.evaluatorType << "\"." << endl;
 			break;
 	}
 	return NULL;

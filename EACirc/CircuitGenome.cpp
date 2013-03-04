@@ -1,7 +1,7 @@
 #include <iomanip>
 #include "CircuitGenome.h"
 #include "CommonFnc.h"
-#include "circuit_evaluator/ICircuitEvaluator.h"
+#include "evaluators/ICircuitEvaluator.h"
 #include "XMLProcessor.h"
 // libinclude ("galib/GAPopulation.h")
 #include "GAPopulation.h"

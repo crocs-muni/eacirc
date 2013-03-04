@@ -30,20 +30,22 @@ Checker::~Checker() {
     mainGenerator = NULL;
 }
 
-int Checker::setTestVectorFile(string filename) {
+void Checker::setTestVectorFile(string filename) {
     if (m_status != STAT_OK) return;
     m_tvFilename = filename;
     m_tvFile.open(m_tvFilename);
     if (!m_tvFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot open file with pre-generated test vectors (" << m_tvFilename << ")." << endl;
+        m_status = STAT_FILE_OPEN_FAIL;
         return;
     }
 }
 
-int Checker::loadTestVectorParameters() {
+void Checker::loadTestVectorParameters() {
     if (m_status != STAT_OK) return;
     if (!m_tvFile.is_open()) {
-        return STAT_FILE_OPEN_FAIL;
+        m_status = STAT_FILE_OPEN_FAIL;
+        return;
     }
 
     // checking settings
@@ -100,7 +102,8 @@ int Checker::loadTestVectorParameters() {
 
     if (error) {
         mainLogger.out(LOGGER_ERROR) << "Settings could not be read." << endl;
-        return STAT_CONFIG_DATA_READ_FAIL;
+        m_status = STAT_CONFIG_DATA_READ_FAIL;
+        return;
     } else {
         mainLogger.out(LOGGER_INFO) << "Settings successfully read." << endl;
     }
@@ -111,18 +114,17 @@ int Checker::loadTestVectorParameters() {
     m_tvFile.open(m_tvFilename, ios_base::binary);
     if (!m_tvFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot open file with pre-generated test vectors (" << m_tvFilename << ")!" << endl;
-        return STAT_FILE_OPEN_FAIL;
+        m_status = STAT_FILE_OPEN_FAIL;
+        return;
     }
     m_tvFile.seekg(dataPosition);
-
-    return STAT_OK;
 }
 
-int Checker::check() {
+void Checker::check() {
     if (m_status != STAT_OK) return;
 
 }
 
-int Checker::getStatus() {
+int Checker::getStatus() const {
     return m_status;
 }

@@ -4,7 +4,8 @@
 #include "EACconstants.h"
 #include "Status.h"
 #include "Logger.h"
-#include "random_generator/IRndGen.h"
+class IRndGen;
+//#include "generators/IRndGen.h"
 #include <cmath>
 #include <cstring>
 using namespace std;
@@ -20,7 +21,7 @@ struct SETTINGS;
 struct STATISTICS;
 struct GLOBALS;
 
-// declarations of global variables (definitions in Main.cpp)
+// declarations of global variables (definitions in EACglobals.cpp)
 /** main EACirc logging service
   * - send logs to 'mainLogger.out()' via '<<'
   * - flushing 'mainLogger.out()' causes written data to be prefixed by current time and flushed to logging stream

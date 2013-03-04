@@ -8,16 +8,14 @@
 #include "EACirc.h"
 #include "EACglobals.h"
 #include "CommonFnc.h"
-#include "random_generator/IRndGen.h"
-#include "random_generator/BiasRndGen.h"
-#include "random_generator/QuantumRndGen.h"
-#include "random_generator/MD5RndGen.h"
+#include "generators/IRndGen.h"
+#include "generators/BiasRndGen.h"
+#include "generators/QuantumRndGen.h"
+#include "generators/MD5RndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
 #include "CircuitGenome.h"
-#include "EAC_circuit.h"
-#include "standalone_testers/TestDistinctorCircuit.h"
 #include "projects/IProject.h"
 
 #ifdef _WIN32

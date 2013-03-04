@@ -2,7 +2,7 @@
 #define EACIRC_H
 
 #include "EACglobals.h"
-#include "random_generator/IRndGen.h"
+#include "generators/IRndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 //libinclude (galib/GASStateGA.h)

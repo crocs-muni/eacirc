@@ -1,4 +1,5 @@
 #include "PredictBitGroupParityCircuitEvaluator.h"
+#include "assert.h"
 
 PredictBitGroupParityCircuitEvaluator::PredictBitGroupParityCircuitEvaluator() : ICircuitEvaluator(){
 }

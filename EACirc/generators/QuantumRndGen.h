@@ -2,7 +2,7 @@
 #define QUANTUMRNDGEN_H
 
 #include <string>
-#include "random_generator/IRndGen.h"
+#include "generators/IRndGen.h"
 
 class QuantumRndGen : public IRndGen{
 private:

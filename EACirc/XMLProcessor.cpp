@@ -1,6 +1,6 @@
 #include "XMLProcessor.h"
-#include "random_generator/QuantumRndGen.h"
-#include "random_generator/BiasRndGen.h"
+#include "generators/QuantumRndGen.h"
+#include "generators/BiasRndGen.h"
 #include <typeinfo>
 
 void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
