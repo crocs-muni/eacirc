@@ -159,16 +159,16 @@ void Checker::check() {
             m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector]+m_max_inputs,NULL,&setMatched,&setPredictions);
         }
 
-        fitness = (double) setMatched / setPredictions;
+        fitness = setPredictions != 0 ? (double) totalMatched / totalPredictions : 0;
         totalMatched += setMatched;
         totalPredictions += setPredictions;
         fitProgressFile << testSet << "\t" << fitness << "\t" << setMatched << "\t" << setPredictions << endl;
     }
 
-    fitness = (double) totalMatched / totalPredictions;
+    fitness = totalPredictions != 0 ? (double) totalMatched / totalPredictions : 0;
     fitProgressFile << endl;
     fitProgressFile << "total:\t" << fitness << "\t" << totalMatched << "\t" << totalPredictions << endl;
-    mainLogger.out(LOGGER_INFO) << "Static check finished successfully." <<  endl;
+    mainLogger.out(LOGGER_INFO) << "Static check finished successfully (average fitness: " << fitness << " )." <<  endl;
 
     delete circuitOutputs;
     fitProgressFile.close();

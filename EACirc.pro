@@ -27,8 +27,7 @@ SOURCES += \
     EACirc/Logger.cpp \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
-    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
-    EACirc/EACglobals.cpp
+    EACirc/EACglobals.cpp \
 
 # === evaluators ===
 SOURCES += \
@@ -47,19 +46,20 @@ SOURCES += \
     EACirc/generators/IRndGen.cpp \
     EACirc/generators/QuantumRndGen.cpp \
     EACirc/generators/MD5RndGen.cpp \
-    EACirc/generators/md5.cpp
+    EACirc/generators/md5.cpp \
 
 # === testing using CATCH framework ===
 SOURCES += \
-    EACirc/self_tests/Tests.cpp
+    EACirc/self_tests/Tests.cpp \
 
 # === project files ===
 SOURCES += \
     EACirc/projects/IProject.cpp \
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
     EACirc/projects/sha3/Sha3Project.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
-    EACirc/projects/estream/EstreamInterface.cpp
+    EACirc/projects/estream/EstreamInterface.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -126,8 +126,6 @@ HEADERS += \
     EACirc/Logger.h \
     EACirc/Status.h \
     EACirc/EACirc.h \
-    EACirc/EAC_circuit.h \
-    EACirc/projects/pregenerated_tv/PregeneratedTvProject.h
 
 # === evaluators ===
 HEADERS += \
@@ -156,6 +154,7 @@ HEADERS += \
 # === project files ===
 HEADERS += \
     EACirc/projects/IProject.h \
+    EACirc/projects/pregenerated_tv/PregeneratedTvProject.h \
     EACirc/projects/sha3/Sha3Project.h \
     EACirc/projects/estream/EstreamProject.h \
     EACirc/projects/estream/EncryptorDecryptor.h \

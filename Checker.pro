@@ -12,35 +12,42 @@ INCLUDEPATH += ./EACirc
 
 # === Main project files ===
 SOURCES += \
-    EACirc/Status.cpp \
-    EACirc/Logger.cpp \
     EACirc/CommonFnc.cpp \
     EACirc/checker/Checker.cpp \
-    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
+    EACirc/checker/CheckerMain.cpp \
+    EACirc/Status.cpp \
+    EACirc/Logger.cpp \
+    EACirc/EACglobals.cpp
+
+# === evaluators ===
+SOURCES += \
     EACirc/evaluators/IEvaluator.cpp \
-#    EACirc/evaluators/PredictAvalancheEvaluator.cpp \
+    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
     EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
     EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
     EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
-    EACirc/checker/CheckerMain.cpp \
-    EACirc/EACglobals.cpp
+#    EACirc/evaluators/PredictAvalancheEvaluator.cpp \
 
+# === Main project files ===
 HEADERS += \
+    EACirc/checker/Checker.h \
+    EACirc/checker/CheckerMain.h \
     EACirc/Status.h \
     EACirc/EACconstants.h \
     EACirc/Logger.h \
     EACirc/CommonFnc.h \
-    EACirc/checker/Checker.h \
-    EACirc/evaluators/DistinguishTwoEvaluator.h \
+    EACirc/checker/EAC_circuit.h \
+    EACirc/EACglobals.h
+
+# === evaluators ===
+HEADERS += \
     EACirc/evaluators/IEvaluator.h \
-#    EACirc/evaluators/PredictAvalancheEvaluator.h \
+    EACirc/evaluators/DistinguishTwoEvaluator.h \
     EACirc/evaluators/PredictBitCircuitEvaluator.h \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
     EACirc/evaluators/PredictByteCircuitEvaluator.h \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
     EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
-    EACirc/EAC_circuit.h \
-    EACirc/checker/CheckerMain.h \
-    EACirc/EACglobals.h
+#    EACirc/evaluators/PredictAvalancheEvaluator.h \
