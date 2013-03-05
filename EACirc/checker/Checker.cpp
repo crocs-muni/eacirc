@@ -2,7 +2,7 @@
 #include "EAC_circuit.h"
 
 Checker::Checker()
-    : m_status(STAT_OK) {
+    : m_status(STAT_OK), m_evaluator(NULL) {
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
@@ -15,19 +15,13 @@ Checker::~Checker() {
     if (m_tvFile.is_open()) {
         m_tvFile.close();
     }
+    if (m_evaluator) delete m_evaluator;
+    m_evaluator = NULL;
     if (pGlobals) {
         pGlobals->release();
         delete pGlobals;
     }
     pGlobals = NULL;
-    if (rndGen) delete rndGen;
-    rndGen = NULL;
-    if (biasRndGen) delete biasRndGen;
-    biasRndGen = NULL;
-    if (galibGenerator) delete galibGenerator;
-    galibGenerator = NULL;
-    if (mainGenerator) delete mainGenerator;
-    mainGenerator = NULL;
 }
 
 void Checker::setTestVectorFile(string filename) {
@@ -50,6 +44,14 @@ void Checker::loadTestVectorParameters() {
 
     // checking settings
     bool error = false;
+
+    // evaluator
+    m_tvFile >> pGlobals->settings->main.evaluatorType;
+    m_tvFile.ignore(UCHAR_MAX,'\n');
+    if (m_tvFile.fail()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot read evaluator type." << endl;
+        error = true;
+    }
 
     // number of test sets
     m_tvFile >> pGlobals->settings->testVectors.numTestSets;
@@ -99,7 +101,6 @@ void Checker::loadTestVectorParameters() {
     do {
         getline(m_tvFile,line);
     } while (!line.empty());
-
     if (error) {
         mainLogger.out(LOGGER_ERROR) << "Settings could not be read." << endl;
         m_status = STAT_CONFIG_DATA_READ_FAIL;
@@ -118,11 +119,59 @@ void Checker::loadTestVectorParameters() {
         return;
     }
     m_tvFile.seekg(dataPosition);
+
+    // load and allocate resources
+    pGlobals->allocate();
+    m_evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
+    if (m_evaluator == NULL) m_status = STAT_INVALID_ARGUMETS;
 }
 
 void Checker::check() {
     if (m_status != STAT_OK) return;
 
+    unsigned char* circuitOutputs;
+    circuitOutputs = new unsigned char[m_max_outputs];
+    int totalMatched = 0;
+    int totalPredictions = 0;
+    int setMatched;
+    int setPredictions;
+    double fitness;
+
+    ofstream fitProgressFile;
+    fitProgressFile.open(FILE_FITNESS_PROGRESS);
+    if (!fitProgressFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for fitness progress (" << FILE_FITNESS_PROGRESS << ")." << endl;
+        m_status = STAT_FILE_WRITE_FAIL;
+        return;
+    }
+
+    for (int testSet = 0; testSet < pGlobals->settings->testVectors.numTestSets; testSet++) {
+        // clear statistics
+        setMatched = 0;
+        setPredictions = 0;
+        // read test set from file
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.numTestVectors; testVector++) {
+            m_tvFile.read((char*)(pGlobals->testVectors[testVector]),m_max_inputs+m_max_outputs);
+        }
+        // run circuits on test set
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.numTestVectors; testVector++) {
+            circuit(pGlobals->testVectors[testVector],circuitOutputs);
+            m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector]+m_max_inputs,NULL,&setMatched,&setPredictions);
+        }
+
+        fitness = (double) setMatched / setPredictions;
+        totalMatched += setMatched;
+        totalPredictions += setPredictions;
+        fitProgressFile << testSet << "\t" << fitness << "\t" << setMatched << "\t" << setPredictions << endl;
+    }
+
+    fitness = (double) totalMatched / totalPredictions;
+    fitProgressFile << endl;
+    fitProgressFile << "total:\t" << fitness << "\t" << totalMatched << "\t" << totalPredictions << endl;
+    mainLogger.out(LOGGER_INFO) << "Static check finished successfully." <<  endl;
+
+    delete circuitOutputs;
+    fitProgressFile.close();
 }
 
 int Checker::getStatus() const {

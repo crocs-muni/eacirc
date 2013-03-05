@@ -1,8 +1,8 @@
 #include "PredictBitGroupParityCircuitEvaluator.h"
 #include "assert.h"
 
-PredictBitGroupParityCircuitEvaluator::PredictBitGroupParityCircuitEvaluator() : ICircuitEvaluator(){
-}
+PredictBitGroupParityCircuitEvaluator::PredictBitGroupParityCircuitEvaluator()
+    : IEvaluator(EVALUATOR_BITGROUP_PARITY) { }
 
 void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
 	// OUTPUT LAYER ENCODES THE GROUP OF BITS AND THEIR PARITY
@@ -64,4 +64,8 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
 		}
         (*pTotalPredictCount)++;                    
     }
+}
+
+string PredictBitGroupParityCircuitEvaluator::shortDescription() {
+    return "No description yet.";
 }

@@ -33,7 +33,7 @@ SOURCES += \
 # === evaluators ===
 SOURCES += \
     EACirc/evaluators/DistinguishTwoEvaluator.cpp \
-    EACirc/evaluators/ICircuitEvaluator.cpp \
+    EACirc/evaluators/IEvaluator.cpp \
     EACirc/evaluators/PredictAvalancheEvaluator.cpp \
     EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
@@ -132,7 +132,7 @@ HEADERS += \
 # === evaluators ===
 HEADERS += \
     EACirc/evaluators/DistinguishTwoEvaluator.h \
-    EACirc/evaluators/ICircuitEvaluator.h \
+    EACirc/evaluators/IEvaluator.h \
     EACirc/evaluators/PredictAvalancheEvaluator.h \
     EACirc/evaluators/PredictBitCircuitEvaluator.h \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \

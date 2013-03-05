@@ -1,7 +1,7 @@
 #include "PredictBitCircuitEvaluator.h"
 
-PredictBitCircuitEvaluator::PredictBitCircuitEvaluator() : ICircuitEvaluator(){
-}
+PredictBitCircuitEvaluator::PredictBitCircuitEvaluator()
+    : IEvaluator(EVALUATOR_BIT) { }
 
 void PredictBitCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
 	// OUTPUT LAYER ENCODES DIRECTLY THE EXPECTED BITS
@@ -19,4 +19,8 @@ void PredictBitCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigne
 			}
 		}
 	}
+}
+
+string PredictBitCircuitEvaluator::shortDescription() {
+    return "No description yet.";
 }

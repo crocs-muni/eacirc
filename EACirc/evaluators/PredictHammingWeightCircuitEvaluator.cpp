@@ -1,7 +1,7 @@
 #include "PredictHammingWeightCircuitEvaluator.h"
 
-PredictHammingWeightCircuitEvaluator::PredictHammingWeightCircuitEvaluator() : ICircuitEvaluator(){
-}
+PredictHammingWeightCircuitEvaluator::PredictHammingWeightCircuitEvaluator()
+    : IEvaluator(EVALUATOR_HAMMING_WEIGHT) { }
 
 void PredictHammingWeightCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
 	// HAMMING WEIGHT OF BYTES IN OUTPUT LAYER SHOULD MATCH WEIGHT IN CORRECT OUTPUT
@@ -39,4 +39,8 @@ void PredictHammingWeightCircuitEvaluator::evaluateCircuit(unsigned char* output
 		}
 	}
             
+}
+
+string PredictHammingWeightCircuitEvaluator::shortDescription() {
+    return "No description yet.";
 }

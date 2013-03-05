@@ -1,8 +1,8 @@
 #include "PredictAvalancheEvaluator.h"
 #include "projects/estream/EncryptorDecryptor.h"
 
-AvalancheEvaluator::AvalancheEvaluator() : ICircuitEvaluator(){
-}
+AvalancheEvaluator::AvalancheEvaluator()
+    : IEvaluator(EVALUATOR_AVALANCHE) { }
 
 void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
     unsigned char* inputStream = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
@@ -83,4 +83,8 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
     // edit BEGIN
     delete encryptorDecryptor;
     // edit END
+}
+
+string AvalancheEvaluator::shortDescription() {
+    return "No description yet.";
 }

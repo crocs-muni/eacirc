@@ -1,6 +1,7 @@
 #include "DistinguishTwoEvaluator.h"
-DistinguishTwoEvaluator::DistinguishTwoEvaluator() : ICircuitEvaluator(){
-}
+
+DistinguishTwoEvaluator::DistinguishTwoEvaluator()
+    : IEvaluator(EVALUATOR_DISTINGUISH) { }
 
 void DistinguishTwoEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
 	// OUTPUT LAYER ENCODES 2 DIFFERENT TYPES - 0xff (0x7f-0xff) and 0x00 (0x00-0x7e)
@@ -14,4 +15,8 @@ void DistinguishTwoEvaluator::evaluateCircuit(unsigned char* outputs, unsigned c
 		}
 		(*pTotalPredictCount)++;
 	}
+}
+
+string DistinguishTwoEvaluator::shortDescription() {
+    return "No description yet.";
 }

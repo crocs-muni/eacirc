@@ -1,7 +1,7 @@
 #include "PredictBytesParityCircuitEvaluator.h"
 
-PredictBytesParityCircuitEvaluator::PredictBytesParityCircuitEvaluator() : ICircuitEvaluator(){
-}
+PredictBytesParityCircuitEvaluator::PredictBytesParityCircuitEvaluator()
+    : IEvaluator(EVALUATOR_BYTES_PARITY) { }
 
 void PredictBytesParityCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
 	// PARITY OF BYTES IN OUTPUT LAYER SHOULD MATCH PARITY IN CORRECT OUTPUT
@@ -33,4 +33,8 @@ void PredictBytesParityCircuitEvaluator::evaluateCircuit(unsigned char* outputs,
 			(*pTotalPredictCount)++;                    
 		}
     }
+}
+
+string PredictBytesParityCircuitEvaluator::shortDescription() {
+    return "No description yet.";
 }

@@ -1,4 +1,4 @@
-#include "ICircuitEvaluator.h"
+#include "IEvaluator.h"
 #include "PredictBitCircuitEvaluator.h"
 #include "PredictByteCircuitEvaluator.h"
 #include "PredictBitGroupParityCircuitEvaluator.h"
@@ -7,11 +7,10 @@
 #include "DistinguishTwoEvaluator.h"
 //#include "PredictAvalancheEvaluator.h"
 
-ICircuitEvaluator::ICircuitEvaluator() {
-}
+IEvaluator::IEvaluator(int type) : m_type(type) { }
 
-ICircuitEvaluator* ICircuitEvaluator::getCircEvalClass(void) {
-    switch (pGlobals->settings->main.evaluatorType) {
+IEvaluator* IEvaluator::getEvaluator(int type) {
+    switch (type) {
         case EVALUATOR_BIT:
 			return new PredictBitCircuitEvaluator();
 			break;
@@ -22,7 +21,7 @@ ICircuitEvaluator* ICircuitEvaluator::getCircEvalClass(void) {
 			return new PredictBytesParityCircuitEvaluator();
 			break;
         case EVALUATOR_HAMMING_WEIGHT:
-			return new PredictHammingWeightCircuitEvaluator();
+            return new PredictHammingWeightCircuitEvaluator();
 			break;
         case EVALUATOR_BYTE:
 			return new PredictByteCircuitEvaluator();
@@ -35,7 +34,7 @@ ICircuitEvaluator* ICircuitEvaluator::getCircEvalClass(void) {
             //return new AvalancheEvaluator();
             break;
 		default:
-            mainLogger.out(LOGGER_ERROR) << "Unknown evaluator type \"" << pGlobals->settings->main.evaluatorType << "\"." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Unknown evaluator type \"" << type << "\"." << endl;
 			break;
 	}
 	return NULL;

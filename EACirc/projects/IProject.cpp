@@ -3,6 +3,7 @@
 #include "pregenerated_tv/PregeneratedTvProject.h"
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
+#include "evaluators/IEvaluator.h"
 
 IProject::IProject(int type) : m_type(type) {
     if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
@@ -13,7 +14,10 @@ IProject::IProject(int type) : m_type(type) {
             return;
         }
         tvFile << dec << left;
-        tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator type)" << endl;
+        tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator";
+        IEvaluator* evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
+        if (evaluator) tvFile << ": " << evaluator->shortDescription();
+        tvFile << ")" << endl;
         tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
         tvFile << pGlobals->settings->testVectors.numTestVectors << " \t\t(number of test vectors in a set)" << endl;
         tvFile << MAX_INPUTS << " \t\t(maximal number of inputs)" << endl;
@@ -116,8 +120,8 @@ int IProject::saveTestVectors() const {
         mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
-    for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
-        tvFile.write((char*)(pGlobals->testVectors[testVectorNumber]),MAX_INPUTS + MAX_OUTPUTS);
+    for (int testVector = 0; testVector < pGlobals->settings->testVectors.numTestVectors; testVector++) {
+        tvFile.write((char*)(pGlobals->testVectors[testVector]),MAX_INPUTS + MAX_OUTPUTS);
     }
     if (tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors." << endl;

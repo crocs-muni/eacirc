@@ -2,6 +2,7 @@
 #define CHECKER_H
 
 #include "EACglobals.h"
+#include "evaluators/IEvaluator.h"
 
 class Checker {
     string m_tvFilename;
@@ -9,6 +10,7 @@ class Checker {
     int m_status;
     int m_max_inputs;
     int m_max_outputs;
+    IEvaluator* m_evaluator;
     //! structure of main settings
     SETTINGS m_settings;
 public:

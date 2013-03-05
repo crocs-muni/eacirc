@@ -3,6 +3,7 @@
 
 #include "EACglobals.h"
 #include "XMLProcessor.h"
+#include "generators/IRndGen.h"
 
 class IProject {
 protected:

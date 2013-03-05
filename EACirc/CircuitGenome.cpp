@@ -1,10 +1,11 @@
 #include <iomanip>
 #include "CircuitGenome.h"
 #include "CommonFnc.h"
-#include "evaluators/ICircuitEvaluator.h"
+#include "evaluators/IEvaluator.h"
 #include "XMLProcessor.h"
 // libinclude ("galib/GAPopulation.h")
 #include "GAPopulation.h"
+#include "generators/IRndGen.h"
 
 void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
     unsigned long   circuit[MAX_GENOME_SIZE];    
@@ -36,12 +37,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     int								match = 0;
     int								numPredictions = 0; 
     int								remainingTestVectors = pGlobals->settings->testVectors.numTestVectors;
-	ICircuitEvaluator				*circEval = new ICircuitEvaluator();
-    {
-        ICircuitEvaluator* temp = circEval->getCircEvalClass();
-        delete circEval;
-        circEval = temp;
-    }
+    IEvaluator*                     evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
 
     memset(inputs,0,MAX_INPUTS);
     memset(outputs,0,MAX_OUTPUTS);
@@ -63,7 +59,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
         status = ExecuteCircuit(&genome, inputs, outputs);
         
         // EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
-		circEval->evaluateCircuit(outputs, correctOutputs, usePredictorMask, &match, &numPredictions);
+        evaluator->evaluateCircuit(outputs, correctOutputs, usePredictorMask, &match, &numPredictions);
     }
 
 	// COMPARE CIRCUIT INPUTS AND OUTPUTS, IF SAME, SET FITNESS TO 0
@@ -98,7 +94,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
         }
     }
         
-    delete circEval;
+    delete evaluator;
     return fit;
 }
 
