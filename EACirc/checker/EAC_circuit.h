@@ -16,22 +16,17 @@ static void circuit(unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_
     unsigned char VAR_IN_14 = inputs[14];
     unsigned char VAR_IN_15 = inputs[15];
 
-    unsigned char VAR_1_0_NOP = VAR_IN_0 ;
-    unsigned char VAR_1_1_NOP = VAR_IN_1 ;
-    unsigned char VAR_1_2_NOP = VAR_IN_2 ;
-    unsigned char VAR_2_0_NOP = VAR_1_0_NOP ;
-    unsigned char VAR_2_1_NOP = VAR_1_1_NOP ;
-    unsigned char VAR_2_2_ROR_2 = VAR_1_2_NOP >> 2 ;
-    unsigned char VAR_3_0_SUB = VAR_2_0_NOP -  VAR_2_0_NOP - VAR_2_2_ROR_2 - 0;
-    unsigned char VAR_3_1_BSL_0 = VAR_2_1_NOP & 0 ;
-    unsigned char VAR_3_2_NOR = 0 | ~ VAR_2_2_ROR_2 | ~ 0xff;
-    unsigned char VAR_4_0_NOP = VAR_3_0_SUB ;
-    unsigned char VAR_4_1_NOR = 0 | ~ VAR_3_1_BSL_0 | ~ 0xff;
-    unsigned char VAR_4_2_NOP = VAR_3_2_NOR ;
-    unsigned char VAR_5_0_NOP = VAR_4_0_NOP ;
-    unsigned char VAR_5_1_XOR = VAR_4_0_NOP ^ VAR_4_1_NOR ^ VAR_4_2_NOP ^ 0;
+    unsigned char VAR_1_2_SUB = VAR_IN_2 -  VAR_IN_2 - VAR_IN_14 - 0;
+    unsigned char VAR_1_5_SUB = VAR_IN_5 -  VAR_IN_5 - VAR_IN_12 - 0;
+    unsigned char VAR_2_1_CONST_8 = 8 ;
+    unsigned char VAR_2_3_NAN = 0xff & ~  VAR_1_2_SUB & ~ VAR_1_5_SUB & ~ 0;
+    unsigned char VAR_3_2_SUM = VAR_2_1_CONST_8 + VAR_2_3_NAN + 0;
+    unsigned char VAR_3_3_NAN = 0xff & ~  VAR_2_3_NAN & ~ 0;
+    unsigned char VAR_4_3_NAN = 0xff & ~  VAR_3_2_SUM & ~ VAR_3_3_NAN & ~ 0;
+    unsigned char VAR_5_0_NOR = 0 | ~ VAR_4_3_NAN | ~ 0xff;
+    unsigned char VAR_5_1_NAN = 0xff & ~  VAR_4_3_NAN & ~ 0;
 
-    outputs[0] = VAR_5_0_NOP;
-    outputs[1] = VAR_5_1_XOR;
+    outputs[0] = VAR_5_0_NOR;
+    outputs[1] = VAR_5_1_NAN;
 
 }

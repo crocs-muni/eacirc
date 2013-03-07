@@ -159,7 +159,7 @@ void Checker::check() {
             m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector]+m_max_inputs,NULL,&setMatched,&setPredictions);
         }
 
-        fitness = setPredictions != 0 ? (double) totalMatched / totalPredictions : 0;
+        fitness = setPredictions != 0 ? (double) setMatched / setPredictions : 0;
         totalMatched += setMatched;
         totalPredictions += setPredictions;
         fitProgressFile << testSet << "\t" << fitness << "\t" << setMatched << "\t" << setPredictions << endl;
