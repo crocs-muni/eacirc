@@ -19,10 +19,10 @@ IProject::IProject(int type) : m_type(type) {
         if (evaluator) tvFile << ": " << evaluator->shortDescription();
         tvFile << ")" << endl;
         tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
-        tvFile << pGlobals->settings->testVectors.numTestVectors << " \t\t(number of test vectors in a set)" << endl;
+        tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
         tvFile << MAX_INPUTS << " \t\t(maximal number of inputs)" << endl;
         tvFile << MAX_OUTPUTS << " \t\t(maximal number of outputs)" << endl;
-        tvFile << pGlobals->settings->testVectors.testVectorLength << " \t\t(number of tv input bytes)" << endl;
+        tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
         tvFile << pGlobals->settings->circuit.sizeOutputLayer << " \t\t(number of tv output bytes)" << endl;
         tvFile.close();
     }
@@ -120,8 +120,9 @@ int IProject::saveTestVectors() const {
         mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
-    for (int testVector = 0; testVector < pGlobals->settings->testVectors.numTestVectors; testVector++) {
-        tvFile.write((char*)(pGlobals->testVectors[testVector]),MAX_INPUTS + MAX_OUTPUTS);
+    for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
+        tvFile.write((char*)(pGlobals->testVectors[testVector]),
+                     pGlobals->settings->testVectors.inputLength + pGlobals->settings->testVectors.outputLength);
     }
     if (tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors." << endl;

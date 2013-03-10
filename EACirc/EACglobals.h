@@ -118,10 +118,11 @@ struct SETTINGS_CIRCUIT {
 
 //! settings corresponding to EACIRC/TEST_VECTORS
 struct SETTINGS_TEST_VECTORS {
-    int testVectorLength;                   //! test vector length (in bytes)
-    int numTestVectors;                     //! number of test vectors in a testing set
-    int testVectorChangeFreq;               //! how often to re-generate test vectors?
-    bool testVectorChangeProgressive;       //! change vectors more often in the beginning and less often in the end
+    int inputLength;                        //! test vector length (input for circuit) (in bytes)
+    int outputLength;                       //! expected test vector output length (output from circuit) (in bytes)
+    int setSize;                            //! number of test vectors in a testing set
+    int setChangeFrequency;                 //! how often to re-generate test vectors?
+    bool setChangeProgressive;              //! change vectors more often in the beginning and less often in the end
     bool saveTestVectors;                   //! should test vecotrs be saved?
     bool evaluateBeforeTestVectorChange;    //! should evaluation before or after test vectors change be written to file?
     bool evaluateEveryStep;                 //! evaluate every step

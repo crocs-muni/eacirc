@@ -15,11 +15,11 @@ SETTINGS_INFO::SETTINGS_INFO() {
 }
 
 SETTINGS_MAIN::SETTINGS_MAIN() {
-    projectType = PROJECT_PREGENERATED_TV;
-    evaluatorType = EVALUATOR_HAMMING_WEIGHT;
+    projectType = -1;
+    evaluatorType = -1;
     recommenceComputation = false;
     loadInitialPopulation = false;
-    numGenerations = 0;
+    numGenerations = -1;
     saveStateFrequency = 0;
 }
 
@@ -28,14 +28,14 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
     seed = 0;
     biasRndGenFactor = 50;
     qrngPath = "";
-    qrngFilesMaxIndex = 0;
+    qrngFilesMaxIndex = -1;
 }
 
 SETTINGS_GA::SETTINGS_GA() {
     evolutionOff = false;
-    probMutation = 0;
-    probCrossing = 0;
-    popupationSize = 0;
+    probMutation = -1;
+    probCrossing = -1;
+    popupationSize = -1;
 }
 
 SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
@@ -50,14 +50,15 @@ SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
 }
 
 SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
-    testVectorLength = MAX_INPUTS;
-    numTestVectors = 100;
-    testVectorChangeFreq = 0;
-    testVectorChangeProgressive = false;
+    inputLength = -1;
+    outputLength = -1;
+    setSize = -1;
+    setChangeFrequency = -1;
+    setChangeProgressive = false;
     saveTestVectors = true;
     evaluateBeforeTestVectorChange = false;
     evaluateEveryStep = false;
-    numTestSets = 0;
+    numTestSets = -1;
 }
 
 SETTINGS::SETTINGS() {
@@ -89,8 +90,8 @@ GLOBALS::GLOBALS() {
 
 void GLOBALS::allocate() {
     if (testVectors != NULL) release();
-    testVectors = new unsigned char*[settings->testVectors.numTestVectors];
-    for (int i = 0; i < settings->testVectors.numTestVectors; i++) {
+    testVectors = new unsigned char*[settings->testVectors.setSize];
+    for (int i = 0; i < settings->testVectors.setSize; i++) {
         testVectors[i] = new unsigned char[MAX_INPUTS + MAX_OUTPUTS];
         memset(testVectors[i],0,MAX_INPUTS + MAX_OUTPUTS);
     }
@@ -98,7 +99,7 @@ void GLOBALS::allocate() {
 
 void GLOBALS::release() {
     if (testVectors != NULL) {
-        for (int i = 0; i < settings->testVectors.numTestVectors; i++) delete[] testVectors[i];
+        for (int i = 0; i < settings->testVectors.setSize; i++) delete[] testVectors[i];
         delete[] testVectors;
         testVectors = NULL;
     }

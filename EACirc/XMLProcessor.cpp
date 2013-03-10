@@ -73,16 +73,17 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     //
     // TEST VECTORS
     //
-    pSettings->testVectors.testVectorLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_LENGTH").c_str());
-    pSettings->testVectors.numTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/NUM_TEST_VECTORS").c_str());
-    pSettings->testVectors.testVectorChangeFreq = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_FREQ").c_str());
-    pSettings->testVectors.testVectorChangeProgressive = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/TEST_VECTOR_CHANGE_PROGRESSIVE").c_str())) ? true : false;
+    pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
+    pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());
+    pSettings->testVectors.setSize = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_SIZE").c_str());
+    pSettings->testVectors.setChangeFrequency = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_CHANGE_FREQ").c_str());
+    pSettings->testVectors.setChangeProgressive = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_CHANGE_PROGRESSIVE").c_str())) ? true : false;
     pSettings->testVectors.saveTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SAVE_TEST_VECTORS").c_str()) ? true : false;
     pSettings->testVectors.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
 
     // UPDATE EXTRA INFO
-    pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.testVectorChangeFreq;
+    pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {

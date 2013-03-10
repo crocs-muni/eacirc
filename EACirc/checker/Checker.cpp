@@ -61,7 +61,7 @@ void Checker::loadTestVectorParameters() {
         error = true;
     }
     // number of vectors in a set
-    m_tvFile >> pGlobals->settings->testVectors.numTestVectors;
+    m_tvFile >> pGlobals->settings->testVectors.setSize;
     m_tvFile.ignore(UCHAR_MAX,'\n');
     if (m_tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot read number of test vectors in a set." << endl;
@@ -82,7 +82,7 @@ void Checker::loadTestVectorParameters() {
         error = true;
     }
     // number of inputs
-    m_tvFile >> pGlobals->settings->testVectors.testVectorLength;
+    m_tvFile >> pGlobals->settings->testVectors.inputLength;
     m_tvFile.ignore(UCHAR_MAX,'\n');
     if (m_tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot read test vector length." << endl;
@@ -150,11 +150,11 @@ void Checker::check() {
         setMatched = 0;
         setPredictions = 0;
         // read test set from file
-        for (int testVector = 0; testVector < pGlobals->settings->testVectors.numTestVectors; testVector++) {
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
             m_tvFile.read((char*)(pGlobals->testVectors[testVector]),m_max_inputs+m_max_outputs);
         }
         // run circuits on test set
-        for (int testVector = 0; testVector < pGlobals->settings->testVectors.numTestVectors; testVector++) {
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
             circuit(pGlobals->testVectors[testVector],circuitOutputs);
             m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector]+m_max_inputs,NULL,&setMatched,&setPredictions);
         }

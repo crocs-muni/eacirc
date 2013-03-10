@@ -50,9 +50,9 @@ int PregeneratedTvProject::initializeProject() {
     // number of vectors in a set
     m_tvFile >> intSetting;
     m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (intSetting != pGlobals->settings->testVectors.numTestVectors) {
+    if (intSetting != pGlobals->settings->testVectors.setSize) {
         mainLogger.out(LOGGER_WARNING) << "Number of vectors in a set does not match.";
-        mainLogger.out() << "         required: " << pGlobals->settings->testVectors.numTestVectors << endl;
+        mainLogger.out() << "         required: " << pGlobals->settings->testVectors.setSize << endl;
         mainLogger.out() << "         provided: " << intSetting << endl;
         warning = true;
     }
@@ -77,9 +77,9 @@ int PregeneratedTvProject::initializeProject() {
     // number of inputs
     m_tvFile >> intSetting;
     m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (intSetting != pGlobals->settings->testVectors.testVectorLength) {
+    if (intSetting != pGlobals->settings->testVectors.inputLength) {
         mainLogger.out(LOGGER_WARNING) << "Number of inputs does not match.";
-        mainLogger.out() << "         required: " << pGlobals->settings->testVectors.testVectorLength << endl;
+        mainLogger.out() << "         required: " << pGlobals->settings->testVectors.inputLength << endl;
         mainLogger.out() << "         provided: " << intSetting << endl;
         warning = true;
     }
@@ -122,7 +122,7 @@ int PregeneratedTvProject::generateTestVectors() {
     if (!m_tvFile.is_open()) {
         return STAT_PROJECT_ERROR;
     }
-    for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.numTestVectors; testVectorNumber++) {
+    for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
         m_tvFile.read((char*)(pGlobals->testVectors[testVectorNumber]),MAX_INPUTS + MAX_OUTPUTS);
     }
     if (m_tvFile.fail()) {

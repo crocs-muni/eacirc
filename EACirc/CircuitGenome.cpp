@@ -36,14 +36,14 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     unsigned char					correctOutputs[MAX_OUTPUTS];  
     int								match = 0;
     int								numPredictions = 0; 
-    int								remainingTestVectors = pGlobals->settings->testVectors.numTestVectors;
+    int								remainingTestVectors = pGlobals->settings->testVectors.setSize;
     IEvaluator*                     evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
 
     memset(inputs,0,MAX_INPUTS);
     memset(outputs,0,MAX_OUTPUTS);
     memset(correctOutputs,0,MAX_OUTPUTS);
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
-    remainingTestVectors = pGlobals->settings->testVectors.numTestVectors;
+    remainingTestVectors = pGlobals->settings->testVectors.setSize;
 
     match = 0;
 	int match1 = 0;

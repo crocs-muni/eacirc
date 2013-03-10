@@ -469,7 +469,7 @@ int EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int
         return STAT_PROJECT_ERROR;
     }
 
-    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
+    if (!length) length = pGlobals->settings->testVectors.inputLength;
 	// WRONG IMPLEMENTATION OF ABC:
 	//typeof hax
 	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))
@@ -489,7 +489,7 @@ int EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int
         return STAT_PROJECT_ERROR;
     }
 
-    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
+    if (!length) length = pGlobals->settings->testVectors.inputLength;
 	// WRONG IMPLEMENTATION OF ABC:
     //typeof hax
     if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))

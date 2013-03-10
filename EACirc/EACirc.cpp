@@ -82,11 +82,11 @@ void EACirc::loadConfiguration(const string filename) {
     }
 
     if (m_settings.main.saveStateFrequency != 0 &&
-            m_settings.main.saveStateFrequency % m_settings.testVectors.testVectorChangeFreq != 0) {
+            m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
         mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    if (m_settings.testVectors.testVectorChangeProgressive &&
+    if (m_settings.testVectors.setChangeProgressive &&
             m_settings.main.saveStateFrequency != 0) {
         mainLogger.out(LOGGER_ERROR) << "Progressive test vector generation cannot be used when saving state." << endl;
         m_status = STAT_CONFIG_INCORRECT;
@@ -490,24 +490,24 @@ void EACirc::run() {
         }
 
         // GENERATE TEST VECTORS IF NEEDED
-        if (m_settings.testVectors.testVectorChangeProgressive) {
+        if (m_settings.testVectors.setChangeProgressive) {
             // TODO: understand and correct
-            if (changed > m_actGener/m_settings.testVectors.testVectorChangeFreq + 1) {
+            if (changed > m_actGener/m_settings.testVectors.setChangeFrequency + 1) {
                 m_status = m_project->generateAndSaveTestVectors();
                 evaluateNow = true;
                 changed = 0;
             }
         } else {
-            if (m_actGener %(m_settings.testVectors.testVectorChangeFreq) == 1) {
+            if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
                 m_status = m_project->generateAndSaveTestVectors();
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
             if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
-                 m_actGener %(m_settings.testVectors.testVectorChangeFreq) == 0) {
+                 m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
                 evaluateNow = true;
             }
             if (!m_settings.testVectors.evaluateBeforeTestVectorChange &&
-                 m_actGener % (m_settings.testVectors.testVectorChangeFreq) == 1) {
+                 m_actGener % (m_settings.testVectors.setChangeFrequency) == 1) {
                 evaluateNow = true;
             }
         }

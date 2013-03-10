@@ -5,10 +5,10 @@ AvalancheEvaluator::AvalancheEvaluator()
     : IEvaluator(EVALUATOR_AVALANCHE) { }
 
 void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
-    unsigned char* inputStream = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
-    unsigned char* inputStreamCheck = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
-    unsigned char* outputStream = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
-    unsigned char* outputStreamCheck = new unsigned char[pGlobals->settings->testVectors.testVectorLength];
+    unsigned char* inputStream = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    unsigned char* inputStreamCheck = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    unsigned char* outputStream = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    unsigned char* outputStreamCheck = new unsigned char[pGlobals->settings->testVectors.inputLength];
 
     // EDITED when creating infrastructure for projects
     // edit BEGIN

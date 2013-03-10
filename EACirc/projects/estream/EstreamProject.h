@@ -9,17 +9,17 @@
 class EstreamProject : public IProject {
 private:
     //! arrays for single final test vector
-    unsigned char outputs[MAX_OUTPUTS];
-    unsigned char inputs[MAX_INPUTS];
+    unsigned char* m_tvOutputs;
+    unsigned char* m_tvInputs;
     //! temporary arrays for initial and encrypted-decrypted plaintext (should be the same)
-    u8 plain[MAX_INPUTS];
-    u8 outplain[MAX_INPUTS];
+    u8* m_plaintextIn;
+    u8* m_plaintextOut;
     //! array used for ballacing test vectors
-    int *numstats;
+    int* m_numVectors;
     //! object providing eStream cipher facilities
-    EncryptorDecryptor* encryptorDecryptor;
+    EncryptorDecryptor* m_encryptorDecryptor;
     //! settings for eStream project
-    ESTREAM_SETTINGS estreamSettings;
+    ESTREAM_SETTINGS m_estreamSettings;
 
     /** prepare single test vector
       * @return status
