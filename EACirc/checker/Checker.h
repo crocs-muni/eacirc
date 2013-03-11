@@ -8,8 +8,6 @@ class Checker {
     string m_tvFilename;
     ifstream m_tvFile;
     int m_status;
-    int m_max_inputs;
-    int m_max_outputs;
     IEvaluator* m_evaluator;
     //! structure of main settings
     SETTINGS m_settings;

@@ -67,34 +67,22 @@ void Checker::loadTestVectorParameters() {
         mainLogger.out(LOGGER_ERROR) << "Cannot read number of test vectors in a set." << endl;
         error = true;
     }
-    // maximal number of inputs
-    m_tvFile >> m_max_inputs;
-    m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (m_tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot read maximal number of inputs." << endl;
-        error = true;
-    }
-    // maximal number of outputs
-    m_tvFile >> m_max_outputs;
-    m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (m_tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot read maximal number of outputs." << endl;
-        error = true;
-    }
     // number of inputs
     m_tvFile >> pGlobals->settings->testVectors.inputLength;
     m_tvFile.ignore(UCHAR_MAX,'\n');
     if (m_tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot read test vector length." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot read test vector input length." << endl;
         error = true;
     }
     // number of outputs
-    m_tvFile >> pGlobals->settings->circuit.sizeOutputLayer;
+    m_tvFile >> pGlobals->settings->testVectors.outputLength;
     m_tvFile.ignore(UCHAR_MAX,'\n');
     if (m_tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot read output layer size." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot read test vector output length." << endl;
         error = true;
     }
+    // TBD/TODO: only temporary solution
+    pGlobals->settings->circuit.sizeOutputLayer = pGlobals->settings->testVectors.outputLength;
 
     // ignore project settings
     string line;
@@ -130,7 +118,7 @@ void Checker::check() {
     if (m_status != STAT_OK) return;
 
     unsigned char* circuitOutputs;
-    circuitOutputs = new unsigned char[m_max_outputs];
+    circuitOutputs = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
     int totalMatched = 0;
     int totalPredictions = 0;
     int setMatched;
@@ -151,12 +139,14 @@ void Checker::check() {
         setPredictions = 0;
         // read test set from file
         for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-            m_tvFile.read((char*)(pGlobals->testVectors[testVector]),m_max_inputs+m_max_outputs);
+            m_tvFile.read((char*)(pGlobals->testVectors[testVector]),
+                          pGlobals->settings->testVectors.inputLength + pGlobals->settings->testVectors.outputLength);
         }
         // run circuits on test set
         for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
             circuit(pGlobals->testVectors[testVector],circuitOutputs);
-            m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector]+m_max_inputs,NULL,&setMatched,&setPredictions);
+            m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector] +
+                                         pGlobals->settings->testVectors.inputLength,NULL,&setMatched,&setPredictions);
         }
 
         fitness = setPredictions != 0 ? (double) setMatched / setPredictions : 0;

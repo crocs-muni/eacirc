@@ -28,62 +28,42 @@ void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned
 float CircuitGenome::Evaluator(GAGenome &g) {
     int								status = STAT_OK;
     GA1DArrayGenome<unsigned long>  &genome = (GA1DArrayGenome<unsigned long>&) g;
-    string							message;
-    float							fit = 0;
-    unsigned char					inputs[MAX_INPUTS];    
+    float							fitness = 0;
     unsigned char					outputs[MAX_OUTPUTS];  
     unsigned char					usePredictorMask[MAX_OUTPUTS];  
-    unsigned char					correctOutputs[MAX_OUTPUTS];  
     int								match = 0;
     int								numPredictions = 0; 
-    int								remainingTestVectors = pGlobals->settings->testVectors.setSize;
     IEvaluator*                     evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
 
-    memset(inputs,0,MAX_INPUTS);
     memset(outputs,0,MAX_OUTPUTS);
-    memset(correctOutputs,0,MAX_OUTPUTS);
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
-    remainingTestVectors = pGlobals->settings->testVectors.setSize;
 
-    match = 0;
-	int match1 = 0;
-    int match2 = 0;    
+    match = 0;    
     numPredictions = 0;
-    for (int testSet = 0; testSet < remainingTestVectors; testSet++) { 
-        // LOAD TEST SET INTO inputs
-        memcpy(inputs, pGlobals->testVectors[testSet], MAX_INPUTS);
-        // LOAD TEST SET INTO outputs
-        memcpy(correctOutputs, pGlobals->testVectors[testSet] + MAX_INPUTS, MAX_OUTPUTS);
-            
+    for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
         // EXECUTE CIRCUIT
-        status = ExecuteCircuit(&genome, inputs, outputs);
-        
+        status = ExecuteCircuit(&genome, pGlobals->testVectors[testVector], outputs);
         // EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
-        evaluator->evaluateCircuit(outputs, correctOutputs, usePredictorMask, &match, &numPredictions);
+        evaluator->evaluateCircuit(outputs, pGlobals->testVectors[testVector] + pGlobals->settings->testVectors.inputLength,
+                                   usePredictorMask, &match, &numPredictions);
     }
+    fitness = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;
 
-	// COMPARE CIRCUIT INPUTS AND OUTPUTS, IF SAME, SET FITNESS TO 0
-    int inOutCompare = memcmp(inputs, outputs, pGlobals->settings->circuit.sizeOutputLayer);
-	if (inOutCompare == 0) {
-		fit = 0;
-	} else {
-		fit = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;
-	}
-
+    // update statistics, if needed
     if (!pGlobals->stats.prunningInProgress) {
         // include into average fitness of whole generation
-        (pGlobals->stats.avgGenerFit) += fit;
+        (pGlobals->stats.avgGenerFit) += fitness;
         (pGlobals->stats.numAvgGenerFit)++;
         (pGlobals->stats.avgPredictions) += numPredictions;
 
-        if (fit > pGlobals->stats.bestGenerFit) pGlobals->stats.bestGenerFit = fit;
+        if (fitness > pGlobals->stats.bestGenerFit) pGlobals->stats.bestGenerFit = fitness;
 
-        if (pGlobals->stats.maxFit < fit) {
-            pGlobals->stats.maxFit = fit;
+        if (pGlobals->stats.maxFit < fitness) {
+            pGlobals->stats.maxFit = fitness;
 
             // DISPLAY CURRENTLY BEST
             ostringstream os2;
-            os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fit;
+            os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fitness;
             string filePath = os2.str();
             PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
 
@@ -95,7 +75,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     }
         
     delete evaluator;
-    return fit;
+    return fitness;
 }
 
 void CircuitGenome::Initializer(GAGenome &g) {
@@ -381,16 +361,11 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
             }
         }
     }
-    
-    // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope start
-    //Evaluator(prunnedGenome);
-    // !!! WHAT IS THIS SUPPOSSED TO BE DOING? scope end
-
     pGlobals->stats.prunningInProgress = false;
     return status;
 }
 
-int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_OUTPUTS], unsigned char displayNodes[MAX_GENOME_SIZE]) {
+int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[MAX_GENOME_SIZE]) {
 	int	status = STAT_OK;
     GA1DArrayGenome<unsigned long>  &genome = (GA1DArrayGenome<unsigned long>&) g;
 	
@@ -407,7 +382,6 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_
 			displayNodes[offsetFNC + i] = 1;	
 		}
     }
-	
 	
 	// PROCESS ALL LAYERS FROM BACK
     for (int layer = 2 * pGlobals->settings->circuit.numLayers - 1; layer > 0; layer = layer - 2) {
@@ -478,7 +452,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_
 			}
 		}
 	}
-	
+
 	return status;
 }
 
@@ -778,7 +752,7 @@ int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int*
     return status;
 }
 
-int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char usePredictorMask[MAX_OUTPUTS], int bPruneCircuit) {
+int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *usePredictorMask, int bPruneCircuit) {
     int								status = STAT_OK;
     GA1DArrayGenome<unsigned long>&inputGenome = (GA1DArrayGenome<unsigned long>&) g;
 	GA1DArrayGenome<unsigned long>  genome(MAX_GENOME_SIZE, Evaluator);
@@ -786,7 +760,6 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char useP
     string							value;
     string							value2;
     string							visualCirc = "";
-    string							visualCircLabel = "";
     string							codeCirc = "";
 	string 							actualSlotID; 
 	string 							previousSlotID; 
@@ -825,7 +798,13 @@ ordering=out;\r\n\
 node [color=lightblue2, style=filled];\r\n";
 
     // CODE CIRCUIT: 
-    if (bCodeCircuit) codeCirc += "static void circuit(unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]) {\n";
+    if (bCodeCircuit) {
+        codeCirc += "static void circuit(unsigned char inputs[";
+        codeCirc += toString(pGlobals->settings->testVectors.inputLength);
+        codeCirc += "], unsigned char outputs[";
+        codeCirc += toString(pGlobals->settings->circuit.sizeOutputLayer);
+        codeCirc += "]) {\n";
+    }
 
     message += "\r\n";
     for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
@@ -1226,14 +1205,14 @@ node [color=lightblue2, style=filled];\r\n";
     return status;
 }
 
-int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]) {  
+int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char* inputs, unsigned char* outputs) {
     int     status = STAT_OK;
-    unsigned char*   inputsBegin = inputs;
+//    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
     int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
     unsigned char    localInputs[MAX_INPUTS];
     
-    memset(outputs, 0, MAX_OUTPUTS);
+    memset(outputs, 0, pGlobals->settings->testVectors.outputLength);
     
     // ALL IN ONE RUN
     numSectors = 1;
@@ -1243,7 +1222,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
         // PREPARE INPUTS FOR ACTUAL RUN OF CIRCUIT
         if (numSectors == 1) {
             // ALL INPUT DATA AT ONCE
-            memcpy(localInputs, inputs, MAX_INPUTS);
+            memcpy(localInputs, inputs, pGlobals->settings->testVectors.inputLength);
         }
         else {
             // USE STATE (OUTPUT) AS FIRST PART OF INPUT

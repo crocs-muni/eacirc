@@ -77,10 +77,15 @@ void EACirc::loadConfiguration(const string filename) {
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
     pGlobals->settings = &m_settings;
 
+    // USE SETTINGS IMPLICATIONS
     if (m_settings.main.recommenceComputation || m_settings.ga.evolutionOff) {
         m_settings.main.loadInitialPopulation = true;
     }
 
+    // CHECK SETTINGS CONSISTENCY
+    if (m_settings.testVectors.outputLength < m_settings.circuit.sizeOutputLayer) {
+        mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
+    }
     if (m_settings.main.saveStateFrequency != 0 &&
             m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
         mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;

@@ -56,24 +56,6 @@ int PregeneratedTvProject::initializeProject() {
         mainLogger.out() << "         provided: " << intSetting << endl;
         warning = true;
     }
-    // maximal number of inputs
-    m_tvFile >> intSetting;
-    m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (intSetting != MAX_INPUTS) {
-        mainLogger.out(LOGGER_WARNING) << "Maximal number of inputs does not match.";
-        mainLogger.out() << "         required: " << MAX_INPUTS << endl;
-        mainLogger.out() << "         provided: " << intSetting << endl;
-        warning = true;
-    }
-    // maximal number of outputs
-    m_tvFile >> intSetting;
-    m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (intSetting != MAX_OUTPUTS) {
-        mainLogger.out(LOGGER_WARNING) << "Maximal number of outputs does not match.";
-        mainLogger.out() << "         required: " << MAX_OUTPUTS << endl;
-        mainLogger.out() << "         provided: " << intSetting << endl;
-        warning = true;
-    }
     // number of inputs
     m_tvFile >> intSetting;
     m_tvFile.ignore(UCHAR_MAX,'\n');
@@ -86,7 +68,7 @@ int PregeneratedTvProject::initializeProject() {
     // number of outputs
     m_tvFile >> intSetting;
     m_tvFile.ignore(UCHAR_MAX,'\n');
-    if (intSetting != pGlobals->settings->circuit.sizeOutputLayer) {
+    if (intSetting != pGlobals->settings->testVectors.outputLength) {
         mainLogger.out(LOGGER_WARNING) << "Number of outputs does not match.";
         mainLogger.out() << "         required: " << pGlobals->settings->circuit.sizeOutputLayer << endl;
         mainLogger.out() << "         provided: " << intSetting << endl;
@@ -123,7 +105,8 @@ int PregeneratedTvProject::generateTestVectors() {
         return STAT_PROJECT_ERROR;
     }
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        m_tvFile.read((char*)(pGlobals->testVectors[testVectorNumber]),MAX_INPUTS + MAX_OUTPUTS);
+        m_tvFile.read((char*)(pGlobals->testVectors[testVectorNumber]),
+                      pGlobals->settings->testVectors.inputLength + pGlobals->settings->testVectors.outputLength);
     }
     if (m_tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Problem when loading test vectors." << endl;

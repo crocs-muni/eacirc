@@ -39,13 +39,13 @@ SETTINGS_GA::SETTINGS_GA() {
 }
 
 SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
-    genomeSize = MAX_GENOME_SIZE;
-    numLayers = MAX_NUM_LAYERS;
+    genomeSize = -1;
+    numLayers = -1;
     numSelectorLayers = 1;
-    sizeLayer = MAX_INTERNAL_LAYER_SIZE;
-    sizeInputLayer = MAX_INTERNAL_LAYER_SIZE;
-    sizeOutputLayer = MAX_OUTPUTS;
-    numConnectors = 0;
+    sizeLayer = -1;
+    sizeInputLayer = -1;
+    sizeOutputLayer = -1;
+    numConnectors = -1;
     memset(allowedFunctions, 1, sizeof(allowedFunctions)); // all allowed by default
 }
 
@@ -89,11 +89,17 @@ GLOBALS::GLOBALS() {
 }
 
 void GLOBALS::allocate() {
+    if (settings->testVectors.inputLength == -1 || settings->testVectors.outputLength == -1) {
+        mainLogger.out(LOGGER_ERROR) << "Test vector input/output size not set." << endl;
+        return;
+    }
     if (testVectors != NULL) release();
     testVectors = new unsigned char*[settings->testVectors.setSize];
     for (int i = 0; i < settings->testVectors.setSize; i++) {
-        testVectors[i] = new unsigned char[MAX_INPUTS + MAX_OUTPUTS];
-        memset(testVectors[i],0,MAX_INPUTS + MAX_OUTPUTS);
+        testVectors[i] = new unsigned char[settings->testVectors.inputLength +
+                settings->testVectors.outputLength];
+        memset(testVectors[i],0,settings->testVectors.inputLength +
+               settings->testVectors.outputLength);
     }
 }
 

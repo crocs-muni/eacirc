@@ -6,7 +6,7 @@ ESTREAM_SETTINGS* pEstreamSettings = NULL;
 // TODO clean-up initialization section
 EstreamProject::EstreamProject()
     : IProject(PROJECT_ESTREAM), m_tvOutputs(NULL), m_tvInputs(NULL), m_plaintextIn(NULL), m_plaintextOut(NULL),
-      m_numVectors(NULL), m_encryptorDecryptor(NULL), m_estreamSettings(NULL) {
+      m_numVectors(NULL), m_encryptorDecryptor(NULL) {
     m_tvOutputs = new unsigned char[pGlobals->settings->testVectors.outputLength];
     m_tvInputs = new unsigned char[pGlobals->settings->testVectors.inputLength];
     m_plaintextIn = new unsigned char[pGlobals->settings->testVectors.inputLength];

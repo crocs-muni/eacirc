@@ -20,10 +20,8 @@ IProject::IProject(int type) : m_type(type) {
         tvFile << ")" << endl;
         tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
         tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
-        tvFile << MAX_INPUTS << " \t\t(maximal number of inputs)" << endl;
-        tvFile << MAX_OUTPUTS << " \t\t(maximal number of outputs)" << endl;
         tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
-        tvFile << pGlobals->settings->circuit.sizeOutputLayer << " \t\t(number of tv output bytes)" << endl;
+        tvFile << pGlobals->settings->testVectors.outputLength << " \t\t(number of tv output bytes)" << endl;
         tvFile.close();
     }
 }

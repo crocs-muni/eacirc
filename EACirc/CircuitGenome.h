@@ -13,15 +13,15 @@ public:
     static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
     static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
 	static int ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize);
-	static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char usePredictorMask[MAX_OUTPUTS] = NULL, int bPruneCircuit = FALSE);
+    static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
 	static int GetFunctionLabel(unsigned long functionID, unsigned long connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
-	static int GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_OUTPUTS], unsigned char displayNodes[MAX_GENOME_SIZE]);
+    static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[MAX_GENOME_SIZE]);
 	static int HasConnection(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, int* pbImplicitConnection);
 	static int HasImplicitConnection(unsigned long functionID);
 	static int IsOperand(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
 	static int GetNeutralValue(unsigned long functionID, string* pOperand);
-    static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]);
+    static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char* inputs, unsigned char* outputs);
 
     /** saves genome to string in binary format
       * @param genome       genome to print

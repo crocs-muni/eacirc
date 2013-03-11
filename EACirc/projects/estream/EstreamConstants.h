@@ -50,7 +50,7 @@
 #define ESTREAM_ZKCRYPT         27
 #define ESTREAM_RANDOM          99
 
-typedef struct _ESTREAM_SETTINGS {
+struct ESTREAM_SETTINGS {
     int estreamUsageType;
     int cipherInitializationFrequency;
     int algorithm1;
@@ -65,7 +65,7 @@ typedef struct _ESTREAM_SETTINGS {
     bool generateStream;
     unsigned long streamSize;
 
-    _ESTREAM_SETTINGS(void) {
+    ESTREAM_SETTINGS(void) {
         estreamUsageType = 0;
         cipherInitializationFrequency = ESTREAM_INIT_CIPHERS_ONCE;
         algorithm1 = 0;
@@ -80,7 +80,7 @@ typedef struct _ESTREAM_SETTINGS {
         generateStream = false;
         streamSize = 0;
     }
-} ESTREAM_SETTINGS;
+};
 
 extern ESTREAM_SETTINGS* pEstreamSettings;
 
