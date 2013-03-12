@@ -27,7 +27,7 @@ Checker::~Checker() {
 void Checker::setTestVectorFile(string filename) {
     if (m_status != STAT_OK) return;
     m_tvFilename = filename;
-    m_tvFile.open(m_tvFilename);
+    m_tvFile.open(m_tvFilename, ios_base::binary);
     if (!m_tvFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot open file with pre-generated test vectors (" << m_tvFilename << ")." << endl;
         m_status = STAT_FILE_OPEN_FAIL;
@@ -81,14 +81,15 @@ void Checker::loadTestVectorParameters() {
         mainLogger.out(LOGGER_ERROR) << "Cannot read test vector output length." << endl;
         error = true;
     }
-    // TBD/TODO: only temporary solution
+    // TBD/TODO: only temporary solution, will be saved in circuit
     pGlobals->settings->circuit.sizeOutputLayer = pGlobals->settings->testVectors.outputLength;
 
     // ignore project settings
+    // TBD/TODO: make better than engineering solution for line endings
     string line;
     do {
         getline(m_tvFile,line);
-    } while (!line.empty());
+    } while (!line.empty() && line != "\r");
     if (error) {
         mainLogger.out(LOGGER_ERROR) << "Settings could not be read." << endl;
         m_status = STAT_CONFIG_DATA_READ_FAIL;
@@ -96,17 +97,6 @@ void Checker::loadTestVectorParameters() {
     } else {
         mainLogger.out(LOGGER_INFO) << "Settings successfully read." << endl;
     }
-
-    // switch data read mode
-    int dataPosition = m_tvFile.tellg();
-    m_tvFile.close();
-    m_tvFile.open(m_tvFilename, ios_base::binary);
-    if (!m_tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot open file with pre-generated test vectors (" << m_tvFilename << ")!" << endl;
-        m_status = STAT_FILE_OPEN_FAIL;
-        return;
-    }
-    m_tvFile.seekg(dataPosition);
 
     // load and allocate resources
     pGlobals->allocate();
