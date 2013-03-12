@@ -1209,8 +1209,9 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
     int     numSectors = 1;
     int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
     unsigned char    localInputs[MAX_INPUTS];
+    unsigned char    localOutputs[MAX_INPUTS];
     
-    memset(outputs, 0, pGlobals->settings->testVectors.outputLength);
+    memset(localOutputs, 0, MAX_INPUTS);
     
     // ALL IN ONE RUN
     numSectors = 1;
@@ -1224,7 +1225,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
         }
         else {
             // USE STATE (OUTPUT) AS FIRST PART OF INPUT
-            memcpy(localInputs, outputs, pGlobals->settings->circuit.sizeOutputLayer);
+            memcpy(localInputs, localOutputs, pGlobals->settings->circuit.sizeOutputLayer);
             // ADD FRESH INPUT DATA
             memcpy(localInputs + pGlobals->settings->circuit.sizeOutputLayer, inputs + sector * sectorLength, sectorLength);
         }
@@ -1233,7 +1234,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
         for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
             int offsetCON = (layer-1) * MAX_INTERNAL_LAYER_SIZE; 
             int offsetFNC = (layer) * MAX_INTERNAL_LAYER_SIZE; 
-            memset(outputs, 0, MAX_INTERNAL_LAYER_SIZE);
+            memset(localOutputs, 0, MAX_INPUTS);
 
             // actual number of inputs for this layer. For first layer equal to pCircuit->numInputs, for next layers equal to number of function in intermediate layer pCircuit->internalLayerSize
             int numLayerInputs = 0;
@@ -1438,14 +1439,15 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
                     }
 				}
                 
-                outputs[slot] = result;
+                localOutputs[slot] = result;
             }
             // PREPARE INPUTS FOR NEXT LAYER FROM OUTPUTS
-            memcpy(localInputs, outputs, pGlobals->settings->circuit.sizeLayer);
+            memcpy(localInputs, localOutputs, pGlobals->settings->circuit.sizeLayer);
 			//cout << endl;
         }
     }
     
+    memcpy(outputs,localOutputs,pGlobals->settings->circuit.sizeOutputLayer);
     return status;
 }
 

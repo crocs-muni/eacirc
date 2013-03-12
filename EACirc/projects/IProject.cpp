@@ -17,6 +17,7 @@ IProject::IProject(int type) : m_type(type) {
         tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator";
         IEvaluator* evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
         if (evaluator) tvFile << ": " << evaluator->shortDescription();
+        delete evaluator;
         tvFile << ")" << endl;
         tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
         tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
