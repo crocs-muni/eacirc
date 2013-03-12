@@ -29,22 +29,20 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     int								status = STAT_OK;
     GA1DArrayGenome<unsigned long>  &genome = (GA1DArrayGenome<unsigned long>&) g;
     float							fitness = 0;
-    unsigned char					outputs[MAX_OUTPUTS];  
     unsigned char					usePredictorMask[MAX_OUTPUTS];  
     int								match = 0;
     int								numPredictions = 0; 
     IEvaluator*                     evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
 
-    memset(outputs,0,MAX_OUTPUTS);
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
 
     match = 0;    
     numPredictions = 0;
     for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
         // EXECUTE CIRCUIT
-        status = ExecuteCircuit(&genome, pGlobals->testVectors[testVector], outputs);
+        status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
         // EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
-        evaluator->evaluateCircuit(outputs, pGlobals->testVectors[testVector] + pGlobals->settings->testVectors.inputLength,
+        evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
                                    usePredictorMask, &match, &numPredictions);
     }
     fitness = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;

@@ -101,6 +101,7 @@ int IProject::getProjectType() const {
 
 int IProject::generateAndSaveTestVectors() {
     int status = STAT_OK;
+    mainLogger.out(LOGGER_INFO) << "Generating test vectors." << endl;
     if ((status = generateTestVectors()) != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Test vector generation failed." << endl;
         return status;
@@ -119,8 +120,8 @@ int IProject::saveTestVectors() const {
         return STAT_FILE_WRITE_FAIL;
     }
     for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-        tvFile.write((char*)(pGlobals->testVectors[testVector]),
-                     pGlobals->settings->testVectors.inputLength + pGlobals->settings->testVectors.outputLength);
+        tvFile.write((char*)(pGlobals->testVectors.inputs[testVector]), pGlobals->settings->testVectors.inputLength);
+        tvFile.write((char*)(pGlobals->testVectors.outputs[testVector]), pGlobals->settings->testVectors.outputLength);
     }
     if (tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors." << endl;

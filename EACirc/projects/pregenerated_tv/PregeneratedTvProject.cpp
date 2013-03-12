@@ -105,8 +105,8 @@ int PregeneratedTvProject::generateTestVectors() {
         return STAT_PROJECT_ERROR;
     }
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        m_tvFile.read((char*)(pGlobals->testVectors[testVectorNumber]),
-                      pGlobals->settings->testVectors.inputLength + pGlobals->settings->testVectors.outputLength);
+        m_tvFile.read((char*)(pGlobals->testVectors.inputs[testVectorNumber]), pGlobals->settings->testVectors.inputLength);
+        m_tvFile.read((char*)(pGlobals->testVectors.outputs[testVectorNumber]), pGlobals->settings->testVectors.outputLength);
     }
     if (m_tvFile.fail()) {
         mainLogger.out(LOGGER_ERROR) << "Problem when loading test vectors." << endl;

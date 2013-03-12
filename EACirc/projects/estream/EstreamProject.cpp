@@ -156,10 +156,10 @@ int EstreamProject::generateTestVectors() {
         }
 
         for (int inputByte = 0; inputByte < pGlobals->settings->testVectors.inputLength; inputByte++) {
-            pGlobals->testVectors[testVectorNumber][inputByte] = m_tvInputs[inputByte];
+            pGlobals->testVectors.inputs[testVectorNumber][inputByte] = m_tvInputs[inputByte];
         }
         for (int outputByte = 0; outputByte < pGlobals->settings->testVectors.outputLength; outputByte++)
-            pGlobals->testVectors[testVectorNumber][pGlobals->settings->testVectors.inputLength+outputByte] = m_tvOutputs[outputByte];
+            pGlobals->testVectors.outputs[testVectorNumber][outputByte] = m_tvOutputs[outputByte];
     }
     return status;
 }

@@ -18,7 +18,7 @@ Checker::~Checker() {
     if (m_evaluator) delete m_evaluator;
     m_evaluator = NULL;
     if (pGlobals) {
-        pGlobals->release();
+        pGlobals->testVectors.release();
         delete pGlobals;
     }
     pGlobals = NULL;
@@ -99,7 +99,7 @@ void Checker::loadTestVectorParameters() {
     }
 
     // load and allocate resources
-    pGlobals->allocate();
+    pGlobals->testVectors.allocate();
     m_evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
     if (m_evaluator == NULL) m_status = STAT_INVALID_ARGUMETS;
 }
@@ -107,8 +107,6 @@ void Checker::loadTestVectorParameters() {
 void Checker::check() {
     if (m_status != STAT_OK) return;
 
-    unsigned char* circuitOutputs;
-    circuitOutputs = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
     int totalMatched = 0;
     int totalPredictions = 0;
     int setMatched;
@@ -129,14 +127,14 @@ void Checker::check() {
         setPredictions = 0;
         // read test set from file
         for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-            m_tvFile.read((char*)(pGlobals->testVectors[testVector]),
-                          pGlobals->settings->testVectors.inputLength + pGlobals->settings->testVectors.outputLength);
+            m_tvFile.read((char*)(pGlobals->testVectors.inputs[testVector]), pGlobals->settings->testVectors.inputLength);
+            m_tvFile.read((char*)(pGlobals->testVectors.outputs[testVector]), pGlobals->settings->testVectors.outputLength);
         }
         // run circuits on test set
         for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-            circuit(pGlobals->testVectors[testVector],circuitOutputs);
-            m_evaluator->evaluateCircuit(circuitOutputs,pGlobals->testVectors[testVector] +
-                                         pGlobals->settings->testVectors.inputLength,NULL,&setMatched,&setPredictions);
+            circuit(pGlobals->testVectors.inputs[testVector],pGlobals->testVectors.circuitOutputs[testVector]);
+            m_evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector],pGlobals->testVectors.outputs[testVector],
+                                         NULL,&setMatched,&setPredictions);
         }
 
         fitness = setPredictions != 0 ? (double) setMatched / setPredictions : 0;
@@ -150,7 +148,6 @@ void Checker::check() {
     fitProgressFile << "total:\t" << fitness << "\t" << totalMatched << "\t" << totalPredictions << endl;
     mainLogger.out(LOGGER_INFO) << "Static check finished successfully (average fitness: " << fitness << " )." <<  endl;
 
-    delete circuitOutputs;
     fitProgressFile.close();
 }
 

@@ -42,7 +42,7 @@ EACirc::~EACirc() {
     if (m_project) delete m_project;
     m_project = NULL;
     if (pGlobals) {
-        pGlobals->release();
+        pGlobals->testVectors.release();
         delete pGlobals;
     }
     pGlobals = NULL;
@@ -77,14 +77,17 @@ void EACirc::loadConfiguration(const string filename) {
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
     pGlobals->settings = &m_settings;
 
-    // USE SETTINGS IMPLICATIONS
-    if (m_settings.main.recommenceComputation || m_settings.ga.evolutionOff) {
-        m_settings.main.loadInitialPopulation = true;
-    }
-
     // CHECK SETTINGS CONSISTENCY
-    if (m_settings.testVectors.outputLength < m_settings.circuit.sizeOutputLayer) {
+    if (m_settings.testVectors.outputLength != m_settings.circuit.sizeOutputLayer) {
         mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
+    }
+    if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {
+        mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when recommencing computation." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.ga.evolutionOff && !m_settings.main.loadInitialPopulation) {
+        mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when evolution is off." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_settings.main.saveStateFrequency != 0 &&
             m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
@@ -109,7 +112,7 @@ void EACirc::loadConfiguration(const string filename) {
     mainLogger.out(LOGGER_INFO) << "Project configuration loaded. (" << m_project->shortDescription() << ")" << endl;
 
     // allocate space for testVecotrs
-    pGlobals->allocate();
+    pGlobals->testVectors.allocate();
 
     // must free memory manually!
     delete pRoot;

@@ -93,6 +93,13 @@ struct SETTINGS_RANDOM {
     SETTINGS_RANDOM();
 };
 
+//! settings corresponding to EACIRC/CUDA
+struct SETTINGS_CUDA {
+    bool enabled;                   //! is CUDA support enabled?
+    string something;               //! string setting example
+    SETTINGS_CUDA();
+};
+
 //! settings corresponding to EACIRC/GA
 struct SETTINGS_GA {
     bool evolutionOff;              //! should evolution be turned off?
@@ -133,16 +140,18 @@ struct SETTINGS_TEST_VECTORS {
 
 //! all program run settings
 struct SETTINGS {
-    SETTINGS_INFO info;
-    SETTINGS_MAIN main;
-    SETTINGS_RANDOM random;
-    SETTINGS_GA ga;
-    SETTINGS_CIRCUIT circuit;
-    SETTINGS_TEST_VECTORS testVectors;
-    void* project;
+    SETTINGS_INFO info;                     //! corresponding to EACIRC/INFO
+    SETTINGS_MAIN main;                     //! corresponding to EACIRC/MAIN
+    SETTINGS_RANDOM random;                 //! corresponding to EACIRC/RANDOM
+    SETTINGS_CUDA cuda;                     //! corresponding to EACIRC/CUDA
+    SETTINGS_GA ga;                         //! corresponding to EACIRC/GA
+    SETTINGS_CIRCUIT circuit;               //! corresponding to EACIRC/CIRCUIT
+    SETTINGS_TEST_VECTORS testVectors;      //! corresponding to EACIRC/TEST_VECTORS
+    void* project;                          //! project specific settings
     SETTINGS();
 };
 
+//! main fitness statistics
 struct STATISTICS {
     int numBestPredictors;          //! TBD
     float maxFit;                   //! TBD
@@ -155,17 +164,25 @@ struct STATISTICS {
     void clear();
 };
 
-struct GLOBALS {
-    SETTINGS* settings;                         //! pointer to SETTINGS in EACirc object
-    STATISTICS stats;                           //! current run statistics
-    unsigned char** testVectors;                //! current test vector set
-    unsigned long precompPow[MAX_CONNECTORS];   //! precomputed values up to 2^32
-    unsigned long powEffectiveMask;             //! TBD
-    GLOBALS();
+//! test vectors and their outputs
+struct TEST_VECTORS {
+    unsigned char** inputs;             //! test vector inputs for current set
+    unsigned char** outputs;            //! (correct) test vector outputs for current set
+    unsigned char** circuitOutputs;     //! circuit outputs for current set (to ease memory allocation)
+    bool newSet;                        //! has new set been generated? (for CUDA usage)
+    TEST_VECTORS();
     void allocate();
     void release();
 };
 
-
+//! globally accessible data (settings, stats, test vectors)
+struct GLOBALS {
+    SETTINGS* settings;                         //! pointer to SETTINGS in EACirc object
+    STATISTICS stats;                           //! current run statistics
+    TEST_VECTORS testVectors;                   //! current test vector set
+    unsigned long precompPow[MAX_CONNECTORS];   //! precomputed values up to 2^32
+    unsigned long powEffectiveMask;             //! TBD
+    GLOBALS();
+};
 
 #endif //EACGLOBALS_H

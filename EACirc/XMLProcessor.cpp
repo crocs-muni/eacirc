@@ -4,16 +4,12 @@
 #include <typeinfo>
 
 void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
-    //
-    // PROGRAM VERSION AND DATE
-    //
+    // parsing EACIRC/INFO
     pSettings->info.computationDate = getXMLElementValue(pRoot,"INFO/DATE");
     pSettings->info.swVersion = getXMLElementValue(pRoot,"INFO/VERSION");
     pSettings->info.notes = getXMLElementValue(pRoot,"INFO/NOTES");
 
-    //
-    // MAIN SETTINGS
-    //
+    // parsing EACIRC/MAIN
     pSettings->main.projectType = atoi(getXMLElementValue(pRoot,"MAIN/PROJECT").c_str());
     pSettings->main.evaluatorType = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR").c_str());
     pSettings->main.recommenceComputation = (atoi(getXMLElementValue(pRoot,"MAIN/RECOMMENCE_COMPUTATION").c_str())) ? true : false;
@@ -21,26 +17,24 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->main.numGenerations = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
     pSettings->main.saveStateFrequency = atol(getXMLElementValue(pRoot,"MAIN/SAVE_STATE_FREQ").c_str());
 
-    //
-    // RANDOM GENERATOR SETTINGS
-    //
+    // parsing EACIRC/RANDOM
     pSettings->random.useFixedSeed = (atoi(getXMLElementValue(pRoot,"RANDOM/USE_FIXED_SEED").c_str())) ? true : false;
     istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pSettings->random.seed;
     pSettings->random.biasRndGenFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
     pSettings->random.qrngPath = getXMLElementValue(pRoot,"RANDOM/QRNG_PATH");
     pSettings->random.qrngFilesMaxIndex = atoi(getXMLElementValue(pRoot,"RANDOM/QRNG_MAX_INDEX").c_str());
 
-    //
-    // GA SETTINGS
-    //
+    // parsing EACIRC/CUDA
+    pSettings->cuda.enabled = (atoi(getXMLElementValue(pRoot,"CUDA/ENABLED").c_str())) ? true : false;
+    pSettings->cuda.something = getXMLElementValue(pRoot,"CUDA/SOMETHING");
+
+    // parsing EACIRC/GA
     pSettings->ga.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;
     pSettings->ga.probMutation = atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
     pSettings->ga.probCrossing = atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
     pSettings->ga.popupationSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());
 
-    //
-    // GA CIRCUIT SETTINGS
-    //
+    // parsing EACIRC/CIRCUIT
     pSettings->circuit.numLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_LAYERS").c_str());
     pSettings->circuit.numSelectorLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_SELECTOR_LAYERS").c_str());
     pSettings->circuit.sizeLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_LAYER").c_str());
@@ -49,10 +43,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
     pSettings->circuit.genomeSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/GENOME_SIZE").c_str());
     pSettings->circuit.allowPrunning = (atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOW_PRUNNING").c_str())) ? true : false;
-
-    //
-    // ALLOWED FUNCTIONS
-    //
+    // parsing EACIRC/CIRCUIT/ALLOWED_FUNCTIONS
     pSettings->circuit.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
     pSettings->circuit.allowedFunctions[FNC_OR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_OR").c_str());
     pSettings->circuit.allowedFunctions[FNC_AND] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_AND").c_str());
@@ -70,9 +61,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.allowedFunctions[FNC_DIV] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_DIV").c_str());
     pSettings->circuit.allowedFunctions[FNC_READX] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_READX").c_str());
 
-    //
-    // TEST VECTORS
-    //
+    // parsing EACIRC/TEST_VECTORS
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
     pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());
     pSettings->testVectors.setSize = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_SIZE").c_str());
@@ -82,7 +71,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->testVectors.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
 
-    // UPDATE EXTRA INFO
+    // update extra info
     pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
 }
 
