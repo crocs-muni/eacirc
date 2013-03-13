@@ -117,6 +117,34 @@ int EstreamProject::setupPlaintext() {
     return STAT_OK;
 }
 
+int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
+    TiXmlElement* pRoot2 = pRoot->ToElement();
+    TiXmlElement* pNode;
+    if (m_estreamSettings.cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
+        pRoot2->SetAttribute("loadable",0);
+        ostringstream ssKeyAndIV;
+
+        pNode = new TiXmlElement("key");
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
+        ssKeyAndIV << setw(2) << hex << (int)(m_encryptorDecryptor->m_key[input]);
+        pNode->LinkEndChild(new TiXmlText(ssKeyAndIV.str().c_str()));
+        pRoot2->LinkEndChild(pNode);
+
+        ssKeyAndIV.str("");
+        pNode = new TiXmlElement("iv");
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
+        ssKeyAndIV << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
+        pNode->LinkEndChild(new TiXmlText(ssKeyAndIV.str().c_str()));
+        pRoot2->LinkEndChild(pNode);
+    }
+    return STAT_OK;
+}
+
+int EstreamProject::loadProjectState(TiXmlNode* pRoot) {
+
+    return STAT_OK;
+}
+
 int EstreamProject::generateTestVectors() {
     int status = STAT_OK;
 
@@ -303,7 +331,7 @@ int EstreamProject::generateCipherDataStream() {
     }
 
     unsigned long alreadyGenerated = 0;
-    while (pEstreamSettings->streamSize == 0 ? true : alreadyGenerated < pEstreamSettings->streamSize) {
+    while (pEstreamSettings->streamSize == 0 ? true : alreadyGenerated <= pEstreamSettings->streamSize) {
         if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
             status = m_encryptorDecryptor->setupKey();
             if (status != STAT_OK) return status;

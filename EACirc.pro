@@ -60,6 +60,7 @@ SOURCES += \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
+    EACirc/projects/tea/TeaProject.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -160,6 +161,7 @@ HEADERS += \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
+    EACirc/projects/tea/TeaProject.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \

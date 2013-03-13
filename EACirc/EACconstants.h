@@ -42,6 +42,7 @@ typedef unsigned __int64 uint64_t;
 #define PROJECT_PREGENERATED_TV     100
 #define PROJECT_ESTREAM             101
 #define PROJECT_SHA3                102
+#define PROJECT_TEA                 103
 
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"

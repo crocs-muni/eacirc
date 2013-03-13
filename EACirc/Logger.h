@@ -11,8 +11,12 @@
 
 using namespace std;
 
+//! constants for logger output prefixes, use with logger.out(prefix)
+//! INFO: execution successfull, just informing the user
 #define LOGGER_INFO 0
+//! WARNING: execution error, but recoverable - possibly something, that just may imply some error somewhere
 #define LOGGER_WARNING 1
+//! ERROR: execution error, unrecoverable - program should end without finishing computation
 #define LOGGER_ERROR 2
 
 class Logger {

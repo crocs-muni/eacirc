@@ -189,6 +189,7 @@
     <ClCompile Include="EACirc\generators\md5.cpp" />
     <ClCompile Include="EACirc\generators\MD5RndGen.cpp" />
     <ClCompile Include="EACirc\generators\QuantumRndGen.cpp" />
+    <ClCompile Include="EACirc\projects\tea\TeaProject.cpp" />
     <ClCompile Include="EACirc\self_tests\Tests.cpp" />
     <ClCompile Include="EACirc\Status.cpp" />
     <ClCompile Include="EACirc\tinyxml\tinystr.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="EACirc\generators\md5.h" />
     <ClInclude Include="EACirc\generators\MD5RndGen.h" />
     <ClInclude Include="EACirc\generators\QuantumRndGen.h" />
+    <ClInclude Include="EACirc\projects\tea\TeaProject.h" />
     <ClInclude Include="EACirc\self_tests\Catch.h" />
     <ClInclude Include="EACirc\self_tests\Tests.h" />
     <ClInclude Include="eacirc\SSGlobals.h" />

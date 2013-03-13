@@ -375,16 +375,16 @@ EncryptorDecryptor::~EncryptorDecryptor() {
 int EncryptorDecryptor::setupIV() {
     switch (pEstreamSettings->ivType) {
     case ESTREAM_GENTYPE_ZEROS:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_iv[input] = 0x00;
         break;
     case ESTREAM_GENTYPE_ONES:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_iv[input] = 0x01;
         break;
     case ESTREAM_GENTYPE_RANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(m_iv[input]));
         break;
     case ESTREAM_GENTYPE_BIASRANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(m_iv[input]));
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
@@ -397,18 +397,18 @@ int EncryptorDecryptor::setupIV() {
         tvFile << setfill('0');
         tvFile << "setting IV: ";
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-            tvFile << setw(2) << hex << (int)(iv[input]);
+            tvFile << setw(2) << hex << (int)(m_iv[input]);
         tvFile << endl;
         tvFile.close();
     }
 
     if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
-        ecryptarr[0]->ECRYPT_ivsetup(ctxarr[0], iv);
-        ecryptarr[2]->ECRYPT_ivsetup(ctxarr[2], iv);
+        ecryptarr[0]->ECRYPT_ivsetup(ctxarr[0], m_iv);
+        ecryptarr[2]->ECRYPT_ivsetup(ctxarr[2], m_iv);
     }
     if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
-        ecryptarr[1]->ECRYPT_ivsetup(ctxarr[1], iv);
-        ecryptarr[3]->ECRYPT_ivsetup(ctxarr[3], iv);
+        ecryptarr[1]->ECRYPT_ivsetup(ctxarr[1], m_iv);
+        ecryptarr[3]->ECRYPT_ivsetup(ctxarr[3], m_iv);
     }
 
     m_setIV = true;
@@ -418,16 +418,16 @@ int EncryptorDecryptor::setupIV() {
 int EncryptorDecryptor::setupKey() {
     switch (pEstreamSettings->keyType) {
     case ESTREAM_GENTYPE_ZEROS:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_key[input] = 0x00;
         break;
     case ESTREAM_GENTYPE_ONES:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_key[input] = 0x01;
         break;
     case ESTREAM_GENTYPE_RANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(m_key[input]));
         break;
     case ESTREAM_GENTYPE_BIASRANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(m_key[input]));
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
@@ -441,18 +441,18 @@ int EncryptorDecryptor::setupKey() {
         tvFile << setfill('0');
         tvFile << "setting key: ";
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-            tvFile << setw(2) << hex << (int)(key[input]);
+            tvFile << setw(2) << hex << (int)(m_key[input]);
         tvFile << endl;
         tvFile.close();
     }
 
     if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
-        ecryptarr[0]->ECRYPT_keysetup(ctxarr[0], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
-        ecryptarr[2]->ECRYPT_keysetup(ctxarr[2], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        ecryptarr[0]->ECRYPT_keysetup(ctxarr[0], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        ecryptarr[2]->ECRYPT_keysetup(ctxarr[2], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }
     if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
-        ecryptarr[1]->ECRYPT_keysetup(ctxarr[1], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
-        ecryptarr[3]->ECRYPT_keysetup(ctxarr[3], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        ecryptarr[1]->ECRYPT_keysetup(ctxarr[1], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        ecryptarr[3]->ECRYPT_keysetup(ctxarr[3], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }
 
     m_setKey = true;

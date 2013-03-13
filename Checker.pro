@@ -39,7 +39,7 @@ HEADERS += \
     EACirc/Logger.h \
     EACirc/CommonFnc.h \
     EACirc/checker/EAC_circuit.h \
-    EACirc/EACglobals.h
+    EACirc/EACglobals.h \
 
 # === evaluators ===
 HEADERS += \

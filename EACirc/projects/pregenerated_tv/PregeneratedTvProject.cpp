@@ -2,7 +2,7 @@
 
 PregeneratedTvProject::PregeneratedTvProject()
     : IProject(PROJECT_PREGENERATED_TV) {
-    m_tvFile.open(FILE_TEST_VECTORS);
+    m_tvFile.open(FILE_TEST_VECTORS, ios_base::binary);
     if (!m_tvFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot open file with pre-generated test vectors (" << FILE_TEST_VECTORS << ")!" << endl;
         return;
@@ -76,27 +76,17 @@ int PregeneratedTvProject::initializeProject() {
     }
 
     // ignore project settings
+    // TBD/TODO: make better than engineering solution for line endings
     string line;
     do {
         getline(m_tvFile,line);
-    } while (!line.empty());
+    } while (!line.empty() && line != "\r");
 
     if (warning) {
         mainLogger.out(LOGGER_WARNING) << "Settings in test vector file and project do not match." << endl;
     } else {
         mainLogger.out(LOGGER_INFO) << "Settings for project match." << endl;
     }
-
-    // switch data read mode
-    int dataPosition = m_tvFile.tellg();
-    m_tvFile.close();
-    m_tvFile.open(FILE_TEST_VECTORS, ios_base::binary);
-    if (!m_tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot open file with pre-generated test vectors (" << FILE_TEST_VECTORS << ")!" << endl;
-        return STAT_FILE_OPEN_FAIL;
-    }
-    m_tvFile.seekg(dataPosition);
-
     return STAT_OK;
 }
 

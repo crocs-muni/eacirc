@@ -33,6 +33,27 @@ private:
       */
     virtual int initializeProject();
 
+    /** save project state
+      * - root node with project type and description is prepared by framework
+      * - add project details into the tree
+      * - project is set as 'loadable' by default, you can change this
+      * - called by saveProjectStateMain()
+      * default implementation: do nothing
+      * @param pRoot    allocated root node for project
+      * @return status
+      */
+    virtual int saveProjectState(TiXmlNode* pRoot) const;
+
+    /** load project state
+      * - project constant and loadability checks are performed by framework
+      * - load your project-specific settings
+      * - called by loadProjectStateMain()
+      * default implementation: do nothing
+      * @param pRoot    allocated XML root of project state
+      * @return status
+      */
+    virtual int loadProjectState(TiXmlNode* pRoot);
+
 public:
     /** general project constructor, sets project type
       * - if enabled, creates header for test vectors file
@@ -60,9 +81,8 @@ public:
     /** initialize project
       * - called once, after configuration loading
       * - calls project initialization (virtual function initializeProject();)
-      * - maked header structure in test vector file
+      * - make header structure in test vector file
       * - called REGARDLESS of recommencing/not recommencong computation
-      * - called by initializeProjectMain();
       * @return status;
       */
     int initializeProjectMain();
@@ -75,18 +95,20 @@ public:
     virtual int initializeProjectState();
 
     /** load project state (previously saved by this project)
-      * default implementation: check project constant, load nothing
+      * - checks project constant
+      * - checks loadability
+      * - calles virtual project state loading method
       * @param pRoot    parsed XML sructure with project state
       * @return status
       */
-    virtual int loadProjectState(TiXmlNode* pRoot);
+    int loadProjectStateMain(TiXmlNode* pRoot);
 
     /** save current project state
       * @return allocated XML tree with project state
       *         CALLER responsible for freeing!
       * default implementation: save project constant
       */
-    virtual TiXmlNode* saveProjectState() const;
+    TiXmlNode* saveProjectStateMain() const;
 
     /** generate new test vectors and save them if required
       * @return status

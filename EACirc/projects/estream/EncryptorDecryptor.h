@@ -9,8 +9,8 @@ class EncryptorDecryptor {
 public:
 	EstreamInterface* ecryptarr[4];
 	void* ctxarr[4];
-    unsigned char key[STREAM_BLOCK_SIZE];
-	unsigned char iv[STREAM_BLOCK_SIZE];
+    unsigned char m_key[STREAM_BLOCK_SIZE];
+    unsigned char m_iv[STREAM_BLOCK_SIZE];
     //! was initialization vector already set?
     bool m_setIV;
     //! was key already set?

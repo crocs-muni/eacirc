@@ -157,7 +157,7 @@ void EACirc::saveState(const string filename) {
     pRoot->LinkEndChild(pElem);
 
     // save project
-    pRoot->LinkEndChild(m_project->saveProjectState());
+    pRoot->LinkEndChild(m_project->saveProjectStateMain());
 
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
@@ -189,7 +189,7 @@ void EACirc::loadState(const string filename) {
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
 
     // load project
-    m_status = m_project->loadProjectState(getXMLElement(pRoot,"project"));
+    m_status = m_project->loadProjectStateMain(getXMLElement(pRoot,"project"));
 
     delete pRoot;
     mainLogger.out(LOGGER_INFO) << "State successfully loaded from file " << filename << "." << endl;
@@ -480,6 +480,7 @@ void EACirc::run() {
 
     mainLogger.out(LOGGER_INFO) << "Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
+        pGlobals->testVectors.newSet = false;
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << " )." << endl;
             break;
@@ -508,7 +509,9 @@ void EACirc::run() {
         } else {
             if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
                 m_status = m_project->generateAndSaveTestVectors();
-                mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
+                if (m_status == STAT_OK) {
+                    mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
+                }
             }
             if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
                  m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
