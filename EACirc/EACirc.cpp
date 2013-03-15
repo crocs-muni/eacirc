@@ -382,8 +382,6 @@ void EACirc::prepare() {
         std::remove(FILE_AVG_FITNESS);
         std::remove(FILE_GALIB_SCORES);
         std::remove(FILE_TEST_VECTORS_HR);
-        std::remove(FILE_TEST_DATA_1);
-        std::remove(FILE_TEST_DATA_2);
     }
 
     m_status = m_project->initializeProjectMain();

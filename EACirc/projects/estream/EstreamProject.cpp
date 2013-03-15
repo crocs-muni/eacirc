@@ -120,8 +120,9 @@ int EstreamProject::setupPlaintext() {
 int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
     TiXmlElement* pRoot2 = pRoot->ToElement();
     TiXmlElement* pNode;
-    if (m_estreamSettings.cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
-        pRoot2->SetAttribute("loadable",0);
+    if (m_estreamSettings.cipherInitializationFrequency != ESTREAM_INIT_CIPHERS_ONCE) {
+        pRoot2->SetAttribute("loadable",1);
+    } else {
         ostringstream ssKeyAndIV;
 
         pNode = new TiXmlElement("key");
@@ -261,6 +262,7 @@ int EstreamProject::getTestVector(){
         break;
     }
 
+    /*
     // SAVE TEST VECTORS IN BINARY FILES
     if (pGlobals->settings->testVectors.saveTestVectors) {
         if (streamnum == 0) {
@@ -278,6 +280,7 @@ int EstreamProject::getTestVector(){
             itvfile.close();
         }
     }
+    */
 
     // save human-readable test vector
     if (pGlobals->settings->testVectors.saveTestVectors) {

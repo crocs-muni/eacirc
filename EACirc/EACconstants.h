@@ -57,8 +57,6 @@ typedef unsigned __int64 uint64_t;
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "test_vectors.bin"
 #define FILE_TEST_VECTORS_HR        "test_vectors_hr.txt"
-#define FILE_TEST_DATA_1            "test_vectors1.bin"
-#define FILE_TEST_DATA_2            "test_vectors2.bin"
 #define FILE_CIRCUIT                "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
 #define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_LOGFILE                "eacirc.log"

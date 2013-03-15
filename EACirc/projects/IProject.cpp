@@ -63,7 +63,7 @@ TiXmlNode* IProject::saveProjectStateMain() const {
     TiXmlElement* pNode = new TiXmlElement("project");
     pNode->SetAttribute("type",toString(m_type).c_str());
     pNode->SetAttribute("description",shortDescription().c_str());
-    pNode->SetAttribute("loadable",1);
+    pNode->SetAttribute("loadable",0);
     if (saveProjectState(pNode) != STAT_OK) {
         mainLogger.out(LOGGER_WARNING) << "Project status could not be saved." << endl;
     }
@@ -95,30 +95,6 @@ int IProject::loadProjectStateMain(TiXmlNode *pRoot) {
 
 int IProject::loadProjectState(TiXmlNode* pRoot) {
     return STAT_OK;
-}
-
-IProject* IProject::getProject(int projectType) {
-    IProject* project = NULL;
-    switch (projectType) {
-    case PROJECT_PREGENERATED_TV:
-        project = new PregeneratedTvProject();
-        break;
-    case PROJECT_ESTREAM:
-        project = new EstreamProject();
-        break;
-    case PROJECT_SHA3:
-        project = new Sha3Project();
-        break;
-    case PROJECT_TEA:
-        project = new TeaProject();
-        break;
-    default:
-        mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
-        return NULL;
-        break;
-    }
-    mainLogger.out(LOGGER_INFO) << "Project successfully initialized. (" << project->shortDescription() << ")" << endl;
-    return project;
 }
 
 int IProject::getProjectType() const {
@@ -156,4 +132,28 @@ int IProject::saveTestVectors() const {
     }
     tvFile.close();
     return STAT_OK;
+}
+
+IProject* IProject::getProject(int projectType) {
+    IProject* project = NULL;
+    switch (projectType) {
+    case PROJECT_PREGENERATED_TV:
+        project = new PregeneratedTvProject();
+        break;
+    case PROJECT_ESTREAM:
+        project = new EstreamProject();
+        break;
+    case PROJECT_SHA3:
+        project = new Sha3Project();
+        break;
+    case PROJECT_TEA:
+        project = new TeaProject();
+        break;
+    default:
+        mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
+        return NULL;
+        break;
+    }
+    mainLogger.out(LOGGER_INFO) << "Project successfully initialized. (" << project->shortDescription() << ")" << endl;
+    return project;
 }

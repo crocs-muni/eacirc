@@ -38,6 +38,8 @@ private:
       * - add project details into the tree
       * - project is set as 'loadable' by default, you can change this
       * - called by saveProjectStateMain()
+      * note: if project state is loadable, reset the appropriate attribute!
+      *       (not loadable is default)
       * default implementation: do nothing
       * @param pRoot    allocated root node for project
       * @return status
@@ -106,7 +108,7 @@ public:
     /** save current project state
       * @return allocated XML tree with project state
       *         CALLER responsible for freeing!
-      * default implementation: save project constant
+      * default implementation: save project constant and description, make it non-loadable
       */
     TiXmlNode* saveProjectStateMain() const;
 

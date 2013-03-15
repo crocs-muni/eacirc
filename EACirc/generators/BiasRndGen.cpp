@@ -155,8 +155,6 @@ TiXmlNode* BiasRndGen::exportGenerator() const {
     sChanceForOne << m_chanceForOne;
     chanceForOne->LinkEndChild(new TiXmlText(sChanceForOne.str().c_str()));
     pRoot->LinkEndChild(chanceForOne);
-
-    pRoot->LinkEndChild(new TiXmlComment("follows state of internal QRNG"));
     TiXmlElement* pElem = new TiXmlElement("internal_rng");
     pElem->LinkEndChild(m_rndGen->exportGenerator());
     pRoot->LinkEndChild(pElem);
