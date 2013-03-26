@@ -46,7 +46,9 @@ class EstreamInterface {
 #include "projects/estream/ciphers/yamb/ecrypt-sync.h"
 #include "projects/estream/ciphers/zk-crypt/ecrypt-sync.h"
 
-// eStream cipher constants
+/** converts eStream cipher constant to human-readable string
+  * @param cipher       cipher constant
+  * @return human readable cipher description
 const char* estreamToString(int cipher);
 
 #endif

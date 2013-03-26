@@ -16,6 +16,7 @@ The learning stage incorporates genetic programming principles:
 The EACirc framework consists of main application and several supporting tools and scripts. The modular design allows for easy addition of new problem modules ('projects'). For more information and details see [projec wiki pages](http://github.com/petrs/EACirc/wiki/Home).
 
 ## Authors
+The framework is developed at the [Laboratory of Security and Applied Cryptography](http://www.fi.muni.cz/research/laboratories/labak/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.
 
 * **Milan Čermák** 2012-now (CUDA support)
 * **Matěj Prišťák** 2011-2012 (object model and refactoring, batch mode for BOINC via XML, eStream candidates testing)

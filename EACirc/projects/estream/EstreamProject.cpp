@@ -196,32 +196,33 @@ int EstreamProject::generateTestVectors() {
 int EstreamProject::getTestVector(){
     int status = STAT_OK;
     ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
-    int streamnum = 0;
+    //! are we using algorithm1 (0) or algorithm2 (1) ?
+    int cipherNumber = 0;
     switch (pEstreamSettings->estreamUsageType) {
         case ESTREAM_DISTINCT:
 
             //SHALL WE BALANCE TEST VECTORS?
             if (pEstreamSettings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
-                streamnum = 1;
+                cipherNumber = 1;
             else if (pEstreamSettings->ballancedTestVectors && (m_numVectors[1] >= pGlobals->settings->testVectors.setSize/2))
-                streamnum = 0;
+                cipherNumber = 0;
             else
-                rndGen->getRandomFromInterval(1, &streamnum);
-            m_numVectors[streamnum]++;
+                rndGen->getRandomFromInterval(1, &cipherNumber);
+            m_numVectors[cipherNumber]++;
             //Signalize the correct value
-            for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++) m_tvOutputs[output] = streamnum * 0xff;
+            for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++) m_tvOutputs[output] = cipherNumber * 0xff;
 
             //generate the plaintext for stream
-            if ((streamnum == 0 && pEstreamSettings->algorithm1 != ESTREAM_RANDOM) ||
-                (streamnum == 1 && pEstreamSettings->algorithm2 != ESTREAM_RANDOM) ) {
+            if ((cipherNumber == 0 && pEstreamSettings->algorithm1 != ESTREAM_RANDOM) ||
+                (cipherNumber == 1 && pEstreamSettings->algorithm2 != ESTREAM_RANDOM) ) {
                 if (pGlobals->settings->testVectors.saveTestVectors == 1)
-                    tvFile  << "(alg n." << ((streamnum==0)?pEstreamSettings->algorithm1:pEstreamSettings->algorithm2) << " - " << ((streamnum==0)?pEstreamSettings->alg1RoundsCount:pEstreamSettings->alg2RoundsCount) << " rounds): ";
+                    tvFile  << "(alg n." << ((cipherNumber==0)?pEstreamSettings->algorithm1:pEstreamSettings->algorithm2) << " - " << ((cipherNumber==0)?pEstreamSettings->alg1RoundsCount:pEstreamSettings->alg2RoundsCount) << " rounds): ";
 
                 status = setupPlaintext();
                 if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,streamnum);
+                status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
                 if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,streamnum+2);
+                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,0);
                 if (status != STAT_OK) return status;
 
                 // check if plaintext = encrypted-decrypted plaintext
@@ -285,7 +286,7 @@ int EstreamProject::getTestVector(){
     // save human-readable test vector
     if (pGlobals->settings->testVectors.saveTestVectors) {
         int tvg = 0;
-        if (streamnum == 0) tvg = pEstreamSettings->algorithm1;
+        if (cipherNumber == 0) tvg = pEstreamSettings->algorithm1;
         else tvg = pEstreamSettings->algorithm2;
         tvFile << setfill('0');
 
@@ -311,20 +312,31 @@ int EstreamProject::getTestVector(){
 }
 
 int EstreamProject::generateCipherDataStream() {
-    if (pEstreamSettings->algorithm1 == ESTREAM_RANDOM) {
+    //! are we using algorithm1 (0) or algorithm2 (1) ?
+    int cipherNumber = -1;
+    int algorithm = -1;
+    int numRounds = -1;
+    if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
+        cipherNumber = 0;
+        algorithm = pEstreamSettings->algorithm1;
+        numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
+    } else if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
+        cipherNumber = 1;
+        algorithm = pEstreamSettings->algorithm2;
+        numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg2RoundsCount : -1;
+    }
+    if (cipherNumber == -1) {
         mainLogger.out(LOGGER_ERROR) << "Cannot generate stream from random, cipher must be specified." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
+    }
+    mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(algorithm);
+    if (numRounds == -1) {
+        mainLogger.out() << " (unlimitted version)" << endl;
     } else {
-        mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(pEstreamSettings->algorithm1);
-        if (!pEstreamSettings->limitAlgRounds) {
-            mainLogger.out() << " (unlimitted version)" << endl;
-        } else {
-            mainLogger.out() << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
-        }
+        mainLogger.out() << " (" << numRounds << " rounds)" << endl;
     }
 
     int status = STAT_OK;
-    int streamnum = 0;
 
     if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
         status = m_encryptorDecryptor->setupKey();
@@ -352,9 +364,9 @@ int EstreamProject::generateCipherDataStream() {
 
             status = setupPlaintext();
             if (status != STAT_OK) return status;
-            status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,streamnum);
+            status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
             if (status != STAT_OK) return status;
-            status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,streamnum+2);
+            status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
             if (status != STAT_OK) return status;
 
             // check if plaintext = encrypted-decrypted plaintext
