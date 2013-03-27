@@ -112,7 +112,6 @@ struct SETTINGS_GA {
 //! settings corresponding to EACIRC/CIRCUIT
 struct SETTINGS_CIRCUIT {
     int numLayers;                  //! number of layers in circuit
-    int numSelectorLayers;          //! number of input layers
     int sizeLayer;                  //! general layer size
     int sizeInputLayer;             //! number if inputs
     int sizeOutputLayer;            //! number of outputs

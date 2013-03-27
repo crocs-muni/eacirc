@@ -46,7 +46,6 @@ SETTINGS_GA::SETTINGS_GA() {
 SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
     genomeSize = -1;
     numLayers = -1;
-    numSelectorLayers = 1;
     sizeLayer = -1;
     sizeInputLayer = -1;
     sizeOutputLayer = -1;

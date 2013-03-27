@@ -284,12 +284,6 @@ void EACirc::loadPopulation(const string filename) {
         mainLogger.out() << m_settings.circuit.numLayers << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_INCOMPATIBLE_PARAMETER;
     }
-    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/num_selector_layers").c_str());
-    if (m_settings.circuit.numSelectorLayers != settingsValue) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible number of selector layers (";
-        mainLogger.out() << m_settings.circuit.numSelectorLayers << " vs. " << settingsValue << ")." << endl;
-        m_status = STAT_INCOMPATIBLE_PARAMETER;
-    }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_layer").c_str());
     if (m_settings.circuit.sizeLayer != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible layer size (";

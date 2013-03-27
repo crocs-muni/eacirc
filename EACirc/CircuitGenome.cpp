@@ -69,7 +69,7 @@ void CircuitGenome::Initializer(GAGenome& g) {
         if (layer % 2 == 0) {
             // connector sub-layer
 
-            if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+            if (layer / 2 == 0) {
                 // connectors to input layer
                 for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
 
@@ -107,7 +107,7 @@ void CircuitGenome::Initializer(GAGenome& g) {
             unsigned long   value;
             if (layer % 2 == 0) {
                 // CONNECTION SUB-LAYER
-                if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+                if (layer / 2 == 0) {
                     // SELECTOR LAYER - TAKE INPUT ONLY FROM PREVIOUS NODE IN SAME COORDINATES
                     value = pGlobals->precompPow[slot];
                 }
@@ -120,7 +120,7 @@ void CircuitGenome::Initializer(GAGenome& g) {
             }
             else {
                 // FUNCTION SUB-LAYER, SET ONLY ALLOWED FUNCTIONS  
-                if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+                if (layer / 2 == 0) {
                     // SELECTOR LAYER - PASS INPUT WITHOUT CHANGES (ONLY SIMPLE COMPOSITION OF INPUTS IS ALLOWED)
                     genome.gene(offset + slot, FNC_XOR);
                 }
@@ -406,7 +406,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 
         // SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
         int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
-        if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+        if (layer / 2 == 0) {
             numLayerConnectors = numLayerInputs;    
         }
 	    int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -863,7 +863,7 @@ node [color=lightblue2, style=filled];\r\n";
             
 			// SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
             int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
-            if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+            if (layer / 2 == 0) {
 				numLayerConnectors = numLayerInputs;    
 			}
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -1245,7 +1245,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
 
             // SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
             int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
-            if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+            if (layer / 2 == 0) {
                 numLayerConnectors = numLayerInputs;    
             }
     	    int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -1496,9 +1496,6 @@ TiXmlElement* CircuitGenome::populationHeader(int populationSize) {
     pElem = new TiXmlElement("circuit_dimensions");
     pElem2 = new TiXmlElement("num_layers");
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.numLayers).c_str()));
-    pElem->LinkEndChild(pElem2);
-    pElem2 = new TiXmlElement("num_selector_layers");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.numSelectorLayers).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_layer");
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeLayer).c_str()));

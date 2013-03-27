@@ -222,7 +222,7 @@ int EstreamProject::getTestVector(){
                 if (status != STAT_OK) return status;
                 status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
                 if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,0);
+                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
                 if (status != STAT_OK) return status;
 
                 // check if plaintext = encrypted-decrypted plaintext
