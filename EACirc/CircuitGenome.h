@@ -12,8 +12,16 @@ public:
     static int Mutator(GAGenome&, float);
     static float Evaluator(GAGenome&);
     static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
-    static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
-	static int ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize);
+
+    /** reads genome in binary fromat from string
+      * genome parameters (number of layers, genome size, etc.) are taken from main settings
+      * @param textCircuit  string to read circuit from
+      * @param genome       read genome (contents overwritten)
+      * @return status
+      */
+    static int readGenomeFromBinary(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
+    static int readGenomeFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
+
     static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
 	static int GetFunctionLabel(unsigned long functionID, unsigned long connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
@@ -30,15 +38,6 @@ public:
       * @return status
       */
     static int writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
-
-    /** reads genome in binary fromat from string
-      * genome parameters (number of layers, genome size, etc.) are taken from main settings
-      * - genome is prolonged by zeroes if needed
-      * @param genome       read genome (contents overwritten)
-      * @param textCircuit  string to read circuit from
-      * @return status
-      */
-    static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
 
     /** allocate XML structure for header in population file
       * @param populationSize       size of the population (info in the header)

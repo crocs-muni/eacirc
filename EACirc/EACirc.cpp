@@ -329,7 +329,7 @@ void EACirc::loadPopulation(const string filename) {
             return;
         }
         textCircuit = pGenome->GetText();
-        CircuitGenome::readGenome(genome,textCircuit);
+        CircuitGenome::readGenomeFromBinary(textCircuit,&genome);
         population.add(genome);
         pGenome = pGenome->NextSiblingElement();
     }

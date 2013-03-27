@@ -7,21 +7,6 @@
 #include "GAPopulation.h"
 #include "generators/IRndGen.h"
 
-void CircuitGenome::ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long> *genome) {
-    unsigned long   circuit[pGlobals->settings->circuit.genomeSize];
-
-    memset(circuit, 0, sizeof(circuit));
-    ParseCircuit(textCircuit, circuit, &(pGlobals->settings->circuit.numLayers),
-                 &(pGlobals->settings->circuit.sizeLayer), &(pGlobals->settings->circuit.sizeOutputLayer));
-    
-    for (int i = 0; i < pGlobals->settings->circuit.genomeSize; i++) genome->gene(i, circuit[i]);
-
-//	PrintCircuit();
-
-    // why?
-    pGlobals->stats.clear();
-}
-
 float CircuitGenome::Evaluator(GAGenome &g) {
     int								status = STAT_OK;
     GA1DArrayGenome<unsigned long>  &genome = (GA1DArrayGenome<unsigned long>&) g;
@@ -73,8 +58,32 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     return fitness;
 }
 
-void CircuitGenome::Initializer(GAGenome &g) {
-    GA1DArrayGenome<unsigned long> &genome = (GA1DArrayGenome<unsigned long>&) g;
+void CircuitGenome::Initializer(GAGenome& g) {
+    GA1DArrayGenome<unsigned long>& genome = (GA1DArrayGenome<unsigned long>&) g;
+    /*
+    // clear genome
+    for (int offset = 0; offset < genome.size(); offset++) genome.gene(offset,0);
+
+    // initialize all layers
+    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers; layer++) {
+        if (layer % 2 == 0) {
+            // connector sub-layer
+
+            if (layer / 2 < pGlobals->settings->circuit.numSelectorLayers) {
+                // connectors to input layer
+                for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
+
+                }
+                galibGenerator->getRandomFromInterval(pGlobals->precompPow[pGlobals->settings->circuit.sizeInputLayer], &value);
+            }
+        } else {
+            // function sublayer
+
+
+        }
+    }
+    */
+
     int	offset = 0;
 
 	// CLEAR GENOM
@@ -651,100 +660,86 @@ int CircuitGenome::GetNeutralValue(unsigned long functionID, string* pOperand) {
     return status;
 }
 
-int CircuitGenome::ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize) {
-    int           status = STAT_OK;
-    unsigned int  pos = 0;
-    unsigned int  pos2 = 0;
-    
-    // CHECK IF CIRCUIT IS GIVEN IN FORM OF GENOM ONLY OR TEXT REPRESENTATION
-	if (textCircuit.find("[") != string::npos) {
-		// TEXT REPRESENTATION
-		*numLayers = 0;
-        while ((pos2 = textCircuit.find(";", pos)) != string::npos) {
-			string line = textCircuit.substr(pos, pos2 - pos + 1);
-			//line.TrimLeft();line.TrimRight();
-			TrimLeadingSpaces(line);
-			TrimTrailingSpaces(line);
-			if (line.find("[") != string::npos) {
-				// AT LEAST ONE FNC ELEMENT PRESENT => NEW layer
-                int offsetCON = (*numLayers * 2) * pGlobals->settings->circuit.sizeLayer;
-                int offsetFNC = (*numLayers * 2 + 1) * pGlobals->settings->circuit.sizeLayer;
-                unsigned int pos3 = 0;
-                unsigned int pos4 = 0;
-				int slot = 0;
-				while ((pos4 = line.find("]", pos3)) != string::npos) {
-					// PARSE ELEMENTS
-					string elem = line.substr(pos3, pos4 - pos3 + 1);
-					//elem.TrimLeft();elem.TrimRight();
-					TrimLeadingSpaces(elem);
-					TrimTrailingSpaces(elem);
-
-					// CONNECTOR LAYER
-					//DWORD conn1 = atol(elem);
-					unsigned long conn = (unsigned long) StringToDouble(elem);
-					//assert(conn1 == conn);
-	                
-					// FUNCTION
-					unsigned long fnc = FNC_NOP;
-					string fncStr = elem.substr(elem.length() - 5,5);
-					//string fncStr = elem.Right(5);
-					if (fncStr.compare("[NOP]") == 0) fnc = FNC_NOP;
-					if (fncStr.compare("[OR_]") == 0) fnc = FNC_OR;
-					if (fncStr.compare("[AND]") == 0) fnc = FNC_AND;
-					if (fncStr.compare("[CON]") == 0) fnc = FNC_CONST;
-					if (fncStr.compare("[XOR]") == 0) fnc = FNC_XOR;
-					if (fncStr.compare("[NOR]") == 0) fnc = FNC_NOR;
-					if (fncStr.compare("[NAN]") == 0) fnc = FNC_NAND;
-					if (fncStr.compare("[ROL]") == 0) fnc = FNC_ROTL;
-					if (fncStr.compare("[ROR]") == 0) fnc = FNC_ROTR;
-					if (fncStr.compare("[BSL]") == 0) fnc = FNC_BITSELECTOR;
-					if (fncStr.compare("[SUM]") == 0) fnc = FNC_SUM;
-					if (fncStr.compare("[SUB]") == 0) fnc = FNC_SUBS;
-					if (fncStr.compare("[ADD]") == 0) fnc = FNC_ADD;
-					if (fncStr.compare("[MUL]") == 0) fnc = FNC_MULT;
-					if (fncStr.compare("[DIV]") == 0) fnc = FNC_DIV;
-					if (fncStr.compare("[RDX]") == 0) fnc = FNC_READX;
-	                
-					circuit[offsetCON + slot] = conn;
-					circuit[offsetFNC + slot] = fnc;
-	                
-					slot++; 
-					pos3 = pos4 + 2;
-				}
-	            
-				if (*numLayers == 0) *intLayerSize = slot; // NUMBER OF INTERNAL ELEMENTS IS SAME AS FOR FIRST LAYER
-				*outLayerSize = slot; // WILL CONTAIN NUMBER OF ELEMENTS IN LAST LAYER
-	            
-				*numLayers = (*numLayers) + 1;
-			}      
-			pos = pos2 + 1;
-		}
+int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<unsigned long>* genome) {
+    istringstream circuitStream(textCircuit);
+    unsigned long gene;
+    for (int offset = 0; offset < pGlobals->settings->circuit.genomeSize; offset++) {
+        circuitStream >> gene;
+        if (!circuitStream.good()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot load binary genome - error at offset " << offset << "." << endl;
+            return STAT_DATA_CORRUPTED;
+        }
+        genome->gene(offset, gene);
     }
-    else {
-		// TODO: OBTAIN CORRECT NUMBER OF LAYERS ETC - NOW TAKEN FROM USER INPUT
+    return STAT_OK;
+}
 
-		// GENOM ONLY 
-		int offset = 0;
-        //while ((pos2 = textCircuit.find(" ", pos)) != string::npos) {
-        while (offset < pGlobals->settings->circuit.genomeSize) {
-            pos2 = textCircuit.find(" ", pos);
-            // manual change: commented line above substituted for 2 lines just above
+// TODO/TBD change according to printcircuit
+int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome) {
+    unsigned long* circuit = new unsigned long[pGlobals->settings->circuit.genomeSize];
 
-			string value = textCircuit.substr(pos, pos2 - pos + 1);
-			//value.TrimLeft();value.TrimRight();
-			TrimLeadingSpaces(value);
-			TrimTrailingSpaces(value);
-			
-			//DWORD temp = atol(value);
-			circuit[offset] = (unsigned long) StringToDouble(value);
-//			assert(temp == circuit[offset]);
-			
-			offset++;
-			pos = pos2 + 1;
-		}
+    int pos = 0;
+    int pos2 = 0;
+    int local_numLayers = 0;
+    int local_intLayerSize = 0;
+    int local_outLayerSize = 0;
+    while ((pos2 = textCircuit.find(";", pos)) != string::npos) {
+        string line = textCircuit.substr(pos, pos2 - pos + 1);
+        TrimLeadingSpaces(line);
+        TrimTrailingSpaces(line);
+        if (line.find("[") != string::npos) {
+            // AT LEAST ONE FNC ELEMENT PRESENT => NEW layer
+            int offsetCON = (local_numLayers * 2) * pGlobals->settings->circuit.sizeLayer;
+            int offsetFNC = (local_numLayers * 2 + 1) * pGlobals->settings->circuit.sizeLayer;
+            unsigned int pos3 = 0;
+            unsigned int pos4 = 0;
+            int slot = 0;
+            while ((pos4 = line.find("]", pos3)) != string::npos) {
+                // PARSE ELEMENTS
+                string elem = line.substr(pos3, pos4 - pos3 + 1);
+                TrimLeadingSpaces(elem);
+                TrimTrailingSpaces(elem);
+
+                // CONNECTOR LAYER
+                unsigned long conn = (unsigned long) StringToDouble(elem);
+
+                // FUNCTION
+                unsigned long fnc = FNC_NOP;
+                string fncStr = elem.substr(elem.length() - 5,5);
+                //string fncStr = elem.Right(5);
+                if (fncStr.compare("[NOP]") == 0) fnc = FNC_NOP;
+                if (fncStr.compare("[OR_]") == 0) fnc = FNC_OR;
+                if (fncStr.compare("[AND]") == 0) fnc = FNC_AND;
+                if (fncStr.compare("[CON]") == 0) fnc = FNC_CONST;
+                if (fncStr.compare("[XOR]") == 0) fnc = FNC_XOR;
+                if (fncStr.compare("[NOR]") == 0) fnc = FNC_NOR;
+                if (fncStr.compare("[NAN]") == 0) fnc = FNC_NAND;
+                if (fncStr.compare("[ROL]") == 0) fnc = FNC_ROTL;
+                if (fncStr.compare("[ROR]") == 0) fnc = FNC_ROTR;
+                if (fncStr.compare("[BSL]") == 0) fnc = FNC_BITSELECTOR;
+                if (fncStr.compare("[SUM]") == 0) fnc = FNC_SUM;
+                if (fncStr.compare("[SUB]") == 0) fnc = FNC_SUBS;
+                if (fncStr.compare("[ADD]") == 0) fnc = FNC_ADD;
+                if (fncStr.compare("[MUL]") == 0) fnc = FNC_MULT;
+                if (fncStr.compare("[DIV]") == 0) fnc = FNC_DIV;
+                if (fncStr.compare("[RDX]") == 0) fnc = FNC_READX;
+
+                circuit[offsetCON + slot] = conn;
+                circuit[offsetFNC + slot] = fnc;
+
+                slot++;
+                pos3 = pos4 + 2;
+            }
+
+            if (local_numLayers == 0) local_intLayerSize = slot; // NUMBER OF INTERNAL ELEMENTS IS SAME AS FOR FIRST LAYER
+            local_outLayerSize = slot; // WILL CONTAIN NUMBER OF ELEMENTS IN LAST LAYER
+
+            local_numLayers = (local_numLayers) + 1;
+        }
+        pos = pos2 + 1;
     }
-    
-    return status;
+    delete circuit;
+    return STAT_OK;
 }
 
 int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *usePredictorMask, int bPruneCircuit) {
@@ -1461,22 +1456,6 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
     textCircuit = textCicruitStream.str();
 
     return status;
-}
-
-int CircuitGenome::readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit) {
-    if (genome.size() != pGlobals->settings->circuit.genomeSize) {
-        mainLogger.out(LOGGER_ERROR) << "Incorrect genome size. Cannot read genome." << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
-    }
-    unsigned long* circuit = new unsigned long[pGlobals->settings->circuit.genomeSize];
-
-    memset(circuit, 0, sizeof(circuit));
-    CircuitGenome::ParseCircuit(textCircuit, circuit, &(pGlobals->settings->circuit.numLayers), &(pGlobals->settings->circuit.sizeLayer), &(pGlobals->settings->circuit.sizeOutputLayer));
-    for (int i = 0; i < pGlobals->settings->circuit.genomeSize; i++) genome.gene(i, circuit[i]);
-
-    delete[] circuit;
-    // TODO: add circiut parsing status
-    return STAT_OK;
 }
 
 int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<unsigned long>& genome, const string filename) {
