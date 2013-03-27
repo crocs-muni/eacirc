@@ -16,7 +16,7 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
     // edit END
 
 	// OUTPUT LAYER CONTAINS CHANGED TV TO ENCRYPT
-	encryptorDecryptor->encrypt(correctOutputs,inputStream,0);
+    encryptorDecryptor->encrypt(correctOutputs,inputStream,0,0);
 	/*encryptorDecryptor->decrypt(inputStream,inputStreamCheck,2);
 
     for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) {
@@ -37,7 +37,7 @@ void AvalancheEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* 
 		itvfile.close();
 	}*/
 	
-	encryptorDecryptor->encrypt(outputs,outputStream,2);
+    encryptorDecryptor->encrypt(outputs,outputStream,0,1);
 	/*encryptorDecryptor->decrypt(outputStream,outputStreamCheck,0);
 
     for (int input = 0; input < pGACirc->settings->testVectors.testVectorLength; input++) {

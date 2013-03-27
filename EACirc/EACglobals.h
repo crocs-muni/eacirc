@@ -111,7 +111,6 @@ struct SETTINGS_GA {
 
 //! settings corresponding to EACIRC/CIRCUIT
 struct SETTINGS_CIRCUIT {
-    int genomeSize;                 //! size of individual genome
     int numLayers;                  //! number of layers in circuit
     int numSelectorLayers;          //! number of input layers
     int sizeLayer;                  //! general layer size
@@ -120,6 +119,8 @@ struct SETTINGS_CIRCUIT {
     int numConnectors;              //! how many connectors (? TBD)
     bool allowPrunning;             //! allow prunning when writing circuit?
     unsigned char allowedFunctions[FNC_MAX+1];  //! functions allowed in circuit
+    // EXTRA INFORMATION, keep updated!
+    int genomeSize;                 //! size of individual genome
     SETTINGS_CIRCUIT();
 };
 

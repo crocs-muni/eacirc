@@ -52,7 +52,6 @@ void Checker::loadTestVectorParameters() {
         mainLogger.out(LOGGER_ERROR) << "Cannot read evaluator type." << endl;
         error = true;
     }
-
     // number of test sets
     m_tvFile >> pGlobals->settings->testVectors.numTestSets;
     m_tvFile.ignore(UCHAR_MAX,'\n');
@@ -81,15 +80,14 @@ void Checker::loadTestVectorParameters() {
         mainLogger.out(LOGGER_ERROR) << "Cannot read test vector output length." << endl;
         error = true;
     }
-    // TBD/TODO: only temporary solution, will be saved in circuit
-    pGlobals->settings->circuit.sizeOutputLayer = pGlobals->settings->testVectors.outputLength;
+    // circuit input/output layer sizes from circuit header file
+    pGlobals->settings->circuit.sizeInputLayer = headerCircuit_inputLayerSize;
+    pGlobals->settings->circuit.sizeOutputLayer = headerCircuit_outputLayerSize;
 
-    // ignore project settings
-    // TBD/TODO: make better than engineering solution for line endings
     string line;
     do {
         getline(m_tvFile,line);
-    } while (!line.empty() && line != "\r");
+    } while (!line.empty());
     if (error) {
         mainLogger.out(LOGGER_ERROR) << "Settings could not be read." << endl;
         m_status = STAT_CONFIG_DATA_READ_FAIL;
@@ -114,7 +112,7 @@ void Checker::check() {
     double fitness;
 
     ofstream fitProgressFile;
-    fitProgressFile.open(FILE_FITNESS_PROGRESS);
+    fitProgressFile.open(FILE_FITNESS_PROGRESS, ios_base::binary);
     if (!fitProgressFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot write file for fitness progress (" << FILE_FITNESS_PROGRESS << ")." << endl;
         m_status = STAT_FILE_WRITE_FAIL;

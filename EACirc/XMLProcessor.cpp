@@ -41,7 +41,6 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.sizeOutputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
     pSettings->circuit.sizeInputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
     pSettings->circuit.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
-    pSettings->circuit.genomeSize = atoi(getXMLElementValue(pRoot,"CIRCUIT/GENOME_SIZE").c_str());
     pSettings->circuit.allowPrunning = (atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOW_PRUNNING").c_str())) ? true : false;
     // parsing EACIRC/CIRCUIT/ALLOWED_FUNCTIONS
     pSettings->circuit.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
@@ -73,6 +72,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // update extra info
     pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
+    pSettings->circuit.genomeSize = (pSettings->circuit.numLayers*2) * pSettings->circuit.sizeLayer;
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {

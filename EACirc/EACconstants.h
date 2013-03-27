@@ -85,12 +85,7 @@ typedef unsigned __int64 uint64_t;
 #define CMD_OPT_SELF_TEST           "-test"
 
 // CIRCUIT LIMITS
-#define MAX_NUM_LAYERS              100
 #define MAX_CONNECTORS              32
-#define MAX_INTERNAL_LAYER_SIZE     32
-#define MAX_OUTPUTS                 MAX_INTERNAL_LAYER_SIZE
-#define MAX_INPUTS                  MAX_INTERNAL_LAYER_SIZE * MAX_INTERNAL_LAYER_SIZE // IF bSectorData IS ENABLED, SEPARATE RANGE FOR EACH INPUT NODE IN FIRST LAYER IS USED
-#define MAX_GENOME_SIZE (MAX_NUM_LAYERS * 2) * MAX_INTERNAL_LAYER_SIZE
 
 // EVALUATORS
 #define EVALUATOR_BIT               0

@@ -75,12 +75,10 @@ int PregeneratedTvProject::initializeProject() {
         warning = true;
     }
 
-    // ignore project settings
-    // TBD/TODO: make better than engineering solution for line endings
     string line;
     do {
         getline(m_tvFile,line);
-    } while (!line.empty() && line != "\r");
+    } while (!line.empty());
 
     if (warning) {
         mainLogger.out(LOGGER_WARNING) << "Settings in test vector file and project do not match." << endl;

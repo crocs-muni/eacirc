@@ -15,7 +15,7 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
     int offsetBit = 0;
     int numBitsPredicted = 0;
             
-    unsigned char usedBits[MAX_OUTPUTS * BITS_IN_UCHAR];
+    unsigned char usedBits[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
     memset(usedBits, 0, sizeof(usedBits));
             
     // GET PREDICTION OF PARITY (parity of first output bit) 

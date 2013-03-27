@@ -4,6 +4,7 @@
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "EACglobals.h"
+#include "tinyxml.h"
 
 class CircuitGenome {
 public:
@@ -16,7 +17,7 @@ public:
     static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
 	static int GetFunctionLabel(unsigned long functionID, unsigned long connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
-    static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[MAX_GENOME_SIZE]);
+    static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[]);
 	static int HasConnection(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, int* pbImplicitConnection);
 	static int HasImplicitConnection(unsigned long functionID);
 	static int IsOperand(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
@@ -38,6 +39,12 @@ public:
       * @return status
       */
     static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+
+    /** allocate XML structure for header in population file
+      * @param populationSize       size of the population (info in the header)
+      * @return pointer to root element "eacirc_population"
+      */
+    static TiXmlElement* populationHeader(int populationSize);
 
 private:
     /** saves circuit as generation with size 1

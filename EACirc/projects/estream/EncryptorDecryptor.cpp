@@ -11,11 +11,11 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
     for (int cipherNumber=0; cipherNumber<2; cipherNumber++) {
         // get correct settings for this cipher
         switch (cipherNumber) {
-        case 1:
+        case 0:
             algorithm = pEstreamSettings->algorithm1;
             numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
             break;
-        case 2:
+        case 1:
             algorithm = pEstreamSettings->algorithm1;
             numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
             break;
@@ -183,7 +183,7 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
                 mainLogger.out() << "). See code and/or manual." << endl;
             }
             m_ciphers[cipherNumber][streamNumber]->numRounds = numRounds;
-            m_ciphers[cipherNumbem][streamNumber]->ECRYPT_init();
+            m_ciphers[cipherNumber][streamNumber]->ECRYPT_init();
         }
     }
 

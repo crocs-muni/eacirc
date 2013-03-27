@@ -81,6 +81,10 @@ void EACirc::loadConfiguration(const string filename) {
     if (m_settings.testVectors.outputLength != m_settings.circuit.sizeOutputLayer) {
         mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
     }
+    if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
+        mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
     if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {
         mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when recommencing computation." << endl;
         m_status = STAT_CONFIG_INCORRECT;
@@ -235,16 +239,10 @@ void EACirc::createState() {
 }
 
 void EACirc::savePopulation(const string filename) {
-    TiXmlElement* pRoot = new TiXmlElement("eacirc_population");
+    TiXmlElement* pRoot = CircuitGenome::populationHeader(m_settings.ga.popupationSize);
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
 
-    pElem = new TiXmlElement("population_size");
-    pElem->LinkEndChild(new TiXmlText(toString(m_settings.ga.popupationSize).c_str()));
-    pRoot->LinkEndChild(pElem);
-    pElem = new TiXmlElement("genome_size");
-    pElem->LinkEndChild(new TiXmlText(toString(m_settings.circuit.genomeSize).c_str()));
-    pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("population");
     string textCircuit;
     for (int i = 0; i < m_settings.ga.popupationSize; i++) {
@@ -278,12 +276,39 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     int savedPopulationSize = atoi(getXMLElementValue(pRoot,"population_size").c_str());
-    int savedGenomeSize = atoi(getXMLElementValue(pRoot,"genome_size").c_str());
-    if (savedGenomeSize != m_settings.circuit.genomeSize) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible genome size." << endl;
-        mainLogger.out() << "       given genome size: " << savedGenomeSize << endl;
-        mainLogger.out() << "       required genome size: " << m_settings.circuit.genomeSize << endl;
+
+    int settingsValue;
+    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/num_layers").c_str());
+    if (m_settings.circuit.numLayers != settingsValue) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible number of layers (";
+        mainLogger.out() << m_settings.circuit.numLayers << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_INCOMPATIBLE_PARAMETER;
+    }
+    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/num_selector_layers").c_str());
+    if (m_settings.circuit.numSelectorLayers != settingsValue) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible number of selector layers (";
+        mainLogger.out() << m_settings.circuit.numSelectorLayers << " vs. " << settingsValue << ")." << endl;
+        m_status = STAT_INCOMPATIBLE_PARAMETER;
+    }
+    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_layer").c_str());
+    if (m_settings.circuit.sizeLayer != settingsValue) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible layer size (";
+        mainLogger.out() << m_settings.circuit.sizeLayer << " vs. " << settingsValue << ")." << endl;
+        m_status = STAT_INCOMPATIBLE_PARAMETER;
+    }
+    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_input_layer").c_str());
+    if (m_settings.circuit.sizeInputLayer != settingsValue) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible input layer size (";
+        mainLogger.out() << m_settings.circuit.sizeInputLayer << " vs. " << settingsValue << ")." << endl;
+        m_status = STAT_INCOMPATIBLE_PARAMETER;
+    }
+    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_output_layer").c_str());
+    if (m_settings.circuit.sizeOutputLayer != settingsValue) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible output layer size (";
+        mainLogger.out() << m_settings.circuit.sizeOutputLayer << " vs. " << settingsValue << ")." << endl;
+        m_status = STAT_INCOMPATIBLE_PARAMETER;
+    }
+    if (m_status != STAT_OK) {
         delete pRoot;
         return;
     }

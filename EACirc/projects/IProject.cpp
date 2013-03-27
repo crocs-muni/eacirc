@@ -9,7 +9,7 @@
 IProject::IProject(int type) : m_type(type) {
     if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
         ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::trunc);
+        tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return;
@@ -40,7 +40,7 @@ int IProject::initializeProjectMain() {
     if (status != STAT_OK) return status;
     if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
         ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::app);
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return STAT_FILE_WRITE_FAIL;

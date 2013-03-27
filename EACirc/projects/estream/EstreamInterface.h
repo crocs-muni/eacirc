@@ -49,6 +49,7 @@ class EstreamInterface {
 /** converts eStream cipher constant to human-readable string
   * @param cipher       cipher constant
   * @return human readable cipher description
+  */
 const char* estreamToString(int cipher);
 
 #endif
