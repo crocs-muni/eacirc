@@ -17,7 +17,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     IEvaluator*                     evaluator = pGlobals->evaluator;
 
     usePredictorMask = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
-	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
+    memset(usePredictorMask, 1, pGlobals->settings->circuit.sizeOutputLayer);	// USE ALL PREDICTORS
 
     match = 0;    
     numPredictions = 0;
@@ -767,7 +767,7 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *use
         bCodeCircuit = TRUE;
         
 		// COMPUTE NODES TO DISPLAY 
-		memset(displayNodes, 0, sizeof(displayNodes));
+        memset(displayNodes, 0, pGlobals->settings->circuit.genomeSize);
 		status = GetUsedNodes(genome, usePredictorMask, displayNodes);        
     }
     else {
@@ -776,7 +776,7 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *use
 			genome.gene(i, inputGenome.gene(i)); 
 		}
 		// ALL NODES WILL BE DISPLAYED
-		memset(displayNodes, 1, sizeof(displayNodes));
+        memset(displayNodes, 1, pGlobals->settings->circuit.genomeSize);
     }
     
     

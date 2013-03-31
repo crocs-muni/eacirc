@@ -216,7 +216,7 @@ EncryptorDecryptor::~EncryptorDecryptor() {
                 m_ciphers[cipherNumber][streamNumber] = NULL;
             }
             if (m_internalStates[cipherNumber][streamNumber]) {
-                delete m_internalStates[cipherNumber][streamNumber];
+                free(m_internalStates[cipherNumber][streamNumber]);
                 m_internalStates[cipherNumber][streamNumber] = NULL;
             }
         }

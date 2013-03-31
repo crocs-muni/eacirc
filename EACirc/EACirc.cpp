@@ -43,6 +43,10 @@ EACirc::~EACirc() {
     m_gaData = NULL;
     if (m_project) delete m_project;
     m_project = NULL;
+    if (pGlobals->evaluator != NULL &&  m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
+        delete pGlobals->evaluator;
+        pGlobals->evaluator = NULL;
+    }
     if (pGlobals) {
         pGlobals->testVectors.release();
         delete pGlobals;

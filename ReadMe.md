@@ -13,7 +13,12 @@ The learning stage incorporates genetic programming principles:
 
 ## The Framework
 
-The EACirc framework consists of main application and several supporting tools and scripts. The modular design allows for easy addition of new problem modules ('projects'). For more information and details see [projec wiki pages](http://github.com/petrs/EACirc/wiki/Home).
+The EACirc framework consists of main application and several supporting tools and scripts. The modular design allows for easy addition of new problem modules ('projects') and output interpretation modules ('evaluators'). Currently, the project has following main parts:
+* **EACirc** - the main application, constructs circuits using evolutionary principles.
+* **Checker** - small tool used for static checking of evolved circuits on pregenerated test vectors.
+* **utils** - set of scripts and small programs used for results processing.
+
+For more information and details see [projec wiki pages](http://github.com/petrs/EACirc/wiki/Home).
 
 ## Authors
 The framework is developed at the [Laboratory of Security and Applied Cryptography](http://www.fi.muni.cz/research/laboratories/labak/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.

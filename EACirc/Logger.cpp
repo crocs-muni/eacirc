@@ -6,7 +6,7 @@ Logger::Logger() : m_logging(false), m_using_file(false),
 	m_out(new LoggerStream(this,clog)) {}
 
 Logger::~Logger() {
-    out(LOGGER_INFO) << "Exiting." << endl;
+    out(LOGGER_INFO) << "Exiting logger." << endl;
     delete m_out;
 }
 
