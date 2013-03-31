@@ -28,7 +28,6 @@ SOURCES += \
     EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
     EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
-#    EACirc/evaluators/PredictAvalancheEvaluator.cpp \
 
 # === Main project files ===
 HEADERS += \
@@ -50,4 +49,3 @@ HEADERS += \
     EACirc/evaluators/PredictByteCircuitEvaluator.h \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
     EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
-#    EACirc/evaluators/PredictAvalancheEvaluator.h \

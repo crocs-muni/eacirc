@@ -111,7 +111,8 @@ public:
     void loadConfiguration(const string filename);
 
     /** does the necessary peparations needed just before running
-      * (also initializes project)
+      * - initializes project
+      * - allocates evaluator
       * must be called after loading settings and before state initialization
       * @note sets eventual error code in m_status
       */

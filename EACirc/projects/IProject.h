@@ -4,11 +4,14 @@
 #include "EACglobals.h"
 #include "XMLProcessor.h"
 #include "generators/IRndGen.h"
+#include "evaluators/IEvaluator.h"
 
 class IProject {
 protected:
     //! project type, see EACirc constants
     int m_type;
+    //! project-specific evaluator
+    IEvaluator* m_projectEvaluator;
 
 private:
     /** generate new set of test vectors
@@ -27,6 +30,7 @@ private:
       * called once, after configuration loading
       * called REGARDLESS of recommencing/not recommencong computation
       * project can here write own configuration notes to test vectors file
+      * project-specific evaluator should be allocated here
       * called by initializeProjectMain();
       * default implemetation: do nothing
       * @return status;
@@ -64,6 +68,7 @@ public:
     IProject(int type);
 
     /** general project destructor
+      * delete project-specific evaluator (if any)
       */
     virtual ~IProject();
 
@@ -121,6 +126,11 @@ public:
       * @return project constant
       */
     int getProjectType() const;
+
+    /** returns project evaluator
+      * @return pointer to evaluator
+      */
+    IEvaluator* getProjectEvaluator();
 
     /** static function to get project instance
       */

@@ -14,7 +14,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     unsigned char					usePredictorMask[pGlobals->settings->circuit.sizeOutputLayer];
     int								match = 0;
     int								numPredictions = 0; 
-    IEvaluator*                     evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
+    IEvaluator*                     evaluator = pGlobals->evaluator;
 
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
 
@@ -53,8 +53,6 @@ float CircuitGenome::Evaluator(GAGenome &g) {
             }
         }
     }
-        
-    delete evaluator;
     return fitness;
 }
 
@@ -665,7 +663,7 @@ int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<unsi
     unsigned long gene;
     for (int offset = 0; offset < pGlobals->settings->circuit.genomeSize; offset++) {
         circuitStream >> gene;
-        if (!circuitStream.good()) {
+        if (circuitStream.fail()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot load binary genome - error at offset " << offset << "." << endl;
             return STAT_DATA_CORRUPTED;
         }
@@ -1452,6 +1450,9 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<unsigned long>& genome, str
     ostringstream textCicruitStream;
     for (int i = 0; i < genome.length(); i++) {
         textCicruitStream << genome.gene(i) << " ";
+        if (i % pGlobals->settings->circuit.sizeLayer == pGlobals->settings->circuit.sizeLayer - 1) {
+            textCicruitStream << "  ";
+        }
     }
     textCircuit = textCicruitStream.str();
 

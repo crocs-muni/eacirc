@@ -59,6 +59,7 @@ public:
     /** project initialization
       * - create EncryptorDecryptor
       * - create project-specifiec header in test vector file (if needed)
+      * - allocated project specific evaluator (if used)
       * @return status
       */
     int initializeProject();

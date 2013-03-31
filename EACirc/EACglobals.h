@@ -4,6 +4,8 @@
 #include "EACconstants.h"
 #include "Status.h"
 #include "Logger.h"
+class IEvaluator;
+//#include "evaluators/IEvaluator.h"
 class IRndGen;
 //#include "generators/IRndGen.h"
 #include <cmath>
@@ -180,6 +182,7 @@ struct GLOBALS {
     SETTINGS* settings;                         //! pointer to SETTINGS in EACirc object
     STATISTICS stats;                           //! current run statistics
     TEST_VECTORS testVectors;                   //! current test vector set
+    IEvaluator* evaluator;                      //! evaluator (compares expected output with actual circuit output)
     unsigned long precompPow[MAX_CONNECTORS];   //! precomputed values up to 2^32
     unsigned long powEffectiveMask;             //! TBD
     GLOBALS();

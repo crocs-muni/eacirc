@@ -17,6 +17,7 @@
 #include "XMLProcessor.h"
 #include "CircuitGenome.h"
 #include "projects/IProject.h"
+#include "evaluators/IEvaluator.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -30,6 +31,7 @@
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
+    mainLogger.out(LOGGER_INFO) << "EACirc framework started (build unknown)." << endl;
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
@@ -83,6 +85,10 @@ void EACirc::loadConfiguration(const string filename) {
     }
     if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
         mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.circuit.numConnectors > MAX_CONNECTORS) {
+        mainLogger.out(LOGGER_ERROR) << "Circuit connectors number greater than maximum allowed." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {
@@ -323,7 +329,8 @@ void EACirc::loadPopulation(const string filename) {
             return;
         }
         textCircuit = pGenome->GetText();
-        CircuitGenome::readGenomeFromBinary(textCircuit,&genome);
+        m_status = CircuitGenome::readGenomeFromBinary(textCircuit,&genome);
+        if (m_status != STAT_OK) return;
         population.add(genome);
         pGenome = pGenome->NextSiblingElement();
     }
@@ -403,8 +410,20 @@ void EACirc::prepare() {
         std::remove(FILE_TEST_VECTORS_HR);
     }
 
+    // initialize project
     m_status = m_project->initializeProjectMain();
     mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
+    // initialize evaluator
+    if (m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
+        pGlobals->evaluator = IEvaluator::getStandardEvaluator(m_settings.main.evaluatorType);
+    } else {
+        pGlobals->evaluator = m_project->getProjectEvaluator();
+    }
+    if (pGlobals->evaluator != NULL) {
+        mainLogger.out(LOGGER_INFO) << "Evaluator initialized (" << pGlobals->evaluator->shortDescription() << ")." << endl;
+    } else {
+        mainLogger.out(LOGGER_ERROR) << "Cannot initialize evaluator (" << m_settings.main.evaluatorType << ")." << endl;
+    }
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;

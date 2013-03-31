@@ -1,5 +1,6 @@
 #include "EstreamProject.h"
 #include "EstreamConstants.h"
+#include "AvalancheEvaluator.h"
 
 ESTREAM_SETTINGS* pEstreamSettings = NULL;
 
@@ -57,7 +58,9 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
 }
 
 int EstreamProject::initializeProject() {
+    // allocate encryptorDecryptor
     m_encryptorDecryptor = new EncryptorDecryptor;
+    // create test vector header, if saving test vectors
     if (pGlobals->settings->testVectors.saveTestVectors) {
         // write project config to test vector file
         ofstream tvFile;
@@ -81,6 +84,10 @@ int EstreamProject::initializeProject() {
         tvFile << pEstreamSettings->keyType << " \t\t(key type)" << endl;
         tvFile << pEstreamSettings->ivType << " \t\t(IV type)" << endl;
         tvFile.close();
+    }
+    // allocate project-specific evaluator, if needed
+    if (pGlobals->settings->main.evaluatorType == ESTREAM_EVALUATOR_AVALANCHE) {
+        m_projectEvaluator = new AvalancheEvaluator(m_encryptorDecryptor);
     }
     return STAT_OK;
 }

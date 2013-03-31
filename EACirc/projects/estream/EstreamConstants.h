@@ -2,9 +2,12 @@
 #define ESTREAMCONSTANTS_H
 
 // eStream test vector generation method
-#define ESTREAM_DISTINCT            667
-#define ESTREAM_PREDICT_KEY         668
-#define ESTREAM_BITS_TO_CHANGE      669
+#define ESTREAM_DISTINCT            101
+#define ESTREAM_PREDICT_KEY         102
+#define ESTREAM_BITS_TO_CHANGE      103
+
+// project-specific evaluators
+#define ESTREAM_EVALUATOR_AVALANCHE 126
 
 // constants for cipher initialization frequency
 #define ESTREAM_INIT_CIPHERS_ONCE           0

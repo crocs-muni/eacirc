@@ -98,7 +98,7 @@ void Checker::loadTestVectorParameters() {
 
     // load and allocate resources
     pGlobals->testVectors.allocate();
-    m_evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
+    m_evaluator = IEvaluator::getStandardEvaluator(pGlobals->settings->main.evaluatorType);
     if (m_evaluator == NULL) m_status = STAT_INVALID_ARGUMETS;
 }
 

@@ -31,9 +31,8 @@ SOURCES += \
 
 # === evaluators ===
 SOURCES += \
-    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
     EACirc/evaluators/IEvaluator.cpp \
-    EACirc/evaluators/PredictAvalancheEvaluator.cpp \
+    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
     EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
     EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
@@ -60,6 +59,7 @@ SOURCES += \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
+    EACirc/projects/estream/AvalancheEvaluator.cpp \
     EACirc/projects/tea/TeaProject.cpp \
 
 # === eSTREAM cipher files ===
@@ -128,11 +128,10 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
 
-# === evaluators ===
+# === standard evaluators ===
 HEADERS += \
-    EACirc/evaluators/DistinguishTwoEvaluator.h \
     EACirc/evaluators/IEvaluator.h \
-    EACirc/evaluators/PredictAvalancheEvaluator.h \
+    EACirc/evaluators/DistinguishTwoEvaluator.h \
     EACirc/evaluators/PredictBitCircuitEvaluator.h \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
     EACirc/evaluators/PredictByteCircuitEvaluator.h \
@@ -161,6 +160,7 @@ HEADERS += \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
+    EACirc/projects/estream/AvalancheEvaluator.h \
     EACirc/projects/tea/TeaProject.h \
 
 # === eSTREAM cipher files ===

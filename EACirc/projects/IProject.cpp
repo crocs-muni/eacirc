@@ -6,7 +6,7 @@
 #include "sha3/Sha3Project.h"
 #include "tea/TeaProject.h"
 
-IProject::IProject(int type) : m_type(type) {
+IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) {
     if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
         ofstream tvFile;
         tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
@@ -16,7 +16,7 @@ IProject::IProject(int type) : m_type(type) {
         }
         tvFile << dec << left;
         tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator";
-        IEvaluator* evaluator = IEvaluator::getEvaluator(pGlobals->settings->main.evaluatorType);
+        IEvaluator* evaluator = IEvaluator::getStandardEvaluator(pGlobals->settings->main.evaluatorType);
         if (evaluator) tvFile << ": " << evaluator->shortDescription();
         delete evaluator;
         tvFile << ")" << endl;
@@ -28,7 +28,12 @@ IProject::IProject(int type) : m_type(type) {
     }
 }
 
-IProject::~IProject() {}
+IProject::~IProject() {
+    if (m_projectEvaluator != NULL) {
+        delete m_projectEvaluator;
+        m_projectEvaluator = NULL;
+    }
+}
 
 int IProject::loadProjectConfiguration(TiXmlNode *pRoot) {
     return STAT_OK;
@@ -132,6 +137,10 @@ int IProject::saveTestVectors() const {
     }
     tvFile.close();
     return STAT_OK;
+}
+
+IEvaluator* IProject::getProjectEvaluator() {
+    return m_projectEvaluator;
 }
 
 IProject* IProject::getProject(int projectType) {

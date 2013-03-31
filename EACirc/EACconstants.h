@@ -39,10 +39,10 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 // PROJECTS
-#define PROJECT_PREGENERATED_TV     100
-#define PROJECT_ESTREAM             101
-#define PROJECT_SHA3                102
-#define PROJECT_TEA                 103
+#define PROJECT_PREGENERATED_TV     0
+#define PROJECT_ESTREAM             100
+#define PROJECT_SHA3                200
+#define PROJECT_TEA                 300
 
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
@@ -88,13 +88,14 @@ typedef unsigned __int64 uint64_t;
 #define MAX_CONNECTORS              32
 
 // EVALUATORS
-#define EVALUATOR_BIT               0
-#define EVALUATOR_BITGROUP_PARITY   1
-#define EVALUATOR_BYTES_PARITY      2
-#define EVALUATOR_HAMMING_WEIGHT    3
-#define EVALUATOR_BYTE              4
-#define EVALUATOR_DISTINGUISH       5
-#define EVALUATOR_AVALANCHE         6
+#define EVALUATOR_BIT               20
+#define EVALUATOR_BITGROUP_PARITY   21
+#define EVALUATOR_BYTES_PARITY      22
+#define EVALUATOR_HAMMING_WEIGHT    23
+#define EVALUATOR_BYTE              24
+#define EVALUATOR_DISTINGUISH       25
+// note: all project specific evaluators must have constant above this
+#define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
 
 #define TESTVECT_MD5INV             0
 #define TESTVECT_SHA1INV            1
