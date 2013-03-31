@@ -149,6 +149,7 @@
     <ClCompile Include="EACirc\galib\GATreeGenome.cpp" />
     <ClCompile Include="EACirc\Logger.cpp" />
     <ClCompile Include="EACirc\Main.cpp" />
+    <ClCompile Include="EACirc\projects\estream\AvalancheEvaluator.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\abc\abc-v3.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\achterbahn\achterbahn-128-80.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\cryptmt\cryptmt-v3.cpp" />
@@ -199,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EACirc\CircuitGenome.h" />
+    <ClInclude Include="EACirc\projects\estream\AvalancheEvaluator.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc-tables.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\ecrypt-sync.h" />

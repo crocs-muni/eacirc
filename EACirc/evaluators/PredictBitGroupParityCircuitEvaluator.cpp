@@ -2,7 +2,16 @@
 #include "assert.h"
 
 PredictBitGroupParityCircuitEvaluator::PredictBitGroupParityCircuitEvaluator()
-    : IEvaluator(EVALUATOR_BITGROUP_PARITY) { }
+    : IEvaluator(EVALUATOR_BITGROUP_PARITY), usedBits(NULL) {
+    usedBits = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
+}
+
+PredictBitGroupParityCircuitEvaluator::~PredictBitGroupParityCircuitEvaluator() {
+    if (usedBits != NULL) {
+        delete[] usedBits;
+        usedBits = NULL;
+    }
+}
 
 void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outputs, unsigned char* correctOutputs, unsigned char* usePredictorsMask, int* pMatch, int* pTotalPredictCount, int* predictorMatch = NULL){
 	// OUTPUT LAYER ENCODES THE GROUP OF BITS AND THEIR PARITY
@@ -15,7 +24,6 @@ void PredictBitGroupParityCircuitEvaluator::evaluateCircuit(unsigned char* outpu
     int offsetBit = 0;
     int numBitsPredicted = 0;
             
-    unsigned char usedBits[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
     memset(usedBits, 0, sizeof(usedBits));
             
     // GET PREDICTION OF PARITY (parity of first output bit) 

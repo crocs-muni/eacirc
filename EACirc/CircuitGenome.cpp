@@ -11,11 +11,12 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     int								status = STAT_OK;
     GA1DArrayGenome<unsigned long>  &genome = (GA1DArrayGenome<unsigned long>&) g;
     float							fitness = 0;
-    unsigned char					usePredictorMask[pGlobals->settings->circuit.sizeOutputLayer];
+    unsigned char*					usePredictorMask = NULL;
     int								match = 0;
     int								numPredictions = 0; 
     IEvaluator*                     evaluator = pGlobals->evaluator;
 
+    usePredictorMask = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
 	memset(usePredictorMask, 1, sizeof(usePredictorMask));	// USE ALL PREDICTORS
 
     match = 0;    
@@ -53,6 +54,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
             }
         }
     }
+    delete[] usePredictorMask;
     return fitness;
 }
 
@@ -752,9 +754,10 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *use
 	string 							actualSlotID; 
 	string 							previousSlotID; 
 	int								bCodeCircuit = TRUE;
-    unsigned char					displayNodes[pGlobals->settings->circuit.genomeSize];
-	
-	
+    unsigned char*					displayNodes = NULL;
+
+    displayNodes = new unsigned char[pGlobals->settings->circuit.genomeSize];
+
     //
     // PRUNE CIRCUIT IF REQUIRED
     //
@@ -1192,7 +1195,9 @@ node [color=lightblue2, style=filled];\r\n";
     //cmdLine.Format("dot -Tpng %s -o %s -Gsize=1000", newFilePath, pngFilePath);
     cmdLine = "dot -Tpng " + newFilePath + " -o " + pngFilePath + " -Gsize=1000";
     WinExec(cmdLine, 0);*/
-    
+
+    delete[] displayNodes;
+
     return status;
 }
 
@@ -1201,9 +1206,11 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
 //    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
     int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
-    unsigned char    localInputs[pGlobals->settings->circuit.sizeInputLayer];
-    unsigned char    localOutputs[pGlobals->settings->circuit.sizeInputLayer];
-    
+    unsigned char*    localInputs = NULL;
+    unsigned char*    localOutputs = NULL;
+
+    localInputs = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
+    localOutputs = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
     memset(localOutputs, 0, pGlobals->settings->circuit.sizeInputLayer);
     
     // ALL IN ONE RUN
@@ -1441,6 +1448,8 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
     }
     
     memcpy(outputs,localOutputs,pGlobals->settings->circuit.sizeOutputLayer);
+    delete[] localInputs;
+    delete[] localOutputs;
     return status;
 }
 

@@ -4,8 +4,10 @@
 #include "IEvaluator.h"
 
 class PredictBitGroupParityCircuitEvaluator: public IEvaluator {
+    unsigned char* usedBits;
 public:
     PredictBitGroupParityCircuitEvaluator();
+    ~PredictBitGroupParityCircuitEvaluator();
     void evaluateCircuit(unsigned char*, unsigned char*, unsigned char*, int*, int*, int*);
     string shortDescription();
 };
