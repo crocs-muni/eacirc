@@ -85,7 +85,7 @@ typedef unsigned __int64 uint64_t;
 #define CMD_OPT_SELF_TEST           "-test"
 
 // CIRCUIT LIMITS
-#define MAX_CONNECTORS              32
+#define MAX_LAYER_SIZE              32
 
 // EVALUATORS
 #define EVALUATOR_BIT               20

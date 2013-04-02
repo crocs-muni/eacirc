@@ -332,7 +332,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                     else {
                         unsigned long   tempOrigValue = origValue;  // WILL HOLD MASK OF INPORTANT CONNECTIONS
                         // CONNECTION LAYER - TRY TO REMOVE CONNECTIONS GRADUALLY
-                        for (int conn = 0; conn < MAX_CONNECTORS; conn++) {
+                        for (int conn = 0; conn < MAX_LAYER_SIZE; conn++) {
                             unsigned long   newValue = tempOrigValue & (~pGlobals->precompPow[conn]);
                             
                             if (newValue != tempOrigValue) {

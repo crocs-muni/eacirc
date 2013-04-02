@@ -87,12 +87,12 @@ void EACirc::loadConfiguration(const string filename) {
     if (m_settings.testVectors.outputLength != m_settings.circuit.sizeOutputLayer) {
         mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
     }
-    if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
-        mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
+    if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE) {
+        mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal layer size or connector number)." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    if (m_settings.circuit.numConnectors > MAX_CONNECTORS) {
-        mainLogger.out(LOGGER_ERROR) << "Circuit connectors number greater than maximum allowed." << endl;
+    if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
+        mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {

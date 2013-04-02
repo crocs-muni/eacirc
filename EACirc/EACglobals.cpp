@@ -134,7 +134,7 @@ GLOBALS::GLOBALS() {
     settings = NULL;
     evaluator = NULL;
     // precompute powers for reasonable values (2^0-2^31)
-    for (int bit = 0; bit < MAX_CONNECTORS; bit++) {
+    for (int bit = 0; bit < MAX_LAYER_SIZE; bit++) {
         precompPow[bit] = (unsigned long) pow(2, (float) bit);
         powEffectiveMask |= precompPow[bit];
     }

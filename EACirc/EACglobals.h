@@ -183,7 +183,7 @@ struct GLOBALS {
     STATISTICS stats;                           //! current run statistics
     TEST_VECTORS testVectors;                   //! current test vector set
     IEvaluator* evaluator;                      //! evaluator (compares expected output with actual circuit output)
-    unsigned long precompPow[MAX_CONNECTORS];   //! precomputed values up to 2^32
+    unsigned long precompPow[MAX_LAYER_SIZE];   //! precomputed values up to 2^32
     unsigned long powEffectiveMask;             //! TBD
     GLOBALS();
 };
