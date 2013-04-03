@@ -27,39 +27,39 @@ SOURCES += \
     EACirc/Logger.cpp \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
-    EACirc/standalone_testers/TestDistinctorCircuit.cpp \
+    EACirc/EACglobals.cpp \
 
 # === evaluators ===
 SOURCES += \
-    EACirc/circuit_evaluator/DistinguishTwoEvaluator.cpp \
-    EACirc/circuit_evaluator/ICircuitEvaluator.cpp \
-    EACirc/circuit_evaluator/PredictAvalancheEvaluator.cpp \
-    EACirc/circuit_evaluator/PredictBitCircuitEvaluator.cpp \
-    EACirc/circuit_evaluator/PredictBitGroupParityCircuitEvaluator.cpp \
-    EACirc/circuit_evaluator/PredictByteCircuitEvaluator.cpp \
-    EACirc/circuit_evaluator/PredictBytesParityCircuitEvaluator.cpp \
-    EACirc/circuit_evaluator/PredictHammingWeightCircuitEvaluator.cpp
+    EACirc/evaluators/IEvaluator.cpp \
+    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
+    EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
+    EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
+    EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
+    EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
+    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp
 
 # === random generators ===
 SOURCES += \
-    EACirc/random_generator/BiasRndGen.cpp \
-    EACirc/random_generator/IRndGen.cpp \
-    EACirc/random_generator/QuantumRndGen.cpp \
-    EACirc/random_generator/MD5RndGen.cpp \
-    EACirc/random_generator/md5.cpp
+    EACirc/generators/BiasRndGen.cpp \
+    EACirc/generators/IRndGen.cpp \
+    EACirc/generators/QuantumRndGen.cpp \
+    EACirc/generators/MD5RndGen.cpp \
+    EACirc/generators/md5.cpp \
 
 # === testing using CATCH framework ===
 SOURCES += \
-    EACirc/self_tests/Tests.cpp
+    EACirc/self_tests/Tests.cpp \
 
 # === project files ===
 SOURCES += \
     EACirc/projects/IProject.cpp \
     EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
+    EACirc/projects/sha3/Sha3Project.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
-    EACirc/projects/sha3/Sha3Project.cpp \
+    EACirc/projects/estream/AvalancheEvaluator.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -219,27 +219,24 @@ HEADERS += \
     EACirc/Logger.h \
     EACirc/Status.h \
     EACirc/EACirc.h \
-    EACirc/EAC_circuit.h \
-    EACirc/standalone_testers/TestDistinctorCircuit.h \
 
-# === evaluators ===
+# === standard evaluators ===
 HEADERS += \
-    EACirc/circuit_evaluator/DistinguishTwoEvaluator.h \
-    EACirc/circuit_evaluator/ICircuitEvaluator.h \
-    EACirc/circuit_evaluator/PredictAvalancheEvaluator.h \
-    EACirc/circuit_evaluator/PredictBitCircuitEvaluator.h \
-    EACirc/circuit_evaluator/PredictBitGroupParityCircuitEvaluator.h \
-    EACirc/circuit_evaluator/PredictByteCircuitEvaluator.h \
-    EACirc/circuit_evaluator/PredictBytesParityCircuitEvaluator.h \
-    EACirc/circuit_evaluator/PredictHammingWeightCircuitEvaluator.h \
+    EACirc/evaluators/IEvaluator.h \
+    EACirc/evaluators/DistinguishTwoEvaluator.h \
+    EACirc/evaluators/PredictBitCircuitEvaluator.h \
+    EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
+    EACirc/evaluators/PredictByteCircuitEvaluator.h \
+    EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
+    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
 
 # === random generators ===
 HEADERS += \
-    EACirc/random_generator/BiasRndGen.h \
-    EACirc/random_generator/IRndGen.h \
-    EACirc/random_generator/QuantumRndGen.h \
-    EACirc/random_generator/MD5RndGen.h \
-    EACirc/random_generator/md5.h \
+    EACirc/generators/BiasRndGen.h \
+    EACirc/generators/IRndGen.h \
+    EACirc/generators/QuantumRndGen.h \
+    EACirc/generators/MD5RndGen.h \
+    EACirc/generators/md5.h \
 
 # === CATCH testing framework ===
 HEADERS += \
@@ -250,12 +247,14 @@ HEADERS += \
 HEADERS += \
     EACirc/projects/IProject.h \
     EACirc/projects/pregenerated_tv/PregeneratedTvProject.h \
+    EACirc/projects/sha3/Sha3Project.h \
+    EACirc/projects/sha3/Sha3Interface.h \
     EACirc/projects/estream/EstreamProject.h \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
-    EACirc/projects/sha3/Sha3Project.h \
-    EACirc/projects/sha3/Sha3Interface.h \
+    EACirc/projects/estream/AvalancheEvaluator.h \
+    EACirc/projects/tea/TeaProject.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \

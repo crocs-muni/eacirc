@@ -1,6 +1,6 @@
 #include "Status.h"
 
-const char* ErrorToString(int error) {
+const char* statusToString(int error) {
     switch (error) {
     // BASE ERROR STATUS
     case STAT_OK:                       return "STAT_OK";

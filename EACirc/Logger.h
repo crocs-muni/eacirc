@@ -11,6 +11,14 @@
 
 using namespace std;
 
+//! constants for logger output prefixes, use with logger.out(prefix)
+//! INFO: operation successfull, just informing the user
+#define LOGGER_INFO 0
+//! WARNING: operation error, but recoverable - possibly something, that just may imply some error somewhere
+#define LOGGER_WARNING 1
+//! ERROR: operation error, unrecoverable - program should end without finishing computation
+#define LOGGER_ERROR 2
+
 class Logger {
 private:
     //! helper class: LoggerStream just uses a LoggerBuffer
@@ -21,8 +29,6 @@ private:
             Logger* m_parentLogger;
         public:
             LoggerBuffer(Logger* parentLogger, ostream& out) : m_out(out), m_parentLogger(parentLogger) {}
-            // LoggerBuffer(const LoggerBuffer& copy) = delete; //(not supprrted in MS VS)
-            // const LoggerBuffer& operator =(const LoggerBuffer& copy) = delete; //(not supprrted in MS VS)
             virtual int sync ();
         };
         LoggerBuffer buffer;
@@ -38,14 +44,18 @@ private:
     LoggerStream* m_out;
 public:
     Logger();
-    // Logger(const Logger& copy)  = delete; //(not supprrted in MS VS)
-    // const Logger& operator =(const Logger& copy) = delete; //(not supprrted in MS VS)
     ~Logger();
 
     /** makes stream for logs available
       * @return stream
       */
-    ostream& out() { return *m_out; }
+    ostream& out();
+
+    /** makes stream for logs available with common prefix
+      * @param prefix       prefix constant
+      * @return stream
+      */
+    ostream& out(int prefix);
 
     /** set stream for logs
       * @param outStream    new stream for logging
@@ -60,7 +70,7 @@ public:
     /** is logging enabled?
       * @return logging enabled?
       */
-    bool getLogging() { return m_logging; }
+    bool getLogging();
 
     /** enable/disable logging
       * @param state

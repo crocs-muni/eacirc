@@ -2,7 +2,7 @@
 #define EACIRC_H
 
 #include "EACglobals.h"
-#include "random_generator/IRndGen.h"
+#include "generators/IRndGen.h"
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 //libinclude (galib/GASStateGA.h)
@@ -111,7 +111,8 @@ public:
     void loadConfiguration(const string filename);
 
     /** does the necessary peparations needed just before running
-      * (also initializes project)
+      * - initializes project
+      * - allocates evaluator
       * must be called after loading settings and before state initialization
       * @note sets eventual error code in m_status
       */

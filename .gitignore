@@ -4,7 +4,6 @@
 *.Debug
 *.Release
 [Mm]akefile
-*.filters
 *.sdf
 *.opensdf
 *.bat

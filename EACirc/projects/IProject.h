@@ -3,11 +3,15 @@
 
 #include "EACglobals.h"
 #include "XMLProcessor.h"
+#include "generators/IRndGen.h"
+#include "evaluators/IEvaluator.h"
 
 class IProject {
 protected:
     //! project type, see EACirc constants
     int m_type;
+    //! project-specific evaluator
+    IEvaluator* m_projectEvaluator;
 
 private:
     /** generate new set of test vectors
@@ -26,11 +30,35 @@ private:
       * called once, after configuration loading
       * called REGARDLESS of recommencing/not recommencong computation
       * project can here write own configuration notes to test vectors file
+      * project-specific evaluator should be allocated here
       * called by initializeProjectMain();
       * default implemetation: do nothing
       * @return status;
       */
     virtual int initializeProject();
+
+    /** save project state
+      * - root node with project type and description is prepared by framework
+      * - add project details into the tree
+      * - project is set as 'loadable' by default, you can change this
+      * - called by saveProjectStateMain()
+      * note: if project state is loadable, reset the appropriate attribute!
+      *       (not loadable is default)
+      * default implementation: do nothing
+      * @param pRoot    allocated root node for project
+      * @return status
+      */
+    virtual int saveProjectState(TiXmlNode* pRoot) const;
+
+    /** load project state
+      * - project constant and loadability checks are performed by framework
+      * - load your project-specific settings
+      * - called by loadProjectStateMain()
+      * default implementation: do nothing
+      * @param pRoot    allocated XML root of project state
+      * @return status
+      */
+    virtual int loadProjectState(TiXmlNode* pRoot);
 
 public:
     /** general project constructor, sets project type
@@ -40,6 +68,7 @@ public:
     IProject(int type);
 
     /** general project destructor
+      * delete project-specific evaluator (if any)
       */
     virtual ~IProject();
 
@@ -59,9 +88,8 @@ public:
     /** initialize project
       * - called once, after configuration loading
       * - calls project initialization (virtual function initializeProject();)
-      * - maked header structure in test vector file
+      * - make header structure in test vector file
       * - called REGARDLESS of recommencing/not recommencong computation
-      * - called by initializeProjectMain();
       * @return status;
       */
     int initializeProjectMain();
@@ -74,18 +102,20 @@ public:
     virtual int initializeProjectState();
 
     /** load project state (previously saved by this project)
-      * default implementation: check project constant, load nothing
+      * - checks project constant
+      * - checks loadability
+      * - calles virtual project state loading method
       * @param pRoot    parsed XML sructure with project state
       * @return status
       */
-    virtual int loadProjectState(TiXmlNode* pRoot);
+    int loadProjectStateMain(TiXmlNode* pRoot);
 
     /** save current project state
       * @return allocated XML tree with project state
       *         CALLER responsible for freeing!
-      * default implementation: save project constant
+      * default implementation: save project constant and description, make it non-loadable
       */
-    virtual TiXmlNode* saveProjectState() const;
+    TiXmlNode* saveProjectStateMain() const;
 
     /** generate new test vectors and save them if required
       * @return status
@@ -96,6 +126,11 @@ public:
       * @return project constant
       */
     int getProjectType() const;
+
+    /** returns project evaluator
+      * @return pointer to evaluator
+      */
+    IEvaluator* getProjectEvaluator();
 
     /** static function to get project instance
       */

@@ -25,6 +25,10 @@ typedef unsigned long DWORD;
 #define INT_MAX       2147483647
 #endif
 
+#ifndef BITS_IN_UCHAR
+#define BITS_IN_UCHAR 8
+#endif
+
 #ifdef _MSC_VER
 typedef __int32 int32_t;
 typedef unsigned __int32 uint32_t;
@@ -35,9 +39,10 @@ typedef unsigned __int64 uint64_t;
 #endif
 
 // PROJECTS
-#define PROJECT_PREGENERATED_TV     100
-#define PROJECT_ESTREAM             101
-#define PROJECT_SHA3                102
+#define PROJECT_PREGENERATED_TV     0
+#define PROJECT_ESTREAM             100
+#define PROJECT_SHA3                200
+#define PROJECT_TEA                 300
 
 // FILENAMES
 #define FILE_CONFIG                 "config.xml"
@@ -52,8 +57,6 @@ typedef unsigned __int64 uint64_t;
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "test_vectors.bin"
 #define FILE_TEST_VECTORS_HR        "test_vectors_hr.txt"
-#define FILE_TEST_DATA_1            "test_vectors1.bin"
-#define FILE_TEST_DATA_2            "test_vectors2.bin"
 #define FILE_CIRCUIT                "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
 #define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_LOGFILE                "eacirc.log"
@@ -81,28 +84,18 @@ typedef unsigned __int64 uint64_t;
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 #define CMD_OPT_SELF_TEST           "-test"
 
-// GA CIRCUIT CONSTANTS
-#define NUM_BITS                    8             // NUMBER OF BITS PER unsigned char
-#define NUM_TEST_SETS               1000
-#define MAX_TEST_SET_SIZE_PER_GENOM 1000
-#define TEST_SET_SIZE               MAX_TEST_SET_SIZE_PER_GENOM * NUM_TEST_SETS
-
 // CIRCUIT LIMITS
-#define MAX_NUM_LAYERS              100
-#define MAX_CONNECTORS              32
-#define MAX_INTERNAL_LAYER_SIZE     32
-#define MAX_OUTPUTS                 MAX_INTERNAL_LAYER_SIZE
-#define MAX_INPUTS                  MAX_INTERNAL_LAYER_SIZE * MAX_INTERNAL_LAYER_SIZE // IF bSectorData IS ENABLED, SEPARATE RANGE FOR EACH INPUT NODE IN FIRST LAYER IS USED
-#define MAX_GENOME_SIZE (MAX_NUM_LAYERS * 2) * MAX_INTERNAL_LAYER_SIZE
+#define MAX_LAYER_SIZE              32
 
 // EVALUATORS
-#define EVALUATOR_BIT               0
-#define EVALUATOR_BITGROUP_PARITY   1
-#define EVALUATOR_BYTES_PARITY      2
-#define EVALUATOR_HAMMING_WEIGHT    3
-#define EVALUATOR_BYTE              4
-#define EVALUATOR_DISTINGUISH       5
-#define EVALUATOR_AVALANCHE         6
+#define EVALUATOR_BIT               20
+#define EVALUATOR_BITGROUP_PARITY   21
+#define EVALUATOR_BYTES_PARITY      22
+#define EVALUATOR_HAMMING_WEIGHT    23
+#define EVALUATOR_BYTE              24
+#define EVALUATOR_DISTINGUISH       25
+// note: all project specific evaluators must have constant above this
+#define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
 
 #define TESTVECT_MD5INV             0
 #define TESTVECT_SHA1INV            1

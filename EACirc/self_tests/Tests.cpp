@@ -66,7 +66,7 @@ int runEACirc() {
     eacirc.initializeState();
     eacirc.run();
 	if (mainLogger.getLogging()) {
-		WARN("######## Ending EACirc (error: " << eacirc.getStatus() << " ) ########");
+        WARN("######## Ending EACirc (status: " << statusToString(eacirc.getStatus()) << " ) ########");
 	}
     return eacirc.getStatus();
 }
@@ -97,6 +97,7 @@ TEST_CASE("determinism/seed","testing whether run with random seed and second ru
     // prepare run 1
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","0") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_INITIAL_POPULATION","0") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","0") == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
@@ -131,6 +132,7 @@ TEST_CASE("determinism/load-state","running and running from loaded state") {
     // prepare run 1
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","0") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_INITIAL_POPULATION","0") == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
     // run 1
@@ -140,6 +142,7 @@ TEST_CASE("determinism/load-state","running and running from loaded state") {
     // prepare run 2
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","1") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_INITIAL_POPULATION","1") == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
     REQUIRE(rename(FILE_STATE_INITIAL,FILE_STATE) == STAT_OK);
@@ -157,6 +160,7 @@ TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 g
     // prepare run 1
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","0") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_INITIAL_POPULATION","0") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/NUM_GENERATIONS","40") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/SAVE_STATE_FREQ","10") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","1") == STAT_OK);
@@ -177,6 +181,7 @@ TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 g
     // prepare run 3
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","1") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_INITIAL_POPULATION","1") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/NUM_GENERATIONS","20") == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
@@ -193,6 +198,7 @@ TEST_CASE("determinism/tv-pregeneration","general run vs. run with the same pre-
     // prepare run 1
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","0") == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/LOAD_INITIAL_POPULATION","0") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/NUM_GENERATIONS","40") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/SAVE_STATE_FREQ","10") == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"RANDOM/USE_FIXED_SEED","1") == STAT_OK);

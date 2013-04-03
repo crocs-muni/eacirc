@@ -14,7 +14,8 @@ DEBUG		= NO
 # PROFILE can be set to YES to include profiling info, or NO otherwise
 PROFILE		= NO
 # output name for the compiled and linked application
-OUTNAME		= eacirc
+OUTNAME_MAIN	= eacirc
+OUTNAME_CHECKER	= checker
 # folder to put linked application and config file into
 RUN_DIR		= run
 #*********************************************************************************
@@ -27,11 +28,23 @@ DEBUG_CXXFLAGS		= -g -DDEBUG
 RELEASE_CXXFLAGS	= -O3
 PROFILE_CXXFLAGS	= -p
 
+# other global settings
+INC_DIRS= -IEACirc -IEACirc/galib -IEACirc/tinyXML
+INC_LIBS= -LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML
+
+# === EACirc Main ===
+SOURCES=
+HEADERS=
 # libs and source (loaded from Qt project file)
 include EACirc.pro
-OBJECTS		=$(SOURCES:.cpp=.o)
-INC_DIRS	= -IEACirc -IEACirc/galib -IEACirc/tinyXML
-INC_LIBS	= -LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML
+OBJECTS_MAIN:=$(SOURCES:.cpp=.o)
+
+# === EACirc Checker ===
+SOURCES=
+HEADERS=
+# libs and source (loaded from Qt project file)
+include Checker.pro
+OBJECTS_CHECKER:=$(SOURCES:.cpp=.o)
 
 # rules and targets
 ifeq (YES, ${DEBUG})
@@ -43,29 +56,42 @@ ifeq (YES, $(PROFILE))
    CXXFLAGS += $(PROFILE_CXXFLAGS)
 endif
 
-all: libs main
+all: libs main checker
 
 libs:
 	cd EACirc/galib && $(MAKE)
+	@echo === GAlib was successfully built. ===
 	cd EACirc/tinyXML && $(MAKE)
-	@echo === Libraries are now up-to-date. ===
+	@echo === tinyXML was successfully built. ===
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) -c -o "$@" "$<"
 
-main: $(OBJECTS)
+main: libs $(OBJECTS_MAIN)
 	mkdir -p $(RUN_DIR)
-	$(CXX) $(CXXFLAGS) -o $(RUN_DIR)/$(OUTNAME) $(OBJECTS) $(INC_DIRS) $(INC_LIBS)
+	$(CXX) $(CXXFLAGS) -o $(RUN_DIR)/$(OUTNAME_MAIN) $(OBJECTS_MAIN) $(INC_DIRS) $(INC_LIBS)
 	if [ ! -f $(RUN_DIR)/config.xml ]; then cp EACirc/config.xml $(RUN_DIR)/; fi
-	@echo === $(OUTNAME) was successfully built. ===
+	@echo === $(OUTNAME_MAIN) was successfully built. ===
 
-clean:
-	cd EACirc/galib && $(MAKE) clean
-	cd EACirc/tinyXML && $(MAKE) clean
-	rm -f $(OBJECTS) 
-	cd $(RUN_DIR) && rm -f *.log *.txt *.bin *.c *.dot *.xml
-	@echo === Successfully cleaned. ===
+checker: $(OBJECTS_CHECKER)
+	mkdir -p $(RUN_DIR)
+	$(CXX) $(CXXFLAGS) -o $(RUN_DIR)/$(OUTNAME_CHECKER) $(OBJECTS_CHECKER) $(INC_DIRS) $(INC_LIBS)
+	@echo === $(OUTNAME_CHECKER) was successfully built. ===
+
+cleanall: cleanresults cleanlibs cleanmain cleanchecker
+
+cleanresults:
+	cd $(RUN_DIR) && rm -f *.log *.txt *.bin *.c *.dot *.xml *.2
+	@echo === Result files successfully cleaned. ===
 
 cleanmain:
-	rm -f $(OBJECTS) $(RUN_DIR)/$(OUTNAME)
-	@echo === Project successfully cleaned \(libraries untouched\). ===
+	rm -f $(OBJECTS_MAIN) $(RUN_DIR)/$(OUTNAME_MAIN)
+	@echo === $(OUTNAME_MAIN) successfully cleaned. ===
+
+cleanchecker:
+	rm -f $(OBJECTS_CHECKER) $(RUN_DIR)/$(OUTNAME_CHECKER)
+	@echo === $(OUTNAME_CHECKER) successfully cleaned. ===
+
+cleanlibs:
+	cd EACirc/galib && $(MAKE) clean
+	cd EACirc/tinyXML && $(MAKE) clean

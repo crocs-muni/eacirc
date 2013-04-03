@@ -2,9 +2,12 @@
 #define ESTREAMCONSTANTS_H
 
 // eStream test vector generation method
-#define ESTREAM_DISTINCT            667
-#define ESTREAM_PREDICT_KEY         668
-#define ESTREAM_BITS_TO_CHANGE      669
+#define ESTREAM_DISTINCT            101
+#define ESTREAM_PREDICT_KEY         102
+#define ESTREAM_BITS_TO_CHANGE      103
+
+// project-specific evaluators
+#define ESTREAM_EVALUATOR_AVALANCHE 126
 
 // constants for cipher initialization frequency
 #define ESTREAM_INIT_CIPHERS_ONCE           0
@@ -50,7 +53,7 @@
 #define ESTREAM_ZKCRYPT         27
 #define ESTREAM_RANDOM          99
 
-typedef struct _ESTREAM_SETTINGS {
+struct ESTREAM_SETTINGS {
     int estreamUsageType;
     int cipherInitializationFrequency;
     int algorithm1;
@@ -65,7 +68,7 @@ typedef struct _ESTREAM_SETTINGS {
     bool generateStream;
     unsigned long streamSize;
 
-    _ESTREAM_SETTINGS(void) {
+    ESTREAM_SETTINGS(void) {
         estreamUsageType = 0;
         cipherInitializationFrequency = ESTREAM_INIT_CIPHERS_ONCE;
         algorithm1 = 0;
@@ -80,7 +83,7 @@ typedef struct _ESTREAM_SETTINGS {
         generateStream = false;
         streamSize = 0;
     }
-} ESTREAM_SETTINGS;
+};
 
 extern ESTREAM_SETTINGS* pEstreamSettings;
 

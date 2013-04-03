@@ -6,7 +6,7 @@ Logger::Logger() : m_logging(false), m_using_file(false),
 	m_out(new LoggerStream(this,clog)) {}
 
 Logger::~Logger() {
-    out() << "info: Exiting EACirc." << endl;
+    out(LOGGER_INFO) << "Exiting logger." << endl;
     delete m_out;
 }
 
@@ -53,4 +53,30 @@ int Logger::LoggerStream::LoggerBuffer::sync() {
     str("");
     m_out.flush();
     return 0;
+}
+
+bool Logger::getLogging() {
+    return m_logging;
+}
+
+ostream& Logger::out() {
+    return *m_out;
+}
+
+ostream& Logger::out(int prefix) {
+    switch (prefix) {
+    case LOGGER_INFO:
+        out() << "info: ";
+        break;
+    case LOGGER_WARNING:
+        out() << "warning: ";
+        break;
+    case LOGGER_ERROR:
+        out() << "error: ";
+        break;
+    default:
+        out(LOGGER_WARNING) << "Unknown logger prefix." << endl;
+        break;
+    }
+    return out();
 }

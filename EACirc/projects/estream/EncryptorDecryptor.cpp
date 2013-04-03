@@ -5,327 +5,187 @@
 #include <string>
 
 EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
-    int numRounds = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->alg1RoundsCount : -1;
-    int numRounds2 = (pEstreamSettings->limitAlgRounds) ? pEstreamSettings->alg2RoundsCount : -1;
-    for(int i = 0; i < 4; i++) {
-        ctxarr[i] = NULL;
-        ecryptarr[i] = NULL;
-    }
-	
-    int testVectorAlg = pEstreamSettings->algorithm1;
-	int nR = numRounds;
+    int algorithm = -1;
+    int numRounds = -1;
 
-	for (int i=0; i<2; i++) {
-	   if (i == 1) {
-               testVectorAlg = pEstreamSettings->algorithm2;
-			   nR = numRounds2;
-		}
-       switch (testVectorAlg) {
-		   case ESTREAM_ABC: {
-				ECRYPT_ABC* ecryptx = new ECRYPT_ABC();
-				ABC_ctx* ctxa = (ABC_ctx*)malloc(sizeof(ABC_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_ABC* ecryptx2 = new ECRYPT_ABC();
-				ABC_ctx* ctxa2 = (ABC_ctx*)malloc(sizeof(ABC_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;
-		   }
-		   case ESTREAM_ACHTERBAHN: {
-				ECRYPT_Achterbahn* ecryptx = new ECRYPT_Achterbahn();
-				ACHTERBAHN_ctx* ctxa = (ACHTERBAHN_ctx*)malloc(sizeof(ACHTERBAHN_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Achterbahn* ecryptx2 = new ECRYPT_Achterbahn();
-				ACHTERBAHN_ctx* ctxa2 = (ACHTERBAHN_ctx*)malloc(sizeof(ACHTERBAHN_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_CRYPTMT: {
-				ECRYPT_Cryptmt* ecryptx = new ECRYPT_Cryptmt();
-				CRYPTMT_ctx* ctxa = (CRYPTMT_ctx*)malloc(sizeof(CRYPTMT_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Cryptmt* ecryptx2 = new ECRYPT_Cryptmt();
-				CRYPTMT_ctx* ctxa2 = (CRYPTMT_ctx*)malloc(sizeof(CRYPTMT_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_DECIM: {
-				ECRYPT_Decim* ecryptx = new ECRYPT_Decim();
-				DECIM_ctx* ctxa = (DECIM_ctx*)malloc(sizeof(DECIM_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Decim* ecryptx2 = new ECRYPT_Decim();
-				DECIM_ctx* ctxa2 = (DECIM_ctx*)malloc(sizeof(DECIM_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-           // if unlimited, set correct number of round
-                if (nR == -1) nR = 8;
-				break;}
-		   case ESTREAM_DICING: {
-				ECRYPT_Dicing* ecryptx = new ECRYPT_Dicing();
-				DICING_ctx* ctxa = (DICING_ctx*)malloc(sizeof(DICING_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Dicing* ecryptx2 = new ECRYPT_Dicing();
-				DICING_ctx* ctxa2 = (DICING_ctx*)malloc(sizeof(DICING_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_DRAGON: {
-				ECRYPT_Dragon* ecryptx = new ECRYPT_Dragon();
-				DRAGON_ctx* ctxa = (DRAGON_ctx*)malloc(sizeof(DRAGON_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Dragon* ecryptx2 = new ECRYPT_Dragon();
-				DRAGON_ctx* ctxa2 = (DRAGON_ctx*)malloc(sizeof(DRAGON_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_EDON80: {
-				ECRYPT_Edon80* ecryptx = new ECRYPT_Edon80();
-				EDON80_ctx* ctxa = (EDON80_ctx*)malloc(sizeof(EDON80_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Edon80* ecryptx2 = new ECRYPT_Edon80();
-				EDON80_ctx* ctxa2 = (EDON80_ctx*)malloc(sizeof(EDON80_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_FFCSR: {
-				ECRYPT_FFCSR* ecryptx = new ECRYPT_FFCSR();
-				FFCSR_ctx* ctxa = (FFCSR_ctx*)malloc(sizeof(FFCSR_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_FFCSR* ecryptx2 = new ECRYPT_FFCSR();
-				FFCSR_ctx* ctxa2 = (FFCSR_ctx*)malloc(sizeof(FFCSR_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_FUBUKI: {
-				ECRYPT_Fubuki* ecryptx = new ECRYPT_Fubuki();
-				FUBUKI_ctx* ctxa = (FUBUKI_ctx*)malloc(sizeof(FUBUKI_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Fubuki* ecryptx2 = new ECRYPT_Fubuki();
-				FUBUKI_ctx* ctxa2 = (FUBUKI_ctx*)malloc(sizeof(FUBUKI_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-		   // if unlimited, set correct number of round
-                if (nR == -1) nR = 4;
-				break;}
-		   case ESTREAM_GRAIN: {
-				ECRYPT_Grain* ecryptx = new ECRYPT_Grain();
-				GRAIN_ctx* ctxa = (GRAIN_ctx*)malloc(sizeof(GRAIN_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Grain* ecryptx2 = new ECRYPT_Grain();
-				GRAIN_ctx* ctxa2 = (GRAIN_ctx*)malloc(sizeof(GRAIN_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-           // if unlimited, set correct number of round
-                if (nR == -1) nR = 13;
-				break;}
-		   case ESTREAM_HC128: {
-				ECRYPT_HC128* ecryptx = new ECRYPT_HC128();
-				HC128_ctx* ctxa = (HC128_ctx*)malloc(sizeof(HC128_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_HC128* ecryptx2 = new ECRYPT_HC128();
-				HC128_ctx* ctxa2 = (HC128_ctx*)malloc(sizeof(HC128_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_HERMES: {
-				ECRYPT_Hermes* ecryptx = new ECRYPT_Hermes();
-				HERMES_ctx* ctxa = (HERMES_ctx*)malloc(sizeof(HERMES_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Hermes* ecryptx2 = new ECRYPT_Hermes();
-				HERMES_ctx* ctxa2 = (HERMES_ctx*)malloc(sizeof(HERMES_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-		   // if unlimited, set correct number of round
-                if (nR == -1) nR = 10;
-				break;}
-		   case ESTREAM_LEX: {
-				ECRYPT_Lex* ecryptx = new ECRYPT_Lex();
-				LEX_ctx* ctxa = (LEX_ctx*)malloc(sizeof(LEX_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Lex* ecryptx2 = new ECRYPT_Lex();
-				LEX_ctx* ctxa2 = (LEX_ctx*)malloc(sizeof(LEX_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_MAG: {
-				ECRYPT_Mag* ecryptx = new ECRYPT_Mag();
-				MAG_ctx* ctxa = (MAG_ctx*)malloc(sizeof(MAG_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Mag* ecryptx2 = new ECRYPT_Mag();
-				MAG_ctx* ctxa2 = (MAG_ctx*)malloc(sizeof(MAG_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_MICKEY: {
-				ECRYPT_Mickey* ecryptx = new ECRYPT_Mickey();
-				MICKEY_ctx* ctxa = (MICKEY_ctx*)malloc(sizeof(MICKEY_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Mickey* ecryptx2 = new ECRYPT_Mickey();
-				MICKEY_ctx* ctxa2 = (MICKEY_ctx*)malloc(sizeof(MICKEY_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_MIR1: {
-				ECRYPT_Mir* ecryptx = new ECRYPT_Mir();
-				MIR1_ctx* ctxa = (MIR1_ctx*)malloc(sizeof(MIR1_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Mir* ecryptx2 = new ECRYPT_Mir();
-				MIR1_ctx* ctxa2 = (MIR1_ctx*)malloc(sizeof(MIR1_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_POMARANCH: {
-				ECRYPT_Pomaranch* ecryptx = new ECRYPT_Pomaranch();
-				POMARANCH_ctx* ctxa = (POMARANCH_ctx*)malloc(sizeof(POMARANCH_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Pomaranch* ecryptx2 = new ECRYPT_Pomaranch();
-				POMARANCH_ctx* ctxa2 = (POMARANCH_ctx*)malloc(sizeof(POMARANCH_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_PY: {
-				ECRYPT_Py* ecryptx = new ECRYPT_Py();
-				PY_ctx* ctxa = (PY_ctx*)malloc(sizeof(PY_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Py* ecryptx2 = new ECRYPT_Py();
-				PY_ctx* ctxa2 = (PY_ctx*)malloc(sizeof(PY_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_RABBIT: {
-				ECRYPT_Rabbit* ecryptx = new ECRYPT_Rabbit();
-				RABBIT_ctx* ctxa = (RABBIT_ctx*)malloc(sizeof(RABBIT_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Rabbit* ecryptx2 = new ECRYPT_Rabbit();
-				RABBIT_ctx* ctxa2 = (RABBIT_ctx*)malloc(sizeof(RABBIT_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_SALSA20: {
-				ECRYPT_Salsa* ecryptx = new ECRYPT_Salsa();
-				SALSA_ctx* ctxa = (SALSA_ctx*)malloc(sizeof(SALSA_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Salsa* ecryptx2 = new ECRYPT_Salsa();
-				SALSA_ctx* ctxa2 = (SALSA_ctx*)malloc(sizeof(SALSA_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-           // if unlimited, set correct number of round
-                if (nR == -1) nR = 12;
-				break;}
-		   case ESTREAM_SFINKS: {
-				ECRYPT_Sfinks* ecryptx = new ECRYPT_Sfinks();
-				SFINKS_ctx* ctxa = (SFINKS_ctx*)malloc(sizeof(SFINKS_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Sfinks* ecryptx2 = new ECRYPT_Sfinks();
-				SFINKS_ctx* ctxa2 = (SFINKS_ctx*)malloc(sizeof(SFINKS_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_SOSEMANUK: {
-				ECRYPT_Sosemanuk* ecryptx = new ECRYPT_Sosemanuk();
-				SOSEMANUK_ctx* ctxa = (SOSEMANUK_ctx*)malloc(sizeof(SOSEMANUK_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Sosemanuk* ecryptx2 = new ECRYPT_Sosemanuk();
-				SOSEMANUK_ctx* ctxa2 = (SOSEMANUK_ctx*)malloc(sizeof(SOSEMANUK_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_TRIVIUM: {
-				ECRYPT_Trivium* ecryptx = new ECRYPT_Trivium();
-				TRIVIUM_ctx* ctxa = (TRIVIUM_ctx*)malloc(sizeof(TRIVIUM_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Trivium* ecryptx2 = new ECRYPT_Trivium();
-				TRIVIUM_ctx* ctxa2 = (TRIVIUM_ctx*)malloc(sizeof(TRIVIUM_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_TSC4: {
-				ECRYPT_Tsc4* ecryptx = new ECRYPT_Tsc4();
-				TSC4_ctx* ctxa = (TSC4_ctx*)malloc(sizeof(TSC4_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Tsc4* ecryptx2 = new ECRYPT_Tsc4();
-				TSC4_ctx* ctxa2 = (TSC4_ctx*)malloc(sizeof(TSC4_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-           // if unlimited, set correct number of round
-                if (nR == -1) nR = 32;
-				break;}
-		   case ESTREAM_WG: {
-				ECRYPT_Wg* ecryptx = new ECRYPT_Wg();
-				WG_ctx* ctxa = (WG_ctx*)malloc(sizeof(WG_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Wg* ecryptx2 = new ECRYPT_Wg();
-				WG_ctx* ctxa2 = (WG_ctx*)malloc(sizeof(WG_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_YAMB: {
-				ECRYPT_Yamb* ecryptx = new ECRYPT_Yamb();
-				YAMB_ctx* ctxa = (YAMB_ctx*)malloc(sizeof(YAMB_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Yamb* ecryptx2 = new ECRYPT_Yamb();
-				YAMB_ctx* ctxa2 = (YAMB_ctx*)malloc(sizeof(YAMB_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-				break;}
-		   case ESTREAM_ZKCRYPT: {
-				ECRYPT_Zkcrypt* ecryptx = new ECRYPT_Zkcrypt();
-				ZKCRYPT_ctx* ctxa = (ZKCRYPT_ctx*)malloc(sizeof(ZKCRYPT_ctx));
-				ecryptarr[i] = ecryptx;
-				ctxarr[i] = (void*)ctxa;
-				ECRYPT_Zkcrypt* ecryptx2 = new ECRYPT_Zkcrypt();
-				ZKCRYPT_ctx* ctxa2 = (ZKCRYPT_ctx*)malloc(sizeof(ZKCRYPT_ctx));
-				ecryptarr[2+i] = ecryptx2;
-				ctxarr[2+i] = (void*)ctxa2;
-			   break;}
-		   case ESTREAM_RANDOM:
-				ecryptarr[i] = NULL;
-           // set correct number of rounds to prevent warning
-                nR = 0;
-				break;
-		   default:
-			   assert(false);
-			   break;
-		}
-
-        if (nR == -1) {
-            mainLogger.out() << "warning: Number of rounds probably incorrectly set (" << nR << "). See code and/or manual." << endl;
+    for (int cipherNumber=0; cipherNumber<2; cipherNumber++) {
+        // get correct settings for this cipher
+        switch (cipherNumber) {
+        case 0:
+            algorithm = pEstreamSettings->algorithm1;
+            numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
+            break;
+        case 1:
+            algorithm = pEstreamSettings->algorithm1;
+            numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
+            break;
+        default:
+            mainLogger.out(LOGGER_ERROR) << "Unsupported EncryptorDecryptor iteration in initialization (";
+            mainLogger.out() << cipherNumber << ")." << endl;
         }
+        // allocate ciphers and internalStates
+        for (int streamNumber=0; streamNumber<2; streamNumber++) {
+            m_ciphers[cipherNumber][streamNumber] = NULL;
+            m_internalStates[cipherNumber][streamNumber] = NULL;
+            if (algorithm == ESTREAM_RANDOM) continue;
 
-        if (testVectorAlg != ESTREAM_RANDOM) {
-			ecryptarr[i]->numRounds = nR;
-			ecryptarr[i]->ECRYPT_init();
-			ecryptarr[2+i]->numRounds = nR;
-			ecryptarr[2+i]->ECRYPT_init();
-		}
-
-	}
+            // if algorithm is set (other than random), allocate ciphers and internalState
+            switch (algorithm) {
+            case ESTREAM_ABC:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_ABC();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(ABC_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(ABC_ctx));
+                break;
+            case ESTREAM_ACHTERBAHN:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Achterbahn();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(ACHTERBAHN_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(ACHTERBAHN_ctx));
+                break;
+            case ESTREAM_CRYPTMT:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Cryptmt();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(CRYPTMT_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(CRYPTMT_ctx));
+                break;
+            case ESTREAM_DECIM:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Decim();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(DECIM_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(DECIM_ctx));
+                if (numRounds == -1) numRounds = 8;
+                break;
+            case ESTREAM_DICING:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Dicing();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(DICING_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(DICING_ctx));
+                break;
+            case ESTREAM_DRAGON:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Dragon();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(DRAGON_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(DRAGON_ctx));
+                break;
+            case ESTREAM_EDON80:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Edon80();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(EDON80_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(EDON80_ctx));
+                break;
+            case ESTREAM_FFCSR:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_FFCSR();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(FFCSR_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(FFCSR_ctx));
+                break;
+            case ESTREAM_FUBUKI:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Fubuki();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(FUBUKI_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(FUBUKI_ctx));
+                if (numRounds == -1) numRounds = 4;
+                break;
+            case ESTREAM_GRAIN:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Grain();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(GRAIN_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(GRAIN_ctx));
+                if (numRounds == -1) numRounds = 13;
+                break;
+            case ESTREAM_HC128:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_HC128();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(HC128_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(HC128_ctx));
+                break;
+            case ESTREAM_HERMES:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Hermes();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(HERMES_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(HERMES_ctx));
+                if (numRounds == -1) numRounds = 10;
+                break;
+            case ESTREAM_LEX:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Lex();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(LEX_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(LEX_ctx));
+                // typically 10 rounds, up to 14 possible, but internal constant would have to be changed
+                if (numRounds == -1) numRounds = 10;
+                break;
+            case ESTREAM_MAG:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Mag();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(MAG_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(MAG_ctx));
+                break;
+            case ESTREAM_MICKEY:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Mickey();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(MICKEY_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(MICKEY_ctx));
+                break;
+            case ESTREAM_MIR1:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Mir();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(MIR1_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(MIR1_ctx));
+                break;
+            case ESTREAM_POMARANCH:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Pomaranch();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(POMARANCH_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(POMARANCH_ctx));
+                break;
+            case ESTREAM_PY:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Py();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(PY_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(PY_ctx));
+                break;
+            case ESTREAM_RABBIT:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Rabbit();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(RABBIT_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(RABBIT_ctx));
+                break;
+            case ESTREAM_SALSA20:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Salsa();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(SALSA_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(SALSA_ctx));
+                if (numRounds == -1) numRounds = 12;
+                break;
+            case ESTREAM_SFINKS:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Sfinks();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(SFINKS_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(SFINKS_ctx));
+                break;
+            case ESTREAM_SOSEMANUK:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Sosemanuk();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(SOSEMANUK_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(SOSEMANUK_ctx));
+                break;
+            case ESTREAM_TRIVIUM:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Trivium();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(TRIVIUM_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(TRIVIUM_ctx));
+                break;
+            case ESTREAM_TSC4:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Tsc4();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(TSC4_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(TSC4_ctx));
+                if (numRounds == -1) numRounds = 32;
+                break;
+            case ESTREAM_WG:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Wg();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(WG_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(WG_ctx));
+                break;
+            case ESTREAM_YAMB:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Yamb();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(YAMB_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(YAMB_ctx));
+                break;
+            case ESTREAM_ZKCRYPT:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Zkcrypt();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(ZKCRYPT_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(ZKCRYPT_ctx));
+                break;
+            default:
+                mainLogger.out(LOGGER_ERROR) << "Unknown cipher type (" << algorithm << ")." << endl;
+                break;
+            }
+            if (numRounds == -1) {
+                mainLogger.out(LOGGER_WARNING) << "Number of rounds probably incorrectly set (" << numRounds;
+                mainLogger.out() << "). See code and/or manual." << endl;
+            }
+            m_ciphers[cipherNumber][streamNumber]->numRounds = numRounds;
+            m_ciphers[cipherNumber][streamNumber]->ECRYPT_init();
+        }
+    }
 
     // generate header to human-readable test-vector file
     if (pGlobals->settings->testVectors.saveTestVectors) {
@@ -349,14 +209,16 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
 }
 
 EncryptorDecryptor::~EncryptorDecryptor() {
-    for(int i = 0; i < 4; i++) {
-        if (ecryptarr[i] != NULL) {
-            delete ecryptarr[i];
-            ecryptarr[i] = NULL;
-        }
-        if (ctxarr[i] != NULL) {
-            free(ctxarr[i]);
-            ctxarr[i] = NULL;
+    for (int cipherNumber=0; cipherNumber<2; cipherNumber++) {
+        for (int streamNumber=0; streamNumber<2; streamNumber++) {
+            if (m_ciphers[cipherNumber][streamNumber]) {
+                delete m_ciphers[cipherNumber][streamNumber];
+                m_ciphers[cipherNumber][streamNumber] = NULL;
+            }
+            if (m_internalStates[cipherNumber][streamNumber]) {
+                free(m_internalStates[cipherNumber][streamNumber]);
+                m_internalStates[cipherNumber][streamNumber] = NULL;
+            }
         }
     }
 }
@@ -364,19 +226,19 @@ EncryptorDecryptor::~EncryptorDecryptor() {
 int EncryptorDecryptor::setupIV() {
     switch (pEstreamSettings->ivType) {
     case ESTREAM_GENTYPE_ZEROS:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x00;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_iv[input] = 0x00;
         break;
     case ESTREAM_GENTYPE_ONES:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) iv[input] = 0x01;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_iv[input] = 0x01;
         break;
     case ESTREAM_GENTYPE_RANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(iv[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(m_iv[input]));
         break;
     case ESTREAM_GENTYPE_BIASRANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(iv[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(m_iv[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
     }
 
@@ -386,18 +248,18 @@ int EncryptorDecryptor::setupIV() {
         tvFile << setfill('0');
         tvFile << "setting IV: ";
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-            tvFile << setw(2) << hex << (int)(iv[input]);
+            tvFile << setw(2) << hex << (int)(m_iv[input]);
         tvFile << endl;
         tvFile.close();
     }
 
     if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
-        ecryptarr[0]->ECRYPT_ivsetup(ctxarr[0], iv);
-        ecryptarr[2]->ECRYPT_ivsetup(ctxarr[2], iv);
+        m_ciphers[0][0]->ECRYPT_ivsetup(m_internalStates[0][0], m_iv);
+        m_ciphers[0][1]->ECRYPT_ivsetup(m_internalStates[0][1], m_iv);
     }
     if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
-        ecryptarr[1]->ECRYPT_ivsetup(ctxarr[1], iv);
-        ecryptarr[3]->ECRYPT_ivsetup(ctxarr[3], iv);
+        m_ciphers[1][0]->ECRYPT_ivsetup(m_internalStates[1][0], m_iv);
+        m_ciphers[1][1]->ECRYPT_ivsetup(m_internalStates[1][1], m_iv);
     }
 
     m_setIV = true;
@@ -407,19 +269,19 @@ int EncryptorDecryptor::setupIV() {
 int EncryptorDecryptor::setupKey() {
     switch (pEstreamSettings->keyType) {
     case ESTREAM_GENTYPE_ZEROS:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x00;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_key[input] = 0x00;
         break;
     case ESTREAM_GENTYPE_ONES:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) key[input] = 0x01;
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) m_key[input] = 0x01;
         break;
     case ESTREAM_GENTYPE_RANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(key[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) rndGen->getRandomFromInterval(255, &(m_key[input]));
         break;
     case ESTREAM_GENTYPE_BIASRANDOM:
-        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(key[input]));
+        for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(m_key[input]));
         break;
     default:
-        mainLogger.out() << "error: Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
         return STAT_INCOMPATIBLE_PARAMETER;
         break;
     }
@@ -430,60 +292,60 @@ int EncryptorDecryptor::setupKey() {
         tvFile << setfill('0');
         tvFile << "setting key: ";
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-            tvFile << setw(2) << hex << (int)(key[input]);
+            tvFile << setw(2) << hex << (int)(m_key[input]);
         tvFile << endl;
         tvFile.close();
     }
 
     if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
-        ecryptarr[0]->ECRYPT_keysetup(ctxarr[0], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
-        ecryptarr[2]->ECRYPT_keysetup(ctxarr[2], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        m_ciphers[0][0]->ECRYPT_keysetup(m_internalStates[0][0], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        m_ciphers[0][1]->ECRYPT_keysetup(m_internalStates[0][1], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }
     if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
-        ecryptarr[1]->ECRYPT_keysetup(ctxarr[1], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
-        ecryptarr[3]->ECRYPT_keysetup(ctxarr[3], key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        m_ciphers[1][0]->ECRYPT_keysetup(m_internalStates[1][0], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
+        m_ciphers[1][1]->ECRYPT_keysetup(m_internalStates[1][1], m_key, STREAM_BLOCK_SIZE*8, STREAM_BLOCK_SIZE*8);
     }
 
     m_setKey = true;
     return STAT_OK;
 }
 
-int EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int streamnum, int length) {
+int EncryptorDecryptor::encrypt(unsigned char* plain, unsigned char* cipher, int cipherNumber, int streamNumber, int length) {
     if (!m_setIV) {
-        mainLogger.out() << "error: Initialization vector is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Initialization vector is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
     if (!m_setKey) {
-        mainLogger.out() << "error: Key is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Key is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
 
-    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
-	// WRONG IMPLEMENTATION OF ABC:
-	//typeof hax
-	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum]))
-		((ECRYPT_ABC*)ecryptarr[streamnum])->ABC_process_bytes(0,(ABC_ctx*)ctxarr[streamnum],plain,cipher, length*8);
-	else
-		ecryptarr[streamnum]->ECRYPT_encrypt_bytes(ctxarr[streamnum], plain, cipher, length);
+    if (!length) length = pGlobals->settings->testVectors.inputLength;
+    // WRONG IMPLEMENTATION OF ABC:
+    //typeof hax
+    if (dynamic_cast<ECRYPT_ABC*>(m_ciphers[cipherNumber][streamNumber]))
+        ((ECRYPT_ABC*)m_ciphers[cipherNumber][streamNumber])->ABC_process_bytes(0,(ABC_ctx*)m_internalStates[cipherNumber][streamNumber],plain,cipher, length*8);
+    else
+        m_ciphers[cipherNumber][streamNumber]->ECRYPT_encrypt_bytes(m_internalStates[cipherNumber][streamNumber], plain, cipher, length);
     return STAT_OK;
 }
 
-int EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int streamnum, int length) {
+int EncryptorDecryptor::decrypt(unsigned char* cipher, unsigned char* plain, int cipherNumber, int streamNumber, int length) {
     if (!m_setIV) {
-        mainLogger.out() << "error: Initialization vector is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Initialization vector is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
     if (!m_setKey) {
-        mainLogger.out() << "error: Key is not set!" << endl;
+        mainLogger.out(LOGGER_ERROR) << "Key is not set!" << endl;
         return STAT_PROJECT_ERROR;
     }
 
-    if (!length) length = pGlobals->settings->testVectors.testVectorLength;
-	// WRONG IMPLEMENTATION OF ABC:
-	//typeof hax
-	if (dynamic_cast<ECRYPT_ABC*>(ecryptarr[streamnum])) 
-		((ECRYPT_ABC*)ecryptarr[streamnum])->ABC_process_bytes(1,(ABC_ctx*)ctxarr[streamnum],cipher,plain, length*8);
-	else
-		ecryptarr[streamnum]->ECRYPT_decrypt_bytes(ctxarr[streamnum], cipher, plain, length);
+    if (!length) length = pGlobals->settings->testVectors.inputLength;
+    // WRONG IMPLEMENTATION OF ABC:
+    //typeof hax
+    if (dynamic_cast<ECRYPT_ABC*>(m_ciphers[cipherNumber][streamNumber]))
+        ((ECRYPT_ABC*)m_ciphers[cipherNumber][streamNumber])->ABC_process_bytes(1,(ABC_ctx*)m_internalStates[cipherNumber][streamNumber],cipher,plain, length*8);
+    else
+        m_ciphers[cipherNumber][streamNumber]->ECRYPT_decrypt_bytes(m_internalStates[cipherNumber][streamNumber], cipher, plain, length);
     return STAT_OK;
 }

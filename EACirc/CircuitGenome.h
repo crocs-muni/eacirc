@@ -4,6 +4,7 @@
 //libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "EACglobals.h"
+#include "tinyxml.h"
 
 class CircuitGenome {
 public:
@@ -11,17 +12,25 @@ public:
     static int Mutator(GAGenome&, float);
     static float Evaluator(GAGenome&);
     static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
-    static void ExecuteFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
-	static int ParseCircuit(string textCircuit, unsigned long* circuit, int* numLayers, int* intLayerSize, int* outLayerSize);
-	static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char usePredictorMask[MAX_OUTPUTS] = NULL, int bPruneCircuit = FALSE);
+
+    /** reads genome in binary fromat from string
+      * genome parameters (number of layers, genome size, etc.) are taken from main settings
+      * @param textCircuit  string to read circuit from
+      * @param genome       read genome (contents overwritten)
+      * @return status
+      */
+    static int readGenomeFromBinary(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
+    static int readGenomeFromText(string textCircuit, GA1DArrayGenome<unsigned long>* genome);
+
+    static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
 	static int GetFunctionLabel(unsigned long functionID, unsigned long connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
-	static int GetUsedNodes(GAGenome &g, unsigned char usePredictorMask[MAX_OUTPUTS], unsigned char displayNodes[MAX_GENOME_SIZE]);
+    static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[]);
 	static int HasConnection(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, int* pbImplicitConnection);
 	static int HasImplicitConnection(unsigned long functionID);
 	static int IsOperand(unsigned long functionID, unsigned long connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
 	static int GetNeutralValue(unsigned long functionID, string* pOperand);
-    static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char inputs[MAX_INPUTS], unsigned char outputs[MAX_OUTPUTS]);
+    static int ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsigned char* inputs, unsigned char* outputs);
 
     /** saves genome to string in binary format
       * @param genome       genome to print
@@ -30,14 +39,11 @@ public:
       */
     static int writeGenome(const GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
 
-    /** reads genome in binary fromat from string
-      * genome parameters (number of layers, genome size, etc.) are taken from main settings
-      * - genome is prolonged by zeroes if needed
-      * @param genome       read genome (contents overwritten)
-      * @param textCircuit  string to read circuit from
-      * @return status
+    /** allocate XML structure for header in population file
+      * @param populationSize       size of the population (info in the header)
+      * @return pointer to root element "eacirc_population"
       */
-    static int readGenome(GA1DArrayGenome<unsigned long>& genome, string& textCircuit);
+    static TiXmlElement* populationHeader(int populationSize);
 
 private:
     /** saves circuit as generation with size 1
