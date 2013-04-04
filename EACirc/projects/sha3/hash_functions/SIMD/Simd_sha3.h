@@ -6,7 +6,7 @@ extern "C" {
 #include "tables.h"
 }
 
-class Simd : public SHA3 {
+class Simd : public Sha3Interface {
 
 #define SIMD_DEFAULT_ROUNDS	4
 

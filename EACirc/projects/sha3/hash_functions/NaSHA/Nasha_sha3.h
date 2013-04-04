@@ -5,7 +5,7 @@
 #include "../../Sha3Interface.h"
 #include "brg_types.h"
 
-class Nasha : public SHA3 {
+class Nasha : public Sha3Interface {
 
 #define Nasha_64BIT
 

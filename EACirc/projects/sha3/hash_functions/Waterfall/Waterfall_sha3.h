@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Waterfall : public SHA3 {
+class Waterfall : public Sha3Interface {
 
 /*typedef unsigned char BitSequence;		// Data type of input data
 typedef unsigned long long DataLength;*/	// Data type for input data length in bits
@@ -46,8 +46,10 @@ public:
 Waterfall(const int NumRounds);
 // Function prototypes
 
-// EACIRC: manual edit: next line added
-#define __forceinline __attribute__((always_inline))
+// EACIRC: manual edit: next 3 lines added
+#ifdef __GNUC__
+//#define __forceinline __attribute__((always_inline))
+#endif
 
 __forceinline int Init(int hashbitlen);									// Initialisation
 __forceinline int Update(const BitSequence *data, DataLength databitlen);	// Update state data with input

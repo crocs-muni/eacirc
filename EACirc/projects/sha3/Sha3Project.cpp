@@ -1,14 +1,243 @@
 #include "Sha3Project.h"
+#include "Sha3Constants.h"
+#include "Sha3Interface.h"
+
+SHA3_SETTINGS* pSha3Settings = NULL;
 
 Sha3Project::Sha3Project()
-    : IProject(PROJECT_ESTREAM) {}
+    : IProject(PROJECT_SHA3), m_tvOutputs(NULL), m_tvInputs(NULL),
+      m_numVectors(NULL), m_hasher(NULL) {
+    m_tvOutputs = new unsigned char[pGlobals->settings->testVectors.outputLength];
+    memset(m_tvOutputs,0,pGlobals->settings->testVectors.outputLength);
+    m_tvInputs = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    memset(m_tvInputs,0,pGlobals->settings->testVectors.inputLength);
+    m_numVectors = new int[2];
+}
 
-Sha3Project::~Sha3Project() {}
+Sha3Project::~Sha3Project() {
+    if (m_tvOutputs) delete[] m_tvOutputs;
+    m_tvOutputs = NULL;
+    if (m_tvInputs) delete[] m_tvInputs;
+    m_tvInputs = NULL;
+    if (m_numVectors) delete[] m_numVectors;
+    m_numVectors = NULL;
+    if (m_hasher) delete m_hasher;
+    m_hasher = NULL;
+}
 
 string Sha3Project::shortDescription() const {
     return "SHA-3 candidate functions";
 }
 
+int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
+    m_sha3Settings.usageType = atoi(getXMLElementValue(pRoot,"SHA3/USAGE_TYPE").c_str());
+    m_sha3Settings.vectorGenerationMethod = atoi(getXMLElementValue(pRoot,"SHA3/VECTOR_GENERATION_METHOD").c_str());
+    m_sha3Settings.algorithm1 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_1").c_str());
+    m_sha3Settings.algorithm2 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_2").c_str());
+    m_sha3Settings.ballancedTestVectors = (atoi(getXMLElementValue(pRoot,"SHA3/BALLANCED_TEST_VECTORS").c_str())) ? true : false;
+    m_sha3Settings.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"SHA3/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
+    m_sha3Settings.alg1RoundsCount = atoi(getXMLElementValue(pRoot,"SHA3/ROUNDS_ALG_1").c_str());
+    m_sha3Settings.alg2RoundsCount = atoi(getXMLElementValue(pRoot,"SHA3/ROUNDS_ALG_2").c_str());
+    m_sha3Settings.generateStream = (atoi(getXMLElementValue(pRoot,"SHA3/GENERATE_STREAM").c_str())) ? true : false;
+    istringstream ss(getXMLElementValue(pRoot,"SHA3/STREAM_SIZE"));
+    ss >> m_sha3Settings.streamSize;
+    pSha3Settings = &m_sha3Settings;
+
+    // bind project settings into global settings
+    pGlobals->settings->project = (void*) pSha3Settings;
+
+    return STAT_OK;
+}
+
+int Sha3Project::initializeProject() {
+    // allocate hasher
+    m_hasher = new Hasher;
+    // create test vector header, if saving test vectors
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        // write project config to test vector file
+        ofstream tvFile;
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+        tvFile << pSha3Settings->usageType << " \t\t(eStream usage type)" << endl;
+        tvFile << pSha3Settings->vectorGenerationMethod << " \t\t(vector generation method)" << endl;
+        tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
+        tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
+        tvFile << pSha3Settings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+        tvFile << pSha3Settings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+        if (pSha3Settings->limitAlgRounds) {
+            tvFile << pSha3Settings->alg1RoundsCount << " \t\t(algorithm1: " << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
+            tvFile << pSha3Settings->alg2RoundsCount << " \t\t(algorithm2: " << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
+        }
+        tvFile.close();
+    }
+    return STAT_OK;
+}
+
 int Sha3Project::generateTestVectors() {
+    int status = STAT_OK;
+
+    // if set so, do not generate test vectors but generate data stream to cout
+    if (pSha3Settings->generateStream) {
+        status = generateHashDataStream();
+        if (status != STAT_OK) {
+            return status;
+        } else {
+            return STAT_INTENTIONAL_EXIT;
+        }
+    }
+
+    // USED FOR BALANCING TEST VECTORS
+    this->m_numVectors[0] = 0;
+    this->m_numVectors[1] = 0;
+
+    for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
+        if (pGlobals->settings->testVectors.saveTestVectors == 1) {
+            ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
+            tvfile << "Test vector n." << dec << testVectorNumber << endl;
+            tvfile.close();
+        }
+
+        status = getTestVector();
+        if (status != STAT_OK) {
+            return status;
+        }
+
+        for (int inputByte = 0; inputByte < pGlobals->settings->testVectors.inputLength; inputByte++) {
+            pGlobals->testVectors.inputs[testVectorNumber][inputByte] = m_tvInputs[inputByte];
+        }
+        for (int outputByte = 0; outputByte < pGlobals->settings->testVectors.outputLength; outputByte++)
+            pGlobals->testVectors.outputs[testVectorNumber][outputByte] = m_tvOutputs[outputByte];
+    }
+    return status;
+}
+
+int Sha3Project::getTestVector() {
+    int status = STAT_OK;
+    //! are we using algorithm1 (0) or algorithm2 (1) ?
+    int algorithmNumber = 0;
+    ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
+    switch (pSha3Settings->usageType) {
+    case SHA3_DISTINGUISHER:
+        //SHALL WE BALANCE TEST VECTORS?
+        if (pSha3Settings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
+            algorithmNumber = 1;
+        else if (pSha3Settings->ballancedTestVectors && (m_numVectors[1] >= pGlobals->settings->testVectors.setSize/2))
+            algorithmNumber = 0;
+        else
+            rndGen->getRandomFromInterval(1, &algorithmNumber);
+        m_numVectors[algorithmNumber]++;
+        status = getTestVectorByAlgorithm(algorithmNumber);
+        break;
+    default:
+        mainLogger.out(LOGGER_ERROR) << "Unknown usage type (" << pSha3Settings->usageType << ") in " << shortDescription() << endl;
+        return STAT_INVALID_ARGUMETS;
+        break;
+    }
+
+    // save human-readable test vector
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        int algorithm = -1;
+        if (algorithmNumber == 0) algorithm = pSha3Settings->algorithm1;
+        else algorithm = pSha3Settings->algorithm2;
+        tvFile << setfill('0');
+
+        /*
+        if (memcmp(m_tvInputs,m_plaintextIn,pGlobals->settings->testVectors.inputLength) != 0) {
+            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
+            tvFile << setw(2) << hex << (int)(m_plaintextIn[input]);
+            tvFile << "::";
+        }
+
+        for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
+            tvFile << setw(2) << hex << (int)(m_tvInputs[input]);
+
+        if (memcmp(m_tvInputs,m_plaintextOut,pGlobals->settings->testVectors.inputLength) != 0) {
+            tvFile << "::";
+            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
+            tvFile << setw(2) << hex << (int)(m_plaintextOut[input]);
+        }
+        */
+        tvFile << endl;
+    }
+    tvFile.close();
+    return status;
+}
+
+int Sha3Project::getTestVectorByAlgorithm(int algorithmNumber) {
+    if (algorithmNumber != 1 && algorithmNumber != 2) {
+        mainLogger.out(LOGGER_ERROR) << "Incorrect algorithm number (" << algorithmNumber << ")." << endl;
+        return STAT_INVALID_ARGUMETS;
+    }
+
     return STAT_NOT_IMPLEMENTED_YET;
+}
+
+int Sha3Project::generateHashDataStream() {
+    int status = STAT_OK;
+    int algorithm = -1;
+    int numRounds = -1;
+    string streamFilename;
+    for (int algorithmNumber = 1; algorithmNumber <= 2; algorithmNumber++) {
+        switch (algorithmNumber) {
+        case 1:
+            algorithm = pSha3Settings->algorithm1;
+            numRounds = pSha3Settings->limitAlgRounds ? pSha3Settings->alg1RoundsCount : -1;
+            streamFilename = SHA3_FILE_STREAM_1;
+            break;
+        case 2:
+            algorithm = pSha3Settings->algorithm2;
+            numRounds = pSha3Settings->limitAlgRounds ? pSha3Settings->alg2RoundsCount : -1;
+            streamFilename = SHA3_FILE_STREAM_2;
+            break;
+        default:
+            mainLogger.out(LOGGER_ERROR) << "Unsupported iteration while generating testVector streams (";
+            mainLogger.out() << algorithmNumber << ")." << endl;
+            return STAT_PROJECT_ERROR;
+        }
+        if (algorithm == SHA3_RANDOM) {
+            mainLogger.out(LOGGER_INFO) << "Algorithm " << algorithmNumber;
+            mainLogger.out() << " is set to random, stream data generation skipped." << endl;
+            continue;
+        } else {
+            mainLogger.out(LOGGER_INFO) << "Generating stream for " << Sha3Interface::sha3ToString(algorithm);
+            if (numRounds == -1) {
+                mainLogger.out() << " (unlimitted version)." << endl;
+            } else {
+                mainLogger.out() << " (" << numRounds << " rounds)." << endl;
+            }
+            mainLogger.out(LOGGER_INFO) << " Output is saved to file \"" << streamFilename << "\"." << endl;
+        }
+        ostream* vectorStream = NULL;
+        if (pSha3Settings->streamSize == 0) {
+            vectorStream = &cout;
+        } else {
+            vectorStream = new ofstream(streamFilename, ios_base::binary | ios_base::trunc);
+        }
+        unsigned long alreadyGenerated = 0;
+        while (pSha3Settings->streamSize == 0 ? true : alreadyGenerated <= pSha3Settings->streamSize) {
+            for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
+                if (status != STAT_OK) break;
+
+                // get test vector for algorithmNumber
+                status = getTestVectorByAlgorithm(algorithmNumber);
+
+                for (int index = 0; index < pGlobals->settings->testVectors.inputLength; index++) {
+                    (*vectorStream) << m_tvInputs[index];
+                }
+                alreadyGenerated += pGlobals->settings->testVectors.inputLength;
+            }
+        }
+
+        if (pSha3Settings->streamSize != 0) {
+            delete vectorStream;
+            vectorStream = NULL;
+        }
+        mainLogger.out(LOGGER_INFO) << "Hash data generation ended. (" << alreadyGenerated << ")" << endl;
+    }
+
+    return status;
 }

@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Essence : public SHA3 {
+class Essence : public Sha3Interface {
 
 //NASTAVENIE RUND:
 #define ESSENCE_COMPRESS_NUM_STEPS 32 /* MUST BE MULTIPLE OF 8 */

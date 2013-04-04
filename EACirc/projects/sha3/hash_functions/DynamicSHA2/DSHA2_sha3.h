@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "../../Sha3Interface.h"
 
-class DSHA2 : public SHA3 {
+class DSHA2 : public Sha3Interface {
 
 #define DSHA2_DEFAULT_ROUNDS 17
 

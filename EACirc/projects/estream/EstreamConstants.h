@@ -1,8 +1,8 @@
 #ifndef ESTREAMCONSTANTS_H
 #define ESTREAMCONSTANTS_H
 
-// eStream test vector generation method
-#define ESTREAM_DISTINCT            101
+// eStream usage type
+#define ESTREAM_DISTINGUISHER       101
 #define ESTREAM_PREDICT_KEY         102
 #define ESTREAM_BITS_TO_CHANGE      103
 
@@ -54,7 +54,7 @@
 #define ESTREAM_RANDOM          99
 
 struct ESTREAM_SETTINGS {
-    int estreamUsageType;
+    int usageType;
     int cipherInitializationFrequency;
     int algorithm1;
     int algorithm2;
@@ -69,19 +69,19 @@ struct ESTREAM_SETTINGS {
     unsigned long streamSize;
 
     ESTREAM_SETTINGS(void) {
-        estreamUsageType = 0;
-        cipherInitializationFrequency = ESTREAM_INIT_CIPHERS_ONCE;
-        algorithm1 = 0;
-        algorithm2 = 0;
+        usageType = -1;
+        cipherInitializationFrequency = -1;
+        algorithm1 = -1;
+        algorithm2 = -1;
         ballancedTestVectors = false;
         limitAlgRounds = false;
         alg1RoundsCount = -1;
         alg2RoundsCount = -1;
-        keyType = ESTREAM_GENTYPE_ZEROS;
-        plaintextType = ESTREAM_GENTYPE_ZEROS;
-        ivType = ESTREAM_GENTYPE_ZEROS;
+        keyType = -1;
+        plaintextType = -1;
+        ivType = -1;
         generateStream = false;
-        streamSize = 0;
+        streamSize = -1;
     }
 };
 

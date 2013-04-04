@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class SHAvite : public SHA3 {
+class SHAvite : public Sha3Interface {
 
 #define SHAVITE_NUM_ROUNDS_256	12
 #define SHAVITE_NUM_ROUNDS_512	14

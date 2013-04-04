@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class MeshHash : public SHA3 {
+class MeshHash : public Sha3Interface {
 
 #define MESHHASH_DEFAULT_ROUNDS	256 /* real number of rounds is 256/8 */
 

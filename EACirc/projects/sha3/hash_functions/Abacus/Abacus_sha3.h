@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Abacus : public SHA3 {
+class Abacus : public Sha3Interface {
 
 /*typedef unsigned long DataLength;
 

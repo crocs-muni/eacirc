@@ -7,7 +7,7 @@
 #include "brg_endian.h"
 #include "brg_types.h"
 
-class Grostl : public SHA3 {
+class Grostl : public Sha3Interface {
 
 /* some sizes (number of bytes) */
 #define GROSTL_ROWS 8

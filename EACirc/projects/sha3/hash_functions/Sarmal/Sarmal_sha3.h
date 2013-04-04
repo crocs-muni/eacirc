@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Sarmal : public SHA3 {
+class Sarmal : public Sha3Interface {
 
 #define SARMAL_DEFAULT_ROUNDS_256	16
 #define SARMAL_DEFAULT_ROUNDS_384	20

@@ -6,7 +6,7 @@ extern "C" {
 #include "skein.h"
 }
 
-class Skein : public SHA3 {
+class Skein : public Sha3Interface {
 
 typedef enum
     {

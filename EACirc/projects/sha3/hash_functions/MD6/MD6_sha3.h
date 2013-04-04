@@ -6,7 +6,7 @@ extern "C" {
 #include "md6.h"
 }
 
-class MD6 : public SHA3 {
+class MD6 : public Sha3Interface {
 
 #define MD6_DEFAULT_ROUNDS	104
 

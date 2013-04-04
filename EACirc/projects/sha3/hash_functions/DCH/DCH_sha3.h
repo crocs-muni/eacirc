@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class DCH : public SHA3 {
+class DCH : public Sha3Interface {
 
 //Primitive polynomial over GF(2^8) to use
 #define DCH_PRIMITIVE 0x11d

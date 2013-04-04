@@ -4,7 +4,7 @@
 #include "../../Sha3Interface.h"
 #include "fugue_t.h"
 
-class Fugue : public SHA3 {
+class Fugue : public Sha3Interface {
 
 #define FUGUE_ROUNDS_PARAM_R_224_256	5
 #define FUGUE_ROUNDS_PARAM_R_384		6

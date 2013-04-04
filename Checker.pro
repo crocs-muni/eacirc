@@ -17,7 +17,7 @@ SOURCES += \
     EACirc/checker/CheckerMain.cpp \
     EACirc/Status.cpp \
     EACirc/Logger.cpp \
-    EACirc/EACglobals.cpp
+    EACirc/EACglobals.cpp \
 
 # === evaluators ===
 SOURCES += \

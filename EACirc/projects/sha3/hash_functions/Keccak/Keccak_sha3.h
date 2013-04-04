@@ -6,7 +6,7 @@ extern "C" {
 #include "KeccakSponge.h"
 }
 
-class Keccak : public SHA3 {
+class Keccak : public Sha3Interface {
 
 /*typedef unsigned char BitSequence;
 typedef unsigned long long DataLength;*/

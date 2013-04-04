@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Luffa : public SHA3 {
+class Luffa : public Sha3Interface {
 
 #define LUFFA_DEFAULT_ROUNDS 8
 

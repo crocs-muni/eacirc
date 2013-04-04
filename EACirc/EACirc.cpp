@@ -292,25 +292,25 @@ void EACirc::loadPopulation(const string filename) {
     if (m_settings.circuit.numLayers != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible number of layers (";
         mainLogger.out() << m_settings.circuit.numLayers << " vs. " << settingsValue << ")." << endl;
-        m_status = STAT_INCOMPATIBLE_PARAMETER;
+        m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_layer").c_str());
     if (m_settings.circuit.sizeLayer != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible layer size (";
         mainLogger.out() << m_settings.circuit.sizeLayer << " vs. " << settingsValue << ")." << endl;
-        m_status = STAT_INCOMPATIBLE_PARAMETER;
+        m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_input_layer").c_str());
     if (m_settings.circuit.sizeInputLayer != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible input layer size (";
         mainLogger.out() << m_settings.circuit.sizeInputLayer << " vs. " << settingsValue << ")." << endl;
-        m_status = STAT_INCOMPATIBLE_PARAMETER;
+        m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_output_layer").c_str());
     if (m_settings.circuit.sizeOutputLayer != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible output layer size (";
         mainLogger.out() << m_settings.circuit.sizeOutputLayer << " vs. " << settingsValue << ")." << endl;
-        m_status = STAT_INCOMPATIBLE_PARAMETER;
+        m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_status != STAT_OK) {
         delete pRoot;
@@ -328,7 +328,7 @@ void EACirc::loadPopulation(const string filename) {
     for (int i = 0; i < savedPopulationSize; i++) {
         if (pGenome->GetText() == NULL) {
             mainLogger.out(LOGGER_ERROR) << "Too few genomes in population - expecting " << savedPopulationSize << "." << endl;
-            m_status = STAT_INCOMPATIBLE_PARAMETER;
+            m_status = STAT_DATA_CORRUPTED;
             delete pRoot;
             return;
         }

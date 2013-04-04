@@ -239,7 +239,7 @@ int EncryptorDecryptor::setupIV() {
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
     }
 
     // human-readable test vector logging
@@ -282,7 +282,7 @@ int EncryptorDecryptor::setupKey() {
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
         break;
     }
 

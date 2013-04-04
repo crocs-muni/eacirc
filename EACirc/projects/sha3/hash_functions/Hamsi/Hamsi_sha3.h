@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Hamsi : public SHA3 {
+class Hamsi : public Sha3Interface {
 
 #define HAMSI_ROUNDS_256		3 /* 224 AND 256 VERSION */
 #define HAMSI_ROUNDS_384		6 /* 384 AND 512 VERSION */

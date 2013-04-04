@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Shamata : public SHA3 {
+class Shamata : public Sha3Interface {
 
 /* The followings are for multiplication over GF(2^8) with the primitive polynomial (x^8 + x^7 + x^5 + x + 1) for AES block */
 #define SHAMATA_R_f8 0x1b                                                // Primitive polynomial remainder

@@ -5,7 +5,7 @@
 
 #include "spectral_structs.h"
 
-class SpectralHash : public SHA3 {
+class SpectralHash : public Sha3Interface {
 
 typedef enum {SUCCESS = 0, FAIL = 1, BAD_HASHBITLEN = 2} HashReturn;
 

@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Boole : public SHA3 {
+class Boole : public Sha3Interface {
 
 private:
 #ifdef _WIN32

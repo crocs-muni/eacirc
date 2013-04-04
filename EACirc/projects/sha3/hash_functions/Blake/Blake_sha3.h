@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Blake : public SHA3 {
+class Blake : public Sha3Interface {
 
 //NASTAVENIE RUND:
 #define BLAKE_NB_ROUNDS32 14

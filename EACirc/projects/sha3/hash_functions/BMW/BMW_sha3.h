@@ -18,7 +18,7 @@ typedef u_int32_t bmw_u_int32_t;
 typedef u_int64_t bmw_u_int64_t;
 #endif
 
-class BMW : public SHA3 {
+class BMW : public Sha3Interface {
 
 // General SHA-3 definitions
 typedef enum { SUCCESS = 0, FAIL = 1, BAD_HASHLEN = 2, BAD_CONSECUTIVE_CALL_TO_UPDATE = 3 } HashReturn;

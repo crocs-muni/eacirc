@@ -10,7 +10,7 @@ typedef unsigned int AURORA_UINT32;
 #endif /* ?__x86_64__ */
 
 
-class Aurora : public SHA3 {
+class Aurora : public Sha3Interface {
 
 private:
 typedef enum { SUCCESS = 0, FAIL = 1, BAD_HASHBITLEN = 2 } HashReturn;

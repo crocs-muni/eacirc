@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Tangle : public SHA3 {
+class Tangle : public Sha3Interface {
 
 #define TANGLE_DEFAULT_ROUNDS_224	72
 #define TANGLE_DEFAULT_ROUNDS_256	80

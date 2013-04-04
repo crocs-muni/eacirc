@@ -28,6 +28,7 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
+    EACirc/projects/sha3/Sha3Interface.cpp
 
 # === evaluators ===
 SOURCES += \
@@ -56,10 +57,12 @@ SOURCES += \
     EACirc/projects/IProject.cpp \
     EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
     EACirc/projects/sha3/Sha3Project.cpp \
+    EACirc/projects/sha3/Hasher.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
     EACirc/projects/estream/AvalancheEvaluator.cpp \
+    EACirc/projects/tea/TeaProject.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -129,8 +132,8 @@ SOURCES += \
     EACirc/projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.cpp \
     EACirc/projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.cpp \
     EACirc/projects/sha3/hash_functions/ECHO/Echo_sha3.cpp \
-    EACirc/projects/sha3/hash_functions/ECOH/ecoh.param.cpp \
-    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/ECOH/ecoh.param.cpp \
+#    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.cpp \
     EACirc/projects/sha3/hash_functions/EDON/Edon_sha3.cpp \
 #    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.c \
 #    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.cpp \
@@ -181,9 +184,9 @@ SOURCES += \
 #    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.c \            # problem in win
 #    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.cpp \     # problem in win
     EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.cpp \
-    EACirc/projects/sha3/hash_functions/TIB3/inupfin256.c \
-    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
-    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/TIB3/inupfin256.c \
+#    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
+#    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Twister/Twister_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Vortex/vortex_core.c \
     EACirc/projects/sha3/hash_functions/Vortex/vortex_misc.c \
@@ -249,6 +252,8 @@ HEADERS += \
     EACirc/projects/pregenerated_tv/PregeneratedTvProject.h \
     EACirc/projects/sha3/Sha3Project.h \
     EACirc/projects/sha3/Sha3Interface.h \
+    EACirc/projects/sha3/Sha3Constants.h \
+    EACirc/projects/sha3/Hasher.h \
     EACirc/projects/estream/EstreamProject.h \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
@@ -346,8 +351,8 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.h \
     EACirc/projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.h \
     EACirc/projects/sha3/hash_functions/ECHO/Echo_sha3.h \
-    EACirc/projects/sha3/hash_functions/ECOH/ecoh.h \
-    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.h \
+#    EACirc/projects/sha3/hash_functions/ECOH/ecoh.h \
+#    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.h \
     EACirc/projects/sha3/hash_functions/EDON/Edon_sha3.h \
 #    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.h \
 #    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.h \
@@ -425,8 +430,8 @@ HEADERS += \
 #    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.h \         # problem in win
 #    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h \    # problem in win
     EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.h \
-    EACirc/projects/sha3/hash_functions/TIB3/inupfin.h \
-    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.h \
+#    EACirc/projects/sha3/hash_functions/TIB3/inupfin.h \
+#    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.h \
     EACirc/projects/sha3/hash_functions/Twister/Twister_sha3.h \
     EACirc/projects/sha3/hash_functions/Twister/twister_tables.h \
     EACirc/projects/sha3/hash_functions/Vortex/int_types.h \

@@ -18,6 +18,12 @@ class EstreamInterface {
 		virtual void ECRYPT_decrypt_bytes(void* ctx, const u8 * ciphertext, u8 * plaintext, u32 msglen) = 0;
 };
 
+/** converts eStream cipher constant to human-readable string
+  * @param cipher       cipher constant
+  * @return human readable cipher description
+  */
+const char* estreamToString(int cipher);
+
 #include "projects/estream/ciphers/abc/ecrypt-sync.h"
 #include "projects/estream/ciphers/achterbahn/ecrypt-sync.h"
 #include "projects/estream/ciphers/cryptmt/ecrypt-sync.h"
@@ -45,11 +51,5 @@ class EstreamInterface {
 #include "projects/estream/ciphers/wg/ecrypt-sync.h"
 #include "projects/estream/ciphers/yamb/ecrypt-sync.h"
 #include "projects/estream/ciphers/zk-crypt/ecrypt-sync.h"
-
-/** converts eStream cipher constant to human-readable string
-  * @param cipher       cipher constant
-  * @return human readable cipher description
-  */
-const char* estreamToString(int cipher);
 
 #endif

@@ -6,7 +6,7 @@ extern "C" {
 #include "chi.h"
 }
 
-class Chi : public SHA3 {
+class Chi : public Sha3Interface {
 
 private:
 int chiNumRounds256;

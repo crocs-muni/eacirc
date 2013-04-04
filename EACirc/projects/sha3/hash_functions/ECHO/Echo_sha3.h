@@ -4,7 +4,7 @@
 #include <string.h>
 #include "../../Sha3Interface.h"
 
-class Echo : public SHA3 {
+class Echo : public Sha3Interface {
 
 #define ECHO_NUM_ROUNDS_LOWER 8
 #define ECHO_NUM_ROUNDS_HIGHER 10

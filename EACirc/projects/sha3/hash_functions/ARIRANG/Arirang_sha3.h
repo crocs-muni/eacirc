@@ -6,7 +6,7 @@ extern "C" {
 }
 #include "../../Sha3Interface.h"
 
-class Arirang : public SHA3 {
+class Arirang : public Sha3Interface {
 
 typedef enum {SUCCESS = 0, FAIL = 1, BAD_HASHLEN = 2} HashReturn;
 

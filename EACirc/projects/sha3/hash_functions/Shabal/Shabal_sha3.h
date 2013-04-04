@@ -19,7 +19,7 @@ typedef unsigned long shabal_word32;
 #endif
 #endif
 
-class Shabal : public SHA3 {
+class Shabal : public Sha3Interface {
 
 #define SHABAL_BLOCK_SIZE   16
 #ifndef SHABAL_PARAM_R

@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Mscsha : public SHA3 {
+class Mscsha : public Sha3Interface {
 
 // This is maximum hash length in bytes for 512 hash length in bits
 #define MCSSHA_LBLOCK       	64

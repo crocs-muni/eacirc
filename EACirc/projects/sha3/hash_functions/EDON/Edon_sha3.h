@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Edon : public SHA3 {
+class Edon : public Sha3Interface {
 
 // General SHA-3 definitions
 //typedef unsigned char BitSequence;

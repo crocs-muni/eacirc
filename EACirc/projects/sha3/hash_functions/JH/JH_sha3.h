@@ -4,7 +4,7 @@
 #include <string.h>
 #include "../../Sha3Interface.h"
 
-class JH : public SHA3 {
+class JH : public Sha3Interface {
 
 #define JH_DEFAULT_NUM_ROUNDS	42
 

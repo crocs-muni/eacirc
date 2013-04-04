@@ -6,7 +6,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Cheetah : public SHA3 {
+class Cheetah : public Sha3Interface {
 
 //typedef unsigned char u8;
 //typedef unsigned int	u32;

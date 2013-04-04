@@ -4,7 +4,7 @@
 #include <string.h>
 #include "../../Sha3Interface.h"
 
-class Lane : public SHA3 {
+class Lane : public Sha3Interface {
 
 #define LANE_224_P_DEFAULT	6
 #define LANE_224_Q_DEFAULT	3

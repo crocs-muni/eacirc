@@ -4,7 +4,7 @@
 #include "../../Sha3Interface.h"
 #include "crunch_type.h"
 
-class Crunch : public SHA3 {
+class Crunch : public Sha3Interface {
 
 private:
 int crunchNumRounds224;

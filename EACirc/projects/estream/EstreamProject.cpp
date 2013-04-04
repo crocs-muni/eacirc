@@ -9,7 +9,9 @@ EstreamProject::EstreamProject()
     : IProject(PROJECT_ESTREAM), m_tvOutputs(NULL), m_tvInputs(NULL), m_plaintextIn(NULL), m_plaintextOut(NULL),
       m_numVectors(NULL), m_encryptorDecryptor(NULL) {
     m_tvOutputs = new unsigned char[pGlobals->settings->testVectors.outputLength];
+    memset(m_tvOutputs,0,pGlobals->settings->testVectors.outputLength);
     m_tvInputs = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    memset(m_tvInputs,0,pGlobals->settings->testVectors.inputLength);
     m_plaintextIn = new unsigned char[pGlobals->settings->testVectors.inputLength];
     m_plaintextOut = new unsigned char[pGlobals->settings->testVectors.inputLength];
     m_numVectors = new int[2];
@@ -35,7 +37,7 @@ string EstreamProject::shortDescription() const {
 }
 
 int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
-    m_estreamSettings.estreamUsageType = atoi(getXMLElementValue(pRoot,"ESTREAM/ESTREAM_USAGE_TYPE").c_str());
+    m_estreamSettings.usageType = atoi(getXMLElementValue(pRoot,"ESTREAM/USAGE_TYPE").c_str());
     m_estreamSettings.algorithm1 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str());
     m_estreamSettings.algorithm2 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_2").c_str());
     m_estreamSettings.ballancedTestVectors = (atoi(getXMLElementValue(pRoot,"ESTREAM/BALLANCED_TEST_VECTORS").c_str())) ? true : false;
@@ -70,7 +72,7 @@ int EstreamProject::initializeProject() {
             return STAT_FILE_WRITE_FAIL;
         }
         tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-        tvFile << pEstreamSettings->estreamUsageType << " \t\t(eStream usage type)" << endl;
+        tvFile << pEstreamSettings->usageType << " \t\t(eStream usage type)" << endl;
         tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
         tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
         tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
@@ -118,7 +120,7 @@ int EstreamProject::setupPlaintext() {
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown plaintext type for " << shortDescription() << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
     }
 
     return STAT_OK;
@@ -156,7 +158,7 @@ int EstreamProject::loadProjectState(TiXmlNode* pRoot) {
 int EstreamProject::generateTestVectors() {
     int status = STAT_OK;
 
-    // if set so, do not generate test vectors but generate data strean to cout
+    // if set so, do not generate test vectors but generate data stream to cout
     if (pEstreamSettings->generateStream) {
         status = generateCipherDataStream();
         if (status != STAT_OK) {
@@ -205,8 +207,8 @@ int EstreamProject::getTestVector(){
     ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
     //! are we using algorithm1 (0) or algorithm2 (1) ?
     int cipherNumber = 0;
-    switch (pEstreamSettings->estreamUsageType) {
-        case ESTREAM_DISTINCT:
+    switch (pEstreamSettings->usageType) {
+        case ESTREAM_DISTINGUISHER:
 
             //SHALL WE BALANCE TEST VECTORS?
             if (pEstreamSettings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
@@ -265,30 +267,10 @@ int EstreamProject::getTestVector(){
         break;
 
     default:
-        mainLogger.out(LOGGER_ERROR) << "unknown testVectorEstreamMethod (" << pEstreamSettings->estreamUsageType << ") in " << shortDescription() << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        mainLogger.out(LOGGER_ERROR) << "unknown testVectorEstreamMethod (" << pEstreamSettings->usageType << ") in " << shortDescription() << endl;
+        return STAT_INVALID_ARGUMETS;
         break;
     }
-
-    /*
-    // SAVE TEST VECTORS IN BINARY FILES
-    if (pGlobals->settings->testVectors.saveTestVectors) {
-        if (streamnum == 0) {
-            ofstream itvfile(FILE_TEST_DATA_1, ios::app | ios::binary);
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                    itvfile << m_tvInputs[input];
-            }
-            itvfile.close();
-        }
-        else {
-            ofstream itvfile(FILE_TEST_DATA_2, ios::app | ios::binary);
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                    itvfile << m_tvInputs[input];
-            }
-            itvfile.close();
-        }
-    }
-    */
 
     // save human-readable test vector
     if (pGlobals->settings->testVectors.saveTestVectors) {
@@ -320,6 +302,7 @@ int EstreamProject::getTestVector(){
 
 int EstreamProject::generateCipherDataStream() {
     //! are we using algorithm1 (0) or algorithm2 (1) ?
+    // TBD/TODO generate for both streams, see project_sha3
     int cipherNumber = -1;
     int algorithm = -1;
     int numRounds = -1;
@@ -334,7 +317,7 @@ int EstreamProject::generateCipherDataStream() {
     }
     if (cipherNumber == -1) {
         mainLogger.out(LOGGER_ERROR) << "Cannot generate stream from random, cipher must be specified." << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
     }
     mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(algorithm);
     if (numRounds == -1) {

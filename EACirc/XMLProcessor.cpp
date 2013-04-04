@@ -130,14 +130,14 @@ int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value) {
     TiXmlNode* pNode = getXMLElement(pRoot,path);
     if (pNode == NULL) {
         mainLogger.out(LOGGER_WARNING) << "no value at " << path << " in given XML." << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
     }
     if (path.find('@') == path.npos) {
         // setting text node
         TiXmlText* pText = pNode->FirstChild()->ToText();
         if (pText == NULL) {
             mainLogger.out(LOGGER_WARNING) << "node at " << path << " is not a leaf in XML." << endl;
-            return STAT_INCOMPATIBLE_PARAMETER;
+            return STAT_INVALID_ARGUMETS;
         }
         pText->SetValue(value.c_str());
     } else {

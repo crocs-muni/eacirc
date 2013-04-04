@@ -4,7 +4,7 @@
 #include "../../Sha3Interface.h"
 #include "WaMMConstants.h"
 
-class WaMM : public SHA3 {
+class WaMM : public Sha3Interface {
 
 private:
 int wammNumRounds;

@@ -84,12 +84,12 @@ int IProject::loadProjectStateMain(TiXmlNode *pRoot) {
     if (loadedType != m_type) {
         mainLogger.out(LOGGER_ERROR) << "Incompatible project type." << endl;
         mainLogger.out() << "       required: " << m_type << "  given: " << loadedType << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
     }
     bool loadable = atoi(getXMLElementValue(pRoot,"@loadable").c_str()) ? true : false;
     if (!loadable) {
         mainLogger.out(LOGGER_ERROR) << "Project is set as unloadable." << endl;
-        return STAT_INCOMPATIBLE_PARAMETER;
+        return STAT_INVALID_ARGUMETS;
     }
     if (loadProjectState(pRoot) != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Project state could not be loaded." << endl;

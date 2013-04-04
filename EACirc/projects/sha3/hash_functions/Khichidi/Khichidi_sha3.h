@@ -4,7 +4,7 @@
 #include "../../Sha3Interface.h"
 #include "common.h"
 
-class Khichidi : public SHA3 {
+class Khichidi : public Sha3Interface {
 
 	typedef struct
 	{

@@ -4,7 +4,7 @@
 #include "../../Sha3Interface.h"
 #include "int_types.h"
 
-class Vortex : public SHA3 {
+class Vortex : public Sha3Interface {
 
 #if 0
 #define VORTEX_HAMMING_W_ANALYSIS

@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Lesamnta : public SHA3 {
+class Lesamnta : public Sha3Interface {
 
 #define LESAMNTA_DEFAULT_ROUNDS	32
 

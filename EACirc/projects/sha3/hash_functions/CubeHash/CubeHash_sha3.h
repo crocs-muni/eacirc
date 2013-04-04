@@ -3,7 +3,7 @@
 
 #include "../../Sha3Interface.h"
 
-class Cubehash : public SHA3 {
+class Cubehash : public Sha3Interface {
 
 //NASTAVENIE RUND:
 #define CUBEHASH_ROUNDS 8

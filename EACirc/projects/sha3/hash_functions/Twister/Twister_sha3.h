@@ -12,7 +12,7 @@ typedef unsigned __int8 uint8_t;
 #endif
 
 
-class Twister : public SHA3 {
+class Twister : public Sha3Interface {
 
 #define TWISTER_DEFAULT_MINI_ROUNDS_256	9
 #define TWISTER_DEFAULT_MINI_ROUNDS_384	10
