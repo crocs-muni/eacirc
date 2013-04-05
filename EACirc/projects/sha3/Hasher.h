@@ -14,10 +14,12 @@ class Hasher {
 
     //! array with computed hashes
     unsigned char* m_hashOutputs[2];
+    //! array with hash output lengths
+    int m_hashOutputLengths[2];
     //! counters for hashed data
     unsigned long m_counters[2];
     //! number of bits of computed hashes already used in test vectors
-    int m_bitsUsed[2];
+    int m_usedBytes[2];
 public:
     /** constructor
       * - allocates hash functions according to loaded settings
@@ -28,6 +30,10 @@ public:
     /** destructor, release memory
       */
     ~Hasher();
+
+    /** set counters to initial value
+      */
+    int initializeState();
 
     /** prepare single test vector for given algorithm (according to vectorGenerationMethod)
       * @param algorithmNumber      1 for algorithm_1, 2 for algorithm_2

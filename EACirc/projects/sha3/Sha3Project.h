@@ -55,6 +55,11 @@ public:
       */
     int initializeProject();
 
+    /** set counters in hasher
+      * @return status
+      */
+    int initializeProjectState();
+
     /** prepares complete test vector set set
       * @return status
       */

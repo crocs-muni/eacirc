@@ -388,7 +388,12 @@ void EACirc::initializeState() {
         loadPopulation(FILE_POPULATION);
     } else {
         m_status = m_project->generateAndSaveTestVectors();
-        mainLogger.out(LOGGER_INFO) << "Initial test vectors generated." << endl;
+        if (m_status == STAT_OK) {
+            mainLogger.out(LOGGER_INFO) << "Initial test vectors generated." << endl;
+        } else {
+            mainLogger.out(LOGGER_ERROR) << "Initial test vectors generation failed." << endl;
+            return;
+        }
         createPopulation();
     }
 

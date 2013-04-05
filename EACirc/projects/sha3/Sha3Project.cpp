@@ -36,6 +36,8 @@ int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
     istringstream(getXMLElementValue(pRoot,"SHA3/SEED")) >> m_sha3Settings.seed;
     m_sha3Settings.algorithm1 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_1").c_str());
     m_sha3Settings.algorithm2 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_2").c_str());
+    m_sha3Settings.hashLength1 = atoi(getXMLElementValue(pRoot,"SHA3/HASHLENGTH_ALG_1").c_str());
+    m_sha3Settings.hashLength2 = atoi(getXMLElementValue(pRoot,"SHA3/HASHLENGTH_ALG_2").c_str());
     m_sha3Settings.ballancedTestVectors = (atoi(getXMLElementValue(pRoot,"SHA3/BALLANCED_TEST_VECTORS").c_str())) ? true : false;
     m_sha3Settings.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"SHA3/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
     m_sha3Settings.alg1RoundsCount = atoi(getXMLElementValue(pRoot,"SHA3/ROUNDS_ALG_1").c_str());
@@ -95,6 +97,10 @@ int Sha3Project::initializeProject() {
         tvFile.close();
     }
     return STAT_OK;
+}
+
+int Sha3Project::initializeProjectState() {
+    return m_hasher->initializeState();
 }
 
 int Sha3Project::generateTestVectors() {

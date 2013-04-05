@@ -1,5 +1,6 @@
 #include "Hasher.h"
 #include "hash_functions/hashFunctions.h"
+#include "generators/IRndGen.h"
 
 Hasher::Hasher() {
     int algorithm = -1;
@@ -11,10 +12,12 @@ Hasher::Hasher() {
         case 0:
             algorithm = pSha3Settings->algorithm1;
             numRounds = pSha3Settings->limitAlgRounds ? pSha3Settings->alg1RoundsCount : -1;
+            m_hashOutputLengths[algorithmNumber] = pSha3Settings->hashLength1/8;
             break;
         case 1:
-            algorithm = pSha3Settings->algorithm1;
+            algorithm = pSha3Settings->algorithm2;
             numRounds = pSha3Settings->limitAlgRounds ? pSha3Settings->alg1RoundsCount : -1;
+            m_hashOutputLengths[algorithmNumber] = pSha3Settings->hashLength2/8;
             break;
         default:
             mainLogger.out(LOGGER_ERROR) << "Unsupported Hasher iteration in initialization (";
@@ -23,10 +26,11 @@ Hasher::Hasher() {
         // allocate hash functions
         m_hashFunctions[algorithmNumber] = NULL;
         m_hashOutputs[algorithmNumber] = NULL;
+        m_usedBytes[algorithmNumber] = m_hashOutputLengths[algorithmNumber];
         m_counters[algorithmNumber] = 0;
-        m_bitsUsed[algorithmNumber] = 0;
         if (algorithm == SHA3_RANDOM) continue;
         // if algorithm is set (other than random), allocate hash function
+        m_hashOutputs[algorithmNumber] = new unsigned char[m_hashOutputLengths[algorithmNumber]];
         switch (algorithm) {
         case SHA3_ABACUS:       m_hashFunctions[algorithmNumber] = new Abacus(numRounds); break;
         case SHA3_ARIRANG:      m_hashFunctions[algorithmNumber] = new Arirang(numRounds); break;
@@ -95,20 +99,65 @@ Hasher::~Hasher() {
     }
 }
 
+int Hasher::initializeState() {
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
+        if (pSha3Settings->useFixedSeed) {
+            m_counters[algorithmNumber] = pSha3Settings->seed;
+        } else {
+            rndGen->getRandomFromInterval(ULONG_MAX,&(m_counters[algorithmNumber]));
+        }
+    }
+    return STAT_OK;
+}
+
 int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned char* tvOutputs) {
     int status = STAT_OK;
-    if (algorithmNumber != 1 && algorithmNumber != 2) {
+    if (algorithmNumber != 0 && algorithmNumber != 1) {
         mainLogger.out(LOGGER_ERROR) << "Incorrect algorithm number (" << algorithmNumber << ")." << endl;
         return STAT_INVALID_ARGUMETS;
+    }
+    ofstream tvFile;
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open())
+            mainLogger.out(LOGGER_WARNING) << "Cannot write to human-readable test vector file." << endl;
     }
 
     switch (pSha3Settings->vectorGenerationMethod) {
     case SHA3_COUNTER:
-        return STAT_NOT_IMPLEMENTED_YET;
-        // set correct inputput
+        // set correct input
+        if ((algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2) != SHA3_RANDOM) {
+            // create new hash output, if necessary
+            if (m_hashOutputLengths[algorithmNumber] - m_usedBytes[algorithmNumber] < pGlobals->settings->testVectors.inputLength) {
+                m_hashFunctions[algorithmNumber]->Hash(8*m_hashOutputLengths[algorithmNumber],
+                                                       (const unsigned char*)&(m_counters[algorithmNumber]),
+                                                       8*sizeof(m_counters[algorithmNumber]),
+                                                       m_hashOutputs[algorithmNumber]);
+                m_usedBytes[algorithmNumber] = 0;
+                tvFile << "NEW HASH CREATED" << endl << "Input: ";
+                tvFile << setw(2*sizeof(m_counters[algorithmNumber])) << hex << m_counters[algorithmNumber] << endl;
+                tvFile << "Output: ";
+                for (int byte = 0; byte < m_hashOutputLengths[algorithmNumber]; byte++) {
+                    tvFile << setfill('0') << setw(2) << hex << (int)(m_hashOutputs[algorithmNumber][byte]);
+                }
+                tvFile << endl;
+                m_counters[algorithmNumber]++;
+            }
+            for (int byte = 0; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                tvInputs[byte] = m_hashOutputs[algorithmNumber][m_usedBytes[algorithmNumber]+byte];
+            }
+            m_usedBytes[algorithmNumber] += pGlobals->settings->testVectors.inputLength;
+        } else { // random data stream
+            if (pGlobals->settings->testVectors.saveTestVectors == 1)
+                tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):" << endl;
+            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
+                rndGen->getRandomFromInterval(UCHAR_MAX, &(tvInputs[input]));
+            }
+        }
 
         // set correct output
-
+        for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++)
+            tvOutputs[output] = algorithmNumber * 0xff;
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown test vector generation method (";
@@ -116,5 +165,9 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
         return STAT_INVALID_ARGUMETS;
     }
 
+    // save test vector to human readable test vector file
+    if (pGlobals->settings->testVectors.saveTestVectors) {
+        tvFile.close();
+    }
     return status;
 }

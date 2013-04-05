@@ -5,7 +5,7 @@
 #define SHA3_DISTINGUISHER          201
 
 // constants for test vector generation method
-#define SHA3_COUNTER                0
+#define SHA3_COUNTER                210
 
 // filenames for streams
 #define SHA3_FILE_STREAM_1      "SHA3-stream1.bin"
@@ -70,6 +70,8 @@ struct SHA3_SETTINGS {
     unsigned long seed;
     int algorithm1;
     int algorithm2;
+    int hashLength1;
+    int hashLength2;
     bool ballancedTestVectors;
     bool limitAlgRounds;
     int alg1RoundsCount;
@@ -84,6 +86,8 @@ struct SHA3_SETTINGS {
         seed = 0;
         algorithm1 = -1;
         algorithm2 = -1;
+        hashLength1 = -1;
+        hashLength2 = -1;
         ballancedTestVectors = false;
         limitAlgRounds = false;
         alg1RoundsCount = -1;
