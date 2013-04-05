@@ -9,6 +9,8 @@ typedef unsigned long long DataLength;
 class Sha3Interface {
 
 public:
+    Sha3Interface() {}
+    virtual ~Sha3Interface() {}
 	virtual int Init(int hashbitlen) = 0;
 	virtual int Update(const BitSequence *data, DataLength databitlen) = 0;
 	virtual int Final(BitSequence *hashval) = 0;

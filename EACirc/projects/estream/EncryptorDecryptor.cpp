@@ -176,7 +176,7 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
                 break;
             default:
                 mainLogger.out(LOGGER_ERROR) << "Unknown cipher type (" << algorithm << ")." << endl;
-                break;
+                return;
             }
             if (numRounds == -1) {
                 mainLogger.out(LOGGER_WARNING) << "Number of rounds probably incorrectly set (" << numRounds;
@@ -185,26 +185,6 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
             m_ciphers[cipherNumber][streamNumber]->numRounds = numRounds;
             m_ciphers[cipherNumber][streamNumber]->ECRYPT_init();
         }
-    }
-
-    // generate header to human-readable test-vector file
-    if (pGlobals->settings->testVectors.saveTestVectors) {
-        ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
-        tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
-        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->algorithm1);
-        if (pEstreamSettings->limitAlgRounds) {
-            tvFile << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
-        } else {
-            tvFile << " (unlimited version)" << endl;
-        }
-        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->algorithm2);
-        if (pEstreamSettings->limitAlgRounds) {
-            tvFile << " (" << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
-        } else {
-            tvFile << " (unlimited version)" << endl;
-        }
-        tvFile << "Test vectors formatted as PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
-        tvFile.close();
     }
 }
 

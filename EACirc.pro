@@ -329,6 +329,7 @@ HEADERS += \
 
 # === SHA-3 hash function files ===
 HEADERS += \
+    EACirc/projects/sha3/hash_functions/hashFunctions.h \
     EACirc/projects/sha3/hash_functions/Abacus/Abacus_sha3.h \
     EACirc/projects/sha3/hash_functions/ARIRANG/Arirang_OP32.h \
     EACirc/projects/sha3/hash_functions/ARIRANG/Arirang_sha3.h \

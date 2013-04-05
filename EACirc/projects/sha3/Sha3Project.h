@@ -19,14 +19,7 @@ class Sha3Project : public IProject {
       * test vector is saved to m_tvOutputs/m_tvInputs
       * @return status
       */
-    int getTestVector();
-
-    /** prepare single test vector for given algorithm
-      * test vector is saved to m_tvOutputs/m_tvInputs
-      * @param algorithmNumber      1 for algorithm_1, 2 for algorithm_2
-      * @return status
-      */
-    int getTestVectorByAlgorithm(int algorithmNumber);
+    int prepareSingleTestVector();
 
     /** generate binary output of hashed data to file (for each non-random stream)
       * - used to generate data stream for statistical testing (dieharder, etc.)
@@ -56,7 +49,7 @@ public:
 
     /** project initialization
       * - create Hasher
-      * - create project-specifiec header in test vector file (if needed)
+      * - create project-specifiec header in test vector files (if needed)
       * - allocated project specific evaluator (if used)
       * @return status
       */

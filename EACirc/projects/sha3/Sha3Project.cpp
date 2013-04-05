@@ -32,6 +32,8 @@ string Sha3Project::shortDescription() const {
 int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_sha3Settings.usageType = atoi(getXMLElementValue(pRoot,"SHA3/USAGE_TYPE").c_str());
     m_sha3Settings.vectorGenerationMethod = atoi(getXMLElementValue(pRoot,"SHA3/VECTOR_GENERATION_METHOD").c_str());
+    m_sha3Settings.useFixedSeed = (atoi(getXMLElementValue(pRoot,"SHA3/USE_FIXED_SEED").c_str())) ? true : false;
+    istringstream(getXMLElementValue(pRoot,"SHA3/SEED")) >> m_sha3Settings.seed;
     m_sha3Settings.algorithm1 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_1").c_str());
     m_sha3Settings.algorithm2 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_2").c_str());
     m_sha3Settings.ballancedTestVectors = (atoi(getXMLElementValue(pRoot,"SHA3/BALLANCED_TEST_VECTORS").c_str())) ? true : false;
@@ -54,15 +56,15 @@ int Sha3Project::initializeProject() {
     m_hasher = new Hasher;
     // create test vector header, if saving test vectors
     if (pGlobals->settings->testVectors.saveTestVectors) {
-        // write project config to test vector file
+        // generate header (project config) to test vector file
         ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::app);
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return STAT_FILE_WRITE_FAIL;
         }
         tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-        tvFile << pSha3Settings->usageType << " \t\t(eStream usage type)" << endl;
+        tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
         tvFile << pSha3Settings->vectorGenerationMethod << " \t\t(vector generation method)" << endl;
         tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
         tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
@@ -72,6 +74,24 @@ int Sha3Project::initializeProject() {
             tvFile << pSha3Settings->alg1RoundsCount << " \t\t(algorithm1: " << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
             tvFile << pSha3Settings->alg2RoundsCount << " \t\t(algorithm2: " << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
         }
+        tvFile.close();
+
+        // generate header to human-readable test-vector file
+        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+        tvFile << "Using SHA-3 hash functions and random generator to generate test vectors." << endl;
+        tvFile << "  stream1: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1);
+        if (pSha3Settings->limitAlgRounds) {
+            tvFile << " (" << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "  stream2: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2);
+        if (pSha3Settings->limitAlgRounds) {
+            tvFile << " (" << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
         tvFile.close();
     }
     return STAT_OK;
@@ -101,7 +121,7 @@ int Sha3Project::generateTestVectors() {
             tvfile.close();
         }
 
-        status = getTestVector();
+        status = prepareSingleTestVector();
         if (status != STAT_OK) {
             return status;
         }
@@ -115,11 +135,10 @@ int Sha3Project::generateTestVectors() {
     return status;
 }
 
-int Sha3Project::getTestVector() {
+int Sha3Project::prepareSingleTestVector() {
     int status = STAT_OK;
     //! are we using algorithm1 (0) or algorithm2 (1) ?
     int algorithmNumber = 0;
-    ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
     switch (pSha3Settings->usageType) {
     case SHA3_DISTINGUISHER:
         //SHALL WE BALANCE TEST VECTORS?
@@ -130,50 +149,27 @@ int Sha3Project::getTestVector() {
         else
             rndGen->getRandomFromInterval(1, &algorithmNumber);
         m_numVectors[algorithmNumber]++;
-        status = getTestVectorByAlgorithm(algorithmNumber);
+        status = m_hasher->getTestVector(algorithmNumber,m_tvInputs,m_tvOutputs);
         break;
     default:
-        mainLogger.out(LOGGER_ERROR) << "Unknown usage type (" << pSha3Settings->usageType << ") in " << shortDescription() << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown usage type (" << pSha3Settings->usageType << ")." << endl;
         return STAT_INVALID_ARGUMETS;
         break;
     }
 
     // save human-readable test vector
     if (pGlobals->settings->testVectors.saveTestVectors) {
-        int algorithm = -1;
-        if (algorithmNumber == 0) algorithm = pSha3Settings->algorithm1;
-        else algorithm = pSha3Settings->algorithm2;
+        ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
-
-        /*
-        if (memcmp(m_tvInputs,m_plaintextIn,pGlobals->settings->testVectors.inputLength) != 0) {
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
-            tvFile << setw(2) << hex << (int)(m_plaintextIn[input]);
-            tvFile << "::";
-        }
-
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
             tvFile << setw(2) << hex << (int)(m_tvInputs[input]);
-
-        if (memcmp(m_tvInputs,m_plaintextOut,pGlobals->settings->testVectors.inputLength) != 0) {
-            tvFile << "::";
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
-            tvFile << setw(2) << hex << (int)(m_plaintextOut[input]);
-        }
-        */
+        tvFile << "::";
+        for (int output = 0; output < pGlobals->settings->testVectors.outputLength; output++)
+            tvFile << setw(2) << hex << (int)(m_tvOutputs[output]);
         tvFile << endl;
+        tvFile.close();
     }
-    tvFile.close();
     return status;
-}
-
-int Sha3Project::getTestVectorByAlgorithm(int algorithmNumber) {
-    if (algorithmNumber != 1 && algorithmNumber != 2) {
-        mainLogger.out(LOGGER_ERROR) << "Incorrect algorithm number (" << algorithmNumber << ")." << endl;
-        return STAT_INVALID_ARGUMETS;
-    }
-
-    return STAT_NOT_IMPLEMENTED_YET;
 }
 
 int Sha3Project::generateHashDataStream() {
@@ -223,7 +219,7 @@ int Sha3Project::generateHashDataStream() {
                 if (status != STAT_OK) break;
 
                 // get test vector for algorithmNumber
-                status = getTestVectorByAlgorithm(algorithmNumber);
+                status = m_hasher->getTestVector(algorithmNumber,m_tvInputs,m_tvOutputs);
 
                 for (int index = 0; index < pGlobals->settings->testVectors.inputLength; index++) {
                     (*vectorStream) << m_tvInputs[index];

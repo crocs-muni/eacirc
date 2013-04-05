@@ -1,55 +1,6 @@
 #include "Sha3Interface.h"
 #include "EACglobals.h"
-
-#include "projects/sha3/hash_functions/Abacus/Abacus_sha3.h"
-#include "projects/sha3/hash_functions/ARIRANG/Arirang_sha3.h"
-#include "projects/sha3/hash_functions/Aurora/Aurora_sha3.h"
-#include "projects/sha3/hash_functions/Blake/Blake_sha3.h"
-#include "projects/sha3/hash_functions/Blender/Blender_sha3.h"
-#include "projects/sha3/hash_functions/BMW/BMW_sha3.h"
-#include "projects/sha3/hash_functions/Boole/Boole_sha3.h"
-#include "projects/sha3/hash_functions/Cheetah/Cheetah_sha3.h"
-#include "projects/sha3/hash_functions/CHI/Chi_sha3.h"
-#include "projects/sha3/hash_functions/CRUNCH/Crunch_sha3.h"
-#include "projects/sha3/hash_functions/CubeHash/CubeHash_sha3.h"
-#include "projects/sha3/hash_functions/DCH/DCH_sha3.h"
-#include "projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.h"
-#include "projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.h"
-#include "projects/sha3/hash_functions/ECHO/Echo_sha3.h"
-// #include "projects/sha3/hash_functions/ECOH/Ecoh_sha3.h"
-#include "projects/sha3/hash_functions/EDON/Edon_sha3.h"
-// #include "projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.h"
-#include "projects/sha3/hash_functions/ESSENCE/Essence_sha3.h"
-#include "projects/sha3/hash_functions/Fugue/Fugue_sha3.h"
-#include "projects/sha3/hash_functions/Grostl/Grostl_sha3.h"
-#include "projects/sha3/hash_functions/Hamsi/Hamsi_sha3.h"
-#include "projects/sha3/hash_functions/JH/JH_sha3.h"
-#include "projects/sha3/hash_functions/Keccak/Keccak_sha3.h"
-#include "projects/sha3/hash_functions/Khichidi/Khichidi_sha3.h"
-#include "projects/sha3/hash_functions/Lane/Lane_sha3.h"
-#include "projects/sha3/hash_functions/Lesamnta/Lesamnta_sha3.h"
-#include "projects/sha3/hash_functions/Luffa/Luffa_sha3.h"
-// #include "projects/sha3/hash_functions/LUX/Lux_sha3.h"
-#include "projects/sha3/hash_functions/MCSSHA3/Mcssha_sha3.h"
-#include "projects/sha3/hash_functions/MD6/MD6_sha3.h"
-#include "projects/sha3/hash_functions/MeshHash/MeshHash_sha3.h"
-#include "projects/sha3/hash_functions/NaSHA/Nasha_sha3.h"
-// #include "projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.h"
-#include "projects/sha3/hash_functions/Sarmal/Sarmal_sha3.h"
-#include "projects/sha3/hash_functions/Shabal/Shabal_sha3.h"
-#include "projects/sha3/hash_functions/Shamata/Shamata_sha3.h"
-#include "projects/sha3/hash_functions/SHAvite3/SHAvite_sha3.h"
-#include "projects/sha3/hash_functions/SIMD/Simd_sha3.h"
-#include "projects/sha3/hash_functions/Skein/Skein_sha3.h"
-#include "projects/sha3/hash_functions/SpectralHash/SpectralHash_sha3.h"
-#include "projects/sha3/hash_functions/StreamHash/StreamHash_sha3.h"
-// #include "projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h"
-#include "projects/sha3/hash_functions/Tangle/Tangle_sha3.h"
-// #include "projects/sha3/hash_functions/TIB3/Tib_sha3.h"
-#include "projects/sha3/hash_functions/Twister/Twister_sha3.h"
-#include "projects/sha3/hash_functions/Vortex/Vortex_sha3.h"
-#include "projects/sha3/hash_functions/WaMM/Wamm_sha3.h"
-#include "projects/sha3/hash_functions/Waterfall/Waterfall_sha3.h"
+#include "hash_functions/hashFunctions.h"
 
 const char* Sha3Interface::sha3ToString(int algorithm) {
     switch(algorithm) {
@@ -82,7 +33,7 @@ const char* Sha3Interface::sha3ToString(int algorithm) {
     case SHA3_LESAMNTA:         return "Lesamnta";
     case SHA3_LUFFA:            return "Luffa";
     case SHA3_LUX:              return "LUX";
-    case SHA3_MCSSHA3:          return "MCSSHA3";
+    case SHA3_MSCSHA3:          return "MCSSHA3";
     case SHA3_MD6:              return "MD6";
     case SHA3_MESHHASH:         return "MeshHash";
     case SHA3_NASHA:            return "NaSHA";
@@ -138,7 +89,7 @@ Sha3Interface* Sha3Interface::getSha3Function(int algorithm, int numRounds) {
     case SHA3_LESAMNTA: { return new Lesamnta(numRounds); break; }
     case SHA3_LUFFA: { return new Luffa(numRounds); break; }
     // case SHA3_LUX: { return new Lux(numRounds); break; }
-    case SHA3_MCSSHA3: { return new Mscsha(); break; }
+    case SHA3_MSCSHA3: { return new Mscsha(); break; }
     case SHA3_MD6: { return new MD6(numRounds); break; }
     case SHA3_MESHHASH: { return new MeshHash(numRounds); break; }
     case SHA3_NASHA: { return new Nasha(); break; }

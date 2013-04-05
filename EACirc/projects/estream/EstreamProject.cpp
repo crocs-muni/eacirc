@@ -62,17 +62,17 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
 int EstreamProject::initializeProject() {
     // allocate encryptorDecryptor
     m_encryptorDecryptor = new EncryptorDecryptor;
-    // create test vector header, if saving test vectors
+    // create test vector headers, if saving test vectors
     if (pGlobals->settings->testVectors.saveTestVectors) {
-        // write project config to test vector file
+        // generate header (project config) to test vector file
         ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::app);
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
             return STAT_FILE_WRITE_FAIL;
         }
         tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-        tvFile << pEstreamSettings->usageType << " \t\t(eStream usage type)" << endl;
+        tvFile << pEstreamSettings->usageType << " \t\t(usage type)" << endl;
         tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
         tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
         tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
@@ -85,6 +85,24 @@ int EstreamProject::initializeProject() {
         tvFile << pEstreamSettings->plaintextType << " \t\t(plaintext type)" << endl;
         tvFile << pEstreamSettings->keyType << " \t\t(key type)" << endl;
         tvFile << pEstreamSettings->ivType << " \t\t(IV type)" << endl;
+        tvFile.close();
+
+        // generate header to human-readable test-vector file
+        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+        tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
+        tvFile << "  stream1: using " << estreamToString(pEstreamSettings->algorithm1);
+        if (pEstreamSettings->limitAlgRounds) {
+            tvFile << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "  stream2: using " << estreamToString(pEstreamSettings->algorithm2);
+        if (pEstreamSettings->limitAlgRounds) {
+            tvFile << " (" << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "Test vectors formatted as PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
         tvFile.close();
     }
     // allocate project-specific evaluator, if needed

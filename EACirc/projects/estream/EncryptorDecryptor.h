@@ -32,9 +32,7 @@ public:
     //! was key already set?
     bool m_setKey;
 public:
-    /** constructor
-      * - allocates ciphers according to loaded settings
-      * - create header for human readable test vector file
+    /** constructor, allocates ciphers according to loaded settings
       */
     EncryptorDecryptor();
 
