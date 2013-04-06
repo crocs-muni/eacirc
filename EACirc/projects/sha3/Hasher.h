@@ -4,6 +4,7 @@
 #include "EACglobals.h"
 #include "Sha3Constants.h"
 #include "Sha3Interface.h"
+#include "XMLProcessor.h"
 
 class Hasher {
     /** array of used hash functions
@@ -20,6 +21,11 @@ class Hasher {
     unsigned long m_counters[2];
     //! number of bits of computed hashes already used in test vectors
     int m_usedBytes[2];
+
+    /** if number of rounds > -1, log info about number of rounds not supported
+      */
+    void checkNumRounds(int numRounds,string algorithmName);
+
 public:
     /** constructor
       * - allocates hash functions according to loaded settings
@@ -34,6 +40,20 @@ public:
     /** set counters to initial value
       */
     int initializeState();
+
+    /** save state of hasher
+      * - current hash outputs, lengths, counters, usedBytes
+      * @param pRoot    allocated XML element 'hasher' to be filled with state
+      * @return status
+      */
+    int saveHasherState(TiXmlNode* pRoot) const;
+
+    /** load state of hasher
+      * - current hash outputs, lengths, counters, usedBytes
+      * @param pRoot    XML element 'hasher'
+      * @return status
+      */
+    int loadHasherState(TiXmlNode* pRoot);
 
     /** prepare single test vector for given algorithm (according to vectorGenerationMethod)
       * @param algorithmNumber      1 for algorithm_1, 2 for algorithm_2

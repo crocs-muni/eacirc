@@ -48,32 +48,42 @@ Hasher::Hasher() {
         case SHA3_DYNAMICSHA2:  m_hashFunctions[algorithmNumber] = new DSHA2(numRounds); break;
         case SHA3_ECHO:         m_hashFunctions[algorithmNumber] = new Echo(numRounds); break;
             //case SHA3_ECOH:         m_hashFunctions[algorithmNumber] = new Ecoh(numRounds); break;
-            //case SHA3_EDON:         m_hashFunctions[algorithmNumber] = new Edon(numRounds); break;        consturctor!
+        case SHA3_EDON:         checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Edon; break;
             //case SHA3_ENRUPT:       m_hashFunctions[algorithmNumber] = new EnRUPT(numRounds); break;
         case SHA3_ESSENCE:      m_hashFunctions[algorithmNumber] = new Essence(numRounds); break;
         case SHA3_FUGUE:        m_hashFunctions[algorithmNumber] = new Fugue(numRounds); break;
         case SHA3_GROSTL:       m_hashFunctions[algorithmNumber] = new Grostl(numRounds); break;
         case SHA3_HAMSI:        m_hashFunctions[algorithmNumber] = new Hamsi(numRounds); break;
         case SHA3_JH:           m_hashFunctions[algorithmNumber] = new JH(numRounds); break;
-            //case SHA3_KECCAK:       m_hashFunctions[algorithmNumber] = new Keccak(numRounds); break;      consturctor!
-            //case SHA3_KHICHIDI:     m_hashFunctions[algorithmNumber] = new Khichidi(numRounds); break;    consturctor!
+        case SHA3_KECCAK:       checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Keccak; break;
+        case SHA3_KHICHIDI:     checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Khichidi; break;
         case SHA3_LANE:         m_hashFunctions[algorithmNumber] = new Lane(numRounds); break;
         case SHA3_LESAMNTA:     m_hashFunctions[algorithmNumber] = new Lesamnta(numRounds); break;
         case SHA3_LUFFA:        m_hashFunctions[algorithmNumber] = new Luffa(numRounds); break;
             //case SHA3_LUX:          m_hashFunctions[algorithmNumber] = new Lux(numRounds); break;
-            //case SHA3_MSCSHA3:      m_hashFunctions[algorithmNumber] = new Mscsha(numRounds); break;      consturctor!
+        case SHA3_MSCSHA3:      checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Mscsha; break;
         case SHA3_MD6:          m_hashFunctions[algorithmNumber] = new MD6(numRounds); break;
         case SHA3_MESHHASH:     m_hashFunctions[algorithmNumber] = new MeshHash(numRounds); break;
-            //case SHA3_NASHA:        m_hashFunctions[algorithmNumber] = new Nasha(numRounds); break;       consturctor!
+        case SHA3_NASHA:        checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Nasha; break;
             //case SHA3_SANDSTORM:    m_hashFunctions[algorithmNumber] = new Sandstorm(numRounds); break;
         case SHA3_SARMAL:       m_hashFunctions[algorithmNumber] = new Sarmal(numRounds); break;
-            //case SHA3_SHABAL:       m_hashFunctions[algorithmNumber] = new Shabal(numRounds); break;      consturctor!
-            //case SHA3_SHAMATA:      m_hashFunctions[algorithmNumber] = new Shamata(numRounds); break;     consturctor!
+        case SHA3_SHABAL:       checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Shabal; break;
+        case SHA3_SHAMATA:      checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Shamata; break;
         case SHA3_SHAVITE3:     m_hashFunctions[algorithmNumber] = new SHAvite(numRounds); break;
         case SHA3_SIMD:         m_hashFunctions[algorithmNumber] = new Simd(numRounds); break;
-            //case SHA3_SKEIN:        m_hashFunctions[algorithmNumber] = new Skein(numRounds); break;       consturctor!
-            //case SHA3_SPECTRALHASH: m_hashFunctions[algorithmNumber] = new SpectralHash(numRounds); break;        consturctor!
-            //case SHA3_STREAMHASH:   m_hashFunctions[algorithmNumber] = new StreamHash(numRounds); break;  consturctor!
+        case SHA3_SKEIN:        checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new Skein; break;
+        case SHA3_SPECTRALHASH: checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new SpectralHash; break;
+        case SHA3_STREAMHASH:   checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+                                m_hashFunctions[algorithmNumber] = new StreamHash; break;
             //case SHA3_SWIFFTX:      m_hashFunctions[algorithmNumber] = new Swifftx(numRounds); break;
         case SHA3_TANGLE:       m_hashFunctions[algorithmNumber] = new Tangle(numRounds); break;
             //case SHA3_TIB3:         m_hashFunctions[algorithmNumber] = new Tib3(numRounds); break;
@@ -108,6 +118,65 @@ int Hasher::initializeState() {
         }
     }
     return STAT_OK;
+}
+
+int Hasher::saveHasherState(TiXmlNode* pRoot) const {
+    TiXmlElement* pElem = NULL;
+    TiXmlElement* pElem2 = NULL;
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
+        int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
+        pElem = new TiXmlElement((string("algorithm")+toString(algorithmNumber+1)).c_str());
+        pElem->SetAttribute("type",algorithm);
+        pElem->SetAttribute("description",Sha3Interface::sha3ToString(algorithm));
+        if (algorithm != SHA3_RANDOM) {
+            pElem2 = new TiXmlElement("hash_output_length");
+            pElem2->LinkEndChild(new TiXmlText(toString(m_hashOutputLengths[algorithmNumber]).c_str()));
+            pElem->LinkEndChild(pElem2);
+            pElem2 = new TiXmlElement("counter");
+            pElem2->LinkEndChild(new TiXmlText(toString(m_counters[algorithmNumber]).c_str()));
+            pElem->LinkEndChild(pElem2);
+            pElem2 = new TiXmlElement("used_bytes");
+            pElem2->LinkEndChild(new TiXmlText(toString(m_usedBytes[algorithmNumber]).c_str()));
+            pElem->LinkEndChild(pElem2);
+            ostringstream hash;
+            for (int byte = 0; byte < m_hashOutputLengths[algorithmNumber]; byte++) {
+                hash << dec << (int)m_hashOutputs[algorithmNumber][byte] << " ";
+            }
+            pElem2 = new TiXmlElement("current_hash");
+            pElem2->LinkEndChild(new TiXmlText(hash.str().c_str()));
+            pElem->LinkEndChild(pElem2);
+        }
+        pRoot->LinkEndChild(pElem);
+    }
+    return STAT_OK;
+}
+
+int Hasher::loadHasherState(TiXmlNode* pRoot) {
+    int status = STAT_OK;
+    TiXmlNode* pElem = NULL;
+    int algorithm;
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
+        algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
+        pElem = getXMLElement(pRoot,string("algorithm")+toString(algorithmNumber+1));
+        if (atoi(getXMLElementValue(pElem,"@type").c_str()) != algorithm) {
+            mainLogger.out(LOGGER_ERROR) << "Incompatible algorithm types." << endl;
+            return STAT_CONFIG_INCORRECT;
+        }
+        if (algorithm == SHA3_RANDOM) continue;
+        if (atoi(getXMLElementValue(pElem,"hash_output_length").c_str()) != m_hashOutputLengths[algorithmNumber]) {
+            mainLogger.out(LOGGER_ERROR) << "Incompatible hash output length." << endl;
+            return STAT_CONFIG_INCORRECT;
+        }
+        istringstream counter(getXMLElementValue(pElem,"counter"));
+        counter >> m_counters[algorithmNumber];
+        m_usedBytes[algorithmNumber] = atoi(getXMLElementValue(pElem,"used_bytes").c_str());
+        istringstream hash(getXMLElementValue(pElem,"current_hash"));
+        for (int byte = 0; byte < m_hashOutputLengths[algorithmNumber]; byte++) {
+            hash >> m_hashOutputs[algorithmNumber][byte];
+            if (hash.fail()) status = STAT_CONFIG_INCORRECT;
+        }
+    }
+    return status;
 }
 
 int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned char* tvOutputs) {
@@ -170,4 +239,10 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
         tvFile.close();
     }
     return status;
+}
+
+void Hasher::checkNumRounds(int numRounds,string algorithmName) {
+    if (numRounds > -1) {
+        mainLogger.out(LOGGER_WARNING) << algorithmName << " cannot be limited in rounds - using UNLIMITTED VERSION!." << endl;
+    }
 }

@@ -178,6 +178,20 @@ int Sha3Project::prepareSingleTestVector() {
     return status;
 }
 
+int Sha3Project::saveProjectState(TiXmlNode* pRoot) const {
+    int status = STAT_OK;
+    TiXmlElement* pRoot2 = pRoot->ToElement();
+    pRoot2->SetAttribute("loadable",1);
+    TiXmlElement* pElem = new TiXmlElement("hasher");
+    status =  m_hasher->saveHasherState(pElem);
+    pRoot2->LinkEndChild(pElem);
+    return status;
+}
+
+int Sha3Project::loadProjectState(TiXmlNode* pRoot) {
+    return m_hasher->loadHasherState(getXMLElement(pRoot,"hasher"));
+}
+
 int Sha3Project::generateHashDataStream() {
     int status = STAT_OK;
     int algorithm = -1;

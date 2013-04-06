@@ -285,7 +285,7 @@ int EstreamProject::getTestVector(){
         break;
 
     default:
-        mainLogger.out(LOGGER_ERROR) << "unknown testVectorEstreamMethod (" << pEstreamSettings->usageType << ") in " << shortDescription() << endl;
+        mainLogger.out(LOGGER_ERROR) << "unknown usage type (" << pEstreamSettings->usageType << ") in " << shortDescription() << endl;
         return STAT_INVALID_ARGUMETS;
         break;
     }

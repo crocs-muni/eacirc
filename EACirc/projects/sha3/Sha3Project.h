@@ -60,6 +60,18 @@ public:
       */
     int initializeProjectState();
 
+    /** save state - hashes, counters, ...
+      * @param pRoot    allocated project state XML root
+      * @return status
+      */
+    int saveProjectState(TiXmlNode* pRoot) const;
+
+    /** load state - hashes, counters, ...
+      * @param pRoot    allocated project state XML root
+      * @return status
+      */
+    int loadProjectState(TiXmlNode* pRoot);
+
     /** prepares complete test vector set set
       * @return status
       */

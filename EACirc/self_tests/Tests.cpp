@@ -211,7 +211,7 @@ TEST_CASE("determinism/tv-pregeneration","general run vs. run with the same pre-
     backupResults();
     // prepare run 2
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
-    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT","100") == STAT_OK);
+    //REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT","100") == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
     // run 2
