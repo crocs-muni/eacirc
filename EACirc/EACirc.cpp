@@ -84,35 +84,7 @@ void EACirc::loadConfiguration(const string filename) {
     pGlobals->settings = &m_settings;
 
     // CHECK SETTINGS CONSISTENCY
-    if (m_settings.testVectors.outputLength != m_settings.circuit.sizeOutputLayer) {
-        mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
-    }
-    if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE) {
-        mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal layer size or connector number)." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
-        mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {
-        mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when recommencing computation." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.ga.evolutionOff && !m_settings.main.loadInitialPopulation) {
-        mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when evolution is off." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.main.saveStateFrequency != 0 &&
-            m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
-        mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.testVectors.setChangeProgressive &&
-            m_settings.main.saveStateFrequency != 0) {
-        mainLogger.out(LOGGER_ERROR) << "Progressive test vector generation cannot be used when saving state." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
+    checkConfigurationConsistency();
 
     if (m_status != STAT_OK) return;
 
@@ -136,6 +108,49 @@ void EACirc::loadConfiguration(const string filename) {
     }
 }
 
+void EACirc::checkConfigurationConsistency() {
+    if (m_settings.testVectors.outputLength != m_settings.circuit.sizeOutputLayer) {
+        mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
+    }
+    if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE) {
+        mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal layer size or connector number)." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
+        mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.testVectors.inputLength < m_settings.circuit.sizeInputLayer) {
+        mainLogger.out(LOGGER_ERROR) << "Test vector input length is smaller than circuit input layer." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize > m_settings.circuit.sizeOutputLayer)) {
+        mainLogger.out(LOGGER_ERROR) << "Circuit memory too large, larger than circuit output." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize >= m_settings.circuit.sizeInputLayer)) {
+        mainLogger.out(LOGGER_ERROR) << "Circuit memory too large, larger than circuit input (or equal)." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {
+        mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when recommencing computation." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.ga.evolutionOff && !m_settings.main.loadInitialPopulation) {
+        mainLogger.out(LOGGER_ERROR) << "Initial population must be loaded from file when evolution is off." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.main.saveStateFrequency != 0 &&
+            m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
+        mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    if (m_settings.testVectors.setChangeProgressive &&
+            m_settings.main.saveStateFrequency != 0) {
+        mainLogger.out(LOGGER_ERROR) << "Progressive test vector generation cannot be used when saving state." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+}
 
 void EACirc::saveState(const string filename) {
     TiXmlElement* pRoot = new TiXmlElement("eacirc_state");

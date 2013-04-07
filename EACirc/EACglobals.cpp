@@ -44,13 +44,16 @@ SETTINGS_GA::SETTINGS_GA() {
 }
 
 SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
-    genomeSize = -1;
     numLayers = -1;
     sizeLayer = -1;
     sizeInputLayer = -1;
     sizeOutputLayer = -1;
     numConnectors = -1;
+    useMemory = false;
+    memorySize = -1;
+    allowPrunning = false;
     memset(allowedFunctions, 0, sizeof(allowedFunctions));
+    genomeSize = -1;
 }
 
 SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {

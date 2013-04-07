@@ -1,6 +1,8 @@
 #ifndef HASHFUNCTIONS_H
 #define HASHFUNCTIONS_H
 
+#define SHA3_HASH_SUCCESS 0
+
 #include "projects/sha3/hash_functions/Abacus/Abacus_sha3.h"
 #include "projects/sha3/hash_functions/ARIRANG/Arirang_sha3.h"
 #include "projects/sha3/hash_functions/Aurora/Aurora_sha3.h"

@@ -1211,6 +1211,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
 
     localInputs = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
     localOutputs = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
+    memset(localInputs, 0, pGlobals->settings->circuit.sizeInputLayer);
     memset(localOutputs, 0, pGlobals->settings->circuit.sizeInputLayer);
     
     // ALL IN ONE RUN
@@ -1221,7 +1222,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<unsigned long>* pGenome, unsig
         // PREPARE INPUTS FOR ACTUAL RUN OF CIRCUIT
         if (numSectors == 1) {
             // ALL INPUT DATA AT ONCE
-            memcpy(localInputs, inputs, pGlobals->settings->testVectors.inputLength);
+            memcpy(localInputs, inputs, pGlobals->settings->circuit.sizeInputLayer);
         }
         else {
             // USE STATE (OUTPUT) AS FIRST PART OF INPUT

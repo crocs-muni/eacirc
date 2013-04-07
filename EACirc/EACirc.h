@@ -34,6 +34,10 @@ class EACirc {
     //! generations completed in previous runs
     int m_oldGenerations;
 
+    /** checks, if configuration has no contradictions
+      */
+    void checkConfigurationConsistency();
+
     /** reinstantialized genetic algorithm object and resets population stats
       * - GAlib is reseeded by current seed at the beginning
       * @param population   will be used to init new instance of genetic algorithm

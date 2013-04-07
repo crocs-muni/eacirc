@@ -94,6 +94,7 @@ int Sha3Project::initializeProject() {
             tvFile << " (unlimited version)" << endl;
         }
         tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
+        tvFile << endl;
         tvFile.close();
     }
     return STAT_OK;

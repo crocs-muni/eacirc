@@ -29,8 +29,14 @@ Hasher::Hasher() {
         m_usedBytes[algorithmNumber] = m_hashOutputLengths[algorithmNumber];
         m_counters[algorithmNumber] = 0;
         if (algorithm == SHA3_RANDOM) continue;
+
         // if algorithm is set (other than random), allocate hash function
         m_hashOutputs[algorithmNumber] = new unsigned char[m_hashOutputLengths[algorithmNumber]];
+        // check hassOutputLength-testVectorInputSize relation
+        if (m_hashOutputLengths[algorithmNumber] % pGlobals->settings->testVectors.inputLength != 0) {
+            mainLogger.out(LOGGER_WARNING) << "Test vector input length is not divider of hash output length." << endl;
+            mainLogger.out(LOGGER_WARNING) << "Some bytes of hash will not be used (not unrecommended!)." << endl;
+        }
         switch (algorithm) {
         case SHA3_ABACUS:       m_hashFunctions[algorithmNumber] = new Abacus(numRounds); break;
         case SHA3_ARIRANG:      m_hashFunctions[algorithmNumber] = new Arirang(numRounds); break;
@@ -185,6 +191,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
         mainLogger.out(LOGGER_ERROR) << "Incorrect algorithm number (" << algorithmNumber << ")." << endl;
         return STAT_INVALID_ARGUMETS;
     }
+    int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
     ofstream tvFile;
     if (pGlobals->settings->testVectors.saveTestVectors) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app | ios_base::binary);
@@ -195,13 +202,29 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     switch (pSha3Settings->vectorGenerationMethod) {
     case SHA3_COUNTER:
         // set correct input
-        if ((algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2) != SHA3_RANDOM) {
+        if (algorithm != SHA3_RANDOM) {
             // create new hash output, if necessary
             if (m_hashOutputLengths[algorithmNumber] - m_usedBytes[algorithmNumber] < pGlobals->settings->testVectors.inputLength) {
-                m_hashFunctions[algorithmNumber]->Hash(8*m_hashOutputLengths[algorithmNumber],
-                                                       (const unsigned char*)&(m_counters[algorithmNumber]),
-                                                       8*sizeof(m_counters[algorithmNumber]),
-                                                       m_hashOutputs[algorithmNumber]);
+                int hashStatus = SHA3_HASH_SUCCESS;
+                hashStatus = m_hashFunctions[algorithmNumber]->Init(8*m_hashOutputLengths[algorithmNumber]);
+                if (hashStatus != SHA3_HASH_SUCCESS) {
+                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Interface::sha3ToString(algorithm);
+                    mainLogger.out() << " could not be initialized (status: " << hashStatus << ")." << endl;
+                    return STAT_PROJECT_ERROR;
+                }
+                hashStatus = m_hashFunctions[algorithmNumber]->Update((const unsigned char*)&(m_counters[algorithmNumber]),
+                                                                      8*sizeof(m_counters[algorithmNumber]));
+                if (hashStatus != SHA3_HASH_SUCCESS) {
+                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Interface::sha3ToString(algorithm);
+                    mainLogger.out() << " could not update hash (status: " << hashStatus << ")." << endl;
+                    return STAT_PROJECT_ERROR;
+                }
+                hashStatus = m_hashFunctions[algorithmNumber]->Final(m_hashOutputs[algorithmNumber]);
+                if (hashStatus != SHA3_HASH_SUCCESS) {
+                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Interface::sha3ToString(algorithm);
+                    mainLogger.out() << " could not finalize hash (status: " << hashStatus << ")." << endl;
+                    return STAT_PROJECT_ERROR;
+                }
                 m_usedBytes[algorithmNumber] = 0;
                 tvFile << "NEW HASH CREATED" << endl << "Input: ";
                 tvFile << setw(2*sizeof(m_counters[algorithmNumber])) << hex << m_counters[algorithmNumber] << endl;

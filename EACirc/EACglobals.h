@@ -118,6 +118,8 @@ struct SETTINGS_CIRCUIT {
     int sizeInputLayer;             //! number if inputs
     int sizeOutputLayer;            //! number of outputs
     int numConnectors;              //! how many connectors (? TBD)
+    bool useMemory;                 //! should we return part of output to input as memory?
+    int memorySize;                 //! memory size in bytes
     bool allowPrunning;             //! allow prunning when writing circuit?
     unsigned char allowedFunctions[FNC_MAX+1];  //! functions allowed in circuit
     // EXTRA INFORMATION, keep updated!
