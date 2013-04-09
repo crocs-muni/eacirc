@@ -9,6 +9,8 @@
 *.bat
 # object files, linked application, build filed
 *.o
+*.ocpp
+*.oc
 *.obj
 *.a
 *.lib

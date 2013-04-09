@@ -132,11 +132,7 @@ SOURCES += \
     EACirc/projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.cpp \
     EACirc/projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.cpp \
     EACirc/projects/sha3/hash_functions/ECHO/Echo_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/ECOH/ecoh.param.cpp \
-#    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.cpp \
     EACirc/projects/sha3/hash_functions/EDON/Edon_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.c \
-#    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.cpp \
     EACirc/projects/sha3/hash_functions/ESSENCE/essence_compress_256.c \
     EACirc/projects/sha3/hash_functions/ESSENCE/essence_compress_512.c \
     EACirc/projects/sha3/hash_functions/ESSENCE/essence_L_tables.c \
@@ -161,14 +157,12 @@ SOURCES += \
     EACirc/projects/sha3/hash_functions/Lane/Lane_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Lesamnta/Lesamnta_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Luffa/Luffa_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/LUX/Lux_sha3.cpp \
     EACirc/projects/sha3/hash_functions/MCSSHA3/Mcssha_sha3.cpp \
     EACirc/projects/sha3/hash_functions/MD6/md6_compress.c \
     EACirc/projects/sha3/hash_functions/MD6/md6_mode.c \
     EACirc/projects/sha3/hash_functions/MD6/MD6_sha3.cpp \
     EACirc/projects/sha3/hash_functions/MeshHash/MeshHash_sha3.cpp \
     EACirc/projects/sha3/hash_functions/NaSHA/Nasha_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Sarmal/Sarmal_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Shabal/Shabal_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Shamata/Shamata_sha3.cpp \
@@ -181,12 +175,7 @@ SOURCES += \
     EACirc/projects/sha3/hash_functions/Skein/Skein_sha3.cpp \
     EACirc/projects/sha3/hash_functions/SpectralHash/SpectralHash_sha3.cpp \
     EACirc/projects/sha3/hash_functions/StreamHash/StreamHash_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.c \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/TIB3/inupfin256.c \
-#    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
-#    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Twister/Twister_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Vortex/vortex_core.c \
     EACirc/projects/sha3/hash_functions/Vortex/vortex_misc.c \
@@ -200,6 +189,17 @@ SOURCES += \
     EACirc/projects/sha3/hash_functions/WaMM/Wamm_sha3.cpp \
     EACirc/projects/sha3/hash_functions/WaMM/WaMMTappingPrimes.c \
     EACirc/projects/sha3/hash_functions/Waterfall/Waterfall_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/ECOH/ecoh.param.cpp \
+#    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.c \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/LUX/Lux_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.c \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.cpp \
+#    EACirc/projects/sha3/hash_functions/TIB3/inupfin256.c \
+#    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
+#    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.cpp \
 
 # === Libraries (redundant if using pre-compiled) ===
 SOURCES += \

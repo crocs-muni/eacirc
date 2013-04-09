@@ -23,10 +23,11 @@ RUN_DIR		= run
 # complation settings
 #CXX			= g++
 CXX			= g++-4.7
+CC			= gcc-4.7
 CXXFLAGS		= -std=c++11 # -Wall
-DEBUG_CXXFLAGS		= -g -DDEBUG
-RELEASE_CXXFLAGS	= -O3
-PROFILE_CXXFLAGS	= -p
+DEBUG_FLAGS		= -g -DDEBUG
+RELEASE_FLAGS	= -O3
+PROFILE_FLAGS	= -p
 
 # other global settings
 INC_DIRS= -IEACirc -IEACirc/galib -IEACirc/tinyXML
@@ -37,23 +38,24 @@ SOURCES=
 HEADERS=
 # libs and source (loaded from Qt project file)
 include EACirc.pro
-OBJECTS_MAIN:=$(SOURCES:.cpp=.opp)
+OBJECTS_MAIN_TEMP:=$(SOURCES:.cpp=.ocpp)
+OBJECTS_MAIN:=$(OBJECTS_MAIN_TEMP:.c=.oc)
 
 # === EACirc Checker ===
 SOURCES=
 HEADERS=
 # libs and source (loaded from Qt project file)
 include Checker.pro
-OBJECTS_CHECKER:=$(SOURCES:.cpp=.o)
+OBJECTS_CHECKER:=$(SOURCES:.cpp=.ocpp)
 
 # rules and targets
 ifeq (YES, ${DEBUG})
-   CXXFLAGS     += $(DEBUG_CXXFLAGS)
+   FLAGS     += $(DEBUG_CXXFLAGS)
 else
-   CXXFLAGS     += $(RELEASE_CXXFLAGS)
+   FLAGS     += $(RELEASE_CXXFLAGS)
 endif
 ifeq (YES, $(PROFILE))
-   CXXFLAGS += $(PROFILE_CXXFLAGS)
+   FLAGS += $(PROFILE_CXXFLAGS)
 endif
 
 all: libs main checker
@@ -64,8 +66,11 @@ libs:
 	cd EACirc/tinyXML && $(MAKE)
 	@echo === tinyXML was successfully built. ===
 
-%.opp: %.cpp
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) -c -o "$@" "$<"
+%.ocpp: %.cpp
+	$(CXX) $(CXXFLAGS) $(FLAGS) $(INC_DIRS) -c -o "$@" "$<"
+
+%.oc: %.c
+	$(CC) $(FLAGS) $(INC_DIRS) -c -o "$@" "$<"
 
 main: libs $(OBJECTS_MAIN)
 	mkdir -p $(RUN_DIR)
