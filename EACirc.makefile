@@ -74,13 +74,13 @@ libs:
 
 main: libs $(OBJECTS_MAIN)
 	mkdir -p $(RUN_DIR)
-	$(CXX) $(CXXFLAGS) -o $(RUN_DIR)/$(OUTNAME_MAIN) $(OBJECTS_MAIN) $(INC_DIRS) $(INC_LIBS)
+	$(CXX) $(CXXFLAGS) $(FLAGS) -o $(RUN_DIR)/$(OUTNAME_MAIN) $(OBJECTS_MAIN) $(INC_DIRS) $(INC_LIBS)
 	if [ ! -f $(RUN_DIR)/config.xml ]; then cp EACirc/config.xml $(RUN_DIR)/; fi
 	@echo === $(OUTNAME_MAIN) was successfully built. ===
 
 checker: $(OBJECTS_CHECKER)
 	mkdir -p $(RUN_DIR)
-	$(CXX) $(CXXFLAGS) -o $(RUN_DIR)/$(OUTNAME_CHECKER) $(OBJECTS_CHECKER) $(INC_DIRS) $(INC_LIBS)
+	$(CXX) $(CXXFLAGS) $(FLAGS) -o $(RUN_DIR)/$(OUTNAME_CHECKER) $(OBJECTS_CHECKER) $(INC_DIRS) $(INC_LIBS)
 	@echo === $(OUTNAME_CHECKER) was successfully built. ===
 
 cleanall: cleanresults cleanlibs cleanmain cleanchecker
