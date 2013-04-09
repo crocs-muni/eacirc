@@ -46,9 +46,11 @@ public:
 Waterfall(const int NumRounds);
 // Function prototypes
 
-// EACIRC: manual edit: next 3 lines added
+// EACIRC: manual edit: next 5 lines added
 #ifdef __GNUC__
-//#define __forceinline __attribute__((always_inline))
+#ifndef __MINGW32__
+#define __forceinline __attribute__((always_inline))
+#endif
 #endif
 
 __forceinline int Init(int hashbitlen);									// Initialisation

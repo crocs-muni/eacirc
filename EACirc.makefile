@@ -37,7 +37,7 @@ SOURCES=
 HEADERS=
 # libs and source (loaded from Qt project file)
 include EACirc.pro
-OBJECTS_MAIN:=$(SOURCES:.cpp=.o)
+OBJECTS_MAIN:=$(SOURCES:.cpp=.opp)
 
 # === EACirc Checker ===
 SOURCES=
@@ -64,7 +64,7 @@ libs:
 	cd EACirc/tinyXML && $(MAKE)
 	@echo === tinyXML was successfully built. ===
 
-%.o: %.cpp
+%.opp: %.cpp
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) -c -o "$@" "$<"
 
 main: libs $(OBJECTS_MAIN)

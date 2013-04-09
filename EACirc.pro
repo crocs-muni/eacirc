@@ -28,7 +28,6 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
-    EACirc/projects/sha3/Sha3Interface.cpp
 
 # === evaluators ===
 SOURCES += \
@@ -38,7 +37,7 @@ SOURCES += \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
     EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp
+    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
 
 # === random generators ===
 SOURCES += \
@@ -58,6 +57,7 @@ SOURCES += \
     EACirc/projects/pregenerated_tv/PregeneratedTvProject.cpp \
     EACirc/projects/sha3/Sha3Project.cpp \
     EACirc/projects/sha3/Hasher.cpp \
+    EACirc/projects/sha3/Sha3Interface.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
@@ -181,8 +181,8 @@ SOURCES += \
     EACirc/projects/sha3/hash_functions/Skein/Skein_sha3.cpp \
     EACirc/projects/sha3/hash_functions/SpectralHash/SpectralHash_sha3.cpp \
     EACirc/projects/sha3/hash_functions/StreamHash/StreamHash_sha3.cpp \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.c \            # problem in win
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.cpp \     # problem in win
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.c \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.cpp \
     EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.cpp \
 #    EACirc/projects/sha3/hash_functions/TIB3/inupfin256.c \
 #    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
@@ -425,11 +425,11 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/SpectralHash/spectral_structs.h \
     EACirc/projects/sha3/hash_functions/StreamHash/sbox32.h \
     EACirc/projects/sha3/hash_functions/StreamHash/StreamHash_sha3.h \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/inttypes.h \        # problem in win
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdbool.h \         # problem in win
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdint.h \          # problem in win
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.h \         # problem in win
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h \    # problem in win
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/inttypes.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdbool.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdint.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h \
     EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.h \
 #    EACirc/projects/sha3/hash_functions/TIB3/inupfin.h \
 #    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.h \
