@@ -116,12 +116,11 @@ Hasher::~Hasher() {
 }
 
 int Hasher::initializeState() {
-    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
-        if (pSha3Settings->useFixedSeed) {
-            m_counters[algorithmNumber] = pSha3Settings->seed;
-        } else {
-            rndGen->getRandomFromInterval(ULONG_MAX,&(m_counters[algorithmNumber]));
-        }
+    if (!pSha3Settings->useFixedSeed) {
+        rndGen->getRandomFromInterval(ULONG_MAX,&(pSha3Settings->seed));
+    }
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {       
+        m_counters[algorithmNumber] = pSha3Settings->seed;
     }
     return STAT_OK;
 }

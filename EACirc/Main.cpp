@@ -7,42 +7,53 @@
 #include "self_tests/Catch.h"
 
 int main(int argc, char **argv) {
-    //usleep(3000);
+    // used in debug mode, wait for debugger to attach
 	std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
-    //
+    string configFilename = FILE_CONFIG;
     // COMMAND LINE ARGUMENTS PROCESSING
-    //
-    if (argc > 1) {
-        int i = 0;
-        while (++i < argc) {
-            // RUN SELF-TESTS
-            if (strcmp(argv[i],CMD_OPT_SELF_TEST) == 0) {
-                return Catch::Main(argc-i,argv+i);
-            }
-            // LOGGING TO CLOG
-            if (strcmp(argv[i],CMD_OPT_LOGGING) == 0) {
-                mainLogger.setOutputStream();
-                mainLogger.setlogging(true);
-            } else
-            // LOGGING TO FILE
-            if (strcmp(argv[i],CMD_OPT_LOGGING_TO_FILE) == 0) {
-                mainLogger.setOutputFile();
-                mainLogger.setlogging(true);
-            } else {
-            // INCORRECT CLI OPTION
-                mainLogger.out() << "\"" << argv[i] << "\" is not a valid argument." << endl;
-                mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
-                mainLogger.out() << "  " << CMD_OPT_LOGGING << "  (set logging to clog)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << "  (set logging to logfile)" << endl;
-                mainLogger.out() << "  " << CMD_OPT_SELF_TEST << "  (run self-tests, use " << CMD_OPT_SELF_TEST << " -h to display options)" << endl;
-                return STAT_INVALID_ARGUMETS;
-            }
+    int argument = 0;
+    while (argument + 1 < argc) {
+        argument++;
+        // RUN SELF-TESTS
+        if (strcmp(argv[argument],CMD_OPT_SELF_TEST) == 0) {
+            return Catch::Main(argc-argument,argv+argument);
         }
+        // CUSTOM CONFIG FILE
+        if (strcmp(argv[argument],CMD_OPT_CUSTOM_CONFIG) == 0) {
+            if (argument+1 == argc) {
+                mainLogger.out(LOGGER_ERROR) << "Incorrect CLI arguments: empty name of custom config file." << endl;
+                return STAT_INVALID_ARGUMETS;
+            } else {
+                configFilename = argv[argument+1];
+                argument++;
+            }
+            continue;
+        }
+        // LOGGING TO CLOG
+        if (strcmp(argv[argument],CMD_OPT_LOGGING) == 0) {
+            mainLogger.setOutputStream();
+            mainLogger.setlogging(true);
+            continue;
+        }
+        // LOGGING TO FILE
+        if (strcmp(argv[argument],CMD_OPT_LOGGING_TO_FILE) == 0) {
+            mainLogger.setOutputFile();
+            mainLogger.setlogging(true);
+            continue;
+        }
+        // INCORRECT CLI OPTION
+        mainLogger.out(LOGGER_ERROR) << "\"" << argv[argument] << "\" is not a valid argument." << endl;
+        mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
+        mainLogger.out() << "  " << CMD_OPT_LOGGING << "  (set logging to clog)" << endl;
+        mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << "  (set logging to logfile)" << endl;
+        mainLogger.out() << "  " << CMD_OPT_SELF_TEST << "  (run self-tests, use " << CMD_OPT_SELF_TEST << " -h to display options)" << endl;
+        mainLogger.out() << "  " << CMD_OPT_CUSTOM_CONFIG << " <filename>  (use custom configuration file)" << endl;
+        return STAT_INVALID_ARGUMETS;
     }
 
     EACirc eacirc;
-    eacirc.loadConfiguration(FILE_CONFIG);
+    eacirc.loadConfiguration(configFilename);
     eacirc.prepare();
     eacirc.initializeState();
     eacirc.run();

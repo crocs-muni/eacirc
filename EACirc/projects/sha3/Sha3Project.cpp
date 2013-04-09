@@ -56,52 +56,61 @@ int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
 int Sha3Project::initializeProject() {
     // allocate hasher
     m_hasher = new Hasher;
-    // create test vector header, if saving test vectors
-    if (pGlobals->settings->testVectors.saveTestVectors) {
-        // generate header (project config) to test vector file
-        ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-        if (!tvFile.is_open()) {
-            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-            return STAT_FILE_WRITE_FAIL;
-        }
-        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-        tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
-        tvFile << pSha3Settings->vectorGenerationMethod << " \t\t(vector generation method)" << endl;
-        tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
-        tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
-        tvFile << pSha3Settings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
-        tvFile << pSha3Settings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
-        if (pSha3Settings->limitAlgRounds) {
-            tvFile << pSha3Settings->alg1RoundsCount << " \t\t(algorithm1: " << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
-            tvFile << pSha3Settings->alg2RoundsCount << " \t\t(algorithm2: " << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
-        }
-        tvFile.close();
-
-        // generate header to human-readable test-vector file
-        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
-        tvFile << "Using SHA-3 hash functions and random generator to generate test vectors." << endl;
-        tvFile << "  stream1: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1);
-        if (pSha3Settings->limitAlgRounds) {
-            tvFile << " (" << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
-        } else {
-            tvFile << " (unlimited version)" << endl;
-        }
-        tvFile << "  stream2: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2);
-        if (pSha3Settings->limitAlgRounds) {
-            tvFile << " (" << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
-        } else {
-            tvFile << " (unlimited version)" << endl;
-        }
-        tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
-        tvFile << endl;
-        tvFile.close();
-    }
     return STAT_OK;
 }
 
 int Sha3Project::initializeProjectState() {
     return m_hasher->initializeState();
+}
+
+int Sha3Project::createTestVectorFilesHeaders() const {
+    // generate header (project config) to test vector file
+    ofstream tvFile;
+    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+    if (!tvFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+    tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
+    tvFile << pSha3Settings->vectorGenerationMethod << " \t\t(vector generation method)" << endl;
+    tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
+    tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
+    tvFile << pSha3Settings->hashLength1 << " \t\t(hash length for algorithm1)" << endl;
+    tvFile << pSha3Settings->hashLength2 << " \t\t(hash length for algorithm2)" << endl;
+    tvFile << pSha3Settings->seed << " \t\t(initial seed for counters)" << endl;
+    tvFile << pSha3Settings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+    tvFile << pSha3Settings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+    if (pSha3Settings->limitAlgRounds) {
+        tvFile << pSha3Settings->alg1RoundsCount << " \t\t(algorithm1: " << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
+        tvFile << pSha3Settings->alg2RoundsCount << " \t\t(algorithm2: " << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
+    }
+    tvFile.close();
+
+    // generate header to human-readable test-vector file
+    tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+    if (!tvFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    tvFile << "Using SHA-3 hash functions and random generator to generate test vectors." << endl;
+    tvFile << "  stream1: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1);
+    if (pSha3Settings->limitAlgRounds) {
+        tvFile << " (" << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
+    } else {
+        tvFile << " (unlimited version)" << endl;
+    }
+    tvFile << "  stream2: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2);
+    if (pSha3Settings->limitAlgRounds) {
+        tvFile << " (" << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
+    } else {
+        tvFile << " (unlimited version)" << endl;
+    }
+    tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
+    tvFile << endl;
+    tvFile.close();
+
+    return STAT_OK;
 }
 
 int Sha3Project::generateTestVectors() {
@@ -198,14 +207,14 @@ int Sha3Project::generateHashDataStream() {
     int algorithm = -1;
     int numRounds = -1;
     string streamFilename;
-    for (int algorithmNumber = 1; algorithmNumber <= 2; algorithmNumber++) {
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         switch (algorithmNumber) {
-        case 1:
+        case 0:
             algorithm = pSha3Settings->algorithm1;
             numRounds = pSha3Settings->limitAlgRounds ? pSha3Settings->alg1RoundsCount : -1;
             streamFilename = SHA3_FILE_STREAM_1;
             break;
-        case 2:
+        case 1:
             algorithm = pSha3Settings->algorithm2;
             numRounds = pSha3Settings->limitAlgRounds ? pSha3Settings->alg2RoundsCount : -1;
             streamFilename = SHA3_FILE_STREAM_2;
@@ -216,7 +225,7 @@ int Sha3Project::generateHashDataStream() {
             return STAT_PROJECT_ERROR;
         }
         if (algorithm == SHA3_RANDOM) {
-            mainLogger.out(LOGGER_INFO) << "Algorithm " << algorithmNumber;
+            mainLogger.out(LOGGER_INFO) << "Algorithm " << (algorithmNumber+1);
             mainLogger.out() << " is set to random, stream data generation skipped." << endl;
             continue;
         } else {
@@ -226,7 +235,7 @@ int Sha3Project::generateHashDataStream() {
             } else {
                 mainLogger.out() << " (" << numRounds << " rounds)." << endl;
             }
-            mainLogger.out(LOGGER_INFO) << " Output is saved to file \"" << streamFilename << "\"." << endl;
+            mainLogger.out(LOGGER_INFO) << "Output is saved to file \"" << streamFilename << "\"." << endl;
         }
         ostream* vectorStream = NULL;
         if (pSha3Settings->streamSize == 0) {
@@ -253,7 +262,7 @@ int Sha3Project::generateHashDataStream() {
             delete vectorStream;
             vectorStream = NULL;
         }
-        mainLogger.out(LOGGER_INFO) << "Hash data generation ended. (" << alreadyGenerated << ")" << endl;
+        mainLogger.out(LOGGER_INFO) << "Hash data generation ended (" << alreadyGenerated << " bytes)." << endl;
     }
 
     return status;

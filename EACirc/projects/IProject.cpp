@@ -6,27 +6,7 @@
 #include "sha3/Sha3Project.h"
 #include "tea/TeaProject.h"
 
-IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) {
-    if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
-        ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
-        if (!tvFile.is_open()) {
-            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-            return;
-        }
-        tvFile << dec << left;
-        tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator";
-        IEvaluator* evaluator = IEvaluator::getStandardEvaluator(pGlobals->settings->main.evaluatorType);
-        if (evaluator) tvFile << ": " << evaluator->shortDescription();
-        delete evaluator;
-        tvFile << ")" << endl;
-        tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
-        tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
-        tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
-        tvFile << pGlobals->settings->testVectors.outputLength << " \t\t(number of tv output bytes)" << endl;
-        tvFile.close();
-    }
-}
+IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) { }
 
 IProject::~IProject() {
     if (m_projectEvaluator != NULL) {
@@ -37,23 +17,6 @@ IProject::~IProject() {
 
 int IProject::loadProjectConfiguration(TiXmlNode *pRoot) {
     return STAT_OK;
-}
-
-int IProject::initializeProjectMain() {
-    int status = STAT_OK;
-    status = initializeProject();
-    if (status != STAT_OK) return status;
-    if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
-        ofstream tvFile;
-        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-        if (!tvFile.is_open()) {
-            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-            return STAT_FILE_WRITE_FAIL;
-        }
-        tvFile << endl;
-        tvFile.close();
-    }
-    return status;
 }
 
 int IProject::initializeProject() {
@@ -104,6 +67,43 @@ int IProject::loadProjectState(TiXmlNode* pRoot) {
 
 int IProject::getProjectType() const {
     return m_type;
+}
+
+int IProject::createTestVectorFilesHeaders() const {
+    return STAT_OK;
+}
+
+int IProject::createTestVectorFilesHeadersMain() const {
+    int status = STAT_OK;
+    if (!pGlobals->settings->testVectors.saveTestVectors || pGlobals->settings->main.projectType == PROJECT_PREGENERATED_TV) {
+        return STAT_OK;
+    }
+    ofstream tvFile;
+    tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
+    if (!tvFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    tvFile << dec << left;
+    tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator:" << pGlobals->evaluator->shortDescription() << ")" << endl;
+    tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
+    tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
+    tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
+    tvFile << pGlobals->settings->testVectors.outputLength << " \t\t(number of tv output bytes)" << endl;
+    tvFile.close();
+
+    status = createTestVectorFilesHeaders();
+    if (status != STAT_OK) return status;
+
+    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+    if (!tvFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    tvFile << endl; // separator between header and test vector values
+    tvFile.close();
+
+    return status;
 }
 
 int IProject::generateAndSaveTestVectors() {

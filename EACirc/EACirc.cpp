@@ -78,15 +78,15 @@ void EACirc::loadConfiguration(const string filename) {
 
     LoadConfigScript(pRoot, &m_settings);
     if (m_status != STAT_OK) {
-        mainLogger.out(LOGGER_ERROR) << "Could not read configuration data from " << FILE_CONFIG << "." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not read configuration data from file (" << filename << ")." << endl;
     }
     // CREATE STRUCTURE OF CIRCUIT FROM BASIC SETTINGS
     pGlobals->settings = &m_settings;
 
     // CHECK SETTINGS CONSISTENCY
     checkConfigurationConsistency();
-
     if (m_status != STAT_OK) return;
+    mainLogger.out(LOGGER_INFO) << "Configuration successfully loaded (" << filename << ")." << endl;
 
     m_project = IProject::getProject(m_settings.main.projectType);
     if (m_project == NULL) {
@@ -385,38 +385,6 @@ void EACirc::saveProgress(const string stateFilename, const string populationFil
     savePopulation(populationFilename);
 }
 
-void EACirc::initializeState() {
-    if (m_status != STAT_OK) return;
-    if ((m_readyToRun & (EACIRC_CONFIG_LOADED | EACIRC_PREPARED)) !=
-            (EACIRC_CONFIG_LOADED | EACIRC_PREPARED)) {
-        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
-        return;
-    }
-    // load or create STATE
-    if (m_settings.main.recommenceComputation) {
-        loadState(FILE_STATE);
-    } else {
-        createState();
-    }
-    // load or create POPULATION
-    if (m_settings.main.loadInitialPopulation) {
-        loadPopulation(FILE_POPULATION);
-    } else {
-        m_status = m_project->generateAndSaveTestVectors();
-        if (m_status == STAT_OK) {
-            mainLogger.out(LOGGER_INFO) << "Initial test vectors generated." << endl;
-        } else {
-            mainLogger.out(LOGGER_ERROR) << "Initial test vectors generation failed." << endl;
-            return;
-        }
-        createPopulation();
-    }
-
-    if (m_status == STAT_OK) {
-        m_readyToRun |= EACIRC_INITIALIZED;
-    }
-}
-
 void EACirc::prepare() {
     if (m_status != STAT_OK) return;
     if ((m_readyToRun & EACIRC_CONFIG_LOADED) != EACIRC_CONFIG_LOADED) {
@@ -435,7 +403,7 @@ void EACirc::prepare() {
     }
 
     // initialize project
-    m_status = m_project->initializeProjectMain();
+    m_status = m_project->initializeProject();
     mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
     // initialize evaluator
     if (m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
@@ -451,6 +419,41 @@ void EACirc::prepare() {
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
+    }
+}
+
+void EACirc::initializeState() {
+    if (m_status != STAT_OK) return;
+    if ((m_readyToRun & (EACIRC_CONFIG_LOADED | EACIRC_PREPARED)) !=
+            (EACIRC_CONFIG_LOADED | EACIRC_PREPARED)) {
+        m_status = STAT_CONFIG_SCRIPT_INCOMPLETE;
+        return;
+    }
+    // load or create STATE
+    if (m_settings.main.recommenceComputation) {
+        loadState(FILE_STATE);
+    } else {
+        createState();
+    }
+    // create headers in test vector files
+    m_status = m_project->createTestVectorFilesHeadersMain();
+    if (m_status != STAT_OK) return;
+    // load or create POPULATION
+    if (m_settings.main.loadInitialPopulation) {
+        loadPopulation(FILE_POPULATION);
+    } else {
+        m_status = m_project->generateAndSaveTestVectors();
+        if (m_status == STAT_OK) {
+            mainLogger.out(LOGGER_INFO) << "Initial test vectors generated." << endl;
+        } else {
+            mainLogger.out(LOGGER_ERROR) << "Initial test vectors generation failed." << endl;
+            return;
+        }
+        createPopulation();
+    }
+
+    if (m_status == STAT_OK) {
+        m_readyToRun |= EACIRC_INITIALIZED;
     }
 }
 

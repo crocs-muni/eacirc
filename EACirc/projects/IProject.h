@@ -26,17 +26,6 @@ private:
       */
     int saveTestVectors() const;
 
-    /** initialize project itself
-      * called once, after configuration loading
-      * called REGARDLESS of recommencing/not recommencong computation
-      * project can here write own configuration notes to test vectors file
-      * project-specific evaluator should be allocated here
-      * called by initializeProjectMain();
-      * default implemetation: do nothing
-      * @return status;
-      */
-    virtual int initializeProject();
-
     /** save project state
       * - root node with project type and description is prepared by framework
       * - add project details into the tree
@@ -60,9 +49,16 @@ private:
       */
     virtual int loadProjectState(TiXmlNode* pRoot);
 
+    /** create headers in testVectorFile and humanReadableTestVectorFile
+      * - write project specific settings to test vector file
+      * - called by createTestVectorFilesHeadersMain()
+      * default implementation: do nothing
+      * @return status
+      */
+    virtual int createTestVectorFilesHeaders() const;
+
 public:
     /** general project constructor, sets project type
-      * - if enabled, creates header for test vectors file
       * @param type     project constant
       */
     IProject(int type);
@@ -87,12 +83,12 @@ public:
 
     /** initialize project
       * - called once, after configuration loading
-      * - calls project initialization (virtual function initializeProject();)
-      * - make header structure in test vector file
       * - called REGARDLESS of recommencing/not recommencong computation
+      * - project-specific evaluator should be allocated here
+      * default implemetation: do nothing
       * @return status;
       */
-    int initializeProjectMain();
+    virtual int initializeProject();
 
     /** initialize project state (called just once, before evolution)
       * NOT called at all, when computation is recommenced
@@ -116,6 +112,12 @@ public:
       * default implementation: save project constant and description, make it non-loadable
       */
     TiXmlNode* saveProjectStateMain() const;
+
+    /** create headers in testVectorFile and humanReadableTestVectorFile
+      * - calls virtual method in project to write project-specific settings
+      * @return status
+      */
+    int createTestVectorFilesHeadersMain() const;
 
     /** generate new test vectors and save them if required
       * @return status

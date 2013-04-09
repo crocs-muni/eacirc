@@ -72,6 +72,11 @@ public:
       */
     int loadProjectState(TiXmlNode* pRoot);
 
+    /** create headers in testVectorFile and humanReadableTestVectorFile
+      * @return status
+      */
+    int createTestVectorFilesHeaders() const;
+
     /** prepares complete test vector set set
       * @return status
       */

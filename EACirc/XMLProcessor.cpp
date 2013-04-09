@@ -83,7 +83,7 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
     doc.LinkEndChild(pRoot);
     bool result = doc.SaveFile(filename.c_str());
     if (!result) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write XML file " << filename << ".";
+        mainLogger.out(LOGGER_ERROR) << "Cannot write XML file (" << filename << ").";
         return STAT_FILE_OPEN_FAIL;
     }
     return STAT_OK;
@@ -92,7 +92,7 @@ int saveXMLFile(TiXmlNode* pRoot, string filename) {
 int loadXMLFile(TiXmlNode*& pRoot, string filename) {
     TiXmlDocument doc(filename.c_str());
     if (!doc.LoadFile()) {
-        mainLogger.out(LOGGER_ERROR) << "Could not load file '" << filename << "'." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Could not load file (" << filename << ")." << endl;
         return STAT_FILE_OPEN_FAIL;
     }
     TiXmlHandle hDoc(&doc);
