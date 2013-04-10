@@ -82,6 +82,7 @@ public:
     int loadProjectState(TiXmlNode* pRoot);
 
     /** create headers in testVectorFile and humanReadableTestVectorFile
+      * - called only if saving test vectors, no need to doublecheck
       * @return status
       */
     int createTestVectorFilesHeaders() const;

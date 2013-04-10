@@ -20,6 +20,10 @@
 #define ESTREAM_GENTYPE_RANDOM      2
 #define ESTREAM_GENTYPE_BIASRANDOM  3
 
+// filenames for streams
+#define ESTREAM_FILE_STREAM_1      "estream_stream1.bin"
+#define ESTREAM_FILE_STREAM_2      "estream_stream2.bin"
+
 // cipher constants
 #define STREAM_BLOCK_SIZE       16
 

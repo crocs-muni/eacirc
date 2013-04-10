@@ -325,79 +325,100 @@ int EstreamProject::getTestVector(){
 }
 
 int EstreamProject::generateCipherDataStream() {
-    //! are we using algorithm1 (0) or algorithm2 (1) ?
-    // TBD/TODO generate for both streams, see project_sha3
-    int cipherNumber = -1;
+    int status = STAT_OK;
     int algorithm = -1;
     int numRounds = -1;
-    if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM) {
-        cipherNumber = 0;
-        algorithm = pEstreamSettings->algorithm1;
-        numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
-    } else if (pEstreamSettings->algorithm2 != ESTREAM_RANDOM) {
-        cipherNumber = 1;
-        algorithm = pEstreamSettings->algorithm2;
-        numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg2RoundsCount : -1;
-    }
-    if (cipherNumber == -1) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot generate stream from random, cipher must be specified." << endl;
-        return STAT_INVALID_ARGUMETS;
-    }
-    mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(algorithm);
-    if (numRounds == -1) {
-        mainLogger.out() << " (unlimitted version)" << endl;
-    } else {
-        mainLogger.out() << " (" << numRounds << " rounds)" << endl;
-    }
+    string streamFilename;
+    for (int cipherNumber = 0; cipherNumber < 2; cipherNumber++) {
+        switch (cipherNumber) {
+        case 0:
+            algorithm = pEstreamSettings->algorithm1;
+            numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
+            streamFilename = ESTREAM_FILE_STREAM_1;
+            break;
+        case 1:
+            algorithm = pEstreamSettings->algorithm2;
+            numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg2RoundsCount : -1;
+            streamFilename = ESTREAM_FILE_STREAM_2;
+            break;
+        default:
+            mainLogger.out(LOGGER_ERROR) << "Unsupported iteration while generating testVector streams (";
+            mainLogger.out() << cipherNumber << ")." << endl;
+            return STAT_PROJECT_ERROR;
+        }
+        if (algorithm == ESTREAM_RANDOM) {
+            mainLogger.out(LOGGER_INFO) << "Algorithm " << (cipherNumber+1);
+            mainLogger.out() << " is set to random, stream data generation skipped." << endl;
+            continue;
+        } else {
+            mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(algorithm);
+            if (numRounds == -1) {
+                mainLogger.out() << " (unlimitted version)." << endl;
+            } else {
+                mainLogger.out() << " (" << numRounds << " rounds)." << endl;
+            }
+            mainLogger.out(LOGGER_INFO) << "Output is saved to file \"" << streamFilename << "\"." << endl;
+        }
+        ostream* vectorStream = NULL;
+        if (pEstreamSettings->streamSize == 0) {
+            vectorStream = &cout;
+        } else {
+            vectorStream = new ofstream(streamFilename, ios_base::binary | ios_base::trunc);
+        }
 
-    int status = STAT_OK;
-
-    if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
-        status = m_encryptorDecryptor->setupKey();
-        if (status != STAT_OK) return status;
-        m_encryptorDecryptor->setupIV();
-        if (status != STAT_OK) return status;
-    }
-
-    unsigned long alreadyGenerated = 0;
-    while (pEstreamSettings->streamSize == 0 ? true : alreadyGenerated <= pEstreamSettings->streamSize) {
-        if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
+        if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
             status = m_encryptorDecryptor->setupKey();
             if (status != STAT_OK) return status;
             m_encryptorDecryptor->setupIV();
             if (status != STAT_OK) return status;
         }
-        for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-            if (status != STAT_OK) break;
-            if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
+
+        unsigned long alreadyGenerated = 0;
+        while (pEstreamSettings->streamSize == 0 ? true : alreadyGenerated <= pEstreamSettings->streamSize) {
+            if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
                 status = m_encryptorDecryptor->setupKey();
                 if (status != STAT_OK) return status;
                 m_encryptorDecryptor->setupIV();
                 if (status != STAT_OK) return status;
             }
-
-            status = setupPlaintext();
-            if (status != STAT_OK) return status;
-            status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
-            if (status != STAT_OK) return status;
-            status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
-            if (status != STAT_OK) return status;
-
-            // check if plaintext = encrypted-decrypted plaintext
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                if (m_plaintextOut[input] != m_plaintextIn[input]) {
-                    status = STAT_PROJECT_ERROR;
-                    mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
-                    break;
+            for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
+                if (status != STAT_OK) break;
+                if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
+                    status = m_encryptorDecryptor->setupKey();
+                    if (status != STAT_OK) return status;
+                    m_encryptorDecryptor->setupIV();
+                    if (status != STAT_OK) return status;
                 }
+
+                status = setupPlaintext();
+                if (status != STAT_OK) return status;
+                status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
+                if (status != STAT_OK) return status;
+                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
+                if (status != STAT_OK) return status;
+
+                // check if plaintext = encrypted-decrypted plaintext
+                for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
+                    if (m_plaintextOut[input] != m_plaintextIn[input]) {
+                        status = STAT_PROJECT_ERROR;
+                        mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
+                        break;
+                    }
+                }
+
+                for (int index = 0; index < pGlobals->settings->testVectors.inputLength; index++) {
+                    (*vectorStream) << m_tvInputs[index];
+                }
+                alreadyGenerated += pGlobals->settings->testVectors.inputLength;
             }
-            for (int index = 0; index < pGlobals->settings->testVectors.inputLength; index++) {
-                cout << m_tvInputs[index];
-            }
-            alreadyGenerated += pGlobals->settings->testVectors.inputLength;
         }
+
+        if (pEstreamSettings->streamSize != 0) {
+            delete vectorStream;
+            vectorStream = NULL;
+        }
+        mainLogger.out(LOGGER_INFO) << "Cipher data generation ended (" << alreadyGenerated << " bytes)." << endl;
     }
-    mainLogger.out(LOGGER_INFO) << "Cipher data stream generation ended. (" << alreadyGenerated << ")" << endl;
 
     return status;
 }

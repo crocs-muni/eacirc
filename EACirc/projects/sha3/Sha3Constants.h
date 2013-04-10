@@ -8,8 +8,8 @@
 #define SHA3_COUNTER                210
 
 // filenames for streams
-#define SHA3_FILE_STREAM_1      "SHA3-stream1.bin"
-#define SHA3_FILE_STREAM_2      "SHA3-stream2.bin"
+#define SHA3_FILE_STREAM_1      "sha3_stream1.bin"
+#define SHA3_FILE_STREAM_2      "sha3_stream2.bin"
 
 // SHA-3 algorithm constants
 #define SHA3_ABACUS         1
