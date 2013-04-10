@@ -430,6 +430,7 @@
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi-tables.h" />
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi.h" />
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\Hamsi_sha3.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\hashFunctions.h" />
     <ClInclude Include="EACirc\projects\sha3\hash_functions\JH\JH_sha3.h" />
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\brg_endian.h" />
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakDuplex.h" />

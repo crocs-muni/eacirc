@@ -7,7 +7,7 @@ SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but
 unix{ QMAKE_CXX = g++-4.7 }
 
 QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
-QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS -Wall -Wextra #-Weffc++
+QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS -Wall -Wextra # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
