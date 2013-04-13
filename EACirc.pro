@@ -63,6 +63,7 @@ SOURCES += \
     EACirc/projects/estream/EstreamInterface.cpp \
     EACirc/projects/estream/AvalancheEvaluator.cpp \
     EACirc/projects/tea/TeaProject.cpp \
+    EACirc/projects/file_distinguisher/fileDistinguisherProject.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -260,6 +261,8 @@ HEADERS += \
     EACirc/projects/estream/EstreamInterface.h \
     EACirc/projects/estream/AvalancheEvaluator.h \
     EACirc/projects/tea/TeaProject.h \
+    EACirc/projects/file_distinguisher/fileDistinguisherProject.h \
+    EACirc/projects/file_distinguisher/fileDistinguisherConstants.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \

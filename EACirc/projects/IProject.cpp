@@ -5,6 +5,7 @@
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
 #include "tea/TeaProject.h"
+#include "file_distinguisher/fileDistinguisherProject.h"
 
 IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) { }
 
@@ -157,6 +158,9 @@ IProject* IProject::getProject(int projectType) {
         break;
     case PROJECT_TEA:
         project = new TeaProject();
+        break;
+    case PROJECT_FILE_DISTINGUISHER:
+        project = new FileDistinguisherProject();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
