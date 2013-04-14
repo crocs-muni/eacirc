@@ -26,6 +26,6 @@ struct FILES_SETTINGS {
     }
 };
 
-extern FILES_SETTINGS* pFileDistSettings;
+extern FILES_SETTINGS* pFilesSettings;
 
 #endif // FILESCONSTANTS_H

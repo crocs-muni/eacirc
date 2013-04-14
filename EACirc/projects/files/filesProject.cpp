@@ -1,6 +1,6 @@
 #include "filesProject.h"
 
-FILES_SETTINGS* pFileDistSettings = NULL;
+FILES_SETTINGS* pFilesSettings = NULL;
 
 FilesProject::FilesProject()
     : IProject(PROJECT_FILE_DISTINGUISHER), m_tvOutputs(NULL), m_tvInputs(NULL) {
@@ -39,48 +39,50 @@ string FilesProject::shortDescription() const {
 }
 
 int FilesProject::loadProjectConfiguration(TiXmlNode* pRoot) {
-    m_fileDistSettings.usageType = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/USAGE_TYPE").c_str());
-    m_fileDistSettings.filenames[0] = getXMLElementValue(pRoot,"FILE_DISTINGUISHER/FILENAME_1");
-    m_fileDistSettings.filenames[1] = getXMLElementValue(pRoot,"FILE_DISTINGUISHER/FILENAME_2");
-    m_fileDistSettings.ballancedTestVectors = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/BALLANCED_TEST_VECTORS").c_str()) ? true : false;
-    m_fileDistSettings.useFixedInitialOffset = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/USE_FIXED_INITIAL_OFFSET").c_str()) ? true : false;
+    m_filesSettings.usageType = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/USAGE_TYPE").c_str());
+    m_filesSettings.filenames[0] = getXMLElementValue(pRoot,"FILE_DISTINGUISHER/FILENAME_1");
+    m_filesSettings.filenames[1] = getXMLElementValue(pRoot,"FILE_DISTINGUISHER/FILENAME_2");
+    m_filesSettings.ballancedTestVectors = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/BALLANCED_TEST_VECTORS").c_str()) ? true : false;
+    m_filesSettings.useFixedInitialOffset = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/USE_FIXED_INITIAL_OFFSET").c_str()) ? true : false;
     istringstream ss;
     ss.str(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/INITIAL_OFFSET_1"));
-    ss >> m_fileDistSettings.initialOffsets[0];
+    ss >> m_filesSettings.initialOffsets[0];
+    ss.clear();
     ss.str(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/INITIAL_OFFSET_2"));
-    ss >> m_fileDistSettings.initialOffsets[1];
-    pFileDistSettings = &m_fileDistSettings;
+    ss >> m_filesSettings.initialOffsets[1];
+    pFilesSettings = &m_filesSettings;
 
     // bind project settings into global settings
-    pGlobals->settings->project = (void*) pFileDistSettings;
+    pGlobals->settings->project = (void*) pFilesSettings;
 
     return STAT_OK;
 }
 
 int FilesProject::initializeProject() {
     for (int fileNumber = 0; fileNumber < FILES_NUMBER_OF_FILES; fileNumber++) {
-        m_files[fileNumber].open(m_fileDistSettings.filenames[fileNumber], ios_base::binary);
+        m_files[fileNumber].open(m_filesSettings.filenames[fileNumber], ios_base::binary);
         if (!m_files[fileNumber].is_open()) {
-            mainLogger.out(LOGGER_ERROR) << "Could not open file (" << m_fileDistSettings.filenames[fileNumber] << ")." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Could not open file (" << m_filesSettings.filenames[fileNumber] << ")." << endl;
             return STAT_FILE_OPEN_FAIL;
         }
         // determine file size
         m_files[fileNumber].seekg (0, ios::end);
-        m_fileDistSettings.fileSizes[fileNumber] = m_files[fileNumber].tellg();
+        m_filesSettings.fileSizes[fileNumber] = m_files[fileNumber].tellg();
         m_files[fileNumber].seekg (0, ios::beg);
     }
     return STAT_OK;
 }
 
 int FilesProject::initializeProjectState() {
-    if (!m_fileDistSettings.useFixedInitialOffset) {
+    if (!m_filesSettings.useFixedInitialOffset) {
         for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-            rndGen->getRandomFromInterval(m_fileDistSettings.fileSizes[i],&(m_fileDistSettings.initialOffsets[i]));
+            rndGen->getRandomFromInterval(m_filesSettings.fileSizes[i],&(m_filesSettings.initialOffsets[i]));
         }
     }
     for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        m_readOffsets[i] = m_fileDistSettings.initialOffsets[i] % m_fileDistSettings.fileSizes[i];
-        mainLogger.out(LOGGER_INFO) << "Using initial offset " << m_readOffsets[i] << " (" << m_fileDistSettings.filenames[i] << ")." << endl;
+        m_readOffsets[i] = m_filesSettings.initialOffsets[i] % m_filesSettings.fileSizes[i];
+        m_files[i].seekg(m_readOffsets[i]);
+        mainLogger.out(LOGGER_INFO) << "Using initial offset " << m_readOffsets[i] << " (" << m_filesSettings.filenames[i] << ")." << endl;
     }
     return STAT_OK;
 }
@@ -102,12 +104,12 @@ int FilesProject::createTestVectorFilesHeaders() const {
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-    tvFile << pFileDistSettings->usageType << " \t\t(usage type)" << endl;
+    tvFile << pFilesSettings->usageType << " \t\t(usage type)" << endl;
     for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        tvFile << pFileDistSettings->filenames[i] << " \t\t(filename " << i << ")" << endl;
-        tvFile << pFileDistSettings->initialOffsets[i] << " \t\t(initial offset for file " << i << ")" << endl;
+        tvFile << pFilesSettings->filenames[i] << " \t\t(filename " << i << ")" << endl;
+        tvFile << pFilesSettings->initialOffsets[i] << " \t\t(initial offset for file " << i << ")" << endl;
     }
-    tvFile << pFileDistSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+    tvFile << pFilesSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
     tvFile.close();
 
     // generate header to human-readable test-vector file
@@ -118,8 +120,8 @@ int FilesProject::createTestVectorFilesHeaders() const {
     }
     tvFile << "Using file contents (binary form) for test vector generation." << endl;
     for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        tvFile << "  file " << i << ": " << m_fileDistSettings.filenames[i] << endl;
-        tvFile << "  initial reading offset: " << m_fileDistSettings.initialOffsets[i] << endl;
+        tvFile << "  file " << i << ": " << m_filesSettings.filenames[i] << endl;
+        tvFile << "  initial reading offset: " << m_filesSettings.initialOffsets[i] << endl;
     }
     tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
     tvFile << endl;
@@ -129,12 +131,13 @@ int FilesProject::createTestVectorFilesHeaders() const {
 }
 
 int FilesProject::getStreamFromFile(int fileNumber, unsigned long length, unsigned char* data) {
-    if (m_fileDistSettings.fileSizes[fileNumber]-m_readOffsets[fileNumber] < length) {
-        mainLogger.out(LOGGER_WARNING) << "Not enought data in file, revinding (" << m_fileDistSettings.filenames[fileNumber] << ")." << endl;
+    if (m_filesSettings.fileSizes[fileNumber]-m_readOffsets[fileNumber] < length) {
+        mainLogger.out(LOGGER_WARNING) << "Not enought data in file, rewinding (" << m_filesSettings.filenames[fileNumber] << ")." << endl;
         m_files[fileNumber].seekg(ios_base::beg);
         m_readOffsets[fileNumber] = m_files[fileNumber].tellg();
     }
     m_files[fileNumber].read((char*)data,length);
+    m_readOffsets[fileNumber] += m_files[fileNumber].gcount();
     if (m_files[fileNumber].fail()) {
         return STAT_FILE_READ_FAIL;
     } else {
@@ -146,12 +149,12 @@ int FilesProject::prepareSingleTestVector() {
     int status = STAT_OK;
     //! are we using algorithm1 (0) or algorithm2 (1) ?
     int fileNumber = 0;
-    switch (pFileDistSettings->usageType) {
+    switch (pFilesSettings->usageType) {
     case FILES_DISTINGUISHER:
         //SHALL WE BALANCE TEST VECTORS?
-        if (pFileDistSettings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
+        if (pFilesSettings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
             fileNumber = 1;
-        else if (pFileDistSettings->ballancedTestVectors && (m_numVectors[1] >= pGlobals->settings->testVectors.setSize/2))
+        else if (pFilesSettings->ballancedTestVectors && (m_numVectors[1] >= pGlobals->settings->testVectors.setSize/2))
             fileNumber = 0;
         else
             rndGen->getRandomFromInterval(1, &fileNumber);
@@ -163,7 +166,7 @@ int FilesProject::prepareSingleTestVector() {
             m_tvOutputs[output] = fileNumber * 0xff;
         break;
     default:
-        mainLogger.out(LOGGER_ERROR) << "Unknown usage type (" << pFileDistSettings->usageType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown usage type (" << pFilesSettings->usageType << ")." << endl;
         return STAT_INVALID_ARGUMETS;
         break;
     }

@@ -545,7 +545,7 @@ void EACirc::run() {
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
         pGlobals->testVectors.newSet = false;
         if (m_status != STAT_OK) {
-            mainLogger.out(LOGGER_ERROR) << "Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << " )." << endl;
+            mainLogger.out(LOGGER_ERROR) << "Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << ")." << endl;
             break;
         }
 

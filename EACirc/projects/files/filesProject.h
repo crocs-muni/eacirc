@@ -15,7 +15,7 @@ class FilesProject : public IProject {
     //! offset for reading from files (max 4GB)
     unsigned long m_readOffsets[FILES_NUMBER_OF_FILES];
     //! settings for file distinguisher project
-    FILES_SETTINGS m_fileDistSettings;
+    FILES_SETTINGS m_filesSettings;
 
     /** prepare single test vector
       * test vector is saved to m_tvOutputs/m_tvInputs
@@ -24,7 +24,7 @@ class FilesProject : public IProject {
     int prepareSingleTestVector();
 
     /** read stream from file
-      * - revind file, if necessary
+      * - rewind file, if necessary
       * @param fileNumber       from which file to read?
       * @param length           how many bytes?
       * @param data             where to store data (should already be allocated)
