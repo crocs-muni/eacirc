@@ -20,6 +20,7 @@
 #define STAT_CONFIG_SCRIPT_INCOMPLETE           16      // CONFIGURATION FILE IS INCOMPLETE
 #define STAT_PROJECT_ERROR                      17      // ERROR IN PROJECT CLASSES
 #define STAT_INTENTIONAL_EXIT                   18      // EXITING EACIRC INTENTIONALLY
+#define STAT_FILE_READ_FAIL                     19      // READ FROM FILE UNSUCCESSFUL
 
 const char* statusToString(int error);
 

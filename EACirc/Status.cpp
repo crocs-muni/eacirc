@@ -22,6 +22,7 @@ const char* statusToString(int error) {
     case STAT_CONFIG_SCRIPT_INCOMPLETE: return "STAT_CONFIG_SCRIPT_INCOMPLETE";
     case STAT_PROJECT_ERROR:            return "STAT_PROJECT_ERROR";
     case STAT_INTENTIONAL_EXIT:         return "STAT_INTENTIONAL_EXIT";
+    case STAT_FILE_READ_FAIL:           return "STAT_FILE_READ_FAIL";
     }
     // NO SPECIAL RULE MATCH
     return "'unknown'";

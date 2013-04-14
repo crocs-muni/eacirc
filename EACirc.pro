@@ -28,6 +28,7 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
+    EACirc/projects/files/filesProject.cpp
 
 # === evaluators ===
 SOURCES += \
@@ -63,7 +64,6 @@ SOURCES += \
     EACirc/projects/estream/EstreamInterface.cpp \
     EACirc/projects/estream/AvalancheEvaluator.cpp \
     EACirc/projects/tea/TeaProject.cpp \
-    EACirc/projects/file_distinguisher/fileDistinguisherProject.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -223,6 +223,8 @@ HEADERS += \
     EACirc/Logger.h \
     EACirc/Status.h \
     EACirc/EACirc.h \
+    EACirc/projects/files/filesConstants.h \
+    EACirc/projects/files/filesProject.h
 
 # === standard evaluators ===
 HEADERS += \
@@ -261,8 +263,6 @@ HEADERS += \
     EACirc/projects/estream/EstreamInterface.h \
     EACirc/projects/estream/AvalancheEvaluator.h \
     EACirc/projects/tea/TeaProject.h \
-    EACirc/projects/file_distinguisher/fileDistinguisherProject.h \
-    EACirc/projects/file_distinguisher/fileDistinguisherConstants.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \

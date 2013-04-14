@@ -260,7 +260,7 @@ void EACirc::createState() {
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
     m_project->initializeProjectState();
-    mainLogger.out(LOGGER_INFO) << "Project intial state setup successful. (" << m_project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project intial state setup successful (" << m_project->shortDescription() << ")." << endl;
 }
 
 void EACirc::savePopulation(const string filename) {
