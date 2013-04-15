@@ -65,7 +65,7 @@
 
 struct SHA3_SETTINGS {
     int usageType;
-    int vectorGenerationMethod;
+    int plaintextType;
     bool useFixedSeed;
     unsigned long seed;
     int algorithm1;
@@ -81,7 +81,7 @@ struct SHA3_SETTINGS {
 
     SHA3_SETTINGS(void) {
         usageType = -1;
-        vectorGenerationMethod = -1;
+        plaintextType = -1;
         useFixedSeed = false;
         seed = 0;
         algorithm1 = -1;

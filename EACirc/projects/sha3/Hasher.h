@@ -55,7 +55,7 @@ public:
       */
     int loadHasherState(TiXmlNode* pRoot);
 
-    /** prepare single test vector for given algorithm (according to vectorGenerationMethod)
+    /** prepare single test vector for given algorithm (according to plaintext type)
       * @param algorithmNumber      1 for algorithm_1, 2 for algorithm_2
       * @param tvInputs             array to store test vector inputs
       * @param tvOutputs            array to store test vector outputs

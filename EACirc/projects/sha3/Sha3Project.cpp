@@ -31,7 +31,7 @@ string Sha3Project::shortDescription() const {
 
 int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_sha3Settings.usageType = atoi(getXMLElementValue(pRoot,"SHA3/USAGE_TYPE").c_str());
-    m_sha3Settings.vectorGenerationMethod = atoi(getXMLElementValue(pRoot,"SHA3/VECTOR_GENERATION_METHOD").c_str());
+    m_sha3Settings.plaintextType = atoi(getXMLElementValue(pRoot,"SHA3/PLAINTEXT_TYPE").c_str());
     m_sha3Settings.useFixedSeed = (atoi(getXMLElementValue(pRoot,"SHA3/USE_FIXED_SEED").c_str())) ? true : false;
     istringstream(getXMLElementValue(pRoot,"SHA3/SEED")) >> m_sha3Settings.seed;
     m_sha3Settings.algorithm1 = atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_1").c_str());
@@ -73,7 +73,7 @@ int Sha3Project::createTestVectorFilesHeaders() const {
     }
     tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
     tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
-    tvFile << pSha3Settings->vectorGenerationMethod << " \t\t(vector generation method)" << endl;
+    tvFile << pSha3Settings->plaintextType << " \t\t(plaintext type)" << endl;
     tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
     tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
     tvFile << pSha3Settings->hashLength1 << " \t\t(hash length for algorithm1)" << endl;
