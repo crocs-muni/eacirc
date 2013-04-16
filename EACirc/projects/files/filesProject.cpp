@@ -6,6 +6,7 @@ FilesProject::FilesProject()
     : IProject(PROJECT_FILE_DISTINGUISHER), m_tvOutputs(NULL), m_tvInputs(NULL) {
     for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
         m_readOffsets[i] = 0;
+        m_rewinds[i] = 0;
     }
     m_tvOutputs = new unsigned char[pGlobals->settings->testVectors.outputLength];
     memset(m_tvOutputs,0,pGlobals->settings->testVectors.outputLength);
@@ -15,6 +16,16 @@ FilesProject::FilesProject()
 }
 
 FilesProject::~FilesProject() {
+    mainLogger.out(LOGGER_INFO) << "File rewinding summary:" << endl;
+    for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
+        if (m_rewinds[file] == 0) {
+            mainLogger.out(LOGGER_INFO) << "File stream " << file+1 << " was not rewound (" << m_filesSettings.filenames[file] << ")." << endl;
+        } else {
+            mainLogger.out(LOGGER_WARNING) << "File stream " << file+1 << " was rewound " << m_rewinds[file];
+            mainLogger.out() << " times (" << m_filesSettings.filenames[file] << ")." << endl;
+        }
+    }
+
     for (int fileNumber = 0; fileNumber < FILES_NUMBER_OF_FILES; fileNumber++) {
         if (m_files[fileNumber].is_open()) {
             m_files[fileNumber].close();
@@ -39,16 +50,16 @@ string FilesProject::shortDescription() const {
 }
 
 int FilesProject::loadProjectConfiguration(TiXmlNode* pRoot) {
-    m_filesSettings.usageType = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/USAGE_TYPE").c_str());
-    m_filesSettings.filenames[0] = getXMLElementValue(pRoot,"FILE_DISTINGUISHER/FILENAME_1");
-    m_filesSettings.filenames[1] = getXMLElementValue(pRoot,"FILE_DISTINGUISHER/FILENAME_2");
-    m_filesSettings.ballancedTestVectors = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/BALLANCED_TEST_VECTORS").c_str()) ? true : false;
-    m_filesSettings.useFixedInitialOffset = atoi(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/USE_FIXED_INITIAL_OFFSET").c_str()) ? true : false;
+    m_filesSettings.usageType = atoi(getXMLElementValue(pRoot,"FILES/USAGE_TYPE").c_str());
+    m_filesSettings.filenames[0] = getXMLElementValue(pRoot,"FILES/FILENAME_1");
+    m_filesSettings.filenames[1] = getXMLElementValue(pRoot,"FILES/FILENAME_2");
+    m_filesSettings.ballancedTestVectors = atoi(getXMLElementValue(pRoot,"FILES/BALLANCED_TEST_VECTORS").c_str()) ? true : false;
+    m_filesSettings.useFixedInitialOffset = atoi(getXMLElementValue(pRoot,"FILES/USE_FIXED_INITIAL_OFFSET").c_str()) ? true : false;
     istringstream ss;
-    ss.str(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/INITIAL_OFFSET_1"));
+    ss.str(getXMLElementValue(pRoot,"FILES/INITIAL_OFFSET_1"));
     ss >> m_filesSettings.initialOffsets[0];
     ss.clear();
-    ss.str(getXMLElementValue(pRoot,"FILE_DISTINGUISHER/INITIAL_OFFSET_2"));
+    ss.str(getXMLElementValue(pRoot,"FILES/INITIAL_OFFSET_2"));
     ss >> m_filesSettings.initialOffsets[1];
     pFilesSettings = &m_filesSettings;
 
@@ -88,11 +99,60 @@ int FilesProject::initializeProjectState() {
 }
 
 int FilesProject::saveProjectState(TiXmlNode *pRoot) const {
+    TiXmlElement* pRoot2 = pRoot->ToElement();
+    TiXmlElement* pElem = NULL;
+    TiXmlElement* pElem2 = NULL;
+    pRoot2->SetAttribute("loadable",1);
+    pElem = new TiXmlElement("usage_type");
+    pElem->LinkEndChild(new TiXmlText(toString(m_filesSettings.usageType).c_str()));
+    pRoot2->LinkEndChild(pElem);
+    for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
+        pElem = new TiXmlElement((string("file_")+toString(file+1)).c_str());
+        pElem2 = new TiXmlElement("filename");
+        pElem2->LinkEndChild(new TiXmlText(m_filesSettings.filenames[file].c_str()));
+        pElem->LinkEndChild(pElem2);
+        pElem2 = new TiXmlElement("file_size");
+        pElem2->LinkEndChild(new TiXmlText(toString(m_filesSettings.fileSizes[file]).c_str()));
+        pElem->LinkEndChild(pElem2);
+        pElem2 = new TiXmlElement("initial_read_offset");
+        pElem2->LinkEndChild(new TiXmlText(toString(m_filesSettings.initialOffsets[file]).c_str()));
+        pElem->LinkEndChild(pElem2);
+        pElem2 = new TiXmlElement("current_read_offset");
+        pElem2->LinkEndChild(new TiXmlText(toString(m_readOffsets[file]).c_str()));
+        pElem->LinkEndChild(pElem2);
+        pRoot2->LinkEndChild(pElem);
+    }
     return STAT_OK;
 }
 
 int FilesProject::loadProjectState(TiXmlNode *pRoot) {
-    return STAT_OK;
+    int status = STAT_OK;
+    if (atoi(getXMLElementValue(pRoot,"usage_type").c_str()) != m_filesSettings.usageType) {
+        mainLogger.out(LOGGER_ERROR) << "Incompatible usage types." << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
+    string configPrefix;
+    istringstream ss;
+    unsigned long value;
+    for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
+        configPrefix = "file_" + toString(file+1);
+        ss.str(getXMLElementValue(pRoot,configPrefix+"/file_size"));
+        ss >> value;
+        if (value != m_filesSettings.fileSizes[file]) {
+            mainLogger.out(LOGGER_WARNING) << "Different file size from previous run (" << m_filesSettings.filenames[file] << ")." << endl;
+        }
+        ss.clear();
+        ss.str(getXMLElementValue(pRoot,configPrefix+"/current_read_offset"));
+        ss >> m_readOffsets[file];
+        ss.clear();
+        ss.str(getXMLElementValue(pRoot,configPrefix+"/initial_read_offset"));
+        ss >> m_filesSettings.initialOffsets[file];
+
+        m_files[file].seekg(m_readOffsets[file]);
+        mainLogger.out(LOGGER_INFO) << "Using initial offset " << m_readOffsets[file] << " (" << m_filesSettings.filenames[file] << ")." << endl;
+    }
+
+    return status;
 }
 
 int FilesProject::createTestVectorFilesHeaders() const {
@@ -134,6 +194,7 @@ int FilesProject::getStreamFromFile(int fileNumber, unsigned long length, unsign
     if (m_filesSettings.fileSizes[fileNumber]-m_readOffsets[fileNumber] < length) {
         mainLogger.out(LOGGER_WARNING) << "Not enought data in file, rewinding (" << m_filesSettings.filenames[fileNumber] << ")." << endl;
         m_files[fileNumber].seekg(ios_base::beg);
+        m_rewinds[fileNumber]++;
         m_readOffsets[fileNumber] = m_files[fileNumber].tellg();
     }
     m_files[fileNumber].read((char*)data,length);

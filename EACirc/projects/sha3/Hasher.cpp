@@ -198,7 +198,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
             mainLogger.out(LOGGER_WARNING) << "Cannot write to human-readable test vector file." << endl;
     }
 
-    switch (pSha3Settings->vectorGenerationMethod) {
+    switch (pSha3Settings->plaintextType) {
     case SHA3_COUNTER:
         // set correct input
         if (algorithm != SHA3_RANDOM) {
@@ -252,7 +252,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown test vector generation method (";
-        mainLogger.out() << pSha3Settings->vectorGenerationMethod << ")." << endl;
+        mainLogger.out() << pSha3Settings->plaintextType << ")." << endl;
         return STAT_INVALID_ARGUMETS;
     }
 

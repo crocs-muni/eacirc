@@ -16,6 +16,8 @@ class FilesProject : public IProject {
     unsigned long m_readOffsets[FILES_NUMBER_OF_FILES];
     //! settings for file distinguisher project
     FILES_SETTINGS m_filesSettings;
+    //! number of rewinds done for each file
+    int m_rewinds[FILES_NUMBER_OF_FILES];
 
     /** prepare single test vector
       * test vector is saved to m_tvOutputs/m_tvInputs

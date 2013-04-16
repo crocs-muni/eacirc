@@ -20,7 +20,7 @@ stableGenTheshold :: Float
 stableGenTheshold = 0.99
 
 maxRuns :: Int
-maxRuns = 30
+maxRuns = 36
 
 logSuspects :: [String]
 logSuspects = ["warning","error"]
