@@ -417,9 +417,7 @@ void EACirc::prepare() {
         if (errorCode == EXIT_SUCCESS) {
             mainLogger.out(LOGGER_INFO) << "Net share mapping successful." << endl;
         } else {
-            mainLogger.out(LOGGER_ERROR) << "Mapping net share failed (error code: " << errorCode << ")." << endl;
-            m_status = STAT_EXTERNAL_SYSTEM_FAILED;
-            return;
+            mainLogger.out(LOGGER_WARNING) << "Mapping net share failed (error code: " << errorCode << ")." << endl;
         }
     }
 
