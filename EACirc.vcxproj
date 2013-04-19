@@ -181,6 +181,7 @@
     <ClCompile Include="EACirc\projects\estream\EncryptorDecryptor.cpp" />
     <ClCompile Include="EACirc\projects\estream\EstreamInterface.cpp" />
     <ClCompile Include="EACirc\projects\estream\EstreamProject.cpp" />
+    <ClCompile Include="EACirc\projects\files\filesProject.cpp" />
     <ClCompile Include="EACirc\projects\IProject.cpp" />
     <ClCompile Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.cpp" />
     <ClCompile Include="EACirc\projects\sha3\Hasher.cpp" />
@@ -330,6 +331,8 @@
     <ClInclude Include="EACirc\projects\estream\EstreamConstants.h" />
     <ClInclude Include="EACirc\projects\estream\EstreamInterface.h" />
     <ClInclude Include="EACirc\projects\estream\EstreamProject.h" />
+    <ClInclude Include="EACirc\projects\files\filesConstants.h" />
+    <ClInclude Include="EACirc\projects\files\filesProject.h" />
     <ClInclude Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.h" />
     <ClInclude Include="EACirc\projects\sha3\CircuitGenome.h" />
     <ClInclude Include="EACirc\evaluators\DistinguishTwoEvaluator.h" />
