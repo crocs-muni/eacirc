@@ -90,6 +90,7 @@ struct SETTINGS_RANDOM {
     bool useFixedSeed;              //! should computation start from fixed seed instead of generating one?
     unsigned long seed;             //! seed to start from
     int biasRndGenFactor;           //! bias factor for general bias generator
+    bool useNetShare;               //! try to map net share (used on METACENTRUM resources)
     string qrngPath;                //! path to pregenerated quantum random data
     int qrngFilesMaxIndex;          //! maximal index of qrng data file
     SETTINGS_RANDOM();

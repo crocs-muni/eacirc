@@ -130,3 +130,20 @@ double StringToDouble(string &s, bool failIfLeftoverChars) {
    return x;
 }
 
+int copyFile(string source, string destination) {
+    ifstream inFile(source, ios_base::binary);
+    if (!inFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot open file (" << source << ")." << endl;
+        return STAT_FILE_OPEN_FAIL;
+    }
+    ofstream outFile(destination, ios_base::binary | ios_base::trunc);
+    if (!outFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write to file (" << destination << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    outFile << inFile.rdbuf();
+    inFile.close();
+    outFile.close();
+
+    return STAT_OK;
+}

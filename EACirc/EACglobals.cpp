@@ -27,6 +27,7 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
     useFixedSeed = false;
     seed = 0;
     biasRndGenFactor = 50;
+    useNetShare = false;
     qrngPath = "";
     qrngFilesMaxIndex = -1;
 }

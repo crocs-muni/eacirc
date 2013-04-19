@@ -69,11 +69,18 @@ int EACirc::getStatus() const {
 void EACirc::loadConfiguration(const string filename) {
     if (m_status != STAT_OK) return;
 
+    // load file
     TiXmlNode* pRoot = NULL;
     m_status = loadXMLFile(pRoot, filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "cannot load configuration." << endl;
         return;
+    }
+
+    // write configuration to file with standard name (compatibility of results file)
+    if (filename != FILE_CONFIG) {
+        m_status = copyFile(filename,FILE_CONFIG);
+        if (m_status != STAT_OK) return;
     }
 
     LoadConfigScript(pRoot, &m_settings);
@@ -400,6 +407,20 @@ void EACirc::prepare() {
         std::remove(FILE_AVG_FITNESS);
         std::remove(FILE_GALIB_SCORES);
         std::remove(FILE_TEST_VECTORS_HR);
+    }
+
+    // map net share for random data, if used (for METACENTRUM resources)
+    if (m_settings.random.useNetShare) {
+        mainLogger.out(LOGGER_INFO) << "Trying to map net share for random data." << endl;
+        int errorCode = system("net use K: \\\\10.1.1.10\\boinc /u:boinc_smb_rw Wee5Eiw9");
+        system("ping -n 10 127.0.0.1 > NUL");
+        if (errorCode == EXIT_SUCCESS) {
+            mainLogger.out(LOGGER_INFO) << "Net share mapping successful." << endl;
+        } else {
+            mainLogger.out(LOGGER_ERROR) << "Mapping net share failed (error code: " << errorCode << ")." << endl;
+            m_status = STAT_EXTERNAL_SYSTEM_FAILED;
+            return;
+        }
     }
 
     // initialize project

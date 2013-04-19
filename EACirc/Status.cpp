@@ -23,6 +23,7 @@ const char* statusToString(int error) {
     case STAT_PROJECT_ERROR:            return "STAT_PROJECT_ERROR";
     case STAT_INTENTIONAL_EXIT:         return "STAT_INTENTIONAL_EXIT";
     case STAT_FILE_READ_FAIL:           return "STAT_FILE_READ_FAIL";
+    case STAT_EXTERNAL_SYSTEM_FAILED:   return "STAT_EXTERNAL_SYSTEM_FAILED";
     }
     // NO SPECIAL RULE MATCH
     return "'unknown'";

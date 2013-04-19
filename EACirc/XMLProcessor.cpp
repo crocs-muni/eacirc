@@ -21,6 +21,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->random.useFixedSeed = (atoi(getXMLElementValue(pRoot,"RANDOM/USE_FIXED_SEED").c_str())) ? true : false;
     istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pSettings->random.seed;
     pSettings->random.biasRndGenFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
+    pSettings->random.useNetShare = atoi(getXMLElementValue(pRoot,"RANDOM/USE_NET_SHARE").c_str()) ? true : false;
     pSettings->random.qrngPath = getXMLElementValue(pRoot,"RANDOM/QRNG_PATH");
     pSettings->random.qrngFilesMaxIndex = atoi(getXMLElementValue(pRoot,"RANDOM/QRNG_MAX_INDEX").c_str());
 

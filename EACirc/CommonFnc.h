@@ -14,6 +14,15 @@ void TrimLeadingSpaces(string& str);
 void TrimTrailingSpaces(string& str);
 double StringToDouble(string &s, bool failIfLeftoverChars = true);
 
+/** copy file
+  * - binary mode
+  * - if destination file exists, it will be overwritten
+  * @param source           what file to copy
+  * @param destination      where to copy file
+  * @return status
+  */
+int copyFile(string source, string destination);
+
 template < typename T >
 string toString(T value) {
     stringstream ss;

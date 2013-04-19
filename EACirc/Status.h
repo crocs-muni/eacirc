@@ -21,6 +21,7 @@
 #define STAT_PROJECT_ERROR                      17      // ERROR IN PROJECT CLASSES
 #define STAT_INTENTIONAL_EXIT                   18      // EXITING EACIRC INTENTIONALLY
 #define STAT_FILE_READ_FAIL                     19      // READ FROM FILE UNSUCCESSFUL
+#define STAT_EXTERNAL_SYSTEM_FAILED             20      // SOME EXTERNAL SYSTEM (E.G. MAPPING NET DRIVE) FAILED
 
 const char* statusToString(int error);
 
