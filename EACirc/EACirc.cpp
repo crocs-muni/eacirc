@@ -414,11 +414,7 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_INFO) << "Trying to map net share for random data." << endl;
         int errorCode = system("net use K: \\\\10.1.1.10\\boinc /u:boinc_smb_rw Wee5Eiw9");
         system("ping -n 10 127.0.0.1 > NUL");
-        if (errorCode == EXIT_SUCCESS) {
-            mainLogger.out(LOGGER_INFO) << "Net share mapping successful." << endl;
-        } else {
-            mainLogger.out(LOGGER_WARNING) << "Mapping net share failed (error code: " << errorCode << ")." << endl;
-        }
+        mainLogger.out(LOGGER_INFO) << "Mapping net share ended (error code: " << errorCode << ")." << endl;
     }
 
     // initialize project
