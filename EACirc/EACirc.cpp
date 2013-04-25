@@ -77,12 +77,6 @@ void EACirc::loadConfiguration(const string filename) {
         return;
     }
 
-    // write configuration to file with standard name (compatibility of results file)
-    if (filename != FILE_CONFIG) {
-        m_status = copyFile(filename,FILE_CONFIG);
-        if (m_status != STAT_OK) return;
-    }
-
     LoadConfigScript(pRoot, &m_settings);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Could not read configuration data from file (" << filename << ")." << endl;
@@ -107,8 +101,12 @@ void EACirc::loadConfiguration(const string filename) {
     // allocate space for testVecotrs
     pGlobals->testVectors.allocate();
 
-    // must free memory manually!
-    delete pRoot;
+    // write configuration to file with standard name (compatibility of results file), free pRoot
+    if (filename != FILE_CONFIG) {
+        m_status = saveXMLFile(pRoot,FILE_CONFIG);
+    } else {
+        delete pRoot;
+    }
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_CONFIG_LOADED;

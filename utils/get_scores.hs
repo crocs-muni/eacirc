@@ -23,7 +23,7 @@ maxRuns :: Int
 maxRuns = 30
 
 logSuspects :: [String]
-logSuspects = ["warning","error"]
+logSuspects = ["] warning: ","] error: "]
 
 data GenerationRunInfo = Info {
   generationRun :: Int,
