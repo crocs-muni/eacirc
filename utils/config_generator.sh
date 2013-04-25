@@ -4,7 +4,7 @@ VERSION=1.0
 CONFIG_NAME_PREFIX="config-"
 CONFIG_NAME_SUFFIX=".xml"
 # output dir must end with path separator
-OUTPUT_DIR="../../configs/"
+OUTPUT_DIR="configs/"
 
 CONFIG0=﻿"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
 <EACIRC>
