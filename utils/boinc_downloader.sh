@@ -1,8 +1,9 @@
 #! /bin/bash
 
-VERSION=1.5
+VERSION=1.6
 PARENTDIR=../../boinc/_processed
 BASEHTML=http://centaur.fi.muni.cz:8000
+HXCLEAN=hxclean
 
 echo "Results downloader for LaBAK@BOINC, version "$VERSION
 if [ $# -eq 0 ]
@@ -13,7 +14,7 @@ then
 	echo " - downloads all files provided in BOINC results table"
 	echo " - only files for successfull runs are downloaded"
 	echo " - downloaded jobs are storer in "$PARENTDIR" (this can be changes in script header)"
-	echo " - dependency: html-xml-utils"
+	echo " - dependency: html-xml-utils, currently called as '"$HXCLEAN"' (changed by constant)"
 	exit -1
 fi
 if [ ! -d $PARENTDIR ]
@@ -32,7 +33,7 @@ do
 	echo "Downloading results from LaBAK@BOINC for source html: "$SOURCEHTML
 	CLEAN=$SOURCEHTML.clean
 	# clean HTML
-	hxclean $SOURCEHTML >$CLEAN
+	$HXCLEAN $SOURCEHTML >$CLEAN
 	ITEM=0
 	while true 
 	do
