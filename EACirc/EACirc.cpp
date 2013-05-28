@@ -129,10 +129,12 @@ void EACirc::checkConfigurationConsistency() {
         mainLogger.out(LOGGER_ERROR) << "Test vector input length is smaller than circuit input layer." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize > m_settings.circuit.sizeOutputLayer)) {
+/* Invalid check, if circuit with memory is used, total number of outputs is computed as m_settings.circuit.memorySize +  m_settings.circuit.totalSizeOutputLayer
+    if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize > m_settings.circuit.totalSizeOutputLayer)) {
         mainLogger.out(LOGGER_ERROR) << "Circuit memory too large, larger than circuit output." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
+	*/
     if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize >= m_settings.circuit.sizeInputLayer)) {
         mainLogger.out(LOGGER_ERROR) << "Circuit memory too large, larger than circuit input (or equal)." << endl;
         m_status = STAT_CONFIG_INCORRECT;

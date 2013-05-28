@@ -127,6 +127,95 @@ typedef unsigned __int64 uint64_t;
 #define FNC_MULT                    13
 #define FNC_DIV                     14
 #define FNC_READX                   15
-#define FNC_MAX                     FNC_READX
+#define FNC_EQUAL                   16
+#define FNC_MAX                     FNC_EQUAL
 
+// BYTECODE OPS CODES - used for emulation of internode program (not all at the moment, see list below)
+#define AALOAD      0x32
+#define AASTORE     0x53
+#define ALOAD       0x19
+#define	ALOAD_0     0x2a
+#define	ALOAD_1     0x2b
+#define	ALOAD_2     0x2c
+#define	ALOAD_3     0x2d
+#define	ARETURN     0xb0
+#define	ARRAYLENGTH	0xbe
+#define	ASTORE      0x3a
+#define	ASTORE_0	0x4b
+#define	ASTORE_1	0x4c
+#define	ASTORE_2	0x4d
+#define	ASTORE_3	0x4e
+#define	BALOAD      0x33
+#define	BASTORE     0x54
+#define	BIPUSH      0x10
+#define	DUP         0x59
+#define	GETSTATIC	0xb2
+#define	GOTO        0xa7
+#define	I2B         0x91
+#define	IADD        0x60
+#define	IAND        0x7e
+#define IALOAD      0x2e
+#define	IASTORE     0x4f
+#define	ICONST_M1	0x2
+#define ICONST_0	0x3
+#define	ICONST_1	0x4
+#define	ICONST_2	0x5
+#define	ICONST_3	0x6
+#define	ICONST_4	0x7
+#define	ICONST_5	0x8
+#define	IDIV		0x6c
+#define	IFEQ		0x99
+#define IFNE		0x9a
+#define	IF_ICMPGE	0xa2
+#define	IF_ICMPLE	0xa4
+#define	IF_ICMPNE	0xa0
+#define IINC		0x84
+#define ILOAD		0x15
+#define	ILOAD_0		0x1a
+#define	ILOAD_1		0x1b
+#define	ILOAD_2		0x1c
+#define	ILOAD_3		0x1d
+#define	IMUL		0x68
+#define INVOKESPECIAL	0xb7
+#define INVOKESTATIC	0xb8
+#define IREM			0x70
+#define IRETURN			0xac
+#define ISHL			0x78
+#define ISHR			0x7a
+#define	ISTORE			0x36
+#define	ISTORE_0		0x3b
+#define	ISTORE_1		0x3c
+#define	ISTORE_2		0x3d
+#define	ISTORE_3		0x3e
+#define ISUB			0x64
+#define	IXOR			0x82
+#define	MULTIANEWARRAY	0xc5
+#define	NEWARRAY		0xbc
+#define	PUTSTATIC		0xb3
+#define	RETURN			0xb1
+#define	SIPUSH			0x11
+#define	POP				0x57
+
+/* already implemented
+IADD
+ISUB
+IAND
+IXOR
+ICONST_M1
+ICONST_0
+ICONST_1
+ICONST_2
+ICONST_3
+ICONST_4
+ICONST_5
+I2B
+IDIV
+IMUL
+IREM
+ISHL
+ISHR
+BIPUSH
+SIPUSH
+DUP
+*/
 #endif                                                       

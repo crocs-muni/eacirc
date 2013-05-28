@@ -48,7 +48,8 @@ SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
     numLayers = -1;
     sizeLayer = -1;
     sizeInputLayer = -1;
-    sizeOutputLayer = -1;
+	sizeOutputLayer = -1;
+    totalSizeOutputLayer = -1;
     numConnectors = -1;
     useMemory = false;
     memorySize = -1;
@@ -96,7 +97,7 @@ TEST_VECTORS::TEST_VECTORS() {
 
 void TEST_VECTORS::allocate() {
     if (pGlobals->settings->testVectors.inputLength == -1 || pGlobals->settings->testVectors.outputLength == -1
-            || pGlobals->settings->circuit.sizeOutputLayer == -1) {
+            || pGlobals->settings->circuit.totalSizeOutputLayer == -1) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input/output size or circuit output size not set." << endl;
         return;
     }
@@ -111,8 +112,8 @@ void TEST_VECTORS::allocate() {
         memset(inputs[i],0,pGlobals->settings->testVectors.inputLength);
         outputs[i] = new unsigned char[pGlobals->settings->testVectors.outputLength];
         memset(outputs[i],0,pGlobals->settings->testVectors.outputLength);
-        circuitOutputs[i] = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
-        memset(circuitOutputs[i],0,pGlobals->settings->circuit.sizeOutputLayer);
+        circuitOutputs[i] = new unsigned char[pGlobals->settings->circuit.totalSizeOutputLayer];
+        memset(circuitOutputs[i],0,pGlobals->settings->circuit.totalSizeOutputLayer);
     }
 }
 

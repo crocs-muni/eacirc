@@ -82,7 +82,7 @@ void Checker::loadTestVectorParameters() {
     }
     // circuit input/output layer sizes from circuit header file
     pGlobals->settings->circuit.sizeInputLayer = headerCircuit_inputLayerSize;
-    pGlobals->settings->circuit.sizeOutputLayer = headerCircuit_outputLayerSize;
+    pGlobals->settings->circuit.totalSizeOutputLayer = headerCircuit_outputLayerSize;
 
     string line;
     do {

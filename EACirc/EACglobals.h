@@ -23,6 +23,11 @@ struct SETTINGS;
 struct STATISTICS;
 struct GLOBALS;
 
+/**
+  Type used to store basic genom items - connectors and functions
+*/
+typedef unsigned long GENOM_ITEM_TYPE;
+
 // declarations of global variables (definitions in EACglobals.cpp)
 /** main EACirc logging service
   * - send logs to 'mainLogger.out()' via '<<'
@@ -118,6 +123,7 @@ struct SETTINGS_CIRCUIT {
     int sizeLayer;                  //! general layer size
     int sizeInputLayer;             //! number if inputs
     int sizeOutputLayer;            //! number of outputs
+    int totalSizeOutputLayer;       //! number of outputs (including possible memory outputs)
     int numConnectors;              //! how many connectors (? TBD)
     bool useMemory;                 //! should we return part of output to input as memory?
     int memorySize;                 //! memory size in bytes

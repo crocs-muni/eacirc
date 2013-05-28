@@ -31,8 +31,8 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // parsing EACIRC/GA
     pSettings->ga.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;
-    pSettings->ga.probMutation = atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
-    pSettings->ga.probCrossing = atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
+    pSettings->ga.probMutation = (float) atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
+    pSettings->ga.probCrossing = (float) atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
     pSettings->ga.popupationSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());
 
     // parsing EACIRC/CIRCUIT
@@ -61,6 +61,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.allowedFunctions[FNC_MULT] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_MULT").c_str());
     pSettings->circuit.allowedFunctions[FNC_DIV] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_DIV").c_str());
     pSettings->circuit.allowedFunctions[FNC_READX] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_READX").c_str());
+    pSettings->circuit.allowedFunctions[FNC_EQUAL] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_EQUAL").c_str());
 
     // parsing EACIRC/TEST_VECTORS
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
@@ -74,7 +75,18 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // update extra info
     pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
-    pSettings->circuit.genomeSize = (pSettings->circuit.numLayers*2) * pSettings->circuit.sizeLayer;
+
+	// Compute real number of inputs and outputs when memory is used
+	pSettings->circuit.totalSizeOutputLayer = pSettings->circuit.sizeOutputLayer;
+	if (pSettings->circuit.useMemory) {
+		pSettings->circuit.sizeInputLayer += pSettings->circuit.memorySize;
+		pSettings->circuit.totalSizeOutputLayer += pSettings->circuit.memorySize; 
+	}
+	// Compute genome size: take into account size of internal layer, input layer and size of memory (if used)
+	int biggerSize = (pSettings->circuit.sizeInputLayer > pSettings->circuit.sizeLayer) ? pSettings->circuit.sizeInputLayer : pSettings->circuit.sizeLayer;
+	pSettings->circuit.genomeSize = (pSettings->circuit.numLayers*2) * biggerSize;
+
+	assert(pSettings->circuit.totalSizeOutputLayer <= pSettings->circuit.sizeLayer);
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {
