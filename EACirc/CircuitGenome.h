@@ -55,6 +55,8 @@ public:
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
     static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[]);
 	static int HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit);
+	static int FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int numLayerConnectors, GENOM_ITEM_TYPE* pEffectiveConnectionMask);
+	
 	//static int HasImplicitConnection(GENOM_ITEM_TYPE functionID);
 	static int IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
 	static int GetNeutralValue(GENOM_ITEM_TYPE functionID, string* pOperand);
@@ -95,6 +97,29 @@ private:
 	static void SET_FNC_ARGUMENT1(GENOM_ITEM_TYPE* fncValue, unsigned char arg1) {
 		*fncValue = *fncValue & 0x00ffffffff;
 		*fncValue |= arg1 << 24;
+	}
+    /** Converts relative connector mask into absolute one (relative centers on slot, absolute directly address inputs) 
+      * @param relativeMask mask with relative connectors
+      * @param slot			current slot to which relative connectors are applied
+	  * @param numLayerConnectors	number of effective layer connectors assumed (= number of bits from mask intepreted as connectors)
+	  * @param numLayerInputs		number of inputs to current layer
+	  * @param pAbsoluteMask		return argument for converted absolute mask
+      * @return nothing
+      */
+	static void convertRelative2AbsolutConnectorMask(GENOM_ITEM_TYPE relativeMask, int slot, int numLayerConnectors, int numLayerInputs, GENOM_ITEM_TYPE* pAbsoluteMask) {
+		int	halfConnectors = (numLayerConnectors - 1) / 2;
+		int connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
+		int stopBit = numLayerConnectors;
+		*pAbsoluteMask = 0;
+        for (int bit = 0; bit < stopBit; bit++) {
+            if (relativeMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+				int targetSlot = getTargetSlot(connectOffset, bit, numLayerInputs);
+				*pAbsoluteMask += pGlobals->precompPow[targetSlot];
+            }
+        }
+	}
+	static int getTargetSlot(int connectOffset, int bit, int numLayerInputs) {
+		return (connectOffset + bit < 0) ? (numLayerInputs + connectOffset + bit) : connectOffset + bit;
 	}
 
 };

@@ -227,7 +227,9 @@ void CircuitGenome::Initializer_basic(GAGenome& g) {
                 // CONNECTION SUB-LAYER
                 if (layer / 2 == 0) {
                     // IN_SELECTOR_LAYER - TAKE INPUT ONLY FROM PREVIOUS NODE IN SAME COORDINATES
-                    value = pGlobals->precompPow[slot];
+					// NOTE: relative mask must be computed (in relative masks, (numLayerInputs / 2) % numLayerInputs is node at same column)
+					int relativeSlot = (numLayerInputs / 2) % numLayerInputs;
+                    value = pGlobals->precompPow[relativeSlot];
                 }
                 else {
                     // FUNCTIONAL LAYERS (CONNECTOR_LAYER_i)
@@ -613,50 +615,99 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 	return status;
 }
 
+int CircuitGenome::FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int numLayerConnectors, GENOM_ITEM_TYPE* pEffectiveConnectionMask) {
+	int	status = STAT_OK;
+
+	*pEffectiveConnectionMask = 0;
+
+	switch (GET_FNC_TYPE(functionID)) {
+		// FUNCTIONS WITH ONLY ONE CONNECTOR
+		case FNC_NOP:  // no break
+        case FNC_ROTL: // no break
+        case FNC_ROTR: // no break
+        case FNC_BITSELECTOR: {
+			// Include only first connector bit
+			for (int i = 0; i < numLayerConnectors; i++) {
+				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i])  {
+					*pEffectiveConnectionMask =  pGlobals->precompPow[i];
+					break;
+				}
+			}
+			break;
+        }
+		// FUNCTIONS WITH NO CONNECTOR
+        case FNC_CONST: // no break
+		case FNC_READX: *pEffectiveConnectionMask = 0; break;
+		// ALL OTHER FUNCTIONS
+		default: {
+			// Include only bits up to numLayerConnectors
+			for (int i = 0; i < numLayerConnectors; i++) {
+				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i])  {
+					*pEffectiveConnectionMask +=  pGlobals->precompPow[i];
+				}
+			}
+			break;
+        }
+    }
+
+	return status;
+}
+
 int CircuitGenome::HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit) {
-    int    status = FALSE; // default is NO
+    int    bHasConnection = FALSE; // default is NO
     
     // DEFAULT: IF SIGNALIZED IN CONNECTOR MASK, THAN ALLOW CONNECTION
-    // SELECTED INSTRUCTION MAY CHANGE LATER
-    if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) status = TRUE;
-	else status = FALSE;
+    // SOME INSTRUCTION MAY CHANGE LATER
+    if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) bHasConnection = TRUE;
+	else bHasConnection = FALSE;
 	
-	// constant has no connection
-	if (GET_FNC_TYPE(functionID) == FNC_CONST) status = FALSE;
-
+    switch (GET_FNC_TYPE(functionID)) {
+        // 
+		// FUNCTIONS WITH ONLY ONE CONNECTOR
+		//
+		case FNC_NOP:  // no break
+        case FNC_ROTL: // no break
+        case FNC_ROTR: // no break
+        case FNC_BITSELECTOR: {
+			// Check if this connection is the first one 
+			// If not, then set connection flag bHasConnection to FALSE
+			for (int i = 0; i < bit; i++) {
+				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
+			}
+			break;
+        }
+        // 
+		// FUNCTIONS WITH NO CONNECTOR
+		//
+        case FNC_CONST: // no break
+		case FNC_READX: bHasConnection = FALSE; break;
+        default: {
+			// connection from mask was alreadu used for all other functions
+        }
+    }
     
-    return status;
+    return bHasConnection;
 }
 
 int CircuitGenome::IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand) {
-    int    bHasConnection = FALSE; // has connection?
+    int    bHasConnection = HasConnection(functionID, connectionMask, fncSlot, connectionOffset, bit);
     
-    // DEFAULT: IF SIGNALIZED IN MASK, THAN ALLOW CONNECTION
-	// MAY CHANGE LATER - SOME INSTRUCTIONS TAKES ONLY ONE (FIRST) CONNECTOR
-    if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) bHasConnection = TRUE;
-
     switch (GET_FNC_TYPE(functionID)) {
-        case FNC_NOP:  {
-			// Check if this connection is the first one (NOP accepts only one connection)
-			// If not, then set connection flag bHasConnection to FALSE
-			for (int i = 0; i < bit; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
-			}
-			*pOperand = ""; break;
-        }
-        case FNC_OR: {
-            *pOperand = "|"; break;    
-        }
-        case FNC_AND: {
-            *pOperand = "&"; break;    
-        }
-        case FNC_CONST: //no break
+        case FNC_NOP:	*pOperand = ""; break;
+        case FNC_OR:	*pOperand = "|"; break;    
+        case FNC_AND:	*pOperand = "&"; break;    
+        case FNC_XOR:	*pOperand = "^"; break;    
+        case FNC_NOR:	*pOperand = "| ~"; break;    
+        case FNC_NAND:	*pOperand = "& ~"; break;    
+        case FNC_SUM:	*pOperand = "+"; break;
+        case FNC_SUBS:	*pOperand = "-"; break;     
+        case FNC_ADD:	*pOperand = "+"; break;    
+        case FNC_MULT:	*pOperand = "*"; break;    
+        case FNC_DIV:	*pOperand = "/"; break;     
+		case FNC_EQUAL: *pOperand = "=="; break;     
+
+        case FNC_CONST: // no break
 		case FNC_READX: {
-			// Check if this connection is the first one (NOP accepts only one connection)
-			// If not, then set connection flag bHasConnection to FALSE
-			for (int i = 0; i < bit; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
-			}
 			if (bHasConnection) {
 				std::stringstream out;
 				out << GET_FNC_ARGUMENT1(functionID);
@@ -664,22 +715,9 @@ int CircuitGenome::IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connect
 			}
 			break;
         }
-        case FNC_XOR: {
-            *pOperand = "^"; break;    
-        }
-        case FNC_NOR: {
-            *pOperand = "| ~"; break;    
-        }
-        case FNC_NAND: {
-            *pOperand = "& ~"; break;    
-        }
+
         case FNC_ROTL: // no break
         case FNC_ROTR: {
-			// Check if this connection is the first one (ROTL/ROTR accepts only one connection)
-			// If not, then set connection flag bHasConnection to FALSE
-			for (int i = 0; i < bit; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
-			}
 			if (bHasConnection) {
 				std::stringstream out;
 				unsigned char tmp = GET_FNC_ARGUMENT1(functionID);
@@ -690,11 +728,6 @@ int CircuitGenome::IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connect
 			break;
         }
         case FNC_BITSELECTOR: {
-			// Check if this connection is the first one (NOP accepts only one connection)
-			// If not, then set connection flag bHasConnection to FALSE
-			for (int i = 0; i < bit; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
-			}
 			if (bHasConnection) {
 				std::stringstream out;
 				out << " & " << (GET_FNC_ARGUMENT1(functionID) & 0xff);
@@ -702,24 +735,7 @@ int CircuitGenome::IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connect
 			}
 			break;
         }
-        case FNC_SUM: {
-            *pOperand = "+"; break;
-        }
-        case FNC_SUBS: {
-            *pOperand = "-"; break;     
-        }
-        case FNC_ADD: {
-            *pOperand = "+"; break;    
-        }  
-        case FNC_MULT: {
-            *pOperand = "*"; break;    
-        }
-        case FNC_DIV: {
-            *pOperand = "/"; break;     
-        }
-		case FNC_EQUAL: {
-            *pOperand = "=="; break;     
-		}
+
         default: {
             *pOperand = "!!!";
             bHasConnection = TRUE;
@@ -874,6 +890,12 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
     unsigned char*					displayNodes = NULL;
 
     displayNodes = new unsigned char[pGlobals->settings->circuit.genomeSize];
+
+	// 1. Prune circuit (if required)
+	// 2. Create header (DOT, C)
+	// 3. 
+
+
 
     //
     // PRUNE CIRCUIT IF REQUIRED
@@ -1039,9 +1061,15 @@ ordering=out;\r\n";
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
 
 			GENOM_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
+			//FilterEffectiveConnections(genome.gene(offsetFNC + slot), genome.gene(offsetCON + slot), numLayerConnectors, &effectiveCon);
+			
 			//value2.Format("%.10u[%s]  ", effectiveCon, value);
+			// TXT: Transform relative connector mask into absolute mask (fixed inputs from previous layer)
+			GENOM_ITEM_TYPE absoluteCon = 0;
+			convertRelative2AbsolutConnectorMask(effectiveCon, slot, numLayerConnectors, numLayerInputs, &absoluteCon);
 			ostringstream os5;
-			os5 <<  setfill('0') << setw(10) << effectiveCon << "[" << value << "]  ";
+			os5 <<  setfill('0') << setw(10) << absoluteCon << "[";
+			os5.setf(std::ios_base::left); os5 << setfill(' ') << setw(10) << value << "]  "; os5.unsetf(std::ios_base::left);
 			value2 = os5.str();
 			message += value2;
             
@@ -1055,27 +1083,9 @@ ordering=out;\r\n";
 				os6 << (layer / 2 + 1) << "_" << slot << "_" << value;
 				actualSlotID = os6.str();
 
-				int connectOffset = 0;
-				int stopBit = 0;
-				if (numLayerConnectors > numLayerInputs) {
-					// NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER - CUT ON BOTH SIDES			
-					connectOffset = 0;
-					stopBit = numLayerInputs;
-				}
-				else {
-					connectOffset = slot - halfConnectors;
-					stopBit = numLayerConnectors;
-					// NUMBER OF CONNECTORS FIT IN - BUT SOMETIMES CANNOT BE CENTERED ON slot
-					if ((slot - halfConnectors < 0)) {
-						// WE ARE TO CLOSE TO LEFT SIDE - ADD MORE INPUTS FROM RIGHT SIDE
-						connectOffset = 0;
-					}
-					if ((slot + halfConnectors + 1 >= numLayerInputs)) { // +1 AS WE ARE TAKING CENTRAL NODE AS BELONGING TO RIGHT HALF
-						// WE ARE TO CLOSE TO RIGHT SIDE - ADD MORE INPUTS FROM LEFT SIDE
-						connectOffset = numLayerInputs - numLayerConnectors;
-					}
-				}
-			 
+			    int connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
+			    int stopBit = numLayerConnectors;
+
 				int    bFirstArgument = TRUE;
 				int    bAtLeastOneConnection = FALSE;
 			    
@@ -1185,16 +1195,17 @@ ordering=out;\r\n";
 						if (layer > 1) {
                             int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
                             int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.sizeLayer;
-							GetFunctionLabel(genome.gene(prevOffsetFNC + connectOffset + bit), genome.gene(prevOffsetCON + connectOffset + bit), &value);
+							getTargetSlot(connectOffset, bit, numLayerInputs);
+							GetFunctionLabel(genome.gene(prevOffsetFNC + getTargetSlot(connectOffset, bit, numLayerInputs)), genome.gene(prevOffsetCON + getTargetSlot(connectOffset, bit, numLayerInputs)), &value);
 							//previousSlotID.Format("%d_%d_%s", layer / 2, connectOffset + bit, value);
 							ostringstream os21;
-							os21 << (layer / 2) << "_" << (connectOffset + bit) << "_" << value;
+							os21 << (layer / 2) << "_" << getTargetSlot(connectOffset, bit, numLayerInputs) << "_" << value;
 							previousSlotID = os21.str();
 						}
 						else {
 							//previousSlotID.Format("IN_%d", connectOffset + bit);
 							ostringstream os22;
-							os22 << "IN_" << (connectOffset + bit);
+							os22 << "IN_" << getTargetSlot(connectOffset, bit, numLayerInputs);
 							previousSlotID = os22.str();
 						}
 						if (bExplicitConnection) {
@@ -1515,27 +1526,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 
 			    connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
 			    stopBit = numLayerConnectors;
-/*    			
-			    if (numLayerConnectors > numLayerInputs) {
-				    // NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER - CUT ON BOTH SIDES			
-				    connectOffset = 0;
-				    stopBit = numLayerInputs;
-			    }
-			    else {
-				    connectOffset = slot - halfConnectors;
 
-				    stopBit = numLayerConnectors;
-				    // NUMBER OF CONNECTORS FIT IN - BUT SOMETIMES CANNOT BE CENTERED ON slot
-				    if ((slot - halfConnectors < 0)) {
-					    // WE ARE TO CLOSE TO LEFT SIDE - ADD MORE INPUTS FROM RIGHT SIDE
-					    connectOffset = 0;
-				    }
-				    if ((slot + halfConnectors + 1 >= numLayerInputs)) { // +1 AS WE ARE TAKING CENTRAL NODE AS BELONGING TO RIGHT HALF
-					    // WE ARE TO CLOSE TO RIGHT SIDE - ADD MORE INPUTS FROM LEFT SIDE
-					    connectOffset = numLayerInputs - numLayerConnectors;
-				    }
-			    }
-*/
 				//
 				// EVALUATE FUNCTION BASED ON ITS INPUTS 
 				//
