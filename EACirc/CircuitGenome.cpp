@@ -1408,13 +1408,21 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
     int     memoryLength = 0;
     unsigned char*    localInputs = NULL;
     unsigned char*    localOutputs = NULL;
+    unsigned char*    fullLocalInputs = NULL;
 
 	// Compute maximum number of inputs into any layer
 	int maxLayerSize = (pGlobals->settings->circuit.sizeInputLayer > pGlobals->settings->circuit.sizeLayer) ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
 
-    localInputs = new unsigned char[maxLayerSize];
+	// Local inputs and local outputs contains inputs and outputs for particular layer
+	// TRICK: We will use relative connectors which may request to access input values from other side of input array (connectors for slot 0 can access slot -2 == sizeLayer - 2)
+	// To remove necessity for repeated boundary checks, we will duplicite inputs three times in the following pattern:
+	// in1, in2, in3 ... inx | in1, in2, in3 ... inx | in1, in2, in3 ... inx
+	//                         ^
+	//						   | localInputs pointer => localInputs[-2] will access inx-1;					
+    fullLocalInputs = new unsigned char[3*maxLayerSize];
+	localInputs = fullLocalInputs + maxLayerSize;	// set localInputs ptr to point at the middle occurence of pattern
     localOutputs = new unsigned char[maxLayerSize];
-    memset(localInputs, 0, maxLayerSize);
+    memset(fullLocalInputs, 0, 3*maxLayerSize);
     memset(localOutputs, 0, maxLayerSize);
 
 	if (pGlobals->settings->circuit.useMemory) {
@@ -1447,6 +1455,9 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
         if (numSectors == 1) {
             // ALL INPUT DATA AT ONCE
 			memcpy(localInputs, inputs, pGlobals->settings->circuit.sizeInputLayer);
+			// duplicate before and after (see TRICK above)
+			memcpy(localInputs - pGlobals->settings->circuit.sizeInputLayer, localInputs, pGlobals->settings->circuit.sizeInputLayer);
+			memcpy(localInputs + pGlobals->settings->circuit.sizeInputLayer, localInputs, pGlobals->settings->circuit.sizeInputLayer);
         }
         else {
             // USE MEMORY STATE (OUTPUT) AS FIRST PART OF INPUT
@@ -1454,6 +1465,11 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
             memcpy(localInputs, localOutputs, memoryLength);
             // ADD FRESH INPUT DATA
             memcpy(localInputs + memoryLength, inputs + sector * sectorLength, sectorLength);
+			int realInputsLength = memoryLength + sectorLength;
+			assert(realInputsLength <= maxLayerSize);
+			// duplicate before and after
+			memcpy(localInputs - realInputsLength, localInputs, realInputsLength);
+			memcpy(localInputs + realInputsLength, localInputs, realInputsLength);
         }
         
         // EVALUATE CIRCUIT
@@ -1480,6 +1496,9 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 			// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
 			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
 
+			// IF NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER => LIMIT TO numLayerInputs
+			if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs; 
+
 			// halfConnectors is used for relative interpretation of connectors
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
 
@@ -1493,7 +1512,10 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 				// COMPUTE RANGE OF INPUTS FOR PARTICULAR slot FUNCTION
 				//
                 connect = pGenome->gene(offsetCON + slot);
-    			
+
+			    connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
+			    stopBit = numLayerConnectors;
+/*    			
 			    if (numLayerConnectors > numLayerInputs) {
 				    // NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER - CUT ON BOTH SIDES			
 				    connectOffset = 0;
@@ -1501,6 +1523,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 			    }
 			    else {
 				    connectOffset = slot - halfConnectors;
+
 				    stopBit = numLayerConnectors;
 				    // NUMBER OF CONNECTORS FIT IN - BUT SOMETIMES CANNOT BE CENTERED ON slot
 				    if ((slot - halfConnectors < 0)) {
@@ -1512,7 +1535,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 					    connectOffset = numLayerInputs - numLayerConnectors;
 				    }
 			    }
-
+*/
 				//
 				// EVALUATE FUNCTION BASED ON ITS INPUTS 
 				//
@@ -1727,6 +1750,11 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
             }
             // PREPARE INPUTS FOR NEXT LAYER FROM OUTPUTS
             memcpy(localInputs, localOutputs, pGlobals->settings->circuit.sizeLayer);
+
+			// duplicate before and after (see TRICK above)
+			memcpy(localInputs - pGlobals->settings->circuit.sizeLayer, localInputs, pGlobals->settings->circuit.sizeLayer);
+			memcpy(localInputs + pGlobals->settings->circuit.sizeLayer, localInputs, pGlobals->settings->circuit.sizeLayer);
+
         }
     }
     
@@ -1734,7 +1762,7 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 	// BUT length of memory outputs can be zero (in case of circuit without memory)
 	memcpy(outputs,localOutputs + memoryLength,pGlobals->settings->circuit.sizeOutputLayer);
 
-	delete[] localInputs;
+	delete[] fullLocalInputs;
     delete[] localOutputs;
     return status;
 }
