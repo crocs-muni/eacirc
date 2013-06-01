@@ -432,6 +432,7 @@ int CircuitGenome::GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE 
 }
 
 int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
+	return PruneCircuitNew(g, prunnedG);
     int                     status = STAT_OK;
     GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
     GA1DArrayGenome<GENOM_ITEM_TYPE>  &prunnedGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) prunnedG;
@@ -467,10 +468,10 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                 if (origValue != 0) {
                     // PRUNE FNC AND CONNECTION LAYER DIFFERENTLY
                     if (((i / pGlobals->settings->circuit.sizeLayer) % 2) == 1) {
-                        // FNCs LAYER - TRY TO SET AS NOP INSTRUCTION
-                        prunnedGenome.gene(i, 0);
+                        // FNCs LAYER - TRY TO SET AS NOP INSTRUCTION WITH NO CONNECTORS
+                        prunnedGenome.gene(i, FNC_NOP);
                         
-                        assert(origValue <= FNC_MAX);
+                        assert(GET_FNC_TYPE(origValue) <= FNC_MAX);
                         
                         float newFit = Evaluator(prunnedGenome);
                         if (origFit > newFit) {
@@ -488,7 +489,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         }
                     }
                     else {
-                        GENOM_ITEM_TYPE   tempOrigValue = origValue;  // WILL HOLD MASK OF INPORTANT CONNECTIONS
+                        GENOM_ITEM_TYPE   tempOrigValue = origValue;  // WILL HOLD MASK OF IMPORTANT CONNECTIONS
                         // CONNECTION LAYER - TRY TO REMOVE CONNECTIONS GRADUALLY
                         for (int conn = 0; conn < MAX_LAYER_SIZE; conn++) {
                             GENOM_ITEM_TYPE   newValue = tempOrigValue & (~pGlobals->precompPow[conn]);
@@ -519,6 +520,98 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         // SET FINAL PRUNNED VALUE
                         prunnedGenome.gene(i, tempOrigValue);
                     }
+                }
+            }
+        }
+    }
+    pGlobals->stats.prunningInProgress = false;
+    return status;
+}
+
+int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
+    int                     status = STAT_OK;
+    GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
+    GA1DArrayGenome<GENOM_ITEM_TYPE>  &prunnedGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) prunnedG;
+    int                    bChangeDetected = FALSE;
+
+    // CREATE LOCAL COPY
+    for (int i = 0; i < genome.size(); i++) {
+        prunnedGenome.gene(i, genome.gene(i)); 
+    }
+
+    if (pGlobals->stats.prunningInProgress) {
+        // WE ARE ALREADY PERFORMING PRUNING - DO NOT CONTINUE TO PREVENT OVERLAPS
+    }
+    else {
+        //
+        // METHOD - TRY TO TEMPORARY REMOVE CONNECTION/FUNCTION AND TEST FITNESS CHANGES
+        //
+        
+        pGlobals->stats.prunningInProgress = true;
+        
+		float origFit = Evaluator(prunnedGenome);
+        
+        int prunneRepeat = 0; 
+        bChangeDetected = TRUE;
+        while (bChangeDetected && prunneRepeat < 10) {
+            bChangeDetected = FALSE;
+            prunneRepeat++;
+            
+			// DISABLE GENES STARTING FROM END 
+			for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
+				int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
+				int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+
+				// actual number of functions in layer - different for the last "output" layer
+				int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? (pGlobals->settings->circuit.totalSizeOutputLayer) : pGlobals->settings->circuit.sizeLayer;
+
+				for (int slot = 0; slot < numFncInLayer; slot++) {
+					GENOM_ITEM_TYPE   origValueFnc = genome.gene(offsetFNC + slot);
+					GENOM_ITEM_TYPE   origValueCon = genome.gene(offsetCON + slot);
+
+					// TRY TO SET AS NOP INSTRUCTION WITH NO CONNECTORS
+					prunnedGenome.gene(offsetFNC + slot, FNC_NOP);	// NOP
+					prunnedGenome.gene(offsetCON + slot, 0);		// NO CONNECTORS
+
+                    float newFit = Evaluator(prunnedGenome);
+                    if (origFit > newFit) {
+                        // SOME PART OF THE GENE WAS IMPORTANT, SET BACK 
+						prunnedGenome.gene(offsetFNC + slot, origValueFnc);	
+						prunnedGenome.gene(offsetCON + slot, origValueCon);		
+
+                        // TRY TO REMOVE CONNECTIONS GRADUALLY
+						GENOM_ITEM_TYPE   prunnedConnectors = origValueCon;
+                        for (int conn = 0; conn < MAX_LAYER_SIZE; conn++) {
+                            GENOM_ITEM_TYPE   newConValue = prunnedConnectors & (~pGlobals->precompPow[conn]);
+                            
+                            if (newConValue != prunnedConnectors) {
+                                prunnedGenome.gene(offsetCON + slot, newConValue);
+                                
+                                float newFit = Evaluator(prunnedGenome);
+                                if (origFit > newFit) {
+                                    // CONNECTOR WAS IMPORTANT, DO NOT REMOVE CONNECTION
+                                }
+                                else {
+                                    bChangeDetected = TRUE;
+                    
+                                    // STORE NEW VALUE WITHOUT UNIMPORTANT CONNECTION
+                                    prunnedConnectors = newConValue;
+                                    
+                                    if (origFit < newFit) {
+                                        // CONNECTOR WAS HARMING, REMOVED
+                                    }
+                                    else {
+                                        // CONNECTOR WAS NOT IMPORTANT, REMOVE
+                                    }
+                                }
+                            }
+                        }
+                        // SET FINAL PRUNNED VALUE FOR CONNECTORS
+                        prunnedGenome.gene(offsetCON + slot, prunnedConnectors);
+                    }
+					else {
+						// GENE WAS UNIMPORTANT, REMOVE IT
+					}
                 }
             }
         }
@@ -562,11 +655,15 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
         // actual number of functions in layer - different for the last "output" layer
         int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? pGlobals->settings->circuit.totalSizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
 
-        // SELECTOR LAYERS HAVE FULL INTERCONNECTION (CONNECTORS), OTHER HAVE SPECIFIED NUMBER 
+        // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
         int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
-        if (layer / 2 == 0) {
-            numLayerConnectors = numLayerInputs;    
-        }
+		// IN_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
+        if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
+		// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
+		if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
+		// IF NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER => LIMIT TO numLayerInputs
+		if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs; 
+
 	    int	halfConnectors = (numLayerConnectors - 1) / 2;
 
         for (int slot = 0; slot < numFncInLayer; slot++) {
@@ -575,36 +672,22 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
             int     connectOffset = 0;
             int     stopBit = 0;
             
+			connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
+			stopBit = numLayerConnectors;
+
             // ANALYZE ONLY SUCH NODES THAT ARE ALREADY IN USED SET
 			if (displayNodes[offsetFNC + slot] == 1) {
 				// COMPUTE RANGE OF INPUTS FOR PARTICULAR slot FUNCTION
 				connect = genome.gene(offsetCON + slot);
-				
-				if (numLayerConnectors > numLayerInputs) {
-					// NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER - CUT ON BOTH SIDES			
-					connectOffset = 0;
-					stopBit = numLayerInputs;
-				}
-				else {
-					connectOffset = slot - halfConnectors;
-					stopBit = numLayerConnectors;
-					// NUMBER OF CONNECTORS FIT IN - BUT SOMETIMES CANNOT BE CENTERED ON slot
-					if ((slot - halfConnectors < 0)) {
-						// WE ARE TO CLOSE TO LEFT SIDE - ADD MORE INPUTS FROM RIGHT SIDE
-						connectOffset = 0;
-					}
-					if ((slot + halfConnectors + 1 >= numLayerInputs)) { // +1 AS WE ARE TAKING CENTRAL NODE AS BELONGING TO RIGHT HALF
-						// WE ARE TO CLOSE TO RIGHT SIDE - ADD MORE INPUTS FROM LEFT SIDE
-						connectOffset = numLayerInputs - numLayerConnectors;
-					}
-				}
 
 				for (int bit = 0; bit < stopBit; bit++) {
 					if (HasConnection(genome.gene(offsetFNC + slot), connect, slot, connectOffset, bit)) {
 						if (layer > 1) {
                             int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
 							// ADD PREVIOUS NODE 	
-							displayNodes[prevOffsetFNC + connectOffset + bit] = 1;
+							int targetSlot = getTargetSlot(connectOffset, bit, numLayerInputs);
+							displayNodes[prevOffsetFNC + targetSlot] = 1;
+//							displayNodes[prevOffsetFNC + connectOffset + bit] = 1;
 						}
 					}		
 				}
@@ -904,7 +987,7 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
         // PRUNE
         status = PruneCircuit(inputGenome, genome);    
         bCodeCircuit = TRUE;
-        
+
 		// COMPUTE NODES TO DISPLAY 
         memset(displayNodes, 0, pGlobals->settings->circuit.genomeSize);
 		status = GetUsedNodes(genome, usePredictorMask, displayNodes);        
@@ -1205,7 +1288,8 @@ ordering=out;\r\n";
 						else {
 							//previousSlotID.Format("IN_%d", connectOffset + bit);
 							ostringstream os22;
-							os22 << "IN_" << getTargetSlot(connectOffset, bit, numLayerInputs);
+							int targetSlot = getTargetSlot(connectOffset, bit, numLayerInputs);
+							os22 << "IN_" << targetSlot;
 							previousSlotID = os22.str();
 						}
 						if (bExplicitConnection) {
@@ -1506,7 +1590,6 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
             if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
 			// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
 			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
-
 			// IF NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER => LIMIT TO numLayerInputs
 			if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs; 
 

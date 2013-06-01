@@ -53,6 +53,7 @@ public:
     static int PrintCircuitMemory(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
 	static int GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
+	static int PruneCircuitNew(GAGenome &g, GAGenome &prunnedG);
     static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[]);
 	static int HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit);
 	static int FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int numLayerConnectors, GENOM_ITEM_TYPE* pEffectiveConnectionMask);
@@ -119,7 +120,12 @@ private:
         }
 	}
 	static int getTargetSlot(int connectOffset, int bit, int numLayerInputs) {
-		return (connectOffset + bit < 0) ? (numLayerInputs + connectOffset + bit) : connectOffset + bit;
+		int targetSlot = connectOffset + bit;
+		if (connectOffset + bit < 0) targetSlot = numLayerInputs + connectOffset + bit;
+		if (connectOffset + bit >= numLayerInputs) targetSlot = connectOffset + bit - numLayerInputs;
+		assert(targetSlot >= 0 && targetSlot < numLayerInputs);
+
+		return targetSlot;
 	}
 
 };
