@@ -153,32 +153,67 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     float							fitness = 0;
     unsigned char*					usePredictorMask = NULL;
     int								match = 0;
-    int								numPredictions = 0; 
+    int								maxCorrectPredictions = 0; 
     IEvaluator*                     evaluator = pGlobals->evaluator;
 
-	/* DO NOT USE PREDICTOR MASK
-	int memoryLength = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.memorySize : 0;
-    usePredictorMask = new unsigned char[pGlobals->settings->circuit.totalSizeOutputLayer + memoryLength];
-    memset(usePredictorMask, 1, pGlobals->settings->circuit.totalSizeOutputLayer + memoryLength);	// USE ALL PREDICTORS
-	*/
-    match = 0;    
-    numPredictions = 0;
-    for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
-        // EXECUTE CIRCUIT
-        status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+	match = 0;    
+	maxCorrectPredictions = 0;
 
-        // EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
-        evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
-                                   usePredictorMask, &match, &numPredictions);
-    }
-    fitness = (numPredictions > 0) ? (match / ((float) numPredictions)) : 0;
+	// ### EXPERIMENTAL: compute categories
+	if (pGlobals->settings->main.evaluatorType == EVALUATOR_OUTPUT_CATEGORIES) {
+		// Set maximum possible chisquare achiavable for normalization
+		// Maximum is achieved when all categories fall into the single, but different category.  
+		int sectorLength = pGlobals->settings->circuit.sizeInputLayer - pGlobals->settings->circuit.memorySize;
+		int numCategorizedInputs = pGlobals->settings->testVectors.inputLength / sectorLength;
+		// Maximum value for fitness normalization is given as numCategorizedInputs 2 * (category completely unused by first type) * numCategorizedInputs (category completely used by the second type)  * pGlobals->settings->testVectors.setSize (total number of test vectors over which we summarize)
+		// It should be taken two times as first type should somewhere put his catagorization, which will result in same difference again
+		// BUGBUG: but so far, it seems that 2x is never used - best fitness seen was slightly below 0.5
+		maxCorrectPredictions = ((numCategorizedInputs * numCategorizedInputs) + (numCategorizedInputs * numCategorizedInputs)) * pGlobals->settings->testVectors.setSize;
+
+		// Compute categories distribution for truly random data
+		memset(pGlobals->testVectors.circuitOutputCategoriesRandom, 0, sizeof(pGlobals->testVectors.circuitOutputCategoriesRandom));
+		memset(pGlobals->testVectors.circuitOutputCategories, 0, sizeof(pGlobals->testVectors.circuitOutputCategories));
+		// Use all random inputs to establish categories for truly random inputs
+		int numTrulyRandomInputs = 0;
+		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
+			if (pGlobals->testVectors.outputs[testVector][0] == 0xff) {
+				status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[0], pGlobals->testVectors.circuitOutputs[0]);
+				numTrulyRandomInputs++;
+			}
+		}
+		// Normalize numbers in the categories according to number of used random inputs (numTrulyRandomInputs)
+    	// Normalize by number of classified input blocks (sectors)
+		// Add +1 to prevent division by zero
+		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategoriesRandom[i] = (pGlobals->testVectors.circuitOutputCategories[i] / (double) numTrulyRandomInputs) + 1;
+
+	}
+	// ### END EXPERIMENTAL
+
+	for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
+		// EXPERIMENTAL: Clear histogram of categories
+		memset(pGlobals->testVectors.circuitOutputCategories, 0, sizeof(pGlobals->testVectors.circuitOutputCategories));
+
+		// EXECUTE CIRCUIT
+		status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+
+    	// EXPERIMENTAL: Add +1 to prevent division by zero
+		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategories[i] = pGlobals->testVectors.circuitOutputCategories[i] + 1;
+
+		// EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
+		evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
+									usePredictorMask, &match, &maxCorrectPredictions);
+	}
+	assert(match < maxCorrectPredictions);
+	if (match > maxCorrectPredictions) cout << "ERROR: (categories) match > maxCorrectPredictions: " << match << endl;
+	match = abs(match);
+    fitness = (maxCorrectPredictions > 0) ? (match / ((float) maxCorrectPredictions)) : 0;
 
     // update statistics, if needed
     if (!pGlobals->stats.prunningInProgress) {
         // include into average fitness of whole generation
         (pGlobals->stats.avgGenerFit) += fitness;
         (pGlobals->stats.numAvgGenerFit)++;
-        (pGlobals->stats.avgPredictions) += numPredictions;
+        (pGlobals->stats.avgPredictions) += maxCorrectPredictions;
 
         if (fitness > pGlobals->stats.bestGenerFit) pGlobals->stats.bestGenerFit = fitness;
 
@@ -974,6 +1009,8 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
 
     displayNodes = new unsigned char[pGlobals->settings->circuit.genomeSize];
 
+	// TODO: of pGlobals->settings->main.evaluatorType == EVALUATOR_OUTPUT_CATEGORIES, then different code for C code is needed
+
 	// 1. Prune circuit (if required)
 	// 2. Create header (DOT, C)
 	// 3. 
@@ -1495,6 +1532,222 @@ ordering=out;\r\n";
     return status;
 }
 
+int CircuitGenome::PrintCircuitMemory_DOT(GAGenome &g, string filePath, unsigned char* displayNodes) {
+    int								status = STAT_OK;
+    GA1DArrayGenome<GENOM_ITEM_TYPE>&genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
+//    string							message;
+    string							value;
+    string							value2;
+    string							visualCirc = "";
+//    string							codeCirc = "";
+	string 							actualSlotID; 
+	string 							previousSlotID; 
+	int								bCodeCircuit = TRUE; 
+
+	int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.memorySize : 0;
+    
+    // VISUAL CIRC: INPUTS 
+    visualCirc += "digraph EACircuit {\r\n\
+rankdir=BT;\r\n\
+edge [dir=none];\r\n\
+size=\"6,6\";\r\n\
+ordering=out;\r\n";
+
+    for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
+        int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
+        int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+
+        int numLayerInputs = 0;
+        if (layer == 1) {
+			//
+			// DRAW NODES IN INPUT LAYER
+			//
+
+			// Use magenta color for memory nodes (if used)
+			if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta, style=filled];\r\n";
+
+			for (int i = 0; i < pGlobals->settings->circuit.sizeInputLayer; i++) {
+				// set color for data input nodes, when necessary
+				if ((pGlobals->settings->circuit.useMemory && (i ==  pGlobals->settings->circuit.memorySize)) ||  // all memory inputs already processed
+					(!pGlobals->settings->circuit.useMemory && (i == 0))) {										  // no memory inputs used	
+					visualCirc += "node [color=green, style=filled];\r\n";
+				}
+
+				ostringstream os1;
+				os1 << "IN_" << i;
+				actualSlotID = os1.str();
+				ostringstream os2;
+				os2 << "\"" << actualSlotID << "\";\r\n";
+				value2 = os2.str();
+				visualCirc += value2;
+			}
+			numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
+        }
+        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
+
+		visualCirc += "node [color=lightblue2, style=filled];\r\n";
+
+        int numFncs = pGlobals->settings->circuit.sizeLayer;
+        // IF DISPLAYING THE LAST LAYER, THEN DISPLAY ONLY 'INTERNAL_LAYER_SIZE' FNC (OTHERS ARE UNUSED)
+        if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numFncs = pGlobals->settings->circuit.totalSizeOutputLayer;
+
+		//
+		// VISUAL CIRC: PUT ALL NODES FROM SAME LAYER INTO SAME RANK
+		//
+        value2 = "{ rank=same; ";
+        for (int slot = 0; slot < numFncs; slot++) {
+            // USE ONLY GENES THAT WERE NOT PRUNNED OUT
+            if (displayNodes[offsetFNC + slot] == 1) {
+			    GetFunctionLabel(genome.gene(offsetFNC + slot), genome.gene(offsetCON + slot), &value);
+			    //actualSlotID.Format("\"%d_%d_%s\"; ", layer / 2 + 1, slot, value);
+				ostringstream os4;
+				os4 << "\"" << (layer / 2 + 1) << "_" << slot << "_" << value << "\"; ";
+				actualSlotID = os4.str();
+                value2 += actualSlotID; 
+            }
+		}
+		value2 += "}\r\n";
+        visualCirc += value2;
+
+        // DISCOVER AND DRAW CONNECTIONS
+        for (int slot = 0; slot < numFncs; slot++) {
+			GetFunctionLabel(genome.gene(offsetFNC + slot), genome.gene(offsetCON + slot), &value);
+            
+            // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
+            int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
+			// IN_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
+            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
+			// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
+			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
+			
+			int	halfConnectors = (numLayerConnectors - 1) / 2;
+
+			GENOM_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
+			
+			// 
+			// VISUAL CIRC: CREATE CONNECTION BETWEEN LAYERS
+			//
+			// USE ONLY GENES THAT WERE NOT PRUNNED OUT
+            if (displayNodes[offsetFNC + slot] == 1) {
+				//actualSlotID.Format("%d_%d_%s", layer / 2 + 1, slot, value);
+				ostringstream os6;
+				os6 << (layer / 2 + 1) << "_" << slot << "_" << value;
+				actualSlotID = os6.str();
+
+			    int connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
+			    int stopBit = numLayerConnectors;
+
+				int    bFirstArgument = TRUE;
+				int    bAtLeastOneConnection = FALSE;
+		    
+				for (int bit = 0; bit < stopBit; bit++) {
+					// IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
+					if (HasConnection(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit)) {
+						int    bExplicitConnection = TRUE;
+						bAtLeastOneConnection = TRUE;
+	                    
+						if (layer > 1) {
+                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
+                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.sizeLayer;
+							getTargetSlot(connectOffset, bit, numLayerInputs);
+							GetFunctionLabel(genome.gene(prevOffsetFNC + getTargetSlot(connectOffset, bit, numLayerInputs)), genome.gene(prevOffsetCON + getTargetSlot(connectOffset, bit, numLayerInputs)), &value);
+							//previousSlotID.Format("%d_%d_%s", layer / 2, connectOffset + bit, value);
+							ostringstream os21;
+							os21 << (layer / 2) << "_" << getTargetSlot(connectOffset, bit, numLayerInputs) << "_" << value;
+							previousSlotID = os21.str();
+						}
+						else {
+							//previousSlotID.Format("IN_%d", connectOffset + bit);
+							ostringstream os22;
+							int targetSlot = getTargetSlot(connectOffset, bit, numLayerInputs);
+							os22 << "IN_" << targetSlot;
+							previousSlotID = os22.str();
+						}
+						if (bExplicitConnection) {
+							//value2.Format("\"%s\" -> \"%s\";\r\n", actualSlotID, previousSlotID);
+							ostringstream os23;
+							os23 << "\"" << actualSlotID << "\" -> \"" << previousSlotID << "\";\r\n";
+							value2 = os23.str();
+							visualCirc += value2;
+						}
+					}
+				}
+	            
+			}
+        }
+    }
+    
+	//
+	// DRAW OUTPUT LAYER
+	//
+
+    // VISUAL CIRC: CONNECT OUTPUT LAYER
+    //for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+
+	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n"; 
+
+	// propagate memory outputs to inputs to next iteration (if required)
+    if (pGlobals->settings->circuit.useMemory) {
+		// set memory inputs by respective memory outputs 
+		for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.memorySize; memorySlot++) {
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.sizeLayer;
+		    string		value;
+		    GetFunctionLabel(genome.gene(prevOffsetFNC + memorySlot), genome.gene(prevOffsetCON + memorySlot), &value);
+			ostringstream os30;
+            os30 << (pGlobals->settings->circuit.numLayers) << "_" << memorySlot << "_" << value;
+			previousSlotID = os30.str();
+		}
+	}
+
+	int outputOffset = 0;
+	for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+		if (i == numMemoryOutputs) {
+			visualCirc += "node [color=red];\r\n"; 
+		}
+		
+		if (true) {
+		    //actualSlotID.Format("%d_OUT", i);
+			ostringstream os29;
+			os29 << i << "_OUT";
+			actualSlotID = os29.str();
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.sizeLayer;
+		    string		value;
+		    GetFunctionLabel(genome.gene(prevOffsetFNC + i), genome.gene(prevOffsetCON + i), &value);
+            //previousSlotID.Format("%d_%d_%s", pGACirc->settings->circuit.numLayers, i, value);
+			ostringstream os30;
+            os30 << (pGlobals->settings->circuit.numLayers) << "_" << i << "_" << value;
+			previousSlotID = os30.str();
+		    //value2.Format("\"%s\" -> \"%s\";\r\n", actualSlotID, previousSlotID);
+			ostringstream os31;
+			os31 << "\"" << actualSlotID << "\" -> \"" << previousSlotID << "\";\r\n";
+			value2 = os31.str();
+		    visualCirc += value2;
+		}
+    }
+    visualCirc += "}";
+
+	//
+    //	ACTUAL WRITING TO DISK
+	//
+    if (filePath == "") filePath = FILE_BEST_CIRCUIT;
+
+	fstream	file;
+	string	newFilePath;
+
+
+    // WRITE FINAL: GRAPHVIZ FILE
+    newFilePath = filePath + ".dot";
+    file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
+    if (file.is_open()) {
+        file << visualCirc;
+        file.close();
+    }
+
+    return status;
+}
+
 int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
     int     status = STAT_OK;
 //    unsigned char*   inputsBegin = inputs;
@@ -1830,6 +2083,10 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 			memcpy(localInputs + pGlobals->settings->circuit.sizeLayer, localInputs, pGlobals->settings->circuit.sizeLayer);
 
         }
+
+		// Compute categories as classified by the circuit - take only first output, add to histogram of outputs
+		// Shrink number of categories down to NUM_OUTPUT_CATEGORIES
+		pGlobals->testVectors.circuitOutputCategories[localOutputs[memoryLength] % NUM_OUTPUT_CATEGORIES] += 1;
     }
     
 	// circuit output is taken from output parts AFTER memory outputs

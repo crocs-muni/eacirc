@@ -86,6 +86,8 @@ typedef unsigned __int64 uint64_t;
 
 // CIRCUIT LIMITS
 #define MAX_LAYER_SIZE              32
+//#define NUM_OUTPUT_CATEGORIES		256
+#define NUM_OUTPUT_CATEGORIES		10
 
 // EVALUATORS
 #define EVALUATOR_BIT               20
@@ -94,6 +96,7 @@ typedef unsigned __int64 uint64_t;
 #define EVALUATOR_HAMMING_WEIGHT    23
 #define EVALUATOR_BYTE              24
 #define EVALUATOR_DISTINGUISH       25
+#define EVALUATOR_OUTPUT_CATEGORIES	26
 // note: all project specific evaluators must have constant above this
 #define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
 

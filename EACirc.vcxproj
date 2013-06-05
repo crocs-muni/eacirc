@@ -108,6 +108,7 @@
     <ClCompile Include="EACirc\EACglobals.cpp" />
     <ClCompile Include="EACirc\evaluators\DistinguishTwoEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\IEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\OutputCategoriesEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\PredictBitCircuitEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\PredictByteCircuitEvaluator.cpp" />
@@ -282,6 +283,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EACirc\CircuitGenome.h" />
+    <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
     <ClInclude Include="EACirc\projects\estream\AvalancheEvaluator.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc-tables.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc.h" />

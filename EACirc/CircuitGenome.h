@@ -51,6 +51,10 @@ public:
 
     static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
     static int PrintCircuitMemory(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
+    static int PrintCircuitMemory_DOT(GAGenome &g, string filePath, unsigned char* displayNodes);
+//    static int PrintCircuitMemory_TXT(GAGenome &g, string filePath, unsigned char* displayNodes);
+//    static int PrintCircuitMemory_C(GAGenome &g, string filePath, unsigned char* displayNodes);
+
 	static int GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
 	static int PruneCircuitNew(GAGenome &g, GAGenome &prunnedG);

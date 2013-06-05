@@ -5,6 +5,7 @@
 #include "PredictBytesParityCircuitEvaluator.h"
 #include "PredictHammingWeightCircuitEvaluator.h"
 #include "DistinguishTwoEvaluator.h"
+#include "OutputCategoriesEvaluator.h"
 
 IEvaluator::IEvaluator(int type) : m_type(type) { }
 
@@ -31,6 +32,9 @@ IEvaluator *IEvaluator::getStandardEvaluator(int type) {
         break;
     case EVALUATOR_DISTINGUISH:
         return new DistinguishTwoEvaluator();
+        break;
+	case EVALUATOR_OUTPUT_CATEGORIES:
+        return new OutputCategoriesEvaluator();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown evaluator type \"" << type << "\"." << endl;

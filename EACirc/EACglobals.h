@@ -180,6 +180,9 @@ struct TEST_VECTORS {
     unsigned char** inputs;             //! test vector inputs for current set
     unsigned char** outputs;            //! (correct) test vector outputs for current set
     unsigned char** circuitOutputs;     //! circuit outputs for current set (to ease memory allocation)
+    double	circuitOutputCategories[NUM_OUTPUT_CATEGORIES];	//! frequency of occurence of output categories as classified by the circuit
+    double	circuitOutputCategoriesRandom[NUM_OUTPUT_CATEGORIES];	//! frequency of occurence of output categories as classified by the circuit provided with truly random data
+
     bool newSet;                        //! has new set been generated? (for CUDA usage)
     TEST_VECTORS();
     void allocate();
