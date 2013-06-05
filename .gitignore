@@ -33,3 +33,12 @@ circuit_*.dot
 circuit_*.c
 circuit_*.txt
 circuit_*.xml
+test_vectors_hr.txt
+test_vectors.bin
+state_initial.xml
+scores.log
+population_initial.xml
+fraction_done.txt
+fitness_progress.txt
+bestfit_graph.txt
+avgfit_graph.txt
