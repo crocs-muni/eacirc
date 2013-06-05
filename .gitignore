@@ -28,3 +28,8 @@ EACirc/galib/BUILD
 notes.txt
 *.dgml
 *.cd
+# results files with circuits created during debuging
+circuit_*.dot
+circuit_*.c
+circuit_*.txt
+circuit_*.xml
