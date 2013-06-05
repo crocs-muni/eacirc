@@ -1,0 +1,44 @@
+digraph EACircuit {
+rankdir=BT;
+edge [dir=none];
+size="6,6";
+ordering=out;
+node [color=magenta, style=filled];
+"IN_0";
+"IN_1";
+"IN_2";
+node [color=green, style=filled];
+"IN_3";
+"IN_4";
+"IN_5";
+"IN_6";
+"IN_7";
+"IN_8";
+"IN_9";
+"IN_10";
+"IN_11";
+"IN_12";
+"IN_13";
+"IN_14";
+"IN_15";
+"IN_16";
+"IN_17";
+"IN_18";
+node [color=lightblue2, style=filled];
+{ rank=same; }
+node [color=lightblue2, style=filled];
+{ rank=same; }
+node [color=lightblue2, style=filled];
+{ rank=same; }
+node [color=lightblue2, style=filled];
+{ rank=same; }
+node [color=lightblue2, style=filled];
+{ rank=same; "5_0_NOP"; "5_1_NOP"; "5_2_NOP"; "5_3_NOP"; "5_4_NOP"; }
+node [color=magenta];
+"0_OUT" -> "5_0_NOP";
+"1_OUT" -> "5_1_NOP";
+"2_OUT" -> "5_2_NOP";
+node [color=red];
+"3_OUT" -> "5_3_NOP";
+"4_OUT" -> "5_4_NOP";
+}
