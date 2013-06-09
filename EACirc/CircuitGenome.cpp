@@ -215,6 +215,9 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 		// ### END EXPERIMENTAL
 	}
 	else {
+		//
+		// ORDINARY EVALUATOR
+		//
 		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
 			// EXECUTE CIRCUIT
 			status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);

@@ -63,7 +63,7 @@ typedef unsigned __int64 uint64_t;
 #define FILE_LOGFILE                "eacirc.log"
 
 // CIRCUIT OUTPUT SETTINGS
-#define CIRCUIT_FILENAME_PRECISION 3
+#define CIRCUIT_FILENAME_PRECISION 6
 
 // QRNG DATA
 // filename = $PREFIX$INDEX$DUFFIX
