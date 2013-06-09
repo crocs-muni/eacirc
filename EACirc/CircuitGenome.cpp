@@ -167,7 +167,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 		int numCategorizedInputs = pGlobals->settings->testVectors.inputLength / sectorLength;
 		// Maximum value for fitness normalization is given as numCategorizedInputs 2 * (category completely unused by first type) * numCategorizedInputs (category completely used by the second type)  * pGlobals->settings->testVectors.setSize (total number of test vectors over which we summarize)
 		// It should be taken two times as first type should somewhere put his catagorization, which will result in same difference again
-		// BUGBUG: but so far, it seems that 2x is never used - best fitness seen was slightly below 0.5
+		// BUGBUG: but so far, it seems that 2x is never achieved - best fitness seen was always slightly below 0.5
 		maxCorrectPredictions = ((numCategorizedInputs * numCategorizedInputs) + (numCategorizedInputs * numCategorizedInputs)) * pGlobals->settings->testVectors.setSize;
 
 		// Compute categories distribution for truly random data
@@ -177,36 +177,55 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 		int numTrulyRandomInputs = 0;
 		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
 			if (pGlobals->testVectors.outputs[testVector][0] == 0xff) {
-				status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[0], pGlobals->testVectors.circuitOutputs[0]);
+				status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
 				numTrulyRandomInputs++;
 			}
 		}
 		// Normalize numbers in the categories according to number of used random inputs (numTrulyRandomInputs)
-    	// Normalize by number of classified input blocks (sectors)
+		//numTrulyRandomInputs = 1;
 		// Add +1 to prevent division by zero
 		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategoriesRandom[i] = (pGlobals->testVectors.circuitOutputCategories[i] / (double) numTrulyRandomInputs) + 1;
 
-	}
-	// ### END EXPERIMENTAL
-
-	for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
-		// EXPERIMENTAL: Clear histogram of categories
+		//
+		// Process function outputs
+		//
 		memset(pGlobals->testVectors.circuitOutputCategories, 0, sizeof(pGlobals->testVectors.circuitOutputCategories));
-
-		// EXECUTE CIRCUIT
-		status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-
-    	// EXPERIMENTAL: Add +1 to prevent division by zero
-		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategories[i] = pGlobals->testVectors.circuitOutputCategories[i] + 1;
-
-		// EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
-		evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
-									usePredictorMask, &match, &maxCorrectPredictions);
+		// Use all function inputs to establish categories
+		int numFncInputs = 0;
+		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
+			if (pGlobals->testVectors.outputs[testVector][0] == 0x00) {
+				status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+				numFncInputs++;
+			}
+		}
+		// Normalize numbers in the categories according to number of used function inputs (numFncInputs)
+		//numFncInputs = 1;
+		// Add +1 to prevent division by zero
+		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategories[i] = (pGlobals->testVectors.circuitOutputCategories[i] / (double) numFncInputs) + 1;
+		
+		
+		// Fitness idea:  if function input is presented, circuit should provide as large difference as possible (difference)
+		// Compute Euclidean distance between circuitOutputCategories for given inputs and for truly random inputs
+		double	difference = 0;
+		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) {
+			double valueDiff = pGlobals->testVectors.circuitOutputCategories[i] - pGlobals->testVectors.circuitOutputCategoriesRandom[i];
+			difference += pow(valueDiff, 2);
+		}
+		
+		fitness = (maxCorrectPredictions > 0) ? (difference / ((float) maxCorrectPredictions)) : 0;
+		// ### END EXPERIMENTAL
 	}
-	assert(match < maxCorrectPredictions);
-	if (match > maxCorrectPredictions) cout << "ERROR: (categories) match > maxCorrectPredictions: " << match << endl;
-	match = abs(match);
-    fitness = (maxCorrectPredictions > 0) ? (match / ((float) maxCorrectPredictions)) : 0;
+	else {
+		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
+			// EXECUTE CIRCUIT
+			status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+
+			// EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
+			evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
+										usePredictorMask, &match, &maxCorrectPredictions);
+		}
+		fitness = (maxCorrectPredictions > 0) ? (match / ((float) maxCorrectPredictions)) : 0;
+	}
 
     // update statistics, if needed
     if (!pGlobals->stats.prunningInProgress) {
@@ -989,7 +1008,8 @@ int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOM_
 }
 
 int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *usePredictorMask, int bPruneCircuit) {
-	return PrintCircuitMemory(g, filePath + "memory", usePredictorMask,bPruneCircuit);
+//	return PrintCircuitMemory(g, filePath + "memory", usePredictorMask,bPruneCircuit);
+	return PrintCircuitMemory(g, filePath, usePredictorMask,bPruneCircuit);
 }
 
 
@@ -1011,12 +1031,14 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
 
 	// TODO: of pGlobals->settings->main.evaluatorType == EVALUATOR_OUTPUT_CATEGORIES, then different code for C code is needed
 
+
 	// 1. Prune circuit (if required)
 	// 2. Create header (DOT, C)
 	// 3. 
 
 
 
+	// TODO: move prunning outside
     //
     // PRUNE CIRCUIT IF REQUIRED
     //
@@ -1043,8 +1065,9 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
 
 	int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.memorySize : 0;
     
-	//bCodeCircuit = FALSE; // BUGBUG: enable bCodeCircuit = TRUE
-
+	//
+	// TODO: REFACT: HEADER
+	//
     // VISUAL CIRC: INPUTS 
     visualCirc += "digraph EACircuit {\r\n\
 rankdir=BT;\r\n\
@@ -1084,7 +1107,11 @@ ordering=out;\r\n";
         int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
 
         int numLayerInputs = 0;
-        if (layer == 1) {
+    
+		//
+		// TODO: REFACT: INPUT LAYER
+		//
+		if (layer == 1) {
 			//
 			// DRAW NODES IN INPUT LAYER
 			//
@@ -1306,10 +1333,15 @@ ordering=out;\r\n";
 					}
 				}
 			    
+
+				//
+				// TODO: REFACT: CONNECTIONS
+				//
+
 				for (int bit = 0; bit < stopBit; bit++) {
 					// IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
 					if (HasConnection(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit)) {
-						int    bExplicitConnection = TRUE;
+						//int    bExplicitConnection = TRUE;
 						bAtLeastOneConnection = TRUE;
 	                    
 						if (layer > 1) {
@@ -1329,13 +1361,11 @@ ordering=out;\r\n";
 							os22 << "IN_" << targetSlot;
 							previousSlotID = os22.str();
 						}
-						if (bExplicitConnection) {
-							//value2.Format("\"%s\" -> \"%s\";\r\n", actualSlotID, previousSlotID);
-							ostringstream os23;
-							os23 << "\"" << actualSlotID << "\" -> \"" << previousSlotID << "\";\r\n";
-							value2 = os23.str();
-							visualCirc += value2;
-						}
+						//value2.Format("\"%s\" -> \"%s\";\r\n", actualSlotID, previousSlotID);
+						ostringstream os23;
+						os23 << "\"" << actualSlotID << "\" -> \"" << previousSlotID << "\";\r\n";
+						value2 = os23.str();
+						visualCirc += value2;
 	                    
 						if (bCodeCircuit) {
 							string operand;
@@ -1347,24 +1377,22 @@ ordering=out;\r\n";
 								codeCirc += value2;
 								bFirstArgument = FALSE;
 							}
-							if (bExplicitConnection) {
-								if (IsOperand(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit, &operand)) {
-									if (GET_FNC_TYPE(genome.gene(offsetFNC + slot)) == FNC_DIV) {
-										// SPECIAL FORMATING TO PREVENT ZERO DIVISION
-										//value2.Format(" ((VAR_%s != 0) ? VAR_%s : 1) %s", previousSlotID, previousSlotID, operand);
-										ostringstream os26;
-										os26 << " ((VAR_" << previousSlotID << " != 0) ? VAR_" << previousSlotID << " : 1) " << operand;
-										value2 = os26.str();
-									}
-									else {
-										// NORMAL FORMATING
-										//value2.Format(" VAR_%s %s", previousSlotID, operand);
-										ostringstream os27;
-										os27 << " VAR_" << previousSlotID << " " << operand;
-										value2 = os27.str();
-									}
-									codeCirc += value2;
+							if (IsOperand(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit, &operand)) {
+								if (GET_FNC_TYPE(genome.gene(offsetFNC + slot)) == FNC_DIV) {
+									// SPECIAL FORMATING TO PREVENT ZERO DIVISION
+									//value2.Format(" ((VAR_%s != 0) ? VAR_%s : 1) %s", previousSlotID, previousSlotID, operand);
+									ostringstream os26;
+									os26 << " ((VAR_" << previousSlotID << " != 0) ? VAR_" << previousSlotID << " : 1) " << operand;
+									value2 = os26.str();
 								}
+								else {
+									// NORMAL FORMATING
+									//value2.Format(" VAR_%s %s", previousSlotID, operand);
+									ostringstream os27;
+									os27 << " VAR_" << previousSlotID << " " << operand;
+									value2 = os27.str();
+								}
+								codeCirc += value2;
 							}
 						}
 					}
@@ -1397,6 +1425,10 @@ ordering=out;\r\n";
     
     if (bCodeCircuit) codeCirc += "\n";
     
+	//
+	// TODO: REFACT: OUTPUT LAYER
+	//
+
 	//
 	// DRAW OUTPUT LAYER
 	//
@@ -1479,6 +1511,10 @@ ordering=out;\r\n";
 	if (bCodeCircuit) codeCirc += "\n}";
     message += "\r\n";
     visualCirc += "}";
+
+	//
+	// TODO: REFACT: SAVING
+	//
 
 	//
     //	ACTUAL WRITING TO DISK
