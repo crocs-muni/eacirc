@@ -167,7 +167,7 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 		int numCategorizedInputs = pGlobals->settings->testVectors.inputLength / sectorLength;
 		// Maximum value for fitness normalization is given as numCategorizedInputs 2 * (category completely unused by first type) * numCategorizedInputs (category completely used by the second type)  * pGlobals->settings->testVectors.setSize (total number of test vectors over which we summarize) / 2 (there are two types of inputs - random&function)
 		// It should be taken two times as first type should somewhere put his catagorization, which will result in same difference again
-		maxCorrectPredictions = ((numCategorizedInputs * numCategorizedInputs) + (numCategorizedInputs * numCategorizedInputs)) * pGlobals->settings->testVectors.setSize;
+		maxCorrectPredictions = ((numCategorizedInputs * numCategorizedInputs) + (numCategorizedInputs * numCategorizedInputs)) * pGlobals->settings->testVectors.setSize / 2;
 
 		// Compute categories distribution for truly random data
 		memset(pGlobals->testVectors.circuitOutputCategoriesRandom, 0, sizeof(pGlobals->testVectors.circuitOutputCategoriesRandom));
