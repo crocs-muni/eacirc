@@ -1,4 +1,4 @@
-function [data_mean] = plot_scores(fileNameTemplate, fromIndex, toIndex, column, color)
+function [data_mean, setChangeFitness] = plot_scores(fileNameTemplate, fromIndex, toIndex, column, color)
 
 % READ ALL DATA STREAMS
 offset = 1;
@@ -26,10 +26,14 @@ offset = offset - 1;
 % COMPUTE AVERAGE
 data_mean = data(1,:);
 if (NUM_FILES > 1) 
-%    data_mean = mean(data); 
-    data_mean = max(data); 
+    data_mean = mean(data); 
+%    data_mean = max(data); 
 %    data_mean = min(data); 
 end
+
+% OBTAIN VALUE JUST AFTER TEST SET CHANGE
+setChangeFitness = data_mean(1 : 1000 : end);
+sum(setChangeFitness)
 
 % PLOT RESULT
 hold on;
