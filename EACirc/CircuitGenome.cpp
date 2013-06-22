@@ -1556,6 +1556,22 @@ ordering=out;\r\n";
         file.close();
     }
 
+	// Print distribution of categories
+    newFilePath = filePath + ".cat";
+    file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
+    if (file.is_open()) {
+		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) {
+			file << setw(3) << i << " ";
+			file << setw(15) << pGlobals->testVectors.circuitOutputCategoriesRandom[i] << " ";
+			file << setw(15) << pGlobals->testVectors.circuitOutputCategories[i] << " ";
+			file << setw(15) << (int) pow(pGlobals->testVectors.circuitOutputCategoriesRandom[i] - pGlobals->testVectors.circuitOutputCategories[i], 2);
+			file << endl;
+		}
+        file.close();
+    }
+
+
+
     // DRAW CIRCUIT, IF DOT IS INSTALLED
     /*string cmdLine;
     string pngFilePath;
@@ -1836,7 +1852,12 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 		sectorLength = pGlobals->settings->circuit.sizeInputLayer;
 	}
 
+#ifdef ENABLE_SLIDING_WINDOW
+	// Inputs is not partitioned into separate sectors with pGlobals->settings->circuit.sizeInputLayer length, but with overlapping parts with pGlobals->settings->circuit.sizeInputLayer length
+    for (float sector = 0; sector < numSectors; sector += 1 / (float) sectorLength) { 
+#else
     for (int sector = 0; sector < numSectors; sector++) { 
+#endif
         // PREPARE INPUTS FOR ACTUAL RUN OF CIRCUIT
         if (numSectors == 1) {
             // ALL INPUT DATA AT ONCE
@@ -1850,7 +1871,8 @@ int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 			// NOTE: for first iteration, memory is zero (taken from localOutputs)
             memcpy(localInputs, localOutputs, memoryLength);
             // ADD FRESH INPUT DATA
-            memcpy(localInputs + memoryLength, inputs + sector * sectorLength, sectorLength);
+			int inputOffset = sector * sectorLength;
+            memcpy(localInputs + memoryLength, inputs + inputOffset, sectorLength);
 			int realInputsLength = memoryLength + sectorLength;
 			assert(realInputsLength <= maxLayerSize);
 			// duplicate before and after

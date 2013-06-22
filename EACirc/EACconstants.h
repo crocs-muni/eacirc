@@ -88,6 +88,7 @@ typedef unsigned __int64 uint64_t;
 #define MAX_LAYER_SIZE              32
 //#define NUM_OUTPUT_CATEGORIES		256
 #define NUM_OUTPUT_CATEGORIES		10
+//#define ENABLE_SLIDING_WINDOW			// if defined, input data are shifted only per one byte, not pGlobals->settings->circuit.sizeInputLayer
 
 // EVALUATORS
 #define EVALUATOR_BIT               20
