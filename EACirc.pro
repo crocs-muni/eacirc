@@ -39,6 +39,7 @@ SOURCES += \
     EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
     EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
+    EACirc/evaluators/OutputCategoriesEvaluator.cpp \
 
 # === random generators ===
 SOURCES += \
@@ -68,10 +69,8 @@ SOURCES += \
 # === eSTREAM cipher files ===
 SOURCES += \
     EACirc/projects/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \
-    EACirc/projects/estream/ciphers/yamb/yamb.cpp \
     EACirc/projects/estream/ciphers/wg/wg.cpp \
     EACirc/projects/estream/ciphers/tsc-4/tsc-4.cpp \
-    EACirc/projects/estream/ciphers/trivium/trivium.cpp \
     EACirc/projects/estream/ciphers/sosemanuk/sosemanuk.cpp \
     EACirc/projects/estream/ciphers/sfinks/sfinks.cpp \
     EACirc/projects/estream/ciphers/salsa20/salsa20.cpp \
@@ -95,6 +94,8 @@ SOURCES += \
     EACirc/projects/estream/ciphers/cryptmt/cryptmt-v3.cpp \
     EACirc/projects/estream/ciphers/achterbahn/achterbahn-128-80.cpp \
     EACirc/projects/estream/ciphers/abc/abc-v3.cpp \
+#    EACirc/projects/estream/ciphers/trivium/trivium.cpp \       # stopped working after IDE update
+#    EACirc/projects/estream/ciphers/yamb/yamb.cpp \             # stopped working after IDE update
 #    EACirc/projects/estream/ciphers/polarbear/polar-bear.cpp \  # not implemented in EncryptorDecryptor
 #    EACirc/projects/estream/ciphers/polarbear/aescrypt.cpp \    # do not include!
 #    EACirc/projects/estream/ciphers/polarbear/aestab.cpp \      # do not include!
@@ -104,10 +105,6 @@ SOURCES += \
 #    EACirc/projects/estream/ciphers/cryptmt/altivec.cpp \       # do not include!
 #    EACirc/projects/estream/ciphers/cryptmt/sse2.cpp            # do not include!
 #    EACirc/projects/estream/ciphers/decim/decim-128.c \         # do not include!
-# not used (but included):
-#    EACirc/projects/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \
-#    EACirc/projects/estream/ciphers/cryptmt/cryptmt-v3.cpp \
-#    EACirc/projects/estream/ciphers/abc/abc-v3.cpp \
 
 # === SHA-3 hash function files ===
 SOURCES += \
@@ -235,6 +232,7 @@ HEADERS += \
     EACirc/evaluators/PredictByteCircuitEvaluator.h \
     EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
     EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
+    EACirc/evaluators/OutputCategoriesEvaluator.h \
 
 # === random generators ===
 HEADERS += \

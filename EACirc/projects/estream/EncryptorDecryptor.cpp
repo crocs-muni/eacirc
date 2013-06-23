@@ -148,11 +148,11 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(SOSEMANUK_ctx));
                 memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(SOSEMANUK_ctx));
                 break;
-            case ESTREAM_TRIVIUM:
+/*            case ESTREAM_TRIVIUM:       // stopped working after IDE update
                 m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Trivium();
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(TRIVIUM_ctx));
                 memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(TRIVIUM_ctx));
-                break;
+                break;*/
             case ESTREAM_TSC4:
                 m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Tsc4();
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(TSC4_ctx));
@@ -164,11 +164,11 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(WG_ctx));
                 memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(WG_ctx));
                 break;
-            case ESTREAM_YAMB:
+/*            case ESTREAM_YAMB:        // stopped working after IDE update
                 m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Yamb();
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(YAMB_ctx));
                 memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(YAMB_ctx));
-                break;
+                break;*/
             case ESTREAM_ZKCRYPT:
                 m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Zkcrypt();
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(ZKCRYPT_ctx));

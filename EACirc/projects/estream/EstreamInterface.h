@@ -46,10 +46,10 @@ const char* estreamToString(int cipher);
 #include "projects/estream/ciphers/salsa20/ecrypt-sync.h"
 #include "projects/estream/ciphers/sfinks/ecrypt-sync.h"
 #include "projects/estream/ciphers/sosemanuk/ecrypt-sync.h"
-#include "projects/estream/ciphers/trivium/ecrypt-sync.h"
+//#include "projects/estream/ciphers/trivium/ecrypt-sync.h"     // stopped working after IDE update
 #include "projects/estream/ciphers/tsc-4/ecrypt-sync.h"
 #include "projects/estream/ciphers/wg/ecrypt-sync.h"
-#include "projects/estream/ciphers/yamb/ecrypt-sync.h"
+//#include "projects/estream/ciphers/yamb/ecrypt-sync.h"        // stopped working after IDE update
 #include "projects/estream/ciphers/zk-crypt/ecrypt-sync.h"
 
 #endif
