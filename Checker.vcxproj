@@ -90,6 +90,7 @@
     <ClInclude Include="EACirc\EACglobals.h" />
     <ClInclude Include="EACirc\evaluators\DistinguishTwoEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\IEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\PredictBitCircuitEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.h" />
     <ClInclude Include="eacirc\evaluators\PredictByteCircuitEvaluator.h" />
@@ -105,6 +106,7 @@
     <ClCompile Include="EACirc\EACglobals.cpp" />
     <ClCompile Include="EACirc\evaluators\DistinguishTwoEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\IEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\OutputCategoriesEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\PredictBitCircuitEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\PredictByteCircuitEvaluator.cpp" />
