@@ -28,11 +28,13 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
-    EACirc/projects/files/filesProject.cpp
+    EACirc/projects/files/filesProject.cpp \
 
 # === evaluators ===
 SOURCES += \
     EACirc/evaluators/IEvaluator.cpp \
+    EACirc/evaluators/TopBitEvaluator.cpp \
+    EACirc/evaluators/CategoriesEvaluator.cpp \
     EACirc/evaluators/DistinguishTwoEvaluator.cpp \
     EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
@@ -221,11 +223,13 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/projects/files/filesConstants.h \
-    EACirc/projects/files/filesProject.h
+    EACirc/projects/files/filesProject.h \
 
 # === standard evaluators ===
 HEADERS += \
     EACirc/evaluators/IEvaluator.h \
+    EACirc/evaluators/TopBitEvaluator.h \
+    EACirc/evaluators/CategoriesEvaluator.h \
     EACirc/evaluators/DistinguishTwoEvaluator.h \
     EACirc/evaluators/PredictBitCircuitEvaluator.h \
     EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \

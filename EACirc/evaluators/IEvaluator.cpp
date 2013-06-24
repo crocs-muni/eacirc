@@ -1,4 +1,8 @@
 #include "IEvaluator.h"
+#include "TopBitEvaluator.h"
+#include "CategoriesEvaluator.h"
+
+/*
 #include "PredictBitCircuitEvaluator.h"
 #include "PredictByteCircuitEvaluator.h"
 #include "PredictBitGroupParityCircuitEvaluator.h"
@@ -6,6 +10,7 @@
 #include "PredictHammingWeightCircuitEvaluator.h"
 #include "DistinguishTwoEvaluator.h"
 #include "OutputCategoriesEvaluator.h"
+*/
 
 IEvaluator::IEvaluator(int type) : m_type(type) { }
 
@@ -15,6 +20,13 @@ IEvaluator *IEvaluator::getStandardEvaluator(int type) {
         return NULL;
     }
     switch (type) {
+    case EVALUATOR_TOP_BIT:
+        return new TopBitEvaluator();
+        break;
+    case EVALUATOR_CATEGORIES:
+        return new CategoriesEvaluator();
+        break;
+        /*
     case EVALUATOR_BIT:
         return new PredictBitCircuitEvaluator();
         break;
@@ -36,6 +48,7 @@ IEvaluator *IEvaluator::getStandardEvaluator(int type) {
 	case EVALUATOR_OUTPUT_CATEGORIES:
         return new OutputCategoriesEvaluator();
         break;
+        */
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown evaluator type \"" << type << "\"." << endl;
         return NULL;

@@ -25,10 +25,6 @@ typedef unsigned long DWORD;
 #define INT_MAX       2147483647
 #endif
 
-#ifndef BITS_IN_UCHAR
-#define BITS_IN_UCHAR 8
-#endif
-
 #ifdef _MSC_VER
 typedef __int32 int32_t;
 typedef unsigned __int32 uint32_t;
@@ -91,6 +87,11 @@ typedef unsigned __int64 uint64_t;
 //#define ENABLE_SLIDING_WINDOW			// if enabled, input data are shifted only per one byte, not pGlobals->settings->circuit.sizeInputLayer. Note - fitness results are then not directly comparable with version without sliding window
 
 // EVALUATORS
+#define EVALUATOR_TOP_BIT           25
+#define EVALUATOR_CATEGORIES        26
+// note: all project specific evaluators must have constant above this
+#define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
+/* OLD BEGIN
 #define EVALUATOR_BIT               20
 #define EVALUATOR_BITGROUP_PARITY   21
 #define EVALUATOR_BYTES_PARITY      22
@@ -98,8 +99,8 @@ typedef unsigned __int64 uint64_t;
 #define EVALUATOR_BYTE              24
 #define EVALUATOR_DISTINGUISH       25
 #define EVALUATOR_OUTPUT_CATEGORIES	26
-// note: all project specific evaluators must have constant above this
-#define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
+// OLD END
+*/
 
 #define TESTVECT_MD5INV             0
 #define TESTVECT_SHA1INV            1
