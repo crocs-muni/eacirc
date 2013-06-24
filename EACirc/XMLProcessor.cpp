@@ -12,6 +12,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     // parsing EACIRC/MAIN
     pSettings->main.projectType = atoi(getXMLElementValue(pRoot,"MAIN/PROJECT").c_str());
     pSettings->main.evaluatorType = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR").c_str());
+    pSettings->main.evaluatorPrecision = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR_PRECISION").c_str());
     pSettings->main.recommenceComputation = (atoi(getXMLElementValue(pRoot,"MAIN/RECOMMENCE_COMPUTATION").c_str())) ? true : false;
     pSettings->main.loadInitialPopulation = (atoi(getXMLElementValue(pRoot,"MAIN/LOAD_INITIAL_POPULATION").c_str())) ? true : false;
     pSettings->main.numGenerations = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());

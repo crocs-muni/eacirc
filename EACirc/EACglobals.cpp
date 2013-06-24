@@ -17,6 +17,7 @@ SETTINGS_INFO::SETTINGS_INFO() {
 SETTINGS_MAIN::SETTINGS_MAIN() {
     projectType = -1;
     evaluatorType = -1;
+    evaluatorPrecision = -1;
     recommenceComputation = false;
     loadInitialPopulation = false;
     numGenerations = -1;

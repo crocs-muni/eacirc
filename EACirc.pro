@@ -35,13 +35,14 @@ SOURCES += \
     EACirc/evaluators/IEvaluator.cpp \
     EACirc/evaluators/TopBitEvaluator.cpp \
     EACirc/evaluators/CategoriesEvaluator.cpp \
-    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
-    EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
-    EACirc/evaluators/OutputCategoriesEvaluator.cpp \
+    # EACirc/evaluators/DistinguishTwoEvaluator.cpp \
+    # EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
+    # EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
+    # EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
+    # EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
+    # EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
+    # EACirc/evaluators/OutputCategoriesEvaluator.cpp \
+    # EACirc/projects/estream/AvalancheEvaluator.cpp \
 
 # === random generators ===
 SOURCES += \
@@ -65,7 +66,6 @@ SOURCES += \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
-    EACirc/projects/estream/AvalancheEvaluator.cpp \
     EACirc/projects/tea/TeaProject.cpp \
 
 # === eSTREAM cipher files ===
@@ -230,13 +230,14 @@ HEADERS += \
     EACirc/evaluators/IEvaluator.h \
     EACirc/evaluators/TopBitEvaluator.h \
     EACirc/evaluators/CategoriesEvaluator.h \
-    EACirc/evaluators/DistinguishTwoEvaluator.h \
-    EACirc/evaluators/PredictBitCircuitEvaluator.h \
-    EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
-    EACirc/evaluators/PredictByteCircuitEvaluator.h \
-    EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
-    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
-    EACirc/evaluators/OutputCategoriesEvaluator.h \
+    # EACirc/evaluators/DistinguishTwoEvaluator.h \
+    # EACirc/evaluators/PredictBitCircuitEvaluator.h \
+    # EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
+    # EACirc/evaluators/PredictByteCircuitEvaluator.h \
+    # EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
+    # EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
+    # EACirc/evaluators/OutputCategoriesEvaluator.h \
+    # EACirc/projects/estream/AvalancheEvaluator.h \
 
 # === random generators ===
 HEADERS += \
@@ -263,7 +264,6 @@ HEADERS += \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
-    EACirc/projects/estream/AvalancheEvaluator.h \
     EACirc/projects/tea/TeaProject.h \
 
 # === eSTREAM cipher files ===

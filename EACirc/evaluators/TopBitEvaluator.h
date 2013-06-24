@@ -4,8 +4,8 @@
 #include "IEvaluator.h"
 
 class TopBitEvaluator: public IEvaluator {
-    unsigned int m_matchedOutputBytes;
-    unsigned int m_totalOutputBytes;
+    int m_matchedOutputBytes;
+    int m_totalOutputBytes;
 public:
     /**
      * reset initial state

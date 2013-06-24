@@ -63,9 +63,11 @@ int EstreamProject::initializeProject() {
     // allocate encryptorDecryptor
     m_encryptorDecryptor = new EncryptorDecryptor;
     // allocate project-specific evaluator, if needed
+    /*
     if (pGlobals->settings->main.evaluatorType == ESTREAM_EVALUATOR_AVALANCHE) {
         m_projectEvaluator = new AvalancheEvaluator(m_encryptorDecryptor);
     }
+    */
     return STAT_OK;
 }
 

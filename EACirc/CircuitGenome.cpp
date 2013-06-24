@@ -156,9 +156,9 @@ float CircuitGenome::Evaluator(GAGenome &g) {
     int								maxCorrectPredictions = 0; 
     IEvaluator*                     evaluator = pGlobals->evaluator;
 
+    /* OLD EVALUATOR SOLUTION (COMMON + EXPERIMENTAL)
 	match = 0;    
 	maxCorrectPredictions = 0;
-
 	// ### EXPERIMENTAL: compute categories
 	if (pGlobals->settings->main.evaluatorType == EVALUATOR_OUTPUT_CATEGORIES) {
 		// Set maximum possible chisquare achiavable for normalization
@@ -226,8 +226,24 @@ float CircuitGenome::Evaluator(GAGenome &g) {
 			evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
 										usePredictorMask, &match, &maxCorrectPredictions);
 		}
-		fitness = (maxCorrectPredictions > 0) ? (match / ((float) maxCorrectPredictions)) : 0;
-	}
+        fitness = (maxCorrectPredictions > 0) ? (match / ((float) maxCorrectPredictions)) : 0;
+    }
+    */
+
+    // NEW EVALUATOR SOLUTION BEGIN
+
+    // reset evaluator state for this individual
+    pGlobals->evaluator->resetEvaluator();
+    for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
+        // execute circuit
+        status = executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+        // evaluate success for this test vector
+        pGlobals->evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector]);
+    }
+    // retrieve fitness from evaluator
+    fitness = pGlobals->evaluator->getFitness();
+
+    // NEW EVALUATOR SOLUTION END
 
     // update statistics, if needed
     if (!pGlobals->stats.prunningInProgress) {
@@ -1802,7 +1818,7 @@ ordering=out;\r\n";
     return status;
 }
 
-int CircuitGenome::ExecuteCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
+int CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
     int     status = STAT_OK;
 //    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;

@@ -2,9 +2,11 @@
 #define CATEGORIESEVALUATOR_H
 
 #include "IEvaluator.h"
+#define CATEGORY_WARNING_THRESHOLD 0
 
 class CategoriesEvaluator : public IEvaluator {
-
+    int* m_categoriesStream0;
+    int* m_categoriesStream1;
 public:
     /**
      * allocate categories map according to needed number of categories
