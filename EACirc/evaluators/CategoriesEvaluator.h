@@ -7,6 +7,8 @@
 class CategoriesEvaluator : public IEvaluator {
     int* m_categoriesStream0;
     int* m_categoriesStream1;
+    int m_totalStream0;
+    int m_totalStream1;
 public:
     /**
      * allocate categories map according to needed number of categories

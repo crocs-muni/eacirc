@@ -1,7 +1,8 @@
 #include "CategoriesEvaluator.h"
 
 CategoriesEvaluator::CategoriesEvaluator()
-    : IEvaluator(EVALUATOR_CATEGORIES), m_categoriesStream0(NULL), m_categoriesStream1(NULL) {
+    : IEvaluator(EVALUATOR_CATEGORIES), m_categoriesStream0(NULL), m_categoriesStream1(NULL),
+      m_totalStream0(0), m_totalStream1(0) {
     m_categoriesStream0 = new int[pGlobals->settings->main.evaluatorPrecision];
     m_categoriesStream1 = new int[pGlobals->settings->main.evaluatorPrecision];
     resetEvaluator();
@@ -26,9 +27,12 @@ void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigne
 double CategoriesEvaluator::getFitness() {
     int categoriesUnderThreshold = 0;
     double fitness = 0;
-    // add normalised Euclidean distance for each category
+    double temp0, temp1;
+    // add normalised Euclidean distance for each category (add 1 to avoid division by 0)
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
-        fitness += pow(m_categoriesStream0[category] - m_categoriesStream1[category], 2) / (float) m_categoriesStream1[category];
+        temp0 = m_categoriesStream0[category] / (double) m_totalStream0;
+        temp1 = m_categoriesStream1[category] / (double) m_totalStream1;
+        fitness += pow(temp0 - temp1, 2);
         if (m_categoriesStream0[category] < CATEGORY_WARNING_THRESHOLD) {
             categoriesUnderThreshold++;
         }
@@ -36,8 +40,8 @@ double CategoriesEvaluator::getFitness() {
             categoriesUnderThreshold++;
         }
     }
-    // transform fitness from interval <0,inf) to interval <0,1>
-    fitness = fitness / (1 + fitness);
+    // transform fitness from interval <0,2> to interval <0,1>
+    fitness = fitness / 2;
     // issue warning when categories below 5 numbers
     if (categoriesUnderThreshold != 0) {
         mainLogger.out(LOGGER_WARNING) << "Evaluator: values in " << categoriesUnderThreshold << "/";
@@ -48,8 +52,9 @@ double CategoriesEvaluator::getFitness() {
 }
 
 void CategoriesEvaluator::resetEvaluator() {
-    memset(m_categoriesStream0, 0, pGlobals->settings->main.evaluatorPrecision);
-    memset(m_categoriesStream1, 0, pGlobals->settings->main.evaluatorPrecision);
+    m_totalStream0 = m_totalStream1 = 0;
+    memset(m_categoriesStream0, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(int));
+    memset(m_categoriesStream1, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(int));
 }
 
 string CategoriesEvaluator::shortDescription() {
