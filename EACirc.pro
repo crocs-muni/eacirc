@@ -28,13 +28,13 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
-    EACirc/projects/files/filesProject.cpp \
 
 # === evaluators ===
 SOURCES += \
     EACirc/evaluators/IEvaluator.cpp \
     EACirc/evaluators/TopBitEvaluator.cpp \
     EACirc/evaluators/CategoriesEvaluator.cpp \
+    EACirc/evaluators/HammingWeightEvaluator.cpp \
     # EACirc/evaluators/DistinguishTwoEvaluator.cpp \
     # EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
     # EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
@@ -67,6 +67,7 @@ SOURCES += \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
     EACirc/projects/tea/TeaProject.cpp \
+    EACirc/projects/files/filesProject.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -222,14 +223,13 @@ HEADERS += \
     EACirc/Logger.h \
     EACirc/Status.h \
     EACirc/EACirc.h \
-    EACirc/projects/files/filesConstants.h \
-    EACirc/projects/files/filesProject.h \
 
 # === standard evaluators ===
 HEADERS += \
     EACirc/evaluators/IEvaluator.h \
     EACirc/evaluators/TopBitEvaluator.h \
     EACirc/evaluators/CategoriesEvaluator.h \
+    EACirc/evaluators/HammingWeightEvaluator.h \
     # EACirc/evaluators/DistinguishTwoEvaluator.h \
     # EACirc/evaluators/PredictBitCircuitEvaluator.h \
     # EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
@@ -265,6 +265,8 @@ HEADERS += \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
     EACirc/projects/tea/TeaProject.h \
+    EACirc/projects/files/filesConstants.h \
+    EACirc/projects/files/filesProject.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \

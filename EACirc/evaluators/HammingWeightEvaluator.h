@@ -1,35 +1,34 @@
-#ifndef CATEGORIESEVALUATOR_H
-#define CATEGORIESEVALUATOR_H
+#ifndef HAMMINGWEIGHTEVALUATOR_H
+#define HAMMINGWEIGHTEVALUATOR_H
 
 #include "IEvaluator.h"
 
-class CategoriesEvaluator : public IEvaluator {
-    int* m_categoriesStream0;
-    int* m_categoriesStream1;
+class HammingWeightEvaluator : public IEvaluator {
+    int* m_weightsStream0;
+    int* m_weightsStream1;
     int m_totalStream0;
     int m_totalStream1;
 public:
     /**
-     * allocate categories map according to needed number of categories
+     * allocate weights map according to output length (number of circuit output bytes * BITS_IN_UCHAR)
      * reset evaluator
      */
-    CategoriesEvaluator();
+    HammingWeightEvaluator();
 
     /**
-     * deallocated categories maps
+     * deallocated weights maps
      */
     ~CategoriesEvaluator();
 
     /**
-     * increase map value for output byte value modulo number of categories
-     * (for each output byte)
+     * increase map value for particular output Hamming weight
      * @param circuitOutputs
      * @param referenceOutputs
      */
     void evaluateCircuit(unsigned char* circuitOutputs, unsigned char* referenceOutputs);
 
     /**
-     * Euclidean distance between corresponding output categories
+     * Euclidean distance between corresponding weight categories
      * @return fitness
      */
     double getFitness();
@@ -40,8 +39,8 @@ public:
     void resetEvaluator();
 
     /**
-     * circuit output bytes are mapped into categories (value modulo number of categories)
-     * each output byte is considered separately
+     * circuit output bytes are mapped into categories according to their Hamming weight
+     * all output bytes are considered together
      * streams are distinguished by top bit of first byte in reference output
      * fitness is based on weighed Euclidean distance of corresponding categories
      * @return description
@@ -49,4 +48,4 @@ public:
     string shortDescription();
 };
 
-#endif // CATEGORIESEVALUATOR_H
+#endif // HAMMINGWEIGHTEVALUATOR_H

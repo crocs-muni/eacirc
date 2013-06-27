@@ -7,7 +7,7 @@ TopBitEvaluator::TopBitEvaluator()
 
 void TopBitEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned char* referenceOutputs) {
     for (int outputByte = 0; outputByte < pGlobals->settings->circuit.sizeOutputLayer; outputByte++) {
-        if (referenceOutputs[0] >> 7 == circuitOutputs[outputByte] >> 7) {
+        if (referenceOutputs[0] >> (BITS_IN_UCHAR-1) == circuitOutputs[outputByte] >> (BITS_IN_UCHAR-1)) {
             m_matchedOutputBytes++;
         }
         m_totalOutputBytes++;
