@@ -257,15 +257,17 @@ float CircuitGenome::Evaluator(GAGenome &g) {
         if (pGlobals->stats.maxFit < fitness) {
             pGlobals->stats.maxFit = fitness;
 
-            // DISPLAY CURRENTLY BEST
-            ostringstream os2;
-            os2 << FILE_CIRCUIT << setprecision(CIRCUIT_FILENAME_PRECISION) << fixed << fitness;
-            string filePath = os2.str();
-            PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
+            // print currently best circuit
+            if (pGlobals->settings->outputs.intermediateCircuits) {
+                ostringstream os2;
+                os2 << FILE_CIRCUIT << setprecision(pGlobals->settings->outputs.filenameFitnessPrecision) << fixed << fitness;
+                string filePath = os2.str();
+                PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
 
-            if (pGlobals->settings->circuit.allowPrunning) {
-                filePath += "_prunned";
-                PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
+                if (pGlobals->settings->outputs.allowPrunning) {
+                    filePath += "_prunned";
+                    PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
+                }
             }
         }
     }
@@ -1060,7 +1062,7 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
     //
     // PRUNE CIRCUIT IF REQUIRED
     //
-    if (pGlobals->settings->circuit.allowPrunning && bPruneCircuit) {
+    if (pGlobals->settings->outputs.allowPrunning && bPruneCircuit) {
         // PRUNE
         status = PruneCircuit(inputGenome, genome);    
         bCodeCircuit = TRUE;

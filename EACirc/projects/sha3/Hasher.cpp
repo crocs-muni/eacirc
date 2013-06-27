@@ -192,7 +192,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     }
     int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
     ofstream tvFile;
-    if (pGlobals->settings->testVectors.saveTestVectors) {
+    if (pGlobals->settings->outputs.saveTestVectors) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app | ios_base::binary);
         if (!tvFile.is_open())
             mainLogger.out(LOGGER_WARNING) << "Cannot write to human-readable test vector file." << endl;
@@ -239,7 +239,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
             }
             m_usedBytes[algorithmNumber] += pGlobals->settings->testVectors.inputLength;
         } else { // random data stream
-            if (pGlobals->settings->testVectors.saveTestVectors == 1)
+            if (pGlobals->settings->outputs.saveTestVectors == 1)
                 tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):" << endl;
             for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                 rndGen->getRandomFromInterval(UCHAR_MAX, &(tvInputs[input]));
@@ -257,7 +257,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     }
 
     // save test vector to human readable test vector file
-    if (pGlobals->settings->testVectors.saveTestVectors) {
+    if (pGlobals->settings->outputs.saveTestVectors) {
         tvFile.close();
     }
     return status;

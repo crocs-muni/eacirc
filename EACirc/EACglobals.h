@@ -91,6 +91,16 @@ struct SETTINGS_MAIN {
     SETTINGS_MAIN();
 };
 
+//! settings corresponding to EACIRC/OUTPUTS
+struct SETTINGS_OUTPUTS {
+    bool graphFiles;                //! should graph files be created?
+    bool intermediateCircuits;      //! should intermediate circuits be saved?
+    int filenameFitnessPrecision;   //! circuit filename fitness precision
+    bool allowPrunning;             //! save prunned versions as well?
+    bool saveTestVectors;           //! should test vectors be saved?
+    SETTINGS_OUTPUTS();
+};
+
 //! settings corresponding to EACIRC/RANDOM
 struct SETTINGS_RANDOM {
     bool useFixedSeed;              //! should computation start from fixed seed instead of generating one?
@@ -128,7 +138,6 @@ struct SETTINGS_CIRCUIT {
     int numConnectors;              //! how many connectors (? TBD)
     bool useMemory;                 //! should we return part of output to input as memory?
     int memorySize;                 //! memory size in bytes
-    bool allowPrunning;             //! allow prunning when writing circuit?
     unsigned char allowedFunctions[FNC_MAX+1];  //! functions allowed in circuit
     // EXTRA INFORMATION, keep updated!
     int genomeSize;                 //! size of individual genome
@@ -141,8 +150,6 @@ struct SETTINGS_TEST_VECTORS {
     int outputLength;                       //! expected test vector output length (output from circuit) (in bytes)
     int setSize;                            //! number of test vectors in a testing set
     int setChangeFrequency;                 //! how often to re-generate test vectors?
-    bool setChangeProgressive;              //! change vectors more often in the beginning and less often in the end
-    bool saveTestVectors;                   //! should test vecotrs be saved?
     bool evaluateBeforeTestVectorChange;    //! should evaluation before or after test vectors change be written to file?
     bool evaluateEveryStep;                 //! evaluate every step
     // EXTRA INFORMATION, keep updated!
@@ -154,6 +161,7 @@ struct SETTINGS_TEST_VECTORS {
 struct SETTINGS {
     SETTINGS_INFO info;                     //! corresponding to EACIRC/INFO
     SETTINGS_MAIN main;                     //! corresponding to EACIRC/MAIN
+    SETTINGS_OUTPUTS outputs;               //! corresponding to EACIRC/OUTPUTS
     SETTINGS_RANDOM random;                 //! corresponding to EACIRC/RANDOM
     SETTINGS_CUDA cuda;                     //! corresponding to EACIRC/CUDA
     SETTINGS_GA ga;                         //! corresponding to EACIRC/GA

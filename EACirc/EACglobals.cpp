@@ -24,6 +24,14 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
     saveStateFrequency = 0;
 }
 
+SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
+    graphFiles = true;
+    intermediateCircuits = false;
+    filenameFitnessPrecision = 3;
+    allowPrunning = false;
+    saveTestVectors = false;
+}
+
 SETTINGS_RANDOM::SETTINGS_RANDOM() {
     useFixedSeed = false;
     seed = 0;
@@ -54,7 +62,6 @@ SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
     numConnectors = -1;
     useMemory = false;
     memorySize = -1;
-    allowPrunning = false;
     memset(allowedFunctions, 0, sizeof(allowedFunctions));
     genomeSize = -1;
 }
@@ -64,8 +71,6 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
     outputLength = -1;
     setSize = -1;
     setChangeFrequency = -1;
-    setChangeProgressive = false;
-    saveTestVectors = true;
     evaluateBeforeTestVectorChange = false;
     evaluateEveryStep = false;
     numTestSets = -1;

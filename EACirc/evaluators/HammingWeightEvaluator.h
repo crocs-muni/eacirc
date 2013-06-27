@@ -18,7 +18,7 @@ public:
     /**
      * deallocated weights maps
      */
-    ~CategoriesEvaluator();
+    ~HammingWeightEvaluator();
 
     /**
      * increase map value for particular output Hamming weight

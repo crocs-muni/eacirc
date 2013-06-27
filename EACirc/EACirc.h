@@ -3,9 +3,7 @@
 
 #include "EACglobals.h"
 #include "generators/IRndGen.h"
-//libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
-//libinclude (galib/GASStateGA.h)
 #include "GASStateGA.h"
 #include "projects/IProject.h"
 

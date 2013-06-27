@@ -3,8 +3,8 @@
 HammingWeightEvaluator::HammingWeightEvaluator()
     : IEvaluator(EVALUATOR_HAMMING_WEIGHT), m_weightsStream0(NULL), m_weightsStream1(NULL),
       m_totalStream0(0), m_totalStream1(0) {
-    m_categoriesStream0 = new int[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
-    m_categoriesStream1 = new int[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
+    m_weightsStream0 = new int[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
+    m_weightsStream1 = new int[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
     resetEvaluator();
 }
 

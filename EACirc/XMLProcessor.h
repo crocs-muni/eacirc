@@ -1,7 +1,6 @@
 #ifndef XMLPROCESSOR_H
 #define XMLPROCESSOR_H
 
-//libinclude (tinyXML/tinyxml.h)
 #include "tinyxml.h"
 #include "EACglobals.h"
 

@@ -11,13 +11,6 @@ QMAKE_CXXFLAGS += -std=c++11 $$SUPPRESSED_WARNINGS -Wall -Wextra # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
-# to load GAlib and tinyXML as external libraries, do following:
-# - comment the Libraries section in SOURCES and HEADERS
-# - change includes in all files from "galib/header.h" to "header.h"
-#   (same for tinyXML) - search for //libinclude in source files
-# - uncomment following line (adding the libraries)
-# LIBS += -ltinyXML -L../EACirc/tinyXML -lga -L../EACirc/ga
-
 # === Main project files ===
 SOURCES += \
     EACirc/Main.cpp \

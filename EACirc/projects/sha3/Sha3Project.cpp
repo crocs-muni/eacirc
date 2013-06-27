@@ -131,7 +131,7 @@ int Sha3Project::generateTestVectors() {
     this->m_numVectors[1] = 0;
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->testVectors.saveTestVectors == 1) {
+        if (pGlobals->settings->outputs.saveTestVectors == 1) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();
@@ -174,7 +174,7 @@ int Sha3Project::prepareSingleTestVector() {
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->testVectors.saveTestVectors) {
+    if (pGlobals->settings->outputs.saveTestVectors) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)

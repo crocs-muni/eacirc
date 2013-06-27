@@ -114,9 +114,6 @@ void EACirc::loadConfiguration(const string filename) {
 }
 
 void EACirc::checkConfigurationConsistency() {
-    if (m_settings.testVectors.outputLength != m_settings.circuit.sizeOutputLayer) {
-        mainLogger.out(LOGGER_WARNING) << "Circuit output size does not equal test vector output size." << endl;
-    }
     if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE) {
         mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal layer size or connector number)." << endl;
         m_status = STAT_CONFIG_INCORRECT;
@@ -127,16 +124,6 @@ void EACirc::checkConfigurationConsistency() {
     }
     if (m_settings.testVectors.inputLength < m_settings.circuit.sizeInputLayer) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input length is smaller than circuit input layer." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-/* Invalid check, if circuit with memory is used, total number of outputs is computed as m_settings.circuit.memorySize +  m_settings.circuit.totalSizeOutputLayer
-    if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize > m_settings.circuit.totalSizeOutputLayer)) {
-        mainLogger.out(LOGGER_ERROR) << "Circuit memory too large, larger than circuit output." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-	*/
-    if (m_settings.circuit.useMemory && (m_settings.circuit.memorySize >= m_settings.circuit.sizeInputLayer)) {
-        mainLogger.out(LOGGER_ERROR) << "Circuit memory too large, larger than circuit input (or equal)." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_settings.main.recommenceComputation && !m_settings.main.loadInitialPopulation) {
@@ -150,11 +137,6 @@ void EACirc::checkConfigurationConsistency() {
     if (m_settings.main.saveStateFrequency != 0 &&
             m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
         mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.testVectors.setChangeProgressive &&
-            m_settings.main.saveStateFrequency != 0) {
-        mainLogger.out(LOGGER_ERROR) << "Progressive test vector generation cannot be used when saving state." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
 }
@@ -505,15 +487,17 @@ void EACirc::evaluateStep() {
     GA1DArrayGenome<unsigned long> genome = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();
 
     float bestFit = CircuitGenome::Evaluator(genome);
-    //float bestFit = genome.score();
 
-    ofstream bestfitfile(FILE_BEST_FITNESS, ios::app);
-    ofstream avgfitfile(FILE_AVG_FITNESS, ios::app);
-    bestfitfile << totalGeneration << "," << bestFit << endl;
-    if (pGlobals->stats.numAvgGenerFit > 0) avgfitfile << totalGeneration << "," << pGlobals->stats.avgGenerFit / pGlobals->stats.numAvgGenerFit << endl;
-    else avgfitfile << totalGeneration << "," << "division by zero!!" << endl;
-    bestfitfile.close();
-    avgfitfile.close();
+    // add scores to graph files
+    if (pGlobals->settings->outputs.graphFiles) {
+        ofstream bestfitfile(FILE_BEST_FITNESS, ios::app);
+        ofstream avgfitfile(FILE_AVG_FITNESS, ios::app);
+        bestfitfile << totalGeneration << "," << bestFit << endl;
+        if (pGlobals->stats.numAvgGenerFit > 0) avgfitfile << totalGeneration << "," << pGlobals->stats.avgGenerFit / pGlobals->stats.numAvgGenerFit << endl;
+        else avgfitfile << totalGeneration << "," << "division by zero!!" << endl;
+        bestfitfile.close();
+        avgfitfile.close();
+    }
 
     ostringstream os2;
     os2 << "(" << totalGeneration << " gen.): " << pGlobals->stats.avgGenerFit << "/" << pGlobals->stats.numAvgGenerFit;
@@ -526,9 +510,6 @@ void EACirc::evaluateStep() {
     out.close();
 
     pGlobals->stats.clear();
-    //pGACirc->avgGenerFit = 0;
-    //pGACirc->numAvgGenerFit = 0;
-    //pGACirc->avgPredictions = 0;
 }
 
 
@@ -549,12 +530,8 @@ void EACirc::run() {
         std::remove(FILE_GALIB_SCORES);
     }
 
-    int	changed = 1;
     bool evaluateNow = false;
     fstream fitfile;
-
-    //GA1DArrayGenome<unsigned long> genomeBest(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
-    //genomeBest = m_gaData->population().individual(0);
 
     mainLogger.out(LOGGER_INFO) << "Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
@@ -577,38 +554,25 @@ void EACirc::run() {
         }
 
         // GENERATE TEST VECTORS IF NEEDED
-        if (m_settings.testVectors.setChangeProgressive) {
-            // TODO: understand and correct
-            if (changed > m_actGener/m_settings.testVectors.setChangeFrequency + 1) {
-                m_status = m_project->generateAndSaveTestVectors();
-                evaluateNow = true;
-                changed = 0;
-            }
-        } else {
-            if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
-                m_status = m_project->generateAndSaveTestVectors();
-                if (m_status == STAT_OK) {
-                    mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
-                }
-            }
-            if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
-                 m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
-                evaluateNow = true;
-            }
-            if (!m_settings.testVectors.evaluateBeforeTestVectorChange &&
-                 m_actGener % (m_settings.testVectors.setChangeFrequency) == 1) {
-                evaluateNow = true;
+        if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
+            m_status = m_project->generateAndSaveTestVectors();
+            if (m_status == STAT_OK) {
+                mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
         }
-        // variable for computing when TVCGProgressive = true
-        changed++;
+        if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
+             m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
+            evaluateNow = true;
+        }
+        if (!m_settings.testVectors.evaluateBeforeTestVectorChange &&
+                m_actGener % (m_settings.testVectors.setChangeFrequency) == 1) {
+            evaluateNow = true;
+        }
 
         // RESET EVALUTION FOR ALL GENOMS
         m_gaData->pop->flushEvalution();
         // GA evolution step
         m_gaData->step();
-
-        //genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
 
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
             evaluateStep();
@@ -624,13 +588,7 @@ void EACirc::run() {
         }
     }
 
-    // commented for testing purposes of saving state
-
-    // GENERATE FRESH NEW SET AND EVALUATE THE RESULT
-    //m_status = m_evaluator->generateAndSaveTestVectors();
-    //m_evaluator->evaluateStep(genomeBest, m_actGener);
-    GA1DArrayGenome<unsigned long> genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();// .statistics().bestIndividual();
-    //Print the best circuit
+    // print the best circuit into separate file
+    GA1DArrayGenome<unsigned long> genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();
     CircuitGenome::PrintCircuit(genomeBest,FILE_BEST_CIRCUIT,0,1);
-    //m_status = saveState(FILE_STATE,FILE_POPULATION);
 }

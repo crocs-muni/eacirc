@@ -76,7 +76,7 @@ int IProject::createTestVectorFilesHeaders() const {
 
 int IProject::createTestVectorFilesHeadersMain() const {
     int status = STAT_OK;
-    if (!pGlobals->settings->testVectors.saveTestVectors || pGlobals->settings->main.projectType == PROJECT_PREGENERATED_TV) {
+    if (!pGlobals->settings->outputs.saveTestVectors || pGlobals->settings->main.projectType == PROJECT_PREGENERATED_TV) {
         return STAT_OK;
     }
     ofstream tvFile;
@@ -115,7 +115,7 @@ int IProject::generateAndSaveTestVectors() {
         return status;
     }
     pGlobals->testVectors.newSet = true;
-    if (pGlobals->settings->testVectors.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
+    if (pGlobals->settings->outputs.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
         status = saveTestVectors();
     }
     return status;

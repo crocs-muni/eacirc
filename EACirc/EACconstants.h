@@ -62,9 +62,6 @@ typedef unsigned __int64 uint64_t;
 #define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_LOGFILE                "eacirc.log"
 
-// CIRCUIT OUTPUT SETTINGS
-#define CIRCUIT_FILENAME_PRECISION 6
-
 // QRNG DATA
 // filename = $PREFIX$INDEX$DUFFIX
 // index starts from 0 to maximal value save in main settings

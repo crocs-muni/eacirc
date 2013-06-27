@@ -18,6 +18,13 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->main.numGenerations = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
     pSettings->main.saveStateFrequency = atol(getXMLElementValue(pRoot,"MAIN/SAVE_STATE_FREQ").c_str());
 
+    // parsing EACIRC/OUTPUTS
+    pSettings->outputs.graphFiles = (atoi(getXMLElementValue(pRoot,"OUTPUTS/GRAPH_FILES").c_str())) ? true : false;
+    pSettings->outputs.intermediateCircuits = (atoi(getXMLElementValue(pRoot,"OUTPUTS/INTERMEDIATE_CIRCUITS").c_str())) ? true : false;
+    pSettings->outputs.filenameFitnessPrecision = atoi(getXMLElementValue(pRoot,"OUTPUTS/CIRCUITS_PRECISION").c_str());
+    pSettings->outputs.allowPrunning = (atoi(getXMLElementValue(pRoot,"OUTPUTS/ALLOW_PRUNNING").c_str())) ? true : false;
+    pSettings->outputs.saveTestVectors = (atoi(getXMLElementValue(pRoot,"OUTPUTS/SAVE_TEST_VECTORS").c_str())) ? true : false;
+
     // parsing EACIRC/RANDOM
     pSettings->random.useFixedSeed = (atoi(getXMLElementValue(pRoot,"RANDOM/USE_FIXED_SEED").c_str())) ? true : false;
     istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pSettings->random.seed;
@@ -44,7 +51,6 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
     pSettings->circuit.useMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/USE_MEMORY").c_str()) ? true : false;
     pSettings->circuit.memorySize = atoi(getXMLElementValue(pRoot,"CIRCUIT/MEMORY_SIZE").c_str());
-    pSettings->circuit.allowPrunning = (atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOW_PRUNNING").c_str())) ? true : false;
     // parsing EACIRC/CIRCUIT/ALLOWED_FUNCTIONS
     pSettings->circuit.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
     pSettings->circuit.allowedFunctions[FNC_OR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_OR").c_str());
@@ -69,8 +75,6 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());
     pSettings->testVectors.setSize = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_SIZE").c_str());
     pSettings->testVectors.setChangeFrequency = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_CHANGE_FREQ").c_str());
-    pSettings->testVectors.setChangeProgressive = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_CHANGE_PROGRESSIVE").c_str())) ? true : false;
-    pSettings->testVectors.saveTestVectors = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SAVE_TEST_VECTORS").c_str()) ? true : false;
     pSettings->testVectors.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
 

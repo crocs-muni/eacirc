@@ -1,7 +1,6 @@
 #ifndef CIRCUIT_GENOME_H
 #define CIRCUIT_GENOME_H
 
-//libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "EACglobals.h"
 #include "tinyxml.h"
