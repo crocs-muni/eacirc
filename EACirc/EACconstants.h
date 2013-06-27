@@ -62,6 +62,10 @@ typedef unsigned __int64 uint64_t;
 #define FILE_BEST_CIRCUIT           "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_LOGFILE                "eacirc.log"
 
+// fitness precisions
+#define FILE_CIRCUIT_PRECISION      3
+#define FITNESS_PRECISION_LOG       4
+
 // QRNG DATA
 // filename = $PREFIX$INDEX$DUFFIX
 // index starts from 0 to maximal value save in main settings

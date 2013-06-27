@@ -24,13 +24,13 @@ void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigne
     }
 }
 
-double CategoriesEvaluator::getFitness() {
-    double fitness = 0;
-    double temp0, temp1;
+float CategoriesEvaluator::getFitness() {
+    float fitness = 0;
+    float temp0, temp1;
     // add normalised Euclidean distance for each category
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
-        temp0 = m_totalStream0 ? m_categoriesStream0[category] / (double) m_totalStream0 : 0;
-        temp1 = m_totalStream1 ? m_categoriesStream1[category] / (double) m_totalStream1 : 0;
+        temp0 = m_totalStream0 ? m_categoriesStream0[category] / (float) m_totalStream0 : 0;
+        temp1 = m_totalStream1 ? m_categoriesStream1[category] / (float) m_totalStream1 : 0;
         fitness += pow(temp0 - temp1, 2);
     }
     // transform fitness from interval <0,2> to interval <0,1>

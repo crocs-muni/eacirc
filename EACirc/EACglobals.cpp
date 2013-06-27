@@ -27,7 +27,6 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
 SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
     graphFiles = true;
     intermediateCircuits = false;
-    filenameFitnessPrecision = 3;
     allowPrunning = false;
     saveTestVectors = false;
 }
@@ -81,16 +80,10 @@ SETTINGS::SETTINGS() {
 }
 
 STATISTICS::STATISTICS() {
-    clear();
-}
-
-void STATISTICS::clear() {
-    numBestPredictors = 0;
-    maxFit = 0;
-    bestGenerFit = 0;
-    avgGenerFit = 0;
-    numAvgGenerFit = 0;
-    avgPredictions = 0;
+    avgMaxFitSum = 0;
+    avgAvgFitSum = 0;
+    avgMinFitSum = 0;
+    avgCount = 0;
     prunningInProgress = false;
 }
 

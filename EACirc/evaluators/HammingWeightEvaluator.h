@@ -31,7 +31,7 @@ public:
      * Euclidean distance between corresponding weight categories
      * @return fitness
      */
-    double getFitness();
+    float getFitness();
 
     /**
      * reset all map fields to zero

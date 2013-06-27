@@ -26,7 +26,7 @@ public:
      * return the fitness of the currently inspected individual
      * @return fitness in <0,1>
      */
-    virtual double getFitness() = 0;
+    virtual float getFitness() = 0;
 
     /**
      * reset internal state of evaluator (clean stats for next individual)

@@ -25,7 +25,7 @@ public:
      * fitness is computed as quotient of successfully matched and all results
      * @return fitness
      */
-    virtual double getFitness();
+    virtual float getFitness();
 
     /**
      * reset counters to zero

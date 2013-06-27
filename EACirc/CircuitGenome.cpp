@@ -3,7 +3,6 @@
 #include "CommonFnc.h"
 #include "evaluators/IEvaluator.h"
 #include "XMLProcessor.h"
-// libinclude ("galib/GAPopulation.h")
 #include "GAPopulation.h"
 #include "generators/IRndGen.h"
 
@@ -148,131 +147,16 @@ static void circuit(unsigned char inputs[64], unsigned char outputs[2]) {
 }
 
 float CircuitGenome::Evaluator(GAGenome &g) {
-    int								status = STAT_OK;
     GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    float							fitness = 0;
-    unsigned char*					usePredictorMask = NULL;
-    int								match = 0;
-    int								maxCorrectPredictions = 0; 
-    IEvaluator*                     evaluator = pGlobals->evaluator;
-
-    /* OLD EVALUATOR SOLUTION (COMMON + EXPERIMENTAL)
-	match = 0;    
-	maxCorrectPredictions = 0;
-	// ### EXPERIMENTAL: compute categories
-	if (pGlobals->settings->main.evaluatorType == EVALUATOR_OUTPUT_CATEGORIES) {
-		// Set maximum possible chisquare achiavable for normalization
-		// Maximum is achieved when all categories fall into the single, but different category.  
-		int sectorLength = pGlobals->settings->circuit.sizeInputLayer - pGlobals->settings->circuit.memorySize;
-		int numCategorizedInputs = pGlobals->settings->testVectors.inputLength / sectorLength;
-		// Maximum value for fitness normalization is given as numCategorizedInputs 2 * (category completely unused by first type) * numCategorizedInputs (category completely used by the second type)  * pGlobals->settings->testVectors.setSize (total number of test vectors over which we summarize) / 2 (there are two types of inputs - random&function)
-		// It should be taken two times as first type should somewhere put his catagorization, which will result in same difference again
-		maxCorrectPredictions = ((numCategorizedInputs * numCategorizedInputs) + (numCategorizedInputs * numCategorizedInputs)) * pGlobals->settings->testVectors.setSize / 2;
-
-		// Compute categories distribution for truly random data
-		memset(pGlobals->testVectors.circuitOutputCategoriesRandom, 0, sizeof(pGlobals->testVectors.circuitOutputCategoriesRandom));
-		memset(pGlobals->testVectors.circuitOutputCategories, 0, sizeof(pGlobals->testVectors.circuitOutputCategories));
-		// Use all random inputs to establish categories for truly random inputs
-		int numTrulyRandomInputs = 0;
-		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
-			if (pGlobals->testVectors.outputs[testVector][0] == 0xff) {
-				status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-				numTrulyRandomInputs++;
-			}
-		}
-		// Normalize numbers in the categories according to number of used random inputs (numTrulyRandomInputs)
-		//numTrulyRandomInputs = 1;
-		// Add +1 to prevent division by zero
-		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategoriesRandom[i] = (pGlobals->testVectors.circuitOutputCategories[i] / (double) numTrulyRandomInputs) + 1;
-
-		//
-		// Process function outputs
-		//
-		memset(pGlobals->testVectors.circuitOutputCategories, 0, sizeof(pGlobals->testVectors.circuitOutputCategories));
-		// Use all function inputs to establish categories
-		int numFncInputs = 0;
-		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
-			if (pGlobals->testVectors.outputs[testVector][0] == 0x00) {
-				status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-				numFncInputs++;
-			}
-		}
-		// Normalize numbers in the categories according to number of used function inputs (numFncInputs)
-		//numFncInputs = 1;
-		// Add +1 to prevent division by zero
-		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) pGlobals->testVectors.circuitOutputCategories[i] = (pGlobals->testVectors.circuitOutputCategories[i] / (double) numFncInputs) + 1;
-		
-		
-		// Fitness idea:  if function input is presented, circuit should provide as large difference as possible (difference)
-		// Compute Euclidean distance between circuitOutputCategories for given inputs and for truly random inputs
-		double	difference = 0;
-		for (int i = 0; i < NUM_OUTPUT_CATEGORIES; i++) {
-			double valueDiff = pGlobals->testVectors.circuitOutputCategories[i] - pGlobals->testVectors.circuitOutputCategoriesRandom[i];
-			difference += pow(valueDiff, 2);
-		}
-		
-		fitness = (maxCorrectPredictions > 0) ? (difference / ((float) maxCorrectPredictions)) : 0;
-		// ### END EXPERIMENTAL
-	}
-	else {
-		//
-		// ORDINARY EVALUATOR
-		//
-		for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {            
-			// EXECUTE CIRCUIT
-			status = ExecuteCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-
-			// EVALUATE SUCCESS OF CIRCUIT FOR THIS TEST VECTOR
-			evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector],
-										usePredictorMask, &match, &maxCorrectPredictions);
-		}
-        fitness = (maxCorrectPredictions > 0) ? (match / ((float) maxCorrectPredictions)) : 0;
-    }
-    */
-
-    // NEW EVALUATOR SOLUTION BEGIN
-
     // reset evaluator state for this individual
     pGlobals->evaluator->resetEvaluator();
+    // execute circuit & evaluate success for each test vector
     for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-        // execute circuit
-        status = executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-        // evaluate success for this test vector
+        executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
         pGlobals->evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector]);
     }
     // retrieve fitness from evaluator
-    fitness = pGlobals->evaluator->getFitness();
-
-    // NEW EVALUATOR SOLUTION END
-
-    // update statistics, if needed
-    if (!pGlobals->stats.prunningInProgress) {
-        // include into average fitness of whole generation
-        (pGlobals->stats.avgGenerFit) += fitness;
-        (pGlobals->stats.numAvgGenerFit)++;
-        (pGlobals->stats.avgPredictions) += maxCorrectPredictions;
-
-        if (fitness > pGlobals->stats.bestGenerFit) pGlobals->stats.bestGenerFit = fitness;
-
-        if (pGlobals->stats.maxFit < fitness) {
-            pGlobals->stats.maxFit = fitness;
-
-            // print currently best circuit
-            if (pGlobals->settings->outputs.intermediateCircuits) {
-                ostringstream os2;
-                os2 << FILE_CIRCUIT << setprecision(pGlobals->settings->outputs.filenameFitnessPrecision) << fixed << fitness;
-                string filePath = os2.str();
-                PrintCircuit(genome, filePath, usePredictorMask, FALSE);   // PRINT WITHOUT PRUNNING
-
-                if (pGlobals->settings->outputs.allowPrunning) {
-                    filePath += "_prunned";
-                    PrintCircuit(genome, filePath, usePredictorMask, TRUE);    // PRINT WITH PRUNNING
-                }
-            }
-        }
-    }
-    delete[] usePredictorMask;
-    return fitness;
+    return pGlobals->evaluator->getFitness();
 }
 
 void CircuitGenome::Initializer(GAGenome& g) {
@@ -1820,8 +1704,7 @@ ordering=out;\r\n";
     return status;
 }
 
-int CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
-    int     status = STAT_OK;
+void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
 //    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
     int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
@@ -2173,7 +2056,6 @@ int CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, uns
 
 	delete[] fullLocalInputs;
     delete[] localOutputs;
-    return status;
 }
 
 int CircuitGenome::writeGenome(const GA1DArrayGenome<GENOM_ITEM_TYPE>& genome, string& textCircuit) {

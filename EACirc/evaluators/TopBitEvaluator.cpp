@@ -14,8 +14,8 @@ void TopBitEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned ch
     }
 }
 
-double TopBitEvaluator::getFitness() {
-    return m_matchedOutputBytes / (double) m_totalOutputBytes;
+float TopBitEvaluator::getFitness() {
+    return m_matchedOutputBytes / (float) m_totalOutputBytes;
 }
 
 void TopBitEvaluator::resetEvaluator() {

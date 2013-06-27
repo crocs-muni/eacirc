@@ -95,7 +95,6 @@ struct SETTINGS_MAIN {
 struct SETTINGS_OUTPUTS {
     bool graphFiles;                //! should graph files be created?
     bool intermediateCircuits;      //! should intermediate circuits be saved?
-    int filenameFitnessPrecision;   //! circuit filename fitness precision
     bool allowPrunning;             //! save prunned versions as well?
     bool saveTestVectors;           //! should test vectors be saved?
     SETTINGS_OUTPUTS();
@@ -173,15 +172,12 @@ struct SETTINGS {
 
 //! main fitness statistics
 struct STATISTICS {
-    int numBestPredictors;          //! TBD
-    float maxFit;                   //! TBD
-    float bestGenerFit;             //! TBD
-    float avgGenerFit;              //! TBD
-    int numAvgGenerFit;             //! TBD
-    int avgPredictions;             //! TBD
+    double avgMaxFitSum;            //! sum for average maximum fitness in inspected generations
+    double avgAvgFitSum;            //! sum for average average fitness in inspected generations
+    double avgMinFitSum;            //! sum for average minimum fitness in inspected generations
+    int avgCount;                   //! count used as divisor in avgMaxFit, avgAvgFit, avgMinFit
     bool prunningInProgress;        //! is prunning currently in progress?
     STATISTICS();
-    void clear();
 };
 
 //! test vectors and their outputs

@@ -28,13 +28,13 @@ void HammingWeightEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsi
     currentStreamMap[hammingWeight]++;
 }
 
-double HammingWeightEvaluator::getFitness() {
-    double fitness = 0;
-    double temp0, temp1;
+float HammingWeightEvaluator::getFitness() {
+    float fitness = 0;
+    float temp0, temp1;
     // add normalised Euclidean distance for each category
     for (int category = 0; category < pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR; category++) {
-        temp0 = m_totalStream0 ? m_weightsStream0[category] / (double) m_totalStream0 : 0;
-        temp1 = m_totalStream1 ? m_weightsStream1[category] / (double) m_totalStream1 : 0;
+        temp0 = m_totalStream0 ? m_weightsStream0[category] / (float) m_totalStream0 : 0;
+        temp1 = m_totalStream1 ? m_weightsStream1[category] / (float) m_totalStream1 : 0;
         fitness += pow(temp0 - temp1, 2);
     }
     // transform fitness from interval <0,2> to interval <0,1>

@@ -21,7 +21,6 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     // parsing EACIRC/OUTPUTS
     pSettings->outputs.graphFiles = (atoi(getXMLElementValue(pRoot,"OUTPUTS/GRAPH_FILES").c_str())) ? true : false;
     pSettings->outputs.intermediateCircuits = (atoi(getXMLElementValue(pRoot,"OUTPUTS/INTERMEDIATE_CIRCUITS").c_str())) ? true : false;
-    pSettings->outputs.filenameFitnessPrecision = atoi(getXMLElementValue(pRoot,"OUTPUTS/CIRCUITS_PRECISION").c_str());
     pSettings->outputs.allowPrunning = (atoi(getXMLElementValue(pRoot,"OUTPUTS/ALLOW_PRUNNING").c_str())) ? true : false;
     pSettings->outputs.saveTestVectors = (atoi(getXMLElementValue(pRoot,"OUTPUTS/SAVE_TEST_VECTORS").c_str())) ? true : false;
 

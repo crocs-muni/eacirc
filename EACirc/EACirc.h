@@ -96,8 +96,9 @@ class EACirc {
       */
     void createPopulation();
 
-    /** evolution step evaluation
-      * - writes to stats files
+    /** evaluate computation
+      * - writes to stats files, graph files
+      * - print the best individual in current generation
       */
     void evaluateStep();
 public:

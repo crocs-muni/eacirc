@@ -64,7 +64,7 @@ public:
 	//static int HasImplicitConnection(GENOM_ITEM_TYPE functionID);
 	static int IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
 	static int GetNeutralValue(GENOM_ITEM_TYPE functionID, string* pOperand);
-    static int executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs);
+    static void executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs);
 
     /** saves genome to string in binary format
       * @param genome       genome to print

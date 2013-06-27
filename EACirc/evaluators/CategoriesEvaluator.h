@@ -32,7 +32,7 @@ public:
      * Euclidean distance between corresponding output categories
      * @return fitness
      */
-    double getFitness();
+    float getFitness();
 
     /**
      * reset all map fields to zero

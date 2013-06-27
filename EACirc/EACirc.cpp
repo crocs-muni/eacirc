@@ -12,7 +12,6 @@
 #include "generators/BiasRndGen.h"
 #include "generators/QuantumRndGen.h"
 #include "generators/MD5RndGen.h"
-//libinclude (galib/GA1DArrayGenome.h)
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
 #include "CircuitGenome.h"
@@ -262,7 +261,7 @@ void EACirc::savePopulation(const string filename) {
     for (int i = 0; i < m_settings.ga.popupationSize; i++) {
         // note: it is not necessary to call individual i in SCALED order
         //       however then the population files differ in order ('diff' cannot be used to finding bugs)
-        GA1DArrayGenome<unsigned long>* pGenome = (GA1DArrayGenome<unsigned long>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
+        GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
         m_status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
@@ -321,7 +320,7 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     GAPopulation population;
-    GA1DArrayGenome<unsigned long> genome(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
     // INIT GENOME STRUCTURES
     genome.initializer(CircuitGenome::Initializer);
     genome.mutator(CircuitGenome::Mutator);
@@ -352,7 +351,7 @@ void EACirc::createPopulation() {
     // seed GAlib (initializations may require random numbers)
     GAResetRNG(m_currentGalibSeed);
     // temporary structure for genome (empty or loaded from file)
-    GA1DArrayGenome<unsigned long> genome(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
     genome.initializer(CircuitGenome::Initializer);
     genome.mutator(CircuitGenome::Mutator);
     genome.crossover(CircuitGenome::Crossover);
@@ -381,7 +380,7 @@ void EACirc::prepare() {
         return;
     }
 
-    // PREPARE THE LOGGING FILES
+    // prepare files for logging
     std::remove(FILE_BOINC_FRACTION_DONE);
     if (!m_settings.main.recommenceComputation) {
         std::remove(FILE_FITNESS_PROGRESS);
@@ -389,6 +388,15 @@ void EACirc::prepare() {
         std::remove(FILE_AVG_FITNESS);
         std::remove(FILE_GALIB_SCORES);
         std::remove(FILE_TEST_VECTORS_HR);
+        ofstream fitnessProgressFile(FILE_FITNESS_PROGRESS, ios_base::trunc);
+        fitnessProgressFile << "Fitness statistics for selected generations" << endl;
+        for (int i = 0; i < log(pGlobals->settings->main.numGenerations)/log(10) - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "gen\tavg";
+        for (int i = 0; i < FITNESS_PRECISION_LOG - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "\tmax";
+        for (int i = 0; i < FITNESS_PRECISION_LOG - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "\tmin" << endl;
+        fitnessProgressFile.close();
     }
 
     // map net share for random data, if used (for METACENTRUM resources)
@@ -483,35 +491,49 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
 void EACirc::evaluateStep() {
     if (m_status != STAT_OK) return;
     int totalGeneration = m_actGener + m_oldGenerations;
-    pGlobals->stats.bestGenerFit = 0;
-    GA1DArrayGenome<unsigned long> genome = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();
 
-    float bestFit = CircuitGenome::Evaluator(genome);
+    // add scores to fitness progress file
+    ofstream fitProgressFile(FILE_FITNESS_PROGRESS, ios_base::app);
+    int digitsInGeneration = max<int>(log(pGlobals->settings->main.numGenerations) / log(10) + 1, 3); // header text "gen" is 3 chars long
+    fitProgressFile << setw(digitsInGeneration) << right << totalGeneration;
+    fitProgressFile << left << setprecision(FITNESS_PRECISION_LOG) << setfill('0');
+    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Mean);
+    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Maximum);
+    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum) << endl;
+    fitProgressFile.close();
 
     // add scores to graph files
     if (pGlobals->settings->outputs.graphFiles) {
-        ofstream bestfitfile(FILE_BEST_FITNESS, ios::app);
-        ofstream avgfitfile(FILE_AVG_FITNESS, ios::app);
-        bestfitfile << totalGeneration << "," << bestFit << endl;
-        if (pGlobals->stats.numAvgGenerFit > 0) avgfitfile << totalGeneration << "," << pGlobals->stats.avgGenerFit / pGlobals->stats.numAvgGenerFit << endl;
-        else avgfitfile << totalGeneration << "," << "division by zero!!" << endl;
-        bestfitfile.close();
-        avgfitfile.close();
+        ofstream bestFitFile(FILE_BEST_FITNESS, ios_base::app);
+        ofstream avgFitFile(FILE_AVG_FITNESS, ios_base::app);
+        bestFitFile << totalGeneration << ", " << m_gaData->statistics().current(GAStatistics::Maximum) << endl;
+        avgFitFile << totalGeneration << ", " << m_gaData->statistics().current(GAStatistics::Mean) << endl;
+        bestFitFile.close();
+        avgFitFile.close();
     }
 
-    ostringstream os2;
-    os2 << "(" << totalGeneration << " gen.): " << pGlobals->stats.avgGenerFit << "/" << pGlobals->stats.numAvgGenerFit;
-    os2 << " avg, " << bestFit << " best, avgPredict: " << pGlobals->stats.avgPredictions / pGlobals->stats.numAvgGenerFit;
-    os2 << ", totalBest: " << pGlobals->stats.maxFit;
-    string message = os2.str();
-    // SAVE FITNESS PROGRESS
-    ofstream out(FILE_FITNESS_PROGRESS, ios::app);
-    out << message << endl;
-    out.close();
+    // print currently best circuit
+    if (pGlobals->settings->outputs.intermediateCircuits) {
+        GA1DArrayGenome<GENOM_ITEM_TYPE> genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) m_gaData->population().best();
 
-    pGlobals->stats.clear();
+        ostringstream fileName;
+        fileName << FILE_CIRCUIT << "g" << totalGeneration << "_";
+        fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
+        string filePath = fileName.str();
+        CircuitGenome::PrintCircuit(genome, filePath, 0, FALSE);   // print without prunning
+
+        if (pGlobals->settings->outputs.allowPrunning) {
+            filePath += "_prunned";
+            CircuitGenome::PrintCircuit(genome, filePath, 0, TRUE);    // print with prunning
+        }
+    }
+
+    // save generation stats for total scores
+    pGlobals->stats.avgAvgFitSum += m_gaData->statistics().current(GAStatistics::Mean);
+    pGlobals->stats.avgMinFitSum += m_gaData->statistics().current(GAStatistics::Minimum);
+    pGlobals->stats.avgMaxFitSum += m_gaData->statistics().current(GAStatistics::Maximum);
+    pGlobals->stats.avgCount++;
 }
-
 
 void EACirc::run() {
     if (m_status != STAT_OK) return;
@@ -524,8 +546,7 @@ void EACirc::run() {
     // SAVE INITIAL STATE
     saveProgress(FILE_STATE_INITIAL,FILE_POPULATION_INITIAL);
 
-    // clear scores
-    pGlobals->stats.clear();
+    // clear galib score file
     if (!pGlobals->settings->main.recommenceComputation) {
         std::remove(FILE_GALIB_SCORES);
     }
@@ -589,6 +610,6 @@ void EACirc::run() {
     }
 
     // print the best circuit into separate file
-    GA1DArrayGenome<unsigned long> genomeBest = (GA1DArrayGenome<unsigned long>&) m_gaData->population().best();
+    GA1DArrayGenome<GENOM_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) m_gaData->population().best();
     CircuitGenome::PrintCircuit(genomeBest,FILE_BEST_CIRCUIT,0,1);
 }
