@@ -16,8 +16,15 @@ CategoriesEvaluator::~CategoriesEvaluator() {
 }
 
 void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned char* referenceOutputs) {
-    // select stream map to update
-    int* currentStreamMap = referenceOutputs[0] >> (BITS_IN_UCHAR-1) == 0 ? m_categoriesStream0 : m_categoriesStream1;
+    // select stream map to update and increase total in corresponding counter
+    int* currentStreamMap;
+    if (referenceOutputs[0] >> (BITS_IN_UCHAR-1) == 0) {
+        currentStreamMap = m_categoriesStream0;
+        m_totalStream0++;
+    } else {
+        currentStreamMap = m_categoriesStream1;
+        m_totalStream1++;
+    }
     // increase category for each output byte (value modulo number of categories)
     for (int outputByte = 0; outputByte < pGlobals->settings->circuit.sizeOutputLayer; outputByte++) {
         currentStreamMap[circuitOutputs[outputByte] % pGlobals->settings->main.evaluatorPrecision]++;

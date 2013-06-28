@@ -22,13 +22,9 @@ SOURCES += \
 # === evaluators ===
 SOURCES += \
     EACirc/evaluators/IEvaluator.cpp \
-    EACirc/evaluators/DistinguishTwoEvaluator.cpp \
-    EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
-    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
-    EACirc/evaluators/OutputCategoriesEvaluator.cpp \
+    EACirc/evaluators/TopBitEvaluator.cpp \
+    EACirc/evaluators/HammingWeightEvaluator.cpp \
+    EACirc/evaluators/CategoriesEvaluator.cpp \
 
 # === Main project files ===
 HEADERS += \
@@ -40,14 +36,11 @@ HEADERS += \
     EACirc/CommonFnc.h \
     EACirc/checker/EAC_circuit.h \
     EACirc/EACglobals.h \
+    EACirc/Version.h \
 
 # === evaluators ===
 HEADERS += \
     EACirc/evaluators/IEvaluator.h \
-    EACirc/evaluators/DistinguishTwoEvaluator.h \
-    EACirc/evaluators/PredictBitCircuitEvaluator.h \
-    EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
-    EACirc/evaluators/PredictByteCircuitEvaluator.h \
-    EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
-    EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
-    EACirc/evaluators/OutputCategoriesEvaluator.h \
+    EACirc/evaluators/TopBitEvaluator.h \
+    EACirc/evaluators/HammingWeightEvaluator.h \
+    EACirc/evaluators/CategoriesEvaluator.h \

@@ -50,11 +50,7 @@ public:
         string config =
 "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
 "<EACIRC>"
-"<INFO>"
-"    <DATE>unspecified</DATE>"
-"    <VERSION>5.0</VERSION>"
-"    <NOTES>-</NOTES>"
-"</INFO>"
+"<NOTES>self-test configuration</NOTES>"
 "<MAIN>"
 "    <PROJECT>100</PROJECT>"
 "    <EVALUATOR>25</EVALUATOR>"

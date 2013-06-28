@@ -4,10 +4,8 @@
 #include <typeinfo>
 
 void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
-    // parsing EACIRC/INFO
-    pSettings->info.computationDate = getXMLElementValue(pRoot,"INFO/DATE");
-    pSettings->info.swVersion = getXMLElementValue(pRoot,"INFO/VERSION");
-    pSettings->info.notes = getXMLElementValue(pRoot,"INFO/NOTES");
+    // parsing EACIRC/NOTES
+    pSettings->notes = getXMLElementValue(pRoot,"NOTES");
 
     // parsing EACIRC/MAIN
     pSettings->main.projectType = atoi(getXMLElementValue(pRoot,"MAIN/PROJECT").c_str());

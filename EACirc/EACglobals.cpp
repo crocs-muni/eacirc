@@ -8,12 +8,6 @@ IRndGen* rndGen = NULL;
 IRndGen* biasRndGen = NULL;
 GLOBALS* pGlobals = NULL;
 
-SETTINGS_INFO::SETTINGS_INFO() {
-    swVersion="unknown";
-    computationDate="unknown";
-    notes = "";
-}
-
 SETTINGS_MAIN::SETTINGS_MAIN() {
     projectType = -1;
     evaluatorType = -1;

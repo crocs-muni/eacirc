@@ -42,6 +42,18 @@ private:
     bool m_using_file;
     //! stream to send logs to
     LoggerStream* m_out;
+
+    /** get current time formatted into string
+      * @return time
+      */
+    string getTime() const;
+
+    /**
+     * get current date formatted into string
+     * @return date
+     */
+    string getDate() const;
+
 public:
     Logger();
     ~Logger();
@@ -76,11 +88,6 @@ public:
       * @param state
       */
     void setlogging(bool state);
-
-    /** get current date and time formatted into string
-      * @return time
-      */
-    string getTime() const;
 };
 
 #endif // LOGGER_H

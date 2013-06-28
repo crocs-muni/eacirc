@@ -6,7 +6,6 @@
 [Mm]akefile
 *.sdf
 *.opensdf
-*.bat
 # object files, linked application, build filed
 *.o
 *.ocpp

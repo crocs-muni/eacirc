@@ -41,17 +41,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
-    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
     <OutDir>$(SolutionDir)run\</OutDir>
-    <IntDir>$(SolutionDir)build\</IntDir>
+    <IntDir>$(SolutionDir)build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)run\</OutDir>
-    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
-    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
-    <IntDir>$(SolutionDir)build\</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+    <IntDir>$(SolutionDir)build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -69,15 +73,32 @@
       <SubSystem>Console</SubSystem>
     </Link>
     <CustomBuildStep>
-      <Command>copy EACirc\config.xml $(OutDir)\config.xml</Command>
-      <TreatOutputAsContent>true</TreatOutputAsContent>
-      <Message>Copying configuration file</Message>
-      <Outputs>$(OutDir)\config.xml</Outputs>
-      <Inputs>EACirc\config.xml</Inputs>
+      <Command>
+      </Command>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
     </CustomBuildStep>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)pre-build.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Updating commit version information.</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)post-build.bat $(Configuration)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying configuration file.</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -98,26 +119,39 @@
       <OutputFile>run\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <CustomBuildStep>
-      <Command>copy EACirc\config.xml $(OutDir)\config.xml</Command>
-      <Message>Copying configuration file</Message>
-      <Outputs>$(OutDir)\config.xml</Outputs>
-      <Inputs>EACirc\config.xml</Inputs>
-      <TreatOutputAsContent>true</TreatOutputAsContent>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
+      <TreatOutputAsContent>
+      </TreatOutputAsContent>
     </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)pre-build.bat</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Updating commit version information.</Message>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)post-build.bat $(Configuration)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copying configuration file.</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EACirc\CircuitGenome.cpp" />
     <ClCompile Include="EACirc\EACglobals.cpp" />
-    <ClCompile Include="EACirc\evaluators\DistinguishTwoEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\CategoriesEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\HammingWeightEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\IEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\OutputCategoriesEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictBitCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictByteCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictBytesParityCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictHammingWeightCircuitEvaluator.cpp" />
     <ClCompile Include="EACirc\CommonFnc.cpp" />
     <ClCompile Include="EACirc\EACirc.cpp" />
+    <ClCompile Include="EACirc\evaluators\TopBitEvaluator.cpp" />
     <ClCompile Include="EACirc\galib\GA1DArrayGenome.cpp" />
     <ClCompile Include="EACirc\galib\GA1DBinStrGenome.cpp" />
     <ClCompile Include="EACirc\galib\GA2DArrayGenome.cpp" />
@@ -152,7 +186,6 @@
     <ClCompile Include="EACirc\galib\GATreeGenome.cpp" />
     <ClCompile Include="EACirc\Logger.cpp" />
     <ClCompile Include="EACirc\Main.cpp" />
-    <ClCompile Include="EACirc\projects\estream\AvalancheEvaluator.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\abc\abc-v3.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\achterbahn\achterbahn-128-80.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\cryptmt\cryptmt-v3.cpp" />
@@ -285,8 +318,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EACirc\CircuitGenome.h" />
+    <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\HammingWeightEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
-    <ClInclude Include="EACirc\projects\estream\AvalancheEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\TopBitEvaluator.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc-tables.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\abc\ecrypt-sync.h" />
@@ -339,13 +374,7 @@
     <ClInclude Include="EACirc\projects\files\filesProject.h" />
     <ClInclude Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.h" />
     <ClInclude Include="EACirc\projects\sha3\CircuitGenome.h" />
-    <ClInclude Include="EACirc\evaluators\DistinguishTwoEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\IEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictBitCircuitEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.h" />
-    <ClInclude Include="eacirc\evaluators\PredictByteCircuitEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictBytesParityCircuitEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictHammingWeightCircuitEvaluator.h" />
     <ClInclude Include="EACirc\CommonFnc.h" />
     <ClInclude Include="EACirc\EACconstants.h" />
     <ClInclude Include="EACirc\EACglobals.h" />
@@ -514,6 +543,7 @@
     <ClInclude Include="EACirc\Status.h" />
     <ClInclude Include="EACirc\tinyxml\tinystr.h" />
     <ClInclude Include="EACirc\tinyxml\tinyxml.h" />
+    <ClInclude Include="EACirc\Version.h" />
     <ClInclude Include="EACirc\XMLProcessor.h" />
   </ItemGroup>
   <ItemGroup>

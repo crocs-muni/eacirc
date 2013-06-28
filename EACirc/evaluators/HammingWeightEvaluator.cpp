@@ -16,8 +16,15 @@ HammingWeightEvaluator::~HammingWeightEvaluator() {
 }
 
 void HammingWeightEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned char* referenceOutputs) {
-    // select stream map to update
-    int* currentStreamMap = referenceOutputs[0] >> (BITS_IN_UCHAR-1) == 0 ? m_weightsStream0 : m_weightsStream1;
+    // select stream map to update and increase total in corresponding counter
+    int* currentStreamMap;
+    if (referenceOutputs[0] >> (BITS_IN_UCHAR-1) == 0) {
+        currentStreamMap = m_weightsStream0;
+        m_totalStream0++;
+    } else {
+        currentStreamMap = m_weightsStream1;
+        m_totalStream1++;
+    }
     // compute Hamming weight of the circuit output
     int hammingWeight = 0;
     for (int outputByte = 0; outputByte < pGlobals->settings->circuit.sizeOutputLayer; outputByte++) {

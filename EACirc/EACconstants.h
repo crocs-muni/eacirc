@@ -63,8 +63,8 @@ typedef unsigned __int64 uint64_t;
 #define FILE_LOGFILE                "eacirc.log"
 
 // fitness precisions
-#define FILE_CIRCUIT_PRECISION      3
-#define FITNESS_PRECISION_LOG       4
+#define FILE_CIRCUIT_PRECISION      6
+#define FITNESS_PRECISION_LOG       6
 
 // QRNG DATA
 // filename = $PREFIX$INDEX$DUFFIX

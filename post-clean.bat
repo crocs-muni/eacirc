@@ -1,0 +1,1 @@
+cd .\run && del *.txt *.dot *.bin *.c *.log *.xml *.2 *.cat

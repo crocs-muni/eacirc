@@ -1,5 +1,5 @@
 #include "Logger.h"
-
+#include "Version.h"
 // for documentation on using logger, see EACglobals.h
 
 Logger::Logger() : m_logging(false), m_using_file(false),
@@ -22,10 +22,16 @@ void Logger::setOutputFile(const string filePath) {
 }
 
 void Logger::setlogging(bool state) {
-    if (state == m_logging) return;
-    out() << "info: Logging disabled" << endl;
-    m_logging = state;
-    out() << "info: Logging enabled." << endl;
+    if (state == m_logging) return;    
+    if (state) {
+        m_logging = state;
+        out(LOGGER_INFO) << "Logging enabled." << endl;
+        out(LOGGER_INFO) << "EACirc framework (build " << GIT_COMMIT_SHORT << ")." << endl;
+        out(LOGGER_INFO) << "current date: " << getDate() << endl;
+    } else {
+        out(LOGGER_INFO) << "Logging disabled" << endl;
+        m_logging = state;
+    }
 }
 
 string Logger::getTime() const {
@@ -34,10 +40,20 @@ string Logger::getTime() const {
     char buffer [80];
     time (&rawtime);
     timeinfo = localtime (&rawtime);
-    strftime (buffer,80,"%Y-%m-%d %H:%M:%S",timeinfo);
+    strftime (buffer,80,"%H:%M:%S",timeinfo);
     stringstream temp;
     temp << "[" << buffer << "] ";
     return temp.str();
+}
+
+string Logger::getDate() const {
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer [80];
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    strftime (buffer,80,"%Y-%m-%d",timeinfo);
+    return string(buffer);
 }
 
 // When we sync the stream with the output.

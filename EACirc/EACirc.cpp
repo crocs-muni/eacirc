@@ -30,7 +30,6 @@
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
-    mainLogger.out(LOGGER_INFO) << "EACirc framework started (build unknown)." << endl;
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
@@ -392,9 +391,9 @@ void EACirc::prepare() {
         fitnessProgressFile << "Fitness statistics for selected generations" << endl;
         for (int i = 0; i < log(pGlobals->settings->main.numGenerations)/log(10) - 3; i++) fitnessProgressFile << " ";
         fitnessProgressFile << "gen\tavg";
-        for (int i = 0; i < FITNESS_PRECISION_LOG - 3; i++) fitnessProgressFile << " ";
+        for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
         fitnessProgressFile << "\tmax";
-        for (int i = 0; i < FITNESS_PRECISION_LOG - 3; i++) fitnessProgressFile << " ";
+        for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
         fitnessProgressFile << "\tmin" << endl;
         fitnessProgressFile.close();
     }
@@ -420,6 +419,7 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_INFO) << "Evaluator initialized (" << pGlobals->evaluator->shortDescription() << ")." << endl;
     } else {
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize evaluator (" << m_settings.main.evaluatorType << ")." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
     }
 
     if (m_status == STAT_OK) {
@@ -496,7 +496,7 @@ void EACirc::evaluateStep() {
     ofstream fitProgressFile(FILE_FITNESS_PROGRESS, ios_base::app);
     int digitsInGeneration = max<int>(log(pGlobals->settings->main.numGenerations) / log(10) + 1, 3); // header text "gen" is 3 chars long
     fitProgressFile << setw(digitsInGeneration) << right << totalGeneration;
-    fitProgressFile << left << setprecision(FITNESS_PRECISION_LOG) << setfill('0');
+    fitProgressFile << left << setprecision(FITNESS_PRECISION_LOG) << fixed;
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Mean);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Maximum);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum) << endl;
@@ -608,6 +608,12 @@ void EACirc::run() {
             saveProgress(FILE_STATE,FILE_POPULATION);
         }
     }
+
+    // output AvgAvg, AvgMax, AvgMin to logger
+    mainLogger.out(LOGGER_INFO) << "Cumulative results for this run:" << endl << setprecision(FITNESS_PRECISION_LOG);
+    mainLogger.out(LOGGER_INFO) << "   AvgAvg: " << pGlobals->stats.avgAvgFitSum / (double) pGlobals->stats.avgCount << endl;
+    mainLogger.out(LOGGER_INFO) << "   AvgMax: " << pGlobals->stats.avgMaxFitSum / (double) pGlobals->stats.avgCount << endl;
+    mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
 
     // print the best circuit into separate file
     GA1DArrayGenome<GENOM_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) m_gaData->population().best();

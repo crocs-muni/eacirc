@@ -216,6 +216,7 @@ HEADERS += \
     EACirc/Logger.h \
     EACirc/Status.h \
     EACirc/EACirc.h \
+    EACirc/Version.h \
 
 # === standard evaluators ===
 HEADERS += \

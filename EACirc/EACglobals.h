@@ -71,14 +71,6 @@ extern IRndGen* biasRndGen;
   */
 extern GLOBALS* pGlobals;
 
-//! settings corresponding to EACIRC/INFO
-struct SETTINGS_INFO {
-    string swVersion;               //! EACirc framework version
-    string computationDate;         //! date of computation
-    string notes;                   //! user defined notes
-    SETTINGS_INFO();
-};
-
 //! settings corresponding to EACIRC/MAIN
 struct SETTINGS_MAIN {
     int projectType;                //! project used to generate test vectors
@@ -158,7 +150,7 @@ struct SETTINGS_TEST_VECTORS {
 
 //! all program run settings
 struct SETTINGS {
-    SETTINGS_INFO info;                     //! corresponding to EACIRC/INFO
+    string notes;                           //! corresponding to EACIRC/NOTES (user notes)
     SETTINGS_MAIN main;                     //! corresponding to EACIRC/MAIN
     SETTINGS_OUTPUTS outputs;               //! corresponding to EACIRC/OUTPUTS
     SETTINGS_RANDOM random;                 //! corresponding to EACIRC/RANDOM

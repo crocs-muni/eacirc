@@ -1,6 +1,5 @@
 #include "EstreamProject.h"
 #include "EstreamConstants.h"
-#include "AvalancheEvaluator.h"
 
 ESTREAM_SETTINGS* pEstreamSettings = NULL;
 
@@ -63,11 +62,7 @@ int EstreamProject::initializeProject() {
     // allocate encryptorDecryptor
     m_encryptorDecryptor = new EncryptorDecryptor;
     // allocate project-specific evaluator, if needed
-    /*
-    if (pGlobals->settings->main.evaluatorType == ESTREAM_EVALUATOR_AVALANCHE) {
-        m_projectEvaluator = new AvalancheEvaluator(m_encryptorDecryptor);
-    }
-    */
+    // no project specific evaluator available
     return STAT_OK;
 }
 

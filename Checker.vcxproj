@@ -88,30 +88,23 @@
     <ClInclude Include="EACirc\CommonFnc.h" />
     <ClInclude Include="EACirc\EACconstants.h" />
     <ClInclude Include="EACirc\EACglobals.h" />
-    <ClInclude Include="EACirc\evaluators\DistinguishTwoEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\HammingWeightEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\IEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictBitCircuitEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.h" />
-    <ClInclude Include="eacirc\evaluators\PredictByteCircuitEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictBytesParityCircuitEvaluator.h" />
-    <ClInclude Include="EACirc\evaluators\PredictHammingWeightCircuitEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\TopBitEvaluator.h" />
     <ClInclude Include="EACirc\Logger.h" />
     <ClInclude Include="EACirc\Status.h" />
+    <ClInclude Include="EACirc\Version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EACirc\checker\Checker.cpp" />
     <ClCompile Include="EACirc\checker\CheckerMain.cpp" />
     <ClCompile Include="EACirc\CommonFnc.cpp" />
     <ClCompile Include="EACirc\EACglobals.cpp" />
-    <ClCompile Include="EACirc\evaluators\DistinguishTwoEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\CategoriesEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\HammingWeightEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\IEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\OutputCategoriesEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictBitCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictBitGroupParityCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictByteCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictBytesParityCircuitEvaluator.cpp" />
-    <ClCompile Include="EACirc\evaluators\PredictHammingWeightCircuitEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\TopBitEvaluator.cpp" />
     <ClCompile Include="EACirc\Logger.cpp" />
     <ClCompile Include="EACirc\Status.cpp" />
   </ItemGroup>
