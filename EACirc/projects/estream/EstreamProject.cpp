@@ -35,6 +35,26 @@ string EstreamProject::shortDescription() const {
     return "eStream candidate ciphers";
 }
 
+string EstreamProject::testingConfiguration() {
+    string config =
+            "<ESTREAM>"
+            "    <USAGE_TYPE>101</USAGE_TYPE>"
+            "    <CIPHER_INIT_FREQ>1</CIPHER_INIT_FREQ>"
+            "    <ALGORITHM_1>10</ALGORITHM_1>"
+            "    <ALGORITHM_2>99</ALGORITHM_2>"
+            "    <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>"
+            "    <LIMIT_NUM_OF_ROUNDS>1</LIMIT_NUM_OF_ROUNDS>"
+            "    <ROUNDS_ALG_1>2</ROUNDS_ALG_1>"
+            "    <ROUNDS_ALG_2>0</ROUNDS_ALG_2>"
+            "    <PLAINTEXT_TYPE>0</PLAINTEXT_TYPE>"
+            "    <KEY_TYPE>2</KEY_TYPE>"
+            "    <IV_TYPE>0</IV_TYPE>"
+            "    <GENERATE_STREAM>0</GENERATE_STREAM>"
+            "    <STREAM_SIZE>1024</STREAM_SIZE>"
+            "</ESTREAM>";
+    return config;
+}
+
 int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_estreamSettings.usageType = atoi(getXMLElementValue(pRoot,"ESTREAM/USAGE_TYPE").c_str());
     m_estreamSettings.algorithm1 = atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str());

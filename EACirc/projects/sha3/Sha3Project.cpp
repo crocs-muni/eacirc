@@ -29,6 +29,27 @@ string Sha3Project::shortDescription() const {
     return "SHA-3 candidate functions";
 }
 
+string Sha3Project::testingConfiguration() {
+    string config =
+            "<SHA3>"
+            "    <USAGE_TYPE>201</USAGE_TYPE>"
+            "    <PLAINTEXT_TYPE>210</PLAINTEXT_TYPE>"
+            "    <USE_FIXED_SEED>0</USE_FIXED_SEED>"
+            "    <SEED>145091104</SEED>"
+            "    <ALGORITHM_1>1</ALGORITHM_1>"
+            "    <ALGORITHM_2>99</ALGORITHM_2>"
+            "    <HASHLENGTH_ALG_1>256</HASHLENGTH_ALG_1>"
+            "    <HASHLENGTH_ALG_2>256</HASHLENGTH_ALG_2>"
+            "    <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>"
+            "    <LIMIT_NUM_OF_ROUNDS>0</LIMIT_NUM_OF_ROUNDS>"
+            "    <ROUNDS_ALG_1>3</ROUNDS_ALG_1>"
+            "    <ROUNDS_ALG_2>0</ROUNDS_ALG_2>"
+            "    <GENERATE_STREAM>0</GENERATE_STREAM>"
+            "    <STREAM_SIZE>1024</STREAM_SIZE>"
+            "</SHA3>";
+    return config;
+}
+
 int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_sha3Settings.usageType = atoi(getXMLElementValue(pRoot,"SHA3/USAGE_TYPE").c_str());
     m_sha3Settings.plaintextType = atoi(getXMLElementValue(pRoot,"SHA3/PLAINTEXT_TYPE").c_str());

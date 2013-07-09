@@ -28,14 +28,6 @@ SOURCES += \
     EACirc/evaluators/TopBitEvaluator.cpp \
     EACirc/evaluators/CategoriesEvaluator.cpp \
     EACirc/evaluators/HammingWeightEvaluator.cpp \
-    # EACirc/evaluators/DistinguishTwoEvaluator.cpp \
-    # EACirc/evaluators/PredictBitCircuitEvaluator.cpp \
-    # EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.cpp \
-    # EACirc/evaluators/PredictByteCircuitEvaluator.cpp \
-    # EACirc/evaluators/PredictBytesParityCircuitEvaluator.cpp \
-    # EACirc/evaluators/PredictHammingWeightCircuitEvaluator.cpp \
-    # EACirc/evaluators/OutputCategoriesEvaluator.cpp \
-    # EACirc/projects/estream/AvalancheEvaluator.cpp \
 
 # === random generators ===
 SOURCES += \
@@ -48,6 +40,7 @@ SOURCES += \
 # === testing using CATCH framework ===
 SOURCES += \
     EACirc/self_tests/Tests.cpp \
+    EACirc/self_tests/TestConfigurator.cpp \
 
 # === project files ===
 SOURCES += \
@@ -224,14 +217,6 @@ HEADERS += \
     EACirc/evaluators/TopBitEvaluator.h \
     EACirc/evaluators/CategoriesEvaluator.h \
     EACirc/evaluators/HammingWeightEvaluator.h \
-    # EACirc/evaluators/DistinguishTwoEvaluator.h \
-    # EACirc/evaluators/PredictBitCircuitEvaluator.h \
-    # EACirc/evaluators/PredictBitGroupParityCircuitEvaluator.h \
-    # EACirc/evaluators/PredictByteCircuitEvaluator.h \
-    # EACirc/evaluators/PredictBytesParityCircuitEvaluator.h \
-    # EACirc/evaluators/PredictHammingWeightCircuitEvaluator.h \
-    # EACirc/evaluators/OutputCategoriesEvaluator.h \
-    # EACirc/projects/estream/AvalancheEvaluator.h \
 
 # === random generators ===
 HEADERS += \
@@ -244,7 +229,7 @@ HEADERS += \
 # === CATCH testing framework ===
 HEADERS += \
     EACirc/self_tests/Catch.h \
-    EACirc/self_tests/Tests.h \
+    EACirc/self_tests/TestConfigurator.h \
 
 # === project files ===
 HEADERS += \

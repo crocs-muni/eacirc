@@ -49,6 +49,20 @@ string FilesProject::shortDescription() const {
     return "file processor";
 }
 
+string FilesProject::testingConfiguration() {
+    string config =
+            "<FILES>"
+            "    <USAGE_TYPE>401</USAGE_TYPE>"
+            "    <FILENAME_1>../../qrng/Random000.bin</FILENAME_1>"
+            "    <FILENAME_2>../../qrng/Random001.bin</FILENAME_2>"
+            "    <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>"
+            "    <USE_FIXED_INITIAL_OFFSET>1</USE_FIXED_INITIAL_OFFSET>"
+            "    <INITIAL_OFFSET_1>1048576</INITIAL_OFFSET_1>"
+            "    <INITIAL_OFFSET_2>1048000</INITIAL_OFFSET_2>"
+            "</FILES>";
+    return config;
+}
+
 int FilesProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_filesSettings.usageType = atoi(getXMLElementValue(pRoot,"FILES/USAGE_TYPE").c_str());
     m_filesSettings.filenames[0] = getXMLElementValue(pRoot,"FILES/FILENAME_1");

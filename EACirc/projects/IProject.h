@@ -136,8 +136,16 @@ public:
     IEvaluator* getProjectEvaluator();
 
     /** static function to get project instance
-      */
+     * @param projectType constant
+     * @return project instance or NULL
+     */
     static IProject* getProject(int projectType);
+
+    /** static function to get testing configuration
+     * @param projectType constant
+     * @return testing conficuration (project root)
+     */
+    static string getTestingConfiguration(int projectType);
 };
 
 #endif // IPROJECT_H

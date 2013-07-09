@@ -170,3 +170,27 @@ IProject* IProject::getProject(int projectType) {
     mainLogger.out(LOGGER_INFO) << "Project successfully initialized. (" << project->shortDescription() << ")" << endl;
     return project;
 }
+
+string IProject::getTestingConfiguration(int projectType) {
+    string projectConfiguration;
+    switch (projectType) {
+    case PROJECT_PREGENERATED_TV:
+    case PROJECT_TEA:
+        projectConfiguration = "<PROJECT />";
+        break;
+    case PROJECT_ESTREAM:
+        projectConfiguration = EstreamProject::testingConfiguration();
+        break;
+    case PROJECT_SHA3:
+        projectConfiguration = Sha3Project::testingConfiguration();
+        break;
+    case PROJECT_FILE_DISTINGUISHER:
+        projectConfiguration = FilesProject::testingConfiguration();
+        break;
+    default:
+        mainLogger.out(LOGGER_ERROR) << "No configuration - unknown project type (" << projectType << ")." << endl;
+        return "";
+        break;
+    }
+    return projectConfiguration;
+}

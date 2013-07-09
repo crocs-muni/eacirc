@@ -41,6 +41,11 @@ public:
 
     string shortDescription() const;
 
+    /** return configuration used for testing
+     * @return testing configuration for project (project root)
+     */
+    static string testingConfiguration();
+
     /** load project-specific configuration from config file
       * @param pRoot    allocated project config file XML root (corresponding to EACIRC element)
       * @return status
