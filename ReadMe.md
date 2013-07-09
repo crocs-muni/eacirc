@@ -31,5 +31,5 @@ The framework is developed at the [Laboratory of Security and Applied Cryptograp
 
 Former participation:
 * **Ondrej Dubovec** 2011-2012 (SHA-3 candidates testing)
-* **Matěj Prišťák** 2011-2012 (object model and refactoring, batch mode for BOINC via XML, eStream candidates testing)
+* **Matěj Prišťák** 2011-2012 (object model and refactoring, XML support, eStream candidates testing)
 * **Tobiáš Smolka** 2011-2012 (BOINC related support)
