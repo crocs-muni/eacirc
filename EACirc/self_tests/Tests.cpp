@@ -71,25 +71,6 @@ int runEACirc() {
     return eacirc.getStatus();
 }
 
-TEST_CASE("xml/xpath","using simple variation of xpath to get/set element and attribute values in XML") {
-    string location = "INFO/VERSION";
-    TiXmlNode* pRoot = NULL;
-    REQUIRE(loadXMLFile(pRoot,FILE_CONFIG) == STAT_OK);
-    CHECK(getXMLElementValue(pRoot,location) == "5.0");
-
-    string newData = "new data here!";
-    REQUIRE(setXMLElementValue(pRoot,location,newData) == STAT_OK);
-    string attrName = "TEST_ATTR";
-    string attrValue = "1234";
-    REQUIRE(setXMLElementValue(pRoot,location + "/@" + attrName,attrValue) == STAT_OK);
-    REQUIRE(saveXMLFile(pRoot,FILE_CONFIG) == STAT_OK);
-
-    REQUIRE(loadXMLFile(pRoot,FILE_CONFIG) == STAT_OK);
-    CHECK(getXMLElementValue(pRoot,location) == newData);
-    CHECK(getXMLElementValue(pRoot,location+"/@"+attrName) == attrValue);
-    delete pRoot;
-}
-
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
     // general preparations
     REQUIRE(basicConfiguration::estream() == STAT_OK);
@@ -137,8 +118,18 @@ TEST_CASE("determinism/load-state","running and running from loaded state") {
     pRootConfig = NULL;
     // run 1
     REQUIRE(runEACirc() == STAT_OK);
-    // rename files to be compared
+    // rename files to be compared but keep header in fitness progress file
+    ifstream fitFileOld(FILE_FITNESS_PROGRESS);
+    string header, line;
+    getline(fitFileOld,line);
+    header += line + "\n";
+    getline(fitFileOld,line);
+    header += line;
+    fitFileOld.close();
     backupResults();
+    ofstream fitFileNew(FILE_FITNESS_PROGRESS);
+    fitFileNew << header << endl;
+    fitFileNew.close();
     // prepare run 2
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     REQUIRE(setXMLElementValue(pRootConfig,"MAIN/RECOMMENCE_COMPUTATION","1") == STAT_OK);
