@@ -23,10 +23,13 @@ For more information and details see [projec wiki pages](http://github.com/petrs
 ## Authors
 The framework is developed at the [Laboratory of Security and Applied Cryptography](http://www.fi.muni.cz/research/laboratories/labak/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.
 
-
 * **Milan Čermák** 2012-now (CUDA support)
-* **Matěj Prišťák** 2011-2012 (object model and refactoring, batch mode for BOINC via XML, eStream candidates testing)
-* **Tobiáš Smolka** 2011-now (BOINC related support)
+* **Zdenek Říha** 2013-now (bytecode emulator)
+* **Marek Sýs** 2013-now (project concept, results interpretation)
 * **Petr Švenda** 2008-now (project lead, initial implementation)
 * **Martin Ukrop** 2012-now (framework model, refactoring, SHA-3 candidates testing, supporting tools)
-* **Zdenek Říha** 2013-now (bytecode emulator)
+
+Former participation:
+* **Ondrej Dubovec** 2011-2012 (SHA-3 candidates testing)
+* **Matěj Prišťák** 2011-2012 (object model and refactoring, batch mode for BOINC via XML, eStream candidates testing)
+* **Tobiáš Smolka** 2011-2012 (BOINC related support)
