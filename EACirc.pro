@@ -11,7 +11,7 @@ QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 
-# === Main project files ===
+# === main project files ===
 SOURCES += \
     EACirc/Main.cpp \
     EACirc/CircuitGenome.cpp \
@@ -21,6 +21,10 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
+
+# === circuit processing ===
+SOURCES += \
+    EACirc/circuit/GACallbacks.cpp \
 
 # === evaluators ===
 SOURCES += \
@@ -188,7 +192,7 @@ SOURCES += \
 #    EACirc/projects/sha3/hash_functions/TIB3/inupfin512.c \
 #    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.cpp \
 
-# === Libraries (redundant if using pre-compiled) ===
+# === libraries ===
 SOURCES += \
     EACirc/tinyXML/tinystr.cpp EACirc/tinyXML/tinyxml.cpp EACirc/tinyXML/tinyxmlerror.cpp EACirc/tinyXML/tinyxmlparser.cpp \
     EACirc/galib/GA1DArrayGenome.cpp EACirc/galib/GA1DBinStrGenome.cpp EACirc/galib/GA2DArrayGenome.cpp EACirc/galib/GA2DBinStrGenome.cpp \
@@ -198,7 +202,7 @@ SOURCES += \
     EACirc/galib/garandom.cpp EACirc/galib/GARealGenome.cpp EACirc/galib/GAScaling.cpp EACirc/galib/GASelector.cpp EACirc/galib/GASimpleGA.cpp EACirc/galib/GASStateGA.cpp \
     EACirc/galib/GAStatistics.cpp EACirc/galib/GAStringGenome.cpp EACirc/galib/GATree.cpp EACirc/galib/GATreeBASE.cpp EACirc/galib/GATreeGenome.cpp
 
-# === Main EACirc files ===
+# === main EACirc files ===
 HEADERS += \
     EACirc/Main.h \
     EACirc/CircuitGenome.h \
@@ -210,6 +214,10 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/Version.h \
+
+# === circuit processing ===
+HEADERS += \
+    EACirc/circuit/GACallbacks.h \
 
 # === standard evaluators ===
 HEADERS += \

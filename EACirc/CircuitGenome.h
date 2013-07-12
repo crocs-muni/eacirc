@@ -22,23 +22,6 @@
 
 class CircuitGenome {
 public:
-    static void Initializer(GAGenome&);
-
-	/** Initialize genom (circuit) into following structire:
-		1. IN_SELECTOR_LAYER connects inputs to corresponding FNC in the same column (FNC_1_3->IN_3) 
-		2. FUNCTION_LAYER_1 is set to XOR instruction only
-		3. CONNECTOR_LAYER_i is set to random mask (possibly multiple connectors)
-		4. FUNCTION_LAYER_i is set to random instruction from range 0..FNC_MAX, additionally respecting set of allowed instructions in SETTINGS_CIRCUIT::allowedFunctions 
-		   - function argument1 is set to 0
-	*/
-    static void Initializer_basic(GAGenome&);
-
-	static int Mutator(GAGenome&, float);
-    static float Evaluator(GAGenome&);
-    static int Crossover(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
-    static int Crossover_perLayer(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
-    static int Crossover_perColumn(const GAGenome&, const GAGenome&,GAGenome*, GAGenome*);
-
     /** reads genome in binary fromat from string
       * genome parameters (number of layers, genome size, etc.) are taken from main settings
       * @param textCircuit  string to read circuit from
@@ -79,7 +62,7 @@ public:
       */
     static TiXmlElement* populationHeader(int populationSize);
 
-private:
+public:
     /** saves circuit as generation with size 1
       * - CAREFUL: code duplicity with Eacirc.cpp!
       * @param genome       genome to save

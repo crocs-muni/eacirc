@@ -1,10 +1,3 @@
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <cmath>
-#include <ctime>
-
 #include "EACirc.h"
 #include "EACglobals.h"
 #include "CommonFnc.h"
@@ -15,6 +8,7 @@
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
 #include "CircuitGenome.h"
+#include "circuit/GACallbacks.h"
 #include "projects/IProject.h"
 #include "evaluators/IEvaluator.h"
 
@@ -54,8 +48,6 @@ EACirc::~EACirc() {
     rndGen = NULL;
     if (biasRndGen) delete biasRndGen;
     biasRndGen = NULL;
-    if (galibGenerator) delete galibGenerator;
-    galibGenerator = NULL;
     if (mainGenerator) delete mainGenerator;
     mainGenerator = NULL;
 }
@@ -161,9 +153,6 @@ void EACirc::saveState(const string filename) {
     pElem2 = new TiXmlElement("main_generator");
     pElem2->LinkEndChild(mainGenerator->exportGenerator());
     pElem->LinkEndChild(pElem2);
-    pElem2 = new TiXmlElement("galib_generator");
-    pElem2->LinkEndChild(galibGenerator->exportGenerator());
-    pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("rndgen");
     pElem2->LinkEndChild(rndGen->exportGenerator());
     pElem->LinkEndChild(pElem2);
@@ -200,7 +189,6 @@ void EACirc::loadState(const string filename) {
     istringstream(getXMLElementValue(pRoot,"current_galib_seed")) >> m_currentGalibSeed;
     // initialize random generators (main, quantum, bias)
     mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
-    galibGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/galib_generator/generator"));
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
 
@@ -229,10 +217,6 @@ void EACirc::createState() {
     }
 
     unsigned long generatorSeed;
-    // INIT GALIBRNG
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
-    galibGenerator = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
-    mainLogger.out(LOGGER_INFO) << "GAlib generator initialized (" << galibGenerator->shortDescription() << ")" << endl;
     // INIT RNG
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
@@ -243,7 +227,7 @@ void EACirc::createState() {
     mainLogger.out(LOGGER_INFO) << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
 
     // GENERATE SEED FOR GALIB
-    galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
     m_project->initializeProjectState();
@@ -319,11 +303,11 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     GAPopulation population;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
+    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
     // INIT GENOME STRUCTURES
-    genome.initializer(CircuitGenome::Initializer);
-    genome.mutator(CircuitGenome::Mutator);
-    genome.crossover(CircuitGenome::Crossover);
+    genome.initializer(GACallbacks::initializer);
+    genome.mutator(GACallbacks::mutator);
+    genome.crossover(GACallbacks::crossover);
     // LOAD genomes
     TiXmlElement* pGenome = getXMLElement(pRoot,"population/genome")->ToElement();
     string textCircuit;
@@ -350,17 +334,17 @@ void EACirc::createPopulation() {
     // seed GAlib (initializations may require random numbers)
     GAResetRNG(m_currentGalibSeed);
     // temporary structure for genome (empty or loaded from file)
-    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, CircuitGenome::Evaluator);
-    genome.initializer(CircuitGenome::Initializer);
-    genome.mutator(CircuitGenome::Mutator);
-    genome.crossover(CircuitGenome::Crossover);
+    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
+    genome.initializer(GACallbacks::initializer);
+    genome.mutator(GACallbacks::mutator);
+    genome.crossover(GACallbacks::crossover);
     GAPopulation population(genome,m_settings.ga.popupationSize);
     // create genetic algorithm and initialize population
     seedAndResetGAlib(population);
     mainLogger.out(LOGGER_INFO) << "Initializing population." << endl;
     m_gaData->initialize();
     // reset GAlib seed
-    galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
 
     mainLogger.out(LOGGER_INFO) << "Population successfully initialized." << endl;
@@ -603,7 +587,7 @@ void EACirc::run() {
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
                 && m_actGener % m_settings.main.saveStateFrequency == 0) {
-            galibGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+            mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
             saveProgress(FILE_STATE,FILE_POPULATION);
         }

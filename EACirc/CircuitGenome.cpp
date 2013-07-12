@@ -5,198 +5,7 @@
 #include "XMLProcessor.h"
 #include "GAPopulation.h"
 #include "generators/IRndGen.h"
-
-float CircuitGenome::Evaluator(GAGenome &g) {
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    // reset evaluator state for this individual
-    pGlobals->evaluator->resetEvaluator();
-    // execute circuit & evaluate success for each test vector
-    for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-        executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-        pGlobals->evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector]);
-    }
-    // retrieve fitness from evaluator
-    return pGlobals->evaluator->getFitness();
-}
-
-void CircuitGenome::Initializer(GAGenome& g) {
-	CircuitGenome::Initializer_basic(g);
-}
-
-void CircuitGenome::Initializer_basic(GAGenome& g) {
-    GA1DArrayGenome<GENOM_ITEM_TYPE>& genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    int	offset = 0;
-
-	// CLEAR GENOM
-	for (int i = 0; i < genome.size(); i++) genome.gene(i, 0);
-    
-	// INITIALIZE ALL LAYERS
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        offset = layer * pGlobals->settings->circuit.sizeLayer;
-        int numLayerInputs = 0;
-        if (layer == 0) numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
-        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
-        
-        int numFncInLayer = ((layer == 2 * pGlobals->settings->circuit.numLayers - 1) || (layer == 2 * pGlobals->settings->circuit.numLayers - 2)) ? pGlobals->settings->circuit.totalSizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
-
-        for (int slot = 0; slot < numFncInLayer; slot++) {
-            GENOM_ITEM_TYPE   value;
-            if (layer % 2 == 0) {
-                // CONNECTION SUB-LAYER
-                if (layer / 2 == 0) {
-                    // IN_SELECTOR_LAYER - TAKE INPUT ONLY FROM PREVIOUS NODE IN SAME COORDINATES
-					// NOTE: relative mask must be computed (in relative masks, (numLayerInputs / 2) % numLayerInputs is node at same column)
-					int relativeSlot = (numLayerInputs / 2) % numLayerInputs;
-                    value = pGlobals->precompPow[relativeSlot];
-                }
-                else {
-                    // FUNCTIONAL LAYERS (CONNECTOR_LAYER_i)
-					galibGenerator->getRandomFromInterval(pGlobals->precompPow[pGlobals->settings->circuit.numConnectors], &value);
-                }
-                genome.gene(offset + slot, value);
-            }
-            else {
-                // FUNCTION SUB-LAYER, SET ONLY ALLOWED FUNCTIONS  
-                
-				if (layer / 2 == 0) {
-                    // FUNCTION_LAYER_1 - PASS INPUT WITHOUT CHANGES (ONLY SIMPLE COMPOSITION OF INPUTS IS ALLOWED)
-                    genome.gene(offset + slot, FNC_XOR);
-                }
-                else {
-                    // FUNCTION_LAYER_i
-                    int bFNCNotSet = TRUE;
-                    while (bFNCNotSet) {
-                        galibGenerator->getRandomFromInterval(FNC_MAX, &value);
-                        if (pGlobals->settings->circuit.allowedFunctions[value] != 0) {
-                            genome.gene(offset + slot, value);
-                            bFNCNotSet = FALSE;
-                        }
-                    }
-					// BUGBUG: ARGUMENT1 is always 0
-                }
-            }
-        }
-    }
-}
-
-int CircuitGenome::Mutator(GAGenome &g, float pmut) {
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    int result = 0;
-    
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.sizeLayer;
-
-        int numLayerInputs = 0;
-        if (layer == 0) numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
-        else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
-
-		// Common layers have SETTINGS_CIRCUIT::sizeLayer functions, output layer have SETTINGS_CIRCUIT::totalSizeOutputLayer
-        int numFncInLayer = ((layer == 2 * pGlobals->settings->circuit.numLayers - 1) || (layer == 2 * pGlobals->settings->circuit.numLayers - 2)) ? pGlobals->settings->circuit.totalSizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
-
-        for (int slot = 0; slot < numFncInLayer; slot++) {
-            GENOM_ITEM_TYPE value = 0;
-            if (layer % 2 == 0) {
-                // CONNECTION SUB-LAYER (CONNECTOR_LAYER_i)
-                
-                // MUTATE CONNECTION SELECTOR (FLIP ONE SINGLE BIT == ONE CONNECTOR)
-				// BUGBUG: we are not taking into account restrictions given by SETTINGS_CIRCUIT::numConnectors
-                if (GAFlipCoin(pmut)) {
-                    GENOM_ITEM_TYPE temp;
-                    galibGenerator->getRandomFromInterval(numLayerInputs, &value);
-                    temp = pGlobals->precompPow[value];
-                    // SWITCH RANDOMLY GENERATED BIT
-                    temp ^= genome.gene(offset + slot);
-                    genome.gene(offset + slot, temp);
-                }
-            }
-            else {
-                // FUNCTION_LAYER_i - MUTATE FUNCTION TYPE USING ONLY ALLOWED FNCs
-                GENOM_ITEM_TYPE origValue = genome.gene(offset + slot);
-				// MUTATE FNC
-				if (GAFlipCoin(pmut)) {             
-                    unsigned char newFncValue = 0;
-					int bFNCNotSet = TRUE;
-                    while (bFNCNotSet) {
-                        galibGenerator->getRandomFromInterval(FNC_MAX, &newFncValue);
-                        if (pGlobals->settings->circuit.allowedFunctions[newFncValue] != 0) {
-							SET_FNC_TYPE(&origValue, newFncValue);
-                            bFNCNotSet = FALSE;
-                        }
-                    }
-                    genome.gene(offset + slot, origValue);
-                }
-				// MUTATE FNC ARGUMENT1
-				if (GAFlipCoin(pmut)) {             
-					origValue = genome.gene(offset + slot);
-
-					unsigned char newArg1Value = 0;
-                    galibGenerator->getRandomFromInterval(0xff, &newArg1Value);
-                    // SWITCH RANDOMLY GENERATED BITS
-                    newArg1Value = newArg1Value ^ GET_FNC_ARGUMENT1(genome.gene(offset + slot));
-					SET_FNC_ARGUMENT1(&origValue, newArg1Value);
-					genome.gene(offset + slot, origValue);
-                }
-            }
-        }
-    }
-
-    return result;
-}
-
-int CircuitGenome::Crossover(const GAGenome &p1, const GAGenome &p2, GAGenome *o1, GAGenome *o2) {
-	return Crossover_perColumn(p1, p2, o1, o2);
-}
-
-int CircuitGenome::Crossover_perLayer(const GAGenome &p1, const GAGenome &p2, GAGenome *o1, GAGenome *o2) {
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &parent1 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) p1;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &parent2 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) p2;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &offspring1 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) *o1;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &offspring2 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) *o2;
-    
-    // CROSS ONLY WHOLE LAYERS
-    int cpoint = GARandomInt(1,pGlobals->settings->circuit.numLayers) * 2; // point of crossover (from, to)
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.sizeLayer;
-
-        if (layer <= cpoint) {
-            for (int i = 0; i < pGlobals->settings->circuit.sizeLayer; i++) {
-                if (o1 != NULL) offspring1.gene(offset + i, parent1.gene(offset + i));
-                if (o2 != NULL) offspring2.gene(offset + i, parent2.gene(offset + i));
-            }
-        }
-        else {
-            for (int i = 0; i < pGlobals->settings->circuit.sizeLayer; i++) {
-                if (o1 != NULL) offspring1.gene(offset + i, parent2.gene(offset + i));
-                if (o2 != NULL) offspring2.gene(offset + i, parent1.gene(offset + i));
-            }
-        }
-    }
-    return 1;
-}
-int CircuitGenome::Crossover_perColumn(const GAGenome &p1, const GAGenome &p2, GAGenome *o1, GAGenome *o2) {
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &parent1 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) p1;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &parent2 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) p2;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &offspring1 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) *o1;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> &offspring2 = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) *o2;
-    
-    // CROSS 
-    int cpoint = GARandomInt(1,pGlobals->settings->circuit.sizeLayer); 
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.sizeLayer;
-        for (int i = 0; i < pGlobals->settings->circuit.sizeLayer; i++) {
-			if ( i < cpoint) {
-				if (o1 != NULL) offspring1.gene(offset + i, parent1.gene(offset + i));
-				if (o2 != NULL) offspring2.gene(offset + i, parent2.gene(offset + i));
-			}
-			else {
-                if (o1 != NULL) offspring1.gene(offset + i, parent2.gene(offset + i));
-                if (o2 != NULL) offspring2.gene(offset + i, parent1.gene(offset + i));
-			}
-        }
-    }
-    return 1;
-}
-
+#include "circuit/GACallbacks.h"
 
 int CircuitGenome::GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connections, string* pLabel) {
     int		status = STAT_OK;
@@ -271,7 +80,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
         
         pGlobals->stats.prunningInProgress = true;
         
-		float origFit = Evaluator(prunnedGenome);
+        float origFit = GACallbacks::evaluator(prunnedGenome);
         
         int prunneRepeat = 0; 
         bChangeDetected = TRUE;
@@ -291,7 +100,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         
                         assert(GET_FNC_TYPE(origValue) <= FNC_MAX);
                         
-                        float newFit = Evaluator(prunnedGenome);
+                        float newFit = GACallbacks::evaluator(prunnedGenome);
                         if (origFit > newFit) {
                             // GENE WAS IMPORTANT, SET BACK 
                             prunnedGenome.gene(i, origValue);
@@ -315,7 +124,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                             if (newValue != tempOrigValue) {
                                 prunnedGenome.gene(i, newValue);
                                 
-                                float newFit = Evaluator(prunnedGenome);
+                                float newFit = GACallbacks::evaluator(prunnedGenome);
                                 if (origFit > newFit) {
                                     // GENE WAS IMPORTANT, DO NOT REMOVE CONNECTION
                                 }
@@ -367,7 +176,7 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
         
         pGlobals->stats.prunningInProgress = true;
         
-		float origFit = Evaluator(prunnedGenome);
+        float origFit = GACallbacks::evaluator(prunnedGenome);
         
         int prunneRepeat = 0; 
         bChangeDetected = TRUE;
@@ -391,7 +200,7 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
 					prunnedGenome.gene(offsetFNC + slot, FNC_NOP);	// NOP
 					prunnedGenome.gene(offsetCON + slot, 0);		// NO CONNECTORS
 
-                    float newFit = Evaluator(prunnedGenome);
+                    float newFit = GACallbacks::evaluator(prunnedGenome);
                     if (origFit > newFit) {
                         // SOME PART OF THE GENE WAS IMPORTANT, SET BACK 
 						prunnedGenome.gene(offsetFNC + slot, origValueFnc);	
@@ -405,7 +214,7 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
                             if (newConValue != prunnedConnectors) {
                                 prunnedGenome.gene(offsetCON + slot, newConValue);
                                 
-                                float newFit = Evaluator(prunnedGenome);
+                                float newFit = GACallbacks::evaluator(prunnedGenome);
                                 if (origFit > newFit) {
                                     // CONNECTOR WAS IMPORTANT, DO NOT REMOVE CONNECTION
                                 }
@@ -780,7 +589,7 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *use
 int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned char *usePredictorMask, int bPruneCircuit) {
     int								status = STAT_OK;
     GA1DArrayGenome<GENOM_ITEM_TYPE>&inputGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  genome(pGlobals->settings->circuit.genomeSize, Evaluator);
+    GA1DArrayGenome<GENOM_ITEM_TYPE>  genome(pGlobals->settings->circuit.genomeSize, GACallbacks::evaluator);
     string							message;
     string							value;
     string							value2;

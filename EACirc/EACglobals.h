@@ -38,17 +38,10 @@ extern Logger mainLogger;
 /** main random generator
   * - initialized at state initialization of EACirc according to external seed or system time
   * - idealy should be used ONLY for first initialization of other generators, GAlib, projects, etc.
+  * - during the computation used to reseed galib
   * - MD5-based generator internally
   */
 extern IRndGen* mainGenerator;
-
-/** random generator for galib seeding
-  * - initialized at state initialization of EACirc
-  * - used ONLY for GA stuff (GAlib seeding, genome initialization, mutation, crossover)
-  * - NEVER use for other purposes
-  * - unbiased generator (quantum or MD5-based)
-  */
-extern IRndGen* galibGenerator;
 
 /** unbiased random generator
   * - initialized at state initialization of EACirc
