@@ -97,16 +97,6 @@ typedef unsigned __int64 uint64_t;
 #define EVALUATOR_CATEGORIES        26
 // note: all project specific evaluators must have constant above this
 #define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
-/* OLD BEGIN
-#define EVALUATOR_BIT               20
-#define EVALUATOR_BITGROUP_PARITY   21
-#define EVALUATOR_BYTES_PARITY      22
-#define EVALUATOR_HAMMING_WEIGHT    23
-#define EVALUATOR_BYTE              24
-#define EVALUATOR_DISTINGUISH       25
-#define EVALUATOR_OUTPUT_CATEGORIES	26
-// OLD END
-*/
 
 #define TESTVECT_MD5INV             0
 #define TESTVECT_SHA1INV            1

@@ -5,6 +5,12 @@
 
 IEvaluator::IEvaluator(int type) : m_type(type) { }
 
+IEvaluator::~IEvaluator() {}
+
+int IEvaluator::getEvaluatorType() const {
+    return m_type;
+}
+
 IEvaluator *IEvaluator::getStandardEvaluator(int type) {
     if (type >= EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
         mainLogger.out(LOGGER_WARNING) << "Evaluator constant in the project range (" << type << ")." << endl;

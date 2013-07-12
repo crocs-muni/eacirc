@@ -14,7 +14,7 @@ void TopBitEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned ch
     }
 }
 
-float TopBitEvaluator::getFitness() {
+float TopBitEvaluator::getFitness() const {
     return m_matchedOutputBytes / (float) m_totalOutputBytes;
 }
 
@@ -23,6 +23,6 @@ void TopBitEvaluator::resetEvaluator() {
     m_totalOutputBytes = 0;
 }
 
-string TopBitEvaluator::shortDescription() {
+string TopBitEvaluator::shortDescription() const {
     return "top-bit in each output byte evaluator";
 }

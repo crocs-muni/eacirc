@@ -32,7 +32,7 @@ public:
      * Euclidean distance between corresponding output categories
      * @return fitness
      */
-    float getFitness();
+    float getFitness() const;
 
     /**
      * reset all map fields to zero
@@ -46,7 +46,7 @@ public:
      * fitness is based on weighed Euclidean distance of corresponding categories
      * @return description
      */
-    string shortDescription();
+    string shortDescription() const;
 };
 
 #endif // CATEGORIESEVALUATOR_H

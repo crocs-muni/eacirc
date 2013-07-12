@@ -25,7 +25,7 @@ public:
      * fitness is computed as quotient of successfully matched and all results
      * @return fitness
      */
-    virtual float getFitness();
+    virtual float getFitness() const;
 
     /**
      * reset counters to zero
@@ -37,7 +37,7 @@ public:
      * each output byte is considered separately
      * @return description
      */
-    virtual string shortDescription();
+    virtual string shortDescription() const;
 };
 
 #endif // TOPBITEVALUATOR_H

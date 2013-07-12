@@ -35,7 +35,7 @@ void HammingWeightEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsi
     currentStreamMap[hammingWeight]++;
 }
 
-float HammingWeightEvaluator::getFitness() {
+float HammingWeightEvaluator::getFitness() const {
     float fitness = 0;
     float temp0, temp1;
     // add normalised Euclidean distance for each category
@@ -55,6 +55,6 @@ void HammingWeightEvaluator::resetEvaluator() {
     memset(m_weightsStream1, 0, pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR * sizeof(int));
 }
 
-string HammingWeightEvaluator::shortDescription() {
+string HammingWeightEvaluator::shortDescription() const {
     return "Hamming weight categories evaluator";
 }

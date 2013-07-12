@@ -14,7 +14,7 @@ public:
 
     /** general evaluator destructor
       */
-    virtual ~IEvaluator() {}
+    virtual ~IEvaluator();
 
     /** compares expected circuit outputs to actual ones, updates internal state
       * @param circuitOutputs       output bytes provided by circuit
@@ -26,7 +26,7 @@ public:
      * return the fitness of the currently inspected individual
      * @return fitness in <0,1>
      */
-    virtual float getFitness() = 0;
+    virtual float getFitness() const = 0;
 
     /**
      * reset internal state of evaluator (clean stats for next individual)
@@ -36,7 +36,12 @@ public:
     /** return short, human readable description of the evaluator
       * @return description
       */
-    virtual string shortDescription() = 0;
+    virtual string shortDescription() const = 0;
+
+    /** constatnt of active evaluator
+      * @return evaluator constant
+      */
+    int getEvaluatorType() const;
 
     /** allocates main evaluator
       * must be called AFTER project initialization

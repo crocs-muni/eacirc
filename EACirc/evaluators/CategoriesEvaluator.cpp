@@ -31,7 +31,7 @@ void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigne
     }
 }
 
-float CategoriesEvaluator::getFitness() {
+float CategoriesEvaluator::getFitness() const {
     float fitness = 0;
     float temp0, temp1;
     // add normalised Euclidean distance for each category
@@ -51,6 +51,6 @@ void CategoriesEvaluator::resetEvaluator() {
     memset(m_categoriesStream1, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(int));
 }
 
-string CategoriesEvaluator::shortDescription() {
+string CategoriesEvaluator::shortDescription() const {
     return "modular categories evaluator";
 }
