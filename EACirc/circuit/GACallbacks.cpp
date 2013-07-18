@@ -37,6 +37,49 @@ int GACallbacks::crossover(const GAGenome &parent1, const GAGenome &parent2, GAG
 }
 
 void GACallbacks::initializer_basic(GA1DArrayGenome<GENOM_ITEM_TYPE>& genome) {
+
+    // clear genome
+    for (int i = 0; i < genome.size(); i++) genome.gene(i, 0);
+
+    // 1. IN_SELECTOR_LAYER connects inputs to corresponding FNC in the same column (FNC_1_3->IN_3)
+    int offset = 0;
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
+        // NOTE: relative mask must be computed (in relative masks, (numLayerInputs / 2) % numLayerInputs is node at same column)
+        genome.gene(offset + slot, pGlobals->precompPow[(pGlobals->settings->circuit.sizeInputLayer / 2) % pGlobals->settings->circuit.sizeInputLayer]);
+    }
+
+    // 2. FUNCTION_LAYER_1 is set to XOR instruction only
+    offset = 1 * pGlobals->settings->circuit.sizeLayer;
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
+        genome.gene(offset + slot, FNC_XOR);
+    }
+
+    // 3. CONNECTOR_LAYER_i is set to random mask (possibly multiple connectors)
+    for (int layer = 1; layer < pGlobals->settings->circuit.numLayers; layer++) {
+        offset = (2 * layer) * pGlobals->settings->circuit.sizeLayer;
+        int layerSize = layer == pGlobals->settings->circuit.numLayers ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
+        for (int slot = 0; slot < layerSize; slot++) {
+            // TBD: what does numConnectors mean? number of connectors, or their maximum distance or both?
+            // TBD: make connector number generation correct
+            genome.gene(offset + slot, GARandomInt(0,pGlobals->precompPow[pGlobals->settings->circuit.numConnectors]));
+        }
+    }
+
+    // 4. FUNCTION_LAYER_i is set to random instruction from range 0..FNC_MAX, respecting allowed instructions in settings
+    for (int layer = 1; layer < pGlobals->settings->circuit.numLayers; layer++) {
+        offset = (2 * layer + 1) * pGlobals->settings->circuit.sizeLayer;
+        int layerSize = layer == pGlobals->settings->circuit.numLayers ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
+        for (int slot = 0; slot < layerSize; slot++) {
+            int function;
+            do {
+                function = GARandomInt(0,FNC_MAX);
+                genome.gene(offset + slot, function);
+            } while (pGlobals->settings->circuit.allowedFunctions[function] != 0);
+        }
+    }
+
+    /*
+    // ***
     int	offset = 0;
 
     // CLEAR GENOME
@@ -89,6 +132,7 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOM_ITEM_TYPE>& genome) {
             }
         }
     }
+    */
 }
 
 int GACallbacks::mutator_basic(GA1DArrayGenome<GENOM_ITEM_TYPE>& genome, float probMutation) {

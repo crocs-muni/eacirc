@@ -85,8 +85,10 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 		pSettings->circuit.totalSizeOutputLayer += pSettings->circuit.memorySize; 
 	}
 	// Compute genome size: take into account size of internal layer, input layer and size of memory (if used)
-	int biggerSize = (pSettings->circuit.sizeInputLayer > pSettings->circuit.sizeLayer) ? pSettings->circuit.sizeInputLayer : pSettings->circuit.sizeLayer;
-	pSettings->circuit.genomeSize = (pSettings->circuit.numLayers*2) * biggerSize;
+//	int biggerSize = (pSettings->circuit.sizeInputLayer > pSettings->circuit.sizeLayer) ? pSettings->circuit.sizeInputLayer : pSettings->circuit.sizeLayer;
+//	pSettings->circuit.genomeSize = (pSettings->circuit.numLayers*2) * biggerSize;
+    pSettings->circuit.genomeSize = pSettings->circuit.numLayers*2 * pSettings->circuit.sizeLayer;
+    // maybe output mayer instead of input layer?
 
 	assert(pSettings->circuit.totalSizeOutputLayer <= pSettings->circuit.sizeLayer);
 }
