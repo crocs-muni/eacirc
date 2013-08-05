@@ -7,7 +7,7 @@
 #include "generators/IRndGen.h"
 #include "circuit/GACallbacks.h"
 
-int CircuitGenome::GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connections, string* pLabel) {
+int CircuitGenome::GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connections, string* pLabel) {
     int		status = STAT_OK;
     switch (GET_FNC_TYPE(functionID)) {
         case FNC_NOP: *pLabel = "NOP"; break;
@@ -61,8 +61,8 @@ int CircuitGenome::GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE 
 int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
 	return PruneCircuitNew(g, prunnedG);
     int                     status = STAT_OK;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  &prunnedGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) prunnedG;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) g;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>  &prunnedGenome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) prunnedG;
     int                    bChangeDetected = FALSE;
 
     // CREATE LOCAL COPY
@@ -90,7 +90,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
             
             // DISABLE GENES STARTING FROM END 
             for (int i = prunnedGenome.size() - 1; i >= 0; i--) {
-                GENOM_ITEM_TYPE   origValue = prunnedGenome.gene(i);
+                GENOME_ITEM_TYPE   origValue = prunnedGenome.gene(i);
                 
                 if (origValue != 0) {
                     // PRUNE FNC AND CONNECTION LAYER DIFFERENTLY
@@ -116,10 +116,10 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         }
                     }
                     else {
-                        GENOM_ITEM_TYPE   tempOrigValue = origValue;  // WILL HOLD MASK OF IMPORTANT CONNECTIONS
+                        GENOME_ITEM_TYPE   tempOrigValue = origValue;  // WILL HOLD MASK OF IMPORTANT CONNECTIONS
                         // CONNECTION LAYER - TRY TO REMOVE CONNECTIONS GRADUALLY
                         for (int conn = 0; conn < MAX_LAYER_SIZE; conn++) {
-                            GENOM_ITEM_TYPE   newValue = tempOrigValue & (~pGlobals->precompPow[conn]);
+                            GENOME_ITEM_TYPE   newValue = tempOrigValue & (~pGlobals->precompPow[conn]);
                             
                             if (newValue != tempOrigValue) {
                                 prunnedGenome.gene(i, newValue);
@@ -157,8 +157,8 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
 
 int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
     int                     status = STAT_OK;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  &prunnedGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) prunnedG;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) g;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>  &prunnedGenome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) prunnedG;
     int                    bChangeDetected = FALSE;
 
     // CREATE LOCAL COPY
@@ -193,8 +193,8 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
 				int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? (pGlobals->settings->circuit.totalSizeOutputLayer) : pGlobals->settings->circuit.sizeLayer;
 
 				for (int slot = 0; slot < numFncInLayer; slot++) {
-					GENOM_ITEM_TYPE   origValueFnc = genome.gene(offsetFNC + slot);
-					GENOM_ITEM_TYPE   origValueCon = genome.gene(offsetCON + slot);
+                    GENOME_ITEM_TYPE   origValueFnc = genome.gene(offsetFNC + slot);
+                    GENOME_ITEM_TYPE   origValueCon = genome.gene(offsetCON + slot);
 
 					// TRY TO SET AS NOP INSTRUCTION WITH NO CONNECTORS
 					prunnedGenome.gene(offsetFNC + slot, FNC_NOP);	// NOP
@@ -207,9 +207,9 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
 						prunnedGenome.gene(offsetCON + slot, origValueCon);		
 
                         // TRY TO REMOVE CONNECTIONS GRADUALLY
-						GENOM_ITEM_TYPE   prunnedConnectors = origValueCon;
+                        GENOME_ITEM_TYPE   prunnedConnectors = origValueCon;
                         for (int conn = 0; conn < MAX_LAYER_SIZE; conn++) {
-                            GENOM_ITEM_TYPE   newConValue = prunnedConnectors & (~pGlobals->precompPow[conn]);
+                            GENOME_ITEM_TYPE   newConValue = prunnedConnectors & (~pGlobals->precompPow[conn]);
                             
                             if (newConValue != prunnedConnectors) {
                                 prunnedGenome.gene(offsetCON + slot, newConValue);
@@ -249,7 +249,7 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
 
 int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[]) {
 	int	status = STAT_OK;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) g;
 	
 	//
 	// BUILD SET OF USED NODES FROM OUTPUT TO INPUT
@@ -295,7 +295,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 
         for (int slot = 0; slot < numFncInLayer; slot++) {
             unsigned char    result = 0;
-            GENOM_ITEM_TYPE   connect = 0;
+            GENOME_ITEM_TYPE   connect = 0;
             int     connectOffset = 0;
             int     stopBit = 0;
             
@@ -325,7 +325,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 	return status;
 }
 
-int CircuitGenome::FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int numLayerConnectors, GENOM_ITEM_TYPE* pEffectiveConnectionMask) {
+int CircuitGenome::FilterEffectiveConnections(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int numLayerConnectors, GENOME_ITEM_TYPE* pEffectiveConnectionMask) {
 	int	status = STAT_OK;
 
 	*pEffectiveConnectionMask = 0;
@@ -338,7 +338,7 @@ int CircuitGenome::FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_
         case FNC_BITSELECTOR: {
 			// Include only first connector bit
 			for (int i = 0; i < numLayerConnectors; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i])  {
+                if (connectionMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[i])  {
 					*pEffectiveConnectionMask =  pGlobals->precompPow[i];
 					break;
 				}
@@ -352,7 +352,7 @@ int CircuitGenome::FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_
 		default: {
 			// Include only bits up to numLayerConnectors
 			for (int i = 0; i < numLayerConnectors; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i])  {
+                if (connectionMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[i])  {
 					*pEffectiveConnectionMask +=  pGlobals->precompPow[i];
 				}
 			}
@@ -363,12 +363,12 @@ int CircuitGenome::FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_
 	return status;
 }
 
-int CircuitGenome::HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit) {
+int CircuitGenome::HasConnection(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit) {
     int    bHasConnection = FALSE; // default is NO
     
     // DEFAULT: IF SIGNALIZED IN CONNECTOR MASK, THAN ALLOW CONNECTION
     // SOME INSTRUCTION MAY CHANGE LATER
-    if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) bHasConnection = TRUE;
+    if (connectionMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) bHasConnection = TRUE;
 	else bHasConnection = FALSE;
 	
     switch (GET_FNC_TYPE(functionID)) {
@@ -382,7 +382,7 @@ int CircuitGenome::HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE con
 			// Check if this connection is the first one 
 			// If not, then set connection flag bHasConnection to FALSE
 			for (int i = 0; i < bit; i++) {
-				if (connectionMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
+                if (connectionMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
 			}
 			break;
         }
@@ -399,7 +399,7 @@ int CircuitGenome::HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE con
     return bHasConnection;
 }
 
-int CircuitGenome::IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand) {
+int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand) {
     int    bHasConnection = HasConnection(functionID, connectionMask, fncSlot, connectionOffset, bit);
     
     switch (GET_FNC_TYPE(functionID)) {
@@ -455,7 +455,7 @@ int CircuitGenome::IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connect
     return bHasConnection;
 }
 
-int CircuitGenome::GetNeutralValue(GENOM_ITEM_TYPE functionID, string* pOperand) {
+int CircuitGenome::GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand) {
     int    status = STAT_OK;
     
     switch (GET_FNC_TYPE(functionID)) {
@@ -497,9 +497,9 @@ int CircuitGenome::GetNeutralValue(GENOM_ITEM_TYPE functionID, string* pOperand)
     return status;
 }
 
-int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOM_ITEM_TYPE>* genome) {
+int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome) {
     istringstream circuitStream(textCircuit);
-    GENOM_ITEM_TYPE gene;
+    GENOME_ITEM_TYPE gene;
     for (int offset = 0; offset < pGlobals->settings->circuit.genomeSize; offset++) {
         circuitStream >> gene;
         if (circuitStream.fail()) {
@@ -512,8 +512,8 @@ int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENO
 }
 
 // TODO/TBD change according to printcircuit
-int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOM_ITEM_TYPE>* genome) {
-    GENOM_ITEM_TYPE* circuit = new GENOM_ITEM_TYPE[pGlobals->settings->circuit.genomeSize];
+int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome) {
+    GENOME_ITEM_TYPE* circuit = new GENOME_ITEM_TYPE[pGlobals->settings->circuit.genomeSize];
 
     int pos = 0;
     int pos2 = 0;
@@ -538,10 +538,10 @@ int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOM_
                 TrimTrailingSpaces(elem);
 
                 // CONNECTOR LAYER
-                GENOM_ITEM_TYPE conn = (GENOM_ITEM_TYPE) StringToDouble(elem);
+                GENOME_ITEM_TYPE conn = (GENOME_ITEM_TYPE) StringToDouble(elem);
 
                 // FUNCTION
-                GENOM_ITEM_TYPE fnc = FNC_NOP;
+                GENOME_ITEM_TYPE fnc = FNC_NOP;
                 string fncStr = elem.substr(elem.length() - 5,5);
                 //string fncStr = elem.Right(5);
                 if (fncStr.compare("[NOP]") == 0) fnc = FNC_NOP;
@@ -588,8 +588,8 @@ int CircuitGenome::PrintCircuit(GAGenome &g, string filePath, unsigned char *use
 
 int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned char *usePredictorMask, int bPruneCircuit) {
     int								status = STAT_OK;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>&inputGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>  genome(pGlobals->settings->circuit.genomeSize, GACallbacks::evaluator);
+    GA1DArrayGenome<GENOME_ITEM_TYPE>&inputGenome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) g;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>  genome(pGlobals->settings->circuit.genomeSize, GACallbacks::evaluator);
     string							message;
     string							value;
     string							value2;
@@ -780,12 +780,12 @@ ordering=out;\r\n";
 			
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
 
-			GENOM_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
+            GENOME_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
 			//FilterEffectiveConnections(genome.gene(offsetFNC + slot), genome.gene(offsetCON + slot), numLayerConnectors, &effectiveCon);
 			
 			//value2.Format("%.10u[%s]  ", effectiveCon, value);
 			// TXT: Transform relative connector mask into absolute mask (fixed inputs from previous layer)
-			GENOM_ITEM_TYPE absoluteCon = 0;
+            GENOME_ITEM_TYPE absoluteCon = 0;
 			convertRelative2AbsolutConnectorMask(effectiveCon, slot, numLayerConnectors, numLayerInputs, &absoluteCon);
 			ostringstream os5;
 			os5 <<  setfill('0') << setw(10) << absoluteCon << "[";
@@ -1159,7 +1159,7 @@ ordering=out;\r\n";
 
 int CircuitGenome::PrintCircuitMemory_DOT(GAGenome &g, string filePath, unsigned char* displayNodes) {
     int								status = STAT_OK;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>&genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) g;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>&genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) g;
 //    string							message;
     string							value;
     string							value2;
@@ -1247,7 +1247,7 @@ ordering=out;\r\n";
 			
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
 
-			GENOM_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
+            GENOME_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
 			
 			// 
 			// VISUAL CIRC: CREATE CONNECTION BETWEEN LAYERS
@@ -1373,7 +1373,7 @@ ordering=out;\r\n";
     return status;
 }
 
-void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
+void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
 //    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
     int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
@@ -1481,7 +1481,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
 
             for (int slot = 0; slot < numFncInLayer; slot++) {
                 unsigned char	result = 0;
-                GENOM_ITEM_TYPE   connect = 0;
+                GENOME_ITEM_TYPE   connect = 0;
                 int     connectOffset = 0;
                 int     stopBit = 0;
                 
@@ -1500,7 +1500,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                     case FNC_NOP: {
                         // DO NOTHING, JUST PASS VALUE FROM FIRST CONNECTOR FROM PREVIOUS LAYER
                         for (int bit = 0; bit < stopBit; bit++) {
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 								result = localInputs[connectOffset + bit];
 								break; // pass only one value
                             }
@@ -1510,7 +1510,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                     case FNC_OR: {
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result |= localInputs[connectOffset + bit];
                             }
                         }
@@ -1520,7 +1520,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         result = ~0; // ASSIGN ALL ONES AS STARTING VALUE TO PERFORM result &= LATER
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION, THEN TAKE INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result &= localInputs[connectOffset + bit];
                             }
                         }
@@ -1534,7 +1534,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                     case FNC_XOR: {
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result ^= localInputs[connectOffset + bit];
                             }
                         }
@@ -1543,7 +1543,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                     case FNC_NOR: {
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result |= ~(localInputs[connectOffset + bit]);
                             }
                         }
@@ -1553,7 +1553,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         result = ~0; // ASSIGN ALL ONES AS STARTING VALUE TO PERFORM result &= LATER
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE NEGATION OF INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result &= ~(localInputs[connectOffset + bit]);
                             }
                         }
@@ -1563,7 +1563,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         // SHIFT IS ENCODED IN FUNCTION IDENTFICATION 
 						// MAXIMUM SHIFT IS 7
                         for (int bit = 0; bit < stopBit; bit++) {
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 								result = localInputs[connectOffset + bit] << (GET_FNC_ARGUMENT1(pGenome->gene(offsetFNC + slot) & 0x07));
 								break; // pass only one value
                             }
@@ -1575,7 +1575,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         // SHIFT IS ENCODED IN FUNCTION IDENTFICATION 
 						// MAXIMUM SHIFT IS 7
                         for (int bit = 0; bit < stopBit; bit++) {
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 								result = localInputs[connectOffset + bit] >> (GET_FNC_ARGUMENT1(pGenome->gene(offsetFNC + slot) & 0x07));
 								break; // pass only one value
                             }
@@ -1586,7 +1586,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         // BIT SELECTOR
                         // MASK IS ENCODED IN FUNCTION IDENTFICATION 
                         for (int bit = 0; bit < stopBit; bit++) {
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 								result = localInputs[connectOffset + bit] & (GET_FNC_ARGUMENT1(pGenome->gene(offsetFNC + slot) & 0x07));
 								break; // pass only fisrt value
                             }
@@ -1598,7 +1598,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         // SUM ALL INPUTS
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN SUM IT INTO OF INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result += localInputs[connectOffset + bit];
                             }
                         }
@@ -1609,7 +1609,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         bool bFirstInput = true;
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN SUBSTRACT IT OF INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 if (bFirstInput) {
 									result = localInputs[connectOffset + bit];
 									bFirstInput = false;
@@ -1625,7 +1625,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         result = 0;
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN ADD THIS INPUT 
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result += localInputs[connectOffset + bit];
                             }
                         }
@@ -1636,7 +1636,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         result = 1;
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN MULTIPLY THIS INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result *= localInputs[connectOffset + bit];
                             }
                         }
@@ -1648,7 +1648,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
                         result = 0;
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN DIVIDE THIS INPUT
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 if (bFirstInput) {
 									result = localInputs[connectOffset + bit];
 									bFirstInput = true;
@@ -1666,7 +1666,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
 						// READ x-th byte - address X is computed as sum from all inputs (modulo size of input layer)
 						result = 0;
 						for (int bit = 0; bit < stopBit; bit++) {
-							if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 								result += localInputs[connectOffset + bit];
 							}
 						}
@@ -1680,7 +1680,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
 						result = 1; // assume equalilty of inputs
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TEST EQUALITY OF INPUTS
-                            if (connect & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+                            if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 								if (bFirstInput) {
 									bFirstInput = false;
 									firstValue = localInputs[connectOffset + bit];
@@ -1727,7 +1727,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, un
     delete[] localOutputs;
 }
 
-int CircuitGenome::writeGenome(const GA1DArrayGenome<GENOM_ITEM_TYPE>& genome, string& textCircuit) {
+int CircuitGenome::writeGenome(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& textCircuit) {
     int status = STAT_OK;
 
     ostringstream textCicruitStream;
@@ -1742,7 +1742,7 @@ int CircuitGenome::writeGenome(const GA1DArrayGenome<GENOM_ITEM_TYPE>& genome, s
     return status;
 }
 
-int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<GENOM_ITEM_TYPE>& genome, const string filename) {
+int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, const string filename) {
     int status = STAT_OK;
     TiXmlElement* pRoot = CircuitGenome::populationHeader(1);
     TiXmlElement* pElem = NULL;
@@ -1750,7 +1750,7 @@ int CircuitGenome::saveCircuitAsPopulation(const GA1DArrayGenome<GENOM_ITEM_TYPE
 
     pElem = new TiXmlElement("population");
     string textCircuit;
-    GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>*) &genome;
+    GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome = (GA1DArrayGenome<GENOME_ITEM_TYPE>*) &genome;
     status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
     if (status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Could not save circuit fo file " << filename << "." << endl;

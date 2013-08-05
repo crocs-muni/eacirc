@@ -28,8 +28,8 @@ public:
       * @param genome       read genome (contents overwritten)
       * @return status
       */
-    static int readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOM_ITEM_TYPE>* genome);
-    static int readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOM_ITEM_TYPE>* genome);
+    static int readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome);
+    static int readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome);
 
     static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
     static int PrintCircuitMemory(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
@@ -37,24 +37,24 @@ public:
 //    static int PrintCircuitMemory_TXT(GAGenome &g, string filePath, unsigned char* displayNodes);
 //    static int PrintCircuitMemory_C(GAGenome &g, string filePath, unsigned char* displayNodes);
 
-	static int GetFunctionLabel(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connections, string* pLabel);
+    static int GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connections, string* pLabel);
 	static int PruneCircuit(GAGenome &g, GAGenome &prunnedG);
 	static int PruneCircuitNew(GAGenome &g, GAGenome &prunnedG);
     static int GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, unsigned char displayNodes[]);
-	static int HasConnection(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit);
-	static int FilterEffectiveConnections(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int numLayerConnectors, GENOM_ITEM_TYPE* pEffectiveConnectionMask);
+    static int HasConnection(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit);
+    static int FilterEffectiveConnections(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int numLayerConnectors, GENOME_ITEM_TYPE* pEffectiveConnectionMask);
 	
 	//static int HasImplicitConnection(GENOM_ITEM_TYPE functionID);
-	static int IsOperand(GENOM_ITEM_TYPE functionID, GENOM_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
-	static int GetNeutralValue(GENOM_ITEM_TYPE functionID, string* pOperand);
-    static void executeCircuit(GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs);
+    static int IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand);
+    static int GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand);
+    static void executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs);
 
     /** saves genome to string in binary format
       * @param genome       genome to print
       * @param textCircuit  printed genome (original contents overwritten)
       * @return status
       */
-    static int writeGenome(const GA1DArrayGenome<GENOM_ITEM_TYPE>& genome, string& textCircuit);
+    static int writeGenome(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& textCircuit);
 
     /** allocate XML structure for header in population file
       * @param populationSize       size of the population (info in the header)
@@ -69,19 +69,19 @@ public:
       * @param filemane     destination filename
       * @return status
       */
-    static int saveCircuitAsPopulation(const GA1DArrayGenome<GENOM_ITEM_TYPE> &genome, const string filename);
+    static int saveCircuitAsPopulation(const GA1DArrayGenome<GENOME_ITEM_TYPE> &genome, const string filename);
 	
-	static unsigned char GET_FNC_TYPE(GENOM_ITEM_TYPE fncValue) {
+    static unsigned char GET_FNC_TYPE(GENOME_ITEM_TYPE fncValue) {
 		return fncValue & 0xff;
 	}
-	static unsigned char GET_FNC_ARGUMENT1(GENOM_ITEM_TYPE fncValue) {
+    static unsigned char GET_FNC_ARGUMENT1(GENOME_ITEM_TYPE fncValue) {
 		return ((fncValue & 0xff000000) >> 24)  & 0xff;
 	}
-	static void SET_FNC_TYPE(GENOM_ITEM_TYPE* fncValue, unsigned char fncType) {
+    static void SET_FNC_TYPE(GENOME_ITEM_TYPE* fncValue, unsigned char fncType) {
 		*fncValue = *fncValue & 0xffffffff00;
 		*fncValue |= fncType;
 	}
-	static void SET_FNC_ARGUMENT1(GENOM_ITEM_TYPE* fncValue, unsigned char arg1) {
+    static void SET_FNC_ARGUMENT1(GENOME_ITEM_TYPE* fncValue, unsigned char arg1) {
 		*fncValue = *fncValue & 0x00ffffffff;
 		*fncValue |= arg1 << 24;
 	}
@@ -93,13 +93,13 @@ public:
 	  * @param pAbsoluteMask		return argument for converted absolute mask
       * @return nothing
       */
-	static void convertRelative2AbsolutConnectorMask(GENOM_ITEM_TYPE relativeMask, int slot, int numLayerConnectors, int numLayerInputs, GENOM_ITEM_TYPE* pAbsoluteMask) {
+    static void convertRelative2AbsolutConnectorMask(GENOME_ITEM_TYPE relativeMask, int slot, int numLayerConnectors, int numLayerInputs, GENOME_ITEM_TYPE* pAbsoluteMask) {
 		int	halfConnectors = (numLayerConnectors - 1) / 2;
 		int connectOffset = slot - halfConnectors;	// connectors are relative, centered on current slot
 		int stopBit = numLayerConnectors;
 		*pAbsoluteMask = 0;
         for (int bit = 0; bit < stopBit; bit++) {
-            if (relativeMask & (GENOM_ITEM_TYPE) pGlobals->precompPow[bit]) {
+            if (relativeMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
 				int targetSlot = getTargetSlot(connectOffset, bit, numLayerInputs);
 				*pAbsoluteMask += pGlobals->precompPow[targetSlot];
             }

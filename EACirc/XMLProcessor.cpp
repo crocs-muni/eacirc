@@ -36,9 +36,11 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // parsing EACIRC/GA
     pSettings->ga.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;
-    pSettings->ga.probMutation = (float) atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
-    pSettings->ga.probCrossing = (float) atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
     pSettings->ga.popupationSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());
+    pSettings->ga.probCrossing = (float) atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
+    pSettings->ga.probMutation = (float) atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
+    pSettings->ga.mutateFunctions = atoi(getXMLElementValue(pRoot,"GA/MUTATE_FUNCTIONS").c_str()) ? true : false;
+    pSettings->ga.mutateConnectors = atoi(getXMLElementValue(pRoot,"GA/MUTATE_CONNECTORS").c_str()) ? true : false;
 
     // parsing EACIRC/CIRCUIT
     pSettings->circuit.numLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_LAYERS").c_str());
@@ -84,12 +86,10 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 		pSettings->circuit.sizeInputLayer += pSettings->circuit.memorySize;
 		pSettings->circuit.totalSizeOutputLayer += pSettings->circuit.memorySize; 
 	}
-	// Compute genome size: take into account size of internal layer, input layer and size of memory (if used)
-//	int biggerSize = (pSettings->circuit.sizeInputLayer > pSettings->circuit.sizeLayer) ? pSettings->circuit.sizeInputLayer : pSettings->circuit.sizeLayer;
-//	pSettings->circuit.genomeSize = (pSettings->circuit.numLayers*2) * biggerSize;
-    pSettings->circuit.genomeSize = pSettings->circuit.numLayers*2 * pSettings->circuit.sizeLayer;
-    // maybe output mayer instead of input layer?
+    // Compute genome size: take into account memory, if used
+    pSettings->circuit.genomeSize = pSettings->circuit.numLayers*2 * max(pSettings->circuit.sizeLayer, pSettings->circuit.totalSizeOutputLayer);
 
+    // TBD:/TODO: decide if totalSizeOutputLayer can exceed layerSize
 	assert(pSettings->circuit.totalSizeOutputLayer <= pSettings->circuit.sizeLayer);
 }
 

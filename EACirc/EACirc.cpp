@@ -244,7 +244,7 @@ void EACirc::savePopulation(const string filename) {
     for (int i = 0; i < m_settings.ga.popupationSize; i++) {
         // note: it is not necessary to call individual i in SCALED order
         //       however then the population files differ in order ('diff' cannot be used to finding bugs)
-        GA1DArrayGenome<GENOM_ITEM_TYPE>* pGenome = (GA1DArrayGenome<GENOM_ITEM_TYPE>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
+        GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome = (GA1DArrayGenome<GENOME_ITEM_TYPE>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
         m_status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
@@ -303,7 +303,7 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     GAPopulation population;
-    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
+    GA1DArrayGenome<GENOME_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
     // INIT GENOME STRUCTURES
     genome.initializer(GACallbacks::initializer);
     genome.mutator(GACallbacks::mutator);
@@ -334,7 +334,7 @@ void EACirc::createPopulation() {
     // seed GAlib (initializations may require random numbers)
     GAResetRNG(m_currentGalibSeed);
     // temporary structure for genome (empty or loaded from file)
-    GA1DArrayGenome<GENOM_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
+    GA1DArrayGenome<GENOME_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
     genome.initializer(GACallbacks::initializer);
     genome.mutator(GACallbacks::mutator);
     genome.crossover(GACallbacks::crossover);
@@ -498,7 +498,7 @@ void EACirc::evaluateStep() {
 
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {
-        GA1DArrayGenome<GENOM_ITEM_TYPE> genome = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) m_gaData->population().best();
+        GA1DArrayGenome<GENOME_ITEM_TYPE> genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
 
         ostringstream fileName;
         fileName << FILE_CIRCUIT << "g" << totalGeneration << "_";
@@ -600,6 +600,6 @@ void EACirc::run() {
     mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
 
     // print the best circuit into separate file
-    GA1DArrayGenome<GENOM_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOM_ITEM_TYPE>&) m_gaData->population().best();
+    GA1DArrayGenome<GENOME_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
     CircuitGenome::PrintCircuit(genomeBest,FILE_BEST_CIRCUIT,0,1);
 }

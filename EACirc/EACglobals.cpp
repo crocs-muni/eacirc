@@ -43,6 +43,8 @@ SETTINGS_GA::SETTINGS_GA() {
     probMutation = -1;
     probCrossing = -1;
     popupationSize = -1;
+    mutateFunctions = true;
+    mutateConnectors = true;
 }
 
 SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {

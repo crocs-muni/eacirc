@@ -26,7 +26,7 @@ struct GLOBALS;
 /**
   Type used to store basic genom items - connectors and functions
 */
-typedef unsigned long GENOM_ITEM_TYPE;
+typedef unsigned long GENOME_ITEM_TYPE;
 
 // declarations of global variables (definitions in EACglobals.cpp)
 /** main EACirc logging service
@@ -107,6 +107,8 @@ struct SETTINGS_CUDA {
 struct SETTINGS_GA {
     bool evolutionOff;              //! should evolution be turned off?
     float probMutation;             //! probability of genome mutation
+    bool mutateFunctions;           //! should functions be mutated?
+    bool mutateConnectors;          //! should connectors be mutated?
     float probCrossing;             //! proprability of genome crossing
     int popupationSize;             //! number of individuals in population
     SETTINGS_GA();
