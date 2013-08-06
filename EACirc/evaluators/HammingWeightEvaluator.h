@@ -3,11 +3,14 @@
 
 #include "IEvaluator.h"
 
+#define CATEGORY_THRESHOLD 5
+
 class HammingWeightEvaluator : public IEvaluator {
     int* m_weightsStream0;
     int* m_weightsStream1;
     int m_totalStream0;
     int m_totalStream1;
+    unsigned long m_numUnderThreshold;
 public:
     /**
      * allocate weights map according to output length (number of circuit output bytes * BITS_IN_UCHAR)

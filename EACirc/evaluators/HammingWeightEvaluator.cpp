@@ -2,7 +2,7 @@
 
 HammingWeightEvaluator::HammingWeightEvaluator()
     : IEvaluator(EVALUATOR_HAMMING_WEIGHT), m_weightsStream0(NULL), m_weightsStream1(NULL),
-      m_totalStream0(0), m_totalStream1(0) {
+      m_totalStream0(0), m_totalStream1(0), m_numUnderThreshold(0) {
     m_weightsStream0 = new int[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
     m_weightsStream1 = new int[pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR];
     resetEvaluator();
@@ -37,19 +37,23 @@ void HammingWeightEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsi
 
 float HammingWeightEvaluator::getFitness() const {
     float fitness = 0;
-    float temp0, temp1;
-    // add normalised Euclidean distance for each category
+    // compute Pearson's Chi square test
+    // chi^2 = sum_{i=1}^{n}{\frac{(Observed_i-Expected_i)^2}{Expected_i}}
+    // check for threshold E_i >=5, Q_i >=5
     for (int category = 0; category < pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR; category++) {
-        temp0 = m_totalStream0 ? m_weightsStream0[category] / (float) m_totalStream0 : 0;
-        temp1 = m_totalStream1 ? m_weightsStream1[category] / (float) m_totalStream1 : 0;
-        fitness += pow(temp0 - temp1, 2);
+        float divider = max(m_categoriesStream0[category], 1); // prevent division by zero
+        fitness += pow(m_categoriesStream1[category]-m_categoriesStream0[category], 2) / divider;
     }
-    // transform fitness from interval <0,2> to interval <0,1>
-    fitness = fitness / 2;
     return fitness;
 }
 
 void HammingWeightEvaluator::resetEvaluator() {
+    unsigned long tempNumUnderThreshold = 0;
+    for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
+        if (m_categoriesStream0[category] < CATEGORY_THRESHOLD) tempNumUnderThreshold++;
+        if (m_categoriesStream1[category] < CATEGORY_THRESHOLD) tempNumUnderThreshold++;
+    }
+    if (tempNumUnderThreshold != 0) m_numUnderThreshold += tempNumUnderThreshold;
     m_totalStream0 = m_totalStream1 = 0;
     memset(m_weightsStream0, 0, pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR * sizeof(int));
     memset(m_weightsStream1, 0, pGlobals->settings->circuit.sizeOutputLayer * BITS_IN_UCHAR * sizeof(int));

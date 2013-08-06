@@ -3,11 +3,14 @@
 
 #include "IEvaluator.h"
 
+#define CATEGORY_THRESHOLD 5
+
 class CategoriesEvaluator : public IEvaluator {
     int* m_categoriesStream0;
     int* m_categoriesStream1;
     int m_totalStream0;
     int m_totalStream1;
+    unsigned long m_numUnderThreshold;
 public:
     /**
      * allocate categories map according to needed number of categories
