@@ -6,16 +6,17 @@
 #include "GAPopulation.h"
 #include "generators/IRndGen.h"
 #include "circuit/GACallbacks.h"
+#include "circuit/CircuitIO.h"
 
 int CircuitGenome::GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connections, string* pLabel) {
     int		status = STAT_OK;
-    switch (GET_FNC_TYPE(functionID)) {
+    switch (nodeGetFunction(functionID)) {
         case FNC_NOP: *pLabel = "NOP"; break;
         case FNC_OR: *pLabel = "OR_"; break;
         case FNC_AND: *pLabel = "AND"; break;
         case FNC_CONST: {
 			std::stringstream out;
-			out << (GET_FNC_ARGUMENT1(functionID)  & 0xff);
+            out << (nodeGetArgument1(functionID)  & 0xff);
 			*pLabel = "CONST_" + out.str();
             break;
         }
@@ -25,20 +26,20 @@ int CircuitGenome::GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYP
         case FNC_NAND: *pLabel = "NAN"; break;
         case FNC_ROTL: {
 			std::stringstream out;
-			unsigned char tmp = GET_FNC_ARGUMENT1(functionID);
-			out << (GET_FNC_ARGUMENT1(functionID) & 0x07);
+            unsigned char tmp = nodeGetArgument1(functionID);
+            out << (nodeGetArgument1(functionID) & 0x07);
             *pLabel = "ROL_" + out.str(); 
             break;
         }
         case FNC_ROTR: {
 			std::stringstream out;
-			out << (GET_FNC_ARGUMENT1(functionID) & 0x07);
+            out << (nodeGetArgument1(functionID) & 0x07);
             *pLabel = "ROR_" + out.str(); 
             break;
         }
         case FNC_BITSELECTOR: {
 			std::stringstream out;
-			out << (GET_FNC_ARGUMENT1(functionID) & 0x07);
+            out << (nodeGetArgument1(functionID) & 0x07);
             *pLabel = "BSL_" + out.str(); 
             break;
         }
@@ -98,7 +99,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         // FNCs LAYER - TRY TO SET AS NOP INSTRUCTION WITH NO CONNECTORS
                         prunnedGenome.gene(i, FNC_NOP);
                         
-                        assert(GET_FNC_TYPE(origValue) <= FNC_MAX);
+                        assert(nodeGetFunction(origValue) <= FNC_MAX);
                         
                         float newFit = GACallbacks::evaluator(prunnedGenome);
                         if (origFit > newFit) {
@@ -330,7 +331,7 @@ int CircuitGenome::FilterEffectiveConnections(GENOME_ITEM_TYPE functionID, GENOM
 
 	*pEffectiveConnectionMask = 0;
 
-	switch (GET_FNC_TYPE(functionID)) {
+    switch (nodeGetFunction(functionID)) {
 		// FUNCTIONS WITH ONLY ONE CONNECTOR
 		case FNC_NOP:  // no break
         case FNC_ROTL: // no break
@@ -371,7 +372,7 @@ int CircuitGenome::HasConnection(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE c
     if (connectionMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) bHasConnection = TRUE;
 	else bHasConnection = FALSE;
 	
-    switch (GET_FNC_TYPE(functionID)) {
+    switch (nodeGetFunction(functionID)) {
         // 
 		// FUNCTIONS WITH ONLY ONE CONNECTOR
 		//
@@ -402,7 +403,7 @@ int CircuitGenome::HasConnection(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE c
 int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE connectionMask, int fncSlot, int connectionOffset, int bit, string* pOperand) {
     int    bHasConnection = HasConnection(functionID, connectionMask, fncSlot, connectionOffset, bit);
     
-    switch (GET_FNC_TYPE(functionID)) {
+    switch (nodeGetFunction(functionID)) {
         case FNC_NOP:	*pOperand = ""; break;
         case FNC_OR:	*pOperand = "|"; break;    
         case FNC_AND:	*pOperand = "&"; break;    
@@ -420,7 +421,7 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
 		case FNC_READX: {
 			if (bHasConnection) {
 				std::stringstream out;
-				out << GET_FNC_ARGUMENT1(functionID);
+                out << nodeGetArgument1(functionID);
 				*pOperand = out.str();
 			}
 			break;
@@ -430,9 +431,9 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
         case FNC_ROTR: {
 			if (bHasConnection) {
 				std::stringstream out;
-				unsigned char tmp = GET_FNC_ARGUMENT1(functionID);
-				if (GET_FNC_TYPE(functionID) == FNC_ROTL) out << "<< " << (GET_FNC_ARGUMENT1(functionID) & 0x07);
-				if (GET_FNC_TYPE(functionID) == FNC_ROTR) out << ">> " << (GET_FNC_ARGUMENT1(functionID) & 0x07);
+                unsigned char tmp = nodeGetArgument1(functionID);
+                if (nodeGetFunction(functionID) == FNC_ROTL) out << "<< " << (nodeGetArgument1(functionID) & 0x07);
+                if (nodeGetFunction(functionID) == FNC_ROTR) out << ">> " << (nodeGetArgument1(functionID) & 0x07);
 				*pOperand = out.str();
 			}
 			break;
@@ -440,7 +441,7 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
         case FNC_BITSELECTOR: {
 			if (bHasConnection) {
 				std::stringstream out;
-				out << " & " << (GET_FNC_ARGUMENT1(functionID) & 0xff);
+                out << " & " << (nodeGetArgument1(functionID) & 0xff);
 				*pOperand = out.str();
 			}
 			break;
@@ -458,7 +459,7 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
 int CircuitGenome::GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand) {
     int    status = STAT_OK;
     
-    switch (GET_FNC_TYPE(functionID)) {
+    switch (nodeGetFunction(functionID)) {
         case FNC_OR: // no break
         case FNC_XOR: 
         case FNC_NAND: 
@@ -497,6 +498,7 @@ int CircuitGenome::GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand
     return status;
 }
 
+/*
 int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome) {
     istringstream circuitStream(textCircuit);
     GENOME_ITEM_TYPE gene;
@@ -510,6 +512,7 @@ int CircuitGenome::readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENO
     }
     return STAT_OK;
 }
+*/
 
 // TODO/TBD change according to printcircuit
 int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome) {
@@ -811,11 +814,11 @@ ordering=out;\r\n";
 			    
 				// CODE CIRCUIT: 
 				if (bCodeCircuit) {
-					switch (GET_FNC_TYPE(genome.gene(offsetFNC + slot))) {
+                    switch (nodeGetFunction(genome.gene(offsetFNC + slot))) {
 						case FNC_CONST: {
 							//value2.Format("    BYTE VAR_%s = %u", actualSlotID, effectiveCon % UCHAR_MAX);
 							ostringstream os7;
-							os7 << "        unsigned char VAR_" << actualSlotID << " = " << (GET_FNC_ARGUMENT1(genome.gene(offsetFNC + slot)) & 0xff);
+                            os7 << "        unsigned char VAR_" << actualSlotID << " = " << (nodeGetArgument1(genome.gene(offsetFNC + slot)) & 0xff);
 							value2 = os7.str();
 							codeCirc += value2;
 							bFirstArgument = FALSE;
@@ -849,7 +852,7 @@ ordering=out;\r\n";
 				if (bCodeCircuit) {
 					// DIV AND SUBST HAVE PREVIOUS LAYER SLOT AS BASIC INPUT
 					// USE ONLY GENES THAT WERE NOT PRUNNED OUT
-					//if (HasImplicitConnection(GET_FNC_TYPE(genome.gene(offsetFNC + slot)))) {
+                    //if (HasImplicitConnection(nodeGetFunction(genome.gene(offsetFNC + slot)))) {
 					if (false){
 						if (layer > 1) {
                             int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
@@ -875,15 +878,15 @@ ordering=out;\r\n";
 
 						ostringstream os13;
 	                    					    
-						switch (GET_FNC_TYPE(genome.gene(offsetFNC + slot))) {
+                        switch (nodeGetFunction(genome.gene(offsetFNC + slot))) {
 							case FNC_NOP: os13 << " VAR_" << previousSlotID; value2 = os13.str(); break; 
 							case FNC_SUBS: os13 << " VAR_" << previousSlotID << " - "; value2 = os13.str(); break; 
 							case FNC_ADD: os13 << " VAR_" << previousSlotID << " + "; value2 = os13.str(); break; 
 							case FNC_MULT: os13 << " VAR_" << previousSlotID << " * "; value2 = os13.str(); break; 
 							case FNC_DIV: os13 << " VAR_" << previousSlotID << " / "; value2 = os13.str(); break; 
-							case FNC_ROTL: os13 << " VAR_" << previousSlotID << " << " << (GET_FNC_ARGUMENT1(genome.gene(offsetFNC + slot) & 0x07)); value2 = os13.str(); break; 
-							case FNC_ROTR: os13 << " VAR_" << previousSlotID << " >> " << (GET_FNC_ARGUMENT1(genome.gene(offsetFNC + slot) & 0x07)); value2 = os13.str(); break; 
-							case FNC_BITSELECTOR: os13 << " VAR_" << previousSlotID + " & " << (GET_FNC_ARGUMENT1(genome.gene(offsetFNC + slot) & 0x07)); value2 = os13.str(); break; 
+                            case FNC_ROTL: os13 << " VAR_" << previousSlotID << " << " << (nodeGetArgument1(genome.gene(offsetFNC + slot) & 0x07)); value2 = os13.str(); break;
+                            case FNC_ROTR: os13 << " VAR_" << previousSlotID << " >> " << (nodeGetArgument1(genome.gene(offsetFNC + slot) & 0x07)); value2 = os13.str(); break;
+                            case FNC_BITSELECTOR: os13 << " VAR_" << previousSlotID + " & " << (nodeGetArgument1(genome.gene(offsetFNC + slot) & 0x07)); value2 = os13.str(); break;
 							case FNC_EQUAL: os13 << " VAR_" << previousSlotID << " == "; value2 = os13.str(); break; 
 							case FNC_READX: {
 								if (codeCirc[codeCirc.length()-1] == ']') {
@@ -951,7 +954,7 @@ ordering=out;\r\n";
 								bFirstArgument = FALSE;
 							}
 							if (IsOperand(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit, &operand)) {
-								if (GET_FNC_TYPE(genome.gene(offsetFNC + slot)) == FNC_DIV) {
+                                if (nodeGetFunction(genome.gene(offsetFNC + slot)) == FNC_DIV) {
 									// SPECIAL FORMATING TO PREVENT ZERO DIVISION
 									//value2.Format(" ((VAR_%s != 0) ? VAR_%s : 1) %s", previousSlotID, previousSlotID, operand);
 									ostringstream os26;
@@ -1092,7 +1095,7 @@ ordering=out;\r\n";
 	//
     //	ACTUAL WRITING TO DISK
 	//
-    if (filePath == "") filePath = FILE_BEST_CIRCUIT;
+    if (filePath == "") filePath = FILE_CIRCUIT_DEFAULT;
 
 	fstream	file;
 	string	newFilePath;
@@ -1106,7 +1109,7 @@ ordering=out;\r\n";
 	}
 
     // WRITE FINAL: BINARY GENOME (POPULATION)
-    status = saveCircuitAsPopulation(genome,filePath + ".xml");
+    status = CircuitIO::genomeToPopulation(genome,filePath + ".xml");
 
     // WRITE FINAL: C FILE
 	if (bCodeCircuit) {
@@ -1356,7 +1359,7 @@ ordering=out;\r\n";
 	//
     //	ACTUAL WRITING TO DISK
 	//
-    if (filePath == "") filePath = FILE_BEST_CIRCUIT;
+    if (filePath == "") filePath = FILE_CIRCUIT_DEFAULT;
 
 	fstream	file;
 	string	newFilePath;
@@ -1496,7 +1499,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 				//
 				// EVALUATE FUNCTION BASED ON ITS INPUTS 
 				//
-                switch (GET_FNC_TYPE(pGenome->gene(offsetFNC + slot))) {
+                switch (nodeGetFunction(pGenome->gene(offsetFNC + slot))) {
                     case FNC_NOP: {
                         // DO NOTHING, JUST PASS VALUE FROM FIRST CONNECTOR FROM PREVIOUS LAYER
                         for (int bit = 0; bit < stopBit; bit++) {
@@ -1528,7 +1531,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                     }
                     case FNC_CONST: {
                         // SEND VALUE FROM CONNECTION LAYER DIRECTLY TO OUTPUT
-                        result = GET_FNC_ARGUMENT1(pGenome->gene(offsetCON + slot));
+                        result = nodeGetArgument1(pGenome->gene(offsetCON + slot));
                         break;
                     }
                     case FNC_XOR: {
@@ -1564,7 +1567,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 						// MAXIMUM SHIFT IS 7
                         for (int bit = 0; bit < stopBit; bit++) {
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
-								result = localInputs[connectOffset + bit] << (GET_FNC_ARGUMENT1(pGenome->gene(offsetFNC + slot) & 0x07));
+                                result = localInputs[connectOffset + bit] << (nodeGetArgument1(pGenome->gene(offsetFNC + slot) & 0x07));
 								break; // pass only one value
                             }
                         }
@@ -1576,7 +1579,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 						// MAXIMUM SHIFT IS 7
                         for (int bit = 0; bit < stopBit; bit++) {
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
-								result = localInputs[connectOffset + bit] >> (GET_FNC_ARGUMENT1(pGenome->gene(offsetFNC + slot) & 0x07));
+                                result = localInputs[connectOffset + bit] >> (nodeGetArgument1(pGenome->gene(offsetFNC + slot) & 0x07));
 								break; // pass only one value
                             }
                         }
@@ -1587,7 +1590,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                         // MASK IS ENCODED IN FUNCTION IDENTFICATION 
                         for (int bit = 0; bit < stopBit; bit++) {
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
-								result = localInputs[connectOffset + bit] & (GET_FNC_ARGUMENT1(pGenome->gene(offsetFNC + slot) & 0x07));
+                                result = localInputs[connectOffset + bit] & (nodeGetArgument1(pGenome->gene(offsetFNC + slot) & 0x07));
 								break; // pass only fisrt value
                             }
                         }
@@ -1727,6 +1730,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
     delete[] localOutputs;
 }
 
+/*
 int CircuitGenome::writeGenome(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& textCircuit) {
     int status = STAT_OK;
 
@@ -1794,3 +1798,4 @@ TiXmlElement* CircuitGenome::populationHeader(int populationSize) {
 
     return pRoot;
 }
+*/

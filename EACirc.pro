@@ -25,6 +25,9 @@ SOURCES += \
 # === circuit processing ===
 SOURCES += \
     EACirc/circuit/GACallbacks.cpp \
+    EACirc/circuit/CircuitIO.cpp \
+    EACirc/circuit/CircuitInterpreter.cpp \
+    EACirc/circuit/CircuitCommonFunctions.cpp \
 
 # === evaluators ===
 SOURCES += \
@@ -218,6 +221,9 @@ HEADERS += \
 # === circuit processing ===
 HEADERS += \
     EACirc/circuit/GACallbacks.h \
+    EACirc/circuit/CircuitIO.h \
+    EACirc/circuit/CircuitInterpreter.h \
+    EACirc/circuit/CircuitCommonFunctions.h \
 
 # === standard evaluators ===
 HEADERS += \

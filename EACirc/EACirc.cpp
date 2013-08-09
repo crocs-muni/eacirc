@@ -11,6 +11,7 @@
 #include "circuit/GACallbacks.h"
 #include "projects/IProject.h"
 #include "evaluators/IEvaluator.h"
+#include "circuit/CircuitIO.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -235,7 +236,7 @@ void EACirc::createState() {
 }
 
 void EACirc::savePopulation(const string filename) {
-    TiXmlElement* pRoot = CircuitGenome::populationHeader(m_settings.ga.popupationSize);
+    TiXmlElement* pRoot = CircuitIO::populationHeader(m_settings.ga.popupationSize);
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
 
@@ -244,8 +245,8 @@ void EACirc::savePopulation(const string filename) {
     for (int i = 0; i < m_settings.ga.popupationSize; i++) {
         // note: it is not necessary to call individual i in SCALED order
         //       however then the population files differ in order ('diff' cannot be used to finding bugs)
-        GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome = (GA1DArrayGenome<GENOME_ITEM_TYPE>*) &(m_gaData->population().individual(i,GAPopulation::SCALED));
-        m_status = CircuitGenome::writeGenome(*pGenome ,textCircuit);
+        GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().individual(i,GAPopulation::SCALED);
+        m_status = CircuitIO::genomeToBinary(genome ,textCircuit);
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
             return;
@@ -319,7 +320,7 @@ void EACirc::loadPopulation(const string filename) {
             return;
         }
         textCircuit = pGenome->GetText();
-        m_status = CircuitGenome::readGenomeFromBinary(textCircuit,&genome);
+        m_status = CircuitIO::genomeFromBinary(textCircuit,genome);
         if (m_status != STAT_OK) return;
         population.add(genome);
         pGenome = pGenome->NextSiblingElement();
@@ -501,7 +502,7 @@ void EACirc::evaluateStep() {
         GA1DArrayGenome<GENOME_ITEM_TYPE> genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
 
         ostringstream fileName;
-        fileName << FILE_CIRCUIT << "g" << totalGeneration << "_";
+        fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
         CircuitGenome::PrintCircuit(genome, filePath, 0, FALSE);   // print without prunning
@@ -601,5 +602,5 @@ void EACirc::run() {
 
     // print the best circuit into separate file
     GA1DArrayGenome<GENOME_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
-    CircuitGenome::PrintCircuit(genomeBest,FILE_BEST_CIRCUIT,0,1);
+    CircuitGenome::PrintCircuit(genomeBest,FILE_CIRCUIT_DEFAULT,0,1);
 }

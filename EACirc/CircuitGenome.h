@@ -28,7 +28,7 @@ public:
       * @param genome       read genome (contents overwritten)
       * @return status
       */
-    static int readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome);
+//    static int readGenomeFromBinary(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome);
     static int readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>* genome);
 
     static int PrintCircuit(GAGenome &g, string filePath = "", unsigned char* usePredictorMask = NULL, int bPruneCircuit = FALSE);
@@ -54,13 +54,13 @@ public:
       * @param textCircuit  printed genome (original contents overwritten)
       * @return status
       */
-    static int writeGenome(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& textCircuit);
+//    static int writeGenome(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& textCircuit);
 
     /** allocate XML structure for header in population file
       * @param populationSize       size of the population (info in the header)
       * @return pointer to root element "eacirc_population"
       */
-    static TiXmlElement* populationHeader(int populationSize);
+//    static TiXmlElement* populationHeader(int populationSize);
 
 public:
     /** saves circuit as generation with size 1
@@ -69,8 +69,9 @@ public:
       * @param filemane     destination filename
       * @return status
       */
-    static int saveCircuitAsPopulation(const GA1DArrayGenome<GENOME_ITEM_TYPE> &genome, const string filename);
-	
+//    static int saveCircuitAsPopulation(const GA1DArrayGenome<GENOME_ITEM_TYPE> &genome, const string filename);
+
+/*
     static unsigned char GET_FNC_TYPE(GENOME_ITEM_TYPE fncValue) {
 		return fncValue & 0xff;
 	}
@@ -85,6 +86,8 @@ public:
 		*fncValue = *fncValue & 0x00ffffffff;
 		*fncValue |= arg1 << 24;
 	}
+    */
+
     /** Converts relative connector mask into absolute one (relative centers on slot, absolute directly address inputs) 
       * @param relativeMask mask with relative connectors
       * @param slot			current slot to which relative connectors are applied

@@ -3,6 +3,7 @@
 #include "evaluators/IEvaluator.h"
 #include "generators/IRndGen.h"
 #include "CircuitGenome.h"
+#include "CircuitInterpreter.h"
 
 void GACallbacks::initializer(GAGenome& genome) {
     GA1DArrayGenome<GENOME_ITEM_TYPE>& g = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) genome;
@@ -52,8 +53,8 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
     offset = 1 * pGlobals->settings->circuit.sizeLayer;
     for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
         GENOME_ITEM_TYPE genomeItem = 0;
-        CircuitGenome::SET_FNC_TYPE(&genomeItem, FNC_XOR);
-        CircuitGenome::SET_FNC_ARGUMENT1(&genomeItem, GARandomInt(0,ULONG_MAX));
+        nodeSetFunction(&genomeItem, FNC_XOR);
+        nodeSetArgument1(&genomeItem, GARandomInt(0,ULONG_MAX));
         genome.gene(offset + slot, genomeItem);
     }
 
@@ -75,9 +76,9 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
             do {
                 function = GARandomInt(0,FNC_MAX);
             } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
-            CircuitGenome::SET_FNC_TYPE(&genomeItem, function);
+            nodeSetFunction(&genomeItem, function);
             // set argument1 to random value (0-255)
-            CircuitGenome::SET_FNC_ARGUMENT1(&genomeItem, GARandomInt(0,ULONG_MAX));
+            nodeSetArgument1(&genomeItem, GARandomInt(0,ULONG_MAX));
             genome.gene(offset + slot, genomeItem);
         }
     }
@@ -98,9 +99,9 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
         do {
             function = GARandomInt(0,FNC_MAX);
         } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
-        CircuitGenome::SET_FNC_TYPE(&genomeItem, function);
+        nodeSetFunction(&genomeItem, function);
         // set argument1 to random value (0-255)
-        CircuitGenome::SET_FNC_ARGUMENT1(&genomeItem, GARandomInt(0,ULONG_MAX));
+        nodeSetArgument1(&genomeItem, GARandomInt(0,ULONG_MAX));
         genome.gene(offset + slot, genomeItem);
     }
 
@@ -159,14 +160,14 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
                         function = GARandomInt(0, FNC_MAX);
                     } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
                     GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
-                    CircuitGenome::SET_FNC_TYPE(&genomeItem, function);
+                    nodeSetFunction(&genomeItem, function);
                     genome.gene(offset + slot, genomeItem);
                 }
                 if (GAFlipCoin(probMutation)) { // muatate argument
                     numOfMutations++;
                     // set argument1 to random value (0-255)
                     GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
-                    CircuitGenome::SET_FNC_ARGUMENT1(&genomeItem, GARandomInt(0,ULONG_MAX));
+                    nodeSetArgument1(&genomeItem, GARandomInt(0,ULONG_MAX));
                     genome.gene(offset + slot, genomeItem);
                 }
             }
