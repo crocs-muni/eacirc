@@ -1,0 +1,1025 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="EACirc\CircuitGenome.cpp" />
+    <ClCompile Include="EACirc\EACglobals.cpp" />
+    <ClCompile Include="EACirc\evaluators\CategoriesEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\HammingWeightEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\IEvaluator.cpp" />
+    <ClCompile Include="EACirc\CommonFnc.cpp" />
+    <ClCompile Include="EACirc\EACirc.cpp" />
+    <ClCompile Include="EACirc\evaluators\TopBitEvaluator.cpp" />
+    <ClCompile Include="EACirc\Logger.cpp" />
+    <ClCompile Include="EACirc\Main.cpp" />
+    <ClCompile Include="EACirc\projects\estream\ciphers\mag\mag.cpp" />
+    <ClCompile Include="EACirc\projects\estream\EncryptorDecryptor.cpp" />
+    <ClCompile Include="EACirc\projects\estream\EstreamInterface.cpp" />
+    <ClCompile Include="EACirc\projects\estream\EstreamProject.cpp" />
+    <ClCompile Include="EACirc\projects\files\filesProject.cpp" />
+    <ClCompile Include="EACirc\projects\IProject.cpp" />
+    <ClCompile Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.cpp" />
+    <ClCompile Include="EACirc\projects\sha3\Hasher.cpp" />
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CRUNCH\const_32.c" />
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Shamata\Shamata_sha3.cpp" />
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\SIMD\optimized.c" />
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\BitArray.c" />
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\ReverseBits.c" />
+    <ClCompile Include="EACirc\projects\sha3\Sha3Interface.cpp" />
+    <ClCompile Include="EACirc\projects\sha3\Sha3Project.cpp" />
+    <ClCompile Include="EACirc\generators\BiasRndGen.cpp" />
+    <ClCompile Include="EACirc\generators\IRndGen.cpp" />
+    <ClCompile Include="EACirc\generators\md5.cpp" />
+    <ClCompile Include="EACirc\generators\MD5RndGen.cpp" />
+    <ClCompile Include="EACirc\generators\QuantumRndGen.cpp" />
+    <ClCompile Include="EACirc\self_tests\Tests.cpp" />
+    <ClCompile Include="EACirc\Status.cpp" />
+    <ClCompile Include="EACirc\tinyxml\tinystr.cpp" />
+    <ClCompile Include="EACirc\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="EACirc\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="EACirc\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="EACirc\XMLProcessor.cpp" />
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Abacus\Abacus_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\abc\abc-v3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\achterbahn\achterbahn-128-80.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ARIRANG\Arirang_OP32.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ARIRANG\Arirang_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Aurora\Aurora_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Blake\Blake_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Blender\Blender_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\BMW\BMW_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Boole\Boole_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Cheetah\Cheetah_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CHI\Chi_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CHI\chi-fast32.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_224.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_256.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_384.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_512.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CRUNCH\Crunch_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\cryptmt\cryptmt-v3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\CubeHash\CubeHash_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\DCH\DCH_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GA1DArrayGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GA1DBinStrGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GA2DArrayGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GA2DBinStrGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GA3DArrayGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GA3DBinStrGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAAllele.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GABaseGA.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GABin2DecGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\gabincvt.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GABinStr.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GADCrowdingGA.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GADemeGA.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\gaerror.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAIncGA.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAList.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAListBASE.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAListGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAParameter.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAPopulation.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\garandom.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GARealGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAScaling.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GASelector.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GASimpleGA.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GASStateGA.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAStatistics.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GAStringGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GATree.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GATreeBASE.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\galib\GATreeGenome.cpp">
+      <Filter>Galib</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\decim\decim-v2.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\dicing\dicing-v2.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\dragon\dragon-sboxes.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\dragon\dragon.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\DynamicSHA2\DSHA2_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\DynamicSHA\DSHA_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ECHO\Echo_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\edon80\edon80.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\EDON\Edon_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ESSENCE\essence_compress_256.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ESSENCE\essence_compress_512.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ESSENCE\essence_L_tables.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\ESSENCE\Essence_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\ffcsr\f-fcsr-h.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\fubuki\fubuki.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Fugue\fugue.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_256.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_384.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_512.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Fugue\Fugue_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\grain\grain-v1.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Grostl\Grostl_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi-tables.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi-exp.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Hamsi\Hamsi_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\hc-128\hc-128.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\hermes\hermes.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Hamsi\i.hamsi-ref.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\JH\JH_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Keccak\Keccak_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakDuplex.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakSponge.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakF-1600-opt32.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Khichidi\khichidi_core.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Khichidi\Khichidi_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Lane\Lane_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Lesamnta\Lesamnta_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\lex\lex.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Luffa\Luffa_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\MCSSHA3\Mcssha_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\MD6\md6_compress.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\MD6\md6_mode.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\MD6\MD6_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\mickey\mickey-128-v2.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\mir-1\mir-1.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\NaSHA\Nasha_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\MeshHash\MeshHash_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\pomaranch\pomaranch.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\py\py6.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\rabbit\rabbit.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\salsa20\salsa20.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Sarmal\Sarmal_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\sfinks\sfinks.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Shabal\Shabal_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\SHAvite3\SHAvite_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\SIMD\Simd_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Skein\skein.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Skein\skein_block.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Skein\skein_debug.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Skein\Skein_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\sosemanuk\sosemanuk.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\SpectralHash\SpectralHash_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\StreamHash\StreamHash_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Tangle\Tangle_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\tea\TeaProject.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Twister\Twister_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\trivium\trivium.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\tsc-4\tsc-4.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Vortex\vortex_core.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Vortex\vortex_misc.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Vortex\Vortex_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Vortex\vortex_tables.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\WaMM.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\Wamm_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMErrorMessage.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMOperator.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMTappingPrimes.c">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\sha3\hash_functions\Waterfall\Waterfall_sha3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\zk-crypt\zk-crypt-v3.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\yamb\yamb.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+    <ClCompile Include="EACirc\projects\estream\ciphers\wg\wg.cpp">
+      <Filter>SHA3 functions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EACirc\CircuitGenome.h" />
+    <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\HammingWeightEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\TopBitEvaluator.h" />
+    <ClInclude Include="EACirc\projects\estream\ciphers\cryptmt\params.h" />
+    <ClInclude Include="EACirc\projects\estream\EncryptorDecryptor.h" />
+    <ClInclude Include="EACirc\projects\estream\EstreamConstants.h" />
+    <ClInclude Include="EACirc\projects\estream\EstreamInterface.h" />
+    <ClInclude Include="EACirc\projects\estream\EstreamProject.h" />
+    <ClInclude Include="EACirc\projects\files\filesConstants.h" />
+    <ClInclude Include="EACirc\projects\files\filesProject.h" />
+    <ClInclude Include="EACirc\projects\pregenerated_tv\PregeneratedTvProject.h" />
+    <ClInclude Include="EACirc\projects\sha3\CircuitGenome.h" />
+    <ClInclude Include="EACirc\evaluators\IEvaluator.h" />
+    <ClInclude Include="EACirc\CommonFnc.h" />
+    <ClInclude Include="EACirc\EACconstants.h" />
+    <ClInclude Include="EACirc\EACglobals.h" />
+    <ClInclude Include="EACirc\EACirc.h" />
+    <ClInclude Include="EACirc\galib\ga.h" />
+    <ClInclude Include="EACirc\galib\gatypes.h" />
+    <ClInclude Include="EACirc\galib\gaversion.h" />
+    <ClInclude Include="EACirc\galib\std_stream.h" />
+    <ClInclude Include="EACirc\Logger.h" />
+    <ClInclude Include="EACirc\Main.h" />
+    <ClInclude Include="EACirc\projects\IProject.h" />
+    <ClInclude Include="EACirc\projects\sha3\Hasher.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\aestab.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\aestab_t.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Grostl\tables.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\hashFunctions.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Khichidi\common.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\MD6\inttypes.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\MD6\stdint.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Shabal\Shabal_sha3.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Shamata\Shamata_sha3.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SHAvite3\AESround.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SHAvite3\portable.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SIMD\compat.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SIMD\tables.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Vortex\int_types.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\BitArray.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\ReverseBits.h" />
+    <ClInclude Include="EACirc\projects\sha3\Sha3Constants.h" />
+    <ClInclude Include="EACirc\projects\sha3\Sha3Interface.h" />
+    <ClInclude Include="EACirc\projects\sha3\Sha3Project.h" />
+    <ClInclude Include="EACirc\generators\BiasRndGen.h" />
+    <ClInclude Include="EACirc\generators\IRndGen.h" />
+    <ClInclude Include="EACirc\generators\md5.h" />
+    <ClInclude Include="EACirc\generators\MD5RndGen.h" />
+    <ClInclude Include="EACirc\generators\QuantumRndGen.h" />
+    <ClInclude Include="EACirc\self_tests\Tests.h" />
+    <ClInclude Include="eacirc\SSGlobals.h" />
+    <ClInclude Include="EACirc\Status.h" />
+    <ClInclude Include="EACirc\tinyxml\tinystr.h" />
+    <ClInclude Include="EACirc\tinyxml\tinyxml.h" />
+    <ClInclude Include="EACirc\Version.h" />
+    <ClInclude Include="EACirc\XMLProcessor.h" />
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Abacus\Abacus_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc-tables.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\abc\abc.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\achterbahn\achterbahn.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\ARIRANG\Arirang_OP32.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\ARIRANG\Arirang_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Aurora\Aurora_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Blake\Blake_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Blender\Blender_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\BMW\BMW_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Boole\Boole_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Cheetah\Cheetah_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CHI\Chi_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CHI\chi.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_224.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_256.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_384.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_512.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CRUNCH\Crunch_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CRUNCH\crunch_type.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\CubeHash\CubeHash_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\DCH\DCH_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GA1DArrayGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GA1DBinStrGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GA2DArrayGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GA2DBinStrGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GA3DArrayGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GA3DBinStrGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAAllele.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAArray.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GABaseGA.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GABin2DecGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\gabincvt.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GABinStr.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\gaconfig.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GADCrowdingGA.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GADemeGA.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\gaerror.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAEvalData.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\gaid.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAIncGA.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAList.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAListBASE.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAListGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAMask.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GANode.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAParameter.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAPopulation.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\garandom.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GARealGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAScaling.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GASelector.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GASimpleGA.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GASStateGA.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAStatistics.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GAStringGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GATree.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GATreeBASE.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\galib\GATreeGenome.h">
+      <Filter>Galib</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\brg_endian.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\NaSHA\brg_endian.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\brg_endian.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Grostl\brg_endian.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\NaSHA\brg_types.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\brg_types.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Grostl\brg_types.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\self_tests\Catch.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\decim\decimv2.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\DynamicSHA2\DSHA2_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\DynamicSHA\DSHA_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\ECHO\Echo_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\ecrypt-config.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\ecrypt-machine.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\ecrypt-portable.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\achterbahn\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\cryptmt\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\abc\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\dicing\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\tsc-4\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\dragon\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\wg\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\yamb\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\decim\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\zk-crypt\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\edon80\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\ffcsr\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\fubuki\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\grain\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\hc-128\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\trivium\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\sosemanuk\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\sfinks\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\salsa20\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\rabbit\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\py\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\pomaranch\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\mir-1\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\mickey\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\mag\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\lex\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\hermes\ecrypt-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\EDON\Edon_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\ESSENCE\essence.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\ESSENCE\Essence_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\ffcsr\ffcsrh-sync.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\fugue.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_256.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_384.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_512.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\Fugue_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Fugue\fugue_t.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\grain\grain-v1.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Grostl\Grostl_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi-internals.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi-tables.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\hamsi.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Hamsi\Hamsi_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\JH\JH_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\Keccak_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakDuplex.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakF-1600-int-set.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakF-1600-opt32-settings.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakF-1600-interface.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Keccak\KeccakSponge.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Khichidi\khichidi_core.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Khichidi\Khichidi_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Lane\Lane_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Lesamnta\Lesamnta_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Luffa\Luffa_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\MCSSHA3\Mcssha_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\MD6\md6.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\MD6\MD6_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\mir-1\mir1.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\NaSHA\Nasha_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\MeshHash\MeshHash_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\pomaranch\pomaranch.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Sarmal\Sarmal_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\StreamHash\sbox32.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SHAvite3\SHAvite3-256.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SHAvite3\SHAvite3-512.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SHAvite3\SHAvite_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SIMD\Simd_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\skein.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\skein_debug.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\skein_iv.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\skein_port.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Skein\Skein_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\sosemanuk\sosemanuk.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SpectralHash\spectral_structs.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\SpectralHash\SpectralHash_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\StreamHash\StreamHash_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Tangle\Tangle_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\tea\TeaProject.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Twister\Twister_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Twister\twister_tables.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\mag\unrollmain.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\mag\unrolliv.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Vortex\vortex_core.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Vortex\vortex_misc.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Vortex\Vortex_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\WaMM.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\Wamm_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMErrorMessage.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMConstants.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMOperator.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\WaMM\WaMMTappingPrimes.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\sha3\hash_functions\Waterfall\Waterfall_sha3.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\zk-crypt\ZKdef.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+    <ClInclude Include="EACirc\projects\estream\ciphers\zk-crypt\ZKengine.h">
+      <Filter>SHA3 functions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="EACirc\config.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SHA3 functions">
+      <UniqueIdentifier>{cdd9ca59-8b38-45a1-a5a6-33e82b67e6b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Galib">
+      <UniqueIdentifier>{525bbee8-5d67-4250-8883-6d3b7f343a31}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
