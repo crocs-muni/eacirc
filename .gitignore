@@ -15,7 +15,9 @@
 *.lib
 *.exe
 *.hi
+*.asv
 utils/get_scores
+utils/start.bat
 [Dd]ebug/
 [Rr]elease/
 [Bb]uild/
@@ -30,6 +32,7 @@ notes.txt
 # results files with circuits created during debuging
 circuit_*.dot
 circuit_*.c
+circuit_*.cat
 circuit_*.txt
 circuit_*.xml
 test_vectors_hr.txt
@@ -41,3 +44,4 @@ fraction_done.txt
 fitness_progress.txt
 bestfit_graph.txt
 avgfit_graph.txt
+config.xml
