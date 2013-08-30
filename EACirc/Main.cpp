@@ -3,8 +3,6 @@
 #include <thread>
 //#include <unistd.h> // unistd is not in VS compiler!
 
-#include "circuit/CircuitCommonFunctions.h"
-
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
 

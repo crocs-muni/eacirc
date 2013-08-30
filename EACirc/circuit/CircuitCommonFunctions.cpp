@@ -24,7 +24,7 @@ void nodeSetArgument1(GENOME_ITEM_TYPE* nodeValue, unsigned char argument1) {
 GENOME_ITEM_TYPE relativeToAbsoluteConnectorMask(GENOME_ITEM_TYPE relativeMask, int slot, int sizePreviousLayer, int connectorWidth) {
     GENOME_ITEM_TYPE absoluteMask = 0;
     GENOME_ITEM_TYPE baseRelativeOffset = (slot - (connectorWidth / 2) + sizePreviousLayer) % sizePreviousLayer;
-    for (int bit = 0; bit < sizePreviousLayer ; bit++) {
+    for (int bit = 0; bit < sizePreviousLayer; bit++) {
         if (relativeMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
             absoluteMask += pGlobals->precompPow[(baseRelativeOffset + bit + sizePreviousLayer) % sizePreviousLayer];
         }
@@ -33,5 +33,12 @@ GENOME_ITEM_TYPE relativeToAbsoluteConnectorMask(GENOME_ITEM_TYPE relativeMask, 
 }
 
 GENOME_ITEM_TYPE absoluteToRelativeConnectorMask(GENOME_ITEM_TYPE absoluteMask, int slot, int sizePreviousLayer, int connectorWidth) {
-
+    GENOME_ITEM_TYPE relativeMask = 0;
+    GENOME_ITEM_TYPE baseRelativeOffset = (slot - (connectorWidth / 2) + sizePreviousLayer) % sizePreviousLayer;
+    for (int bit = 0; bit < sizePreviousLayer; bit++) {
+        if (absoluteMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[(bit + baseRelativeOffset + sizePreviousLayer) % sizePreviousLayer]) {
+            relativeMask += pGlobals->precompPow[bit];
+        }
+    }
+    return relativeMask;
 }

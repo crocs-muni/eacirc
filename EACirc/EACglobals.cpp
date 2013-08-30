@@ -90,6 +90,10 @@ TEST_VECTORS::TEST_VECTORS() {
     outputs = NULL;
     circuitOutputs = NULL;
     newSet = false;
+    executionInputLayer = NULL;
+    executionMiddleLayer = NULL;
+    executionMiddleLayer2 = NULL;
+    executionOutputLayer = NULL;
 }
 
 void TEST_VECTORS::allocate() {
@@ -99,7 +103,8 @@ void TEST_VECTORS::allocate() {
         return;
     }
     // if memory is allocated, release
-    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL) release();
+    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL || executionInputLayer != NULL
+            || executionMiddleLayer != NULL || executionMiddleLayer2 != NULL || executionOutputLayer != NULL) release();
     // allocate memory for inputs, outputs, citcuitOutputs
     inputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
     outputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
@@ -112,6 +117,10 @@ void TEST_VECTORS::allocate() {
         circuitOutputs[i] = new unsigned char[pGlobals->settings->circuit.sizeOutput];
         memset(circuitOutputs[i],0,pGlobals->settings->circuit.sizeOutput);
     }
+    executionInputLayer = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
+    executionMiddleLayer = new unsigned char[pGlobals->settings->circuit.sizeLayer];
+    executionMiddleLayer2 = new unsigned char[pGlobals->settings->circuit.sizeLayer];
+    executionOutputLayer = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
 }
 
 void TEST_VECTORS::release() {
@@ -130,6 +139,14 @@ void TEST_VECTORS::release() {
         delete[] circuitOutputs;
         circuitOutputs = NULL;
     }
+    if (executionInputLayer != NULL) delete executionInputLayer;
+    executionInputLayer = NULL;
+    if (executionMiddleLayer != NULL) delete executionMiddleLayer;
+    executionMiddleLayer = NULL;
+    if (executionMiddleLayer2 != NULL) delete executionMiddleLayer2;
+    executionMiddleLayer2 = NULL;
+    if (executionOutputLayer != NULL) delete executionOutputLayer;
+    executionOutputLayer = NULL;
 }
 
 GLOBALS::GLOBALS() {
@@ -138,6 +155,5 @@ GLOBALS::GLOBALS() {
     // precompute powers for reasonable values (2^0-2^31)
     for (int bit = 0; bit < MAX_LAYER_SIZE; bit++) {
         precompPow[bit] = (unsigned long) pow(2, (float) bit);
-        powEffectiveMask |= precompPow[bit];
     }
 }

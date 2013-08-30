@@ -158,7 +158,8 @@ TEST_CASE("circuit/connector-conversion","relative versus absolute connector mas
     pGlobals = new GLOBALS;
     CHECK(relativeToAbsoluteConnectorMask(10,3,6,4) == 20);
     CHECK(relativeToAbsoluteConnectorMask(9,0,6,4) == 18);
-    // TBD:/TODO: add abs->rel tests
+    CHECK(absoluteToRelativeConnectorMask(20,3,6,4) == 10);
+    CHECK(absoluteToRelativeConnectorMask(18,0,6,4) == 9);
     if (pGlobals != NULL) delete pGlobals;
     pGlobals = NULL;
 }

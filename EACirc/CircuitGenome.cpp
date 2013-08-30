@@ -1130,6 +1130,7 @@ ordering=out;\r\n";
         file.close();
     }
 
+    /*
 	// Print distribution of categories
     newFilePath = filePath + ".cat";
     file.open(newFilePath.c_str(), fstream::in | fstream::out | fstream::ate | fstream::trunc);
@@ -1143,6 +1144,7 @@ ordering=out;\r\n";
 		}
         file.close();
     }
+    */
 
 
 
@@ -1722,7 +1724,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 
 		// Compute categories as classified by the circuit - take only first output, add to histogram of outputs
 		// Shrink number of categories down to NUM_OUTPUT_CATEGORIES
-		pGlobals->testVectors.circuitOutputCategories[localOutputs[memoryLength] % NUM_OUTPUT_CATEGORIES] += 1;
+        // pGlobals->testVectors.circuitOutputCategories[localOutputs[memoryLength] % NUM_OUTPUT_CATEGORIES] += 1;
     }
     
 	// circuit output is taken from output parts AFTER memory outputs

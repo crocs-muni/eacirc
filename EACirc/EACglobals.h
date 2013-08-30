@@ -171,13 +171,15 @@ struct STATISTICS {
 
 //! test vectors and their outputs
 struct TEST_VECTORS {
-    unsigned char** inputs;             //! test vector inputs for current set
-    unsigned char** outputs;            //! (correct) test vector outputs for current set
-    unsigned char** circuitOutputs;     //! circuit outputs for current set (to ease memory allocation)
-    double	circuitOutputCategories[NUM_OUTPUT_CATEGORIES];	//! frequency of occurence of output categories as classified by the circuit
-    double	circuitOutputCategoriesRandom[NUM_OUTPUT_CATEGORIES];	//! frequency of occurence of output categories as classified by the circuit provided with truly random data
-
-    bool newSet;                        //! has new set been generated? (for CUDA usage)
+    unsigned char** inputs;                 //! test vector inputs for current set
+    unsigned char** outputs;                //! (correct) test vector outputs for current set
+    unsigned char** circuitOutputs;         //! circuit outputs for current set (to ease memory allocation)
+    bool newSet;                            //! has new set been generated? (for CUDA usage)
+    // temporary arrays for executeCircuit (to prevent multiple allocations)
+    unsigned char* executionInputLayer;     //! input layer (memory + inputs)
+    unsigned char* executionMiddleLayer;    //! common layer used as input
+    unsigned char* executionMiddleLayer2;   //! common layer used as output
+    unsigned char* executionOutputLayer;    //! output layer (memoty + outputs)
     TEST_VECTORS();
     void allocate();
     void release();
@@ -190,7 +192,6 @@ struct GLOBALS {
     TEST_VECTORS testVectors;                   //! current test vector set
     IEvaluator* evaluator;                      //! evaluator (compares expected output with actual circuit output)
     unsigned long precompPow[MAX_LAYER_SIZE];   //! precomputed values up to 2^32
-    unsigned long powEffectiveMask;             //! TBD
     GLOBALS();
 };
 
