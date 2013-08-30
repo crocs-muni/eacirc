@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EACirc", "EACirc.vcxproj", "{38FBA7EF-420A-4958-9720-F9008E3769D7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Checker", "Checker.vcxproj", "{94B755BF-6C39-4CDD-8648-BDCDBA61E10F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,10 +13,6 @@ Global
 		{38FBA7EF-420A-4958-9720-F9008E3769D7}.Debug|Win32.Build.0 = Debug|Win32
 		{38FBA7EF-420A-4958-9720-F9008E3769D7}.Release|Win32.ActiveCfg = Release|Win32
 		{38FBA7EF-420A-4958-9720-F9008E3769D7}.Release|Win32.Build.0 = Release|Win32
-		{94B755BF-6C39-4CDD-8648-BDCDBA61E10F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{94B755BF-6C39-4CDD-8648-BDCDBA61E10F}.Debug|Win32.Build.0 = Debug|Win32
-		{94B755BF-6C39-4CDD-8648-BDCDBA61E10F}.Release|Win32.ActiveCfg = Release|Win32
-		{94B755BF-6C39-4CDD-8648-BDCDBA61E10F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
