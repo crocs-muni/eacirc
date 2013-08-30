@@ -73,23 +73,6 @@ public:
       * @return pointer to root element "eacirc_population"
       */
     static TiXmlElement* populationHeader(int populationSize);
-
-private:
-    /** transform connector mask relative->absolute (when saving)
-     * @param relativeMask
-     * @param slot                  current slot within the layer
-     * @param numLayerConnectors    number of connectors in current layer (how many bits to consider in mask)
-     * @return absolute connector mask
-     */
-    static GENOME_ITEM_TYPE relativeToAbsoluteConnectorMask(GENOME_ITEM_TYPE relativeMask, int slot, int numLayerConnectors);
-
-    /** transform connector mask absolute->relative (when loading)
-     * @param absoluteMask
-     * @param slot                  current slot within the layer
-     * @param numLayerConnectors    number of connectors in current layer (how many bits to consider in mask)
-     * @return relative connector mask
-     */
-    static GENOME_ITEM_TYPE absoluteToRelativeConnectorMask(GENOME_ITEM_TYPE absoluteMask, int slot, int numLayerConnectors);
 };
 
 #endif // CIRCUITIO_H

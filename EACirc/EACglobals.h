@@ -118,15 +118,17 @@ struct SETTINGS_GA {
 struct SETTINGS_CIRCUIT {
     int numLayers;                  //! number of layers in circuit
     int sizeLayer;                  //! general layer size
-    int sizeInputLayer;             //! number if inputs
-    int sizeOutputLayer;            //! number of outputs
-    int totalSizeOutputLayer;       //! number of outputs (including possible memory outputs)
-    int numConnectors;              //! how many connectors (? TBD)
+    int sizeInput;                  //! number if inputs
+    int sizeOutput;                 //! number of outputs
     bool useMemory;                 //! should we return part of output to input as memory?
-    int memorySize;                 //! memory size in bytes
+    int sizeMemory;                 //! memory size in bytes
+    int numConnectors;              //! maximum number of allowed connectors
     unsigned char allowedFunctions[FNC_MAX+1];  //! functions allowed in circuit
     // EXTRA INFORMATION, keep updated!
     int genomeSize;                 //! size of individual genome
+    int genomeWidth;                //! number of function slots in single circuit row (beware: can be higher than sizeLayer!)
+    int sizeOutputLayer;            //! number of outputs (including possible memory outputs)
+    int sizeInputLayer;             //! number of inputs (including possible memory inputs)
     SETTINGS_CIRCUIT();
 };
 

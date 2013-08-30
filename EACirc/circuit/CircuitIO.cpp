@@ -38,7 +38,7 @@ int CircuitIO::genomeToBinary(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string&
     ostringstream textCicruitStream;
     for (int i = 0; i < genome.length(); i++) {
         textCicruitStream << genome.gene(i) << " ";
-        if (i % pGlobals->settings->circuit.sizeLayer == pGlobals->settings->circuit.sizeLayer - 1) {
+        if (i % pGlobals->settings->circuit.genomeWidth == pGlobals->settings->circuit.genomeWidth - 1) {
             textCicruitStream << "  ";
         }
     }
@@ -100,20 +100,15 @@ TiXmlElement* CircuitIO::populationHeader(int populationSize) {
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeLayer).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_input_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeInputLayer).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeInput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_output_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeOutputLayer).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeOutput).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pElem2 = new TiXmlElement("size_memory");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeMemory).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
 
     return pRoot;
-}
-
-GENOME_ITEM_TYPE CircuitIO::relativeToAbsoluteConnectorMask(GENOME_ITEM_TYPE relativeMask, int slot, int numLayerConnectors) {
-
-}
-
-GENOME_ITEM_TYPE CircuitIO::absoluteToRelativeConnectorMask(GENOME_ITEM_TYPE absoluteMask, int slot, int numLayerConnectors) {
-
 }

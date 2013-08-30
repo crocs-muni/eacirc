@@ -45,11 +45,11 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     // parsing EACIRC/CIRCUIT
     pSettings->circuit.numLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_LAYERS").c_str());
     pSettings->circuit.sizeLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_LAYER").c_str());
-    pSettings->circuit.sizeOutputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
-    pSettings->circuit.sizeInputLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
+    pSettings->circuit.sizeOutput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
+    pSettings->circuit.sizeInput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
     pSettings->circuit.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
     pSettings->circuit.useMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/USE_MEMORY").c_str()) ? true : false;
-    pSettings->circuit.memorySize = atoi(getXMLElementValue(pRoot,"CIRCUIT/MEMORY_SIZE").c_str());
+    pSettings->circuit.sizeMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/MEMORY_SIZE").c_str());
     // parsing EACIRC/CIRCUIT/ALLOWED_FUNCTIONS
     pSettings->circuit.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
     pSettings->circuit.allowedFunctions[FNC_OR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_OR").c_str());
@@ -78,19 +78,15 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
 
     // update extra info
+    if (!pSettings->circuit.useMemory) {
+        pSettings->circuit.sizeMemory = 0;
+    }
     pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
-
-	// Compute real number of inputs and outputs when memory is used
-	pSettings->circuit.totalSizeOutputLayer = pSettings->circuit.sizeOutputLayer;
-	if (pSettings->circuit.useMemory) {
-		pSettings->circuit.sizeInputLayer += pSettings->circuit.memorySize;
-		pSettings->circuit.totalSizeOutputLayer += pSettings->circuit.memorySize; 
-	}
-    // Compute genome size: take into account memory, if used
-    pSettings->circuit.genomeSize = pSettings->circuit.numLayers*2 * max(pSettings->circuit.sizeLayer, pSettings->circuit.totalSizeOutputLayer);
-
-    // TBD:/TODO: decide if totalSizeOutputLayer can exceed layerSize
-	assert(pSettings->circuit.totalSizeOutputLayer <= pSettings->circuit.sizeLayer);
+    pSettings->circuit.sizeOutputLayer = pSettings->circuit.sizeOutput + pSettings->circuit.sizeMemory;
+    pSettings->circuit.sizeInputLayer = pSettings->circuit.sizeInput + pSettings->circuit.sizeMemory;
+    pSettings->circuit.genomeWidth = max(pSettings->circuit.sizeLayer, pSettings->circuit.sizeOutputLayer);
+    // Compute genome size: genomeWidth for number of layers (each layer is twice - function and connector)
+    pSettings->circuit.genomeSize = pSettings->circuit.numLayers * 2 * pSettings->circuit.genomeWidth;
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {

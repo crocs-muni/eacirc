@@ -95,7 +95,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                 
                 if (origValue != 0) {
                     // PRUNE FNC AND CONNECTION LAYER DIFFERENTLY
-                    if (((i / pGlobals->settings->circuit.sizeLayer) % 2) == 1) {
+                    if (((i / pGlobals->settings->circuit.genomeWidth) % 2) == 1) {
                         // FNCs LAYER - TRY TO SET AS NOP INSTRUCTION WITH NO CONNECTORS
                         prunnedGenome.gene(i, FNC_NOP);
                         
@@ -187,11 +187,11 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
             
 			// DISABLE GENES STARTING FROM END 
 			for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
-				int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
-				int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+                int offsetCON = (layer-1) * pGlobals->settings->circuit.genomeWidth;
+                int offsetFNC = (layer) * pGlobals->settings->circuit.genomeWidth;
 
 				// actual number of functions in layer - different for the last "output" layer
-				int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? (pGlobals->settings->circuit.totalSizeOutputLayer) : pGlobals->settings->circuit.sizeLayer;
+                int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? (pGlobals->settings->circuit.sizeOutputLayer) : pGlobals->settings->circuit.sizeLayer;
 
 				for (int slot = 0; slot < numFncInLayer; slot++) {
                     GENOME_ITEM_TYPE   origValueFnc = genome.gene(offsetFNC + slot);
@@ -258,8 +258,8 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 	
 	// ADD OUTPUT NODES
     // VISUAL CIRC: CONNECT OUTPUT LAYER
-    int offsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
-    for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+    int offsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
+    for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (usePredictorMask == NULL || usePredictorMask[i] == 1) {
 			// ADD THIS ONE TO LIST OF USED NODES 
 			displayNodes[offsetFNC + i] = 1;	
@@ -268,20 +268,20 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 	
 	// PROCESS ALL LAYERS FROM BACK
     for (int layer = 2 * pGlobals->settings->circuit.numLayers - 1; layer > 0; layer = layer - 2) {
-        int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
-        int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+        int offsetCON = (layer-1) * pGlobals->settings->circuit.genomeWidth;
+        int offsetFNC = (layer) * pGlobals->settings->circuit.genomeWidth;
 
         // actual number of inputs for this layer. For first layer equal to pCircuit->numInputs, for next layers equal to number of function in intermediate layer pCircuit->internalLayerSize
         int numLayerInputs = 0;
         if (layer == 1) {
             // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
             //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize; 
-            numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
+            numLayerInputs = pGlobals->settings->circuit.sizeInput;
         }
         else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
         // actual number of functions in layer - different for the last "output" layer
-        int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? pGlobals->settings->circuit.totalSizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
+        int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
 
         // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
         int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
@@ -311,7 +311,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
 				for (int bit = 0; bit < stopBit; bit++) {
 					if (HasConnection(genome.gene(offsetFNC + slot), connect, slot, connectOffset, bit)) {
 						if (layer > 1) {
-                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
+                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.genomeWidth;
 							// ADD PREVIOUS NODE 	
 							int targetSlot = getTargetSlot(connectOffset, bit, numLayerInputs);
 							displayNodes[prevOffsetFNC + targetSlot] = 1;
@@ -529,8 +529,8 @@ int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME
         TrimTrailingSpaces(line);
         if (line.find("[") != string::npos) {
             // AT LEAST ONE FNC ELEMENT PRESENT => NEW layer
-            int offsetCON = (local_numLayers * 2) * pGlobals->settings->circuit.sizeLayer;
-            int offsetFNC = (local_numLayers * 2 + 1) * pGlobals->settings->circuit.sizeLayer;
+            int offsetCON = (local_numLayers * 2) * pGlobals->settings->circuit.genomeWidth;
+            int offsetFNC = (local_numLayers * 2 + 1) * pGlobals->settings->circuit.genomeWidth;
             unsigned int pos3 = 0;
             unsigned int pos4 = 0;
             int slot = 0;
@@ -639,7 +639,7 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
 	// Compute real size of input (in case when memory is used)
 	//int numberOfCircuitInputs = pGlobals->settings->circuit.sizeInputLayer;
 
-	int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.memorySize : 0;
+    int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.sizeMemory : 0;
     
 	//
 	// TODO: REFACT: HEADER
@@ -654,8 +654,8 @@ ordering=out;\r\n";
 	// CODE CIRCUIT: 
     if (bCodeCircuit) {
 		// FUNCTION HEADER
-        codeCirc += "int headerCircuit_inputLayerSize = " + toString(pGlobals->settings->circuit.sizeInputLayer) + ";\n"; 
-        codeCirc += "int headerCircuit_outputLayerSize = " + toString(pGlobals->settings->circuit.totalSizeOutputLayer) + ";\n";
+        codeCirc += "int headerCircuit_inputLayerSize = " + toString(pGlobals->settings->circuit.sizeInput) + ";\n";
+        codeCirc += "int headerCircuit_outputLayerSize = " + toString(pGlobals->settings->circuit.sizeOutputLayer) + ";\n";
         codeCirc += "\n";
         codeCirc += "static void circuit(unsigned char inputs[";
         codeCirc += toString(pGlobals->settings->testVectors.inputLength);
@@ -665,7 +665,7 @@ ordering=out;\r\n";
 
 		// MEMORY INPUTS (if used)
 		if (pGlobals->settings->circuit.useMemory) {
-			int sectorLength = pGlobals->settings->circuit.sizeInputLayer - pGlobals->settings->circuit.memorySize;
+            int sectorLength = pGlobals->settings->circuit.sizeInput - pGlobals->settings->circuit.sizeMemory;
 			int numSectors = pGlobals->settings->testVectors.inputLength / sectorLength;
 
 			codeCirc += "    const int SECTOR_SIZE = ";
@@ -679,8 +679,8 @@ ordering=out;\r\n";
 
     message += "\r\n";
     for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
-        int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
-        int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+        int offsetCON = (layer-1) * pGlobals->settings->circuit.genomeWidth;
+        int offsetFNC = (layer) * pGlobals->settings->circuit.genomeWidth;
 
         int numLayerInputs = 0;
     
@@ -695,9 +695,9 @@ ordering=out;\r\n";
 			// Use magenta color for memory nodes (if used)
 			if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta, style=filled];\r\n";
 
-			for (int i = 0; i < pGlobals->settings->circuit.sizeInputLayer; i++) {
+            for (int i = 0; i < pGlobals->settings->circuit.sizeInput; i++) {
 				// set color for data input nodes, when necessary
-				if ((pGlobals->settings->circuit.useMemory && (i ==  pGlobals->settings->circuit.memorySize)) ||  // all memory inputs already processed
+                if ((pGlobals->settings->circuit.useMemory && (i ==  pGlobals->settings->circuit.sizeMemory)) ||  // all memory inputs already processed
 					(!pGlobals->settings->circuit.useMemory && (i == 0))) {										  // no memory inputs used	
 					visualCirc += "node [color=green, style=filled];\r\n";
 				}
@@ -732,9 +732,9 @@ ordering=out;\r\n";
 
 				// set values from input data into respective inputs 
 				// NOTE: memory inputs are initialized at the end of cycle
-				for (int dataInput = pGlobals->settings->circuit.memorySize; dataInput < pGlobals->settings->circuit.sizeInputLayer; dataInput++) {
+                for (int dataInput = pGlobals->settings->circuit.sizeMemory; dataInput < pGlobals->settings->circuit.sizeInput; dataInput++) {
 					ostringstream os3;
-					os3 << "        VAR_" <<  "IN_" << dataInput << " = inputs[sector * SECTOR_SIZE + " << dataInput - pGlobals->settings->circuit.memorySize << "];\n";
+                    os3 << "        VAR_" <<  "IN_" << dataInput << " = inputs[sector * SECTOR_SIZE + " << dataInput - pGlobals->settings->circuit.sizeMemory << "];\n";
 					value2 = os3.str();
 					codeCirc += value2;
 				}
@@ -742,7 +742,7 @@ ordering=out;\r\n";
 				codeCirc += "\n";
 			}
 
-			numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
+            numLayerInputs = pGlobals->settings->circuit.sizeInput;
         }
         else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
@@ -750,7 +750,7 @@ ordering=out;\r\n";
 
         int numFncs = pGlobals->settings->circuit.sizeLayer;
         // IF DISPLAYING THE LAST LAYER, THEN DISPLAY ONLY 'INTERNAL_LAYER_SIZE' FNC (OTHERS ARE UNUSED)
-        if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numFncs = pGlobals->settings->circuit.totalSizeOutputLayer;
+        if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numFncs = pGlobals->settings->circuit.sizeOutputLayer;
 
 		//
 		// VISUAL CIRC: PUT ALL NODES FROM SAME LAYER INTO SAME RANK
@@ -855,8 +855,8 @@ ordering=out;\r\n";
                     //if (HasImplicitConnection(nodeGetFunction(genome.gene(offsetFNC + slot)))) {
 					if (false){
 						if (layer > 1) {
-                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
-                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.sizeLayer;
+                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.genomeWidth;
+                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.genomeWidth;
 							GetFunctionLabel(genome.gene(prevOffsetFNC + slot), genome.gene(prevOffsetCON + slot), &value);
 							//previousSlotID.Format("%d_%d_%s", layer / 2, slot, value);
 							ostringstream os10;
@@ -921,8 +921,8 @@ ordering=out;\r\n";
 						bAtLeastOneConnection = TRUE;
 	                    
 						if (layer > 1) {
-                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
-                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.sizeLayer;
+                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.genomeWidth;
+                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.genomeWidth;
 							getTargetSlot(connectOffset, bit, numLayerInputs);
 							GetFunctionLabel(genome.gene(prevOffsetFNC + getTargetSlot(connectOffset, bit, numLayerInputs)), genome.gene(prevOffsetCON + getTargetSlot(connectOffset, bit, numLayerInputs)), &value);
 							//previousSlotID.Format("%d_%d_%s", layer / 2, connectOffset + bit, value);
@@ -1010,16 +1010,16 @@ ordering=out;\r\n";
 	//
 
     // VISUAL CIRC: CONNECT OUTPUT LAYER
-    //for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+    //for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 
 	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n"; 
 
 	// propagate memory outputs to inputs to next iteration (if required)
     if (pGlobals->settings->circuit.useMemory) {
 		// set memory inputs by respective memory outputs 
-		for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.memorySize; memorySlot++) {
-            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
-            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.sizeLayer;
+        for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.sizeMemory; memorySlot++) {
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.genomeWidth;
 		    string		value;
 		    GetFunctionLabel(genome.gene(prevOffsetFNC + memorySlot), genome.gene(prevOffsetCON + memorySlot), &value);
 			ostringstream os30;
@@ -1034,7 +1034,7 @@ ordering=out;\r\n";
 	}
 
 	int outputOffset = 0;
-	for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+    for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (i == numMemoryOutputs) {
 			visualCirc += "node [color=red];\r\n"; 
 		}
@@ -1055,8 +1055,8 @@ ordering=out;\r\n";
 			ostringstream os29;
 			os29 << i << "_OUT";
 			actualSlotID = os29.str();
-            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
-            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.sizeLayer;
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.genomeWidth;
 		    string		value;
 		    GetFunctionLabel(genome.gene(prevOffsetFNC + i), genome.gene(prevOffsetCON + i), &value);
             //previousSlotID.Format("%d_%d_%s", pGACirc->settings->circuit.numLayers, i, value);
@@ -1172,7 +1172,7 @@ int CircuitGenome::PrintCircuitMemory_DOT(GAGenome &g, string filePath, unsigned
 	string 							previousSlotID; 
 	int								bCodeCircuit = TRUE; 
 
-	int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.memorySize : 0;
+    int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.sizeMemory : 0;
     
     // VISUAL CIRC: INPUTS 
     visualCirc += "digraph EACircuit {\r\n\
@@ -1182,8 +1182,8 @@ size=\"6,6\";\r\n\
 ordering=out;\r\n";
 
     for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
-        int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
-        int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+        int offsetCON = (layer-1) * pGlobals->settings->circuit.genomeWidth;
+        int offsetFNC = (layer) * pGlobals->settings->circuit.genomeWidth;
 
         int numLayerInputs = 0;
         if (layer == 1) {
@@ -1194,9 +1194,9 @@ ordering=out;\r\n";
 			// Use magenta color for memory nodes (if used)
 			if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta, style=filled];\r\n";
 
-			for (int i = 0; i < pGlobals->settings->circuit.sizeInputLayer; i++) {
+            for (int i = 0; i < pGlobals->settings->circuit.sizeInput; i++) {
 				// set color for data input nodes, when necessary
-				if ((pGlobals->settings->circuit.useMemory && (i ==  pGlobals->settings->circuit.memorySize)) ||  // all memory inputs already processed
+                if ((pGlobals->settings->circuit.useMemory && (i ==  pGlobals->settings->circuit.sizeMemory)) ||  // all memory inputs already processed
 					(!pGlobals->settings->circuit.useMemory && (i == 0))) {										  // no memory inputs used	
 					visualCirc += "node [color=green, style=filled];\r\n";
 				}
@@ -1209,7 +1209,7 @@ ordering=out;\r\n";
 				value2 = os2.str();
 				visualCirc += value2;
 			}
-			numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
+            numLayerInputs = pGlobals->settings->circuit.sizeInput;
         }
         else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
@@ -1217,7 +1217,7 @@ ordering=out;\r\n";
 
         int numFncs = pGlobals->settings->circuit.sizeLayer;
         // IF DISPLAYING THE LAST LAYER, THEN DISPLAY ONLY 'INTERNAL_LAYER_SIZE' FNC (OTHERS ARE UNUSED)
-        if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numFncs = pGlobals->settings->circuit.totalSizeOutputLayer;
+        if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numFncs = pGlobals->settings->circuit.sizeOutputLayer;
 
 		//
 		// VISUAL CIRC: PUT ALL NODES FROM SAME LAYER INTO SAME RANK
@@ -1275,8 +1275,8 @@ ordering=out;\r\n";
 						bAtLeastOneConnection = TRUE;
 	                    
 						if (layer > 1) {
-                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.sizeLayer;
-                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.sizeLayer;
+                            int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.genomeWidth;
+                            int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.genomeWidth;
 							getTargetSlot(connectOffset, bit, numLayerInputs);
 							GetFunctionLabel(genome.gene(prevOffsetFNC + getTargetSlot(connectOffset, bit, numLayerInputs)), genome.gene(prevOffsetCON + getTargetSlot(connectOffset, bit, numLayerInputs)), &value);
 							//previousSlotID.Format("%d_%d_%s", layer / 2, connectOffset + bit, value);
@@ -1310,16 +1310,16 @@ ordering=out;\r\n";
 	//
 
     // VISUAL CIRC: CONNECT OUTPUT LAYER
-    //for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+    //for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 
 	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n"; 
 
 	// propagate memory outputs to inputs to next iteration (if required)
     if (pGlobals->settings->circuit.useMemory) {
 		// set memory inputs by respective memory outputs 
-		for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.memorySize; memorySlot++) {
-            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
-            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.sizeLayer;
+        for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.sizeMemory; memorySlot++) {
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.genomeWidth;
 		    string		value;
 		    GetFunctionLabel(genome.gene(prevOffsetFNC + memorySlot), genome.gene(prevOffsetCON + memorySlot), &value);
 			ostringstream os30;
@@ -1329,7 +1329,7 @@ ordering=out;\r\n";
 	}
 
 	int outputOffset = 0;
-	for (int i = 0; i < pGlobals->settings->circuit.totalSizeOutputLayer; i++) {
+    for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (i == numMemoryOutputs) {
 			visualCirc += "node [color=red];\r\n"; 
 		}
@@ -1339,8 +1339,8 @@ ordering=out;\r\n";
 			ostringstream os29;
 			os29 << i << "_OUT";
 			actualSlotID = os29.str();
-            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.sizeLayer;
-            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.sizeLayer;
+            int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
+            int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.genomeWidth;
 		    string		value;
 		    GetFunctionLabel(genome.gene(prevOffsetFNC + i), genome.gene(prevOffsetCON + i), &value);
             //previousSlotID.Format("%d_%d_%s", pGACirc->settings->circuit.numLayers, i, value);
@@ -1379,14 +1379,15 @@ ordering=out;\r\n";
 void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
 //    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
-    int     sectorLength = pGlobals->settings->circuit.sizeInputLayer;
+    int     sectorLength = pGlobals->settings->circuit.sizeInput;
     int     memoryLength = 0;
     unsigned char*    localInputs = NULL;
     unsigned char*    localOutputs = NULL;
     unsigned char*    fullLocalInputs = NULL;
 
 	// Compute maximum number of inputs into any layer
-	int maxLayerSize = (pGlobals->settings->circuit.sizeInputLayer > pGlobals->settings->circuit.sizeLayer) ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
+    //int maxLayerSize = (pGlobals->settings->circuit.sizeInputLayer > pGlobals->settings->circuit.sizeLayer) ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
+    int maxLayerSize = max(pGlobals->settings->circuit.sizeInputLayer, pGlobals->settings->circuit.genomeWidth);
 
 	// Local inputs and local outputs contains inputs and outputs for particular layer
 	// TRICK: We will use relative connectors which may request to access input values from other side of input array (connectors for slot 0 can access slot -2 == sizeLayer - 2)
@@ -1407,13 +1408,15 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 		// ######### CIRCUIT #############
 		// | MEMORY_INTPUTS_i+1 | DATA_OUTPUTS_i |
 		// 
-		// sizeof(MEMORY_INPUTS_i) == pGlobals->settings->circuit.memorySize
+        // sizeof(MEMORY_INPUTS_i) == pGlobals->settings->circuit.memorySize (0 if useMemory = false)
 		// sizeof(DATA_INPUTS_i) == pGlobals->settings->circuit.sizeInputLayer - pGlobals->settings->circuit.memorySize
+        // wanted: sizeof(DATA_INPUTS_i) == pGlobals->settings->circuit.sizeInput
 		// sizeof(MEMORY_INTPUTS_i+1) == pGlobals->settings->circuit.memorySize
 		// sizeof(DATA_OUTPUTS_i) == pGlobals->settings->circuit.sizeOutputLayer
+        // wanted: sizeof(DATA_OUTPUTS_i) == pGlobals->settings->circuit.sizeOutput
 
-		sectorLength = pGlobals->settings->circuit.sizeInputLayer - pGlobals->settings->circuit.memorySize;
-		memoryLength = pGlobals->settings->circuit.memorySize;
+        sectorLength = pGlobals->settings->circuit.sizeInput - pGlobals->settings->circuit.sizeMemory;
+        memoryLength = pGlobals->settings->circuit.sizeMemory;
 		numSectors = pGlobals->settings->testVectors.inputLength / sectorLength;
 
 		assert(pGlobals->settings->testVectors.inputLength % sectorLength == 0);
@@ -1422,7 +1425,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 		// ALL IN ONE RUN
 		numSectors = 1;
 		memoryLength = 0;
-		sectorLength = pGlobals->settings->circuit.sizeInputLayer;
+        sectorLength = pGlobals->settings->circuit.sizeInput;
 	}
 
 #ifdef ENABLE_SLIDING_WINDOW
@@ -1434,10 +1437,10 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
         // PREPARE INPUTS FOR ACTUAL RUN OF CIRCUIT
         if (numSectors == 1) {
             // ALL INPUT DATA AT ONCE
-			memcpy(localInputs, inputs, pGlobals->settings->circuit.sizeInputLayer);
+            memcpy(localInputs, inputs, pGlobals->settings->circuit.sizeInput);
 			// duplicate before and after (see TRICK above)
-			memcpy(localInputs - pGlobals->settings->circuit.sizeInputLayer, localInputs, pGlobals->settings->circuit.sizeInputLayer);
-			memcpy(localInputs + pGlobals->settings->circuit.sizeInputLayer, localInputs, pGlobals->settings->circuit.sizeInputLayer);
+            memcpy(localInputs - pGlobals->settings->circuit.sizeInput, localInputs, pGlobals->settings->circuit.sizeInput);
+            memcpy(localInputs + pGlobals->settings->circuit.sizeInput, localInputs, pGlobals->settings->circuit.sizeInput);
         }
         else {
             // USE MEMORY STATE (OUTPUT) AS FIRST PART OF INPUT
@@ -1455,20 +1458,20 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
         
         // EVALUATE CIRCUIT
         for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
-            int offsetCON = (layer-1) * pGlobals->settings->circuit.sizeLayer;
-            int offsetFNC = (layer) * pGlobals->settings->circuit.sizeLayer;
+            int offsetCON = (layer-1) * pGlobals->settings->circuit.genomeWidth;
+            int offsetFNC = (layer) * pGlobals->settings->circuit.genomeWidth;
             memset(localOutputs, 0, maxLayerSize); // BUGBUG: can be sizeInputLayer lower than number of used items in localOutputs?
 
             // actual number of inputs for this layer. For first layer equal to pCircuit->numInputs, for next layers equal to number of function in intermediate layer pCircuit->internalLayerSize
             int numLayerInputs = 0;
             if (layer == 1) {
                 // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN sizeInputLayer INPUTS
-                numLayerInputs = pGlobals->settings->circuit.sizeInputLayer;
+                numLayerInputs = pGlobals->settings->circuit.sizeInput;
             }
             else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
 
             // actual number of functions in layer - different for the last "output" layer
-            int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? (pGlobals->settings->circuit.totalSizeOutputLayer) : pGlobals->settings->circuit.sizeLayer;
+            int numFncInLayer = (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) ? (pGlobals->settings->circuit.sizeOutputLayer) : pGlobals->settings->circuit.sizeLayer;
 
             // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
             int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
@@ -1673,7 +1676,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 								result += localInputs[connectOffset + bit];
 							}
 						}
-                        result = inputs[result % pGlobals->settings->circuit.sizeInputLayer];
+                        result = inputs[result % pGlobals->settings->circuit.sizeInput];
                         break;
 					}
 					case FNC_EQUAL: {
@@ -1724,7 +1727,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
     
 	// circuit output is taken from output parts AFTER memory outputs
 	// BUT length of memory outputs can be zero (in case of circuit without memory)
-	memcpy(outputs,localOutputs + memoryLength,pGlobals->settings->circuit.sizeOutputLayer);
+    memcpy(outputs,localOutputs + memoryLength,pGlobals->settings->circuit.sizeOutput);
 
 	delete[] fullLocalInputs;
     delete[] localOutputs;

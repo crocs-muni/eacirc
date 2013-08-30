@@ -70,7 +70,7 @@ int PregeneratedTvProject::initializeProject() {
     m_tvFile.ignore(UCHAR_MAX,'\n');
     if (intSetting != pGlobals->settings->testVectors.outputLength) {
         mainLogger.out(LOGGER_WARNING) << "Number of outputs does not match.";
-        mainLogger.out() << "         required: " << pGlobals->settings->circuit.sizeOutputLayer << endl;
+        mainLogger.out() << "         required: " << pGlobals->settings->circuit.sizeOutput << endl;
         mainLogger.out() << "         provided: " << intSetting << endl;
         warning = true;
     }

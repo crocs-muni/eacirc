@@ -237,7 +237,7 @@ int FilesProject::prepareSingleTestVector() {
         // get correct input
         status = getStreamFromFile(fileNumber,pGlobals->settings->testVectors.inputLength,m_tvInputs);
         // set correct output
-        for (int output = 0; output < pGlobals->settings->circuit.sizeOutputLayer; output++)
+        for (int output = 0; output < pGlobals->settings->circuit.sizeOutput; output++)
             m_tvOutputs[output] = fileNumber * 0xff;
         break;
     default:

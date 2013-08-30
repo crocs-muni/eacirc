@@ -105,15 +105,12 @@ void EACirc::loadConfiguration(const string filename) {
 }
 
 void EACirc::checkConfigurationConsistency() {
-    if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE) {
-        mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal layer size or connector number)." << endl;
+    if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE
+            || m_settings.circuit.sizeInputLayer > MAX_LAYER_SIZE || m_settings.circuit.sizeOutputLayer > MAX_LAYER_SIZE) {
+        mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal size || connectors || total input|| total output)." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    if (m_settings.circuit.sizeLayer < m_settings.circuit.sizeOutputLayer) {
-        mainLogger.out(LOGGER_ERROR) << "Circuit output layer size is less than internal layer size." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.testVectors.inputLength < m_settings.circuit.sizeInputLayer) {
+    if (m_settings.testVectors.inputLength < m_settings.circuit.sizeInput) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input length is smaller than circuit input layer." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
@@ -288,15 +285,21 @@ void EACirc::loadPopulation(const string filename) {
         m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_input_layer").c_str());
-    if (m_settings.circuit.sizeInputLayer != settingsValue) {
+    if (m_settings.circuit.sizeInput != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible input layer size (";
-        mainLogger.out() << m_settings.circuit.sizeInputLayer << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.circuit.sizeInput << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_output_layer").c_str());
-    if (m_settings.circuit.sizeOutputLayer != settingsValue) {
+    if (m_settings.circuit.sizeOutput != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible output layer size (";
-        mainLogger.out() << m_settings.circuit.sizeOutputLayer << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.circuit.sizeOutput << " vs. " << settingsValue << ")." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
+    settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_memory").c_str());
+    if (m_settings.circuit.sizeMemory != settingsValue) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible memory size (";
+        mainLogger.out() << m_settings.circuit.sizeMemory << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_status != STAT_OK) {

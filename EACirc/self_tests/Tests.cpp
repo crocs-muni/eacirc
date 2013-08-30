@@ -1,6 +1,7 @@
 #include "Catch.h"
 #include "TestConfigurator.h"
 #include "XMLProcessor.h"
+#include "circuit/CircuitCommonFunctions.h"
 
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
     // general preparations
@@ -151,4 +152,13 @@ TEST_CASE("determinism/tv-pregeneration","general run vs. run with the same pre-
         // compare results
         configurator.compareResults();
     }
+}
+
+TEST_CASE("circuit/connector-conversion","relative versus absolute connector masks") {
+    pGlobals = new GLOBALS;
+    CHECK(relativeToAbsoluteConnectorMask(10,3,6,4) == 20);
+    CHECK(relativeToAbsoluteConnectorMask(9,0,6,4) == 18);
+    // TBD:/TODO: add abs->rel tests
+    if (pGlobals != NULL) delete pGlobals;
+    pGlobals = NULL;
 }

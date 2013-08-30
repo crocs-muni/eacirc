@@ -29,7 +29,7 @@ void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigne
         m_totalStream1++;
     }
     // increase category for each output byte (value modulo number of categories)
-    for (int outputByte = 0; outputByte < pGlobals->settings->circuit.sizeOutputLayer; outputByte++) {
+    for (int outputByte = 0; outputByte < pGlobals->settings->circuit.sizeOutput; outputByte++) {
         currentStreamMap[circuitOutputs[outputByte] % pGlobals->settings->main.evaluatorPrecision]++;
     }
 }

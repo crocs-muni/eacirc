@@ -4,6 +4,7 @@
 #include "generators/IRndGen.h"
 #include "CircuitGenome.h"
 #include "CircuitInterpreter.h"
+#include "CircuitCommonFunctions.h"
 
 void GACallbacks::initializer(GAGenome& genome) {
     GA1DArrayGenome<GENOME_ITEM_TYPE>& g = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) genome;
@@ -50,7 +51,7 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
     }
 
     // 2. FUNCTION_LAYER_1 is set to XOR instruction only (argument random 0-255)
-    offset = 1 * pGlobals->settings->circuit.sizeLayer;
+    offset = 1 * pGlobals->settings->circuit.genomeWidth;
     for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
         GENOME_ITEM_TYPE genomeItem = 0;
         nodeSetFunction(&genomeItem, FNC_XOR);
@@ -60,7 +61,7 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
 
     // 3. CONNECTOR_LAYER_i is set to random mask (possibly multiple connectors)
     for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-        offset = (2 * layer) * pGlobals->settings->circuit.sizeLayer;
+        offset = (2 * layer) * pGlobals->settings->circuit.genomeWidth;
         for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
             // for details see connector documentation
             genome.gene(offset + slot, GARandomInt(0,pGlobals->precompPow[pGlobals->settings->circuit.numConnectors]-1));
@@ -69,7 +70,7 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
 
     // 4. FUNCTION_LAYER_i is set to random instruction from range 0..FNC_MAX, respecting allowed instructions in settings
     for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-        offset = (2 * layer + 1) * pGlobals->settings->circuit.sizeLayer;
+        offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
         for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
             GENOME_ITEM_TYPE genomeItem = 0;
             unsigned char function;
@@ -85,14 +86,15 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
 
     int layer = pGlobals->settings->circuit.numLayers - 1;
     // 5. last CONNECTOR_LAYER connects to random nodes (not respecting numConnectors!)
-    offset = (2 * layer) * pGlobals->settings->circuit.sizeLayer;
+    offset = (2 * layer) * pGlobals->settings->circuit.genomeWidth;
     for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++){
         // for details see connectors documentation
+        // BEWARE: relative location of nodes further than sizeLayer are wrapped around (see documentation)
         genome.gene(offset + slot, GARandomInt(0, pGlobals->precompPow[pGlobals->settings->circuit.sizeLayer]-1));
     }
 
     // 6. last FUNCTION_LAYER is set to random instruction from range 0..FNC_MAX, respecting allowed instructions in settings
-    offset = (2 * layer + 1) * pGlobals->settings->circuit.sizeLayer;
+    offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
     for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) {
         GENOME_ITEM_TYPE genomeItem = 0;
         unsigned char function;
@@ -120,12 +122,12 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
             if (GAFlipCoin(probMutation)) {
                 numOfMutations++;
                 // allow any bit 0-sizeInputLayer to change
-                genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->circuit.sizeInputLayer));
+                genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->circuit.sizeInput));
             }
         }
         // mutate connectors in internal connector layers
         for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-            offset = (2 * layer) * pGlobals->settings->circuit.sizeLayer;
+            offset = (2 * layer) * pGlobals->settings->circuit.genomeWidth;
             for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
                 if (GAFlipCoin(probMutation)) {
                     numOfMutations++;
@@ -135,11 +137,12 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
             }
         }
         // mutate connectors in last layer
-        offset = (2 * (pGlobals->settings->circuit.numLayers - 1)) * pGlobals->settings->circuit.sizeLayer;
+        offset = (2 * (pGlobals->settings->circuit.numLayers - 1)) * pGlobals->settings->circuit.genomeWidth;
         for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++){
             if (GAFlipCoin(probMutation)) {
                 numOfMutations++;
                 // allow any bit 0-sizeLayer to change
+                // BEWARE: relative location of nodes further than sizeLayer are wrapped around (see documentation)
                 genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->circuit.sizeLayer));
             }
         }
@@ -150,8 +153,9 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
     if (pGlobals->settings->ga.mutateFunctions) {
         // mutate functions in input layer or internal layers
         for (int layer = 0; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-            offset = (2 * layer + 1) * pGlobals->settings->circuit.sizeLayer;
-            int actualLayerSize = layer != pGlobals->settings->circuit.numLayers - 1 ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
+            offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
+            int actualLayerSize = layer != pGlobals->settings->circuit.numLayers - 1 ?
+                        pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
             for (int slot = 0; slot < actualLayerSize; slot++){
                 if (GAFlipCoin(probMutation)) { // mutate function
                     numOfMutations++;
@@ -181,14 +185,14 @@ int GACallbacks::crossover_perLayer(const GA1DArrayGenome<GENOME_ITEM_TYPE> &par
     // take random layer and cut individuals in 2 parts horisontally
     int crossPoint = GARandomInt(1,pGlobals->settings->circuit.numLayers) * 2;
     for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.sizeLayer;
+        int offset = layer * pGlobals->settings->circuit.genomeWidth;
         if (layer <= crossPoint) {
-            for (int i = 0; i < pGlobals->settings->circuit.sizeLayer; i++) {
+            for (int i = 0; i < pGlobals->settings->circuit.genomeWidth; i++) {
                 if (offspring1 != NULL) offspring1->gene(offset + i, parent1.gene(offset + i));
                 if (offspring2 != NULL) offspring2->gene(offset + i, parent2.gene(offset + i));
             }
         } else {
-            for (int i = 0; i < pGlobals->settings->circuit.sizeLayer; i++) {
+            for (int i = 0; i < pGlobals->settings->circuit.genomeWidth; i++) {
                 if (offspring1 != NULL) offspring1->gene(offset + i, parent2.gene(offset + i));
                 if (offspring2 != NULL) offspring2->gene(offset + i, parent1.gene(offset + i));
             }
@@ -202,8 +206,8 @@ int GACallbacks::crossover_perColumn(const GA1DArrayGenome<GENOME_ITEM_TYPE> &pa
     // take random point in layer size and cut individuals in 2 parts verically
     int crossPoint = GARandomInt(1,pGlobals->settings->circuit.sizeLayer);
     for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.sizeLayer;
-        for (int i = 0; i < pGlobals->settings->circuit.sizeLayer; i++) {
+        int offset = layer * pGlobals->settings->circuit.genomeWidth;
+        for (int i = 0; i < pGlobals->settings->circuit.genomeWidth; i++) {
             if ( i < crossPoint) {
                 if (offspring1 != NULL) offspring1->gene(offset + i, parent1.gene(offset + i));
                 if (offspring2 != NULL) offspring2->gene(offset + i, parent2.gene(offset + i));

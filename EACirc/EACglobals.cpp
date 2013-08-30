@@ -50,14 +50,17 @@ SETTINGS_GA::SETTINGS_GA() {
 SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
     numLayers = -1;
     sizeLayer = -1;
-    sizeInputLayer = -1;
-	sizeOutputLayer = -1;
-    totalSizeOutputLayer = -1;
-    numConnectors = -1;
+    sizeInput = -1;
+    sizeOutput = -1;
     useMemory = false;
-    memorySize = -1;
+    sizeMemory = -1;
+    numConnectors = -1;
     memset(allowedFunctions, 0, sizeof(allowedFunctions));
+    // computed data
+    sizeOutputLayer = -1;
+    sizeInputLayer = -1;
     genomeSize = -1;
+    genomeWidth = -1;
 }
 
 SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
@@ -91,7 +94,7 @@ TEST_VECTORS::TEST_VECTORS() {
 
 void TEST_VECTORS::allocate() {
     if (pGlobals->settings->testVectors.inputLength == -1 || pGlobals->settings->testVectors.outputLength == -1
-            || pGlobals->settings->circuit.totalSizeOutputLayer == -1) {
+            || pGlobals->settings->circuit.sizeOutputLayer == -1) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input/output size or circuit output size not set." << endl;
         return;
     }
@@ -106,8 +109,8 @@ void TEST_VECTORS::allocate() {
         memset(inputs[i],0,pGlobals->settings->testVectors.inputLength);
         outputs[i] = new unsigned char[pGlobals->settings->testVectors.outputLength];
         memset(outputs[i],0,pGlobals->settings->testVectors.outputLength);
-        circuitOutputs[i] = new unsigned char[pGlobals->settings->circuit.totalSizeOutputLayer];
-        memset(circuitOutputs[i],0,pGlobals->settings->circuit.totalSizeOutputLayer);
+        circuitOutputs[i] = new unsigned char[pGlobals->settings->circuit.sizeOutput];
+        memset(circuitOutputs[i],0,pGlobals->settings->circuit.sizeOutput);
     }
 }
 
