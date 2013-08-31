@@ -91,8 +91,8 @@ TEST_VECTORS::TEST_VECTORS() {
     circuitOutputs = NULL;
     newSet = false;
     executionInputLayer = NULL;
-    executionMiddleLayer = NULL;
-    executionMiddleLayer2 = NULL;
+    executionMiddleLayerIn = NULL;
+    executionMiddleLayerOut = NULL;
     executionOutputLayer = NULL;
 }
 
@@ -104,7 +104,7 @@ void TEST_VECTORS::allocate() {
     }
     // if memory is allocated, release
     if (inputs != NULL || outputs != NULL || circuitOutputs != NULL || executionInputLayer != NULL
-            || executionMiddleLayer != NULL || executionMiddleLayer2 != NULL || executionOutputLayer != NULL) release();
+            || executionMiddleLayerIn != NULL || executionMiddleLayerOut != NULL || executionOutputLayer != NULL) release();
     // allocate memory for inputs, outputs, citcuitOutputs
     inputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
     outputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
@@ -118,8 +118,8 @@ void TEST_VECTORS::allocate() {
         memset(circuitOutputs[i],0,pGlobals->settings->circuit.sizeOutput);
     }
     executionInputLayer = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
-    executionMiddleLayer = new unsigned char[pGlobals->settings->circuit.sizeLayer];
-    executionMiddleLayer2 = new unsigned char[pGlobals->settings->circuit.sizeLayer];
+    executionMiddleLayerIn = new unsigned char[pGlobals->settings->circuit.sizeLayer];
+    executionMiddleLayerOut = new unsigned char[pGlobals->settings->circuit.sizeLayer];
     executionOutputLayer = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
 }
 
@@ -141,10 +141,10 @@ void TEST_VECTORS::release() {
     }
     if (executionInputLayer != NULL) delete executionInputLayer;
     executionInputLayer = NULL;
-    if (executionMiddleLayer != NULL) delete executionMiddleLayer;
-    executionMiddleLayer = NULL;
-    if (executionMiddleLayer2 != NULL) delete executionMiddleLayer2;
-    executionMiddleLayer2 = NULL;
+    if (executionMiddleLayerIn != NULL) delete executionMiddleLayerIn;
+    executionMiddleLayerIn = NULL;
+    if (executionMiddleLayerOut != NULL) delete executionMiddleLayerOut;
+    executionMiddleLayerOut = NULL;
     if (executionOutputLayer != NULL) delete executionOutputLayer;
     executionOutputLayer = NULL;
 }

@@ -19,6 +19,16 @@ public:
      * @return status
      */
     static int pruneCircuit(GAGenome &originalGenome, GAGenome &prunnedGenome);
+
+private:
+    /** compute single circuit function
+     * @param ndoe                  function constant (with optional arguments)
+     * @param absoluteConnectors    connector mask (absolute!)
+     * @param layerInputValues      array of values produced by previous layer
+     * @param result                computed value
+     * @return status
+     */
+    static int executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result);
 };
 
 #endif // CIRCUITINTERPRETER_H

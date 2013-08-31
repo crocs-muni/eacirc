@@ -17,7 +17,7 @@ float GACallbacks::evaluator(GAGenome &g) {
     pGlobals->evaluator->resetEvaluator();
     // execute circuit & evaluate success for each test vector
     for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-        CircuitGenome::executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+        CircuitInterpreter::executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
         pGlobals->evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector]);
     }
     // retrieve fitness from evaluator

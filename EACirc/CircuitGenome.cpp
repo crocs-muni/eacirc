@@ -43,7 +43,7 @@ int CircuitGenome::GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYP
             *pLabel = "BSL_" + out.str(); 
             break;
         }
-        case FNC_SUM: *pLabel = "SUM"; break;
+        //case FNC_SUM: *pLabel = "SUM"; break;
         case FNC_SUBS: *pLabel = "SUB"; break;
         case FNC_ADD: *pLabel = "ADD"; break;
         case FNC_MULT: *pLabel = "MUL"; break;
@@ -410,7 +410,7 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
         case FNC_XOR:	*pOperand = "^"; break;    
         case FNC_NOR:	*pOperand = "| ~"; break;    
         case FNC_NAND:	*pOperand = "& ~"; break;    
-        case FNC_SUM:	*pOperand = "+"; break;
+        //case FNC_SUM:	*pOperand = "+"; break;
         case FNC_SUBS:	*pOperand = "-"; break;     
         case FNC_ADD:	*pOperand = "+"; break;    
         case FNC_MULT:	*pOperand = "*"; break;    
@@ -464,7 +464,7 @@ int CircuitGenome::GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand
         case FNC_XOR: 
         case FNC_NAND: 
         case FNC_SUBS: 
-        case FNC_SUM: 
+        //case FNC_SUM:
         case FNC_ADD: {
             *pOperand = "0"; break;    
         }
@@ -557,7 +557,7 @@ int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME
                 if (fncStr.compare("[ROL]") == 0) fnc = FNC_ROTL;
                 if (fncStr.compare("[ROR]") == 0) fnc = FNC_ROTR;
                 if (fncStr.compare("[BSL]") == 0) fnc = FNC_BITSELECTOR;
-                if (fncStr.compare("[SUM]") == 0) fnc = FNC_SUM;
+                //if (fncStr.compare("[SUM]") == 0) fnc = FNC_SUM;
                 if (fncStr.compare("[SUB]") == 0) fnc = FNC_SUBS;
                 if (fncStr.compare("[ADD]") == 0) fnc = FNC_ADD;
                 if (fncStr.compare("[MUL]") == 0) fnc = FNC_MULT;
@@ -1602,7 +1602,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                         
                         break;
                     }
-                    case FNC_SUM: {
+                    /*case FNC_SUM: {
                         // SUM ALL INPUTS
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN SUM IT INTO OF INPUT
@@ -1611,7 +1611,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                             }
                         }
                         break;
-                    }
+                    }*/
                     case FNC_SUBS: {
                         // SUBSTRACT ALL REMAINING VALUES FROM FIRST CONNECTED INPUTS
                         bool bFirstInput = true;

@@ -28,6 +28,13 @@ void nodeSetFunction(GENOME_ITEM_TYPE* nodeValue, unsigned char function);
  */
 void nodeSetArgument1(GENOME_ITEM_TYPE* nodeValue, unsigned char argument1);
 
+/** read and discart the first connection from given conenctor mask
+ * @param connectorMask     connector mask (relative or absolute) - is changed during run!
+ * @param connection        position of the first connection from the left (0-31), undefined if no connection exists
+ * @return is connection filled with connector?
+ */
+bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection);
+
 /** transform connector mask relative->absolute (when saving)
  * @param relativeMask
  * @param slot                  current slot within the layer
@@ -45,5 +52,17 @@ GENOME_ITEM_TYPE relativeToAbsoluteConnectorMask(GENOME_ITEM_TYPE relativeMask, 
  * @return relative connector mask
  */
 GENOME_ITEM_TYPE absoluteToRelativeConnectorMask(GENOME_ITEM_TYPE absoluteMask, int slot, int sizePreviousLayer, int connectorWidth);
+
+/** returns neutral value for given function
+ * @param function      function constant
+ * @return neutral value
+ */
+unsigned char getNeutralValue(unsigned char function);
+
+/** text describing function
+ * @param function      function constant
+ * @return describtion
+ */
+string functionToString(unsigned char function);
 
 #endif // CIRCUITCOMMONFUNCTIONS_H

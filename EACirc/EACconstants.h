@@ -122,7 +122,7 @@ typedef unsigned __int64 uint64_t;
 #define FNC_ROTL                    7
 #define FNC_ROTR                    8
 #define FNC_BITSELECTOR             9
-#define FNC_SUM                     10
+//#define FNC_SUM                     10
 #define FNC_SUBS                    11
 #define FNC_ADD                     12
 #define FNC_MULT                    13

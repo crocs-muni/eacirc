@@ -45,8 +45,8 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     // parsing EACIRC/CIRCUIT
     pSettings->circuit.numLayers = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_LAYERS").c_str());
     pSettings->circuit.sizeLayer = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_LAYER").c_str());
-    pSettings->circuit.sizeOutput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT_LAYER").c_str());
-    pSettings->circuit.sizeInput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT_LAYER").c_str());
+    pSettings->circuit.sizeOutput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_OUTPUT").c_str());
+    pSettings->circuit.sizeInput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT").c_str());
     pSettings->circuit.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
     pSettings->circuit.useMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/USE_MEMORY").c_str()) ? true : false;
     pSettings->circuit.sizeMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/MEMORY_SIZE").c_str());
@@ -61,7 +61,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.allowedFunctions[FNC_ROTL] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ROTL").c_str());
     pSettings->circuit.allowedFunctions[FNC_ROTR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ROTR").c_str());
     pSettings->circuit.allowedFunctions[FNC_BITSELECTOR] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_BITSELECTOR").c_str());
-    pSettings->circuit.allowedFunctions[FNC_SUM] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUM").c_str());
+    //pSettings->circuit.allowedFunctions[FNC_SUM] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUM").c_str());
     pSettings->circuit.allowedFunctions[FNC_SUBS] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_SUBS").c_str());
     pSettings->circuit.allowedFunctions[FNC_ADD] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_ADD").c_str());
     pSettings->circuit.allowedFunctions[FNC_MULT] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_MULT").c_str());
