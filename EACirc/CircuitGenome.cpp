@@ -1378,6 +1378,7 @@ ordering=out;\r\n";
     return status;
 }
 
+/*
 void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
 //    unsigned char*   inputsBegin = inputs;
     int     numSectors = 1;
@@ -1602,7 +1603,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                         
                         break;
                     }
-                    /*case FNC_SUM: {
+                    case FNC_SUM: {
                         // SUM ALL INPUTS
                         for (int bit = 0; bit < stopBit; bit++) {
                             // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN SUM IT INTO OF INPUT
@@ -1611,7 +1612,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                             }
                         }
                         break;
-                    }*/
+                    }
                     case FNC_SUBS: {
                         // SUBSTRACT ALL REMAINING VALUES FROM FIRST CONNECTED INPUTS
                         bool bFirstInput = true;
@@ -1734,6 +1735,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 	delete[] fullLocalInputs;
     delete[] localOutputs;
 }
+*/
 
 /*
 int CircuitGenome::writeGenome(const GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& textCircuit) {
