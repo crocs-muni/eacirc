@@ -32,13 +32,13 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {
     int connectionIndex = 0;
-    while ( (( (GENOME_ITEM_TYPE) 1 >> connectionIndex ) & connectorMask) == 0 && connectionIndex < 32) {
+    while ( (( (GENOME_ITEM_TYPE) 1 << connectionIndex ) & connectorMask) == 0 && connectionIndex < 32) {
         connectionIndex++;
     }
     if (connectionIndex >= 32) {
         return false; // no existing connection
     } else {
-        connectorMask ^= ((GENOME_ITEM_TYPE) 1 >> connectionIndex); // discart connection
+        connectorMask ^= ((GENOME_ITEM_TYPE) 1 << connectionIndex); // discart connection
         connection = connectionIndex; // output connection
         return true; // connection found
     }
@@ -95,23 +95,40 @@ unsigned char getNeutralValue(unsigned char function) {
 
 string functionToString(unsigned char function) {
     switch (function) {
-    case FNC_NOP:           return "NOP ";
-    case FNC_OR:            return "OR  ";
-    case FNC_NOR:           return "NOR ";
-    case FNC_XOR:           return "XOR ";
+    case FNC_NOP:           return "NOP";
+    case FNC_OR:            return "OR";
+    case FNC_NOR:           return "NOR";
+    case FNC_XOR:           return "XOR";
     case FNC_ROTL:          return "ROTL";
     case FNC_ROTR:          return "ROTR";
     case FNC_BITSELECTOR:   return "BSLT";
     case FNC_SUBS:          return "SUBS";
-    case FNC_ADD:           return "ADD ";
-    case FNC_EQUAL:         return "EQ  ";
-    case FNC_AND:           return "AND ";
+    case FNC_ADD:           return "ADD";
+    case FNC_EQUAL:         return "EQ";
+    case FNC_AND:           return "AND";
     case FNC_NAND:          return "NAND";
     case FNC_MULT:          return "MULT";
-    case FNC_DIV:           return "DIV ";
+    case FNC_DIV:           return "DIV";
     case FNC_CONST:         return "CONS";
     case FNC_READX:         return "READ";
     }
     // unknown function constant
     return string("UNKNOWN_") + to_string(function);
+}
+
+string getNodeLabel(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, int layer, int slot) {
+    ostringstream label;
+    switch (layer) {
+    case -1:
+        label << "IN_" << slot;
+        break;
+    case -2:
+        label << "OUT_" << slot;
+        break;
+    default:
+        label << functionToString(nodeGetFunction(genome.gene( (2*layer+1)*pGlobals->settings->circuit.genomeWidth + slot )));
+        label << "_" << layer << "_" << slot;
+        break;
+    }
+    return label.str();
 }

@@ -105,7 +105,8 @@ int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fi
                 gene = relativeToAbsoluteConnectorMask(gene, slot, previousLayerWidth, connectorWidth);
                 file << setw(10) << setfill('0') << gene << "   ";
             } else { // function layer
-                file << functionToString(nodeGetFunction(gene)) << " [" << setw(3) << setfill('0') << (int) nodeGetArgument(gene,1) << "]" << "   ";
+                file << setw(4) << setfill(' ') << left << functionToString(nodeGetFunction(gene));
+                file << " [" << setw(3) << setfill('0') << (int) nodeGetArgument(gene,1) << "]" << "   ";
             }
         }
         file << endl;
@@ -120,7 +121,60 @@ int CircuitIO::genomeToCode(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fi
 }
 
 int CircuitIO::genomeToGraph(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
-    return STAT_NOT_IMPLEMENTED_YET;
+    int layerWidth;
+    int previousLayerWidth;
+    int connectorWidth;
+    GENOME_ITEM_TYPE connectors;
+    int connection;
+    ofstream file(fileName);
+    if (!file.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write genome (" << fileName << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    // graph header
+    file << "digraph EACircuit {" << endl << "rankdir=BT;" << endl << "edge [dir=none];" << endl << "size=\"6,6\";" << endl << "ordering=out;" << endl;
+
+    // node specification
+    // input nodes
+    file << "node [color=green, style=filled];" << endl << "{ rank=same; ";
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) { file << "\"" << getNodeLabel(genome, -1, slot) << "\"; "; }
+    file << "}" << endl;
+    // inside nodes
+    file << "node [color=lightblue2, style=filled];" << endl;
+    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers; layer++) {
+        layerWidth = layer == pGlobals->settings->circuit.numLayers-1 ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
+        file << "{ rank=same; ";
+        for (int slot = 0; slot < layerWidth; slot++) { file << "\"" << getNodeLabel(genome, layer, slot) << "\"; "; }
+        file << "}" << endl;
+    }
+    // output nodes
+    file << "node [color=red];" << endl << "{ rank=same; ";
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) { file << "\"" << getNodeLabel(genome, -2, slot) << "\"; "; }
+    file << "}" << endl;
+
+    // connectors
+    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
+        previousLayerWidth = layer == 0 ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
+        layerWidth = layer < pGlobals->settings->circuit.numLayers ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
+        connectorWidth = (layer == 0 || layer >= pGlobals->settings->circuit.numLayers-1) ? previousLayerWidth : pGlobals->settings->circuit.numConnectors;
+        for (int slot = 0; slot < layerWidth; slot++) {
+            if (layer == pGlobals->settings->circuit.numLayers) { // last pseudo-output layer
+                file << "\"" << getNodeLabel(genome, -2, slot) << "\" -> \"";
+                file << getNodeLabel(genome, pGlobals->settings->circuit.numLayers-1, slot) << "\";" << endl;
+            } else { // common layer
+                connectors = genome.gene(layer * 2 * pGlobals->settings->circuit.genomeWidth + slot);
+                connectors = relativeToAbsoluteConnectorMask(connectors, slot, previousLayerWidth, connectorWidth);
+                while (connectorsDiscartFirst(connectors,connection)) {
+                    file << "\"" << getNodeLabel(genome, layer, slot) << "\" -> \"" << getNodeLabel(genome, layer-1, connection) << "\";" << endl;
+                }
+            }
+        }
+    }
+
+    // footer & close
+    file << "}";
+    file.close();
+    return STAT_OK;
 }
 
 TiXmlElement* CircuitIO::populationHeader(int populationSize) {
