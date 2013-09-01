@@ -7,18 +7,27 @@ unsigned char nodeGetFunction(GENOME_ITEM_TYPE nodeValue) {
     return nodeValue & BOTTOM_BYTE;
 }
 
-unsigned char nodeGetArgument1(GENOME_ITEM_TYPE nodeValue) {
-    return ((nodeValue & TOP_BYTE) >> 24) & BOTTOM_BYTE;
+unsigned char nodeGetArgument(GENOME_ITEM_TYPE nodeValue, int argumentNumber) {
+    if (argumentNumber < 1 || argumentNumber > 4 ) {
+        mainLogger.out(LOGGER_ERROR) << "Getting invalid argument: " << argumentNumber << "." << endl;
+        return 0;
+    }
+    int shift = 32 - argumentNumber * BITS_IN_UCHAR;
+    return ((nodeValue & (BOTTOM_BYTE << shift)) >> shift) & BOTTOM_BYTE;
 }
 
-void nodeSetFunction(GENOME_ITEM_TYPE* nodeValue, unsigned char function) {
-    *nodeValue = *nodeValue & (~BOTTOM_BYTE);
-    *nodeValue |= function;
+void nodeSetFunction(GENOME_ITEM_TYPE& nodeValue, unsigned char function) {
+    nodeValue = nodeValue & (~BOTTOM_BYTE);
+    nodeValue |= function;
 }
 
-void nodeSetArgument1(GENOME_ITEM_TYPE* nodeValue, unsigned char argument1) {
-    *nodeValue = *nodeValue & (~TOP_BYTE);
-    *nodeValue |= (argument1 << 24);
+void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned char argumentValue) {
+    if (argumentNumber < 1 || argumentNumber > 4 ) {
+        mainLogger.out(LOGGER_ERROR) << "Setting invalid argument: " << argumentNumber << "." << endl;
+    }
+    int shift = 32 - argumentNumber * BITS_IN_UCHAR;
+    nodeValue = nodeValue & (~(BOTTOM_BYTE << shift));
+    nodeValue |= (argumentValue << shift);
 }
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {
@@ -66,7 +75,6 @@ unsigned char getNeutralValue(unsigned char function) {
     case FNC_ROTL:
     case FNC_ROTR:
     case FNC_BITSELECTOR:
-    //case FNC_SUM:
     case FNC_SUBS:
     case FNC_ADD:
     case FNC_EQUAL:
@@ -87,23 +95,22 @@ unsigned char getNeutralValue(unsigned char function) {
 
 string functionToString(unsigned char function) {
     switch (function) {
-    case FNC_NOP:           return "FNC_NOP";
-    case FNC_OR:            return "FNC_OR";
-    case FNC_NOR:           return "FNC_NOR";
-    case FNC_XOR:           return "FNC_XOR";
-    case FNC_ROTL:          return "FNC_ROTL";
-    case FNC_ROTR:          return "FNC_ROTR";
-    case FNC_BITSELECTOR:   return "FNC_BITSELECTOR";
-    //case FNC_SUM:           return "FNC_SUM";
-    case FNC_SUBS:          return "FNC_SUBS";
-    case FNC_ADD:           return "FNC_ADD";
-    case FNC_EQUAL:         return "FNC_EQUAL";
-    case FNC_AND:           return "FNC_AND";
-    case FNC_NAND:          return "FNC_NAND";
-    case FNC_MULT:          return "FNC_MULT";
-    case FNC_DIV:           return "FNC_DIV";
-    case FNC_CONST:         return "FNC_CONST";
-    case FNC_READX:         return "FNC_READX";
+    case FNC_NOP:           return "NOP ";
+    case FNC_OR:            return "OR  ";
+    case FNC_NOR:           return "NOR ";
+    case FNC_XOR:           return "XOR ";
+    case FNC_ROTL:          return "ROTL";
+    case FNC_ROTR:          return "ROTR";
+    case FNC_BITSELECTOR:   return "BSLT";
+    case FNC_SUBS:          return "SUBS";
+    case FNC_ADD:           return "ADD ";
+    case FNC_EQUAL:         return "EQ  ";
+    case FNC_AND:           return "AND ";
+    case FNC_NAND:          return "NAND";
+    case FNC_MULT:          return "MULT";
+    case FNC_DIV:           return "DIV ";
+    case FNC_CONST:         return "CONS";
+    case FNC_READX:         return "READ";
     }
     // unknown function constant
     return string("UNKNOWN_") + to_string(function);

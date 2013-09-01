@@ -70,14 +70,14 @@ int CircuitInterpreter::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenom
 }
 
 int CircuitInterpreter::pruneCircuit(GAGenome &originalGenome, GAGenome &prunnedGenome) {
-
+    return STAT_NOT_IMPLEMENTED_YET;
 }
 
 int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char& result) {
     // temporary variables
     int connection = 0;
     unsigned char function = nodeGetFunction(node);
-    unsigned char argument1 = nodeGetArgument1(node);
+    unsigned char argument1 = nodeGetArgument(node,1);
     // start result with neutral value
     result = getNeutralValue(function);
 

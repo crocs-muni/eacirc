@@ -10,23 +10,25 @@
  */
 unsigned char nodeGetFunction(GENOME_ITEM_TYPE nodeValue);
 
-/** get argument 1 from node value
+/** get argument from node value
  * @param nodeValue
+ * @apram argumentNumber        (1-4, 1 being the most used, 4 being function constant)
  * @return argument 1 value
  */
-unsigned char nodeGetArgument1(GENOME_ITEM_TYPE nodeValue);
+unsigned char nodeGetArgument(GENOME_ITEM_TYPE nodeValue, int argumentNumber);
 
 /** assign function constant to node value
  * @param nodeValue
  * @param function constant
  */
-void nodeSetFunction(GENOME_ITEM_TYPE* nodeValue, unsigned char function);
+void nodeSetFunction(GENOME_ITEM_TYPE& nodeValue, unsigned char function);
 
-/** assign argument 1 to node value
+/** assign argument to node value
  * @param nodeValue
- * @param argument 1
+ * @apram argumentNumber        (1-4, 1 being the most used, 4 being function constant)
+ * @param argumentValue
  */
-void nodeSetArgument1(GENOME_ITEM_TYPE* nodeValue, unsigned char argument1);
+void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned char argumentValue);
 
 /** read and discart the first connection from given conenctor mask
  * @param connectorMask     connector mask (relative or absolute) - is changed during run!

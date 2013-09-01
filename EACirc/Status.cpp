@@ -27,6 +27,6 @@ const char* statusToString(int error) {
     case STAT_CIRCUIT_INCONSISTENT:     return "STAT_CIRCUIT_INCONSISTENT";
     }
     // NO SPECIAL RULE MATCH
-    return "'unknown'";
+    return "UNKNOWN_STATUS";
 }
 

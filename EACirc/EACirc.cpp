@@ -508,7 +508,8 @@ void EACirc::evaluateStep() {
         fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
-        CircuitGenome::PrintCircuit(genome, filePath, 0, FALSE);   // print without prunning
+        CircuitIO::outputGenomeFiles(genome,filePath);
+        //CircuitGenome::PrintCircuit(genome, filePath, 0, FALSE);   // print without prunning
 
         if (pGlobals->settings->outputs.allowPrunning) {
             filePath += "_prunned";

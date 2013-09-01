@@ -17,7 +17,7 @@ int CircuitIO::genomeFromBinary(string binaryCircuit, GA1DArrayGenome<GENOME_ITE
 }
 
 int CircuitIO::genomeFromText(string filename, GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
-
+    return STAT_NOT_IMPLEMENTED_YET;
 }
 
 int CircuitIO::outputGenomeFiles(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
@@ -73,15 +73,54 @@ int CircuitIO::genomeToPopulation(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, str
 }
 
 int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
-
+    ofstream file(fileName);
+    if (!file.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write genome (" << fileName << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    // output file header with current circuit configuration
+    file << pGlobals->settings->circuit.numLayers << " \t(number of layers)" << endl;
+    file << pGlobals->settings->circuit.sizeLayer << " \t(size of inside layer)" << endl;
+    file << pGlobals->settings->circuit.sizeInput << " \t(number of inputs, without memory)" << endl;
+    file << pGlobals->settings->circuit.sizeOutput << " \t(number of outputs, without memory)" << endl;
+    file << pGlobals->settings->circuit.sizeMemory << " \t(size of memory)" << endl;
+    file << pGlobals->settings->circuit.numConnectors << " \t(maximum number of inside connectors)" << endl;
+    file << endl;
+    // output circuit itself, starting with input pseudo-layer
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
+        file << "IN  [2^" << setw(2) << setfill('0') << slot << "]" << " | ";
+    }
+    file << endl << endl;
+    GENOME_ITEM_TYPE gene;
+    int previousLayerWidth;
+    int layerWidth;
+    int connectorWidth;
+    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
+        previousLayerWidth = layer < 2 ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
+        layerWidth = layer < pGlobals->settings->circuit.numLayers*2-2 ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
+        connectorWidth = (layer < 2 || layer >= pGlobals->settings->circuit.numLayers*2-2) ? previousLayerWidth : pGlobals->settings->circuit.numConnectors;
+        for (int slot = 0; slot < layerWidth; slot++) {
+            gene = genome.gene(layer * pGlobals->settings->circuit.genomeWidth + slot);
+            if (layer % 2 == 0) { // connector layer
+                gene = relativeToAbsoluteConnectorMask(gene, slot, previousLayerWidth, connectorWidth);
+                file << setw(10) << setfill('0') << gene << "   ";
+            } else { // function layer
+                file << functionToString(nodeGetFunction(gene)) << " [" << setw(3) << setfill('0') << (int) nodeGetArgument(gene,1) << "]" << "   ";
+            }
+        }
+        file << endl;
+        if (layer % 2 == 1) file << endl;
+    }
+    file.close();
+    return STAT_OK;
 }
 
 int CircuitIO::genomeToCode(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
-
+    return STAT_NOT_IMPLEMENTED_YET;
 }
 
 int CircuitIO::genomeToGraph(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
-
+    return STAT_NOT_IMPLEMENTED_YET;
 }
 
 TiXmlElement* CircuitIO::populationHeader(int populationSize) {
