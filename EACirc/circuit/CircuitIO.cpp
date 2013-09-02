@@ -88,7 +88,7 @@ int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fi
     file << endl;
     // output circuit itself, starting with input pseudo-layer
     for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
-        file << "IN  [2^" << setw(2) << setfill('0') << slot << "]" << " | ";
+        file << "IN  [2^" << setw(2) << right << setfill('0') << slot << "]" << " | ";
     }
     file << endl << endl;
     GENOME_ITEM_TYPE gene;
@@ -103,10 +103,10 @@ int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fi
             gene = genome.gene(layer * pGlobals->settings->circuit.genomeWidth + slot);
             if (layer % 2 == 0) { // connector layer
                 gene = relativeToAbsoluteConnectorMask(gene, slot, previousLayerWidth, connectorWidth);
-                file << setw(10) << setfill('0') << gene << "   ";
+                file << setw(10) << right << setfill('0') << gene << "   ";
             } else { // function layer
-                file << setw(4) << setfill(' ') << left << functionToString(nodeGetFunction(gene));
-                file << " [" << setw(3) << setfill('0') << (int) nodeGetArgument(gene,1) << "]" << "   ";
+                file << setw(4) << left << setfill(' ') << functionToString(nodeGetFunction(gene));
+                file << " [" << setw(3) << right << setfill('0') << (int) nodeGetArgument(gene,1) << "]" << "   ";
             }
         }
         file << endl;
@@ -132,40 +132,64 @@ int CircuitIO::genomeToGraph(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string f
         return STAT_FILE_WRITE_FAIL;
     }
     // graph header
-    file << "digraph EACircuit {" << endl << "rankdir=BT;" << endl << "edge [dir=none];" << endl << "size=\"6,6\";" << endl << "ordering=out;" << endl;
+    file << "graph EACircuit {" << endl << "rankdir=BT;" << endl << "ranksep=0.75;" << endl << "ordering=out;" << endl;
+    file << "splines=polyline;" << endl << "node [style=filled, color=lightblue2];" << endl << endl;
 
     // node specification
     // input nodes
-    file << "node [color=green, style=filled];" << endl << "{ rank=same; ";
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) { file << "\"" << getNodeLabel(genome, -1, slot) << "\"; "; }
+    file << "{ rank=same;" << endl << "node [color=goldenrod1];" << endl;
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
+        if (slot == pGlobals->settings->circuit.sizeMemory) { file << "node [color=chartreuse3];" << endl; }
+        file << "\"-1_" << slot << "\"[label=\"" << (slot < pGlobals->settings->circuit.sizeMemory ? "MEM" : "IN") << "\\n" << slot << "\"];" << endl;
+    }
     file << "}" << endl;
     // inside nodes
-    file << "node [color=lightblue2, style=filled];" << endl;
     for (int layer = 0; layer < pGlobals->settings->circuit.numLayers; layer++) {
         layerWidth = layer == pGlobals->settings->circuit.numLayers-1 ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
-        file << "{ rank=same; ";
-        for (int slot = 0; slot < layerWidth; slot++) { file << "\"" << getNodeLabel(genome, layer, slot) << "\"; "; }
+        file << "{ rank=same;" << endl;
+        for (int slot = 0; slot < layerWidth; slot++) {
+            GENOME_ITEM_TYPE gene = genome.gene((layer*2+1) * pGlobals->settings->circuit.genomeWidth + slot);
+            file << "\"" << layer << "_" << slot << "\"[label=\"";
+            file << functionToString(nodeGetFunction(gene)) << "\\n" << (int) nodeGetArgument(gene,1) << "\"];" << endl;
+        }
         file << "}" << endl;
     }
     // output nodes
-    file << "node [color=red];" << endl << "{ rank=same; ";
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) { file << "\"" << getNodeLabel(genome, -2, slot) << "\"; "; }
+    file << "{ rank=same;" << endl << "node [color=goldenrod1];" << endl;
+    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) {
+        if (slot == pGlobals->settings->circuit.sizeMemory) { file << "node [color=brown2];" << endl; }
+        file << "\"-2_" << slot << "\"[label=\"" << (slot < pGlobals->settings->circuit.sizeMemory ? "MEM" : "OUT") << "\\n" << slot << "\"];" << endl;
+    }
     file << "}" << endl;
 
+    // invisible connectors (to preserve order in rows)
+    file << "edge[style=invis];" << endl;
+    for (int layer = -1; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
+        layerWidth = pGlobals->settings->circuit.sizeLayer;
+        if (layer == -1) { layerWidth = pGlobals->settings->circuit.sizeInputLayer; }
+        if (layer >= pGlobals->settings->circuit.numLayers - 1) { layerWidth = pGlobals->settings->circuit.sizeOutputLayer; }
+        file << "\"" << (layer == pGlobals->settings->circuit.numLayers ? -2 : layer) << "_0\"";
+        for (int slot = 1; slot < layerWidth; slot++) {
+            file << " -- \"" << (layer == pGlobals->settings->circuit.numLayers ? -2 : layer) << "_" << slot << "\"";
+        }
+        file << ";" << endl;
+    }
+    file << endl;
+
     // connectors
+    file << "edge[style=solid];" << endl;
     for (int layer = 0; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
         previousLayerWidth = layer == 0 ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
-        layerWidth = layer < pGlobals->settings->circuit.numLayers ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
+        layerWidth = layer < pGlobals->settings->circuit.numLayers - 1 ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
         connectorWidth = (layer == 0 || layer >= pGlobals->settings->circuit.numLayers-1) ? previousLayerWidth : pGlobals->settings->circuit.numConnectors;
         for (int slot = 0; slot < layerWidth; slot++) {
             if (layer == pGlobals->settings->circuit.numLayers) { // last pseudo-output layer
-                file << "\"" << getNodeLabel(genome, -2, slot) << "\" -> \"";
-                file << getNodeLabel(genome, pGlobals->settings->circuit.numLayers-1, slot) << "\";" << endl;
+                file << "\"-2_" << slot << "\" -- \"" << pGlobals->settings->circuit.numLayers - 1 << "_" << slot << "\";" << endl;
             } else { // common layer
                 connectors = genome.gene(layer * 2 * pGlobals->settings->circuit.genomeWidth + slot);
                 connectors = relativeToAbsoluteConnectorMask(connectors, slot, previousLayerWidth, connectorWidth);
                 while (connectorsDiscartFirst(connectors,connection)) {
-                    file << "\"" << getNodeLabel(genome, layer, slot) << "\" -> \"" << getNodeLabel(genome, layer-1, connection) << "\";" << endl;
+                    file << "\"" << layer << "_" << slot << "\" -- \"" << layer-1 << "_" << connection << "\";" << endl;
                 }
             }
         }

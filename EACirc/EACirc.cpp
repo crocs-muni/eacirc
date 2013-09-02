@@ -127,6 +127,10 @@ void EACirc::checkConfigurationConsistency() {
         mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
+    if (m_settings.circuit.useMemory && m_settings.circuit.sizeMemory <= 0) {
+        mainLogger.out(LOGGER_ERROR) << "Memory enabled but size incorrectly set (negative or zero)." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
 }
 
 void EACirc::saveState(const string filename) {
