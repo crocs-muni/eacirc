@@ -14,7 +14,7 @@ INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 # === main project files ===
 SOURCES += \
     EACirc/Main.cpp \
-    EACirc/CircuitGenome.cpp \
+#    EACirc/CircuitGenome.cpp \
     EACirc/CommonFnc.cpp \
     EACirc/XMLProcessor.cpp \
     EACirc/Logger.cpp \
@@ -208,7 +208,7 @@ SOURCES += \
 # === main EACirc files ===
 HEADERS += \
     EACirc/Main.h \
-    EACirc/CircuitGenome.h \
+#    EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
     EACirc/XMLProcessor.h \
     EACirc/EACconstants.h \

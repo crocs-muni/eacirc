@@ -2,7 +2,6 @@
 #include "EACglobals.h"
 #include "evaluators/IEvaluator.h"
 #include "generators/IRndGen.h"
-#include "CircuitGenome.h"
 #include "CircuitInterpreter.h"
 #include "CircuitCommonFunctions.h"
 

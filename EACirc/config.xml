@@ -46,22 +46,25 @@
         <MEMORY_SIZE>8</MEMORY_SIZE>
         <ALLOWED_FUNCTIONS>
             <FNC_NOP>1</FNC_NOP>
-            <FNC_OR>1</FNC_OR>
+            <FNC_CONS>1</FNC_CONS>
             <FNC_AND>1</FNC_AND>
-            <FNC_CONST>1</FNC_CONST>
+            <FNC_NAND>1</FNC_NAND>
+            <FNC_OR>1</FNC_OR>
             <FNC_XOR>1</FNC_XOR>
             <FNC_NOR>1</FNC_NOR>
-            <FNC_NAND>1</FNC_NAND>
+            <FNC_NOT>1</FNC_NOT>
+            <FNC_SHIL>1</FNC_SHIL>
+            <FNC_SHIR>1</FNC_SHIR>
             <FNC_ROTL>1</FNC_ROTL>
             <FNC_ROTR>1</FNC_ROTR>
-            <FNC_BITSELECTOR>1</FNC_BITSELECTOR>
-            <FNC_SUM>1</FNC_SUM>
-            <FNC_SUBS>1</FNC_SUBS>
-            <FNC_ADD>1</FNC_ADD>
-            <FNC_MULT>1</FNC_MULT>
-            <FNC_DIV>1</FNC_DIV>
-            <FNC_READX>0</FNC_READX>
-            <FNC_EQUAL>0</FNC_EQUAL>
+            <FNC_EQ>1</FNC_EQ>
+            <FNC_LT>1</FNC_LT>
+            <FNC_GT>1</FNC_GT>
+            <FNC_LEQ>1</FNC_LEQ>
+            <FNC_GEQ>1</FNC_GEQ>
+            <FNC_BSLC>1</FNC_BSLC>
+            <FNC_READ>1</FNC_READ>
+            <FNC_EXT>0</FNC_EXT>
         </ALLOWED_FUNCTIONS>
     </CIRCUIT>
     <TEST_VECTORS>

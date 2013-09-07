@@ -7,11 +7,11 @@
 #include "generators/MD5RndGen.h"
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
-#include "CircuitGenome.h"
 #include "circuit/GACallbacks.h"
 #include "projects/IProject.h"
 #include "evaluators/IEvaluator.h"
 #include "circuit/CircuitIO.h"
+#include "circuit/CircuitInterpreter.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -513,12 +513,6 @@ void EACirc::evaluateStep() {
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
         CircuitIO::outputGenomeFiles(genome,filePath);
-        //CircuitGenome::PrintCircuit(genome, filePath, 0, FALSE);   // print without prunning
-
-        if (pGlobals->settings->outputs.allowPrunning) {
-            filePath += "_prunned";
-            CircuitGenome::PrintCircuit(genome, filePath, 0, TRUE);    // print with prunning
-        }
     }
 
     // save generation stats for total scores
@@ -608,7 +602,14 @@ void EACirc::run() {
     mainLogger.out(LOGGER_INFO) << "   AvgMax: " << pGlobals->stats.avgMaxFitSum / (double) pGlobals->stats.avgCount << endl;
     mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
 
-    // print the best circuit into separate file
+    // print the best circuit into separate file, prune if allowed
     GA1DArrayGenome<GENOME_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
-    CircuitGenome::PrintCircuit(genomeBest,FILE_CIRCUIT_DEFAULT,0,1);
+    CircuitIO::outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
+    if (pGlobals->settings->outputs.allowPrunning) {
+        GA1DArrayGenome<GENOME_ITEM_TYPE> genomePrunned = genomeBest;
+        m_status = CircuitInterpreter::pruneCircuit(genomeBest, genomePrunned);
+        if (m_status == STAT_OK) {
+            CircuitIO::outputGenomeFiles(genomePrunned, string(FILE_CIRCUIT_DEFAULT) + FILE_PRUNNED_SUFFIX);
+        }
+    }
 }

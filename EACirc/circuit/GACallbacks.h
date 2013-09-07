@@ -1,7 +1,8 @@
 #ifndef GACALLBACKS_H
 #define GACALLBACKS_H
 
-#include "CircuitGenome.h"
+#include "EACglobals.h"
+#include "GA1DArrayGenome.h"
 
 class GACallbacks {
 public:

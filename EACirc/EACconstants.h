@@ -60,6 +60,7 @@ typedef unsigned __int64 uint64_t;
 #define FILE_TEST_VECTORS_HR        "test_vectors_hr.txt"
 #define FILE_CIRCUIT_PREFIX         "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
 #define FILE_CIRCUIT_DEFAULT        "EAC_circuit"       // .bin, .txt, .dot, .c
+#define FILE_PRUNNED_SUFFIX         "_prunned"
 #define FILE_LOGFILE                "eacirc.log"
 
 // fitness precisions
@@ -112,24 +113,27 @@ typedef unsigned __int64 uint64_t;
 #define GENERATOR_MD5               3
 
 // CIRCUIT FUNCTIONS
-#define FNC_NOP                     0
-#define FNC_OR                      1
-#define FNC_AND                     2
-#define FNC_CONST                   3
-#define FNC_XOR                     4
-#define FNC_NOR                     5
-#define FNC_NAND                    6
-#define FNC_ROTL                    7
-#define FNC_ROTR                    8
-#define FNC_BITSELECTOR             9
-//#define FNC_SUM                     10
-#define FNC_SUBS                    11
-#define FNC_ADD                     12
-#define FNC_MULT                    13
-#define FNC_DIV                     14
-#define FNC_READX                   15
-#define FNC_EQUAL                   16
-#define FNC_MAX                     FNC_EQUAL
+#define FNC_NOP     0
+#define FNC_CONS    1
+#define FNC_AND     2
+#define FNC_NAND    3
+#define FNC_OR      4
+#define FNC_XOR     5
+#define FNC_NOR     6
+#define FNC_NOT     7
+#define FNC_SHIL    8
+#define FNC_SHIR    9
+#define FNC_ROTL    10
+#define FNC_ROTR    11
+#define FNC_EQ      12
+#define FNC_LT      13
+#define FNC_GT      14
+#define FNC_LEQ     15
+#define FNC_GEQ     16
+#define FNC_BSLC    17
+#define FNC_READ    18
+#define FNC_EXT     19
+#define FNC_MAX     FNC_EXT
 
 // BYTECODE OPS CODES - used for emulation of internode program (not all at the moment, see list below)
 #define AALOAD      0x32

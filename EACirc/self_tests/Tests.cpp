@@ -42,7 +42,7 @@ TEST_CASE("determinism/seed","testing whether run with random seed and second ru
 }
 
 TEST_CASE("determinism/load-state","running and running from loaded state") {
-    TestConfigurator configurator;
+    TestConfigurator configurator(PROJECT_ESTREAM);
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();

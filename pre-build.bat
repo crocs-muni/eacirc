@@ -12,6 +12,6 @@ goto end
 echo // current git commit info (updated before build if correctly set-up) >EACirc/Version.h
 git log -1 --format="#define GIT_COMMIT \"%%H\"" >>EACirc/Version.h
 git log -1 --format="#define GIT_COMMIT_SHORT \"%%h\"" >>EACirc/Version.h
-goto end
+if errorlevel 1 (goto nok) else goto end
 
 :end

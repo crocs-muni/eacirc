@@ -76,6 +76,7 @@ int CircuitInterpreter::pruneCircuit(GAGenome &originalGenome, GAGenome &prunned
 int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char& result) {
     // temporary variables
     int connection = 0;
+    int connection2 = 0;
     unsigned char function = nodeGetFunction(node);
     unsigned char argument1 = nodeGetArgument(node,1);
     // start result with neutral value
@@ -85,14 +86,18 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
     case FNC_NOP:
         if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = layerInputValues[connection]; }
         break;
-    case FNC_OR:
-        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result |= layerInputValues[connection]; }
+    case FNC_CONS:
+        result = argument1;
         break;
     case FNC_AND:
         while (connectorsDiscartFirst(absoluteConnectors,connection)) { result &= layerInputValues[connection]; }
         break;
-    case FNC_CONST:
-        result = argument1;
+    case FNC_NAND:
+        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result &= layerInputValues[connection]; }
+        result = ~result;
+        break;
+    case FNC_OR:
+        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result |= layerInputValues[connection]; }
         break;
     case FNC_XOR:
         while (connectorsDiscartFirst(absoluteConnectors,connection)) { result ^= layerInputValues[connection]; }
@@ -101,41 +106,60 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
         while (connectorsDiscartFirst(absoluteConnectors,connection)) { result |= layerInputValues[connection]; }
         result = ~result;
         break;
-    case FNC_NAND:
-        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result &= layerInputValues[connection]; }
-        result = ~result;
+    case FNC_NOT:
+        if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = ~(layerInputValues[connection]); }
         break;
-    case FNC_ROTL:
+    case FNC_SHIL:
         if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = layerInputValues[connection] << (argument1 % BITS_IN_UCHAR); }
         break;
-    case FNC_ROTR:
+    case FNC_SHIR:
         if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = layerInputValues[connection] >> (argument1 % BITS_IN_UCHAR); }
         break;
-    case FNC_BITSELECTOR:
-        if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = layerInputValues[connection] & argument1; }
-        break;
-    case FNC_SUBS:
-        result = argument1;
-        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result -= layerInputValues[connection]; }
-        break;
-    case FNC_ADD:
-        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result += layerInputValues[connection]; }
-        break;
-    case FNC_MULT:
-        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result *= layerInputValues[connection]; }
-        break;
-    case FNC_DIV:
-        result = argument1;
-        while (connectorsDiscartFirst(absoluteConnectors,connection)) { result /= (max(layerInputValues[connection], (unsigned char) 1)); }
-        break;
-    case FNC_READX:
-        result = pGlobals->testVectors.executionInputLayer[argument1 % pGlobals->settings->circuit.sizeInputLayer];
-        break;
-    case FNC_EQUAL:
+    case FNC_ROTL:
         if (connectorsDiscartFirst(absoluteConnectors,connection)) {
-            if (argument1 == layerInputValues[connection]) result = UCHAR_MAX;
+            result = (layerInputValues[connection] << (argument1 % BITS_IN_UCHAR))
+                      | (layerInputValues[connection] >> (BITS_IN_UCHAR - argument1 % BITS_IN_UCHAR));
         }
         break;
+    case FNC_ROTR:
+        if (connectorsDiscartFirst(absoluteConnectors,connection)) {
+            result = (layerInputValues[connection] >> (argument1 % BITS_IN_UCHAR))
+                      | (layerInputValues[connection] << (BITS_IN_UCHAR - argument1 % BITS_IN_UCHAR));
+        }
+        break;
+    case FNC_EQ:
+        if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
+            if (layerInputValues[connection] == layerInputValues[connection2]) { return UCHAR_MAX; }
+        }
+        break;
+    case FNC_LT:
+        if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
+            if (layerInputValues[connection] < layerInputValues[connection2]) { return UCHAR_MAX; }
+        }
+        break;
+    case FNC_GT:
+        if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
+            if (layerInputValues[connection] > layerInputValues[connection2]) { return UCHAR_MAX; }
+        }
+        break;
+    case FNC_LEQ:
+        if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
+            if (layerInputValues[connection] <= layerInputValues[connection2]) { return UCHAR_MAX; }
+        }
+        break;
+    case FNC_GEQ:
+        if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
+            if (layerInputValues[connection] >= layerInputValues[connection2]) { return UCHAR_MAX; }
+        }
+        break;
+    case FNC_BSLC:
+        if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = layerInputValues[connection] & argument1; }
+        break;
+    case FNC_READ:
+        result = pGlobals->testVectors.executionInputLayer[argument1 % pGlobals->settings->circuit.sizeInputLayer];
+        break;
+    case FNC_EXT:
+        return executeExternalFunction(node, absoluteConnectors, layerInputValues, result);
 
         // unknown function constant
     default:
@@ -143,4 +167,8 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
         return STAT_CIRCUIT_INCONSISTENT;
     }
     return STAT_OK;
+}
+
+int CircuitInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
+    return STAT_NOT_IMPLEMENTED_YET;
 }

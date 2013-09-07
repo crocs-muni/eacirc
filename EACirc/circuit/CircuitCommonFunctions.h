@@ -67,12 +67,4 @@ unsigned char getNeutralValue(unsigned char function);
  */
 string functionToString(unsigned char function);
 
-/** return label used in graph and code outputs, processes function layers
- * @param genome    source genome
- * @param layer     layer (-1 for pseudo-input, -2 for pseudo-output)
- * @param slot      slot number (0..size-1)
- * @return node description
- */
-string getNodeLabel(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, int layer, int slot);
-
 #endif // CIRCUITCOMMONFUNCTIONS_H

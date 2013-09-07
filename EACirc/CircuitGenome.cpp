@@ -24,14 +24,14 @@ int CircuitGenome::GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYP
         case FNC_XOR: *pLabel = "XOR"; break;
         case FNC_NOR: *pLabel = "NOR"; break;
         case FNC_NAND: *pLabel = "NAN"; break;
-        case FNC_ROTL: {
+        case FNC_SHIL: {
 			std::stringstream out;
             unsigned char tmp = nodeGetArgument(functionID,1);
             out << (nodeGetArgument(functionID,1) & 0x07);
             *pLabel = "ROL_" + out.str(); 
             break;
         }
-        case FNC_ROTR: {
+        case FNC_SHIR: {
 			std::stringstream out;
             out << (nodeGetArgument(functionID,1) & 0x07);
             *pLabel = "ROR_" + out.str(); 
@@ -334,8 +334,8 @@ int CircuitGenome::FilterEffectiveConnections(GENOME_ITEM_TYPE functionID, GENOM
     switch (nodeGetFunction(functionID)) {
 		// FUNCTIONS WITH ONLY ONE CONNECTOR
 		case FNC_NOP:  // no break
-        case FNC_ROTL: // no break
-        case FNC_ROTR: // no break
+        case FNC_SHIL: // no break
+        case FNC_SHIR: // no break
         case FNC_BITSELECTOR: {
 			// Include only first connector bit
 			for (int i = 0; i < numLayerConnectors; i++) {
@@ -377,8 +377,8 @@ int CircuitGenome::HasConnection(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE c
 		// FUNCTIONS WITH ONLY ONE CONNECTOR
 		//
 		case FNC_NOP:  // no break
-        case FNC_ROTL: // no break
-        case FNC_ROTR: // no break
+        case FNC_SHIL: // no break
+        case FNC_SHIR: // no break
         case FNC_BITSELECTOR: {
 			// Check if this connection is the first one 
 			// If not, then set connection flag bHasConnection to FALSE
@@ -427,13 +427,13 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
 			break;
         }
 
-        case FNC_ROTL: // no break
-        case FNC_ROTR: {
+        case FNC_SHIL: // no break
+        case FNC_SHIR: {
 			if (bHasConnection) {
 				std::stringstream out;
                 unsigned char tmp = nodeGetArgument(functionID,1);
-                if (nodeGetFunction(functionID) == FNC_ROTL) out << "<< " << (nodeGetArgument(functionID,1) & 0x07);
-                if (nodeGetFunction(functionID) == FNC_ROTR) out << ">> " << (nodeGetArgument(functionID,1) & 0x07);
+                if (nodeGetFunction(functionID) == FNC_SHIL) out << "<< " << (nodeGetArgument(functionID,1) & 0x07);
+                if (nodeGetFunction(functionID) == FNC_SHIR) out << ">> " << (nodeGetArgument(functionID,1) & 0x07);
 				*pOperand = out.str();
 			}
 			break;
@@ -481,11 +481,11 @@ int CircuitGenome::GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand
 
         case FNC_NOP: 
         case FNC_CONST: 
-        case FNC_ROTL: 
+        case FNC_SHIL: 
         case FNC_BITSELECTOR: 
 		case FNC_READX: 
 		case FNC_EQUAL:
-        case FNC_ROTR: {
+        case FNC_SHIR: {
             *pOperand = ""; break;    
         }
 
@@ -554,8 +554,8 @@ int CircuitGenome::readGenomeFromText(string textCircuit, GA1DArrayGenome<GENOME
                 if (fncStr.compare("[XOR]") == 0) fnc = FNC_XOR;
                 if (fncStr.compare("[NOR]") == 0) fnc = FNC_NOR;
                 if (fncStr.compare("[NAN]") == 0) fnc = FNC_NAND;
-                if (fncStr.compare("[ROL]") == 0) fnc = FNC_ROTL;
-                if (fncStr.compare("[ROR]") == 0) fnc = FNC_ROTR;
+                if (fncStr.compare("[ROL]") == 0) fnc = FNC_SHIL;
+                if (fncStr.compare("[ROR]") == 0) fnc = FNC_SHIR;
                 if (fncStr.compare("[BSL]") == 0) fnc = FNC_BITSELECTOR;
                 //if (fncStr.compare("[SUM]") == 0) fnc = FNC_SUM;
                 if (fncStr.compare("[SUB]") == 0) fnc = FNC_SUBS;
@@ -884,8 +884,8 @@ ordering=out;\r\n";
 							case FNC_ADD: os13 << " VAR_" << previousSlotID << " + "; value2 = os13.str(); break; 
 							case FNC_MULT: os13 << " VAR_" << previousSlotID << " * "; value2 = os13.str(); break; 
 							case FNC_DIV: os13 << " VAR_" << previousSlotID << " / "; value2 = os13.str(); break; 
-                            case FNC_ROTL: os13 << " VAR_" << previousSlotID << " << " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
-                            case FNC_ROTR: os13 << " VAR_" << previousSlotID << " >> " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
+                            case FNC_SHIL: os13 << " VAR_" << previousSlotID << " << " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
+                            case FNC_SHIR: os13 << " VAR_" << previousSlotID << " >> " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
                             case FNC_BITSELECTOR: os13 << " VAR_" << previousSlotID + " & " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
 							case FNC_EQUAL: os13 << " VAR_" << previousSlotID << " == "; value2 = os13.str(); break; 
 							case FNC_READX: {

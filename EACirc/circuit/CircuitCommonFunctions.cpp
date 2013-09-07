@@ -69,24 +69,27 @@ GENOME_ITEM_TYPE absoluteToRelativeConnectorMask(GENOME_ITEM_TYPE absoluteMask, 
 unsigned char getNeutralValue(unsigned char function) {
     switch (function) {
     case FNC_NOP:
+    case FNC_CONS:
     case FNC_OR:
-    case FNC_NOR:
     case FNC_XOR:
+    case FNC_NOR:
+    case FNC_NOT:
+    case FNC_SHIL:
+    case FNC_SHIR:
     case FNC_ROTL:
     case FNC_ROTR:
-    case FNC_BITSELECTOR:
-    case FNC_SUBS:
-    case FNC_ADD:
-    case FNC_EQUAL:
+    case FNC_EQ:
+    case FNC_LT:
+    case FNC_GT:
+    case FNC_LEQ:
+    case FNC_GEQ:
+    case FNC_BSLC:
+    case FNC_READ:
+    case FNC_EXT:
         return 0;
     case FNC_AND:
     case FNC_NAND:
-    case FNC_MULT:
-    case FNC_DIV:
-        return 1;
-    case FNC_CONST:
-    case FNC_READX:
-        return 0;
+        return UCHAR_MAX;
     }
     // unknown function constant
     mainLogger.out(LOGGER_ERROR) << "Neutral value undefined - unknown function (" << function << ")." << endl;
@@ -95,40 +98,27 @@ unsigned char getNeutralValue(unsigned char function) {
 
 string functionToString(unsigned char function) {
     switch (function) {
-    case FNC_NOP:           return "NOP";
-    case FNC_OR:            return "OR";
-    case FNC_NOR:           return "NOR";
-    case FNC_XOR:           return "XOR";
-    case FNC_ROTL:          return "ROTL";
-    case FNC_ROTR:          return "ROTR";
-    case FNC_BITSELECTOR:   return "BSLT";
-    case FNC_SUBS:          return "SUBS";
-    case FNC_ADD:           return "ADD";
-    case FNC_EQUAL:         return "EQ";
-    case FNC_AND:           return "AND";
-    case FNC_NAND:          return "NAND";
-    case FNC_MULT:          return "MULT";
-    case FNC_DIV:           return "DIV";
-    case FNC_CONST:         return "CONS";
-    case FNC_READX:         return "READ";
+    case FNC_NOP:   return "NOP";
+    case FNC_CONS:  return "CONS";
+    case FNC_AND:   return "AND";
+    case FNC_NAND:  return "NAND";
+    case FNC_OR:    return "OR";
+    case FNC_XOR:   return "XOR";
+    case FNC_NOR:   return "NOR";
+    case FNC_NOT:   return "NOT";
+    case FNC_SHIL:  return "ROTL";
+    case FNC_SHIR:  return "ROTR";
+    case FNC_ROTL:  return "CYCL";
+    case FNC_ROTR:  return "CYCR";
+    case FNC_EQ:    return "EQ";
+    case FNC_LT:    return "LT";
+    case FNC_GT:    return "GT";
+    case FNC_LEQ:   return "LEQ";
+    case FNC_GEQ:   return "GEQ";
+    case FNC_BSLC:  return "BSLC";
+    case FNC_READ:  return "READ";
+    case FNC_EXT:   return "EXT";
     }
     // unknown function constant
     return string("UNKNOWN_") + to_string(function);
-}
-
-string getNodeLabel(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, int layer, int slot) {
-    ostringstream label;
-    switch (layer) {
-    case -1:
-        label << "IN_" << slot;
-        break;
-    case -2:
-        label << "OUT_" << slot;
-        break;
-    default:
-        label << functionToString(nodeGetFunction(genome.gene( (2*layer+1)*pGlobals->settings->circuit.genomeWidth + slot )));
-        label << "_" << layer << "_" << slot;
-        break;
-    }
-    return label.str();
 }
