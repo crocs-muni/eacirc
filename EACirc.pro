@@ -4,7 +4,6 @@ CONFIG -= qt
 
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
                       -Wno-unused-function -Wno-unused-value
-unix{ QMAKE_CXX = g++-4.7 }
 
 QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++
@@ -14,7 +13,6 @@ INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
 # === main project files ===
 SOURCES += \
     EACirc/Main.cpp \
-#    EACirc/CircuitGenome.cpp \
     EACirc/CommonFnc.cpp \
     EACirc/XMLProcessor.cpp \
     EACirc/Logger.cpp \
@@ -208,7 +206,6 @@ SOURCES += \
 # === main EACirc files ===
 HEADERS += \
     EACirc/Main.h \
-#    EACirc/CircuitGenome.h \
     EACirc/CommonFnc.h \
     EACirc/XMLProcessor.h \
     EACirc/EACconstants.h \
@@ -352,12 +349,7 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/DynamicSHA2/DSHA2_sha3.h \
     EACirc/projects/sha3/hash_functions/DynamicSHA/DSHA_sha3.h \
     EACirc/projects/sha3/hash_functions/ECHO/Echo_sha3.h \
-#    EACirc/projects/sha3/hash_functions/ECOH/ecoh.h \
-#    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.h \
     EACirc/projects/sha3/hash_functions/EDON/Edon_sha3.h \
-#    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.h \
-#    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.h \
-#    EACirc/projects/sha3/hash_functions/EnRUPT/portEnRUPT.h \
     EACirc/projects/sha3/hash_functions/ESSENCE/essence.h \
     EACirc/projects/sha3/hash_functions/ESSENCE/Essence_sha3.h \
     EACirc/projects/sha3/hash_functions/Fugue/aestab.h \
@@ -390,7 +382,6 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/Lane/Lane_sha3.h \
     EACirc/projects/sha3/hash_functions/Lesamnta/Lesamnta_sha3.h \
     EACirc/projects/sha3/hash_functions/Luffa/Luffa_sha3.h \
-#    EACirc/projects/sha3/hash_functions/LUX/Lux_sha3.h \
     EACirc/projects/sha3/hash_functions/MCSSHA3/Mcssha_sha3.h \
     EACirc/projects/sha3/hash_functions/MD6/inttypes.h \
     EACirc/projects/sha3/hash_functions/MD6/md6.h \
@@ -400,9 +391,6 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/NaSHA/brg_endian.h \
     EACirc/projects/sha3/hash_functions/NaSHA/brg_types.h \
     EACirc/projects/sha3/hash_functions/NaSHA/Nasha_sha3.h \
-#    EACirc/projects/sha3/hash_functions/SANDstorm/DoBlockModMix.h \
-#    EACirc/projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.h \
-#    EACirc/projects/sha3/hash_functions/SANDstorm/SHA3_ref.h \
     EACirc/projects/sha3/hash_functions/Sarmal/Sarmal_sha3.h \
     EACirc/projects/sha3/hash_functions/Shabal/Shabal_sha3.h \
     EACirc/projects/sha3/hash_functions/Shamata/Shamata_sha3.h \
@@ -425,14 +413,7 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/SpectralHash/spectral_structs.h \
     EACirc/projects/sha3/hash_functions/StreamHash/sbox32.h \
     EACirc/projects/sha3/hash_functions/StreamHash/StreamHash_sha3.h \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/inttypes.h \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdbool.h \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdint.h \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.h \
-#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h \
     EACirc/projects/sha3/hash_functions/Tangle/Tangle_sha3.h \
-#    EACirc/projects/sha3/hash_functions/TIB3/inupfin.h \
-#    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.h \
     EACirc/projects/sha3/hash_functions/Twister/Twister_sha3.h \
     EACirc/projects/sha3/hash_functions/Twister/twister_tables.h \
     EACirc/projects/sha3/hash_functions/Vortex/int_types.h \
@@ -448,6 +429,22 @@ HEADERS += \
     EACirc/projects/sha3/hash_functions/WaMM/Wamm_sha3.h \
     EACirc/projects/sha3/hash_functions/WaMM/WaMMTappingPrimes.h \
     EACirc/projects/sha3/hash_functions/Waterfall/Waterfall_sha3.h \
+#    EACirc/projects/sha3/hash_functions/ECOH/ecoh.h \
+#    EACirc/projects/sha3/hash_functions/ECOH/Ecoh_sha3.h \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/EnRUPT_opt.h \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/Enrupt_sha3.h \
+#    EACirc/projects/sha3/hash_functions/EnRUPT/portEnRUPT.h \
+#    EACirc/projects/sha3/hash_functions/LUX/Lux_sha3.h \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/DoBlockModMix.h \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/Sandstorm_sha3.h \
+#    EACirc/projects/sha3/hash_functions/SANDstorm/SHA3_ref.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/inttypes.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdbool.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/stdint.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/SWIFFTX.h \
+#    EACirc/projects/sha3/hash_functions/SWIFFTX/Swifftx_sha3.h \
+#    EACirc/projects/sha3/hash_functions/TIB3/inupfin.h \
+#    EACirc/projects/sha3/hash_functions/TIB3/Tib_sha3.h \
 
 # === Libraries (redundant if using pre-compiled) ===
 HEADERS += \

@@ -129,27 +129,27 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
         break;
     case FNC_EQ:
         if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
-            if (layerInputValues[connection] == layerInputValues[connection2]) { return UCHAR_MAX; }
+            if (layerInputValues[connection] == layerInputValues[connection2]) { result = UCHAR_MAX; }
         }
         break;
     case FNC_LT:
         if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
-            if (layerInputValues[connection] < layerInputValues[connection2]) { return UCHAR_MAX; }
+            if (layerInputValues[connection] < layerInputValues[connection2]) { result = UCHAR_MAX; }
         }
         break;
     case FNC_GT:
         if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
-            if (layerInputValues[connection] > layerInputValues[connection2]) { return UCHAR_MAX; }
+            if (layerInputValues[connection] > layerInputValues[connection2]) { result = UCHAR_MAX; }
         }
         break;
     case FNC_LEQ:
         if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
-            if (layerInputValues[connection] <= layerInputValues[connection2]) { return UCHAR_MAX; }
+            if (layerInputValues[connection] <= layerInputValues[connection2]) { result = UCHAR_MAX; }
         }
         break;
     case FNC_GEQ:
         if (connectorsDiscartFirst(absoluteConnectors,connection) && connectorsDiscartFirst(absoluteConnectors,connection2)) {
-            if (layerInputValues[connection] >= layerInputValues[connection2]) { return UCHAR_MAX; }
+            if (layerInputValues[connection] >= layerInputValues[connection2]) { result = UCHAR_MAX; }
         }
         break;
     case FNC_BSLC:

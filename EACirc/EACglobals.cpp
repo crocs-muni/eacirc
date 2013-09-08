@@ -139,13 +139,13 @@ void TEST_VECTORS::release() {
         delete[] circuitOutputs;
         circuitOutputs = NULL;
     }
-    if (executionInputLayer != NULL) delete executionInputLayer;
+    if (executionInputLayer != NULL) delete[] executionInputLayer;
     executionInputLayer = NULL;
-    if (executionMiddleLayerIn != NULL) delete executionMiddleLayerIn;
+    if (executionMiddleLayerIn != NULL) delete[] executionMiddleLayerIn;
     executionMiddleLayerIn = NULL;
-    if (executionMiddleLayerOut != NULL) delete executionMiddleLayerOut;
+    if (executionMiddleLayerOut != NULL) delete[] executionMiddleLayerOut;
     executionMiddleLayerOut = NULL;
-    if (executionOutputLayer != NULL) delete executionOutputLayer;
+    if (executionOutputLayer != NULL) delete[] executionOutputLayer;
     executionOutputLayer = NULL;
 }
 
