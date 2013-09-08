@@ -166,7 +166,7 @@ string TestConfigurator::mainConfiguration =
         "    <SIZE_OUTPUT>2</SIZE_OUTPUT>"
         "    <NUM_CONNECTORS>4</NUM_CONNECTORS>"
         "    <USE_MEMORY>0</USE_MEMORY>"
-        "    <MEMORY_SIZE>2</MEMORY_SIZE>"
+        "    <SIZE_MEMORY>2</SIZE_MEMORY>"
         "    <ALLOWED_FUNCTIONS>"
         "        <FNC_NOP>1</FNC_NOP>"
         "        <FNC_CONS>1</FNC_CONS>"

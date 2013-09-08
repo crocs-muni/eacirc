@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="EACirc\CircuitGenome.cpp" />
     <ClCompile Include="EACirc\EACglobals.cpp" />
     <ClCompile Include="EACirc\evaluators\CategoriesEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\HammingWeightEvaluator.cpp" />
@@ -440,9 +439,13 @@
     <ClCompile Include="EACirc\projects\estream\ciphers\wg\wg.cpp">
       <Filter>SHA3 functions</Filter>
     </ClCompile>
+    <ClCompile Include="EACirc\circuit\CircuitCommonFunctions.cpp" />
+    <ClCompile Include="EACirc\circuit\CircuitInterpreter.cpp" />
+    <ClCompile Include="EACirc\circuit\CircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\GACallbacks.cpp" />
+    <ClCompile Include="EACirc\self_tests\TestConfigurator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EACirc\CircuitGenome.h" />
     <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\HammingWeightEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
@@ -1010,6 +1013,11 @@
     <ClInclude Include="EACirc\projects\estream\ciphers\zk-crypt\ZKengine.h">
       <Filter>SHA3 functions</Filter>
     </ClInclude>
+    <ClInclude Include="EACirc\circuit\CircuitCommonFunctions.h" />
+    <ClInclude Include="EACirc\circuit\CircuitInterpreter.h" />
+    <ClInclude Include="EACirc\circuit\CircuitIO.h" />
+    <ClInclude Include="EACirc\circuit\GACallbacks.h" />
+    <ClInclude Include="EACirc\self_tests\TestConfigurator.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="EACirc\config.xml" />

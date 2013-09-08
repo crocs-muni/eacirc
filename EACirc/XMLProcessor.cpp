@@ -49,7 +49,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.sizeInput = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_INPUT").c_str());
     pSettings->circuit.numConnectors = atoi(getXMLElementValue(pRoot,"CIRCUIT/NUM_CONNECTORS").c_str());
     pSettings->circuit.useMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/USE_MEMORY").c_str()) ? true : false;
-    pSettings->circuit.sizeMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/MEMORY_SIZE").c_str());
+    pSettings->circuit.sizeMemory = atoi(getXMLElementValue(pRoot,"CIRCUIT/SIZE_MEMORY").c_str());
     // parsing EACIRC/CIRCUIT/ALLOWED_FUNCTIONS
     pSettings->circuit.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
     pSettings->circuit.allowedFunctions[FNC_CONS] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_CONS").c_str());

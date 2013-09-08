@@ -148,7 +148,10 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EACirc\CircuitGenome.cpp" />
+    <ClCompile Include="EACirc\circuit\CircuitCommonFunctions.cpp" />
+    <ClCompile Include="EACirc\circuit\CircuitInterpreter.cpp" />
+    <ClCompile Include="EACirc\circuit\CircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\GACallbacks.cpp" />
     <ClCompile Include="EACirc\EACglobals.cpp" />
     <ClCompile Include="EACirc\evaluators\CategoriesEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\HammingWeightEvaluator.cpp" />
@@ -312,6 +315,7 @@
     <ClCompile Include="EACirc\generators\MD5RndGen.cpp" />
     <ClCompile Include="EACirc\generators\QuantumRndGen.cpp" />
     <ClCompile Include="EACirc\projects\tea\TeaProject.cpp" />
+    <ClCompile Include="EACirc\self_tests\TestConfigurator.cpp" />
     <ClCompile Include="EACirc\self_tests\Tests.cpp" />
     <ClCompile Include="EACirc\Status.cpp" />
     <ClCompile Include="EACirc\tinyxml\tinystr.cpp" />
@@ -321,7 +325,10 @@
     <ClCompile Include="EACirc\XMLProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EACirc\CircuitGenome.h" />
+    <ClInclude Include="EACirc\circuit\CircuitCommonFunctions.h" />
+    <ClInclude Include="EACirc\circuit\CircuitInterpreter.h" />
+    <ClInclude Include="EACirc\circuit\CircuitIO.h" />
+    <ClInclude Include="EACirc\circuit\GACallbacks.h" />
     <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\HammingWeightEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
@@ -542,6 +549,7 @@
     <ClInclude Include="EACirc\generators\QuantumRndGen.h" />
     <ClInclude Include="EACirc\projects\tea\TeaProject.h" />
     <ClInclude Include="EACirc\self_tests\Catch.h" />
+    <ClInclude Include="EACirc\self_tests\TestConfigurator.h" />
     <ClInclude Include="EACirc\self_tests\Tests.h" />
     <ClInclude Include="eacirc\SSGlobals.h" />
     <ClInclude Include="EACirc\Status.h" />
