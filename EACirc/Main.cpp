@@ -1,7 +1,9 @@
 #include "Main.h"
 #include "EACirc.h"
+
+// problem with g++ lower than 4.8, temporary solution
+#define _GLIBCXX_USE_NANOSLEEP
 #include <thread>
-//#include <unistd.h> // unistd is not in VS compiler!
 
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
