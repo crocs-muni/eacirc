@@ -307,6 +307,7 @@ int EstreamProject::getTestVector(){
         // WE NEED TO LET EVALUATOR KNOW THE INPUTS
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
             m_tvOutputs[input] = m_tvInputs[input];
+        return STAT_NOT_IMPLEMENTED_YET;
 
         break;
 
