@@ -2,9 +2,7 @@
 #include "EACirc.h"
 
 // problem with g++ lower than 4.8, temporary solution
-#ifndef _GLIBCXX_USE_NANOSLEEP
 #define _GLIBCXX_USE_NANOSLEEP
-#endif
 #include <thread>
 
 #define CATCH_CONFIG_RUNNER

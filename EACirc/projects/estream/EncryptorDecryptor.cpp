@@ -16,8 +16,8 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
             numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
             break;
         case 1:
-            algorithm = pEstreamSettings->algorithm2;
-            numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg2RoundsCount : -1;
+            algorithm = pEstreamSettings->algorithm1;
+            numRounds = pEstreamSettings->limitAlgRounds ? pEstreamSettings->alg1RoundsCount : -1;
             break;
         default:
             mainLogger.out(LOGGER_ERROR) << "Unsupported EncryptorDecryptor iteration in initialization (";

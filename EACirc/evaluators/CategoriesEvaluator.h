@@ -11,14 +11,6 @@ class CategoriesEvaluator : public IEvaluator {
     int m_totalStream0;
     int m_totalStream1;
     unsigned long m_numUnderThreshold;
-
-    /**  compute collapsed categories
-     * - aggregate increased vs. decreased categories together
-     * - pointers are allocated and filled (caller responsible for freeing!)
-     * @param collapsedCategoriesStream0
-     * @param collapsedCategoriesStream1
-     */
-    void collapseCategories(int*& collapsedCategoriesStream0, int*& collapsedCategoriesStream1) const;
 public:
     /**
      * allocate categories map according to needed number of categories
