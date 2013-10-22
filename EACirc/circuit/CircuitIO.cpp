@@ -28,8 +28,9 @@ int CircuitIO::outputGenomeFiles(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, stri
     if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing binary genome (" << statusToString(status) << ")." << endl;
     status = genomeToGraph(genome, fileName + ".dot");
     if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing graph genome (" << statusToString(status) << ")." << endl;
-    status = genomeToCode(genome, fileName + ".c");
-    if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing code genome (" << statusToString(status) << ")." << endl;
+    // TODO/TBD: implement code genomes and uncomment
+    //status = genomeToCode(genome, fileName + ".c");
+    //if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing code genome (" << statusToString(status) << ")." << endl;
     return STAT_OK;
 }
 
@@ -88,7 +89,7 @@ int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fi
     file << endl;
     // output circuit itself, starting with input pseudo-layer
     for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
-        file << "IN  [2^" << setw(2) << right << setfill('0') << slot << "]" << " | ";
+        file << "IN  [2^" << setw(2) << right << setfill('0') << slot << "]" << "   ";
     }
     file << endl << endl;
     GENOME_ITEM_TYPE gene;
