@@ -115,7 +115,8 @@ processFolder path = do
       putStrLn $ "=> Processing folder " ++ path
       stats <- foldM (foldRunStats path) emptyRunStats [1..maxRuns]
       writeFile resultsFile $ unlines [resultsHeader, formatErrors (errors stats),
-                   formatStableGen (stableGen stats), formatTable (avgTable stats)]
+--                   formatStableGen (stableGen stats), 
+                   formatTable (avgTable stats)]
     else putStrLn $ "Folder " ++ path ++ " does not exist!"
   where resultsFile = path ++ resultsFilename
         resultsHeader = "EACirc - results for job " ++ job ++ "\n"
@@ -141,6 +142,24 @@ average xs = sum xs / (fromIntegral $ length xs)
 iff :: Bool -> a -> a -> a
 iff c t e = if c then t else e
 
+help :: String
+help = "\nusage: get_scores <experiemnt-folder> [<experiment-folder> ...]\n" ++
+         "e. g.  get_scores ../../boinc/_processed/*/\n\n" ++
+       " - takes lines from GAlib score file after test set change\n" ++
+       " - computes avg average, avg maximum and avg minimum fitness values\n" ++
+       " - reads log file and filters error suspects (\"" ++ intercalate "\", \"" logSuspects ++ "\")\n" ++
+       " - note: experiment folder must end with path separator, i.e '/'"
+
+settings :: String
+settings = "EACirc scores processor settings:\n" ++
+           "score filename:          " ++ scoreFilename ++ "\n" ++
+           "log filename:            " ++ logFilename ++ "\n" ++
+           "results filename:        " ++ resultsFilename ++ "\n" ++
+           "number of runs:          " ++ show maxRuns ++ "\n" ++
+           "test vector change freq: " ++ show testVectorChangeFreq
+
 main :: IO ()
 main = do
-  getArgs >>= mapM_ processFolder
+  cliArgs <- getArgs
+  putStrLn settings
+  if length cliArgs == 0 then putStrLn help else mapM_ processFolder cliArgs
