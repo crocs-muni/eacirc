@@ -40,8 +40,9 @@ float CategoriesEvaluator::getFitness() const {
     // chi^2 = sum_{i=1}^{n}{\frac{(Observed_i-Expected_i)^2}{Expected_i}}
     // check for threshold E_i >=5, Q_i >=5
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
+        float coefficient = m_categoriesStream0[category] > 5 ? 1 : (float) m_categoriesStream0[category] / 6;
         float divider = max(m_categoriesStream0[category], 1); // prevent division by zero
-        fitness += pow(m_categoriesStream1[category]-m_categoriesStream0[category], 2) / divider;
+        fitness += coefficient * pow(m_categoriesStream1[category]-m_categoriesStream0[category], 2) / divider;
     }
     return fitness;
 }
