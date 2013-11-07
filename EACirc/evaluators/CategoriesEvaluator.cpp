@@ -1,4 +1,5 @@
 #include "CategoriesEvaluator.h"
+#include "CommonFnc.h"
 
 CategoriesEvaluator::CategoriesEvaluator()
     : IEvaluator(EVALUATOR_CATEGORIES), m_categoriesStream0(NULL), m_categoriesStream1(NULL),
@@ -35,16 +36,20 @@ void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigne
 }
 
 float CategoriesEvaluator::getFitness() const {
-    float fitness = 0;
+    float chiSquareValue = 0;
+    int dof = 0;
     // compute Pearson's Chi square test
     // chi^2 = sum_{i=1}^{n}{\frac{(Observed_i-Expected_i)^2}{Expected_i}}
     // check for threshold E_i >=5, Q_i >=5
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
-        float coefficient = m_categoriesStream0[category] > 5 ? 1 : 0; //(float) m_categoriesStream0[category] / 6;
-        float divider = max(m_categoriesStream0[category], 1); // prevent division by zero
-        fitness += coefficient * pow(m_categoriesStream1[category]-m_categoriesStream0[category], 2) / divider;
+        //float coefficient = m_categoriesStream0[category] > 5 ? 1 : 0; //(float) m_categoriesStream0[category] / 6;
+        if (m_categoriesStream0[category] >= 5) {
+            dof++;
+            //float divider = max(m_categoriesStream0[category], 1); // prevent division by zero
+            chiSquareValue += pow(m_categoriesStream1[category]-m_categoriesStream0[category], 2) / m_categoriesStream0[category];
+        }
     }
-    return fitness;
+    return (1.0 - chisqr(dof,chiSquareValue));
 }
 
 void CategoriesEvaluator::resetEvaluator() {

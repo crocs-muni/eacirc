@@ -31,4 +31,10 @@ string toString(T value) {
     return ss.str();
 }
 
+// from http://www.codeproject.com/Articles/432194/How-to-Calculate-the-Chi-Squared-P-Value
+double chisqr(int Dof, double Cv);
+
+// from http://www.codeproject.com/Articles/432194/How-to-Calculate-the-Chi-Squared-P-Value
+double igf(double S, double Z);
+
 #endif

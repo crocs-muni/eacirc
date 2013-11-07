@@ -158,6 +158,7 @@ string TestConfigurator::mainConfiguration =
         "    <MUTATE_CONNECTORS>1</MUTATE_CONNECTORS>"
         "    <PROB_CROSSING>0.5</PROB_CROSSING>"
         "    <POPULATION_SIZE>20</POPULATION_SIZE>"
+        "    <REPLACEMENT_SIZE>13</REPLACEMENT_SIZE>"
         "</GA>"
         "<CIRCUIT>"
         "    <NUM_LAYERS>5</NUM_LAYERS>"

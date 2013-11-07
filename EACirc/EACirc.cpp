@@ -105,6 +105,10 @@ void EACirc::loadConfiguration(const string filename) {
 }
 
 void EACirc::checkConfigurationConsistency() {
+    if (m_settings.ga.replacementSize <= 0 || m_settings.ga.replacementSize > m_settings.ga.popupationSize) {
+        mainLogger.out(LOGGER_ERROR) << "Replacement size must be greater than 0 and must not exceed population size." << endl;
+        m_status = STAT_CONFIG_INCORRECT;
+    }
     if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE
             || m_settings.circuit.sizeInputLayer > MAX_LAYER_SIZE || m_settings.circuit.sizeOutputLayer > MAX_LAYER_SIZE) {
         mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal size || connectors || total input|| total output)." << endl;
@@ -469,7 +473,7 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     m_gaData = gaTemp;
     // initialize the new genetic algorithm
     m_gaData->populationSize(m_settings.ga.popupationSize);
-    m_gaData->nReplacement(2 * m_settings.ga.popupationSize / 3);
+    m_gaData->nReplacement(m_settings.ga.replacementSize);
     m_gaData->nGenerations(m_settings.main.numGenerations);
     m_gaData->pCrossover(m_settings.ga.probCrossing);
     m_gaData->pMutation(m_settings.ga.probMutation);

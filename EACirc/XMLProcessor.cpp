@@ -37,6 +37,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     // parsing EACIRC/GA
     pSettings->ga.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;
     pSettings->ga.popupationSize = atoi(getXMLElementValue(pRoot,"GA/POPULATION_SIZE").c_str());
+    pSettings->ga.replacementSize = atoi(getXMLElementValue(pRoot,"GA/REPLACEMENT_SIZE").c_str());
     pSettings->ga.probCrossing = (float) atof(getXMLElementValue(pRoot,"GA/PROB_CROSSING").c_str());
     pSettings->ga.probMutation = (float) atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
     pSettings->ga.mutateFunctions = atoi(getXMLElementValue(pRoot,"GA/MUTATE_FUNCTIONS").c_str()) ? true : false;

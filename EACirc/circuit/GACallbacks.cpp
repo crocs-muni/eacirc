@@ -153,9 +153,7 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
         // mutate functions in input layer or internal layers
         for (int layer = 0; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
             offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
-            int actualLayerSize = layer != pGlobals->settings->circuit.numLayers - 1 ?
-                        pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
-            for (int slot = 0; slot < actualLayerSize; slot++){
+            for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
                 if (GAFlipCoin(probMutation)) { // mutate function
                     numOfMutations++;
                     unsigned char function;
@@ -173,6 +171,27 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
                     nodeSetArgument(genomeItem, 1, GARandomInt(0,UCHAR_MAX));
                     genome.gene(offset + slot, genomeItem);
                 }
+            }
+        }
+        // mutate function in last layer
+        offset = (2 * (pGlobals->settings->circuit.numLayers-1) + 1) * pGlobals->settings->circuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++){
+            if (GAFlipCoin(probMutation)) { // mutate function
+                numOfMutations++;
+                unsigned char function;
+                do {
+                    function = GARandomInt(0, FNC_MAX);
+                } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
+                GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
+                nodeSetFunction(genomeItem, function);
+                genome.gene(offset + slot, genomeItem);
+            }
+            if (GAFlipCoin(probMutation)) { // muatate argument
+                numOfMutations++;
+                // set argument1 to random value (0-255)
+                GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
+                nodeSetArgument(genomeItem, 1, GARandomInt(0,UCHAR_MAX));
+                genome.gene(offset + slot, genomeItem);
             }
         }
     }

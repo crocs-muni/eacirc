@@ -111,6 +111,7 @@ struct SETTINGS_GA {
     bool mutateConnectors;          //! should connectors be mutated?
     float probCrossing;             //! proprability of genome crossing
     int popupationSize;             //! number of individuals in population
+    int replacementSize;            //! number of individuals to replace in each new generation
     SETTINGS_GA();
 };
 
