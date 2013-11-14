@@ -3,7 +3,7 @@
 
 CategoriesEvaluator::CategoriesEvaluator()
     : IEvaluator(EVALUATOR_CATEGORIES), m_categoriesStream0(NULL), m_categoriesStream1(NULL),
-      m_totalStream0(0), m_totalStream1(0), m_numUnderThreshold(0) {
+      m_totalStream0(0), m_totalStream1(0) {
     m_categoriesStream0 = new int[pGlobals->settings->main.evaluatorPrecision];
     m_categoriesStream1 = new int[pGlobals->settings->main.evaluatorPrecision];
     resetEvaluator();
@@ -14,9 +14,6 @@ CategoriesEvaluator::~CategoriesEvaluator() {
     m_categoriesStream0 = NULL;
     delete m_categoriesStream1;
     m_categoriesStream1 = NULL;
-    if (m_numUnderThreshold != 0) {
-        mainLogger.out(LOGGER_WARNING) << m_numUnderThreshold << " categories under threshold of " << CATEGORY_THRESHOLD << endl;
-    }
 }
 
 void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned char* referenceOutputs) {
@@ -38,27 +35,21 @@ void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigne
 float CategoriesEvaluator::getFitness() const {
     float chiSquareValue = 0;
     int dof = 0;
-    // compute Pearson's Chi square test
-    // chi^2 = sum_{i=1}^{n}{\frac{(Observed_i-Expected_i)^2}{Expected_i}}
-    // check for threshold E_i >=5, Q_i >=5
+    // using two-smaple Chi^2 test (http://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/chi2samp.htm)
+    float k1 = 1;
+    float k2 = 1;
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
-        //float coefficient = m_categoriesStream0[category] > 5 ? 1 : 0; //(float) m_categoriesStream0[category] / 6;
-        if (m_categoriesStream0[category] >= 5) {
+        if (m_categoriesStream0[category] + m_categoriesStream1[category] > 0) {
             dof++;
-            //float divider = max(m_categoriesStream0[category], 1); // prevent division by zero
-            chiSquareValue += pow(m_categoriesStream1[category]-m_categoriesStream0[category], 2) / m_categoriesStream0[category];
+            chiSquareValue += pow(k1*m_categoriesStream1[category]-k2*m_categoriesStream0[category], 2) /
+                              (m_categoriesStream0[category] + m_categoriesStream1[category]);
         }
     }
+    dof--; // last category is fully determined by others
     return (1.0 - chisqr(dof,chiSquareValue));
 }
 
 void CategoriesEvaluator::resetEvaluator() {
-    unsigned long tempNumUnderThreshold = 0;
-    for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
-        if (m_categoriesStream0[category] < CATEGORY_THRESHOLD) tempNumUnderThreshold++;
-        //if (m_categoriesStream1[category] < CATEGORY_THRESHOLD) tempNumUnderThreshold++;
-    }
-    if (tempNumUnderThreshold != 0) m_numUnderThreshold += tempNumUnderThreshold;
     m_totalStream0 = m_totalStream1 = 0;
     memset(m_categoriesStream0, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(int));
     memset(m_categoriesStream1, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(int));
