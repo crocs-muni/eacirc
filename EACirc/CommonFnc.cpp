@@ -1,10 +1,9 @@
 #include "CommonFnc.h"
-#include <string>
-#include <cmath>
-#include <sstream>
-#include <exception>
 #include "EACglobals.h"
 
+#ifndef M_PI    // to resolve cmath constants problems
+#define M_PI 3.141592653589793238462
+#endif
 
 using namespace std;
 
