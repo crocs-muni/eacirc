@@ -561,6 +561,10 @@ void EACirc::run() {
         // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_status = m_project->generateAndSaveTestVectors();
+            m_gaData->pop->flushEvalution();
+            m_gaData->pop->evaluate(gaTrue);
+            m_gaData->pop->scale(gaTrue);
+            m_gaData->stats.update(m_gaData->population());
             evaluateStep();
             continue;
         }

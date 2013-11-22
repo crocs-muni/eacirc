@@ -233,9 +233,9 @@ public:
   virtual void objectiveData(const GAEvalData& v);
 
 protected:
-  GAStatistics stats;
   GAParameterList params;
 public:
+  GAStatistics stats;
   GAPopulation *pop;
 protected:
   Terminator cf;		// function for determining done-ness
