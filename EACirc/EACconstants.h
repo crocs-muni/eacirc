@@ -63,6 +63,8 @@ typedef unsigned __int64 uint64_t;
 #define FILE_PRUNNED_SUFFIX         "_prunned"
 #define FILE_LOGFILE                "eacirc.log"
 
+#define FILE_HISTOGRAMS             "histograms.txt"
+
 // fitness precisions
 #define FILE_CIRCUIT_PRECISION      6
 #define FITNESS_PRECISION_LOG       6

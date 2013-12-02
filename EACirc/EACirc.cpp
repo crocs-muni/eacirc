@@ -383,6 +383,7 @@ void EACirc::prepare() {
         std::remove(FILE_AVG_FITNESS);
         std::remove(FILE_GALIB_SCORES);
         std::remove(FILE_TEST_VECTORS_HR);
+        std::remove(FILE_HISTOGRAMS);
         ofstream fitnessProgressFile(FILE_FITNESS_PROGRESS, ios_base::trunc);
         fitnessProgressFile << "Fitness statistics for selected generations" << endl;
         for (int i = 0; i < log(pGlobals->settings->main.numGenerations)/log(10) - 3; i++) fitnessProgressFile << " ";
@@ -547,6 +548,8 @@ void EACirc::run() {
 
     mainLogger.out(LOGGER_INFO) << "Starting evolution." << endl;
     for (m_actGener = 1; m_actGener <= m_settings.main.numGenerations; m_actGener++) {
+        pGlobals->stats.actGener = m_actGener;
+
         pGlobals->testVectors.newSet = false;
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Ooops, something went wrong, stopping. " << "(error: " << statusToString(m_status) << ")." << endl;

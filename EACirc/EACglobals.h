@@ -167,6 +167,7 @@ struct STATISTICS {
     double avgMinFitSum;            //! sum for average minimum fitness in inspected generations
     int avgCount;                   //! count used as divisor in avgMaxFit, avgAvgFit, avgMinFit
     bool prunningInProgress;        //! is prunning currently in progress?
+    int actGener;
     STATISTICS();
 };
 
