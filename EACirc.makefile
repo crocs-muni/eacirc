@@ -15,16 +15,16 @@ DEBUG		= NO
 PROFILE		= NO
 # output name for the compiled and linked application
 OUTNAME_MAIN	= eacirc
-OUTNAME_CHECKER	= checker
+#OUTNAME_CHECKER	= checker
 # folder to put linked application and config file into
 RUN_DIR		= run
 #*********************************************************************************
 
 # complation settings
-#CXX			= g++
-CXX			= g++-4.7
-CC			= gcc-4.7
-CXXFLAGS		= -std=c++11 # -Wall
+CXX			= g++
+CC			= gcc
+CXXFLAGS		= -std=c++11 -m32 # -Wall
+LDFLAGS			= -m32
 DEBUG_FLAGS		= -g -DDEBUG
 RELEASE_FLAGS	= -O3
 PROFILE_FLAGS	= -p
@@ -42,11 +42,11 @@ OBJECTS_MAIN_TEMP:=$(SOURCES:.cpp=.ocpp)
 OBJECTS_MAIN:=$(OBJECTS_MAIN_TEMP:.c=.oc)
 
 # === EACirc Checker ===
-SOURCES=
-HEADERS=
+#SOURCES=
+#HEADERS=
 # libs and source (loaded from Qt project file)
-include Checker.pro
-OBJECTS_CHECKER:=$(SOURCES:.cpp=.ocpp)
+#include Checker.pro
+#OBJECTS_CHECKER:=$(SOURCES:.cpp=.ocpp)
 
 # rules and targets
 ifeq (YES, ${DEBUG})
@@ -58,7 +58,8 @@ ifeq (YES, $(PROFILE))
    FLAGS += $(PROFILE_CXXFLAGS)
 endif
 
-all: libs main checker
+# all: libs main checker
+all: libs main
 
 libs:
 	cd EACirc/galib && $(MAKE)
@@ -78,12 +79,13 @@ main: libs $(OBJECTS_MAIN)
 	if [ ! -f $(RUN_DIR)/config.xml ]; then cp EACirc/config.xml $(RUN_DIR)/; fi
 	@echo === $(OUTNAME_MAIN) was successfully built. ===
 
-checker: $(OBJECTS_CHECKER)
-	mkdir -p $(RUN_DIR)
-	$(CXX) $(CXXFLAGS) $(FLAGS) -o $(RUN_DIR)/$(OUTNAME_CHECKER) $(OBJECTS_CHECKER) $(INC_DIRS) $(INC_LIBS)
-	@echo === $(OUTNAME_CHECKER) was successfully built. ===
+#checker: $(OBJECTS_CHECKER)
+#	mkdir -p $(RUN_DIR)
+#	$(CXX) $(CXXFLAGS) $(FLAGS) -o $(RUN_DIR)/$(OUTNAME_CHECKER) $(OBJECTS_CHECKER) $(INC_DIRS) $(INC_LIBS)
+#	@echo === $(OUTNAME_CHECKER) was successfully built. ===
 
-cleanall: cleanresults cleanlibs cleanmain cleanchecker
+#cleanall: cleanresults cleanlibs cleanmain cleanchecker
+cleanall: cleanresults cleanlibs cleanmain
 
 cleanresults:
 	cd $(RUN_DIR) && rm -f *.log *.txt *.bin *.c *.dot *.xml *.2

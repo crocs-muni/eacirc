@@ -1,9 +1,9 @@
-TEMPLATE = app
-CONFIG += console
-CONFIG -= qt
+TEMPLATE=app
+CONFIG+=console
+CONFIG-=qt
 
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
-                      -Wno-unused-function -Wno-unused-value
+    -Wno-unused-function -Wno-unused-value
 
 QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++

@@ -18,7 +18,7 @@ MKDEPEND    = makedepend
 MKDIR       = mkdir -p
 CP          = cp -f
 CC          = gcc
-CCFLAGS     = -O2
+CCFLAGS     = -O2 -m32
 # unix
 RM          = rm -f
 RMDIR       = $(RM) -r
@@ -38,7 +38,7 @@ RMDIR       = $(RM) -r
 #  verified 06mar07 on linux-x86 (ubuntu with gcc 4.0.3)
 #  verified 06mar07 on macosx-ppc (macosx 10.4.8 with gcc 4.0.1)
 CXX         = g++
-CXXFLAGS    = -g
+CXXFLAGS    = -g -m32
 LD          = g++ -w
 AR          = ar rv
 INSTALL     = install -c

@@ -30,8 +30,8 @@ AR     := ar rv
 RANLIB := ranlib
 LIB    := libtinyXML.a
 
-DEBUG_CFLAGS     := -Wall -Wno-format -g -DDEBUG
-RELEASE_CFLAGS   := -Wall -Wno-unknown-pragmas -Wno-format -O3
+DEBUG_CFLAGS     := -m32 -Wall -Wno-format -g -DDEBUG
+RELEASE_CFLAGS   := -m32 -Wall -Wno-unknown-pragmas -Wno-format -O3
 
 LIBS		 :=
 
