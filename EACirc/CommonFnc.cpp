@@ -156,7 +156,7 @@ double chisqr(int Dof, double Cv) {
     incog( K, X, gin, gim, gip); // compute incomplete gamma function
     double PValue = gim;
     PValue /= gamma0(K); // divide by gamma function value
-    return (1.0 - PValue);
+    return PValue;
 }
 
 int incog(double a,double x,double &gin,double &gim,double &gip) {
