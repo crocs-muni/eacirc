@@ -39,15 +39,12 @@ float CategoriesEvaluator::getFitness() const {
     float k1 = 1;
     float k2 = 1;
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
-        //if (m_categoriesStream0[category] + m_categoriesStream1[category] > 5) {
-        if (m_categoriesStream0[category] + m_categoriesStream1[category] > 0) {
+        if (m_categoriesStream0[category] + m_categoriesStream1[category] > 5) {
             dof++;
             chiSquareValue += pow(k1*m_categoriesStream1[category]-k2*m_categoriesStream0[category], 2) /
                               (m_categoriesStream0[category] + m_categoriesStream1[category]);
         }
     }
-    return chiSquareValue;
-    /*
     dof--; // last category is fully determined by others
     float fitness = (1.0 - chisqr(dof,chiSquareValue));
     ofstream hist(FILE_HISTOGRAMS, ios_base::app);
@@ -63,7 +60,6 @@ float CategoriesEvaluator::getFitness() const {
     hist.close();
 
     return fitness;
-    */
 }
 
 void CategoriesEvaluator::resetEvaluator() {
