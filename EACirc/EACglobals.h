@@ -146,6 +146,11 @@ struct SETTINGS_TEST_VECTORS {
     SETTINGS_TEST_VECTORS();
 };
 
+//! settings corresponding to EACIRC/POLYDIST
+struct SETTINGS_POLYDIST {
+    SETTINGS_POLYDIST();
+};
+
 //! all program run settings
 struct SETTINGS {
     string notes;                           //! corresponding to EACIRC/NOTES (user notes)
@@ -155,6 +160,7 @@ struct SETTINGS {
     SETTINGS_CUDA cuda;                     //! corresponding to EACIRC/CUDA
     SETTINGS_GA ga;                         //! corresponding to EACIRC/GA
     SETTINGS_CIRCUIT circuit;               //! corresponding to EACIRC/CIRCUIT
+    SETTINGS_POLYDIST polydist;             //! corresponding to EACIRC/POLYDIST
     SETTINGS_TEST_VECTORS testVectors;      //! corresponding to EACIRC/TEST_VECTORS
     void* project;                          //! project specific settings
     SETTINGS();
