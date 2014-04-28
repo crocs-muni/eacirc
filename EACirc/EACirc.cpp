@@ -13,6 +13,11 @@
 #include "circuit/CircuitIO.h"
 #include "circuit/CircuitInterpreter.h"
 
+#include "polynomials/GAPolyCallbacks.h"
+#include "polynomials/PolyDistEval.h"
+#include "polynomials/Term.h"
+#include "polynomials/poly.h"
+
 #ifdef _WIN32
 	#include <Windows.h>
 	#define getpid() GetCurrentProcessId()

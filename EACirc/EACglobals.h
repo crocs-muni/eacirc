@@ -148,6 +148,9 @@ struct SETTINGS_TEST_VECTORS {
 
 //! settings corresponding to EACIRC/POLYDIST
 struct SETTINGS_POLYDIST {
+    double genomeInitTermStopProbability;
+    double genomeInitTermCountProbability;
+    int genomeInitMaxTerms;
     SETTINGS_POLYDIST();
 };
 

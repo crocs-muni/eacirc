@@ -27,6 +27,13 @@ SOURCES += \
     EACirc/circuit/CircuitInterpreter.cpp \
     EACirc/circuit/CircuitCommonFunctions.cpp \
 
+# === polynomials ===
+SOURCES += \
+    ./EACirc/polynomials/Term.cpp   \
+    ./EACirc/polynomials/PolyDistEval.cpp   \
+    ./EACirc/polynomials/GAPolyCallbacks.cpp \
+    ./EACirc/polynomials/poly.cpp \
+
 # === evaluators ===
 SOURCES += \
     EACirc/evaluators/IEvaluator.cpp \
@@ -221,6 +228,13 @@ HEADERS += \
     EACirc/circuit/CircuitIO.h \
     EACirc/circuit/CircuitInterpreter.h \
     EACirc/circuit/CircuitCommonFunctions.h \
+
+# === polynomials ===
+HEADERS += \
+    ./EACirc/polynomials/PolyDistEval.h \
+    ./EACirc/polynomials/GAPolyCallbacks.h \
+    ./EACirc/polynomials/Term.h \
+    ./EACirc/polynomials/poly.h \
 
 # === standard evaluators ===
 HEADERS += \
