@@ -9,6 +9,8 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
     int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
     int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
+    assert(sizeof(POLY_GENOME_ITEM_TYPE) == 8);
+    
     // Reset output memory
     memset(outputs, 0, ceil( (double)numPolynomials / (double)sizeof(unsigned char)) );
     
@@ -33,7 +35,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
             bool ret = 1;
             for(int i=0; i<termSize; i++){
                 POLY_GENOME_ITEM_TYPE cTermEx = pGenome->gene(cPoly, 1 + termSize * cTerm + i);
-                ret &= TERM_ITEM_EVAL(cTermEx, inputs+i*termSize);
+                ret &= TERM_ITEM_EVAL_8(cTermEx, inputs+i*termSize);
             }
             
             // Polynomial is t1 XOR t2 XOR ... XOR t_{numVariables}
@@ -71,10 +73,11 @@ int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
             PTerm t = new Term(numVariables, pGenome, cPoly, 1 + cTerm * termSize);
             
             // If term is already in the set, do not add it, but remove.
-             std::set<PTerm>::iterator existingElem = termSet.find();
+            // TODO: check how equals is performed in the set. using less?
+            std::set<PTerm>::iterator existingElem = termSet.find(t);
             if (existingElem == termSet.end()){       // Term is not in the set.
                 termSet.insert(t);
-            } else if (existingElem->getIgnore()) {
+            } else if ((*existingElem)->getIgnore()) {
                 // Term is already in the set.
                 // Equivalent operation (preserving polynomial function)
                 // is to remove existing / invalidating it term from the set and ignore current
@@ -83,7 +86,7 @@ int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
             } else {
                 // Term is in the set and has ignore=false.
                 // Just toggle ignore flag to save operations.
-                existingElem->setIgnore(true);
+                (*existingElem)->setIgnore(true);
             }
         }
         
@@ -92,13 +95,13 @@ int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
         std::set<PTerm>::iterator it = termSet.begin();
         for(; it != termSet.end(); it++){
             // If term is set to zero, ignore it.
-            if (it->getIgnore()){
+            if ((*it)->getIgnore()){
                 continue;
             }
             
             // Dumps current term to the genome, respecting offset. 
             // One term has $termSize sub-term elements.
-            it->dumpToGenome(pGenome, cPoly, 1 + nonNullTerms * termSize);
+            (*it)->dumpToGenome(pGenome, cPoly, 1 + nonNullTerms * termSize);
             nonNullTerms+=1;
         }
         

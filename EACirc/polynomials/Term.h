@@ -79,12 +79,12 @@ class Term {
     /**
      * Getter for the size.
      */
-    term_size_t getSize (void) {return (size);}
+    term_size_t getSize (void) const {return (size);}
     
     /**
      * Setter only for the size. Performs no initialization.
      */
-    Term setSize(term_size_t size) {
+    Term * setSize(term_size_t size) {
         this->size = size; 
         this->vectorSize = (term_size_t) ceil((double) size / (double)sizeof(term_elem_t));
         return this;
@@ -93,14 +93,14 @@ class Term {
     /**
      * Term initializer, set size has to be called before.
      */
-    Term initialize();
+    Term * initialize();
     
     /**
      * Term initializer, able to set new size.
      * @param 
      * @return 
      */
-    Term initialize(term_size_t);
+    Term * initialize(term_size_t);
     
     /**
      * Initialize term from the genome.
@@ -110,7 +110,7 @@ class Term {
      * @param offset            2. D offset where to start reading.
      * @return 
      */
-    Term initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
+    Term * initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
     
     /**
      * Dumps term to the genome./
@@ -119,14 +119,23 @@ class Term {
      * @param polyIdx
      * @param offset
      */
-    void dumpToGenome(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
+    void dumpToGenome(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset) const;
     
-    bool getIgnore() { return this->ignore; }
-    Term setIgnore(bool ign) { this->ignore = ign; return this; }
+    /**
+     * Sets particular bit in the term,
+     * @param bit
+     * @param value
+     */
+    bool setBit(unsigned int bit, bool value);
+    bool getBit(unsigned int bit) const;
+    bool flipBit(unsigned int bit);
+    
+    bool getIgnore() const { return this->ignore; }
+    Term * setIgnore(bool ign) { this->ignore = ign; return this; }
     
     // Comparator for sorting
-    int compareTo(const Term& other);
-    int compareTo(const PTerm other);
+    int compareTo(const Term& other) const;
+    int compareTo(const Term * other) const;
     
     // Assignment operator
     Term& operator=(const Term& other);
@@ -141,7 +150,7 @@ class Term {
     friend bool operator!= (const Term &cT1, const Term &cT2);
     
     // Evaluation
-    bool evaluate(const unsigned char * input, term_size_t inputLen);
+    bool evaluate(const unsigned char * input, term_size_t inputLen) const;
 };
 
 // Pointer to the term.

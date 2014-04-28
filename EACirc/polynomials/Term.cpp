@@ -3,7 +3,7 @@
 #include <assert.h> 
 #include <cmath>
 
-Term::Term(Term& cT){
+Term::Term(const Term& cT){
     // Initialize internal representation with the size from the source.
     this->setSize(cT.getSize());
     
@@ -20,7 +20,7 @@ Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int 
 }
 
 Term& Term::operator =(const Term& other){
-    this->setSize(other->getSize());
+    this->setSize(other.getSize());
     
     // Release vector if not null
     if (this->term != NULL){
@@ -29,18 +29,18 @@ Term& Term::operator =(const Term& other){
     }
     
     // Copy vectors.
-    this->term = new term_t(*(other->term));
+    this->term = new term_t(*(other.term));
  
     // return the existing object
     return *this;
 }
 
-Term Term::initialize(term_size_t size){
+Term * Term::initialize(term_size_t size){
     this->setSize(size);
     return this->initialize();
 }
 
-Term Term::initialize() {
+Term * Term::initialize() {
     
     // Null terms are not allowed, it has to be initialized prior this call.
     assert(this->size > 0);
@@ -52,9 +52,11 @@ Term Term::initialize() {
         this->term->clear();
         this->term->reserve(this->vectorSize);
     }
+    
+    return this;
 }
 
-bool Term::evaluate(const unsigned char * input, unsigned int inputLen){
+bool Term::evaluate(const unsigned char * input, term_size_t inputLen) const {
     assert(this->size > 0);
     
     // For now assume that the size of an internal term element
@@ -70,11 +72,11 @@ bool Term::evaluate(const unsigned char * input, unsigned int inputLen){
     return res;
 }
 
-int Term::compareTo(const Term& other){
-    return compareTo(*other);
+int Term::compareTo(const Term& other) const {
+    return compareTo(&other);
 }
 
-int Term::compareTo(const PTerm other){
+int Term::compareTo(const Term * other) const {
     if (size < other->getSize()) return  1;
     if (size > other->getSize()) return -1;
     
@@ -93,11 +95,11 @@ int Term::compareTo(const PTerm other){
     return 0;
 }
 
-Term Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset){
+Term * Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset){
     // Assume genome storage is the same to our term store, for code simplicity.
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(term_elem_t));
     
-    int & numVariables = size;
+    term_size_t & numVariables = size;
     int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
     int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
@@ -112,7 +114,7 @@ Term Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* 
     return this;
 }
 
-void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset){
+void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset) const {
     // Assume genome storage is the same to our term store, for code simplicity.
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(term_elem_t));
     
@@ -123,3 +125,34 @@ void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyI
         pGenome->gene(polyIdx, offset + i, *it1);
     }
 }
+
+bool Term::setBit(unsigned int bit, bool value){
+    if (bit > size){ 
+        return false; // TODO: throw exception
+    }
+    
+    if (value){
+        term->at(bit / sizeof(term_elem_t)) |  (1 << (bit % sizeof(term_elem_t)));
+    } else {
+        term->at(bit / sizeof(term_elem_t)) & ~(1 << (bit % sizeof(term_elem_t)));
+    }
+    return true;
+}
+
+bool Term::getBit(unsigned int bit) const {
+    if (bit > size){ 
+        return false; // TODO: throw exception
+    }
+    
+    return (term->at(bit / sizeof(term_elem_t)) & (bit % sizeof(term_elem_t))) > 0;
+}
+
+bool Term::flipBit(unsigned int bit){
+    if (bit > size){ 
+        return false; // TODO: throw exception
+    }
+    
+    term->at(bit / sizeof(term_elem_t)) = term->at(bit / sizeof(term_elem_t)) ^ (1 << (bit % sizeof(term_elem_t)));
+    return true;
+}
+    
