@@ -4,12 +4,13 @@
 // One single element is unsigned long
 // Originally term was here, but length of the term is set in configuration
 // file, thus it is controlled on the higher level, not at the genome level.
-#define POLY_GENOME_ITEM_TYPE unsigned long
+#define POLY_GENOME_ITEM_TYPE GENOME_ITEM_TYPE
 
 // Global definitions.
 #include "EACglobals.h"
 
 // We use 2D array genome (polynomials, terms).
+#include "../galib/GAGenome.h"
 #include "../galib/GA2DArrayGenome.h"
 
 /**

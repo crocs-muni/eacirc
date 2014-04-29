@@ -73,6 +73,12 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->circuit.allowedFunctions[FNC_READ] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_READ").c_str());
     pSettings->circuit.allowedFunctions[FNC_EXT] = atoi(getXMLElementValue(pRoot,"CIRCUIT/ALLOWED_FUNCTIONS/FNC_EXT").c_str());
 
+    // parsing EACIRC/POLYDIST
+    pSettings->polydist.enabled = atoi(getXMLElementValue(pRoot,"POLYDIST/ENABLED").c_str()) ? true : false;
+    pSettings->polydist.genomeInitMaxTerms = atoi(getXMLElementValue(pRoot,"POLYDIST/MAX_TERMS").c_str());
+    pSettings->polydist.genomeInitTermCountProbability = atof(getXMLElementValue(pRoot,"POLYDIST/TERM_COUNT_P").c_str());
+    pSettings->polydist.genomeInitTermStopProbability = atof(getXMLElementValue(pRoot,"POLYDIST/TERM_VAR_P").c_str());
+    
     // parsing EACIRC/TEST_VECTORS
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
     pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());

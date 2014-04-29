@@ -87,6 +87,7 @@ void TestConfigurator::compareResults() const {
 void TestConfigurator::runEACirc() const {
     if (mainLogger.getLogging()) {
         WARN("######## Running EACirc ########");
+        mainLogger.out(LOGGER_INFO) << "Configuration file: "  << FILE_CONFIG << endl;
     }
     EACirc eacirc;
     eacirc.loadConfiguration(FILE_CONFIG);

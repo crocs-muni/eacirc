@@ -148,9 +148,10 @@ struct SETTINGS_TEST_VECTORS {
 
 //! settings corresponding to EACIRC/POLYDIST
 struct SETTINGS_POLYDIST {
-    double genomeInitTermStopProbability;
-    double genomeInitTermCountProbability;
-    int genomeInitMaxTerms;
+    bool enabled;                           //! whether to use polynomial distinguishers instead of circuit.
+    double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
+    double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
+    int genomeInitMaxTerms;                 //! upper bound for number of terms in polynomial.
     SETTINGS_POLYDIST();
 };
 

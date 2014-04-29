@@ -156,15 +156,9 @@ class Term {
 // Pointer to the term.
 typedef Term * PTerm;
 
-bool operator== (const Term &cT1, const Term &cT2)
-{
-    return cT1.compareTo(cT2) == 0;
-}
+inline bool operator== (const Term &cT1, const Term &cT2){ return cT1.compareTo(cT2) == 0; }
  
-bool operator!= (const Term &cT1, const Term &cT2)
-{
-    return !(cT1 == cT2);
-}
+inline bool operator!= (const Term &cT1, const Term &cT2){ return !(cT1 == cT2); }
 
 // Term comparator
 struct TermComparator {

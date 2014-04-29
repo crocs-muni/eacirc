@@ -6,6 +6,7 @@
 #include "GA1DArrayGenome.h"
 #include "GASStateGA.h"
 #include "projects/IProject.h"
+#include "representation/Repr.h"
 
 //! constants for EACirc configuration state
 #define EACIRC_CONFIG_LOADED 0x01
@@ -31,6 +32,8 @@ class EACirc {
     int m_actGener;
     //! generations completed in previous runs
     int m_oldGenerations;
+    //! representation of an individual.
+    Repr * representation;
 
     /** checks, if configuration has no contradictions
       */

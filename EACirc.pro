@@ -1,10 +1,12 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
+TARGET = eacirc2
 
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
                       -Wno-unused-function -Wno-unused-value
 
+QMAKE_TARGET = eacirc2
 QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
@@ -20,18 +22,26 @@ SOURCES += \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
 
+# === individual representation ===
+SOURCES += \
+    EACirc/representation/Repr.cpp \
+    EACirc/representation/ReprIO.cpp \
+
 # === circuit processing ===
 SOURCES += \
     EACirc/circuit/GACallbacks.cpp \
     EACirc/circuit/CircuitIO.cpp \
     EACirc/circuit/CircuitInterpreter.cpp \
     EACirc/circuit/CircuitCommonFunctions.cpp \
+    EACirc/circuit/CircuitRepr.cpp \
 
 # === polynomials ===
 SOURCES += \
     ./EACirc/polynomials/Term.cpp   \
     ./EACirc/polynomials/PolyDistEval.cpp   \
+    ./EACirc/polynomials/PolyIO.cpp \
     ./EACirc/polynomials/GAPolyCallbacks.cpp \
+    ./EACirc/polynomials/PolyRepr.cpp \
     ./EACirc/polynomials/poly.cpp \
 
 # === evaluators ===
@@ -222,18 +232,26 @@ HEADERS += \
     EACirc/EACirc.h \
     EACirc/Version.h \
 
+# === individual representation ===
+HEADERS += \
+    EACirc/representation/Repr.h \
+    EACirc/representation/ReprIO.h \
+
 # === circuit processing ===
 HEADERS += \
     EACirc/circuit/GACallbacks.h \
     EACirc/circuit/CircuitIO.h \
     EACirc/circuit/CircuitInterpreter.h \
     EACirc/circuit/CircuitCommonFunctions.h \
+    EACirc/circuit/CircuitRepr.h \
 
 # === polynomials ===
 HEADERS += \
     ./EACirc/polynomials/PolyDistEval.h \
     ./EACirc/polynomials/GAPolyCallbacks.h \
+    ./EACirc/polynomials/PolyIO.h \
     ./EACirc/polynomials/Term.h \
+    ./EACirc/polynomials/PolyRepr.h \
     ./EACirc/polynomials/poly.h \
 
 # === standard evaluators ===

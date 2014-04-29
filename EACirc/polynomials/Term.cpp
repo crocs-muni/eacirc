@@ -77,15 +77,15 @@ int Term::compareTo(const Term& other) const {
 }
 
 int Term::compareTo(const Term * other) const {
-    if (size < other->getSize()) return  1;
-    if (size > other->getSize()) return -1;
+    if (this->size < other->getSize()) return  1;
+    if (this->size > other->getSize()) return -1;
     
     // Same size here.
     // Compare from the highest variable present.
-    term_t::reverse_iterator it1 = term->rbegin();
+    term_t::reverse_iterator it1 = this->term->rbegin();
     term_t::reverse_iterator it2 = other->term->rbegin();
     
-    term_t::const_reverse_iterator it1End = term->rend();
+    term_t::const_reverse_iterator it1End = this->term->rend();
     term_t::const_reverse_iterator it2End = other->term->rend();
     for(;it1 != it1End && it2 != it2End; it1++, it2++){
         if ((*it1) < (*it2)) return  1;

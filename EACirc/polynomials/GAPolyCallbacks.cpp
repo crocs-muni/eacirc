@@ -12,7 +12,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     // Then generate new polynomials using this distribution, minimum is 1 term.
     // (uniform distribution for choosing which variable to include in the polynomial).
     // Define probability distribution on the number of variables in term. Minimum is 1.
-    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&) g;
+    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
@@ -76,7 +76,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
 }
 
 float GAPolyCallbacks::evaluator(GAGenome &g) {
-    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>  &genome = (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&) g;
+    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>  &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
     // reset evaluator state for this individual
     pGlobals->evaluator->resetEvaluator();
@@ -92,7 +92,7 @@ float GAPolyCallbacks::evaluator(GAGenome &g) {
 
 int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){ 
     int numOfMutations = 0;
-    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&) g;
+    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
@@ -125,13 +125,13 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
 
 int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2, GAGenome* offspring1, GAGenome* offspring2){
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * parents[] = {
-        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) &parent1, 
-        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) &parent2
+        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*)&parent1, 
+        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*)&parent2
     };
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * offsprings[] = {
-        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) offspring1, 
-        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) offspring2
+        dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring1), 
+        dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring2)
     };
     
     // Crossover is very simple here -> uniform selection of the polynomials to the offsprings.

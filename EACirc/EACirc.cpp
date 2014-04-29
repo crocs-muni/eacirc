@@ -17,6 +17,8 @@
 #include "polynomials/PolyDistEval.h"
 #include "polynomials/Term.h"
 #include "polynomials/poly.h"
+#include "polynomials/PolyRepr.h"
+#include "circuit/CircuitRepr.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -56,6 +58,8 @@ EACirc::~EACirc() {
     biasRndGen = NULL;
     if (mainGenerator) delete mainGenerator;
     mainGenerator = NULL;
+    if (representation) delete representation;
+    representation = NULL;
 }
 
 int EACirc::getStatus() const {
@@ -246,7 +250,7 @@ void EACirc::createState() {
 }
 
 void EACirc::savePopulation(const string filename) {
-    TiXmlElement* pRoot = CircuitIO::populationHeader(m_settings.ga.popupationSize);
+    TiXmlElement* pRoot = representation->getIOCallbacks()->populationHeader(m_settings.ga.popupationSize);
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
 
@@ -255,8 +259,8 @@ void EACirc::savePopulation(const string filename) {
     for (int i = 0; i < m_settings.ga.popupationSize; i++) {
         // note: it is not necessary to call individual i in SCALED order
         //       however then the population files differ in order ('diff' cannot be used to finding bugs)
-        GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().individual(i,GAPopulation::SCALED);
-        m_status = CircuitIO::genomeToBinary(genome ,textCircuit);
+        GAGenome & genome = m_gaData->population().individual(i,GAPopulation::SCALED);
+        m_status = representation->getIOCallbacks()->genomeToBinary(genome ,textCircuit);
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
             return;
@@ -319,12 +323,11 @@ void EACirc::loadPopulation(const string filename) {
         delete pRoot;
         return;
     }
-    GAPopulation population;
-    GA1DArrayGenome<GENOME_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
-    // INIT GENOME STRUCTURES
-    genome.initializer(GACallbacks::initializer);
-    genome.mutator(GACallbacks::mutator);
-    genome.crossover(GACallbacks::crossover);
+    
+    GAPopulation * population = representation->createConfigPopulation(&m_settings);
+    GAGenome * genome = representation->createGenome(&m_settings);
+    representation->setGACallbacks(genome, &m_settings);
+    
     // LOAD genomes
     TiXmlElement* pGenome = getXMLElement(pRoot,"population/genome")->ToElement();
     string textCircuit;
@@ -333,16 +336,21 @@ void EACirc::loadPopulation(const string filename) {
             mainLogger.out(LOGGER_ERROR) << "Too few genomes in population - expecting " << savedPopulationSize << "." << endl;
             m_status = STAT_DATA_CORRUPTED;
             delete pRoot;
+            delete genome;
+            delete population;
             return;
         }
         textCircuit = pGenome->GetText();
-        m_status = CircuitIO::genomeFromBinary(textCircuit,genome);
+        m_status = representation->getIOCallbacks()->genomeFromBinary(textCircuit, *genome);
         if (m_status != STAT_OK) return;
-        population.add(genome);
+        population->add(*genome);
         pGenome = pGenome->NextSiblingElement();
     }
-    seedAndResetGAlib(population);
+        
+    seedAndResetGAlib(*population);
     delete pRoot;
+    delete genome;
+    delete population;
     mainLogger.out(LOGGER_INFO) << "Population successfully loaded from file " << filename << "." << endl;
 }
 
@@ -350,21 +358,21 @@ void EACirc::createPopulation() {
     if (m_status != STAT_OK) return;
     // seed GAlib (initializations may require random numbers)
     GAResetRNG(m_currentGalibSeed);
-    // temporary structure for genome (empty or loaded from file)
-    GA1DArrayGenome<GENOME_ITEM_TYPE> genome(m_settings.circuit.genomeSize, GACallbacks::evaluator);
-    genome.initializer(GACallbacks::initializer);
-    genome.mutator(GACallbacks::mutator);
-    genome.crossover(GACallbacks::crossover);
-    GAPopulation population(genome,m_settings.ga.popupationSize);
+
+    // Create a basic genome used for this problem.
+    GAPopulation * p = representation->createConfigPopulation(&m_settings);
     // create genetic algorithm and initialize population
-    seedAndResetGAlib(population);
-    mainLogger.out(LOGGER_INFO) << "Initializing population." << endl;
+    seedAndResetGAlib(*p);
+    delete p;
+    
+    mainLogger.out(LOGGER_INFO) << "Initializing population, representation: " << representation->shortDescription() << endl;
     m_gaData->initialize();
+    
     // reset GAlib seed
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    mainGenerator->getRandomFromInterval(ULONG_MAX, &m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
 
-    mainLogger.out(LOGGER_INFO) << "Population successfully initialized." << endl;
+    mainLogger.out(LOGGER_INFO) << "Population successfully initialized: " << m_gaData->population().className() << endl;
 }
 
 void EACirc::saveProgress(const string stateFilename, const string populationFilename) {
@@ -424,6 +432,15 @@ void EACirc::prepare() {
         m_status = STAT_CONFIG_INCORRECT;
     }
 
+    // Individual representation? Polynomial / Circuit.
+    if (m_settings.polydist.enabled){
+        representation = new PolyRepr();
+    } else {
+        representation = new CircuitRepr();
+    }
+    
+    mainLogger.out(LOGGER_INFO) << "Representation initialized (" << representation->shortDescription() << ")." << endl;
+    
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
     }
@@ -516,13 +533,13 @@ void EACirc::evaluateStep() {
 
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {
-        GA1DArrayGenome<GENOME_ITEM_TYPE> genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
+        GAGenome & genome = m_gaData->population().best();
 
         ostringstream fileName;
         fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
-        CircuitIO::outputGenomeFiles(genome,filePath);
+        representation->getIOCallbacks()->outputGenomeFiles(genome, filePath);
     }
 
     // save generation stats for total scores
@@ -619,13 +636,15 @@ void EACirc::run() {
     mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
 
     // print the best circuit into separate file, prune if allowed
-    GA1DArrayGenome<GENOME_ITEM_TYPE> genomeBest = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) m_gaData->population().best();
-    CircuitIO::outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
+    GAGenome & genomeBest = m_gaData->population().best();
+    representation->getIOCallbacks()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
     if (pGlobals->settings->outputs.allowPrunning) {
-        GA1DArrayGenome<GENOME_ITEM_TYPE> genomePrunned = genomeBest;
-        m_status = CircuitInterpreter::pruneCircuit(genomeBest, genomePrunned);
+        
+        // TODO: fix prunning?
+        GAGenome genomePrunned = genomeBest;
+        m_status = representation->postProcess(genomeBest, genomePrunned);
         if (m_status == STAT_OK) {
-            CircuitIO::outputGenomeFiles(genomePrunned, string(FILE_CIRCUIT_DEFAULT) + FILE_PRUNNED_SUFFIX);
+            representation->getIOCallbacks()->outputGenomeFiles(genomePrunned, string(FILE_CIRCUIT_DEFAULT) + FILE_PRUNNED_SUFFIX);
         }
     }
 }
