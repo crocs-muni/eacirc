@@ -25,45 +25,28 @@ void PolyRepr::initialize(){
     this->io = new PolyIO();
 }
 
-GAGenome::Initializer PolyRepr::getInitializer() {
-    return GAPolyCallbacks::initializer;
-}
-
-GAGenome::Evaluator PolyRepr::getEvaluator() {
-    return GAPolyCallbacks::evaluator;
-}
-
-GAGenome::Comparator PolyRepr::getComparator() {
-    return NULL;
-}
-
-GAGenome::Mutator PolyRepr::getMutator() {
-    return GAPolyCallbacks::mutator;
-}
-
-GAGenome::SexualCrossover PolyRepr::getSexualCrossover() {
-    return GAPolyCallbacks::crossover;
-}
-
-GAGenome::AsexualCrossover PolyRepr::getAsexualCrossover() {
-    return NULL;
-}
-
-GAGenome* PolyRepr::createGenome(const SETTINGS* settings) {
+GAGenome* PolyRepr::createGenome(const SETTINGS* settings, bool setCallbacks) {
     // Has to compute genome dimensions.
     int numVariables = settings->circuit.sizeInput;
     int numPolynomials = settings->circuit.sizeOutput;
     unsigned int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
     unsigned int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
     
-    return new GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>(
+    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = new GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>(
             numPolynomials, 
             1 + termSize * settings->polydist.genomeInitMaxTerms,               // number of terms N + N terms.
             this->getEvaluator());
+    
+    if (setCallbacks){
+        setGACallbacks(g, settings);
+    }
+    
+    return g;
 }
 
 GAGenome* PolyRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
     g->initializer(getInitializer());
+    g->evaluator(getEvaluator());
     g->mutator(getMutator());
     g->crossover(getSexualCrossover());
     return g;

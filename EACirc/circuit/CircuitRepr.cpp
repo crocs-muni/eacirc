@@ -26,36 +26,18 @@ void CircuitRepr::initialize(){
     this->io = new CircuitIO();
 }
 
-GAGenome::Initializer CircuitRepr::getInitializer() {
-    return GACallbacks::initializer;
-}
-
-GAGenome::Evaluator CircuitRepr::getEvaluator() {
-    return GACallbacks::evaluator;
-}
-
-GAGenome::Comparator CircuitRepr::getComparator() {
-    return NULL;
-}
-
-GAGenome::Mutator CircuitRepr::getMutator() {
-    return GACallbacks::mutator;
-}
-
-GAGenome::SexualCrossover CircuitRepr::getSexualCrossover() {
-    return GACallbacks::crossover;
-}
-
-GAGenome::AsexualCrossover CircuitRepr::getAsexualCrossover() {
-    return NULL;
-}
-
-GAGenome* CircuitRepr::createGenome(const SETTINGS* settings) {
-    return new GA1DArrayGenome<GENOME_ITEM_TYPE>(settings->circuit.genomeSize, getEvaluator());
+GAGenome* CircuitRepr::createGenome(const SETTINGS* settings, bool setCallbacks) {
+    GA1DArrayGenome<GENOME_ITEM_TYPE> *g = new GA1DArrayGenome<GENOME_ITEM_TYPE>(settings->circuit.genomeSize, getEvaluator());
+    if (setCallbacks){
+        setGACallbacks(g, settings);
+    }
+    
+    return g;
 }
 
 GAGenome* CircuitRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
     g->initializer(getInitializer());
+    g->evaluator(getEvaluator());
     g->mutator(getMutator());
     g->crossover(getSexualCrossover());
     return g;

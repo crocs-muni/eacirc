@@ -8,6 +8,7 @@
 #ifndef POLYREPR_H
 #define	POLYREPR_H
 #include "../representation/Repr.h"
+#include "GAPolyCallbacks.h"
 
 class PolyRepr : public Repr {
 public:
@@ -22,15 +23,15 @@ public:
     virtual string shortDescription() { return "PolyRepr"; }
     
     // Getters for GA callbacks.
-    virtual GAGenome::Initializer       getInitializer();
-    virtual GAGenome::Evaluator         getEvaluator();
-    virtual GAGenome::Mutator           getMutator();
-    virtual GAGenome::Comparator        getComparator();
-    virtual GAGenome::SexualCrossover   getSexualCrossover();
-    virtual GAGenome::AsexualCrossover  getAsexualCrossover();
+    virtual inline GAGenome::Initializer       getInitializer() { return GAPolyCallbacks::initializer; };
+    virtual inline GAGenome::Evaluator         getEvaluator()   { return GAPolyCallbacks::evaluator;   };
+    virtual inline GAGenome::Mutator           getMutator()     { return GAPolyCallbacks::mutator;     };
+    virtual inline GAGenome::Comparator        getComparator()  { return NULL; }
+    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GAPolyCallbacks::crossover; };
+    virtual inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
     
     // Constructs empty genome from settings.
-    virtual GAGenome * createGenome(const SETTINGS * settings);
+    virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false);
     
     // Sets non-null GA callbacks.
     virtual GAGenome * setGACallbacks(GAGenome * g, const SETTINGS * settings);

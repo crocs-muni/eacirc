@@ -13,19 +13,10 @@
 #include "EACglobals.h"
 #include "ReprIO.h"
 
-typedef struct GACb_t {
-    GAGenome::Initializer       * initializer;
-    GAGenome::Evaluator         * evaluator;
-    GAGenome::Mutator           * mutator;
-    GAGenome::Comparator        * comparator;
-    GAGenome::SexualCrossover   * sexualCrossover;
-    GAGenome::AsexualCrossover  * asexualCrossover;
-} GACb;
-
 class Repr {
 protected:
+    // IO operations for representation.
     ReprIO * io;
-    //GACb gacb;
     
 public:
     Repr();
@@ -43,7 +34,7 @@ public:
     virtual GAGenome::AsexualCrossover  getAsexualCrossover()=0;
     
     // Constructs empty genome from settings.
-    virtual GAGenome * createGenome(const SETTINGS * settings)=0;
+    virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false)=0;
     
     // Sets non-null GA callbacks to the genome.
     virtual GAGenome * setGACallbacks(GAGenome * g, const SETTINGS * settings)=0;

@@ -325,8 +325,7 @@ void EACirc::loadPopulation(const string filename) {
     }
     
     GAPopulation * population = representation->createConfigPopulation(&m_settings);
-    GAGenome * genome = representation->createGenome(&m_settings);
-    representation->setGACallbacks(genome, &m_settings);
+    GAGenome * genome = representation->createGenome(&m_settings, true);
     
     // LOAD genomes
     TiXmlElement* pGenome = getXMLElement(pRoot,"population/genome")->ToElement();
