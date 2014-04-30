@@ -89,7 +89,7 @@ typedef unsigned __int64 uint64_t;
 #define CMD_OPT_CUSTOM_CONFIG       "-c"
 
 // CIRCUIT LIMITS
-#define MAX_LAYER_SIZE              32
+#define MAX_LAYER_SIZE              256
 //#define NUM_OUTPUT_CATEGORIES		256
 #define NUM_OUTPUT_CATEGORIES		10
 //#define ENABLE_SLIDING_WINDOW			// if enabled, input data are shifted only per one byte, not pGlobals->settings->circuit.sizeInputLayer. Note - fitness results are then not directly comparable with version without sliding window

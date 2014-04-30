@@ -5,6 +5,7 @@
 #include <assert.h> 
 #include <vector>
 #include <cmath>
+#include <stdexcept>
 
 // Basic element of the term array/vector.
 typedef POLY_GENOME_ITEM_TYPE term_elem_t; 
@@ -44,7 +45,7 @@ class Term {
     /**
      * Internal term representation using a vector.
      */
-    term_t * term;
+    term_t * term = NULL;
     
     /**
      * Helper attribute - whether to ignore this term or not.
@@ -126,9 +127,9 @@ class Term {
      * @param bit
      * @param value
      */
-    bool setBit(unsigned int bit, bool value);
+    void setBit(unsigned int bit, bool value);
     bool getBit(unsigned int bit) const;
-    bool flipBit(unsigned int bit);
+    void flipBit(unsigned int bit);
     
     bool getIgnore() const { return this->ignore; }
     Term * setIgnore(bool ign) { this->ignore = ign; return this; }

@@ -58,7 +58,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
             int curVars = 0;
             for(curVars = 0; curVars < numVariables; curVars++){
                 // Generating terms with chain.
-                if (curVars > 1 && GAFlipCoin(pGlobals->settings->polydist.genomeInitTermCountProbability)) {
+                if (curVars >= 1 && GAFlipCoin(pGlobals->settings->polydist.genomeInitTermCountProbability)) {
                     break;
                 }
                 

@@ -7,7 +7,7 @@
 
 #include "Repr.h"
 
-Repr::Repr() {
+Repr::Repr() : io(NULL) {
 }
 
 Repr::~Repr() {

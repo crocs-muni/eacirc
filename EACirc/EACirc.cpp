@@ -31,7 +31,7 @@
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_project(NULL), m_gaData(NULL),
-      m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
+      m_readyToRun(0), m_actGener(0), m_oldGenerations(0), representation(0) {
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }

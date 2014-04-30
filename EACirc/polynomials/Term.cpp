@@ -2,6 +2,7 @@
 
 #include <assert.h> 
 #include <cmath>
+#include <stdexcept>
 
 Term::Term(const Term& cT){
     // Initialize internal representation with the size from the source.
@@ -49,8 +50,8 @@ Term * Term::initialize() {
     if (this->term == NULL){
         this->term = new term_t(this->vectorSize);
     } else {
-        this->term->clear();
-        this->term->reserve(this->vectorSize);
+        // Reset vector to zero, fill exact same number of elements as desired.
+        term->assign(this->vectorSize, static_cast<term_elem_t>(0));
     }
     
     return this;
@@ -126,33 +127,32 @@ void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyI
     }
 }
 
-bool Term::setBit(unsigned int bit, bool value){
+void Term::setBit(unsigned int bit, bool value){
     if (bit > size){ 
-        return false; // TODO: throw exception
+        throw std::out_of_range("illegal bit position");
     }
     
+    const int bitpos = bit / sizeof(term_elem_t);
     if (value){
-        term->at(bit / sizeof(term_elem_t)) |  (1 << (bit % sizeof(term_elem_t)));
+        term->at(bitpos) = term->at(bitpos) |  (1 << (bit % sizeof(term_elem_t)));
     } else {
-        term->at(bit / sizeof(term_elem_t)) & ~(1 << (bit % sizeof(term_elem_t)));
+        term->at(bitpos) = term->at(bitpos) & ~(1 << (bit % sizeof(term_elem_t)));
     }
-    return true;
 }
 
 bool Term::getBit(unsigned int bit) const {
     if (bit > size){ 
-        return false; // TODO: throw exception
+        throw std::out_of_range("illegal bit position");
     }
     
     return (term->at(bit / sizeof(term_elem_t)) & (bit % sizeof(term_elem_t))) > 0;
 }
 
-bool Term::flipBit(unsigned int bit){
+void Term::flipBit(unsigned int bit){
     if (bit > size){ 
-        return false; // TODO: throw exception
+        throw std::out_of_range("illegal bit position");
     }
     
     term->at(bit / sizeof(term_elem_t)) = term->at(bit / sizeof(term_elem_t)) ^ (1 << (bit % sizeof(term_elem_t)));
-    return true;
 }
     
