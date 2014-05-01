@@ -135,6 +135,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
             
             int bitPos = 1 + numTerms*termSize + (randomBit/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
             genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (randomBit % (8*sizeof(POLY_GENOME_ITEM_TYPE)))));
+            
+            numTerms+=1;
             numOfMutations+=1;
         }
         
@@ -143,15 +145,17 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
             // Pick a random term to delete
             unsigned int term2del = GARandomInt(0, numTerms-1);
             
-            // Delete term, shifting of others to the right.
+            // Delete term, copy the last term on this place, O(1).
             genome.gene(cPoly, 0, numTerms-1);
-            // For each polynomial to the right of the current (to delete).
-            for(unsigned int t=term2del; t < (numTerms-1); t++){
-                // Move term t+1 to the right
+            if (term2del < (numTerms-1)){
+                // Move the last term to the place of removed.
                 for(unsigned int i=0; i<termSize; i++){
-                    genome.gene(cPoly, 1 + t*termSize + i, genome.gene(cPoly, 1 + (t+1)*termSize + i));
+                    genome.gene(cPoly, 1 + term2del*termSize + i, genome.gene(cPoly, 1 + (numTerms-1)*termSize + i));
                 }
             }
+            
+            numTerms-=1;
+            numOfMutations+=1;
         }
     }
     
@@ -173,7 +177,7 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
     unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
-    // Vectors for generating a random permutation.
+    // Vectors for generating a random permutation on polynomials.
     std::vector<int> poly1(numPolynomials);
     std::vector<int> poly2(numPolynomials);
     for(int i=0; i<numPolynomials; i++){
@@ -181,7 +185,8 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
         poly2[i] = i;
     }
     
-    // If want to randomize polynomial selection, shuffle arrays.
+    // If want to randomize polynomial selection, shuffle index arrays.
+    // TODO: are we generating differen tpermutations here???
     if (pGlobals->settings->polydist.crossoverRandomizePolySelect && numPolynomials > 1){
         std::shuffle(poly1.begin(), poly1.end(), std::default_random_engine(pGlobals->settings->random.seed));
         std::shuffle(poly2.begin(), poly2.end(), std::default_random_engine(pGlobals->settings->random.seed));
@@ -212,10 +217,10 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
             POLY_GENOME_ITEM_TYPE numTerms[] = {offsprings[0]->gene(cPoly, 0), offsprings[1]->gene(cPoly, 0)};
             int minTerms = numTerms[0] < numTerms[1] ? 0 : 1;
             
-            // Single point crossover on terms.
+            // Single point crossover on terms, [0, min(t1size, t2size)].
             int crossoverPlace = GARandomInt(0, numTerms[minTerms]-1);
             
-            // Do the single point crossover.
+            // Do the single point crossover, exchange term size. 
             offsprings[0]->gene(cPoly, 0, numTerms[1]);
             offsprings[1]->gene(cPoly, 0, numTerms[0]);
             
