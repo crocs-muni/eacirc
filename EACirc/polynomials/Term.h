@@ -92,7 +92,7 @@ class Term {
      * @param bitSize
      * @return 
      */
-    static inline int getTermSize(unsigned int bitSize) { return (unsigned int) ceil((double) bitSize / (8.0*(double)sizeof(term_elem_t))); };
+    static inline unsigned int getTermSize(unsigned int bitSize) { return (unsigned int) ceil((double) bitSize / (8.0*(double)sizeof(term_elem_t))); };
     
     /**
      * Returns number of term building blocks if term has provided bit size, provided storage type.
@@ -100,7 +100,7 @@ class Term {
      * @param typeSize
      * @return 
      */
-    static inline int getTermSize(unsigned int bitSize, unsigned int typeSize) { return (unsigned int) ceil((double) bitSize / (8.0*(double)typeSize)); };
+    static inline unsigned int getTermSize(unsigned int bitSize, unsigned int typeSize) { return (unsigned int) ceil((double) bitSize / (8.0*(double)typeSize)); };
     
     /**
      * Setter only for the size. Performs no initialization.

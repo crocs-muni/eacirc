@@ -75,8 +75,15 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 }
 
 SETTINGS_POLYDIST::SETTINGS_POLYDIST() {
-    genomeInitTermStopProbability = 0.3;
-    genomeInitMaxTerms = 50;
+    genomeInitTermStopProbability = -1;
+    genomeInitMaxTerms = -1;
+    crossoverRandomizePolySelect = false;
+    crossoverTermsProbability = -1;
+    enabled = false;
+    mutateAddTermProbability = -1;
+    mutateAddTermStrategy = -1;
+    mutateRemoveTermProbability = -1;
+    mutateRemoveTermStrategy = -1;
 }
 
 SETTINGS::SETTINGS() {

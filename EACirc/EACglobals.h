@@ -151,7 +151,13 @@ struct SETTINGS_POLYDIST {
     bool enabled;                           //! whether to use polynomial distinguishers instead of circuit.
     double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
     double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
-    int genomeInitMaxTerms;                 //! upper bound for number of terms in polynomial.
+    double mutateAddTermProbability;        //! p for adding a new term in a mutation, monomial.
+    int mutateAddTermStrategy;              //! strategy for adding a new term in a mutation, multiple / single / geometric / ...
+    double mutateRemoveTermProbability;     //! p for removing a term in a mutation, monomial.
+    int mutateRemoveTermStrategy;           //! strategy for removing a term in a mutation, multiple / single / geometric / ...
+    bool crossoverRandomizePolySelect;      //! randomize polynomial ordering in the crossover?
+    bool crossoverTermsProbability;         //! crossing of the terms probability.
+    int genomeInitMaxTerms;                 //! upper bound for a number of terms in a polynomial.
     SETTINGS_POLYDIST();
 };
 
