@@ -6,13 +6,12 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
     // allocate repeatedly used variables
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == 8);
     
     // Reset output memory
-    memset(outputs, 0, ceil( (double)numPolynomials / (double)sizeof(unsigned char)) );
+    memset(outputs, 0, ceil( (double)numPolynomials / (8.0*(double)sizeof(unsigned char))) );
     
     //
     // Evaluates distinguisher on the given input.
@@ -35,7 +34,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
             bool ret = 1;
             for(int i=0; i<termSize; i++){
                 POLY_GENOME_ITEM_TYPE cTermEx = pGenome->gene(cPoly, 1 + termSize * cTerm + i);
-                ret &= TERM_ITEM_EVAL_8(cTermEx, inputs+i*termSize);
+                ret &= TERM_ITEM_EVAL_8(cTermEx, inputs+i*sizeof(POLY_GENOME_ITEM_TYPE));
             }
             
             // Polynomial is t1 XOR t2 XOR ... XOR t_{numVariables}
@@ -44,7 +43,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
         
         // Store result of the polynomial to the output array.
         if (polyRes > 0){
-                outputs[cPoly/sizeof(unsigned char)] |= polyRes >> (cPoly % sizeof(unsigned char));
+                outputs[cPoly / (8*sizeof(unsigned char))] |= 1ul << (cPoly % (8*sizeof(unsigned char)));
         }
     }
     
@@ -54,8 +53,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
 int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Normalize each polynomial in the distinguisher.
     for(int cPoly = 0; cPoly < numPolynomials; cPoly++){

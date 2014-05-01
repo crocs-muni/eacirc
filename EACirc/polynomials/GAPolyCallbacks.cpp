@@ -16,8 +16,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Clear genome.
     for (int i = 0; i < genome.width(); i++) {
@@ -42,7 +41,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
         int curTerms;
         for(curTerms = 0; curTerms <  pGlobals->settings->polydist.genomeInitMaxTerms; curTerms++){
             // Generating polynomials with chain
-            if (curTerms > 1 && GAFlipCoin(pGlobals->settings->polydist.genomeInitTermStopProbability)) {
+            if (curTerms >= 1 && GAFlipCoin(pGlobals->settings->polydist.genomeInitTermStopProbability)) {
                 break;
             }
 
@@ -86,6 +85,7 @@ float GAPolyCallbacks::evaluator(GAGenome &g) {
         PolyEval::polyEval(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
         pGlobals->evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector]);
     }
+    
     // retrieve fitness from evaluator
     return pGlobals->evaluator->getFitness();
 }
@@ -96,28 +96,28 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
     
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Current mutation strategy: 
     //  - [pick 1 polynomial to mutate ad random]
     //  - pick 1 term from the given polynomial to mutate ad random.
     //  - pick 1 variable from the given term and flip it.
     for(int cPoly=0; cPoly < numPolynomials; cPoly++){
-        if (!GAFlipCoin(probMutation)) continue;
+        POLY_GENOME_ITEM_TYPE numTerms = genome.gene(cPoly, 0);
         
-        // Pick random term
-        POLY_GENOME_ITEM_TYPE termSize = genome.gene(cPoly, 0);
-        int randTerm = GARandomInt(0, termSize-1);
-        
-        // Pick random bit
-        int randomBit = GARandomInt(0, numVariables-1);
-        
-        // Get value of the random bit
-        int bitPos = 1+randTerm*termSize + (randomBit/sizeof(POLY_GENOME_ITEM_TYPE));
-        genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1 << (randomBit % sizeof(POLY_GENOME_ITEM_TYPE))));
-        
-        numOfMutations+=1;
+        if (GAFlipCoin(probMutation)) {
+            // Pick random term
+            int randTerm = GARandomInt(0, numTerms-1);
+
+            // Pick random bit
+            int randomBit = GARandomInt(0, numVariables-1);
+
+            // Get value of the random bit
+            int bitPos = 1 + randTerm*termSize + (randomBit/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
+            genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (randomBit % (8*sizeof(POLY_GENOME_ITEM_TYPE)))));
+
+            numOfMutations+=1;
+        }
     }
     
     return numOfMutations;
@@ -159,5 +159,5 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
 }
 
 POLY_GENOME_ITEM_TYPE GAPolyCallbacks::changeBit(POLY_GENOME_ITEM_TYPE genomeValue, int width) {
-    return genomeValue ^ (1 << GARandomInt(0, width-1));
+    return genomeValue ^ (1ul << GARandomInt(0, width-1));
 }

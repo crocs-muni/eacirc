@@ -9,6 +9,7 @@
 #include "representation/Repr.h"
 #include "PolyIO.h"
 #include "GAPolyCallbacks.h"
+#include "Term.h"
 #include <math.h>
 
 PolyRepr::PolyRepr() {
@@ -29,8 +30,7 @@ GAGenome* PolyRepr::createGenome(const SETTINGS* settings, bool setCallbacks) {
     // Has to compute genome dimensions.
     int numVariables = settings->circuit.sizeInput;
     int numPolynomials = settings->circuit.sizeOutput;
-    unsigned int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    unsigned int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
+    unsigned int   termSize = Term::getTermSize(numVariables); // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = new GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>(
             numPolynomials, 
@@ -55,8 +55,7 @@ GAGenome* PolyRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
 GAPopulation* PolyRepr::createConfigPopulation(const SETTINGS* settings) {
     int numVariables = settings->circuit.sizeInput;
     int numPolynomials = settings->circuit.sizeOutput;
-    unsigned int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    unsigned int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
+    unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> g(
             numPolynomials, 

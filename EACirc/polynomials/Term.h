@@ -27,6 +27,11 @@ typedef std::vector<term_elem_t> term_t;
  *
  * It is not possible to express a zero term (not needed in
  * the polynomial representation of a function).
+ * 
+ * Term is stored in the internal vector in this way:
+ * x_0  .. x_63  goes to the vector[0]
+ * x_64 .. x_128 goes to the vector[1] ...
+ * 
  */
 class Term {
   protected:
@@ -38,7 +43,7 @@ class Term {
     
     /**
      * Size of the vector derived from the size.
-     * ceil(size / sizeof(term_elem_t))
+     * ceil(size / 8*sizeof(term_elem_t))
      */
     term_size_t vectorSize=0;
     
@@ -83,11 +88,26 @@ class Term {
     term_size_t getSize (void) const {return (size);}
     
     /**
+     * Returns number of term building blocks if term has provided bit size.
+     * @param bitSize
+     * @return 
+     */
+    static inline int getTermSize(unsigned int bitSize) { return (unsigned int) ceil((double) bitSize / (8.0*(double)sizeof(term_elem_t))); };
+    
+    /**
+     * Returns number of term building blocks if term has provided bit size, provided storage type.
+     * @param bitSize
+     * @param typeSize
+     * @return 
+     */
+    static inline int getTermSize(unsigned int bitSize, unsigned int typeSize) { return (unsigned int) ceil((double) bitSize / (8.0*(double)typeSize)); };
+    
+    /**
      * Setter only for the size. Performs no initialization.
      */
     Term * setSize(term_size_t size) {
         this->size = size; 
-        this->vectorSize = (term_size_t) ceil((double) size / (double)sizeof(term_elem_t));
+        this->vectorSize = (term_size_t) ceil((double) size / (8.0*(double)sizeof(term_elem_t)));
         return this;
     }
     
@@ -114,7 +134,8 @@ class Term {
     Term * initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
     
     /**
-     * Dumps term to the genome./
+     * Dumps term to the genome.
+     * Writes vector[0] .. vector[n] to the genome (thus ordering is x_0 ... x_size).
      * 
      * @param pGenome
      * @param polyIdx
@@ -140,10 +161,10 @@ class Term {
     
     // Assignment operator
     Term& operator=(const Term& other);
-    bool operator<(const Term& other)   { return this->compareTo(other)==-1;    }
-    bool operator<=(const Term& other)  { return this->compareTo(other)!=1;     }
-    bool operator>(const Term& other)   { return this->compareTo(other)==1;     }
-    bool operator>=(const Term& other)  { return this->compareTo(other)!=-1;    }
+    bool operator<(const Term& other)   const { return this->compareTo(other)==-1;    }
+    bool operator<=(const Term& other)  const { return this->compareTo(other)!=1;     }
+    bool operator>(const Term& other)   const { return this->compareTo(other)==1;     }
+    bool operator>=(const Term& other)  const { return this->compareTo(other)!=-1;    }
     
     // Operations required by the library.
     //friend bool operator= (Term &cT);

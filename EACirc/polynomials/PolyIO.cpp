@@ -2,26 +2,26 @@
 #include "XMLProcessor.h"
 #include "CommonFnc.h"
 #include "representation/ReprIO.h"
+#include "Term.h"
 
 int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    unsigned int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    unsigned int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     int status = STAT_OK;
     ostringstream textCicruitStream;
     for (int i = 0; i < numPolynomials; i++) {
         // Get number of terms in the genome.
         POLY_GENOME_ITEM_TYPE numTerms = genome.gene(i, 0);
-        textCicruitStream << numTerms << " ";
+        textCicruitStream << setw(3) << right << setfill('0') << numTerms << " ";
         
         for(unsigned int j = 0; j < (numTerms * termSize); j++){
-            textCicruitStream << genome.gene(i, 1+j) << " ";
+            textCicruitStream << setw(3) << right << setfill('0') << genome.gene(i, 1+j) << " ";
         }
         
-        textCicruitStream << "  ";
+        textCicruitStream << "      ";
     }
     binaryCircuit = textCicruitStream.str();
     return status;
@@ -31,8 +31,7 @@ int PolyIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    unsigned int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    unsigned int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     istringstream circuitStream(binaryCircuit);
     POLY_GENOME_ITEM_TYPE gene;
@@ -115,8 +114,7 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     
     int & numVariables = pGlobals->settings->circuit.sizeInput;
     int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    unsigned int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    unsigned int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     ofstream file(fileName);
     if (!file.is_open()) {
@@ -146,33 +144,29 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     int status = STAT_OK;
     ostringstream textCicruitStream;
     for (int cPoly = 0; cPoly < numPolynomials; cPoly++) {
-        file << "#" << setw(3) << right << setfill('0') << (int) cPoly << ": ";
+        file << "#" << setw(2) << right << setfill('0') << (int) cPoly << ": ";
         
         // Get number of terms in the genome.
         POLY_GENOME_ITEM_TYPE numTerms = genome.gene(cPoly, 0);
-        file << " [#" << setw(3) << right << setfill('0') << (int) numTerms << "]" << "   ";
+        file << " [#" << setw(2) << right << setfill('0') << (int) numTerms << "]" << "   ";
         
         // Read term by term
         for(unsigned int cTerm = 0; cTerm < numTerms; cTerm++){
             
             // Read sub-terms
-            bool atLeastOne = false;
             for(unsigned int j = 0; j < termSize; j++){
                 POLY_GENOME_ITEM_TYPE gene = genome.gene(cPoly, 1 + cTerm * termSize + j);
                 
-                // Print x_1
-                for(unsigned int x = 0; x < termElemSize; x++){
-                    if ((gene & (1 << x)) == 0) continue;
-                    atLeastOne = true;
+                // Print x_i
+                for(unsigned int x = 0; x < 8*sizeof(POLY_GENOME_ITEM_TYPE); x++){
+                    if ((gene & (1ul << x)) == 0) continue;
                     
-                    file << "x_" << setw(3) << right << setfill('0') << (j*termElemSize + x);
+                    file << "x_" << setw(2) << right << setfill('0') << (j*8*sizeof(POLY_GENOME_ITEM_TYPE) + x) << ".";
                 }
             }
             
-            // Special case = constant polynomial
-            if (!atLeastOne){
-                file << "1";
-            }
+            // 1 is in each term.
+            file << "001";
 
             // Last term?
             if (cTerm+1 == numTerms){
@@ -181,10 +175,9 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
                 file << " + ";
             }
         }
-        
-        file << endl;
     }
     
+    file << endl;
     file.close();
     return STAT_OK;
 }
@@ -198,83 +191,6 @@ int PolyIO::genomeToCodeSt(GAGenome& g, string fileName) {
 int PolyIO::genomeToGraphSt(GAGenome& g, string fileName) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    /*int layerWidth;
-    int previousLayerWidth;
-    int connectorWidth;
-    POLY_GENOME_ITEM_TYPE connectors;
-    int connection;
-    ofstream file(fileName);
-    if (!file.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write genome (" << fileName << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
-    }
-    // graph header
-    file << "graph EACircuit {" << endl << "rankdir=BT;" << endl << "ranksep=0.75;" << endl << "ordering=out;" << endl;
-    file << "splines=polyline;" << endl << "node [style=filled, color=lightblue2];" << endl << endl;
-
-    // node specification
-    // input nodes
-    file << "{ rank=same;" << endl << "node [color=goldenrod1];" << endl;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
-        if (slot == pGlobals->settings->circuit.sizeMemory) { file << "node [color=chartreuse3];" << endl; }
-        file << "\"-1_" << slot << "\"[label=\"" << (slot < pGlobals->settings->circuit.sizeMemory ? "MEM" : "IN") << "\\n" << slot << "\"];" << endl;
-    }
-    file << "}" << endl;
-    // inside nodes
-    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers; layer++) {
-        layerWidth = layer == pGlobals->settings->circuit.numLayers-1 ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
-        file << "{ rank=same;" << endl;
-        for (int slot = 0; slot < layerWidth; slot++) {
-            POLY_GENOME_ITEM_TYPE gene = genome.gene((layer*2+1) * pGlobals->settings->circuit.genomeWidth + slot);
-            file << "\"" << layer << "_" << slot << "\"[label=\"";
-            file << functionToString(nodeGetFunction(gene)) << "\\n" << (int) nodeGetArgument(gene,1) << "\"];" << endl;
-        }
-        file << "}" << endl;
-    }
-    // output nodes
-    file << "{ rank=same;" << endl << "node [color=goldenrod1];" << endl;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) {
-        if (slot == pGlobals->settings->circuit.sizeMemory) { file << "node [color=brown2];" << endl; }
-        file << "\"-2_" << slot << "\"[label=\"" << (slot < pGlobals->settings->circuit.sizeMemory ? "MEM" : "OUT") << "\\n" << slot << "\"];" << endl;
-    }
-    file << "}" << endl;
-
-    // invisible connectors (to preserve order in rows)
-    file << "edge[style=invis];" << endl;
-    for (int layer = -1; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
-        layerWidth = pGlobals->settings->circuit.sizeLayer;
-        if (layer == -1) { layerWidth = pGlobals->settings->circuit.sizeInputLayer; }
-        if (layer >= pGlobals->settings->circuit.numLayers - 1) { layerWidth = pGlobals->settings->circuit.sizeOutputLayer; }
-        file << "\"" << (layer == pGlobals->settings->circuit.numLayers ? -2 : layer) << "_0\"";
-        for (int slot = 1; slot < layerWidth; slot++) {
-            file << " -- \"" << (layer == pGlobals->settings->circuit.numLayers ? -2 : layer) << "_" << slot << "\"";
-        }
-        file << ";" << endl;
-    }
-    file << endl;
-
-    // connectors
-    file << "edge[style=solid];" << endl;
-    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
-        previousLayerWidth = layer == 0 ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
-        layerWidth = layer < pGlobals->settings->circuit.numLayers - 1 ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
-        connectorWidth = (layer == 0 || layer >= pGlobals->settings->circuit.numLayers-1) ? previousLayerWidth : pGlobals->settings->circuit.numConnectors;
-        for (int slot = 0; slot < layerWidth; slot++) {
-            if (layer == pGlobals->settings->circuit.numLayers) { // last pseudo-output layer
-                file << "\"-2_" << slot << "\" -- \"" << pGlobals->settings->circuit.numLayers - 1 << "_" << slot << "\";" << endl;
-            } else { // common layer
-                connectors = genome.gene(layer * 2 * pGlobals->settings->circuit.genomeWidth + slot);
-                connectors = relativeToAbsoluteConnectorMask(connectors, slot, previousLayerWidth, connectorWidth);
-                while (connectorsDiscartFirst(connectors,connection)) {
-                    file << "\"" << layer << "_" << slot << "\" -- \"" << layer-1 << "_" << connection << "\";" << endl;
-                }
-            }
-        }
-    }
-
-    // footer & close
-    file << "}";
-    file.close();*/
     return STAT_OK;
 }
 
