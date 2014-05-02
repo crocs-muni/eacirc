@@ -1,9 +1,7 @@
 #ifndef EACCONSTANTS_H
 #define EACCONSTANTS_H
 
-#include <limits.h>
-
-typedef unsigned long DWORD;
+#include <limits>
 
 #ifndef FALSE
 #define FALSE               0
@@ -13,21 +11,20 @@ typedef unsigned long DWORD;
 #define TRUE                1
 #endif
 
-#ifndef ULONG_MAX
-#define ULONG_MAX     0xffffffffUL
-#endif
-
 #ifndef UCHAR_MAX
-#define UCHAR_MAX     255
+constexpr unsigned char UCHAR_MAX = std::numeric_limits<unsigned char>::max();
 #endif
 
 #ifndef INT_MAX
-#define INT_MAX       2147483647
+constexpr int INT_MAX = std::numeric_limits<int>::max();
 #endif
 
-#ifndef BITS_IN_UCHAR
-#define BITS_IN_UCHAR 8
+#ifndef ULONG_MAX
+constexpr unsigned long ULONG_MAX = std::numeric_limits<unsigned long>::max();
 #endif
+
+constexpr unsigned char BITS_IN_UCHAR = std::numeric_limits<unsigned char>::digits;
+constexpr unsigned char BITS_IN_ULONG = std::numeric_limits<unsigned long>::digits;
 
 #ifdef _MSC_VER
 typedef __int32 int32_t;

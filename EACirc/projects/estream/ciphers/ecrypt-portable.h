@@ -312,8 +312,8 @@ typedef unsigned I64T u64;
     #define U64C(v) (v##U)
 #endif
 
-#ifndef u64
-    typedef unsigned long long int  u64;
+#ifndef I64T
+    typedef long long unsigned int u64;
 #endif
 
 #endif

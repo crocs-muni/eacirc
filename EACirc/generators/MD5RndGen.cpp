@@ -27,7 +27,7 @@ int MD5RndGen::getRandomFromInterval(unsigned long highBound, unsigned long* pRa
     // UPDATE ACCUMULATOR
     status = updateAccumulator();
 
-    // GET FIRST DWORD FROM ACCUMULATOR     
+    // GET FIRST ULONG FROM ACCUMULATOR
     unsigned long random;
     memcpy(&random, m_md5Accumulator, sizeof(unsigned long));
     if (pRandom) *pRandom = (unsigned long) (((float) random / ULONG_MAX) *  highBound);
@@ -37,7 +37,7 @@ int MD5RndGen::getRandomFromInterval(unsigned long highBound, unsigned long* pRa
 
 int MD5RndGen::getRandomFromInterval(unsigned char highBound, unsigned char* pRandom) {
     int     status = STAT_OK;
-    DWORD   rand = 0;
+    unsigned long rand = 0;
     
     status = getRandomFromInterval(highBound, &rand);
     *pRandom = (unsigned char) rand;

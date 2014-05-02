@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
         argument++;
         // RUN SELF-TESTS
         if (strcmp(argv[argument],CMD_OPT_SELF_TEST) == 0) {
+            testEnvironment();
             return Catch::Main(argc-argument,argv+argument);
         }
         // CUSTOM CONFIG FILE
@@ -56,6 +57,8 @@ int main(int argc, char **argv) {
         return STAT_INVALID_ARGUMETS;
     }
 
+    testEnvironment();
+
     EACirc eacirc;
     eacirc.loadConfiguration(configFilename);
     eacirc.prepare();
@@ -67,5 +70,16 @@ int main(int argc, char **argv) {
         mainLogger.out() << "       status: " << statusToString(eacirc.getStatus()) << endl;
     } else {
         mainLogger.out(LOGGER_INFO) << "EACirc run succeeded." << endl;
+    }
+}
+
+void testEnvironment() {
+    if (UCHAR_MAX != 255) {
+        mainLogger.out(LOGGER_ERROR) << "Maximum for unsigned char is not 255 (it's " << UCHAR_MAX << ")." << endl;
+        exit(-1);
+    }
+    if (BITS_IN_UCHAR != 8) {
+        mainLogger.out(LOGGER_ERROR) << "Unsigned char does not have 8 bits (it has " << BITS_IN_UCHAR << ")." << endl;
+        exit(-1);
     }
 }

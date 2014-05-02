@@ -79,12 +79,12 @@ string QuantumRndGen::getQRNGDataFileName(int fileIndex) {
 int QuantumRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pRandom) {
     int status = STAT_OK;
 
-	if (highBound != ULONG_MAX) highBound++;
-    // GET FIRST DWORD FROM ACCUMULATOR     
+    if (highBound != ULONG_MAX) highBound++;
+    // GET FIRST ULONG FROM ACCUMULATOR
     unsigned long   random;
     memcpy(&random, m_accumulator+m_accPosition, sizeof(unsigned long));
     if (pRandom) {
-		*pRandom = (unsigned long) (((float) random / ULONG_MAX) *  highBound);
+        *pRandom = (unsigned long) (((float) random / ULONG_MAX) *  highBound);
 		if (*pRandom == highBound) *pRandom = 0;
 	}
 	// UPDATE ACCUMULATOR
@@ -107,7 +107,7 @@ int QuantumRndGen::getRandomFromInterval(int highBound, int *pRandom) {
     int status = STAT_OK;
 
 	if (highBound != INT_MAX) highBound++;
-    // GET FIRST DWORD FROM ACCUMULATOR     
+    // GET FIRST ULONG FROM ACCUMULATOR
     int   random;
     memcpy(&random, m_accumulator+m_accPosition, sizeof(int));
     // SUPRESS NEGATIVE VALUES
@@ -126,12 +126,12 @@ int QuantumRndGen::getRandomFromInterval(int highBound, int *pRandom) {
 int QuantumRndGen::getRandomFromInterval(float highBound, float *pRandom) {
     int status = STAT_OK;
 
-	if (highBound != ULONG_MAX) highBound++;
-    // GET FIRST DWORD FROM ACCUMULATOR     
+    if (highBound != ULONG_MAX) highBound++;
+    // GET FIRST ULONG FROM ACCUMULATOR
     unsigned long   random;
     memcpy(&random, m_accumulator+m_accPosition, sizeof(unsigned long));
     if (pRandom) {
-		*pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
+        *pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
 		if (*pRandom == highBound) *pRandom = 0;
 	}
 

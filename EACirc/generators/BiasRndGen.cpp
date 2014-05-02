@@ -32,7 +32,7 @@ int BiasRndGen::getRandomFromInterval(unsigned long highBound, unsigned long *pR
 	}
 
 	if (*pRandom == 0) {
-		*pRandom = (unsigned long) (((float) random / ULONG_MAX) *  highBound);
+        *pRandom = (unsigned long) (((float) random / ULONG_MAX) *  highBound);
 	}
 
 	// UPDATE ACCUMULATOR
@@ -103,7 +103,7 @@ int BiasRndGen::getRandomFromInterval(float highBound, float *pRandom) {
 	}
 
 	if (*pRandom == 0)
-		*pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
+        *pRandom = (float) (((float) random / ULONG_MAX) *  highBound);
 
 	// UPDATE ACCUMULATOR
     //UpdateAccumulator();

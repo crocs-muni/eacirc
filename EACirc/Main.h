@@ -9,4 +9,9 @@
   */
 int main(int argc, char **argv);
 
+/** Runtime environment tests
+ * - check limits for UCHAR
+ */
+void testEnvironment();
+
 #endif // MAIN_H
