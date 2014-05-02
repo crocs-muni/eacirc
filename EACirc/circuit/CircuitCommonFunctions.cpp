@@ -1,7 +1,6 @@
 #include "CircuitCommonFunctions.h"
 
-#define TOP_BYTE 0xff000000
-#define BOTTOM_BYTE 0x000000ff
+#define BOTTOM_BYTE 0xff
 
 unsigned char nodeGetFunction(GENOME_ITEM_TYPE nodeValue) {
     return nodeValue & BOTTOM_BYTE;
@@ -12,8 +11,8 @@ unsigned char nodeGetArgument(GENOME_ITEM_TYPE nodeValue, int argumentNumber) {
         mainLogger.out(LOGGER_ERROR) << "Getting invalid argument: " << argumentNumber << "." << endl;
         return 0;
     }
-    int shift = 32 - argumentNumber * BITS_IN_UCHAR;
-    return ((nodeValue & (BOTTOM_BYTE << shift)) >> shift) & BOTTOM_BYTE;
+    int shift = (4 - argumentNumber) * BITS_IN_UCHAR;
+    return ((nodeValue & ((GENOME_ITEM_TYPE) BOTTOM_BYTE << shift)) >> shift) & BOTTOM_BYTE;
 }
 
 void nodeSetFunction(GENOME_ITEM_TYPE& nodeValue, unsigned char function) {
@@ -25,17 +24,17 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
     if (argumentNumber < 1 || argumentNumber > 4 ) {
         mainLogger.out(LOGGER_ERROR) << "Setting invalid argument: " << argumentNumber << "." << endl;
     }
-    int shift = 32 - argumentNumber * BITS_IN_UCHAR;
-    nodeValue = nodeValue & (~(BOTTOM_BYTE << shift));
-    nodeValue |= (argumentValue << shift);
+    int shift = (4 - argumentNumber) * BITS_IN_UCHAR;
+    nodeValue = nodeValue & (~((GENOME_ITEM_TYPE) BOTTOM_BYTE << shift));
+    nodeValue |= ((GENOME_ITEM_TYPE) argumentValue << shift);
 }
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {
     int connectionIndex = 0;
-    while ( (( (GENOME_ITEM_TYPE) 1 << connectionIndex ) & connectorMask) == 0 && connectionIndex < 32) {
+    while ( (( (GENOME_ITEM_TYPE) 1 << connectionIndex ) & connectorMask) == 0 && connectionIndex < BITS_IN_ULONG) {
         connectionIndex++;
     }
-    if (connectionIndex >= 32) {
+    if (connectionIndex >= BITS_IN_ULONG) {
         return false; // no existing connection
     } else {
         connectorMask ^= ((GENOME_ITEM_TYPE) 1 << connectionIndex); // discart connection

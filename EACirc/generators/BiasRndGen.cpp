@@ -51,6 +51,16 @@ int BiasRndGen::getRandomFromInterval(unsigned char highBound, unsigned char *pR
     return status;
 }
 
+int BiasRndGen::getRandomFromInterval(unsigned int highBound, unsigned int *pRandom) {
+    int status = STAT_OK;
+    unsigned long   rand = 0;
+
+    status = getRandomFromInterval(highBound, &rand);
+    *pRandom = (unsigned int) rand;
+
+    return status;
+}
+
 int BiasRndGen::getRandomFromInterval(int highBound, int *pRandom) {
     int status = STAT_OK;
 	int val;

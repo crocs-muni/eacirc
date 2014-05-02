@@ -233,7 +233,7 @@ void EACirc::createState() {
     mainLogger.out(LOGGER_INFO) << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
 
     // GENERATE SEED FOR GALIB
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
     m_project->initializeProjectState();
@@ -356,7 +356,7 @@ void EACirc::createPopulation() {
     mainLogger.out(LOGGER_INFO) << "Initializing population." << endl;
     m_gaData->initialize();
     // reset GAlib seed
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+    mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
 
     mainLogger.out(LOGGER_INFO) << "Population successfully initialized." << endl;
@@ -601,7 +601,7 @@ void EACirc::run() {
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
                 && m_actGener % m_settings.main.saveStateFrequency == 0) {
-            mainGenerator->getRandomFromInterval(ULONG_MAX,&m_currentGalibSeed);
+            mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
             saveProgress(FILE_STATE,FILE_POPULATION);
         }

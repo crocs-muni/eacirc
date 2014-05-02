@@ -17,6 +17,7 @@ public:
 
     int getRandomFromInterval(unsigned long highBound, unsigned long *pRandom);
     int getRandomFromInterval(unsigned char highBound, unsigned char *pRandom);
+    int getRandomFromInterval(unsigned int highBound, unsigned int *pRandom);
     int getRandomFromInterval(int highBound, int *pRandom);
     int getRandomFromInterval(float highBound, float *pRandom);
     int discartValue();

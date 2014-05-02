@@ -18,7 +18,7 @@ class EACirc {
     //! main seed for this computation (can be reproduced with this seed and settings)
     unsigned long m_originalSeed;
     //! seed used to reseed GAlib the last time
-    unsigned long m_currentGalibSeed;
+    unsigned int m_currentGalibSeed;
     //! structure of main settings
     SETTINGS m_settings;
     //! project

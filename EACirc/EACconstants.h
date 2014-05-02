@@ -19,6 +19,10 @@ constexpr unsigned char UCHAR_MAX = std::numeric_limits<unsigned char>::max();
 constexpr int INT_MAX = std::numeric_limits<int>::max();
 #endif
 
+#ifndef UINT_MAX
+constexpr unsigned int UINT_MAX = std::numeric_limits<unsigned int>::max();
+#endif
+
 #ifndef ULONG_MAX
 constexpr unsigned long ULONG_MAX = std::numeric_limits<unsigned long>::max();
 #endif

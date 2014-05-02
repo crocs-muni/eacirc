@@ -21,6 +21,7 @@ public:
 
     virtual int getRandomFromInterval(unsigned long, unsigned long *) = 0;
     virtual int getRandomFromInterval(unsigned char, unsigned char *) = 0;
+    virtual int getRandomFromInterval(unsigned int, unsigned int *) = 0;
     virtual int getRandomFromInterval(int, int *) = 0;
     virtual int getRandomFromInterval(float, float *) = 0;
     virtual int discartValue() = 0;
