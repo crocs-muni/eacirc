@@ -43,6 +43,25 @@ private:
      * @return              changed genome item value
      */
     static POLY_GENOME_ITEM_TYPE changeBit(POLY_GENOME_ITEM_TYPE genomeValue, int width);
+    
+    /**
+     * Random number generator using GAlib (determinism).
+     * @param max
+     * @return 
+     */
+    inline static int randomGen(int max) { return GARandomInt(0, max-1); }
+    
+    /**
+     * Shuffling container with RandomAccessIterator. 
+     * Knuth shuffles in O(n), unbiased algorithm (all permutations equally probable).
+     * 
+     * Uses GA random generator for determinism (if desired).
+     * 
+     * @param first
+     * @param last
+     */
+    template <class RandomAccessIterator>
+    static void shuffle(RandomAccessIterator first, RandomAccessIterator last);
 };
 
 #endif // GAPOLYCALLBACKS_H

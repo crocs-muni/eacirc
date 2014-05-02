@@ -8,6 +8,15 @@
 #include <algorithm>    // std::move_backward
 #include <vector>
 #include <array>
+#include <iterator>
+
+template<class RandomAccessIterator>
+void GAPolyCallbacks::shuffle(RandomAccessIterator first, RandomAccessIterator last) {
+    for (auto i=(last-first)-1; i>0; --i) {
+        const auto rnd = GARandomInt(0, i);
+        swap(first[i], first[rnd]);
+    }
+}
 
 void GAPolyCallbacks::initializer(GAGenome& g){
     // Then generate new polynomials using this distribution, minimum is 1 term.
@@ -22,11 +31,12 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     // Clear genome.
     for (int i = 0; i < genome.width(); i++) {
         for(int j=0; j < genome.height(); j++){
-            genome.gene(i, j);
+            genome.gene(i, j, 0);
         }
     }
     
     // How to generate random variables: shuffle a vector.
+    // Initialization of variables. Shuffled when needed.
     std::vector<int> vars;
     for(int i=0; i<numVariables; i++){
         vars.push_back(i);
@@ -51,7 +61,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
             
             // Shuffle a variable vector.
             // Variable vector is kept of the same size all the time!
-            std::shuffle(vars.begin(), vars.end(), std::default_random_engine(pGlobals->settings->random.seed));
+            shuffle(vars.begin(), vars.end());
             
             // How many variables should have one term?
             // Same process again -> sample another geometric distribution.
@@ -186,10 +196,9 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
     }
     
     // If want to randomize polynomial selection, shuffle index arrays.
-    // TODO: are we generating differen tpermutations here???
     if (pGlobals->settings->polydist.crossoverRandomizePolySelect && numPolynomials > 1){
-        std::shuffle(poly1.begin(), poly1.end(), std::default_random_engine(pGlobals->settings->random.seed));
-        std::shuffle(poly2.begin(), poly2.end(), std::default_random_engine(pGlobals->settings->random.seed));
+        shuffle(poly1.begin(), poly1.end());
+        shuffle(poly2.begin(), poly2.end());
     }
     
     // Crossover is very simple here -> uniform selection of the polynomials to the offsprings.
@@ -211,7 +220,8 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
                 offsprings[1]->gene(cPoly, i, parents[!pIdx]->gene(pIdxPoly2Pick[!pIdx], i)); 
         }
         
-        // If crossover of individual terms is allowed.
+        // If crossover of individual terms is allowed, perform single crossover
+        // on two polynomials, crossing terms.
         if (GAFlipCoin(pGlobals->settings->polydist.crossoverTermsProbability)) {
             // In this phase enters 2 polynomials, offsprings[0] cPoly, offsprings[1] cPoly.
             POLY_GENOME_ITEM_TYPE numTerms[] = {offsprings[0]->gene(cPoly, 0), offsprings[1]->gene(cPoly, 0)};
@@ -232,17 +242,17 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
                 if (i < numTerms[minTerms]){
                     // Swapping of the sub-terms, element-wise.
                     for(unsigned int j=0; j<termSize; j++){
-                        const int tPos = i*termSize + j;
+                        const int tPos = 1+i*termSize + j;
                         POLY_GENOME_ITEM_TYPE gTmp = offsprings[0]->gene(cPoly, tPos);
                         offsprings[0]->gene(cPoly, tPos, offsprings[1]->gene(cPoly, tPos));
                         offsprings[1]->gene(cPoly, tPos, gTmp);
                     }
                     
                 } else {
-                    // One term is already finished, no swapping, just copy
-                    // the longer tail to just finished term (minTerms)
+                    // One polynomial is already finished, no swapping, just copy
+                    // the longer tail to just finished polynomial (minTerms).
                     for(unsigned int j=0; j<termSize; j++){
-                        const int tPos = i*termSize + j;
+                        const int tPos = 1+i*termSize + j;
                         offsprings[minTerms]->gene(cPoly, tPos, offsprings[!minTerms]->gene(cPoly, tPos));
                     }
                 }

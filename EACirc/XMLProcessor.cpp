@@ -83,7 +83,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->polydist.mutateRemoveTermProbability    = atof(getXMLElementValue(pRoot,"POLYDIST/RM_TERM_P").c_str());
     pSettings->polydist.mutateRemoveTermStrategy       = atoi(getXMLElementValue(pRoot,"POLYDIST/RM_TERM_STRATEGY").c_str());
     pSettings->polydist.crossoverRandomizePolySelect   = atoi(getXMLElementValue(pRoot,"POLYDIST/CROSSOVER_RANDOMIZE_POLY").c_str()) ? true : false;
-    pSettings->polydist.crossoverTermsProbability      = atoi(getXMLElementValue(pRoot,"POLYDIST/CROSSOVER_TERM_P").c_str()) ? true : false;
+    pSettings->polydist.crossoverTermsProbability      = atof(getXMLElementValue(pRoot,"POLYDIST/CROSSOVER_TERM_P").c_str());
     
     // parsing EACIRC/TEST_VECTORS
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
