@@ -173,13 +173,14 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     pGlobals->settings = new SETTINGS();
     pGlobals->settings->circuit.sizeInput = 16;
     pGlobals->settings->circuit.sizeOutput = 16;
+    pGlobals->settings->polydist.genomeInitMaxTerms = 50;
     int termSize = Term::getTermSize(pGlobals->settings->circuit.sizeInput);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Polynomial representation.
     PolyRepr rep;
     
     // Genome, polynomials will be saved here.
-    GA2DArrayGenome<unsigned long> * g = (GA2DArrayGenome<unsigned long>*) rep.createGenome(pGlobals->settings, true);
+    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) rep.createGenome(pGlobals->settings, true);
     
     // Generate a term, evaluate it on known inputs and observe result.
     Term ** terms = new Term*[16];
