@@ -171,10 +171,10 @@ TEST_CASE("circuit/connector-conversion","relative versus absolute connector mas
 TEST_CASE("polydist/term-eval", "term evaluation") {
     pGlobals = new GLOBALS;
     pGlobals->settings = new SETTINGS();
-    pGlobals->settings->circuit.sizeInput = 16;
-    pGlobals->settings->circuit.sizeOutput = 16;
+    pGlobals->settings->polydist.numVariables = 16;
+    pGlobals->settings->polydist.numPolynomials = 16;
     pGlobals->settings->polydist.genomeInitMaxTerms = 50;
-    int termSize = Term::getTermSize(pGlobals->settings->circuit.sizeInput);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int termSize = Term::getTermSize(pGlobals->settings->polydist.numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Polynomial representation.
     PolyRepr rep;

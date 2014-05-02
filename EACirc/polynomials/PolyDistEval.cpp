@@ -4,9 +4,9 @@
 
 int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs){
     // allocate repeatedly used variables
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
-    int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
+    unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == 8);
     
@@ -32,7 +32,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
             // We have assumption term is non-null, thus initialize to 1 by default.
             // Initialization to 0 would cause whole term to be 0 due to way of term evaluation.
             bool ret = 1;
-            for(int i=0; i<termSize; i++){
+            for(unsigned int i=0; i<termSize; i++){
                 POLY_GENOME_ITEM_TYPE cTermEx = pGenome->gene(cPoly, 1 + termSize * cTerm + i);
                 ret &= TERM_ITEM_EVAL_8(cTermEx, inputs+i*sizeof(POLY_GENOME_ITEM_TYPE));
             }
@@ -51,8 +51,8 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
 }
 
 int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Normalize each polynomial in the distinguisher.

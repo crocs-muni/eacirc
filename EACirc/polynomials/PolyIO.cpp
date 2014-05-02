@@ -6,8 +6,8 @@
 
 int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     int status = STAT_OK;
@@ -29,8 +29,8 @@ int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
 
 int PolyIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     istringstream circuitStream(binaryCircuit);
@@ -112,8 +112,8 @@ int PolyIO::genomeToPopulationSt(GAGenome& g, string fileName) {
 int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     ofstream file(fileName);
@@ -123,16 +123,18 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     }
     
     // output file header with current circuit configuration
-    file << pGlobals->settings->circuit.numLayers << " \t(number of layers)" << endl;
-    file << pGlobals->settings->circuit.sizeLayer << " \t(size of inside layer)" << endl;
-    file << pGlobals->settings->circuit.sizeInput << " \t(number of inputs, without memory)" << endl;
-    file << pGlobals->settings->circuit.sizeOutput << " \t(number of outputs, without memory)" << endl;
-    file << pGlobals->settings->circuit.sizeMemory << " \t(size of memory)" << endl;
-    file << pGlobals->settings->circuit.numConnectors << " \t(maximum number of inside connectors)" << endl;
+    file << pGlobals->settings->polydist.numVariables << " \t(number of variables)" << endl;
+    file << pGlobals->settings->polydist.numPolynomials << " \t(number of polynomials)" << endl;
     file << pGlobals->settings->polydist.enabled << " \t(polynomial distinguishers enabled)" << endl;
     file << pGlobals->settings->polydist.genomeInitMaxTerms << " \t(maximum number of terms in polynomial)" << endl;
     file << pGlobals->settings->polydist.genomeInitTermCountProbability << " \t(p for geometric distribution for number of variables in term)" << endl;
     file << pGlobals->settings->polydist.genomeInitTermStopProbability << " \t(p for geometric distribution for number of terms in polynomial)" << endl;
+    file << pGlobals->settings->polydist.mutateAddTermProbability << "\t(p for adding a new term in a mutation)" << endl;
+    file << pGlobals->settings->polydist.mutateAddTermStrategy << "\t(strategy for adding a new term in a mutation)" << endl;  
+    file << pGlobals->settings->polydist.mutateRemoveTermProbability << "\t(p for removing a random term in a mutation)" << endl;   
+    file << pGlobals->settings->polydist.mutateRemoveTermStrategy << "\t(strategy for removing a random term in a mutation)" << endl;    
+    file << pGlobals->settings->polydist.crossoverRandomizePolySelect << "\t(use random permutation in polynomials in crossover)" << endl; 
+    file << pGlobals->settings->polydist.crossoverTermsProbability << "\t(p for crossing individual terms using single point crossover)" << endl;       
     file << endl;
     
     // output circuit itself, starting with input pseudo-layer
@@ -203,17 +205,11 @@ TiXmlElement* PolyIO::populationHeaderSt(int populationSize) {
     pElem->LinkEndChild(new TiXmlText(toString(populationSize).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("circuit_dimensions");
-    pElem2 = new TiXmlElement("num_layers");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.numLayers).c_str()));
-    pElem->LinkEndChild(pElem2);
-    pElem2 = new TiXmlElement("size_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeLayer).c_str()));
-    pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_input_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeInput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.numVariables).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_output_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeOutput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.numPolynomials).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_memory");
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeMemory).c_str()));
@@ -235,6 +231,30 @@ TiXmlElement* PolyIO::populationHeaderSt(int populationSize) {
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.genomeInitTermStopProbability).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_mutate_add_term_p");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.mutateAddTermProbability).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_mutate_add_term_strategy");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.mutateAddTermStrategy).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_mutate_remove_term_p");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.mutateRemoveTermProbability).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_mutate_remove_term_strategy");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.mutateRemoveTermStrategy).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_crossover_randomize_poly");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.crossoverRandomizePolySelect).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_crossover_terms_p");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.crossoverTermsProbability).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem); 
     return pRoot;
 }
 

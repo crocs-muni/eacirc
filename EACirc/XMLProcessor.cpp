@@ -75,6 +75,8 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // parsing EACIRC/POLYDIST
     pSettings->polydist.enabled = atoi(getXMLElementValue(pRoot,"POLYDIST/ENABLED").c_str()) ? true : false;
+    pSettings->polydist.numVariables = atoi(getXMLElementValue(pRoot,"POLYDIST/NUM_VARIABLES").c_str());
+    pSettings->polydist.numPolynomials = atoi(getXMLElementValue(pRoot,"POLYDIST/NUM_POLYNOMIALS").c_str());
     pSettings->polydist.genomeInitMaxTerms = atoi(getXMLElementValue(pRoot,"POLYDIST/MAX_TERMS").c_str());
     pSettings->polydist.genomeInitTermCountProbability = atof(getXMLElementValue(pRoot,"POLYDIST/TERM_COUNT_P").c_str());
     pSettings->polydist.genomeInitTermStopProbability  = atof(getXMLElementValue(pRoot,"POLYDIST/TERM_VAR_P").c_str());

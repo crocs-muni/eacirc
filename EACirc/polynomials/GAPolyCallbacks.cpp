@@ -24,8 +24,8 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     // Define probability distribution on the number of variables in term. Minimum is 1.
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Clear genome.
@@ -105,8 +105,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
     int numOfMutations = 0;
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Current mutation strategy: 
@@ -183,8 +183,8 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
         dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring2)
     };
     
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->polydist.numVariables;
+    int & numPolynomials = pGlobals->settings->polydist.numPolynomials;
     unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Vectors for generating a random permutation on polynomials.

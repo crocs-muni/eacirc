@@ -75,6 +75,8 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 }
 
 SETTINGS_POLYDIST::SETTINGS_POLYDIST() {
+    numVariables = -1;
+    numPolynomials = -1;
     genomeInitTermStopProbability = -1;
     genomeInitMaxTerms = -1;
     crossoverRandomizePolySelect = false;
