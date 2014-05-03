@@ -324,7 +324,8 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     
-    GAPopulation * population = representation->createConfigPopulation(&m_settings);
+    // FIX: population has to be stupid, not genome-based
+    GAPopulation * population = new GAPopulation; //representation->createConfigPopulation(&m_settings);
     GAGenome * genome = representation->createGenome(&m_settings, true);
     
     // LOAD genomes
@@ -345,7 +346,7 @@ void EACirc::loadPopulation(const string filename) {
         population->add(*genome);
         pGenome = pGenome->NextSiblingElement();
     }
-        
+
     seedAndResetGAlib(*population);
     delete pRoot;
     delete genome;
