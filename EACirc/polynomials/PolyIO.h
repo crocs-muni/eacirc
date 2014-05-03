@@ -1,11 +1,21 @@
-#ifndef CIRCUITIO_H
-#define CIRCUITIO_H
+/* 
+ * File:   PolyIO.h
+ * Author: ph4r05
+ *
+ * Created on April 29, 2014, 10:22 AM
+ */
 
-#include "CircuitCommonFunctions.h"
-#include "tinyXML/tinyxml.h"
+#ifndef POLYIO_H
+#define	POLYIO_H
+
+#include "poly.h"
+#include "EACglobals.h"
 #include "../representation/ReprIO.h"
+#include "../galib/GAGenome.h"
+#include "../galib/GA2DArrayGenome.h"
+#include "tinyXML/tinyxml.h"
 
-class CircuitIO : public ReprIO {
+class PolyIO : public ReprIO {
 public:
     // Non-static wrappers (polymorphic).
     virtual int genomeFromBinary(string binaryCircuit, GAGenome& g);
@@ -87,4 +97,6 @@ public:
     static TiXmlElement* populationHeaderSt(int populationSize);
 };
 
-#endif // CIRCUITIO_H
+
+
+#endif	/* POLYIO_H */

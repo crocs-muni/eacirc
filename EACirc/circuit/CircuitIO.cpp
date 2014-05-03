@@ -2,7 +2,8 @@
 #include "XMLProcessor.h"
 #include "CommonFnc.h"
 
-int CircuitIO::genomeFromBinary(string binaryCircuit, GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
+int CircuitIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
+    GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     istringstream circuitStream(binaryCircuit);
     GENOME_ITEM_TYPE gene;
     for (int offset = 0; offset < pGlobals->settings->circuit.genomeSize; offset++) {
@@ -16,17 +17,17 @@ int CircuitIO::genomeFromBinary(string binaryCircuit, GA1DArrayGenome<GENOME_ITE
     return STAT_OK;
 }
 
-int CircuitIO::genomeFromText(string filename, GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
+int CircuitIO::genomeFromTextSt(string filename, GAGenome& g) {
     return STAT_NOT_IMPLEMENTED_YET;
 }
 
-int CircuitIO::outputGenomeFiles(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
+int CircuitIO::outputGenomeFilesSt(GAGenome& genome, string fileName) {
     int status = STAT_OK;
-    status = genomeToText(genome, fileName + ".txt");
+    status = genomeToTextSt(genome, fileName + ".txt");
     if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing text genome (" << statusToString(status) << ")." << endl;
-    status = genomeToPopulation(genome, fileName + ".xml");
+    status = genomeToPopulationSt(genome, fileName + ".xml");
     if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing binary genome (" << statusToString(status) << ")." << endl;
-    status = genomeToGraph(genome, fileName + ".dot");
+    status = genomeToGraphSt(genome, fileName + ".dot");
     if (status != STAT_OK) mainLogger.out(LOGGER_WARNING) << "Problem writing graph genome (" << statusToString(status) << ")." << endl;
     // TODO/TBD: implement code genomes and uncomment
     //status = genomeToCode(genome, fileName + ".c");
@@ -34,7 +35,8 @@ int CircuitIO::outputGenomeFiles(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, stri
     return STAT_OK;
 }
 
-int CircuitIO::genomeToBinary(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string& binaryCircuit) {
+int CircuitIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
+    GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     int status = STAT_OK;
     ostringstream textCicruitStream;
     for (int i = 0; i < genome.length(); i++) {
@@ -47,15 +49,16 @@ int CircuitIO::genomeToBinary(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string&
     return status;
 }
 
-int CircuitIO::genomeToPopulation(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
+int CircuitIO::genomeToPopulationSt(GAGenome& g, string fileName) {
+    
     int status = STAT_OK;
-    TiXmlElement* pRoot = populationHeader(1);
+    TiXmlElement* pRoot = populationHeaderSt(1);
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
 
     pElem = new TiXmlElement("population");
     string textCircuit;
-    status = genomeToBinary(genome, textCircuit);
+    status = genomeToBinarySt(g, textCircuit);
     if (status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Could not save circuit to file " << fileName << "." << endl;
         return status;
@@ -73,7 +76,8 @@ int CircuitIO::genomeToPopulation(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, str
     return status;
 }
 
-int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
+int CircuitIO::genomeToTextSt(GAGenome& g, string fileName) {
+    GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     ofstream file(fileName);
     if (!file.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot write genome (" << fileName << ")." << endl;
@@ -117,11 +121,12 @@ int CircuitIO::genomeToText(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fi
     return STAT_OK;
 }
 
-int CircuitIO::genomeToCode(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
+int CircuitIO::genomeToCodeSt(GAGenome& g, string fileName) {
     return STAT_NOT_IMPLEMENTED_YET;
 }
 
-int CircuitIO::genomeToGraph(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string fileName) {
+int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
+    GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     int layerWidth;
     int previousLayerWidth;
     int connectorWidth;
@@ -202,7 +207,7 @@ int CircuitIO::genomeToGraph(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, string f
     return STAT_OK;
 }
 
-TiXmlElement* CircuitIO::populationHeader(int populationSize) {
+TiXmlElement* CircuitIO::populationHeaderSt(int populationSize) {
     TiXmlElement* pRoot = new TiXmlElement("eacirc_population");
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
@@ -229,4 +234,41 @@ TiXmlElement* CircuitIO::populationHeader(int populationSize) {
     pRoot->LinkEndChild(pElem);
 
     return pRoot;
+}
+
+int CircuitIO::genomeFromBinary(string binaryCircuit, GAGenome& g){
+    return genomeFromBinarySt(binaryCircuit, g);
+}
+
+int CircuitIO::genomeFromText(string filename, GAGenome& g){
+    return genomeFromTextSt(filename, g);
+}
+
+int CircuitIO::genomeToBinary(GAGenome& g, string& binaryCircuit){
+    return genomeToBinarySt(g, binaryCircuit);
+}
+
+int CircuitIO::genomeToCode(GAGenome& g, string fileName){
+    return genomeToCodeSt(g, fileName);
+}
+
+int CircuitIO::genomeToGraph(GAGenome& g, string fileName){
+    return genomeToGraphSt(g, fileName);
+}
+
+int CircuitIO::genomeToPopulation(GAGenome& g, string fileName){
+    return genomeToPopulationSt(g, fileName);
+}
+
+int CircuitIO::genomeToText(GAGenome& g, string fileName) {
+    return genomeToTextSt(g, fileName);
+}
+
+
+int CircuitIO::outputGenomeFiles(GAGenome& g, string fileName){
+    return outputGenomeFilesSt(g, fileName);
+}
+
+TiXmlElement* CircuitIO::populationHeader(int populationSize){
+    return populationHeaderSt(populationSize);
 }

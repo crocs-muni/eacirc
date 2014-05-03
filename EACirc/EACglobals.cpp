@@ -74,6 +74,18 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
     numTestSets = -1;
 }
 
+SETTINGS_POLYDIST::SETTINGS_POLYDIST() {
+    genomeInitTermStopProbability = -1;
+    genomeInitMaxTerms = -1;
+    crossoverRandomizePolySelect = false;
+    crossoverTermsProbability = -1;
+    enabled = false;
+    mutateAddTermProbability = -1;
+    mutateAddTermStrategy = -1;
+    mutateRemoveTermProbability = -1;
+    mutateRemoveTermStrategy = -1;
+}
+
 SETTINGS::SETTINGS() {
     project = NULL;
 }
