@@ -39,7 +39,7 @@ public:
     virtual GAPopulation * createConfigPopulation(const SETTINGS * settings);
     
     // Individual post-processing.
-    virtual int postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome);
+    virtual bool postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome);
     
 private:
 

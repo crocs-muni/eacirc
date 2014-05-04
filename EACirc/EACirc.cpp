@@ -618,13 +618,8 @@ void EACirc::run() {
     // print the best circuit into separate file, prune if allowed
     GAGenome & genomeBest = m_gaData->population().best();
     m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
-    if (pGlobals->settings->outputs.allowPrunning) {
-        
-        // TODO: fix prunning?
-        GAGenome genomePrunned = genomeBest;
-        m_status = m_circuit->postProcess(genomeBest, genomePrunned);
-        if (m_status == STAT_OK) {
-            m_circuit->io()->outputGenomeFiles(genomePrunned, string(FILE_CIRCUIT_DEFAULT) + FILE_PRUNNED_SUFFIX);
-        }
+    GAGenome genomeProccessed = genomeBest;
+    if (m_circuit->postProcess(genomeBest, genomeProccessed)) {
+        m_circuit->io()->outputGenomeFiles(genomeProccessed, string(FILE_CIRCUIT_DEFAULT) + FILE_POSTPROCCESSED_SUFFIX);
     }
 }

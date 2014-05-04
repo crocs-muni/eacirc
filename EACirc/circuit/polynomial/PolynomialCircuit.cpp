@@ -57,6 +57,6 @@ GAPopulation* PolynomialCircuit::createConfigPopulation(const SETTINGS* settings
     return population;
 }
 
-int PolynomialCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
-    return STAT_NOT_IMPLEMENTED_YET;
+bool PolynomialCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
+    return false;
 }

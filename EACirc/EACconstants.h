@@ -66,6 +66,7 @@ typedef unsigned __int64 uint64_t;
 #define FILE_CIRCUIT_PREFIX         "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
 #define FILE_CIRCUIT_DEFAULT        "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_PRUNNED_SUFFIX         "_prunned"
+#define FILE_POSTPROCCESSED_SUFFIX  "_final"
 #define FILE_LOGFILE                "eacirc.log"
 
 #define FILE_HISTOGRAMS             "histograms.txt"

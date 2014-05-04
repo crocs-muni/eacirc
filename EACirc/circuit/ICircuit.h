@@ -55,8 +55,12 @@ public:
     // Creates a configuration population.
     virtual GAPopulation * createConfigPopulation(const SETTINGS * settings)=0;
      
-    // Individual post-processing.
-    virtual int postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome) { return STAT_NOT_IMPLEMENTED_YET; }
+    /** individual post-processing, if needed (default does nothing)
+     * @param original      genome to post-process
+     * @param processed     processed
+     * @return did something happen? (i.e. is there valid output in processed?)
+     */
+    virtual bool postProcess(GAGenome &original, GAGenome &processed);
 
     /** short textual description of individual representation
       * implementation in representation required!

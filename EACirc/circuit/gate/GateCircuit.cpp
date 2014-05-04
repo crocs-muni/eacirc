@@ -45,7 +45,15 @@ GAPopulation* GateCircuit::createConfigPopulation(const SETTINGS* settings) {
     return population;
 }
 
-int GateCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
-    return CircuitInterpreter::pruneCircuit(originalGenome, prunnedGenome);
+bool GateCircuit::postProcess(GAGenome& original, GAGenome& prunned) {
+    if (!pGlobals->settings->outputs.allowPrunning) {
+        return false;
+    }
+    int status = CircuitInterpreter::pruneCircuit(original, prunned);
+    if (status != STAT_OK) {
+        mainLogger.out(LOGGER_WARNING) << "Could not post-process genome (" << status << ")." << endl;
+        return false;
+    }
+    return true;
 }
 

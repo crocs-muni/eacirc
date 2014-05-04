@@ -27,6 +27,10 @@ int ICircuit::getCircuitType() const {
     return m_type;
 }
 
+bool ICircuit::postProcess(GAGenome &original, GAGenome &processed) {
+    return false;
+}
+
 ICircuit* ICircuit::getCircuit(int circuitType) {
     ICircuit* circuit = NULL;
     switch (circuitType) {
