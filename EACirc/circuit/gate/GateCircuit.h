@@ -10,10 +10,10 @@
 
 #include "EACglobals.h"
 #include "GA1DArrayGenome.h"
-#include "circuit/Repr.h"
+#include "circuit/ICircuit.h"
 #include "GACallbacks.h"
 
-class CircuitRepr : public Repr {
+class CircuitRepr : public ICircuit {
 public:
     CircuitRepr();
     virtual ~CircuitRepr();

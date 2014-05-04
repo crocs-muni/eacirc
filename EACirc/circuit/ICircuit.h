@@ -8,21 +8,21 @@
 #ifndef REPR_H
 #define	REPR_H
 
-#include "../galib/GAGenome.h"
-#include "../galib/GAPopulation.h"
+#include "GAGenome.h"
+#include "GAPopulation.h"
 #include "EACglobals.h"
-#include "ReprIO.h"
+#include "ICircuitIO.h"
 
-class Repr {
+class ICircuit {
 protected:
     //! circuit type, see EACirc constants
     int m_type;
     // IO operations for representation.
-    ReprIO * io;
+    ICircuitIO * io;
     
 public:
-    Repr(int type);
-    virtual ~Repr();
+    ICircuit(int type);
+    virtual ~ICircuit();
     
     // Internal initializer
     virtual void initialize() { }
@@ -51,7 +51,7 @@ public:
     virtual int postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome) { return STAT_NOT_IMPLEMENTED_YET; }
     
     // Getter for IO callbacks
-    ReprIO * getIOCallbacks() { return this->io; }
+    ICircuitIO * getIOCallbacks() { return this->io; }
 
     /** constatnt of active circuit representation
       * @return circuit constant
@@ -62,7 +62,7 @@ public:
      * @param circuitType constant
      * @return circuit backend instance or NULL
      */
-    static Repr* getCircuit(int circuitType);
+    static ICircuit* getCircuit(int circuitType);
 };
 
 #endif	/* REPR_H */

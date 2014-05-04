@@ -5,22 +5,22 @@
  * Created on April 29, 2014, 3:00 PM
  */
 
-#include "Repr.h"
-#include "gate/CircuitRepr.h"
-#include "polynomial/PolyRepr.h"
+#include "ICircuit.h"
+#include "gate/GateCircuit.h"
+#include "polynomial/PolynomialCircuit.h"
 
-Repr::Repr(int type) : m_type(type), io(NULL) {
+ICircuit::ICircuit(int type) : m_type(type), io(NULL) {
 }
 
-Repr::~Repr() {
+ICircuit::~ICircuit() {
 }
 
-int Repr::getCircuitType() const {
+int ICircuit::getCircuitType() const {
     return m_type;
 }
 
-Repr* Repr::getCircuit(int circuitType) {
-    Repr* circuit = NULL;
+ICircuit* ICircuit::getCircuit(int circuitType) {
+    ICircuit* circuit = NULL;
     switch (circuitType) {
     case CIRCUIT_GATE:
         circuit = new CircuitRepr();

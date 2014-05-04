@@ -5,14 +5,14 @@
  * Created on April 29, 2014, 4:29 PM
  */
 
-#include "CircuitRepr.h"
-#include "CircuitIO.h"
+#include "GateCircuit.h"
+#include "GateCircuitIO.h"
 #include "CircuitCommonFunctions.h"
 #include "GACallbacks.h"
 #include "CircuitInterpreter.h"
 #include "GAPopulation.h"
 
-CircuitRepr::CircuitRepr() : Repr(CIRCUIT_GATE) {
+CircuitRepr::CircuitRepr() : ICircuit(CIRCUIT_GATE) {
     initialize();
 }
 

@@ -7,10 +7,10 @@
 
 #ifndef POLYREPR_H
 #define	POLYREPR_H
-#include "circuit/Repr.h"
+#include "circuit/ICircuit.h"
 #include "GAPolyCallbacks.h"
 
-class PolyRepr : public Repr {
+class PolyRepr : public ICircuit {
 public:
     // 
     PolyRepr();

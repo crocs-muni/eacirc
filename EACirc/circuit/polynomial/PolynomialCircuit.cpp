@@ -5,14 +5,14 @@
  * Created on April 29, 2014, 4:20 PM
  */
 
-#include "PolyRepr.h"
-#include "circuit/Repr.h"
-#include "PolyIO.h"
+#include "PolynomialCircuit.h"
+#include "circuit/ICircuit.h"
+#include "PolynomialCircuitIO.h"
 #include "GAPolyCallbacks.h"
 #include "Term.h"
 #include <math.h>
 
-PolyRepr::PolyRepr() : Repr(CIRCUIT_POLYNOMIAL) {
+PolyRepr::PolyRepr() : ICircuit(CIRCUIT_POLYNOMIAL) {
     initialize();
 }
 

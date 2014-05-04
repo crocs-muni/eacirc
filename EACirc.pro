@@ -20,27 +20,27 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
+    EACirc/circuit/ICircuit.cpp \
+    EACirc/circuit/ICircuitIO.cpp \
+    EACirc/circuit/gate/GateCircuitIO.cpp \
+    EACirc/circuit/gate/GateCircuit.cpp \
+    EACirc/circuit/polynomial/PolynomialCircuit.cpp \
+    EACirc/circuit/polynomial/PolynomialCircuitIO.cpp
 
 # === individual representation ===
 SOURCES += \
-    EACirc/circuit/Repr.cpp \
-    EACirc/circuit/ReprIO.cpp \
 
 # === circuit processing ===
 SOURCES += \
     EACirc/circuit/gate/GACallbacks.cpp \
-    EACirc/circuit/gate/CircuitIO.cpp \
     EACirc/circuit/gate/CircuitInterpreter.cpp \
     EACirc/circuit/gate/CircuitCommonFunctions.cpp \
-    EACirc/circuit/gate/CircuitRepr.cpp \
 
 # === polynomials ===
 SOURCES += \
     EACirc/circuit/polynomial/Term.cpp   \
     EACirc/circuit/polynomial/PolyDistEval.cpp   \
-    EACirc/circuit/polynomial/PolyIO.cpp \
     EACirc/circuit/polynomial/GAPolyCallbacks.cpp \
-    EACirc/circuit/polynomial/PolyRepr.cpp \
     EACirc/circuit/polynomial/poly.cpp \
 
 # === evaluators ===
@@ -230,27 +230,27 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/Version.h \
+    EACirc/circuit/ICircuit.h \
+    EACirc/circuit/ICircuitIO.h \
+    EACirc/circuit/gate/GateCircuit.h \
+    EACirc/circuit/gate/GateCircuitIO.h \
+    EACirc/circuit/polynomial/PolynomialCircuit.h \
+    EACirc/circuit/polynomial/PolynomialCircuitIO.h
 
 # === individual representation ===
 HEADERS += \
-    EACirc/circuit/Repr.h \
-    EACirc/circuit/ReprIO.h \
 
 # === circuit processing ===
 HEADERS += \
     EACirc/circuit/gate/GACallbacks.h \
-    EACirc/circuit/gate/CircuitIO.h \
     EACirc/circuit/gate/CircuitInterpreter.h \
     EACirc/circuit/gate/CircuitCommonFunctions.h \
-    EACirc/circuit/gate/CircuitRepr.h \
 
 # === polynomials ===
 HEADERS += \
     EACirc/circuit/polynomial/PolyDistEval.h \
     EACirc/circuit/polynomial/GAPolyCallbacks.h \
-    EACirc/circuit/polynomial/PolyIO.h \
     EACirc/circuit/polynomial/Term.h \
-    EACirc/circuit/polynomial/PolyRepr.h \
     EACirc/circuit/polynomial/poly.h \
 
 # === standard evaluators ===

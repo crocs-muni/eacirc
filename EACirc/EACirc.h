@@ -2,11 +2,9 @@
 #define EACIRC_H
 
 #include "EACglobals.h"
-#include "generators/IRndGen.h"
-#include "GA1DArrayGenome.h"
 #include "GASStateGA.h"
 #include "projects/IProject.h"
-#include "circuit/Repr.h"
+#include "circuit/ICircuit.h"
 
 //! constants for EACirc configuration state
 #define EACIRC_CONFIG_LOADED 0x01
@@ -22,6 +20,8 @@ class EACirc {
     unsigned int m_currentGalibSeed;
     //! structure of main settings
     SETTINGS m_settings;
+    //! representation of an individual
+    ICircuit* m_circuit;
     //! project
     IProject* m_project;
     //! genetics algorithm instance
@@ -32,8 +32,6 @@ class EACirc {
     int m_actGener;
     //! generations completed in previous runs
     int m_oldGenerations;
-    //! representation of an individual.
-    Repr * representation;
 
     /** checks, if configuration has no contradictions
       */

@@ -1,4 +1,4 @@
-#include "CircuitIO.h"
+#include "GateCircuitIO.h"
 #include "XMLProcessor.h"
 #include "CommonFnc.h"
 
