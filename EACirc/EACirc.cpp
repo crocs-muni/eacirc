@@ -236,7 +236,7 @@ void EACirc::createState() {
 }
 
 void EACirc::savePopulation(const string filename) {
-    TiXmlElement* pRoot = m_circuit->getIOCallbacks()->populationHeader(m_settings.ga.popupationSize);
+    TiXmlElement* pRoot = m_circuit->io()->populationHeader(m_settings.ga.popupationSize);
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
 
@@ -246,7 +246,7 @@ void EACirc::savePopulation(const string filename) {
         // note: it is not necessary to call individual i in SCALED order
         //       however then the population files differ in order ('diff' cannot be used to finding bugs)
         GAGenome & genome = m_gaData->population().individual(i,GAPopulation::SCALED);
-        m_status = m_circuit->getIOCallbacks()->genomeToBinary(genome ,textCircuit);
+        m_status = m_circuit->io()->genomeToBinary(genome ,textCircuit);
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
             return;
@@ -327,7 +327,7 @@ void EACirc::loadPopulation(const string filename) {
             return;
         }
         textCircuit = pGenome->GetText();
-        m_status = m_circuit->getIOCallbacks()->genomeFromBinary(textCircuit, *genome);
+        m_status = m_circuit->io()->genomeFromBinary(textCircuit, *genome);
         if (m_status != STAT_OK) return;
         population->add(*genome);
         pGenome = pGenome->NextSiblingElement();
@@ -519,7 +519,7 @@ void EACirc::evaluateStep() {
         fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
-        m_circuit->getIOCallbacks()->outputGenomeFiles(genome, filePath);
+        m_circuit->io()->outputGenomeFiles(genome, filePath);
     }
 
     // save generation stats for total scores
@@ -617,14 +617,14 @@ void EACirc::run() {
 
     // print the best circuit into separate file, prune if allowed
     GAGenome & genomeBest = m_gaData->population().best();
-    m_circuit->getIOCallbacks()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
+    m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
     if (pGlobals->settings->outputs.allowPrunning) {
         
         // TODO: fix prunning?
         GAGenome genomePrunned = genomeBest;
         m_status = m_circuit->postProcess(genomeBest, genomePrunned);
         if (m_status == STAT_OK) {
-            m_circuit->getIOCallbacks()->outputGenomeFiles(genomePrunned, string(FILE_CIRCUIT_DEFAULT) + FILE_PRUNNED_SUFFIX);
+            m_circuit->io()->outputGenomeFiles(genomePrunned, string(FILE_CIRCUIT_DEFAULT) + FILE_PRUNNED_SUFFIX);
         }
     }
 }

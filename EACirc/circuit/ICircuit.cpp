@@ -7,12 +7,20 @@
 
 #include "ICircuit.h"
 #include "gate/GateCircuit.h"
+#include "gate/GateCircuitIO.h"
 #include "polynomial/PolynomialCircuit.h"
+#include "polynomial/PolynomialCircuitIO.h"
 
-ICircuit::ICircuit(int type) : m_type(type), io(NULL) {
+ICircuit::ICircuit(int type) : m_type(type), ioCallbackObject(NULL) {
 }
 
 ICircuit::~ICircuit() {
+    delete ioCallbackObject;
+    ioCallbackObject = NULL;
+}
+
+ICircuitIO * ICircuit::io() {
+    return ioCallbackObject;
 }
 
 int ICircuit::getCircuitType() const {
@@ -23,10 +31,12 @@ ICircuit* ICircuit::getCircuit(int circuitType) {
     ICircuit* circuit = NULL;
     switch (circuitType) {
     case CIRCUIT_GATE:
-        circuit = new CircuitRepr();
+        circuit = new GateCircuit();
+        circuit->ioCallbackObject = new CircuitIO();
         break;
     case CIRCUIT_POLYNOMIAL:
-        circuit = new PolyRepr();
+        circuit = new PolynomialCircuit();
+        circuit->ioCallbackObject = new PolyIO();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize circuit representation - unknown type (" << circuitType << ")." << endl;

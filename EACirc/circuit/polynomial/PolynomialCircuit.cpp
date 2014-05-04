@@ -12,21 +12,11 @@
 #include "Term.h"
 #include <math.h>
 
-PolyRepr::PolyRepr() : ICircuit(CIRCUIT_POLYNOMIAL) {
-    initialize();
-}
+PolynomialCircuit::PolynomialCircuit() : ICircuit(CIRCUIT_POLYNOMIAL) { }
 
-PolyRepr::~PolyRepr() {
-    if (io) delete this->io;
-    io = NULL;
-}
+PolynomialCircuit::~PolynomialCircuit() { }
 
-void PolyRepr::initialize(){
-    // Fill in IO.
-    this->io = new PolyIO();
-}
-
-GAGenome* PolyRepr::createGenome(const SETTINGS* settings, bool setCallbacks) {
+GAGenome* PolynomialCircuit::createGenome(const SETTINGS* settings, bool setCallbacks) {
     // Has to compute genome dimensions.
     int numVariables = settings->circuit.sizeInput;
     int numPolynomials = settings->circuit.sizeOutput;
@@ -44,7 +34,7 @@ GAGenome* PolyRepr::createGenome(const SETTINGS* settings, bool setCallbacks) {
     return g;
 }
 
-GAGenome* PolyRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
+GAGenome* PolynomialCircuit::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
     g->initializer(getInitializer());
     g->evaluator(getEvaluator());
     g->mutator(getMutator());
@@ -52,7 +42,7 @@ GAGenome* PolyRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
     return g;
 }
 
-GAPopulation* PolyRepr::createConfigPopulation(const SETTINGS* settings) {
+GAPopulation* PolynomialCircuit::createConfigPopulation(const SETTINGS* settings) {
     int numVariables = settings->circuit.sizeInput;
     int numPolynomials = settings->circuit.sizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
@@ -67,6 +57,6 @@ GAPopulation* PolyRepr::createConfigPopulation(const SETTINGS* settings) {
     return population;
 }
 
-int PolyRepr::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
+int PolynomialCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
     return STAT_NOT_IMPLEMENTED_YET;
 }

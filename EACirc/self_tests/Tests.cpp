@@ -3,8 +3,8 @@
 #include "XMLProcessor.h"
 #include "circuit/gate/CircuitCommonFunctions.h"
 #include "circuit/polynomial/Term.h"
-#include "circuit/Repr.h"
-#include "circuit/polynomial/PolyRepr.h"
+#include "circuit/ICircuit.h"
+#include "circuit/polynomial/PolynomialCircuit.h"
 #include "circuit/polynomial/PolyDistEval.h"
 
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
@@ -176,11 +176,11 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     pGlobals->settings->polydist.genomeInitMaxTerms = 50;
     int termSize = Term::getTermSize(pGlobals->settings->circuit.sizeInput);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
-    // Polynomial representation.
-    PolyRepr rep;
+    // Polynomial circuit representation.
+    PolynomialCircuit circuit;
     
     // Genome, polynomials will be saved here.
-    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) rep.createGenome(pGlobals->settings, true);
+    GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*) circuit.createGenome(pGlobals->settings, true);
     
     // Generate a term, evaluate it on known inputs and observe result.
     Term ** terms = new Term*[16];

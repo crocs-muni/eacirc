@@ -10,26 +10,25 @@
 #include "circuit/ICircuit.h"
 #include "GAPolyCallbacks.h"
 
-class PolyRepr : public ICircuit {
+class PolynomialCircuit : public ICircuit {
 public:
     // 
-    PolyRepr();
-    virtual ~PolyRepr();
-    
-    // Initializer
-    virtual void initialize();
+    PolynomialCircuit();
+    virtual ~PolynomialCircuit();
     
     // Short description of the representation.
     virtual string shortDescription() { return "PolyRepr"; }
     
     // Getters for GA callbacks.
-    virtual inline GAGenome::Initializer       getInitializer() { return GAPolyCallbacks::initializer; };
-    virtual inline GAGenome::Evaluator         getEvaluator()   { return GAPolyCallbacks::evaluator;   };
-    virtual inline GAGenome::Mutator           getMutator()     { return GAPolyCallbacks::mutator;     };
+    virtual inline GAGenome::Initializer       getInitializer() { return GAPolyCallbacks::initializer; }
+    virtual inline GAGenome::Evaluator         getEvaluator()   { return GAPolyCallbacks::evaluator;   }
+    virtual inline GAGenome::Mutator           getMutator()     { return GAPolyCallbacks::mutator;     }
     virtual inline GAGenome::Comparator        getComparator()  { return NULL; }
-    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GAPolyCallbacks::crossover; };
+    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GAPolyCallbacks::crossover; }
     virtual inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
     
+    int executeCircuit(GAGenome* pGenome, unsigned char* inputs, unsigned char* outputs) { }
+
     // Constructs empty genome from settings.
     virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false);
     

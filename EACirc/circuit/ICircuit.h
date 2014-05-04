@@ -8,24 +8,27 @@
 #ifndef REPR_H
 #define	REPR_H
 
+#include "EACglobals.h"
 #include "GAGenome.h"
 #include "GAPopulation.h"
-#include "EACglobals.h"
 #include "ICircuitIO.h"
 
 class ICircuit {
 protected:
     //! circuit type, see EACirc constants
     int m_type;
-    // IO operations for representation.
-    ICircuitIO * io;
+    //! IO operations for representation, created and deleted automatically
+    ICircuitIO* ioCallbackObject;
     
 public:
+    /** constructor, sets type attribute
+     * @param circuit type
+     */
     ICircuit(int type);
+
+    /** destructor, deletes ioCallbackObject
+     */
     virtual ~ICircuit();
-    
-    // Internal initializer
-    virtual void initialize() { }
     
     // Getters for GA callbacks.
     virtual GAGenome::Initializer       getInitializer()=0;
@@ -35,6 +38,14 @@ public:
     virtual GAGenome::SexualCrossover   getSexualCrossover()=0;
     virtual GAGenome::AsexualCrossover  getAsexualCrossover()=0;
     
+    /** execute circuit over given inputs, return outputs
+     * @param pGenome       circuit to executeCircuit
+     * @param inputs
+     * @param outputs
+     * @return status
+     */
+    virtual int executeCircuit(GAGenome* pGenome, unsigned char* inputs, unsigned char* outputs) = 0;
+
     // Constructs empty genome from settings.
     virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false)=0;
     
@@ -43,15 +54,20 @@ public:
     
     // Creates a configuration population.
     virtual GAPopulation * createConfigPopulation(const SETTINGS * settings)=0;
-    
-    // Short description of the representation.
-    virtual string shortDescription() { return "Repr"; }
-    
+     
     // Individual post-processing.
     virtual int postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome) { return STAT_NOT_IMPLEMENTED_YET; }
+
+    /** short textual description of individual representation
+      * implementation in representation required!
+      * @return description
+      */
+    virtual string shortDescription() = 0;
     
-    // Getter for IO callbacks
-    ICircuitIO * getIOCallbacks() { return this->io; }
+    /** access io functions
+     * @return io callback object
+     */
+    ICircuitIO * io();
 
     /** constatnt of active circuit representation
       * @return circuit constant

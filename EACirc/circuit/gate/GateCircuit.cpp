@@ -12,21 +12,15 @@
 #include "CircuitInterpreter.h"
 #include "GAPopulation.h"
 
-CircuitRepr::CircuitRepr() : ICircuit(CIRCUIT_GATE) {
-    initialize();
+GateCircuit::GateCircuit() : ICircuit(CIRCUIT_GATE) { }
+
+GateCircuit::~GateCircuit() { }
+
+string GateCircuit::shortDescription() {
+    return "gate circuit emulator";
 }
 
-CircuitRepr::~CircuitRepr() {
-    if (io) delete this->io;
-    io = NULL;
-}
-
-void CircuitRepr::initialize(){
-    // Fill in IO.
-    this->io = new CircuitIO();
-}
-
-GAGenome* CircuitRepr::createGenome(const SETTINGS* settings, bool setCallbacks) {
+GAGenome* GateCircuit::createGenome(const SETTINGS* settings, bool setCallbacks) {
     GA1DArrayGenome<GENOME_ITEM_TYPE> *g = new GA1DArrayGenome<GENOME_ITEM_TYPE>(settings->circuit.genomeSize, getEvaluator());
     if (setCallbacks){
         setGACallbacks(g, settings);
@@ -35,7 +29,7 @@ GAGenome* CircuitRepr::createGenome(const SETTINGS* settings, bool setCallbacks)
     return g;
 }
 
-GAGenome* CircuitRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
+GAGenome* GateCircuit::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
     g->initializer(getInitializer());
     g->evaluator(getEvaluator());
     g->mutator(getMutator());
@@ -43,7 +37,7 @@ GAGenome* CircuitRepr::setGACallbacks(GAGenome* g, const SETTINGS* settings) {
     return g;
 }
 
-GAPopulation* CircuitRepr::createConfigPopulation(const SETTINGS* settings) {
+GAPopulation* GateCircuit::createConfigPopulation(const SETTINGS* settings) {
     GA1DArrayGenome<GENOME_ITEM_TYPE> g(settings->circuit.genomeSize, getEvaluator());
     setGACallbacks(&g, settings);
     
@@ -51,7 +45,7 @@ GAPopulation* CircuitRepr::createConfigPopulation(const SETTINGS* settings) {
     return population;
 }
 
-int CircuitRepr::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
+int GateCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedGenome) {
     return CircuitInterpreter::pruneCircuit(originalGenome, prunnedGenome);
 }
 

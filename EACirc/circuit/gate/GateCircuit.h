@@ -13,25 +13,22 @@
 #include "circuit/ICircuit.h"
 #include "GACallbacks.h"
 
-class CircuitRepr : public ICircuit {
+class GateCircuit : public ICircuit {
 public:
-    CircuitRepr();
-    virtual ~CircuitRepr();
-    
-    // Initializer
-    virtual void initialize();
-    
-    // Short description of the representation.
-    virtual string shortDescription() { return "CircRepr"; };
+    GateCircuit();
+    virtual ~GateCircuit();
+    string shortDescription();
     
     // Getters for GA callbacks.
-    virtual inline GAGenome::Initializer       getInitializer() { return GACallbacks::initializer; };
-    virtual inline GAGenome::Evaluator         getEvaluator()   { return GACallbacks::evaluator;   };
-    virtual inline GAGenome::Mutator           getMutator()     { return GACallbacks::mutator;     };
+    virtual inline GAGenome::Initializer       getInitializer() { return GACallbacks::initializer; }
+    virtual inline GAGenome::Evaluator         getEvaluator()   { return GACallbacks::evaluator;   }
+    virtual inline GAGenome::Mutator           getMutator()     { return GACallbacks::mutator;     }
     virtual inline GAGenome::Comparator        getComparator()  { return NULL; }
-    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GACallbacks::crossover; };
+    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GACallbacks::crossover; }
     virtual inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
     
+    int executeCircuit(GAGenome* pGenome, unsigned char* inputs, unsigned char* outputs) { }
+
     // Constructs empty genome from settings.
     virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false);
     
