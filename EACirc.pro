@@ -20,24 +20,24 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
-    EACirc/circuit/ICircuit.cpp \
-    EACirc/circuit/ICircuitIO.cpp \
-    EACirc/circuit/gate/GateCircuitIO.cpp \
-    EACirc/circuit/gate/GateCircuit.cpp \
-    EACirc/circuit/polynomial/PolynomialCircuit.cpp \
-    EACirc/circuit/polynomial/PolynomialCircuitIO.cpp
 
 # === individual representation ===
 SOURCES += \
+    EACirc/circuit/ICircuit.cpp \
+    EACirc/circuit/ICircuitIO.cpp \
 
 # === circuit processing ===
 SOURCES += \
+    EACirc/circuit/gate/GateCircuitIO.cpp \
+    EACirc/circuit/gate/GateCircuit.cpp \
     EACirc/circuit/gate/GACallbacks.cpp \
     EACirc/circuit/gate/CircuitInterpreter.cpp \
     EACirc/circuit/gate/CircuitCommonFunctions.cpp \
 
-# === polynomials ===
+# === polynomial circuits ===
 SOURCES += \
+    EACirc/circuit/polynomial/PolynomialCircuit.cpp \
+    EACirc/circuit/polynomial/PolynomialCircuitIO.cpp \
     EACirc/circuit/polynomial/Term.cpp   \
     EACirc/circuit/polynomial/PolyDistEval.cpp   \
     EACirc/circuit/polynomial/GAPolyCallbacks.cpp \

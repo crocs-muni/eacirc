@@ -17,12 +17,12 @@ public:
     ~GateCircuit();
     string shortDescription();
     
-    inline GAGenome::Initializer       getInitializer() { return GACallbacks::initializer; }
-    inline GAGenome::Evaluator         getEvaluator()   { return GACallbacks::evaluator;   }
-    inline GAGenome::Mutator           getMutator()     { return GACallbacks::mutator;     }
-    inline GAGenome::Comparator        getComparator()  { return NULL; }
-    inline GAGenome::SexualCrossover   getSexualCrossover()  { return GACallbacks::crossover; }
-    inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
+    inline GAGenome::Initializer       getInitializer();
+    inline GAGenome::Evaluator         getEvaluator();
+    inline GAGenome::Mutator           getMutator();
+    inline GAGenome::Comparator        getComparator();
+    inline GAGenome::SexualCrossover   getSexualCrossover();
+    inline GAGenome::AsexualCrossover  getAsexualCrossover();
 
     GAGenome * createGenome(bool setCallbacks = false);
     GAPopulation * createPopulation();

@@ -19,6 +19,13 @@ string GateCircuit::shortDescription() {
     return "gate circuit emulator";
 }
 
+inline GAGenome::Initializer       GateCircuit::getInitializer() { return GACallbacks::initializer; }
+inline GAGenome::Evaluator         GateCircuit::getEvaluator()   { return GACallbacks::evaluator;   }
+inline GAGenome::Mutator           GateCircuit::getMutator()     { return GACallbacks::mutator;     }
+inline GAGenome::Comparator        GateCircuit::getComparator()  { return NULL; }
+inline GAGenome::SexualCrossover   GateCircuit::getSexualCrossover()  { return GACallbacks::crossover; }
+inline GAGenome::AsexualCrossover  GateCircuit::getAsexualCrossover() { return NULL; }
+
 GAGenome* GateCircuit::createGenome(bool setCallbacks) {
     GA1DArrayGenome<GENOME_ITEM_TYPE> *g = new GA1DArrayGenome<GENOME_ITEM_TYPE>(pGlobals->settings->gateCircuit.genomeSize, getEvaluator());
     if (setCallbacks){

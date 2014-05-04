@@ -136,6 +136,8 @@ struct SETTINGS_GATE_CIRCUIT {
 
 //! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
 struct SETTINGS_POLY_CIRCUIT {
+    int numVariables;                       //! number of input variables in polynomial (i.e., input bit size).
+    int numPolynomials;                     //! number of polynomials in a distinguisher (i.e., outpit bit size).
     double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
     double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
     double mutateAddTermProbability;        //! p for adding a new term in a mutation, monomial.
