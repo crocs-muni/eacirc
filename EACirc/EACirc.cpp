@@ -7,18 +7,16 @@
 #include "generators/MD5RndGen.h"
 #include "GA1DArrayGenome.h"
 #include "XMLProcessor.h"
-#include "circuit/GACallbacks.h"
+#include "circuit/gate/GACallbacks.h"
 #include "projects/IProject.h"
 #include "evaluators/IEvaluator.h"
-#include "circuit/CircuitIO.h"
-#include "circuit/CircuitInterpreter.h"
+#include "circuit/gate/CircuitIO.h"
+#include "circuit/gate/CircuitInterpreter.h"
 
-#include "polynomials/GAPolyCallbacks.h"
-#include "polynomials/PolyDistEval.h"
-#include "polynomials/Term.h"
-#include "polynomials/poly.h"
-#include "polynomials/PolyRepr.h"
-#include "circuit/CircuitRepr.h"
+#include "circuit/polynomial/GAPolyCallbacks.h"
+#include "circuit/polynomial/PolyDistEval.h"
+#include "circuit/polynomial/Term.h"
+#include "circuit/polynomial/poly.h"
 
 #ifdef _WIN32
 	#include <Windows.h>
@@ -432,14 +430,8 @@ void EACirc::prepare() {
         m_status = STAT_CONFIG_INCORRECT;
     }
 
-    // Individual representation? Polynomial / Circuit.
-    if (m_settings.polydist.enabled){
-        representation = new PolyRepr();
-    } else {
-        representation = new CircuitRepr();
-    }
-    
-    mainLogger.out(LOGGER_INFO) << "Representation initialized (" << representation->shortDescription() << ")." << endl;
+    // initialize circuit representation
+    representation = Repr::getCircuit(m_settings.main.circuitType);
     
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;

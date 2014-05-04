@@ -1,11 +1,11 @@
 #include "Catch.h"
 #include "TestConfigurator.h"
 #include "XMLProcessor.h"
-#include "circuit/CircuitCommonFunctions.h"
-#include "polynomials/Term.h"
-#include "representation/Repr.h"
-#include "polynomials/PolyRepr.h"
-#include "polynomials/PolyDistEval.h"
+#include "circuit/gate/CircuitCommonFunctions.h"
+#include "circuit/polynomial/Term.h"
+#include "circuit/Repr.h"
+#include "circuit/polynomial/PolyRepr.h"
+#include "circuit/polynomial/PolyDistEval.h"
 
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
     // general preparations

@@ -1,35 +1,33 @@
 /* 
- * File:   CircuitRepr.h
+ * File:   PolyRepr.h
  * Author: ph4r05
  *
- * Created on April 29, 2014, 4:29 PM
+ * Created on April 29, 2014, 4:20 PM
  */
 
-#ifndef CIRCUITREPR_H
-#define	CIRCUITREPR_H
+#ifndef POLYREPR_H
+#define	POLYREPR_H
+#include "circuit/Repr.h"
+#include "GAPolyCallbacks.h"
 
-#include "EACglobals.h"
-#include "GA1DArrayGenome.h"
-#include "../representation/Repr.h"
-#include "GACallbacks.h"
-
-class CircuitRepr : public Repr {
+class PolyRepr : public Repr {
 public:
-    CircuitRepr();
-    virtual ~CircuitRepr();
+    // 
+    PolyRepr();
+    virtual ~PolyRepr();
     
     // Initializer
     virtual void initialize();
     
     // Short description of the representation.
-    virtual string shortDescription() { return "CircRepr"; };
+    virtual string shortDescription() { return "PolyRepr"; }
     
     // Getters for GA callbacks.
-    virtual inline GAGenome::Initializer       getInitializer() { return GACallbacks::initializer; };
-    virtual inline GAGenome::Evaluator         getEvaluator()   { return GACallbacks::evaluator;   };
-    virtual inline GAGenome::Mutator           getMutator()     { return GACallbacks::mutator;     };
+    virtual inline GAGenome::Initializer       getInitializer() { return GAPolyCallbacks::initializer; };
+    virtual inline GAGenome::Evaluator         getEvaluator()   { return GAPolyCallbacks::evaluator;   };
+    virtual inline GAGenome::Mutator           getMutator()     { return GAPolyCallbacks::mutator;     };
     virtual inline GAGenome::Comparator        getComparator()  { return NULL; }
-    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GACallbacks::crossover; };
+    virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GAPolyCallbacks::crossover; };
     virtual inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
     
     // Constructs empty genome from settings.
@@ -43,9 +41,10 @@ public:
     
     // Individual post-processing.
     virtual int postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome);
+    
 private:
 
 };
 
-#endif	/* CIRCUITREPR_H */
+#endif	/* POLYREPR_H */
 

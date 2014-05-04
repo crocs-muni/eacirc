@@ -8,6 +8,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->notes = getXMLElementValue(pRoot,"NOTES");
 
     // parsing EACIRC/MAIN
+    pSettings->main.circuitType = atoi(getXMLElementValue(pRoot,"MAIN/CIRCUIT_REPRESENTATION").c_str());
     pSettings->main.projectType = atoi(getXMLElementValue(pRoot,"MAIN/PROJECT").c_str());
     pSettings->main.evaluatorType = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR").c_str());
     pSettings->main.evaluatorPrecision = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR_PRECISION").c_str());

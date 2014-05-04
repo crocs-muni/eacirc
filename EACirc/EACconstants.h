@@ -39,6 +39,10 @@ typedef unsigned __int64 uint64_t;
 #include <stdint.h>
 #endif
 
+// CIRCUIT REPRESENTATIONS (BACKENDS)
+#define CIRCUIT_GATE                1
+#define CIRCUIT_POLYNOMIAL          2
+
 // PROJECTS
 #define PROJECT_PREGENERATED_TV     0
 #define PROJECT_ESTREAM             100

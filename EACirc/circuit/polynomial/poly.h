@@ -10,8 +10,8 @@
 #include "EACglobals.h"
 
 // We use 2D array genome (polynomials, terms).
-#include "../galib/GAGenome.h"
-#include "../galib/GA2DArrayGenome.h"
+#include "GAGenome.h"
+#include "GA2DArrayGenome.h"
 
 /**
  * Function to evaluate one term element of an arbitrary size.

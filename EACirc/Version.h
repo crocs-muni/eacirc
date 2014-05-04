@@ -1,3 +1,3 @@
 // current git commit info (updated before build if correctly set-up)
-#define GIT_COMMIT "d519da776fc6886281785086563f8721c9742273"
-#define GIT_COMMIT_SHORT "d519da7"
+#define GIT_COMMIT "426ffb49a1670f2e9684aa51d3b1c5caf1e46c63"
+#define GIT_COMMIT_SHORT "426ffb4"

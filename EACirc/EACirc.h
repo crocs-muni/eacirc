@@ -6,7 +6,7 @@
 #include "GA1DArrayGenome.h"
 #include "GASStateGA.h"
 #include "projects/IProject.h"
-#include "representation/Repr.h"
+#include "circuit/Repr.h"
 
 //! constants for EACirc configuration state
 #define EACIRC_CONFIG_LOADED 0x01

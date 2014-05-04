@@ -66,6 +66,7 @@ extern GLOBALS* pGlobals;
 
 //! settings corresponding to EACIRC/MAIN
 struct SETTINGS_MAIN {
+    int circuitType;                //! circuit representation used
     int projectType;                //! project used to generate test vectors
     int evaluatorType;              //! evaluator used in fitness computation
     int evaluatorPrecision;         //! precision point for evaluators (e.g. number of categories)

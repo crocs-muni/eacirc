@@ -8,6 +8,7 @@ IRndGen* biasRndGen = NULL;
 GLOBALS* pGlobals = NULL;
 
 SETTINGS_MAIN::SETTINGS_MAIN() {
+    circuitType = -1;
     projectType = -1;
     evaluatorType = -1;
     evaluatorPrecision = -1;

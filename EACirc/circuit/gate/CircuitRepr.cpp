@@ -12,7 +12,7 @@
 #include "CircuitInterpreter.h"
 #include "GAPopulation.h"
 
-CircuitRepr::CircuitRepr() {
+CircuitRepr::CircuitRepr() : Repr(CIRCUIT_GATE) {
     initialize();
 }
 

@@ -6,13 +6,13 @@
  */
 
 #include "PolyRepr.h"
-#include "representation/Repr.h"
+#include "circuit/Repr.h"
 #include "PolyIO.h"
 #include "GAPolyCallbacks.h"
 #include "Term.h"
 #include <math.h>
 
-PolyRepr::PolyRepr() {
+PolyRepr::PolyRepr() : Repr(CIRCUIT_POLYNOMIAL) {
     initialize();
 }
 

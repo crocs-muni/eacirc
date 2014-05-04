@@ -126,6 +126,7 @@ void TestConfigurator::prepareConfiguration() const {
 string TestConfigurator::mainConfiguration =
         "<NOTES>self-test configuration</NOTES>"
         "<MAIN>"
+        "    <CIRCUIT_REPRESENTATION>1</CIRCUIT_REPRESENTATION>"
         "    <PROJECT>100</PROJECT>"
         "    <EVALUATOR>26</EVALUATOR>"
         "    <EVALUATOR_PRECISION>10</EVALUATOR_PRECISION>"

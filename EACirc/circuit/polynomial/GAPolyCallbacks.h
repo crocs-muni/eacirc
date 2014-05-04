@@ -3,8 +3,8 @@
 
 #include "EACglobals.h"
 #include "poly.h"
-#include "../galib/GAGenome.h"
-#include "../galib/GA2DArrayGenome.h"
+#include "GAGenome.h"
+#include "GA2DArrayGenome.h"
 
 class GAPolyCallbacks {
 public:

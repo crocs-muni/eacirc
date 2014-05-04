@@ -1,6 +1,6 @@
-TEMPLATE = app
-CONFIG += console
-CONFIG -= qt
+TEMPLATE=app
+CONFIG+=console
+CONFIG-=qt
 
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
     -Wno-unused-function -Wno-unused-value
@@ -23,25 +23,25 @@ SOURCES += \
 
 # === individual representation ===
 SOURCES += \
-    EACirc/representation/Repr.cpp \
-    EACirc/representation/ReprIO.cpp \
+    EACirc/circuit/Repr.cpp \
+    EACirc/circuit/ReprIO.cpp \
 
 # === circuit processing ===
 SOURCES += \
-    EACirc/circuit/GACallbacks.cpp \
-    EACirc/circuit/CircuitIO.cpp \
-    EACirc/circuit/CircuitInterpreter.cpp \
-    EACirc/circuit/CircuitCommonFunctions.cpp \
-    EACirc/circuit/CircuitRepr.cpp \
+    EACirc/circuit/gate/GACallbacks.cpp \
+    EACirc/circuit/gate/CircuitIO.cpp \
+    EACirc/circuit/gate/CircuitInterpreter.cpp \
+    EACirc/circuit/gate/CircuitCommonFunctions.cpp \
+    EACirc/circuit/gate/CircuitRepr.cpp \
 
 # === polynomials ===
 SOURCES += \
-    ./EACirc/polynomials/Term.cpp   \
-    ./EACirc/polynomials/PolyDistEval.cpp   \
-    ./EACirc/polynomials/PolyIO.cpp \
-    ./EACirc/polynomials/GAPolyCallbacks.cpp \
-    ./EACirc/polynomials/PolyRepr.cpp \
-    ./EACirc/polynomials/poly.cpp \
+    EACirc/circuit/polynomial/Term.cpp   \
+    EACirc/circuit/polynomial/PolyDistEval.cpp   \
+    EACirc/circuit/polynomial/PolyIO.cpp \
+    EACirc/circuit/polynomial/GAPolyCallbacks.cpp \
+    EACirc/circuit/polynomial/PolyRepr.cpp \
+    EACirc/circuit/polynomial/poly.cpp \
 
 # === evaluators ===
 SOURCES += \
@@ -233,25 +233,25 @@ HEADERS += \
 
 # === individual representation ===
 HEADERS += \
-    EACirc/representation/Repr.h \
-    EACirc/representation/ReprIO.h \
+    EACirc/circuit/Repr.h \
+    EACirc/circuit/ReprIO.h \
 
 # === circuit processing ===
 HEADERS += \
-    EACirc/circuit/GACallbacks.h \
-    EACirc/circuit/CircuitIO.h \
-    EACirc/circuit/CircuitInterpreter.h \
-    EACirc/circuit/CircuitCommonFunctions.h \
-    EACirc/circuit/CircuitRepr.h \
+    EACirc/circuit/gate/GACallbacks.h \
+    EACirc/circuit/gate/CircuitIO.h \
+    EACirc/circuit/gate/CircuitInterpreter.h \
+    EACirc/circuit/gate/CircuitCommonFunctions.h \
+    EACirc/circuit/gate/CircuitRepr.h \
 
 # === polynomials ===
 HEADERS += \
-    ./EACirc/polynomials/PolyDistEval.h \
-    ./EACirc/polynomials/GAPolyCallbacks.h \
-    ./EACirc/polynomials/PolyIO.h \
-    ./EACirc/polynomials/Term.h \
-    ./EACirc/polynomials/PolyRepr.h \
-    ./EACirc/polynomials/poly.h \
+    EACirc/circuit/polynomial/PolyDistEval.h \
+    EACirc/circuit/polynomial/GAPolyCallbacks.h \
+    EACirc/circuit/polynomial/PolyIO.h \
+    EACirc/circuit/polynomial/Term.h \
+    EACirc/circuit/polynomial/PolyRepr.h \
+    EACirc/circuit/polynomial/poly.h \
 
 # === standard evaluators ===
 HEADERS += \

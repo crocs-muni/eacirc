@@ -1,7 +1,7 @@
 #include "PolyIO.h"
 #include "XMLProcessor.h"
 #include "CommonFnc.h"
-#include "representation/ReprIO.h"
+#include "circuit/ReprIO.h"
 #include "Term.h"
 
 int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
