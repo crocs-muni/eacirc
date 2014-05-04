@@ -247,7 +247,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
         }
 
         // set correct output
-        for (int output = 0; output < pGlobals->settings->circuit.sizeOutput; output++)
+        for (int output = 0; output < pGlobals->settings->main.circuitSizeOutput; output++)
             tvOutputs[output] = algorithmNumber * 0xff;
         break;
     default:

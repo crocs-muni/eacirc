@@ -1,8 +1,6 @@
-/* 
- * File:   Repr.cpp
- * Author: ph4r05
- * 
- * Created on April 29, 2014, 3:00 PM
+/**
+ * @file ICircuit.cpp
+ * @author Martin Ukrop, ph4r05
  */
 
 #include "ICircuit.h"
@@ -27,8 +25,24 @@ int ICircuit::getCircuitType() const {
     return m_type;
 }
 
+void ICircuit::setGACallbacks(GAGenome * g) {
+    g->initializer(getInitializer());
+    g->evaluator(getEvaluator());
+    g->mutator(getMutator());
+    g->comparator(getComparator());
+    if (getSexualCrossover() != NULL) {
+        g->crossover(getSexualCrossover());
+    } else {
+        g->crossover(getAsexualCrossover());
+    }
+}
+
 bool ICircuit::postProcess(GAGenome &original, GAGenome &processed) {
     return false;
+}
+
+int ICircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
+    return STAT_OK;
 }
 
 ICircuit* ICircuit::getCircuit(int circuitType) {

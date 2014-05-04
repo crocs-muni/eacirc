@@ -16,6 +16,8 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
     loadInitialPopulation = false;
     numGenerations = -1;
     saveStateFrequency = 0;
+    circuitSizeInput = -1;
+    circuitSizeOutput = -1;
 }
 
 SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
@@ -49,11 +51,9 @@ SETTINGS_GA::SETTINGS_GA() {
     mutateConnectors = true;
 }
 
-SETTINGS_CIRCUIT::SETTINGS_CIRCUIT() {
+SETTINGS_GATE_CIRCUIT::SETTINGS_GATE_CIRCUIT() {
     numLayers = -1;
     sizeLayer = -1;
-    sizeInput = -1;
-    sizeOutput = -1;
     useMemory = false;
     sizeMemory = -1;
     numConnectors = -1;
@@ -75,12 +75,11 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
     numTestSets = -1;
 }
 
-SETTINGS_POLYDIST::SETTINGS_POLYDIST() {
+SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
     genomeInitTermStopProbability = -1;
     genomeInitMaxTerms = -1;
     crossoverRandomizePolySelect = false;
     crossoverTermsProbability = -1;
-    enabled = false;
     mutateAddTermProbability = -1;
     mutateAddTermStrategy = -1;
     mutateRemoveTermProbability = -1;
@@ -112,7 +111,7 @@ TEST_VECTORS::TEST_VECTORS() {
 
 void TEST_VECTORS::allocate() {
     if (pGlobals->settings->testVectors.inputLength == -1 || pGlobals->settings->testVectors.outputLength == -1
-            || pGlobals->settings->circuit.sizeOutputLayer == -1) {
+            || pGlobals->settings->gateCircuit.sizeOutputLayer == -1) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input/output size or circuit output size not set." << endl;
         return;
     }
@@ -128,13 +127,13 @@ void TEST_VECTORS::allocate() {
         memset(inputs[i],0,pGlobals->settings->testVectors.inputLength);
         outputs[i] = new unsigned char[pGlobals->settings->testVectors.outputLength];
         memset(outputs[i],0,pGlobals->settings->testVectors.outputLength);
-        circuitOutputs[i] = new unsigned char[pGlobals->settings->circuit.sizeOutput];
-        memset(circuitOutputs[i],0,pGlobals->settings->circuit.sizeOutput);
+        circuitOutputs[i] = new unsigned char[pGlobals->settings->main.circuitSizeOutput];
+        memset(circuitOutputs[i],0,pGlobals->settings->main.circuitSizeOutput);
     }
-    executionInputLayer = new unsigned char[pGlobals->settings->circuit.sizeInputLayer];
-    executionMiddleLayerIn = new unsigned char[pGlobals->settings->circuit.sizeLayer];
-    executionMiddleLayerOut = new unsigned char[pGlobals->settings->circuit.sizeLayer];
-    executionOutputLayer = new unsigned char[pGlobals->settings->circuit.sizeOutputLayer];
+    executionInputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeInputLayer];
+    executionMiddleLayerIn = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
+    executionMiddleLayerOut = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
+    executionOutputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeOutputLayer];
 }
 
 void TEST_VECTORS::release() {

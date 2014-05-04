@@ -25,6 +25,7 @@ const char* statusToString(int error) {
     case STAT_FILE_READ_FAIL:           return "STAT_FILE_READ_FAIL";
     case STAT_EXTERNAL_SYSTEM_FAILED:   return "STAT_EXTERNAL_SYSTEM_FAILED";
     case STAT_CIRCUIT_INCONSISTENT:     return "STAT_CIRCUIT_INCONSISTENT";
+    case STAT_CIRCUIT_BACKEND_ERROR:    return "STAT_CIRCUIT_BACKEND_ERROR";
     }
     // NO SPECIAL RULE MATCH
     return "UNKNOWN_STATUS";

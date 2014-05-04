@@ -44,14 +44,14 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
 
     // 1. CONNECTOR_LAYER_1 connects inputs to corresponding FNC in the same column (FNC_1_3->IN_3)
     int offset = 0;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++){
         // for details see connectors documentation
-        genome.gene(offset + slot, pGlobals->precompPow[pGlobals->settings->circuit.sizeInputLayer / 2]);
+        genome.gene(offset + slot, pGlobals->precompPow[pGlobals->settings->gateCircuit.sizeInputLayer / 2]);
     }
 
     // 2. FUNCTION_LAYER_1 is set to XOR instruction only (argument random 0-255)
-    offset = 1 * pGlobals->settings->circuit.genomeWidth;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
+    offset = 1 * pGlobals->settings->gateCircuit.genomeWidth;
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++) {
         GENOME_ITEM_TYPE genomeItem = 0;
         nodeSetFunction(genomeItem, FNC_XOR);
         nodeSetArgument(genomeItem, 1, GARandomInt(0,UCHAR_MAX));
@@ -59,23 +59,23 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
     }
 
     // 3. CONNECTOR_LAYER_i is set to random mask (possibly multiple connectors)
-    for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-        offset = (2 * layer) * pGlobals->settings->circuit.genomeWidth;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
+    for (int layer = 1; layer < pGlobals->settings->gateCircuit.numLayers - 1; layer++) {
+        offset = (2 * layer) * pGlobals->settings->gateCircuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++) {
             // for details see connector documentation
-            genome.gene(offset + slot, GARandomInt(0,pGlobals->precompPow[pGlobals->settings->circuit.numConnectors]-1));
+            genome.gene(offset + slot, GARandomInt(0,pGlobals->precompPow[pGlobals->settings->gateCircuit.numConnectors]-1));
         }
     }
 
     // 4. FUNCTION_LAYER_i is set to random instruction from range 0..FNC_MAX, respecting allowed instructions in settings
-    for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-        offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
+    for (int layer = 1; layer < pGlobals->settings->gateCircuit.numLayers - 1; layer++) {
+        offset = (2 * layer + 1) * pGlobals->settings->gateCircuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++) {
             GENOME_ITEM_TYPE genomeItem = 0;
             unsigned char function;
             do {
                 function = GARandomInt(0,FNC_MAX);
-            } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
+            } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
             nodeSetFunction(genomeItem, function);
             // set argument1 to random value (0-255)
             nodeSetArgument(genomeItem, 1, GARandomInt(0,(int)UCHAR_MAX));
@@ -83,23 +83,23 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
         }
     }
 
-    int layer = pGlobals->settings->circuit.numLayers - 1;
+    int layer = pGlobals->settings->gateCircuit.numLayers - 1;
     // 5. last CONNECTOR_LAYER connects to random nodes (not respecting numConnectors!)
-    offset = (2 * layer) * pGlobals->settings->circuit.genomeWidth;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++){
+    offset = (2 * layer) * pGlobals->settings->gateCircuit.genomeWidth;
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeOutputLayer; slot++){
         // for details see connectors documentation
         // BEWARE: relative location of nodes further than sizeLayer are wrapped around (see documentation)
-        genome.gene(offset + slot, GARandomInt(0, pGlobals->precompPow[pGlobals->settings->circuit.sizeLayer]-1));
+        genome.gene(offset + slot, GARandomInt(0, pGlobals->precompPow[pGlobals->settings->gateCircuit.sizeLayer]-1));
     }
 
     // 6. last FUNCTION_LAYER is set to random instruction from range 0..FNC_MAX, respecting allowed instructions in settings
-    offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) {
+    offset = (2 * layer + 1) * pGlobals->settings->gateCircuit.genomeWidth;
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeOutputLayer; slot++) {
         GENOME_ITEM_TYPE genomeItem = 0;
         unsigned char function;
         do {
             function = GARandomInt(0,FNC_MAX);
-        } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
+        } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
         nodeSetFunction(genomeItem, function);
         // set argument1 to random value (0-255)
         nodeSetArgument(genomeItem, 1, GARandomInt(0,UCHAR_MAX));
@@ -117,32 +117,32 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
     if (pGlobals->settings->ga.mutateConnectors) {
         // mutate connectors in input layer
         offset = 0;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++){
             if (GAFlipCoin(probMutation)) {
                 numOfMutations++;
                 // allow any bit 0-sizeInputLayer to change
-                genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->circuit.sizeInput));
+                genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->main.circuitSizeInput));
             }
         }
         // mutate connectors in internal connector layers
-        for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-            offset = (2 * layer) * pGlobals->settings->circuit.genomeWidth;
-            for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
+        for (int layer = 1; layer < pGlobals->settings->gateCircuit.numLayers - 1; layer++) {
+            offset = (2 * layer) * pGlobals->settings->gateCircuit.genomeWidth;
+            for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++){
                 if (GAFlipCoin(probMutation)) {
                     numOfMutations++;
                     // allow only bits 0-numConnectors to change
-                    genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->circuit.numConnectors));
+                    genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->gateCircuit.numConnectors));
                 }
             }
         }
         // mutate connectors in last layer
-        offset = (2 * (pGlobals->settings->circuit.numLayers - 1)) * pGlobals->settings->circuit.genomeWidth;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++){
+        offset = (2 * (pGlobals->settings->gateCircuit.numLayers - 1)) * pGlobals->settings->gateCircuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeOutputLayer; slot++){
             if (GAFlipCoin(probMutation)) {
                 numOfMutations++;
                 // allow any bit 0-sizeLayer to change
                 // BEWARE: relative location of nodes further than sizeLayer are wrapped around (see documentation)
-                genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->circuit.sizeLayer));
+                genome.gene(offset + slot, changeBit(genome.gene(offset+slot), pGlobals->settings->gateCircuit.sizeLayer));
             }
         }
     }
@@ -151,15 +151,15 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
     //
     if (pGlobals->settings->ga.mutateFunctions) {
         // mutate functions in input layer or internal layers
-        for (int layer = 0; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-            offset = (2 * layer + 1) * pGlobals->settings->circuit.genomeWidth;
-            for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++){
+        for (int layer = 0; layer < pGlobals->settings->gateCircuit.numLayers - 1; layer++) {
+            offset = (2 * layer + 1) * pGlobals->settings->gateCircuit.genomeWidth;
+            for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++){
                 if (GAFlipCoin(probMutation)) { // mutate function
                     numOfMutations++;
                     unsigned char function;
                     do {
                         function = GARandomInt(0, FNC_MAX);
-                    } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
+                    } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
                     GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
                     nodeSetFunction(genomeItem, function);
                     genome.gene(offset + slot, genomeItem);
@@ -174,14 +174,14 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
             }
         }
         // mutate function in last layer
-        offset = (2 * (pGlobals->settings->circuit.numLayers-1) + 1) * pGlobals->settings->circuit.genomeWidth;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++){
+        offset = (2 * (pGlobals->settings->gateCircuit.numLayers-1) + 1) * pGlobals->settings->gateCircuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeOutputLayer; slot++){
             if (GAFlipCoin(probMutation)) { // mutate function
                 numOfMutations++;
                 unsigned char function;
                 do {
                     function = GARandomInt(0, FNC_MAX);
-                } while (pGlobals->settings->circuit.allowedFunctions[function] == 0);
+                } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
                 GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
                 nodeSetFunction(genomeItem, function);
                 genome.gene(offset + slot, genomeItem);
@@ -201,16 +201,16 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
 int GACallbacks::crossover_perLayer(const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent1, const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent2,
                                     GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring1, GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring2) {
     // take random layer and cut individuals in 2 parts horisontally
-    int crossPoint = GARandomInt(1,pGlobals->settings->circuit.numLayers) * 2;
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.genomeWidth;
+    int crossPoint = GARandomInt(1,pGlobals->settings->gateCircuit.numLayers) * 2;
+    for (int layer = 0; layer < 2 * pGlobals->settings->gateCircuit.numLayers; layer++) {
+        int offset = layer * pGlobals->settings->gateCircuit.genomeWidth;
         if (layer <= crossPoint) {
-            for (int i = 0; i < pGlobals->settings->circuit.genomeWidth; i++) {
+            for (int i = 0; i < pGlobals->settings->gateCircuit.genomeWidth; i++) {
                 if (offspring1 != NULL) offspring1->gene(offset + i, parent1.gene(offset + i));
                 if (offspring2 != NULL) offspring2->gene(offset + i, parent2.gene(offset + i));
             }
         } else {
-            for (int i = 0; i < pGlobals->settings->circuit.genomeWidth; i++) {
+            for (int i = 0; i < pGlobals->settings->gateCircuit.genomeWidth; i++) {
                 if (offspring1 != NULL) offspring1->gene(offset + i, parent2.gene(offset + i));
                 if (offspring2 != NULL) offspring2->gene(offset + i, parent1.gene(offset + i));
             }
@@ -222,10 +222,10 @@ int GACallbacks::crossover_perLayer(const GA1DArrayGenome<GENOME_ITEM_TYPE> &par
 int GACallbacks::crossover_perColumn(const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent1, const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent2,
                                      GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring1, GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring2) {
     // take random point in layer size and cut individuals in 2 parts verically
-    int crossPoint = GARandomInt(1,pGlobals->settings->circuit.sizeLayer);
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        int offset = layer * pGlobals->settings->circuit.genomeWidth;
-        for (int i = 0; i < pGlobals->settings->circuit.genomeWidth; i++) {
+    int crossPoint = GARandomInt(1,pGlobals->settings->gateCircuit.sizeLayer);
+    for (int layer = 0; layer < 2 * pGlobals->settings->gateCircuit.numLayers; layer++) {
+        int offset = layer * pGlobals->settings->gateCircuit.genomeWidth;
+        for (int i = 0; i < pGlobals->settings->gateCircuit.genomeWidth; i++) {
             if ( i < crossPoint) {
                 if (offspring1 != NULL) offspring1->gene(offset + i, parent1.gene(offset + i));
                 if (offspring2 != NULL) offspring2->gene(offset + i, parent2.gene(offset + i));

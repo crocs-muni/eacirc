@@ -1,12 +1,12 @@
 /* 
- * File:   PolyRepr.h
+ * File:   PolynomialCircuit.h
  * Author: ph4r05
  *
  * Created on April 29, 2014, 4:20 PM
  */
 
-#ifndef POLYREPR_H
-#define	POLYREPR_H
+#ifndef POLYNOMIALCIRCUIT_H
+#define	POLYNOMIALCIRCUIT_H
 #include "circuit/ICircuit.h"
 #include "GAPolyCallbacks.h"
 
@@ -26,24 +26,20 @@ public:
     virtual inline GAGenome::Comparator        getComparator()  { return NULL; }
     virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GAPolyCallbacks::crossover; }
     virtual inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
-    
-    int executeCircuit(GAGenome* pGenome, unsigned char* inputs, unsigned char* outputs) { }
 
     // Constructs empty genome from settings.
-    virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false);
-    
-    // Sets non-null GA callbacks.
-    virtual GAGenome * setGACallbacks(GAGenome * g, const SETTINGS * settings);
+    virtual GAGenome * createGenome(bool setCallbacks = false);
     
     // Creates a configuration population.
-    virtual GAPopulation * createConfigPopulation(const SETTINGS * settings);
+    virtual GAPopulation * createPopulation();
     
     // Individual post-processing.
     virtual bool postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome);
-    
+
+    int loadCircuitConfiguration(TiXmlNode* pRoot);
 private:
 
 };
 
-#endif	/* POLYREPR_H */
+#endif	/* POLYNOMIALCIRCUIT_H */
 

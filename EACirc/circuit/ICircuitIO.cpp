@@ -1,17 +1,12 @@
-/* 
- * File:   ReprIO.cpp
- * Author: ph4r05
- * 
- * Created on April 29, 2014, 10:25 AM
+/**
+ * @file ICircuitIO.cpp
+ * @author Martin Ukrop, ph4r05
  */
 
 #include "ICircuitIO.h"
 
-ICircuitIO::ICircuitIO() {
-}
+ICircuitIO::ICircuitIO() { }
 
-ICircuitIO::ICircuitIO(const ICircuitIO& orig) {
-}
+ICircuitIO::ICircuitIO(const ICircuitIO& orig) { }
 
-ICircuitIO::~ICircuitIO() {
-}
+ICircuitIO::~ICircuitIO() { }

@@ -1,12 +1,12 @@
 /* 
- * File:   PolyIO.h
+ * File:   PolynomialCircuitIO.h
  * Author: ph4r05
  *
  * Created on April 29, 2014, 10:22 AM
  */
 
-#ifndef POLYIO_H
-#define	POLYIO_H
+#ifndef POLYNOMIALCIRCUITIO_H
+#define	POLYNOMIALCIRCUITIO_H
 
 #include "poly.h"
 #include "EACglobals.h"
@@ -99,4 +99,4 @@ public:
 
 
 
-#endif	/* POLYIO_H */
+#endif	/* POLYNOMIALCIRCUITIO_H */

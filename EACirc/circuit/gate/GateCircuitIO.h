@@ -1,5 +1,10 @@
-#ifndef CIRCUITIO_H
-#define CIRCUITIO_H
+/**
+  * @file GateCircuitIO.h
+  * @author Martin Ukrop
+  */
+
+#ifndef GATECIRCUITIO_H
+#define GATECIRCUITIO_H
 
 #include "CircuitCommonFunctions.h"
 #include "tinyXML/tinyxml.h"
@@ -87,4 +92,4 @@ public:
     static TiXmlElement* populationHeaderSt(int populationSize);
 };
 
-#endif // CIRCUITIO_H
+#endif // GATECIRCUITIO_H

@@ -9,53 +9,53 @@ int CircuitInterpreter::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenom
     int status;
 
     // initial memory inputs are zero
-    memset(pGlobals->testVectors.executionOutputLayer, 0, pGlobals->settings->circuit.sizeOutputLayer);
+    memset(pGlobals->testVectors.executionOutputLayer, 0, pGlobals->settings->gateCircuit.sizeOutputLayer);
 
     // compute number of memory cycles
-    int numMemoryCycles = !pGlobals->settings->circuit.useMemory ? 1 : pGlobals->settings->testVectors.inputLength / pGlobals->settings->circuit.sizeInput;
+    int numMemoryCycles = !pGlobals->settings->gateCircuit.useMemory ? 1 : pGlobals->settings->testVectors.inputLength / pGlobals->settings->main.circuitSizeInput;
 
     // execute entire circuit for each memory cycle
     for (int memoryCycle = 0; memoryCycle < numMemoryCycles; memoryCycle++) {
         // prepare initial input layer values (memory + inputs)
-        memcpy(pGlobals->testVectors.executionInputLayer, pGlobals->testVectors.executionOutputLayer, pGlobals->settings->circuit.sizeMemory);
-        memcpy(pGlobals->testVectors.executionInputLayer + pGlobals->settings->circuit.sizeMemory, inputs, pGlobals->settings->circuit.sizeInput);
+        memcpy(pGlobals->testVectors.executionInputLayer, pGlobals->testVectors.executionOutputLayer, pGlobals->settings->gateCircuit.sizeMemory);
+        memcpy(pGlobals->testVectors.executionInputLayer + pGlobals->settings->gateCircuit.sizeMemory, inputs, pGlobals->settings->main.circuitSizeInput);
 
         // execute first layer
         offsetConnectors = 0;
-        offsetFunctions = pGlobals->settings->circuit.genomeWidth;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
-            absoluteConnectors = relativeToAbsoluteConnectorMask(pGenome->gene(offsetConnectors + slot), slot, pGlobals->settings->circuit.sizeInputLayer,
-                                                                 pGlobals->settings->circuit.sizeInputLayer);
+        offsetFunctions = pGlobals->settings->gateCircuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++) {
+            absoluteConnectors = relativeToAbsoluteConnectorMask(pGenome->gene(offsetConnectors + slot), slot, pGlobals->settings->gateCircuit.sizeInputLayer,
+                                                                 pGlobals->settings->gateCircuit.sizeInputLayer);
             function = pGenome->gene(offsetFunctions + slot);
             status = executeFunction(function, absoluteConnectors, pGlobals->testVectors.executionInputLayer,
                                      (pGlobals->testVectors.executionMiddleLayerOut[slot]));
             if (status != STAT_OK) return status;
         }
         // copy results to new inputs
-        memcpy(pGlobals->testVectors.executionMiddleLayerIn, pGlobals->testVectors.executionMiddleLayerOut, pGlobals->settings->circuit.sizeLayer);
+        memcpy(pGlobals->testVectors.executionMiddleLayerIn, pGlobals->testVectors.executionMiddleLayerOut, pGlobals->settings->gateCircuit.sizeLayer);
 
         // execute inside layers
-        for (int layer = 1; layer < pGlobals->settings->circuit.numLayers - 1; layer++) {
-            offsetConnectors = 2 * layer * pGlobals->settings->circuit.genomeWidth;
-            offsetFunctions = offsetConnectors + pGlobals->settings->circuit.genomeWidth;
-            for (int slot = 0; slot < pGlobals->settings->circuit.sizeLayer; slot++) {
-                absoluteConnectors = relativeToAbsoluteConnectorMask(pGenome->gene(offsetConnectors + slot), slot, pGlobals->settings->circuit.sizeLayer,
-                                                                     pGlobals->settings->circuit.numConnectors);
+        for (int layer = 1; layer < pGlobals->settings->gateCircuit.numLayers - 1; layer++) {
+            offsetConnectors = 2 * layer * pGlobals->settings->gateCircuit.genomeWidth;
+            offsetFunctions = offsetConnectors + pGlobals->settings->gateCircuit.genomeWidth;
+            for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeLayer; slot++) {
+                absoluteConnectors = relativeToAbsoluteConnectorMask(pGenome->gene(offsetConnectors + slot), slot, pGlobals->settings->gateCircuit.sizeLayer,
+                                                                     pGlobals->settings->gateCircuit.numConnectors);
                 function = pGenome->gene(offsetFunctions + slot);
                 status = executeFunction(function, absoluteConnectors, pGlobals->testVectors.executionMiddleLayerIn,
                                          (pGlobals->testVectors.executionMiddleLayerOut[slot]));
                 if (status != STAT_OK) return status;
             }
             // copy results to new inputs
-            memcpy(pGlobals->testVectors.executionMiddleLayerIn, pGlobals->testVectors.executionMiddleLayerOut, pGlobals->settings->circuit.sizeLayer);
+            memcpy(pGlobals->testVectors.executionMiddleLayerIn, pGlobals->testVectors.executionMiddleLayerOut, pGlobals->settings->gateCircuit.sizeLayer);
         }
 
         // execute last layer
-        offsetConnectors = 2 * (pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
-        offsetFunctions = offsetConnectors + pGlobals->settings->circuit.genomeWidth;
-        for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) {
-            absoluteConnectors = relativeToAbsoluteConnectorMask(pGenome->gene(offsetConnectors + slot), slot % pGlobals->settings->circuit.sizeLayer,
-                                                                 pGlobals->settings->circuit.sizeLayer, pGlobals->settings->circuit.sizeLayer);
+        offsetConnectors = 2 * (pGlobals->settings->gateCircuit.numLayers - 1) * pGlobals->settings->gateCircuit.genomeWidth;
+        offsetFunctions = offsetConnectors + pGlobals->settings->gateCircuit.genomeWidth;
+        for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeOutputLayer; slot++) {
+            absoluteConnectors = relativeToAbsoluteConnectorMask(pGenome->gene(offsetConnectors + slot), slot % pGlobals->settings->gateCircuit.sizeLayer,
+                                                                 pGlobals->settings->gateCircuit.sizeLayer, pGlobals->settings->gateCircuit.sizeLayer);
             function = pGenome->gene(offsetFunctions + slot);
             status = executeFunction(function, absoluteConnectors, pGlobals->testVectors.executionMiddleLayerIn,
                                      (pGlobals->testVectors.executionOutputLayer[slot]));
@@ -65,7 +65,7 @@ int CircuitInterpreter::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenom
     }
 
     // copy final outputs
-    memcpy(outputs, pGlobals->testVectors.executionOutputLayer + pGlobals->settings->circuit.sizeMemory, pGlobals->settings->circuit.sizeOutput);
+    memcpy(outputs, pGlobals->testVectors.executionOutputLayer + pGlobals->settings->gateCircuit.sizeMemory, pGlobals->settings->main.circuitSizeOutput);
     return STAT_OK;
 }
 
@@ -156,7 +156,7 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
         if (connectorsDiscartFirst(absoluteConnectors,connection)) { result = layerInputValues[connection] & argument1; }
         break;
     case FNC_READ:
-        result = pGlobals->testVectors.executionInputLayer[argument1 % pGlobals->settings->circuit.sizeInputLayer];
+        result = pGlobals->testVectors.executionInputLayer[argument1 % pGlobals->settings->gateCircuit.sizeInputLayer];
         break;
     case FNC_EXT:
         return executeExternalFunction(node, absoluteConnectors, layerInputValues, result);

@@ -6,8 +6,8 @@
 
 int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->main.circuitSizeInput;
+    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     int status = STAT_OK;
@@ -29,8 +29,8 @@ int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
 
 int PolyIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->main.circuitSizeInput;
+    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     istringstream circuitStream(binaryCircuit);
@@ -112,8 +112,8 @@ int PolyIO::genomeToPopulationSt(GAGenome& g, string fileName) {
 int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->circuit.sizeInput;
-    int & numPolynomials = pGlobals->settings->circuit.sizeOutput;
+    int & numVariables = pGlobals->settings->main.circuitSizeInput;
+    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     ofstream file(fileName);
@@ -122,17 +122,17 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
         return STAT_FILE_WRITE_FAIL;
     }
     
+    // TODO: please remove what is irrelevant, ideally everything from gateCircuit (this should be independent of gate circuits)
     // output file header with current circuit configuration
-    file << pGlobals->settings->circuit.numLayers << " \t(number of layers)" << endl;
-    file << pGlobals->settings->circuit.sizeLayer << " \t(size of inside layer)" << endl;
-    file << pGlobals->settings->circuit.sizeInput << " \t(number of inputs, without memory)" << endl;
-    file << pGlobals->settings->circuit.sizeOutput << " \t(number of outputs, without memory)" << endl;
-    file << pGlobals->settings->circuit.sizeMemory << " \t(size of memory)" << endl;
-    file << pGlobals->settings->circuit.numConnectors << " \t(maximum number of inside connectors)" << endl;
-    file << pGlobals->settings->polydist.enabled << " \t(polynomial distinguishers enabled)" << endl;
-    file << pGlobals->settings->polydist.genomeInitMaxTerms << " \t(maximum number of terms in polynomial)" << endl;
-    file << pGlobals->settings->polydist.genomeInitTermCountProbability << " \t(p for geometric distribution for number of variables in term)" << endl;
-    file << pGlobals->settings->polydist.genomeInitTermStopProbability << " \t(p for geometric distribution for number of terms in polynomial)" << endl;
+    file << pGlobals->settings->gateCircuit.numLayers << " \t(number of layers)" << endl;
+    file << pGlobals->settings->gateCircuit.sizeLayer << " \t(size of inside layer)" << endl;
+    file << pGlobals->settings->main.circuitSizeInput << " \t(number of inputs, without memory)" << endl;
+    file << pGlobals->settings->main.circuitSizeOutput << " \t(number of outputs, without memory)" << endl;
+    file << pGlobals->settings->gateCircuit.sizeMemory << " \t(size of memory)" << endl;
+    file << pGlobals->settings->gateCircuit.numConnectors << " \t(maximum number of inside connectors)" << endl;
+    file << pGlobals->settings->polyCircuit.genomeInitMaxTerms << " \t(maximum number of terms in polynomial)" << endl;
+    file << pGlobals->settings->polyCircuit.genomeInitTermCountProbability << " \t(p for geometric distribution for number of variables in term)" << endl;
+    file << pGlobals->settings->polyCircuit.genomeInitTermStopProbability << " \t(p for geometric distribution for number of terms in polynomial)" << endl;
     file << endl;
     
     // output circuit itself, starting with input pseudo-layer
@@ -199,40 +199,37 @@ TiXmlElement* PolyIO::populationHeaderSt(int populationSize) {
     TiXmlElement* pElem = NULL;
     TiXmlElement* pElem2 = NULL;
 
+    // TODO: please remove what is irrelevant, ideally everything from gateCircuit (this should be independent of gate circuits)
     pElem = new TiXmlElement("population_size");
     pElem->LinkEndChild(new TiXmlText(toString(populationSize).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("circuit_dimensions");
     pElem2 = new TiXmlElement("num_layers");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.numLayers).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.numLayers).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeLayer).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeLayer).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_input_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeInput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeInput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_output_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeOutput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeOutput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_memory");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeMemory).c_str()));
-    pElem->LinkEndChild(pElem2);
-    pRoot->LinkEndChild(pElem);
-    pElem2 = new TiXmlElement("polydist_enabled");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.enabled).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeMemory).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
     pElem2 = new TiXmlElement("polydist_max_terms");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.genomeInitMaxTerms).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.genomeInitMaxTerms).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
     pElem2 = new TiXmlElement("polydist_term_count_p");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.genomeInitTermCountProbability).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.genomeInitTermCountProbability).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
     pElem2 = new TiXmlElement("polydist_term_size_p");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polydist.genomeInitTermStopProbability).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.genomeInitTermStopProbability).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
     return pRoot;

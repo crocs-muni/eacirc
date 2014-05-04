@@ -75,6 +75,18 @@ void EACirc::loadConfiguration(const string filename) {
     if (m_status != STAT_OK) return;
     mainLogger.out(LOGGER_INFO) << "Configuration successfully loaded (" << filename << ")." << endl;
 
+    // load circuit representation and its configuration
+    m_circuit = ICircuit::getCircuit(m_settings.main.circuitType);
+    if (m_circuit == NULL) {
+        m_status = STAT_CIRCUIT_BACKEND_ERROR;
+        mainLogger.out(LOGGER_ERROR) << "Could not load circuit representation." << endl;
+        return;
+    }
+    m_status = m_circuit->loadCircuitConfiguration(pRoot);
+    if (m_status != STAT_OK) return;
+    mainLogger.out(LOGGER_INFO) << "Circuit representation configuration loaded. (" << m_circuit->shortDescription() << ")" << endl;
+
+    // load project and its configuration
     m_project = IProject::getProject(m_settings.main.projectType);
     if (m_project == NULL) {
         m_status = STAT_PROJECT_ERROR;
@@ -82,6 +94,7 @@ void EACirc::loadConfiguration(const string filename) {
         return;
     }
     m_status = m_project->loadProjectConfiguration(pRoot);
+    if (m_status != STAT_OK) return;
     mainLogger.out(LOGGER_INFO) << "Project configuration loaded. (" << m_project->shortDescription() << ")" << endl;
 
     // allocate space for testVecotrs
@@ -104,12 +117,7 @@ void EACirc::checkConfigurationConsistency() {
         mainLogger.out(LOGGER_ERROR) << "Replacement size must be greater than 0 and must not exceed population size." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    if (m_settings.circuit.sizeLayer > MAX_LAYER_SIZE || m_settings.circuit.numConnectors > MAX_LAYER_SIZE
-            || m_settings.circuit.sizeInputLayer > MAX_LAYER_SIZE || m_settings.circuit.sizeOutputLayer > MAX_LAYER_SIZE) {
-        mainLogger.out(LOGGER_ERROR) << "Maximum layer size exceeded (internal size || connectors || total input|| total output)." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.testVectors.inputLength < m_settings.circuit.sizeInput) {
+    if (m_settings.testVectors.inputLength < m_settings.main.circuitSizeInput) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input length is smaller than circuit input layer." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
@@ -124,10 +132,6 @@ void EACirc::checkConfigurationConsistency() {
     if (m_settings.main.saveStateFrequency != 0 &&
             m_settings.main.saveStateFrequency % m_settings.testVectors.setChangeFrequency != 0) {
         mainLogger.out(LOGGER_ERROR) << "GAlib reseeding frequency must be multiple of test vector change frequency." << endl;
-        m_status = STAT_CONFIG_INCORRECT;
-    }
-    if (m_settings.circuit.useMemory && m_settings.circuit.sizeMemory <= 0) {
-        mainLogger.out(LOGGER_ERROR) << "Memory enabled but size incorrectly set (negative or zero)." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
 }
@@ -276,33 +280,33 @@ void EACirc::loadPopulation(const string filename) {
 
     int settingsValue;
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/num_layers").c_str());
-    if (m_settings.circuit.numLayers != settingsValue) {
+    if (m_settings.gateCircuit.numLayers != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible number of layers (";
-        mainLogger.out() << m_settings.circuit.numLayers << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.gateCircuit.numLayers << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_layer").c_str());
-    if (m_settings.circuit.sizeLayer != settingsValue) {
+    if (m_settings.gateCircuit.sizeLayer != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible layer size (";
-        mainLogger.out() << m_settings.circuit.sizeLayer << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.gateCircuit.sizeLayer << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_input_layer").c_str());
-    if (m_settings.circuit.sizeInput != settingsValue) {
+    if (m_settings.main.circuitSizeInput != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible input layer size (";
-        mainLogger.out() << m_settings.circuit.sizeInput << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.main.circuitSizeInput << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_output_layer").c_str());
-    if (m_settings.circuit.sizeOutput != settingsValue) {
+    if (m_settings.main.circuitSizeOutput != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible output layer size (";
-        mainLogger.out() << m_settings.circuit.sizeOutput << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.main.circuitSizeOutput << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     settingsValue = atoi(getXMLElementValue(pRoot,"circuit_dimensions/size_memory").c_str());
-    if (m_settings.circuit.sizeMemory != settingsValue) {
+    if (m_settings.gateCircuit.sizeMemory != settingsValue) {
         mainLogger.out(LOGGER_ERROR) << "Cannot load population - incompatible memory size (";
-        mainLogger.out() << m_settings.circuit.sizeMemory << " vs. " << settingsValue << ")." << endl;
+        mainLogger.out() << m_settings.gateCircuit.sizeMemory << " vs. " << settingsValue << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
     if (m_status != STAT_OK) {
@@ -310,9 +314,9 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     
-    // FIX: population has to be stupid, not genome-based
+    // FIX: population has to be empty, not genome-based
     GAPopulation * population = new GAPopulation; //representation->createConfigPopulation(&m_settings);
-    GAGenome * genome = m_circuit->createGenome(&m_settings, true);
+    GAGenome * genome = m_circuit->createGenome(true);
     
     // LOAD genomes
     TiXmlElement* pGenome = getXMLElement(pRoot,"population/genome")->ToElement();
@@ -346,7 +350,7 @@ void EACirc::createPopulation() {
     GAResetRNG(m_currentGalibSeed);
 
     // Create a basic genome used for this problem.
-    GAPopulation * p = m_circuit->createConfigPopulation(&m_settings);
+    GAPopulation * p = m_circuit->createPopulation();
     // create genetic algorithm and initialize population
     seedAndResetGAlib(*p);
     delete p;
@@ -405,6 +409,7 @@ void EACirc::prepare() {
     // initialize project
     m_status = m_project->initializeProject();
     mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
+
     // initialize evaluator
     if (m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
         pGlobals->evaluator = IEvaluator::getStandardEvaluator(m_settings.main.evaluatorType);
@@ -417,9 +422,6 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize evaluator (" << m_settings.main.evaluatorType << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-
-    // initialize circuit representation
-    m_circuit = ICircuit::getCircuit(m_settings.main.circuitType);
     
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;

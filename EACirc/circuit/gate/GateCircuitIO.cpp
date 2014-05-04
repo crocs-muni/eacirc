@@ -6,7 +6,7 @@ int CircuitIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     istringstream circuitStream(binaryCircuit);
     GENOME_ITEM_TYPE gene;
-    for (int offset = 0; offset < pGlobals->settings->circuit.genomeSize; offset++) {
+    for (int offset = 0; offset < pGlobals->settings->gateCircuit.genomeSize; offset++) {
         circuitStream >> gene;
         if (circuitStream.fail()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot load binary genome - error at offset " << offset << "." << endl;
@@ -41,7 +41,7 @@ int CircuitIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
     ostringstream textCicruitStream;
     for (int i = 0; i < genome.length(); i++) {
         textCicruitStream << genome.gene(i) << " ";
-        if (i % pGlobals->settings->circuit.genomeWidth == pGlobals->settings->circuit.genomeWidth - 1) {
+        if (i % pGlobals->settings->gateCircuit.genomeWidth == pGlobals->settings->gateCircuit.genomeWidth - 1) {
             textCicruitStream << "  ";
         }
     }
@@ -84,15 +84,15 @@ int CircuitIO::genomeToTextSt(GAGenome& g, string fileName) {
         return STAT_FILE_WRITE_FAIL;
     }
     // output file header with current circuit configuration
-    file << pGlobals->settings->circuit.numLayers << " \t(number of layers)" << endl;
-    file << pGlobals->settings->circuit.sizeLayer << " \t(size of inside layer)" << endl;
-    file << pGlobals->settings->circuit.sizeInput << " \t(number of inputs, without memory)" << endl;
-    file << pGlobals->settings->circuit.sizeOutput << " \t(number of outputs, without memory)" << endl;
-    file << pGlobals->settings->circuit.sizeMemory << " \t(size of memory)" << endl;
-    file << pGlobals->settings->circuit.numConnectors << " \t(maximum number of inside connectors)" << endl;
+    file << pGlobals->settings->gateCircuit.numLayers << " \t(number of layers)" << endl;
+    file << pGlobals->settings->gateCircuit.sizeLayer << " \t(size of inside layer)" << endl;
+    file << pGlobals->settings->main.circuitSizeInput << " \t(number of inputs, without memory)" << endl;
+    file << pGlobals->settings->main.circuitSizeOutput << " \t(number of outputs, without memory)" << endl;
+    file << pGlobals->settings->gateCircuit.sizeMemory << " \t(size of memory)" << endl;
+    file << pGlobals->settings->gateCircuit.numConnectors << " \t(maximum number of inside connectors)" << endl;
     file << endl;
     // output circuit itself, starting with input pseudo-layer
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeInputLayer; slot++) {
         file << "IN  [2^" << setw(2) << right << setfill('0') << slot << "]" << "   ";
     }
     file << endl << endl;
@@ -100,12 +100,12 @@ int CircuitIO::genomeToTextSt(GAGenome& g, string fileName) {
     int previousLayerWidth;
     int layerWidth;
     int connectorWidth;
-    for (int layer = 0; layer < 2 * pGlobals->settings->circuit.numLayers; layer++) {
-        previousLayerWidth = layer < 2 ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
-        layerWidth = layer < pGlobals->settings->circuit.numLayers*2-2 ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
-        connectorWidth = (layer < 2 || layer >= pGlobals->settings->circuit.numLayers*2-2) ? previousLayerWidth : pGlobals->settings->circuit.numConnectors;
+    for (int layer = 0; layer < 2 * pGlobals->settings->gateCircuit.numLayers; layer++) {
+        previousLayerWidth = layer < 2 ? pGlobals->settings->gateCircuit.sizeInputLayer : pGlobals->settings->gateCircuit.sizeLayer;
+        layerWidth = layer < pGlobals->settings->gateCircuit.numLayers*2-2 ? pGlobals->settings->gateCircuit.sizeLayer : pGlobals->settings->gateCircuit.sizeOutputLayer;
+        connectorWidth = (layer < 2 || layer >= pGlobals->settings->gateCircuit.numLayers*2-2) ? previousLayerWidth : pGlobals->settings->gateCircuit.numConnectors;
         for (int slot = 0; slot < layerWidth; slot++) {
-            gene = genome.gene(layer * pGlobals->settings->circuit.genomeWidth + slot);
+            gene = genome.gene(layer * pGlobals->settings->gateCircuit.genomeWidth + slot);
             if (layer % 2 == 0) { // connector layer
                 gene = relativeToAbsoluteConnectorMask(gene, slot, previousLayerWidth, connectorWidth);
                 file << setw(10) << right << setfill('0') << gene << "   ";
@@ -144,17 +144,17 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
     // node specification
     // input nodes
     file << "{ rank=same;" << endl << "node [color=goldenrod1];" << endl;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeInputLayer; slot++) {
-        if (slot == pGlobals->settings->circuit.sizeMemory) { file << "node [color=chartreuse3];" << endl; }
-        file << "\"-1_" << slot << "\"[label=\"" << (slot < pGlobals->settings->circuit.sizeMemory ? "MEM" : "IN") << "\\n" << slot << "\"];" << endl;
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeInputLayer; slot++) {
+        if (slot == pGlobals->settings->gateCircuit.sizeMemory) { file << "node [color=chartreuse3];" << endl; }
+        file << "\"-1_" << slot << "\"[label=\"" << (slot < pGlobals->settings->gateCircuit.sizeMemory ? "MEM" : "IN") << "\\n" << slot << "\"];" << endl;
     }
     file << "}" << endl;
     // inside nodes
-    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers; layer++) {
-        layerWidth = layer == pGlobals->settings->circuit.numLayers-1 ? pGlobals->settings->circuit.sizeOutputLayer : pGlobals->settings->circuit.sizeLayer;
+    for (int layer = 0; layer < pGlobals->settings->gateCircuit.numLayers; layer++) {
+        layerWidth = layer == pGlobals->settings->gateCircuit.numLayers-1 ? pGlobals->settings->gateCircuit.sizeOutputLayer : pGlobals->settings->gateCircuit.sizeLayer;
         file << "{ rank=same;" << endl;
         for (int slot = 0; slot < layerWidth; slot++) {
-            GENOME_ITEM_TYPE gene = genome.gene((layer*2+1) * pGlobals->settings->circuit.genomeWidth + slot);
+            GENOME_ITEM_TYPE gene = genome.gene((layer*2+1) * pGlobals->settings->gateCircuit.genomeWidth + slot);
             file << "\"" << layer << "_" << slot << "\"[label=\"";
             file << functionToString(nodeGetFunction(gene)) << "\\n" << (int) nodeGetArgument(gene,1) << "\"];" << endl;
         }
@@ -162,21 +162,21 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
     }
     // output nodes
     file << "{ rank=same;" << endl << "node [color=goldenrod1];" << endl;
-    for (int slot = 0; slot < pGlobals->settings->circuit.sizeOutputLayer; slot++) {
-        if (slot == pGlobals->settings->circuit.sizeMemory) { file << "node [color=brown2];" << endl; }
-        file << "\"-2_" << slot << "\"[label=\"" << (slot < pGlobals->settings->circuit.sizeMemory ? "MEM" : "OUT") << "\\n" << slot << "\"];" << endl;
+    for (int slot = 0; slot < pGlobals->settings->gateCircuit.sizeOutputLayer; slot++) {
+        if (slot == pGlobals->settings->gateCircuit.sizeMemory) { file << "node [color=brown2];" << endl; }
+        file << "\"-2_" << slot << "\"[label=\"" << (slot < pGlobals->settings->gateCircuit.sizeMemory ? "MEM" : "OUT") << "\\n" << slot << "\"];" << endl;
     }
     file << "}" << endl;
 
     // invisible connectors (to preserve order in rows)
     file << "edge[style=invis];" << endl;
-    for (int layer = -1; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
-        layerWidth = pGlobals->settings->circuit.sizeLayer;
-        if (layer == -1) { layerWidth = pGlobals->settings->circuit.sizeInputLayer; }
-        if (layer >= pGlobals->settings->circuit.numLayers - 1) { layerWidth = pGlobals->settings->circuit.sizeOutputLayer; }
-        file << "\"" << (layer == pGlobals->settings->circuit.numLayers ? -2 : layer) << "_0\"";
+    for (int layer = -1; layer < pGlobals->settings->gateCircuit.numLayers + 1; layer++) {
+        layerWidth = pGlobals->settings->gateCircuit.sizeLayer;
+        if (layer == -1) { layerWidth = pGlobals->settings->gateCircuit.sizeInputLayer; }
+        if (layer >= pGlobals->settings->gateCircuit.numLayers - 1) { layerWidth = pGlobals->settings->gateCircuit.sizeOutputLayer; }
+        file << "\"" << (layer == pGlobals->settings->gateCircuit.numLayers ? -2 : layer) << "_0\"";
         for (int slot = 1; slot < layerWidth; slot++) {
-            file << " -- \"" << (layer == pGlobals->settings->circuit.numLayers ? -2 : layer) << "_" << slot << "\"";
+            file << " -- \"" << (layer == pGlobals->settings->gateCircuit.numLayers ? -2 : layer) << "_" << slot << "\"";
         }
         file << ";" << endl;
     }
@@ -184,15 +184,15 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
 
     // connectors
     file << "edge[style=solid];" << endl;
-    for (int layer = 0; layer < pGlobals->settings->circuit.numLayers + 1; layer++) {
-        previousLayerWidth = layer == 0 ? pGlobals->settings->circuit.sizeInputLayer : pGlobals->settings->circuit.sizeLayer;
-        layerWidth = layer < pGlobals->settings->circuit.numLayers - 1 ? pGlobals->settings->circuit.sizeLayer : pGlobals->settings->circuit.sizeOutputLayer;
-        connectorWidth = (layer == 0 || layer >= pGlobals->settings->circuit.numLayers-1) ? previousLayerWidth : pGlobals->settings->circuit.numConnectors;
+    for (int layer = 0; layer < pGlobals->settings->gateCircuit.numLayers + 1; layer++) {
+        previousLayerWidth = layer == 0 ? pGlobals->settings->gateCircuit.sizeInputLayer : pGlobals->settings->gateCircuit.sizeLayer;
+        layerWidth = layer < pGlobals->settings->gateCircuit.numLayers - 1 ? pGlobals->settings->gateCircuit.sizeLayer : pGlobals->settings->gateCircuit.sizeOutputLayer;
+        connectorWidth = (layer == 0 || layer >= pGlobals->settings->gateCircuit.numLayers-1) ? previousLayerWidth : pGlobals->settings->gateCircuit.numConnectors;
         for (int slot = 0; slot < layerWidth; slot++) {
-            if (layer == pGlobals->settings->circuit.numLayers) { // last pseudo-output layer
-                file << "\"-2_" << slot << "\" -- \"" << pGlobals->settings->circuit.numLayers - 1 << "_" << slot << "\";" << endl;
+            if (layer == pGlobals->settings->gateCircuit.numLayers) { // last pseudo-output layer
+                file << "\"-2_" << slot << "\" -- \"" << pGlobals->settings->gateCircuit.numLayers - 1 << "_" << slot << "\";" << endl;
             } else { // common layer
-                connectors = genome.gene(layer * 2 * pGlobals->settings->circuit.genomeWidth + slot);
+                connectors = genome.gene(layer * 2 * pGlobals->settings->gateCircuit.genomeWidth + slot);
                 connectors = relativeToAbsoluteConnectorMask(connectors, slot, previousLayerWidth, connectorWidth);
                 while (connectorsDiscartFirst(connectors,connection)) {
                     file << "\"" << layer << "_" << slot << "\" -- \"" << layer-1 << "_" << connection << "\";" << endl;
@@ -217,19 +217,19 @@ TiXmlElement* CircuitIO::populationHeaderSt(int populationSize) {
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("circuit_dimensions");
     pElem2 = new TiXmlElement("num_layers");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.numLayers).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.numLayers).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeLayer).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeLayer).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_input_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeInput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeInput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_output_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeOutput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeOutput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_memory");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->circuit.sizeMemory).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeMemory).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
 

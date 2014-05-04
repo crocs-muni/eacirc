@@ -1,12 +1,10 @@
-/* 
- * File:   Repr.h
- * Author: ph4r05
- *
- * Created on April 29, 2014, 3:00 PM
+/**
+ * @file ICircuit.h
+ * @author Martin Ukrop, ph4r05
  */
 
-#ifndef REPR_H
-#define	REPR_H
+#ifndef ICIRCUIT_H
+#define	ICIRCUIT_H
 
 #include "EACglobals.h"
 #include "GAGenome.h"
@@ -30,30 +28,39 @@ public:
      */
     virtual ~ICircuit();
     
-    // Getters for GA callbacks.
+    /** short textual description of individual representation
+      * implementation in representation required!
+      * @return description
+      */
+    virtual string shortDescription() = 0;
+
+    // getters for GA callbacks, return NULL if not available
     virtual GAGenome::Initializer       getInitializer()=0;
     virtual GAGenome::Evaluator         getEvaluator()=0;
     virtual GAGenome::Mutator           getMutator()=0;
     virtual GAGenome::Comparator        getComparator()=0;
     virtual GAGenome::SexualCrossover   getSexualCrossover()=0;
     virtual GAGenome::AsexualCrossover  getAsexualCrossover()=0;
-    
-    /** execute circuit over given inputs, return outputs
-     * @param pGenome       circuit to executeCircuit
-     * @param inputs
-     * @param outputs
-     * @return status
-     */
-    virtual int executeCircuit(GAGenome* pGenome, unsigned char* inputs, unsigned char* outputs) = 0;
 
-    // Constructs empty genome from settings.
-    virtual GAGenome * createGenome(const SETTINGS * settings, bool setCallbacks=false)=0;
+    /** construct new genome according to global settings
+     * @param setCallbacks  should GAcallbacks be set in the genome object?
+     * @return genome
+     */
+    virtual GAGenome * createGenome(bool setCallbacks = false) = 0;
+
+    /** construct new population according to global settings
+     * - GA callbacks are automatically set
+     * @return population
+     */
+    virtual GAPopulation * createPopulation() = 0;
     
-    // Sets non-null GA callbacks to the genome.
-    virtual GAGenome * setGACallbacks(GAGenome * g, const SETTINGS * settings)=0;
+    /** set callbacks to given genome
+     * - default sets all callbacks (NULL = not available)
+     * - sexual crossover is prefered over asexual
+     * @param g     genome
+     */
+    virtual void setGACallbacks(GAGenome * g);
     
-    // Creates a configuration population.
-    virtual GAPopulation * createConfigPopulation(const SETTINGS * settings)=0;
      
     /** individual post-processing, if needed (default does nothing)
      * @param original      genome to post-process
@@ -61,13 +68,14 @@ public:
      * @return did something happen? (i.e. is there valid output in processed?)
      */
     virtual bool postProcess(GAGenome &original, GAGenome &processed);
-
-    /** short textual description of individual representation
-      * implementation in representation required!
-      * @return description
-      */
-    virtual string shortDescription() = 0;
     
+    /** load circuit representation-specific configuration
+      * default implementation: load no configuration
+      * @param pRoot    parsed XML tree with configuration (root=EACIRC)
+      * @return status
+      */
+    virtual int loadCircuitConfiguration(TiXmlNode* pRoot);
+
     /** access io functions
      * @return io callback object
      */
@@ -85,5 +93,4 @@ public:
     static ICircuit* getCircuit(int circuitType);
 };
 
-#endif	/* REPR_H */
-
+#endif	/* ICIRCUIT_H */

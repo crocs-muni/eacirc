@@ -263,7 +263,7 @@ int EstreamProject::getTestVector(){
                 rndGen->getRandomFromInterval(1, &cipherNumber);
             m_numVectors[cipherNumber]++;
             //Signalize the correct value
-            for (int output = 0; output < pGlobals->settings->circuit.sizeOutput; output++) m_tvOutputs[output] = cipherNumber * 0xff;
+            for (int output = 0; output < pGlobals->settings->main.circuitSizeOutput; output++) m_tvOutputs[output] = cipherNumber * 0xff;
 
             //generate the plaintext for stream
             if ((cipherNumber == 0 && pEstreamSettings->algorithm1 != ESTREAM_RANDOM) ||

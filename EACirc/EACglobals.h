@@ -17,7 +17,7 @@ struct SETTINGS_INFO;
 struct SETTINGS_MAIN;
 struct SETTINGS_RANDOM;
 struct SETTINGS_GA;
-struct SETTINGS_CIRCUIT;
+struct SETTINGS_GATE_CIRCUIT;
 struct SETTINGS_TEST_VECTORS;
 struct SETTINGS;
 struct STATISTICS;
@@ -74,6 +74,8 @@ struct SETTINGS_MAIN {
     bool loadInitialPopulation;     //! should initial population be loaded instead of randomly generated?
     int numGenerations;             //! number of generations to evolve
     int saveStateFrequency;         //! frequency of reseeding GAlib and saving state
+    int circuitSizeInput;           //! number if circuit input bytes
+    int circuitSizeOutput;          //! number of circuit output bytes
     SETTINGS_MAIN();
 };
 
@@ -117,11 +119,9 @@ struct SETTINGS_GA {
 };
 
 //! settings corresponding to EACIRC/CIRCUIT
-struct SETTINGS_CIRCUIT {
+struct SETTINGS_GATE_CIRCUIT {
     int numLayers;                  //! number of layers in circuit
     int sizeLayer;                  //! general layer size
-    int sizeInput;                  //! number if inputs
-    int sizeOutput;                 //! number of outputs
     bool useMemory;                 //! should we return part of output to input as memory?
     int sizeMemory;                 //! memory size in bytes
     int numConnectors;              //! maximum number of allowed connectors
@@ -131,7 +131,21 @@ struct SETTINGS_CIRCUIT {
     int genomeWidth;                //! number of function slots in single circuit row (beware: can be higher than sizeLayer!)
     int sizeOutputLayer;            //! number of outputs (including possible memory outputs)
     int sizeInputLayer;             //! number of inputs (including possible memory inputs)
-    SETTINGS_CIRCUIT();
+    SETTINGS_GATE_CIRCUIT();
+};
+
+//! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
+struct SETTINGS_POLY_CIRCUIT {
+    double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
+    double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
+    double mutateAddTermProbability;        //! p for adding a new term in a mutation, monomial.
+    int mutateAddTermStrategy;              //! strategy for adding a new term in a mutation, multiple / single / geometric / ...
+    double mutateRemoveTermProbability;     //! p for removing a term in a mutation, monomial.
+    int mutateRemoveTermStrategy;           //! strategy for removing a term in a mutation, multiple / single / geometric / ...
+    bool crossoverRandomizePolySelect;      //! randomize polynomial ordering in the crossover?
+    bool crossoverTermsProbability;         //! crossing of the terms probability.
+    int genomeInitMaxTerms;                 //! upper bound for a number of terms in a polynomial.
+    SETTINGS_POLY_CIRCUIT();
 };
 
 //! settings corresponding to EACIRC/TEST_VECTORS
@@ -147,21 +161,6 @@ struct SETTINGS_TEST_VECTORS {
     SETTINGS_TEST_VECTORS();
 };
 
-//! settings corresponding to EACIRC/POLYDIST
-struct SETTINGS_POLYDIST {
-    bool enabled;                           //! whether to use polynomial distinguishers instead of circuit.
-    double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
-    double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
-    double mutateAddTermProbability;        //! p for adding a new term in a mutation, monomial.
-    int mutateAddTermStrategy;              //! strategy for adding a new term in a mutation, multiple / single / geometric / ...
-    double mutateRemoveTermProbability;     //! p for removing a term in a mutation, monomial.
-    int mutateRemoveTermStrategy;           //! strategy for removing a term in a mutation, multiple / single / geometric / ...
-    bool crossoverRandomizePolySelect;      //! randomize polynomial ordering in the crossover?
-    bool crossoverTermsProbability;         //! crossing of the terms probability.
-    int genomeInitMaxTerms;                 //! upper bound for a number of terms in a polynomial.
-    SETTINGS_POLYDIST();
-};
-
 //! all program run settings
 struct SETTINGS {
     string notes;                           //! corresponding to EACIRC/NOTES (user notes)
@@ -170,8 +169,8 @@ struct SETTINGS {
     SETTINGS_RANDOM random;                 //! corresponding to EACIRC/RANDOM
     SETTINGS_CUDA cuda;                     //! corresponding to EACIRC/CUDA
     SETTINGS_GA ga;                         //! corresponding to EACIRC/GA
-    SETTINGS_CIRCUIT circuit;               //! corresponding to EACIRC/CIRCUIT
-    SETTINGS_POLYDIST polydist;             //! corresponding to EACIRC/POLYDIST
+    SETTINGS_GATE_CIRCUIT gateCircuit;      //! corresponding to EACIRC/GATE_CIRCUIT
+    SETTINGS_POLY_CIRCUIT polyCircuit;      //! corresponding to EACIRC/POLYNOMIAL_CIRCUIT
     SETTINGS_TEST_VECTORS testVectors;      //! corresponding to EACIRC/TEST_VECTORS
     void* project;                          //! project specific settings
     SETTINGS();

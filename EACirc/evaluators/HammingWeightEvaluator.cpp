@@ -3,8 +3,8 @@
 HammingWeightEvaluator::HammingWeightEvaluator()
     : IEvaluator(EVALUATOR_HAMMING_WEIGHT), m_weightsStream0(NULL), m_weightsStream1(NULL),
       m_totalStream0(0), m_totalStream1(0), m_numUnderThreshold(0) {
-    m_weightsStream0 = new int[pGlobals->settings->circuit.sizeOutput * BITS_IN_UCHAR + 1];
-    m_weightsStream1 = new int[pGlobals->settings->circuit.sizeOutput * BITS_IN_UCHAR + 1];
+    m_weightsStream0 = new int[pGlobals->settings->main.circuitSizeOutput * BITS_IN_UCHAR + 1];
+    m_weightsStream1 = new int[pGlobals->settings->main.circuitSizeOutput * BITS_IN_UCHAR + 1];
     resetEvaluator();
 }
 
@@ -27,7 +27,7 @@ void HammingWeightEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsi
     }
     // compute Hamming weight of the circuit output
     int hammingWeight = 0;
-    for (int outputByte = 0; outputByte < pGlobals->settings->circuit.sizeOutput; outputByte++) {
+    for (int outputByte = 0; outputByte < pGlobals->settings->main.circuitSizeOutput; outputByte++) {
         for (int bit = 0; bit < BITS_IN_UCHAR; bit++) {
             if (circuitOutputs[outputByte] & (unsigned char) pGlobals->precompPow[bit]) hammingWeight++;
         }
@@ -40,7 +40,7 @@ float HammingWeightEvaluator::getFitness() const {
     // compute Pearson's Chi square test
     // chi^2 = sum_{i=1}^{n}{\frac{(Observed_i-Expected_i)^2}{Expected_i}}
     // check for threshold E_i >=5, Q_i >=5
-    for (int category = 0; category < pGlobals->settings->circuit.sizeOutput * BITS_IN_UCHAR + 1; category++) {
+    for (int category = 0; category < pGlobals->settings->main.circuitSizeOutput * BITS_IN_UCHAR + 1; category++) {
         float divider = max(m_weightsStream0[category], 1); // prevent division by zero
         fitness += pow(m_weightsStream1[category]-m_weightsStream0[category], 2) / divider;
     }
@@ -55,8 +55,8 @@ void HammingWeightEvaluator::resetEvaluator() {
     }
     if (tempNumUnderThreshold != 0) m_numUnderThreshold += tempNumUnderThreshold;
     m_totalStream0 = m_totalStream1 = 0;
-    memset(m_weightsStream0, 0, (pGlobals->settings->circuit.sizeOutput * BITS_IN_UCHAR + 1) * sizeof(int));
-    memset(m_weightsStream1, 0, (pGlobals->settings->circuit.sizeOutput * BITS_IN_UCHAR + 1) * sizeof(int));
+    memset(m_weightsStream0, 0, (pGlobals->settings->main.circuitSizeOutput * BITS_IN_UCHAR + 1) * sizeof(int));
+    memset(m_weightsStream1, 0, (pGlobals->settings->main.circuitSizeOutput * BITS_IN_UCHAR + 1) * sizeof(int));
 }
 
 string HammingWeightEvaluator::shortDescription() const {

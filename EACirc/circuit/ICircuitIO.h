@@ -1,12 +1,10 @@
-/* 
- * File:   ReprIO.h
- * Author: ph4r05
- *
- * Created on April 29, 2014, 10:25 AM
+/**
+ * @file ICircuitIO.h
+ * @author Martin Ukrop, ph4r05
  */
 
-#ifndef REPRIO_H
-#define	REPRIO_H
+#ifndef ICIRCUITIO_H
+#define	ICIRCUITIO_H
 
 #include "EACglobals.h"
 #include "GAGenome.h"
@@ -90,5 +88,5 @@ private:
 
 };
 
-#endif	/* REPRIO_H */
+#endif	/* ICIRCUITIO_H */
 

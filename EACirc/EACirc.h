@@ -107,7 +107,8 @@ public:
     ~EACirc();
 
     /** loads configuration from xml file to settings attribute
-      * (also loads project settings)
+      * - allocate circuit representation, load appropriate configuration
+      * - allocate project, load project configuration
       * checks basic consistency of the settings
       * @param filename     configuration file to use
       * @note sets eventual error code in m_status
