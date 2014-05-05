@@ -6,8 +6,8 @@
 
 int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->polyCircuit.numVariables;
-    int & numPolynomials = pGlobals->settings->polyCircuit.numPolynomials;
+    int & numVariables = pGlobals->settings->main.circuitSizeInput;
+    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     int status = STAT_OK;
@@ -29,8 +29,8 @@ int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
 
 int PolyIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->polyCircuit.numVariables;
-    int & numPolynomials = pGlobals->settings->polyCircuit.numPolynomials;
+    int & numVariables = pGlobals->settings->main.circuitSizeInput;
+    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     istringstream circuitStream(binaryCircuit);
@@ -112,8 +112,8 @@ int PolyIO::genomeToPopulationSt(GAGenome& g, string fileName) {
 int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->polyCircuit.numVariables;
-    int & numPolynomials = pGlobals->settings->polyCircuit.numPolynomials;
+    int & numVariables = pGlobals->settings->main.circuitSizeInput;
+    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     ofstream file(fileName);
@@ -123,8 +123,8 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     }
     
     // output file header with current circuit configuration
-    file << pGlobals->settings->polyCircuit.numVariables << " \t(number of variables)" << endl;
-    file << pGlobals->settings->polyCircuit.numPolynomials << " \t(number of polynomials)" << endl;
+    file << pGlobals->settings->main.circuitSizeInput << " \t(number of variables)" << endl;
+    file << pGlobals->settings->main.circuitSizeOutput << " \t(number of polynomials)" << endl;
     file << pGlobals->settings->polyCircuit.genomeInitMaxTerms << " \t(maximum number of terms in polynomial)" << endl;
     file << pGlobals->settings->polyCircuit.genomeInitTermCountProbability << " \t(p for geometric distribution for number of variables in term)" << endl;
     file << pGlobals->settings->polyCircuit.genomeInitTermStopProbability << " \t(p for geometric distribution for number of terms in polynomial)" << endl;
@@ -205,10 +205,10 @@ TiXmlElement* PolyIO::populationHeaderSt(int populationSize) {
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("circuit_dimensions");
     pElem2 = new TiXmlElement("size_input_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.numVariables).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeInput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_output_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.numPolynomials).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeOutput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_memory");
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeMemory).c_str()));

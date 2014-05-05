@@ -76,8 +76,6 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 }
 
 SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
-    numVariables = -1;
-    numPolynomials = -1;
     genomeInitTermStopProbability = -1;
     genomeInitMaxTerms = -1;
     crossoverRandomizePolySelect = false;
