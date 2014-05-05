@@ -120,52 +120,108 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
             // Pick random term
             int randTerm = GARandomInt(0, numTerms-1);
 
-            // Pick random bit
-            int randomBit = GARandomInt(0, numVariables-1);
+            // Strategy 0 = pick a random bit and flip it.
+            // Pros: Quick, easy and clean implementation and semantics. Impl.: O(1).
+            // Cons: Provided terms with low weight are more useful, it is more probable
+            // this strategy will generate terms with high height thus producing not 
+            // useful terms in mutation.
+            if (pGlobals->settings->polyCircuit.mutateTermStrategy == MUTATE_TERM_STRATEGY_FLIP){
+                // Pick random bit
+                int randomBit = GARandomInt(0, numVariables-1);
 
-            // Get value of the random bit
-            int bitPos = 1 + randTerm*termSize + (randomBit/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
-            genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (randomBit % (8*sizeof(POLY_GENOME_ITEM_TYPE)))));
+                // Get value of the random bit
+                const int bitPos = Term::getBitPos(randomBit, randTerm, termSize);
+                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::getBitLoc(randomBit)));
 
-            numOfMutations+=1;
+                
+            } else if (pGlobals->settings->polyCircuit.mutateTermStrategy == MUTATE_TERM_STRATEGY_ADDREMOVE){
+                // ADD/REMOVE strategy: either randomly add a new variable to the term or 
+                // randomly remove existing variable from the term. 
+                // Pros: Better for hypothesis that shorter terms are more valuable for our purpose (i.e., distinguisher).
+                // Cons: Slower implementation, not that clean. Impl.: O(k) if k is size of a term (constant).
+                bool addVariable = GAFlipCoin(0.5);
+                
+                // Build vector of present variables in term, 
+                // if we want to add a variable to a term, construct a list of non-set variables.
+                // if we want to remove a variable from a term, construct a list of set variables.
+                std::vector<int> vars;
+                for(int i=0; i<numVariables; i++){
+                    const int bitPos = Term::getBitPos(i, randTerm, termSize);
+                    const int bitLoc = Term::getBitLoc(i);
+                    const bool isVariableInTerm = (genome.gene(cPoly, bitPos) & (1ul << bitLoc)) > 0;
+                    
+                    // Add to the variable set either if it is present or not.
+                    if ((addVariable && !isVariableInTerm) || (!addVariable && isVariableInTerm)){
+                        vars.push_back(i);
+                    }
+                }
+                
+                // If term is fully saturated (all variables, cannot add),
+                // if term is zero, cannot remove. 
+                if (vars.size()>0){
+                    // Pick one variable at random to either remove or delete.
+                    int var2operateOn = GARandomInt(0, vars.size()-1);
+                    // Toggle specified variable in the term.
+                    const int bitPos = Term::getBitPos(var2operateOn, randTerm, termSize);
+                    genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::getBitLoc(var2operateOn)));
+                    numOfMutations+=1;
+                } 
+            } else {
+                mainLogger.out(LOGGER_ERROR) << "Unknown mutate term strategy: " << pGlobals->settings->polyCircuit.mutateTermStrategy << endl;
+                return 0;
+            }
         }
         
         // Add a new term to the polynomial?
-        if (numTerms < pGlobals->settings->polyCircuit.genomeInitMaxTerms && GAFlipCoin(pGlobals->settings->polyCircuit.mutateAddTermProbability)) {
-            // Pick random bit
-            int randomBit = GARandomInt(0, numVariables-1);
-            
-            // New term
-            genome.gene(cPoly, 0, numTerms+1);
-            
-            // Add it - clear storage to have const 1 term by default.
-            for(unsigned int i=0; i<termSize; i++){
-                genome.gene(cPoly, 1 + numTerms*termSize + i, 0);
+        if (numTerms < pGlobals->settings->polyCircuit.genomeInitMaxTerms){
+            for(unsigned int addTermCtr = 0; GAFlipCoin(pGlobals->settings->polyCircuit.mutateAddTermProbability); addTermCtr++){
+                // Pick random bit
+                int randomBit = GARandomInt(0, numVariables-1);
+
+                // New term
+                genome.gene(cPoly, 0, numTerms+1);
+
+                // Add it - clear storage to have const 1 term by default.
+                for(unsigned int i=0; i<termSize; i++){
+                    genome.gene(cPoly, 1 + numTerms*termSize + i, 0);
+                }
+
+                int bitPos = 1 + numTerms*termSize + (randomBit/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
+                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (randomBit % (8*sizeof(POLY_GENOME_ITEM_TYPE)))));
+
+                numTerms+=1;
+                numOfMutations+=1;
+                
+                // Quit, depending on strategy
+                if (pGlobals->settings->polyCircuit.mutateAddTermStrategy == MUTATE_ADD_TERM_STRATEGY_ONCE){
+                    break;
+                }
             }
-            
-            int bitPos = 1 + numTerms*termSize + (randomBit/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
-            genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (randomBit % (8*sizeof(POLY_GENOME_ITEM_TYPE)))));
-            
-            numTerms+=1;
-            numOfMutations+=1;
         }
         
         // Remove a term?
-        if (numTerms > 1 && GAFlipCoin(pGlobals->settings->polyCircuit.mutateRemoveTermProbability)){
-            // Pick a random term to delete
-            unsigned int term2del = GARandomInt(0, numTerms-1);
-            
-            // Delete term, copy the last term on this place, O(1).
-            genome.gene(cPoly, 0, numTerms-1);
-            if (term2del < (numTerms-1)){
-                // Move the last term to the place of removed.
-                for(unsigned int i=0; i<termSize; i++){
-                    genome.gene(cPoly, 1 + term2del*termSize + i, genome.gene(cPoly, 1 + (numTerms-1)*termSize + i));
+        if (numTerms > 1){
+            for(unsigned int rmTermCtr = 0; GAFlipCoin(pGlobals->settings->polyCircuit.mutateRemoveTermProbability); rmTermCtr++){
+                // Pick a random term to delete
+                unsigned int term2del = GARandomInt(0, numTerms-1);
+
+                // Delete term, copy the last term on this place, O(1).
+                genome.gene(cPoly, 0, numTerms-1);
+                if (term2del < (numTerms-1)){
+                    // Move the last term to the place of removed.
+                    for(unsigned int i=0; i<termSize; i++){
+                        genome.gene(cPoly, 1 + term2del*termSize + i, genome.gene(cPoly, 1 + (numTerms-1)*termSize + i));
+                    }
+                }
+
+                numTerms-=1;
+                numOfMutations+=1;
+                
+                // Quit, depending on strategy
+                if (pGlobals->settings->polyCircuit.mutateRemoveTermStrategy == MUTATE_RM_TERM_STRATEGY_ONCE){
+                    break;
                 }
             }
-            
-            numTerms-=1;
-            numOfMutations+=1;
         }
     }
     

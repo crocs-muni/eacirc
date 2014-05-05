@@ -78,6 +78,7 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
     genomeInitTermStopProbability = -1;
     genomeInitMaxTerms = -1;
+    mutateTermStrategy=-1;
     crossoverRandomizePolySelect = false;
     crossoverTermsProbability = -1;
     mutateAddTermProbability = -1;

@@ -56,6 +56,7 @@ bool PolynomialCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedG
 
 int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     // parsing EACIRC/POLYNOMIAL_CIRCUIT
+    pGlobals->settings->polyCircuit.mutateTermStrategy             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MUTATE_TERM_STRATEGY").c_str());
     pGlobals->settings->polyCircuit.genomeInitMaxTerms             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MAX_TERMS").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermCountProbability = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_COUNT_P").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermStopProbability  = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_VAR_P").c_str());

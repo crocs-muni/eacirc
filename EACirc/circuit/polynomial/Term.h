@@ -173,6 +173,20 @@ class Term {
     
     // Evaluation
     bool evaluate(const unsigned char * input, term_size_t inputLen) const;
+    
+    /**
+     * Returns position of a particular bit w.r.t. term elements (POLY_GENOME_ITEM_TYPE).
+     * Returns index of POLY_GENOME_ITEM_TYPE
+     * @return 
+     */
+    static inline unsigned int getBitPos(int bitIdx, int termIdx, unsigned int termSize) { return 1 + termIdx*termSize + (bitIdx/(8*sizeof(POLY_GENOME_ITEM_TYPE))); }
+    
+    /**
+     * Returns position of a particular bit inside term element.
+     * Returns bit position inside POLY_GENOME_ITEM_TYPE.
+     * @return 
+     */
+    static inline unsigned int getBitLoc(int bitIdx) { return bitIdx % (8*sizeof(POLY_GENOME_ITEM_TYPE)); }
 };
 
 // Pointer to the term.

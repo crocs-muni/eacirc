@@ -136,6 +136,7 @@ struct SETTINGS_GATE_CIRCUIT {
 
 //! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
 struct SETTINGS_POLY_CIRCUIT {
+    int mutateTermStrategy;                 //! strategy for mutating single term. 0=bitflip, 1=either add or remove variable.
     double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
     double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
     double mutateAddTermProbability;        //! p for adding a new term in a mutation, monomial.

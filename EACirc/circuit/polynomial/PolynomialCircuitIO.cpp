@@ -125,6 +125,7 @@ int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     // output file header with current circuit configuration
     file << pGlobals->settings->main.circuitSizeInput << " \t(number of variables)" << endl;
     file << pGlobals->settings->main.circuitSizeOutput << " \t(number of polynomials)" << endl;
+    file << pGlobals->settings->polyCircuit.mutateTermStrategy << " \t(term mutation strategy)" << endl;
     file << pGlobals->settings->polyCircuit.genomeInitMaxTerms << " \t(maximum number of terms in polynomial)" << endl;
     file << pGlobals->settings->polyCircuit.genomeInitTermCountProbability << " \t(p for geometric distribution for number of variables in term)" << endl;
     file << pGlobals->settings->polyCircuit.genomeInitTermStopProbability << " \t(p for geometric distribution for number of terms in polynomial)" << endl;
@@ -224,6 +225,10 @@ TiXmlElement* PolyIO::populationHeaderSt(int populationSize) {
     pRoot->LinkEndChild(pElem);
     pElem2 = new TiXmlElement("polydist_term_size_p");
     pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.genomeInitTermStopProbability).c_str()));
+    pElem->LinkEndChild(pElem2);
+    pRoot->LinkEndChild(pElem);
+    pElem2 = new TiXmlElement("polydist_mutate_term_strategy");
+    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->polyCircuit.mutateTermStrategy).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
     pElem2 = new TiXmlElement("polydist_mutate_add_term_p");

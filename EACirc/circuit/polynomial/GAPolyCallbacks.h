@@ -6,6 +6,15 @@
 #include "GAGenome.h"
 #include "GA2DArrayGenome.h"
 
+#define MUTATE_TERM_STRATEGY_FLIP 0
+#define MUTATE_TERM_STRATEGY_ADDREMOVE 1
+
+#define MUTATE_ADD_TERM_STRATEGY_ONCE 0
+#define MUTATE_ADD_TERM_STRATEGY_GEOMETRIC 1
+
+#define MUTATE_RM_TERM_STRATEGY_ONCE 0
+#define MUTATE_RM_TERM_STRATEGY_GEOMETRIC 1
+
 class GAPolyCallbacks {
 public:
     /** initializes genome
