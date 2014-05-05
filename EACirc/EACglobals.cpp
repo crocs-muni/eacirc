@@ -111,7 +111,7 @@ TEST_VECTORS::TEST_VECTORS() {
 
 void TEST_VECTORS::allocate() {
     if (pGlobals->settings->testVectors.inputLength == -1 || pGlobals->settings->testVectors.outputLength == -1
-            || pGlobals->settings->gateCircuit.sizeOutputLayer == -1) {
+            || pGlobals->settings->main.circuitSizeOutput == -1) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input/output size or circuit output size not set." << endl;
         return;
     }
@@ -130,10 +130,17 @@ void TEST_VECTORS::allocate() {
         circuitOutputs[i] = new unsigned char[pGlobals->settings->main.circuitSizeOutput];
         memset(circuitOutputs[i],0,pGlobals->settings->main.circuitSizeOutput);
     }
-    executionInputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeInputLayer];
-    executionMiddleLayerIn = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
-    executionMiddleLayerOut = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
-    executionOutputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeOutputLayer];
+    
+    if (pGlobals->settings->gateCircuit.sizeInputLayer <=0 
+            || pGlobals->settings->gateCircuit.sizeLayer <= 0
+            || pGlobals->settings->gateCircuit.sizeOutputLayer <= 0){
+        mainLogger.out(LOGGER_INFO) << "TestVectors: no memory allocated for gate related representation. Invalid dimensions." << endl;
+    } else {
+        executionInputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeInputLayer];
+        executionMiddleLayerIn = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
+        executionMiddleLayerOut = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
+        executionOutputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeOutputLayer];
+    }
 }
 
 void TEST_VECTORS::release() {
