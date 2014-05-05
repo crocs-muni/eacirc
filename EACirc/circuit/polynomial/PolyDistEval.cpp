@@ -8,7 +8,8 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
     int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
     unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
-    assert(sizeof(POLY_GENOME_ITEM_TYPE) == 8);
+    // Assumption: base type is size of long.
+    assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(unsigned long));
     
     // Reset output memory
     memset(outputs, 0, ceil( (double)numPolynomials / (8.0*(double)sizeof(unsigned char))) );
@@ -34,7 +35,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
             bool ret = 1;
             for(unsigned int i=0; i<termSize; i++){
                 POLY_GENOME_ITEM_TYPE cTermEx = pGenome->gene(cPoly, 1 + termSize * cTerm + i);
-                ret &= TERM_ITEM_EVAL_8(cTermEx, inputs+i*sizeof(POLY_GENOME_ITEM_TYPE));
+                ret &= TERM_ITEM_EVAL_GENOME(cTermEx, inputs+i*sizeof(POLY_GENOME_ITEM_TYPE));
             }
             
             // Polynomial is t1 XOR t2 XOR ... XOR t_{numVariables}
