@@ -1,6 +1,7 @@
 TEMPLATE=app
 CONFIG+=console
 CONFIG-=qt
+TARGET=eacirc
 
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
     -Wno-unused-function -Wno-unused-value
