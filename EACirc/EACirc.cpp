@@ -314,8 +314,7 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     
-    // FIX: population has to be empty, not genome-based
-    GAPopulation * population = new GAPopulation; //representation->createConfigPopulation(&m_settings);
+    GAPopulation * population = new GAPopulation;
     GAGenome * genome = m_circuit->createGenome(true);
     
     // LOAD genomes
@@ -350,10 +349,11 @@ void EACirc::createPopulation() {
     GAResetRNG(m_currentGalibSeed);
 
     // Create a basic genome used for this problem.
-    GAPopulation * p = m_circuit->createPopulation();
+    GAPopulation * population = m_circuit->createPopulation();
     // create genetic algorithm and initialize population
-    seedAndResetGAlib(*p);
-    delete p;
+    seedAndResetGAlib(*population);
+    delete population;
+    population = NULL;
     
     mainLogger.out(LOGGER_INFO) << "Initializing population, representation: " << m_circuit->shortDescription() << endl;
     m_gaData->initialize();
