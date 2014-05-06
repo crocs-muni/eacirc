@@ -56,6 +56,7 @@ bool PolynomialCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedG
 
 int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     // parsing EACIRC/POLYNOMIAL_CIRCUIT
+    pGlobals->settings->polyCircuit.numPolynomials                 = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/NUM_POLYNOMIALS").c_str());
     pGlobals->settings->polyCircuit.mutateTermStrategy             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MUTATE_TERM_STRATEGY").c_str());
     pGlobals->settings->polyCircuit.genomeInitMaxTerms             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MAX_TERMS").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermCountProbability = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_COUNT_P").c_str());
@@ -66,6 +67,18 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     pGlobals->settings->polyCircuit.mutateRemoveTermStrategy       = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/RM_TERM_STRATEGY").c_str());
     pGlobals->settings->polyCircuit.crossoverRandomizePolySelect   = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/CROSSOVER_RANDOMIZE_POLY").c_str()) ? true : false;
     pGlobals->settings->polyCircuit.crossoverTermsProbability      = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/CROSSOVER_TERM_P").c_str());
-
+    
+    // Not defined ? use main configuration.
+    if (pGlobals->settings->polyCircuit.numPolynomials<=0){
+        pGlobals->settings->polyCircuit.numPolynomials = 8*pGlobals->settings->main.circuitSizeOutput;
+        mainLogger.out(LOGGER_INFO) << "Number of polynomials not set properly. Falling back to " << pGlobals->settings->polyCircuit.numPolynomials << endl;
+    }
+    
+    // Configuration check - invariant.
+    if (pGlobals->settings->polyCircuit.numPolynomials > 8*pGlobals->settings->main.circuitSizeOutput){
+        mainLogger.out(LOGGER_ERROR) << "Number of polynomials is larger than 8 * circuit size output " << pGlobals->settings->polyCircuit.numPolynomials << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
+    
     return STAT_OK;
 }
