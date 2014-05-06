@@ -194,6 +194,7 @@ string TestConfigurator::mainConfiguration =
         "    </ALLOWED_FUNCTIONS>"
         "</GATE_CIRCUIT>"
         "<POLYNOMIAL_CIRCUIT>"
+        "    <NUM_POLYNOMIALS>1</NUM_POLYNOMIALS>"
         "    <MUTATE_TERM_STRATEGY>0</MUTATE_TERM_STRATEGY>"
         "    <MAX_TERMS>50</MAX_TERMS>"
         "    <TERM_COUNT_P>0.70</TERM_COUNT_P>"
