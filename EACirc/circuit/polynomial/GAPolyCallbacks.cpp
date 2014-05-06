@@ -4,6 +4,7 @@
 #include "GAPolyCallbacks.h"
 #include "PolyDistEval.h"
 #include "Term.h"
+#include "PolynomialCircuit.h"
 #include <random>       // std::default_random_engine
 #include <algorithm>    // std::move_backward
 #include <vector>
@@ -24,9 +25,9 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     // Define probability distribution on the number of variables in term. Minimum is 1.
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->main.circuitSizeInput;
-    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
-    int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int numVariables =  PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
+    int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Clear genome.
     for (int i = 0; i < genome.width(); i++) {
@@ -105,8 +106,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
     int numOfMutations = 0;
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->main.circuitSizeInput;
-    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Current mutation strategy: 
@@ -173,7 +174,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
         }
         
         // Add a new term to the polynomial?
-        if (numTerms < pGlobals->settings->polyCircuit.genomeInitMaxTerms){
+        if (numTerms < static_cast<unsigned long>(pGlobals->settings->polyCircuit.genomeInitMaxTerms)){
             for(unsigned int addTermCtr = 0; GAFlipCoin(pGlobals->settings->polyCircuit.mutateAddTermProbability); addTermCtr++){
                 // Pick random bit
                 int randomBit = GARandomInt(0, numVariables-1);
@@ -239,8 +240,8 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
         dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring2)
     };
     
-    int & numVariables = pGlobals->settings->main.circuitSizeInput;
-    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Vectors for generating a random permutation on polynomials.

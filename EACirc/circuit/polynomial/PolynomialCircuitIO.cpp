@@ -3,11 +3,12 @@
 #include "CommonFnc.h"
 #include "circuit/ICircuitIO.h"
 #include "Term.h"
+#include "PolynomialCircuit.h"
 
 int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->main.circuitSizeInput;
-    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     int status = STAT_OK;
@@ -29,8 +30,8 @@ int PolyIO::genomeToBinarySt(GAGenome& g, string& binaryCircuit) {
 
 int PolyIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
-    int & numVariables = pGlobals->settings->main.circuitSizeInput;
-    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     istringstream circuitStream(binaryCircuit);
@@ -112,8 +113,8 @@ int PolyIO::genomeToPopulationSt(GAGenome& g, string fileName) {
 int PolyIO::genomeToTextSt(GAGenome& g, string fileName) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int & numVariables = pGlobals->settings->main.circuitSizeInput;
-    int & numPolynomials = pGlobals->settings->main.circuitSizeOutput;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     ofstream file(fileName);
