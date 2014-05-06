@@ -19,6 +19,8 @@ CategoriesEvaluator::~CategoriesEvaluator() {
 void CategoriesEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned char* referenceOutputs) {
     // select stream map to update and increase total in corresponding counter
     int* currentStreamMap;
+    // Highest bit in referenceOutputs[0] determines which data was used
+    // in the evaluation of the circuit (i.e., from algorithm 1 or algorithm 2).
     if (referenceOutputs[0] >> (BITS_IN_UCHAR-1) == 0) {
         currentStreamMap = m_categoriesStream0;
         m_totalStream0++;

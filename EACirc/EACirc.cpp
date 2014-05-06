@@ -17,7 +17,8 @@
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_circuit(NULL), m_project(NULL), m_gaData(NULL),
-      m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
+      m_readyToRun(0), m_actGener(0), m_oldGenerations(0), m_evaluateStepVisitor(NULL),
+      m_evaluatePreStepVisitor(NULL) {
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
@@ -35,6 +36,7 @@ EACirc::~EACirc() {
     }
     if (pGlobals) {
         pGlobals->testVectors.release();
+        pGlobals->stats.release();
         delete pGlobals;
     }
     pGlobals = NULL;
@@ -99,6 +101,8 @@ void EACirc::loadConfiguration(const string filename) {
 
     // allocate space for testVecotrs
     pGlobals->testVectors.allocate();
+    // allocate statistics
+    pGlobals->stats.allocate();
 
     // write configuration to file with standard name (compatibility of results file), free pRoot
     if (filename != FILE_CONFIG) {
@@ -394,7 +398,11 @@ void EACirc::prepare() {
         for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
         fitnessProgressFile << "\tmax";
         for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
-        fitnessProgressFile << "\tmin" << endl;
+        fitnessProgressFile << "\tmin";
+        for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "\tpnm";
+        for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "\tpvl" << endl;
         fitnessProgressFile.close();
     }
 
@@ -500,7 +508,16 @@ void EACirc::evaluateStep() {
     fitProgressFile << left << setprecision(FITNESS_PRECISION_LOG) << fixed;
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Mean);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Maximum);
-    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum) << endl;
+    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum);
+    fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->size();        
+    
+    if (pGlobals->stats.pvaluesBestIndividual->size() > 0){
+        fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->back();
+    } else {
+        fitProgressFile << "\t" << -1;
+    }
+            
+    fitProgressFile << endl;
     fitProgressFile.close();
 
     // add scores to graph files
@@ -529,6 +546,32 @@ void EACirc::evaluateStep() {
     pGlobals->stats.avgMinFitSum += m_gaData->statistics().current(GAStatistics::Minimum);
     pGlobals->stats.avgMaxFitSum += m_gaData->statistics().current(GAStatistics::Maximum);
     pGlobals->stats.avgCount++;
+    
+    // Call visitor, if non-null.
+    if (m_evaluateStepVisitor!=NULL){
+        m_evaluateStepVisitor(this);
+    }
+}
+
+void EACirc::evaluatePreStep() {
+    if (m_status != STAT_OK) return;
+    
+    // Compute fitness for the best population individual on a current test vectors.
+    // It makes sense if the test vectors are new (testing set) --> evaluates performance
+    // of the best individual on a new data not seen so far by the individual.
+    //
+    // Pick the best individual from the population.
+    GAGenome & genome = m_gaData->population().best();
+    // Compute a fitness on current test vectors, using evaluator configured
+    // for this genome. 
+    float newFitness = genome.evaluate(gaTrue);
+    // Add fitness to the statistics vector.
+    pGlobals->stats.pvaluesBestIndividual->push_back(newFitness);
+    
+    // Call visitor, if non-null.
+    if (m_evaluatePreStepVisitor!=NULL){
+        m_evaluatePreStepVisitor(this);
+    }
 }
 
 void EACirc::run() {
@@ -582,6 +625,9 @@ void EACirc::run() {
             if (m_status == STAT_OK) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
+            
+            // New test vectors -> evaluate pre-step.
+            evaluatePreStep();
         }
         if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
              m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
@@ -617,6 +663,23 @@ void EACirc::run() {
     mainLogger.out(LOGGER_INFO) << "   AvgMax: " << pGlobals->stats.avgMaxFitSum / (double) pGlobals->stats.avgCount << endl;
     mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
 
+    // Kolmogorov-Smirnov test for the p-values uniformity.
+    const unsigned long pvalsSize = pGlobals->stats.pvaluesBestIndividual->size();
+    if (pvalsSize > 2){
+        mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
+        
+        double KS_critical_alpha_5 = KS_get_critical_value(pvalsSize);
+        double KS_P_value = KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
+        mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
+        mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
+        
+        if(KS_P_value > KS_critical_alpha_5) {
+            mainLogger.out(LOGGER_INFO) << "   KS is in 5% interval -> uniformity hypothesis rejected." << endl;
+        } else {
+            mainLogger.out(LOGGER_INFO) << "   KS is not in 5% interval -> is uniform." << endl;
+        }
+    }
+    
     // print the best circuit into separate file, prune if allowed
     GAGenome & genomeBest = m_gaData->population().best();
     m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);

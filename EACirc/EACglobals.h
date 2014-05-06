@@ -10,6 +10,7 @@ class IRndGen;
 //#include "generators/IRndGen.h"
 #include <cmath>
 #include <cstring>
+#include <vector>
 using namespace std;
 
 // forward declarations
@@ -185,7 +186,10 @@ struct STATISTICS {
     int avgCount;                   //! count used as divisor in avgMaxFit, avgAvgFit, avgMinFit
     bool prunningInProgress;        //! is prunning currently in progress?
     int actGener;
+    std::vector<double> * pvaluesBestIndividual; //! pvalues of the best individual evaluated on new test vectors (validation).
     STATISTICS();
+    void allocate();
+    void release();
 };
 
 //! test vectors and their outputs

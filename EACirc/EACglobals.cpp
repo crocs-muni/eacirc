@@ -97,6 +97,7 @@ STATISTICS::STATISTICS() {
     avgMinFitSum = 0;
     avgCount = 0;
     prunningInProgress = false;
+    pvaluesBestIndividual = NULL;
 }
 
 TEST_VECTORS::TEST_VECTORS() {
@@ -168,6 +169,19 @@ void TEST_VECTORS::release() {
     executionMiddleLayerOut = NULL;
     if (executionOutputLayer != NULL) delete[] executionOutputLayer;
     executionOutputLayer = NULL;
+}
+
+void STATISTICS::allocate() {
+    if (pvaluesBestIndividual!=NULL){
+        release();
+    }
+    
+    pvaluesBestIndividual = new vector<double>;
+}
+
+void STATISTICS::release() {
+    if (pvaluesBestIndividual!=NULL) delete pvaluesBestIndividual;
+    pvaluesBestIndividual = NULL;
 }
 
 GLOBALS::GLOBALS() {

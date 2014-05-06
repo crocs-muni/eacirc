@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <algorithm>    // std::sort
 
 using namespace std;
 
@@ -58,5 +60,36 @@ int incog(double a,double x,double &gin,double &gim,double &gip);
  * @return      \Gamma(argument)
  */
 double gamma0(double x);
+
+/** Returns critical value for KS test with alpha=0.05.
+ * @param sampleSize
+ * @return 
+ */
+inline double KS_get_critical_value(unsigned long sampleSize) { return 1.36/sqrt((double)sampleSize); }
+
+/** Kolmogorov-Smirnov uniformity test.
+ * @param sample
+ * @return KS test statistic value
+ */
+template <typename T>
+double KS_uniformity_test(std::vector<T> * sample){
+    std::sort(sample->begin(), sample->end());
+    double test_statistic = 0;
+    double temp = 0;
+    float N = sample->size();
+    int index;
+
+    for(int i = 1; i < N; i++){
+        double cur = static_cast<double>(sample->at(i));
+        
+        temp = max(abs(i/N - cur),abs((i-1)/N - cur));
+        if(temp > test_statistic) {
+            test_statistic = temp;
+            index = i;
+        }
+    }
+
+    return test_statistic;
+}
 
 #endif
