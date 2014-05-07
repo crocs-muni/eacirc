@@ -50,6 +50,7 @@ SOURCES += \
     EACirc/evaluators/TopBitEvaluator.cpp \
     EACirc/evaluators/CategoriesEvaluator.cpp \
     EACirc/evaluators/HammingWeightEvaluator.cpp \
+    EACirc/evaluators/FeatureEvaluator.cpp \
 
 # === random generators ===
 SOURCES += \
@@ -260,6 +261,7 @@ HEADERS += \
     EACirc/evaluators/TopBitEvaluator.h \
     EACirc/evaluators/CategoriesEvaluator.h \
     EACirc/evaluators/HammingWeightEvaluator.h \
+    EACirc/evaluators/FeatureEvaluator.h \
 
 # === random generators ===
 HEADERS += \

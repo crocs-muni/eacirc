@@ -104,6 +104,7 @@ typedef unsigned __int64 uint64_t;
 #define EVALUATOR_HAMMING_WEIGHT    24
 #define EVALUATOR_TOP_BIT           25
 #define EVALUATOR_CATEGORIES        26
+#define EVALUATOR_FEATURES          27
 // note: all project specific evaluators must have constant above this
 #define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
 
