@@ -11,6 +11,10 @@
 #define TRUE                1
 #endif
 
+#ifndef constexpr	 	
+	#define constexpr const// constexpr not supported in VS2013
+#endif
+
 #ifndef UCHAR_MAX
 constexpr unsigned char UCHAR_MAX = std::numeric_limits<unsigned char>::max();
 #endif
@@ -143,6 +147,7 @@ typedef unsigned __int64 uint64_t;
 #define FNC_EXT     19
 #define FNC_MAX     FNC_EXT
 
+/*
 // BYTECODE OPS CODES - used for emulation of internode program (not all at the moment, see list below)
 #define AALOAD      0x32
 #define AASTORE     0x53
@@ -208,7 +213,7 @@ typedef unsigned __int64 uint64_t;
 #define	RETURN			0xb1
 #define	SIPUSH			0x11
 #define	POP				0x57
-
+*/
 /* already implemented
 IADD
 ISUB
