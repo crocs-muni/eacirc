@@ -161,7 +161,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                 // if term is zero, cannot remove. 
                 if (vars.size()>0){
                     // Pick one variable at random to either remove or delete.
-                    int var2operateOn = GARandomInt(0, vars.size()-1);
+                    int var2operateOn = vars.at(GARandomInt(0, vars.size()-1));
                     // Toggle specified variable in the term.
                     const int bitPos = Term::getBitPos(var2operateOn, randTerm, termSize);
                     genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::getBitLoc(var2operateOn)));
@@ -187,8 +187,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                     genome.gene(cPoly, 1 + numTerms*termSize + i, 0);
                 }
 
-                int bitPos = 1 + numTerms*termSize + (randomBit/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
-                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (randomBit % (8*sizeof(POLY_GENOME_ITEM_TYPE)))));
+                const int bitPos = Term::getBitPos(randomBit, numTerms, termSize);
+                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (Term::getBitLoc(randomBit))));
 
                 numTerms+=1;
                 numOfMutations+=1;
