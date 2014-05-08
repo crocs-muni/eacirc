@@ -8,9 +8,7 @@ class IEvaluator;
 //#include "evaluators/IEvaluator.h"
 class IRndGen;
 //#include "generators/IRndGen.h"
-#include "circuit/gate/JVMSimulator.h"
 #include <cmath>
-#include <algorithm>
 #include <cstring>
 using namespace std;
 
@@ -214,7 +212,6 @@ struct GLOBALS {
     TEST_VECTORS testVectors;                   //! current test vector set
     IEvaluator* evaluator;                      //! evaluator (compares expected output with actual circuit output)
     unsigned long precompPow[MAX_LAYER_SIZE];   //! precomputed values up to 2^32
-	JVMSimulator* jvmSim;						//! object responsible for simulation of JVM bytecode (FNC_EXT)
     GLOBALS();
 };
 

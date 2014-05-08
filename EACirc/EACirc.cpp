@@ -33,10 +33,6 @@ EACirc::~EACirc() {
         delete pGlobals->evaluator;
         pGlobals->evaluator = NULL;
     }
-	if (pGlobals->jvmSim != NULL) {
-		delete pGlobals->jvmSim;
-		pGlobals->jvmSim = NULL;
-	}
     if (pGlobals) {
         pGlobals->testVectors.release();
         delete pGlobals;
@@ -426,12 +422,7 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize evaluator (" << m_settings.main.evaluatorType << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-
-	// initialize JVM simulator if required
-	if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_EXT] == 1) {
-		pGlobals->jvmSim = new JVMSimulator();
-	}
-
+    
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
     }

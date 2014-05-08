@@ -170,20 +170,5 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
 }
 
 int CircuitInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
-
-	int connection = 0;
-	while (connectorsDiscartFirst(absoluteConnectors, connection))
-		pGlobals->jvmSim->push_int((int32_t)layerInputValues[connection]);
-
-	//printf("@");
-	int runval = pGlobals->jvmSim->jvmsim_run("FFMul", 1, 10, false);
-
-	while (!(pGlobals->jvmSim->stack_empty()))
-	{
-		unsigned char stack = (unsigned char)pGlobals->jvmSim->pop_int();
-		result ^= stack;
-	}
-	//printf("$\n");
-
-	return STAT_OK;
+    return STAT_NOT_IMPLEMENTED_YET;
 }
