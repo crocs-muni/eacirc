@@ -35,6 +35,7 @@ using namespace std;
 #define ERR_MAX_NUMBER_OF_INSTRUCTIONS_EXHAUSTED 13
 
 // Instructions
+#define NOP		0x00
 #define AALOAD	0x32
 #define AASTORE	0x53
 #define ALOAD	0x19
@@ -100,6 +101,7 @@ using namespace std;
 #define	SIPUSH			0x11
 #define	POP				0x57 
 
+
 // Stack types
 #define STACKTYPE_INTEGER	0x1
 #define STACKTYPE_ARRAYREF	0x2
@@ -162,6 +164,7 @@ struct Ga {
 
 class JVMSimulator {
 	struct F *Functions = NULL;
+	int	numFunctions = 0;
 	struct element *Stack = NULL;
 	struct call_element *Call_stack = NULL;
 
@@ -176,8 +179,10 @@ public:
     string shortDescription();
 
 	int jvmsim_init();
-	int jvmsim_run(char *function_name, int line_from, int line_to, int use_files);
+	int jvmsim_run(string function_name, int line_from, int line_to, int use_files);
 	int jvmsim_main(int argc, char* argv[]);
+
+	string getFunctionNameByID(int functionID);
 
 	inline struct Ins *find_ins(char *fn, int in);
 	inline void call_push(char *fn, int nl);

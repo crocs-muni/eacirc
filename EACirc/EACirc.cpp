@@ -33,9 +33,9 @@ EACirc::~EACirc() {
         delete pGlobals->evaluator;
         pGlobals->evaluator = NULL;
     }
-	if (pGlobals->jvmSim != NULL) {
-		delete pGlobals->jvmSim;
-		pGlobals->jvmSim = NULL;
+	if (pGlobals->settings->gateCircuit.jvmSim != NULL) {
+		delete pGlobals->settings->gateCircuit.jvmSim;
+		pGlobals->settings->gateCircuit.jvmSim = NULL;
 	}
     if (pGlobals) {
         pGlobals->testVectors.release();
@@ -428,8 +428,8 @@ void EACirc::prepare() {
     }
 
 	// initialize JVM simulator if required
-	if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_EXT] == 1) {
-		pGlobals->jvmSim = new JVMSimulator();
+	if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM] == 1) {
+		pGlobals->settings->gateCircuit.jvmSim = new JVMSimulator();
 	}
 
     if (m_status == STAT_OK) {

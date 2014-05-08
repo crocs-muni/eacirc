@@ -158,7 +158,7 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
     case FNC_READ:
         result = pGlobals->testVectors.executionInputLayer[argument1 % pGlobals->settings->gateCircuit.sizeInputLayer];
         break;
-    case FNC_EXT:
+    case FNC_JVM:
         return executeExternalFunction(node, absoluteConnectors, layerInputValues, result);
 
         // unknown function constant
@@ -172,18 +172,27 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
 int CircuitInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
 
 	int connection = 0;
+	// Prepare all inputs values to JVM stack
 	while (connectorsDiscartFirst(absoluteConnectors, connection))
-		pGlobals->jvmSim->push_int((int32_t)layerInputValues[connection]);
+		pGlobals->settings->gateCircuit.jvmSim->push_int((int32_t)layerInputValues[connection]);
 
-	//printf("@");
-	int runval = pGlobals->jvmSim->jvmsim_run("FFMul", 1, 10, false);
+	// Obtain arguments of JVM function
+	unsigned char argument1 = nodeGetArgument(node, 1); // function ID (name) 	
+	unsigned char argument2 = nodeGetArgument(node, 2);	// instruction from
+	unsigned char argument3 = nodeGetArgument(node, 3); // instruction to
 
-	while (!(pGlobals->jvmSim->stack_empty()))
+	// Execute given subpart of bytecode 
+	//int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run("FFMul", 1, 10, false);
+	int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(pGlobals->settings->gateCircuit.jvmSim->getFunctionNameByID(argument1), argument2, argument3, false);
+	if (runval != 0) { 
+		//assert(runval == 0);
+		//mainLogger.out(LOGGER_ERROR) << "jvmsim_run failed to execute with value " << runval << ")." << endl; 
+	}
+	// Combine output of function as xor of values left on stack
+	while (!(pGlobals->settings->gateCircuit.jvmSim->stack_empty()))
 	{
-		unsigned char stack = (unsigned char)pGlobals->jvmSim->pop_int();
+		unsigned char stack = (unsigned char)pGlobals->settings->gateCircuit.jvmSim->pop_int();
 		result ^= stack;
 	}
-	//printf("$\n");
-
 	return STAT_OK;
 }

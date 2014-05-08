@@ -103,6 +103,7 @@ typedef unsigned __int64 uint64_t;
 //#define NUM_OUTPUT_CATEGORIES		256
 #define NUM_OUTPUT_CATEGORIES		10
 //#define ENABLE_SLIDING_WINDOW			// if enabled, input data are shifted only per one byte, not pGlobals->settings->circuit.sizeInputLayer. Note - fitness results are then not directly comparable with version without sliding window
+#define NUM_FNC_ARGUMENTS			3
 
 // EVALUATORS
 #define EVALUATOR_HAMMING_WEIGHT    24
@@ -144,8 +145,8 @@ typedef unsigned __int64 uint64_t;
 #define FNC_GEQ     16
 #define FNC_BSLC    17
 #define FNC_READ    18
-#define FNC_EXT     19
-#define FNC_MAX     FNC_EXT
+#define FNC_JVM     19
+#define FNC_MAX     FNC_JVM
 
 /*
 // BYTECODE OPS CODES - used for emulation of internode program (not all at the moment, see list below)

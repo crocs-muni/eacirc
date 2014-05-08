@@ -3,6 +3,9 @@
 #include <stdio.h> 
 #include "Shamata_sha3.h"
 
+#pragma warning(disable:4715)
+#pragma warning(disable:4244)
+
 // MDS boxes
 unsigned int SHAMATA_MHH[256]={0x00000000,0x02010103,0x04020206,0x06030305,0x0804040c,0x0a05050f,0x0c06060a,0x0e070709,
                        0x10080818,0x1209091b,0x140a0a1e,0x160b0b1d,0x180c0c14,0x1a0d0d17,0x1c0e0e12,0x1e0f0f11,

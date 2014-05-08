@@ -4,6 +4,8 @@
 #include "Nasha_sha3.h"
 #include "brg_endian.h"
 
+#pragma warning(disable:4715)
+
 #if defined( _MSC_VER ) && ( _MSC_VER > 800 )
 #pragma intrinsic(memcpy)
 #endif

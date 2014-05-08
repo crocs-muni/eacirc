@@ -1,5 +1,8 @@
 #include "JVMSimulator.h"
 #include "EACglobals.h"
+#include <cassert>
+
+#pragma warning(disable:4996)
 
 JVMSimulator::JVMSimulator() {
 	int retval = jvmsim_init();
@@ -15,7 +18,7 @@ JVMSimulator::~JVMSimulator() {
 }
 
 // Utilities
-struct Ins *JVMSimulator::find_ins(char *fn, int in)
+struct Ins *JVMSimulator::find_ins(char *fn, int instructionLineNumber)
 {
 	struct F *fnct= Functions;
 	int found=0;
@@ -29,19 +32,29 @@ struct Ins *JVMSimulator::find_ins(char *fn, int in)
 		fnct=fnct->next;
 	}
 	if(!found) return NULL;
-	for(int a=0;a<fnct->ins_array->filled_elements;a++)
-		if(fnct->ins_array->array[a]->line_number==in)
+
+
+	for (int a = 0; a < fnct->ins_array->filled_elements; a++) {
+		if (fnct->ins_array->array[a]->line_number == instructionLineNumber) {
 			return fnct->ins_array->array[a];
+		}
+	}
 	return NULL;
 }
 
 void JVMSimulator::call_push(char *fn, int nl)
 {
 	struct call_element *n=(struct call_element*)malloc(sizeof(struct call_element));
-	if(n==NULL) exit(ERR_NO_MEMORY);
+	if (n == NULL) {
+		assert(false);
+		exit(ERR_NO_MEMORY);
+	}
 	n->next=Call_stack;
 	n->function=(char*)malloc(strlen(fn)+1);
-	if(n->function==NULL) exit(ERR_NO_MEMORY);
+	if (n->function == NULL) {
+		assert(false);
+		exit(ERR_NO_MEMORY);
+	}
 	strcpy(n->function,fn);
 	n->next_line=nl;
 	Call_stack=n;
@@ -53,8 +66,10 @@ int JVMSimulator::call_pop(struct Pc *PC)
 	strcpy(PC->fn,Call_stack->function);
 	PC->ln=Call_stack->next_line;
 	PC->current_ins=find_ins(PC->fn,PC->ln);
-	if(PC->current_ins==NULL) 
-		exit(ERR_DATA_MISMATCH);
+	if (PC->current_ins == NULL) {
+		assert(false);
+		//exit(ERR_DATA_MISMATCH);
+	}
 	struct call_element *d=Call_stack;
 	Call_stack=Call_stack->next;
 	delete d;
@@ -82,7 +97,10 @@ bool JVMSimulator::stack_empty()
 void JVMSimulator::push_int(int32_t ii)
 {
 	struct element *n=(struct element*)malloc(sizeof(struct element));
-	if(n==NULL) exit(ERR_NO_MEMORY);
+	if (n == NULL) {
+		assert(false);
+		exit(ERR_NO_MEMORY);
+	}
 	n->next=Stack;
 	n->integer=ii;
 	n->data_type=STACKTYPE_INTEGER;
@@ -92,7 +110,10 @@ void JVMSimulator::push_int(int32_t ii)
 void JVMSimulator::push_arrayref(int32_t ii)
 {
 	struct element *n=(struct element*)malloc(sizeof(struct element));
-	if(n==NULL) exit(ERR_NO_MEMORY);
+	if (n == NULL) {
+		assert(false);
+		exit(ERR_NO_MEMORY);
+	}
 	n->next=Stack;
 	n->integer=ii;
 	n->data_type=STACKTYPE_ARRAYREF;
@@ -119,7 +140,10 @@ void push_byte(signed char c)
 int32_t JVMSimulator::pop_int()
 {
 	if (Stack == NULL) return 0; //exit(ERR_STACK_EMPTY);
-	if(Stack->data_type!=STACKTYPE_INTEGER) exit(ERR_STACK_DATAMISMATCH);
+	if(Stack->data_type!=STACKTYPE_INTEGER) {
+		assert(false);
+		exit(ERR_STACK_DATAMISMATCH);
+	}
 	int32_t res = Stack->integer;
 	struct element *d = Stack;
 	Stack=Stack->next;
@@ -129,8 +153,14 @@ int32_t JVMSimulator::pop_int()
 
 int32_t JVMSimulator::pop_arrayref()
 {
-	if(Stack==NULL) exit(ERR_STACK_EMPTY);
-	if(Stack->data_type!=STACKTYPE_ARRAYREF) exit(ERR_STACK_DATAMISMATCH);
+	if (Stack == NULL) {
+		assert(false);
+		exit(ERR_STACK_EMPTY);
+	}
+	if (Stack->data_type != STACKTYPE_ARRAYREF) {
+		assert(false);
+		exit(ERR_STACK_DATAMISMATCH);
+	}
 	int32_t res = Stack->integer;
 	struct element *d = Stack;
 	Stack=Stack->next;
@@ -193,6 +223,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 	int jump = 0;
 	switch (PC->current_ins->instruction_code)
 	{
+	case NOP: {
+				  break;
+	}
 	case IADD:
 	{
 				 int32_t a = pop_int();
@@ -318,8 +351,10 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 	{
 				 PC->ln = atoi(PC->current_ins->param1);
 				 PC->current_ins = find_ins(PC->fn, PC->ln);
-				 if (PC->current_ins == NULL)
-					 exit(ERR_DATA_MISMATCH);
+				 if (PC->current_ins == NULL) {
+					assert(false);
+					exit(ERR_DATA_MISMATCH);
+				 }
 				 jump = 1;
 	}
 		break;
@@ -330,8 +365,10 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				 {
 					 PC->ln = atoi(PC->current_ins->param1);
 					 PC->current_ins = find_ins(PC->fn, PC->ln);
-					 if (PC->current_ins == NULL)
+					 if (PC->current_ins == NULL){
+						 assert(false);
 						 exit(ERR_DATA_MISMATCH);
+					 }
 					 jump = 1;
 				 }
 	}
@@ -344,8 +381,10 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 					  {
 						  PC->ln = atoi(PC->current_ins->param1);
 						  PC->current_ins = find_ins(PC->fn, PC->ln);
-						  if (PC->current_ins == NULL)
+						  if (PC->current_ins == NULL){
+							  assert(false);
 							  exit(ERR_DATA_MISMATCH);
+						  }
 						  jump = 1;
 					  }
 	}
@@ -364,7 +403,10 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				}
 				fnct = fnct->next;
 			}
-			if (!found) exit(ERR_DATA_MISMATCH);
+			if (!found) {
+				assert(false);
+				exit(ERR_DATA_MISMATCH);
+			}
 			int step_done = 0;
 			for (int a = 0; a<fnct->ins_array->filled_elements; a++)
 			if (fnct->ins_array->array[a]->line_number == PC->ln)
@@ -373,27 +415,41 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				step_done = 1;
 				break;
 			}
-			if (!step_done) exit(ERR_DATA_MISMATCH);
+			if (!step_done) {
+				assert(false);
+				exit(ERR_DATA_MISMATCH);
+			}
 		}
 						 char cp[MAX_LINE_LENGTH], *p1, *p2;
 						 strcpy(cp, PC->current_ins->full_line);
 						 p1 = strstr(cp, "//Method ");
-						 if (!p1) exit(ERR_DATA_MISMATCH);
+						 if (!p1) {
+							 assert(false);
+							 exit(ERR_DATA_MISMATCH);
+						 }
 						 p1 += 9;
 						 p2 = strchr(p1, ':');
-						 if (!p2) exit(ERR_DATA_MISMATCH);
+						 if (!p2) {
+							 assert(false);
+							 exit(ERR_DATA_MISMATCH);
+						 }
 						 *p2 = 0;
 						 strcpy(PC->fn, p1); PC->ln = 0;
 						 PC->current_ins = find_ins(PC->fn, PC->ln);
-						 if (PC->current_ins == NULL) exit(ERR_DATA_MISMATCH);
+						 if (PC->current_ins == NULL) {
+							 assert(false);
+							 exit(ERR_DATA_MISMATCH);
+						 }
 						 jump = 1;
 	}
 		break;
 	case RETURN:
 	case ARETURN:
 	{
-					if (call_pop(PC) == 1)
+					if (call_pop(PC) == 1){
+						assert(false);
 						exit(ERR_FUNCTION_RETURNED);
+					}
 					jump = 1;
 	}
 		break;
@@ -404,6 +460,7 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 						// int32_t r=pop_int();
 						// printf("Returning result: %i\n",(int)r);
 						write_output();
+						assert(false);
 						exit(ERR_FUNCTION_RETURNED);
 					}
 
@@ -482,7 +539,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 					 if (!strcmp(PC->current_ins->param1, "integer"))
 					 {
 						 globalarrays[globalarrays_count].ia = (int32_t*)malloc(count*sizeof(int32_t));
-						 if (globalarrays[globalarrays_count].ia == NULL) exit(ERR_NO_MEMORY);
+						 if (globalarrays[globalarrays_count].ia == NULL) {
+							 assert(false); exit(ERR_NO_MEMORY);
+						 }
 						 globalarrays[globalarrays_count].type = T_INT;
 						 globalarrays[globalarrays_count].number_of_elements = count;
 						 push_arrayref(globalarrays_count);
@@ -530,14 +589,18 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 	{
 				   int index = pop_int();
 				   int32_t ref = pop_arrayref();
-				   if (ref >= globalarrays_count) exit(ERR_ARRAYREF_NOT_VALID);
-				   if (index >= globalarrays[ref].number_of_elements) exit(ERR_ARRAYINDEX_OUT_OF_RANGE);
+				   if (ref >= globalarrays_count) {
+					   assert(false); exit(ERR_ARRAYREF_NOT_VALID);
+				   }
+				   if (index >= globalarrays[ref].number_of_elements) {
+					   assert(false); exit(ERR_ARRAYINDEX_OUT_OF_RANGE);
+				   }
 				   if (globalarrays[ref].type == T_INT)
 				   {
 					   push_int(globalarrays[ref].ia[index]);
 
 				   }
-				   else { /*TODO: handle also other data types */ exit(ERR_NOT_IMPLEMENTED); }
+				   else { /*TODO: handle also other data types */ assert(false);  exit(ERR_NOT_IMPLEMENTED); }
 	}
 		break;
 	default:
@@ -558,8 +621,10 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 			}
 			fnct = fnct->next;
 		}
-		if (!found)
+		if (!found) {
+			assert(false);
 			exit(ERR_DATA_MISMATCH);
+		}
 		int step_done = 0;
 		for (int a = 0; a<fnct->ins_array->filled_elements; a++)
 		if (fnct->ins_array->array[a]->line_number == PC->ln)
@@ -569,8 +634,10 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 			step_done = 1;
 			break;
 		}
-		if (!step_done)
+		if (!step_done) {
+			assert(false);
 			exit(ERR_DATA_MISMATCH);
+		}
 	}
 }
 
@@ -648,6 +715,7 @@ int JVMSimulator::code(char* i)
 	if(!strcmp(i,"return"))return RETURN;
 	if(!strcmp(i,"sipush"))return SIPUSH;
 
+	assert(false); 
 	exit(ERR_DATA_MISMATCH);
 }
 /*
@@ -663,7 +731,10 @@ printf("Locals - aa: %i, bb: %i, r: %i, t: %i\n", locals[2], locals[3], locals[4
 void JVMSimulator::read_input()
 {
 	FILE *f=fopen("input.txt","rt");
-	if(f==NULL)exit(ERR_PARSING_INPUT);
+	if (f == NULL){
+		assert(false);
+		exit(ERR_PARSING_INPUT);
+	}
 	char number[MAX_LINE_LENGTH],*p;
 	
 	int to_continue=1;
@@ -675,7 +746,10 @@ void JVMSimulator::read_input()
 		do
 		{
 			int c=fgetc(f);
-			if(c==EOF)exit(ERR_PARSING_INPUT);
+			if (c == EOF){
+				assert(false);
+				exit(ERR_PARSING_INPUT);
+			}
 			if(c=='\n'||c=='\r')to_continue=0;
 			if(c==' ')next_word=1;
 			*p=c; p++; *p=0;
@@ -713,7 +787,10 @@ void JVMSimulator::read_input()
 void JVMSimulator::write_output()
 {
 	FILE *f=fopen("output.txt","wt");
-	if(f==NULL)exit(ERR_WRITING_OUTPUT);
+	if (f == NULL){
+		assert(false);
+		exit(ERR_WRITING_OUTPUT);
+	}
 
 	struct element *n=Stack;
 	while(n)
@@ -785,6 +862,8 @@ int JVMSimulator::jvmsim_init()
 			fnew->ins_array->array = (struct Ins**)malloc(ALLOC_STEP*sizeof(struct Ins*));
 			fnew->ins_array->filled_elements = 0;
 			fnew->ins_array->maximum_elements = ALLOC_STEP;
+
+			numFunctions++;
 			continue;
 		}
 		// instructions
@@ -852,7 +931,7 @@ int JVMSimulator::jvmsim_init()
 	return ERR_NO_ERROR;
 }
 
-int JVMSimulator::jvmsim_run(char *function_name, int line_from, int line_to, int use_files)
+int JVMSimulator::jvmsim_run(string function_name, int line_from, int line_to, int use_files)
 {
 	if(use_files)
 		read_input();
@@ -862,7 +941,7 @@ int JVMSimulator::jvmsim_run(char *function_name, int line_from, int line_to, in
 	memset(locals,0,sizeof(int32_t)*MAX_NUMBER_OF_LOCAL_VARIABLES);
 
 	struct Pc PC = { "", 0, NULL };
-	strcpy(PC.fn, function_name); PC.ln = line_from;
+	strcpy(PC.fn, function_name.c_str()); PC.ln = line_from;
 	for (int plus = 0; plus<10; plus++)
 	{
 		PC.current_ins = find_ins(PC.fn, PC.ln);
@@ -877,7 +956,7 @@ int JVMSimulator::jvmsim_run(char *function_name, int line_from, int line_to, in
 		emulate_ins(&PC);
 		//printf(".");
 		insc--;
-	} while ((strcmp(PC.fn, function_name) || PC.ln<line_to) && insc);
+	} while ((strcmp(PC.fn, function_name.c_str()) || PC.ln<line_to) && insc);
 	if(use_files)
 		write_output();
 	if (!insc)
@@ -904,6 +983,7 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
 			fn=fn->next;
 		}
 		
+		assert(false);
 		exit(ERR_NO_ERROR);
 	}
 
@@ -918,3 +998,20 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
 	return ERR_NO_ERROR;
 }
 
+string JVMSimulator::getFunctionNameByID(int functionID) {
+	struct F *fnct = Functions;
+
+	// If bigger functionID is supplied, scale by modulo
+	functionID = functionID % numFunctions;
+
+	int index = 0;
+	while (fnct)
+	{
+		if (index == functionID) {
+			return fnct->short_name;
+		}
+		index++;
+		fnct = fnct->next;
+	}
+	return "NO_SUCH_FUNCTION";
+}

@@ -7,7 +7,7 @@ unsigned char nodeGetFunction(GENOME_ITEM_TYPE nodeValue) {
 }
 
 unsigned char nodeGetArgument(GENOME_ITEM_TYPE nodeValue, int argumentNumber) {
-    if (argumentNumber < 1 || argumentNumber > 4 ) {
+	if (argumentNumber < 1 || argumentNumber > NUM_FNC_ARGUMENTS) {
         mainLogger.out(LOGGER_ERROR) << "Getting invalid argument: " << argumentNumber << "." << endl;
         return 0;
     }
@@ -21,7 +21,7 @@ void nodeSetFunction(GENOME_ITEM_TYPE& nodeValue, unsigned char function) {
 }
 
 void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned char argumentValue) {
-    if (argumentNumber < 1 || argumentNumber > 4 ) {
+	if (argumentNumber < 1 || argumentNumber > NUM_FNC_ARGUMENTS) {
         mainLogger.out(LOGGER_ERROR) << "Setting invalid argument: " << argumentNumber << "." << endl;
     }
     int shift = (4 - argumentNumber) * BITS_IN_UCHAR;
@@ -84,7 +84,7 @@ unsigned char getNeutralValue(unsigned char function) {
     case FNC_GEQ:
     case FNC_BSLC:
     case FNC_READ:
-    case FNC_EXT:
+    case FNC_JVM:
         return 0;
     case FNC_AND:
     case FNC_NAND:
@@ -116,7 +116,7 @@ string functionToString(unsigned char function) {
     case FNC_GEQ:   return "GEQ";
     case FNC_BSLC:  return "BSLC";
     case FNC_READ:  return "READ";
-    case FNC_EXT:   return "EXT";
+    case FNC_JVM:   return "JVM";
     }
     // unknown function constant
     return string("UNKNOWN_") + to_string(function);

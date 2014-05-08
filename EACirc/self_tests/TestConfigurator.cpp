@@ -190,7 +190,7 @@ string TestConfigurator::mainConfiguration =
         "        <FNC_GEQ>1</FNC_GEQ>"
         "        <FNC_BSLC>1</FNC_BSLC>"
         "        <FNC_READ>1</FNC_READ>"
-        "        <FNC_EXT>0</FNC_EXT>"
+        "        <FNC_JVM>0</FNC_JVM>"
         "    </ALLOWED_FUNCTIONS>"
         "</GATE_CIRCUIT>"
         "<POLYNOMIAL_CIRCUIT>"

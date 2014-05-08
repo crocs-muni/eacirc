@@ -82,7 +82,7 @@ int GateCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     pGlobals->settings->gateCircuit.allowedFunctions[FNC_GEQ] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_GEQ").c_str());
     pGlobals->settings->gateCircuit.allowedFunctions[FNC_BSLC] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_BSLC").c_str());
     pGlobals->settings->gateCircuit.allowedFunctions[FNC_READ] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_READ").c_str());
-    pGlobals->settings->gateCircuit.allowedFunctions[FNC_EXT] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_EXT").c_str());
+    pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_JVM").c_str());
 
     // update extra info
     if (!pGlobals->settings->gateCircuit.useMemory) {

@@ -133,7 +133,8 @@ struct SETTINGS_GATE_CIRCUIT {
     int genomeWidth;                //! number of function slots in single circuit row (beware: can be higher than sizeLayer!)
     int sizeOutputLayer;            //! number of outputs (including possible memory outputs)
     int sizeInputLayer;             //! number of inputs (including possible memory inputs)
-    SETTINGS_GATE_CIRCUIT();
+	JVMSimulator* jvmSim;			//! object responsible for simulation of JVM bytecode (FNC_JVM)
+	SETTINGS_GATE_CIRCUIT();
 };
 
 //! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
@@ -214,7 +215,6 @@ struct GLOBALS {
     TEST_VECTORS testVectors;                   //! current test vector set
     IEvaluator* evaluator;                      //! evaluator (compares expected output with actual circuit output)
     unsigned long precompPow[MAX_LAYER_SIZE];   //! precomputed values up to 2^32
-	JVMSimulator* jvmSim;						//! object responsible for simulation of JVM bytecode (FNC_EXT)
     GLOBALS();
 };
 
