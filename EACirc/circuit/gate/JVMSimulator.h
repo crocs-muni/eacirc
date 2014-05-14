@@ -1,6 +1,6 @@
 /**
   * @file JVMSimulator.h
-  * @author Petr Svenda
+  * @author Zdenek Riha
   */
 
 #ifndef JVMSIMULATOR_H
