@@ -106,10 +106,6 @@ TEST_VECTORS::TEST_VECTORS() {
     outputs = NULL;
     circuitOutputs = NULL;
     newSet = false;
-    executionInputLayer = NULL;
-    executionMiddleLayerIn = NULL;
-    executionMiddleLayerOut = NULL;
-    executionOutputLayer = NULL;
 }
 
 void TEST_VECTORS::allocate() {
@@ -119,8 +115,7 @@ void TEST_VECTORS::allocate() {
         return;
     }
     // if memory is allocated, release
-    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL || executionInputLayer != NULL
-            || executionMiddleLayerIn != NULL || executionMiddleLayerOut != NULL || executionOutputLayer != NULL) release();
+    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL) release();
     // allocate memory for inputs, outputs, citcuitOutputs
     inputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
     outputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
@@ -132,17 +127,6 @@ void TEST_VECTORS::allocate() {
         memset(outputs[i],0,pGlobals->settings->testVectors.outputLength);
         circuitOutputs[i] = new unsigned char[pGlobals->settings->main.circuitSizeOutput];
         memset(circuitOutputs[i],0,pGlobals->settings->main.circuitSizeOutput);
-    }
-    
-    if (pGlobals->settings->gateCircuit.sizeInputLayer <=0 
-            || pGlobals->settings->gateCircuit.sizeLayer <= 0
-            || pGlobals->settings->gateCircuit.sizeOutputLayer <= 0){
-        mainLogger.out(LOGGER_INFO) << "TestVectors: no memory allocated for gate related representation. Invalid dimensions." << endl;
-    } else {
-        executionInputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeInputLayer];
-        executionMiddleLayerIn = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
-        executionMiddleLayerOut = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
-        executionOutputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeOutputLayer];
     }
 }
 
@@ -162,14 +146,6 @@ void TEST_VECTORS::release() {
         delete[] circuitOutputs;
         circuitOutputs = NULL;
     }
-    if (executionInputLayer != NULL) delete[] executionInputLayer;
-    executionInputLayer = NULL;
-    if (executionMiddleLayerIn != NULL) delete[] executionMiddleLayerIn;
-    executionMiddleLayerIn = NULL;
-    if (executionMiddleLayerOut != NULL) delete[] executionMiddleLayerOut;
-    executionMiddleLayerOut = NULL;
-    if (executionOutputLayer != NULL) delete[] executionOutputLayer;
-    executionOutputLayer = NULL;
 }
 
 void STATISTICS::allocate() {

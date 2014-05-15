@@ -27,6 +27,11 @@ public:
     /** destructor, deletes ioCallbackObject
      */
     virtual ~ICircuit();
+
+    /** general initialization, empty by default
+     * @return status
+     */
+    virtual int initialize();
     
     /** short textual description of individual representation
       * implementation in representation required!

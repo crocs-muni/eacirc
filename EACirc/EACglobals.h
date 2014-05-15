@@ -199,11 +199,6 @@ struct TEST_VECTORS {
     unsigned char** outputs;                //! (correct) test vector outputs for current set
     unsigned char** circuitOutputs;         //! circuit outputs for current set (to ease memory allocation)
     bool newSet;                            //! has new set been generated? (for CUDA usage)
-    // temporary arrays for executeCircuit (to prevent multiple allocations)
-    unsigned char* executionInputLayer;     //! input layer (memory + inputs)
-    unsigned char* executionMiddleLayerIn;  //! common layer used as input
-    unsigned char* executionMiddleLayerOut; //! common layer used as output
-    unsigned char* executionOutputLayer;    //! output layer (memoty + outputs)
     TEST_VECTORS();
     void allocate();
     void release();

@@ -429,8 +429,14 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_INFO) << "Mapping net share ended (error code: " << errorCode << ")." << endl;
     }
 
+    // initialize backend
+    m_status = m_circuit->initialize();
+    if (m_status != STAT_OK) return;
+    mainLogger.out(LOGGER_INFO) << "Circuit backend now fully initialized. (" << m_circuit->shortDescription() << ")" << endl;
+
     // initialize project
     m_status = m_project->initializeProject();
+    if (m_status != STAT_OK) return;
     mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
 
     // initialize evaluator

@@ -14,9 +14,18 @@
 class GateCircuit : public ICircuit {
 public:
     GateCircuit();
+
+    /** release arrays for interpreter
+      */
     ~GateCircuit();
+
     string shortDescription();
     
+    /** allocate arrays for interpreter
+     * @return status
+     */
+    int initialize();
+
     inline GAGenome::Initializer       getInitializer();
     inline GAGenome::Evaluator         getEvaluator();
     inline GAGenome::Mutator           getMutator();

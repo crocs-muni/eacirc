@@ -17,6 +17,10 @@ ICircuit::~ICircuit() {
     ioCallbackObject = NULL;
 }
 
+int ICircuit::initialize() {
+    return STAT_OK;
+}
+
 ICircuitIO * ICircuit::io() {
     return ioCallbackObject;
 }
@@ -57,10 +61,10 @@ ICircuit* ICircuit::getCircuit(int circuitType) {
         circuit->ioCallbackObject = new PolyIO();
         break;
     default:
-        mainLogger.out(LOGGER_ERROR) << "Cannot initialize circuit representation - unknown type (" << circuitType << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Cannot allocate circuit representation - unknown type (" << circuitType << ")." << endl;
         return NULL;
         break;
     }
-    mainLogger.out(LOGGER_INFO) << "Circuit representation successfully initialized. (" << circuit->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Circuit representation successfully allocated. (" << circuit->shortDescription() << ")" << endl;
     return circuit;
 }
