@@ -112,7 +112,7 @@ Term * Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>
     
     term_size_t & numVariables = size;
     int   termElemSize = sizeof(POLY_GENOME_ITEM_TYPE);
-    int   termSize = (int) ceil((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int   termSize = (int) OWN_CEIL((double)numVariables / (double)termElemSize);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Initialize new vector of a specific size inside.
     this->initialize(numVariables);

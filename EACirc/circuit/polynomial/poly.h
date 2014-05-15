@@ -98,4 +98,8 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 #define TERM_ITEM_EVAL_GENOME(trm, input)  term_item_eval(trm, input)
 #endif
 
+// Fast ceiling function for integers.
+#define OWN_CEIL(x)  (    (((int)(x)) < (x)) ? ((int)(x))+1 : ((int)(x))    )
+#define OWN_FLOOR(x) (    (((int)(x)) < (x)) ? ((int)(x))-1 : ((int)(x))    )
+
 #endif // end of file
