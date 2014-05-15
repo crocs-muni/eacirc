@@ -95,7 +95,8 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
     }
     if (path.find('@') == path.npos) {
         // getting text node
-        return pNode->ToElement()->GetText();
+        const char* text = pNode->ToElement()->GetText();
+        return text != NULL ? string(text) : "";
     } else {
         // getting attribute
         string attrName = path.substr(path.find('@')+1,path.length()-path.find('@')-1).c_str();
