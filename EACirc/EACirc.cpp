@@ -158,6 +158,14 @@ void EACirc::saveState(const string filename) {
     pElem->LinkEndChild(new TiXmlText(toString(m_currentGalibSeed).c_str()));
     pRoot->LinkEndChild(pElem);
 
+    pElem = new TiXmlElement("pvalues_best_individual");
+    ostringstream pvalues;
+    for (unsigned int i = 0; i < pGlobals->stats.pvaluesBestIndividual->size(); i++) {
+        pvalues << pGlobals->stats.pvaluesBestIndividual->at(i) << " ";
+    }
+    pElem->LinkEndChild(new TiXmlText(pvalues.str().c_str()));
+    pRoot->LinkEndChild(pElem);
+
     pElem = new TiXmlElement("random_generators");
     pElem2 = new TiXmlElement("main_generator");
     pElem2->LinkEndChild(mainGenerator->exportGenerator());
@@ -196,6 +204,13 @@ void EACirc::loadState(const string filename) {
     m_settings.random.seed = m_originalSeed;
     // restore current galib seed
     istringstream(getXMLElementValue(pRoot,"current_galib_seed")) >> m_currentGalibSeed;
+    // restore pvalues of best individuals
+    istringstream pvalues(getXMLElementValue(pRoot,"pvalues_best_individual"));
+    double val = 0;
+    while (pvalues >> val) {
+        pGlobals->stats.pvaluesBestIndividual->push_back(val);
+    }
+
     // initialize random generators (main, quantum, bias)
     mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
@@ -559,7 +574,8 @@ void EACirc::evaluatePreStep() {
     // Compute fitness for the best population individual on a current test vectors.
     // It makes sense if the test vectors are new (testing set) --> evaluates performance
     // of the best individual on a new data not seen so far by the individual.
-    //
+
+    m_gaData->pop->flushEvalution();
     // Pick the best individual from the population.
     GAGenome & genome = m_gaData->population().best();
     // Compute a fitness on current test vectors, using evaluator configured
@@ -611,6 +627,8 @@ void EACirc::run() {
         // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_status = m_project->generateAndSaveTestVectors();
+            // New test vectors -> evaluate pre-step.
+            evaluatePreStep();
             m_gaData->pop->flushEvalution();
             m_gaData->pop->evaluate(gaTrue);
             m_gaData->pop->scale(gaTrue);
