@@ -40,8 +40,6 @@ private:
     int m_oldGenerations;
     //! evaluateStep function visitor - called on evaluate step.
     EACirc::EACircVisitor m_evaluateStepVisitor;
-    //! evaluateStep function visitor - called on evaluate pre-step.
-    EACirc::EACircVisitor m_evaluatePreStepVisitor;
 
     /** checks, if configuration has no contradictions
       */
@@ -113,10 +111,6 @@ private:
       */
     void evaluateStep();
     
-    /** evaluate computation after test vector change, before calling step() on population.
-      * Advantage: can evaluate performance of the population on a new data.
-      */
-    void evaluatePreStep();
 public:
     EACirc();
     ~EACirc();

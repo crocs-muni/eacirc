@@ -17,8 +17,7 @@
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_circuit(NULL), m_project(NULL), m_gaData(NULL),
-      m_readyToRun(0), m_actGener(0), m_oldGenerations(0), m_evaluateStepVisitor(NULL),
-      m_evaluatePreStepVisitor(NULL) {
+      m_readyToRun(0), m_actGener(0), m_oldGenerations(0), m_evaluateStepVisitor(NULL) {
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
@@ -511,6 +510,9 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     m_gaData->nGenerations(m_settings.main.numGenerations);
     m_gaData->pCrossover(m_settings.ga.probCrossing);
     m_gaData->pMutation(m_settings.ga.probMutation);
+    // cannot disable scaling, some evaluators produce fitness values that are not usable directly
+    //GANoScaling scaler;
+    //m_gaData->scaling(scaler);
     m_gaData->scoreFilename(FILE_GALIB_SCORES);
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->flushFrequency(1);	// specify how often to write the score to disk
@@ -551,15 +553,17 @@ void EACirc::evaluateStep() {
         avgFitFile.close();
     }
 
+    // add fitness of the best individual to statistics vector
+    GAGenome & bestGenome = m_gaData->population().best();
+    pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.score());
+
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {
-        GAGenome & genome = m_gaData->population().best();
-
         ostringstream fileName;
         fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
-        m_circuit->io()->outputGenomeFiles(genome, filePath);
+        m_circuit->io()->outputGenomeFiles(bestGenome, filePath);
     }
 
     // save generation stats for total scores
@@ -571,28 +575,6 @@ void EACirc::evaluateStep() {
     // Call visitor, if non-null.
     if (m_evaluateStepVisitor!=NULL){
         m_evaluateStepVisitor(this);
-    }
-}
-
-void EACirc::evaluatePreStep() {
-    if (m_status != STAT_OK) return;
-    
-    // Compute fitness for the best population individual on a current test vectors.
-    // It makes sense if the test vectors are new (testing set) --> evaluates performance
-    // of the best individual on a new data not seen so far by the individual.
-
-    m_gaData->pop->flushEvalution();
-    // Pick the best individual from the population.
-    GAGenome & genome = m_gaData->population().best();
-    // Compute a fitness on current test vectors, using evaluator configured
-    // for this genome. 
-    float newFitness = genome.evaluate(gaTrue);
-    // Add fitness to the statistics vector.
-    pGlobals->stats.pvaluesBestIndividual->push_back(newFitness);
-    
-    // Call visitor, if non-null.
-    if (m_evaluatePreStepVisitor!=NULL){
-        m_evaluatePreStepVisitor(this);
     }
 }
 
@@ -633,8 +615,6 @@ void EACirc::run() {
         // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_status = m_project->generateAndSaveTestVectors();
-            // New test vectors -> evaluate pre-step.
-            evaluatePreStep();
             m_gaData->pop->flushEvalution();
             m_gaData->pop->evaluate(gaTrue);
             m_gaData->pop->scale(gaTrue);
@@ -649,9 +629,8 @@ void EACirc::run() {
             if (m_status == STAT_OK) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
-            
-            // New test vectors -> evaluate pre-step.
-            evaluatePreStep();
+            // new test vectors, force re-evaluation
+            m_gaData->pop->flushEvalution();
         }
         if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
              m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
@@ -662,15 +641,17 @@ void EACirc::run() {
             evaluateNow = true;
         }
 
-        // RESET EVALUTION FOR ALL GENOMS
-        m_gaData->pop->flushEvalution();
-        // GA evolution step
-        m_gaData->step();
-
+        // evaluate population on new  and save statistics, if needed
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
+            m_gaData->pop->evaluate(gaTrue);
+            m_gaData->pop->scale(gaTrue);
+            m_gaData->stats.update(m_gaData->population());
             evaluateStep();
             evaluateNow = false;
         }
+
+        // perform GA evolution step
+        m_gaData->step();
 
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
