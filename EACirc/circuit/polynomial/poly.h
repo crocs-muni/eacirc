@@ -13,6 +13,12 @@
 #include "GAGenome.h"
 #include "GA2DArrayGenome.h"
 
+// Determine whether we are building for a 64-bit platform.
+// _LP64: http://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
+#if defined(_M_X64) || defined(__amd64__) || defined(_LP64) || defined(_ILP64)
+#define COMPILER_X64
+#endif
+
 /**
  * Function to evaluate one term element of an arbitrary size.
  * @param trm
@@ -73,6 +79,27 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 // Integer has to be used in the third parameter.
 #define TERM_ITEM_EVAL(trm, input, size) TERM_ITEM_EVAL_##size(trm, input)
 
-//#define TERM_ITEM_EVAL(size, trm, input) TERM_ITEM_EVAL_##size(trm, input)
+// Evaluate internal representation of a term, using correct size of an internal type.
+#if defined(COMPILER_X64)
+// Compilation for 64 bit platform.
+#define TERM_ITEM_EVAL_GENOME(trm, input) TERM_ITEM_EVAL_8(trm, input)
+#else 
+// Determine if long is of length 4 B
+#if defined(__SIZEOF_LONG__) && __SIZEOF_LONG__ == 4
+// Assume we are compiling for 32 bit platform, if macro for size of long is defined,
+// and is of size 4 bytes, use macro to evaluate 4 B type.
+#define TERM_ITEM_EVAL_GENOME(trm, input) TERM_ITEM_EVAL_4(trm, input)
+#endif
+#endif 
+
+// Using default implementation by function call. 
+// System is neither x86_64 nor GCC having __SIZEOF_LONG__ set to 4.
+#ifndef TERM_ITEM_EVAL_GENOME
+#define TERM_ITEM_EVAL_GENOME(trm, input)  term_item_eval(trm, input)
+#endif
+
+// Fast ceiling function for integers.
+#define OWN_CEIL(x)  (    (((int)(x)) < (x)) ? ((int)(x))+1 : ((int)(x))    )
+#define OWN_FLOOR(x) (    (((int)(x)) < (x)) ? ((int)(x))-1 : ((int)(x))    )
 
 #endif // end of file

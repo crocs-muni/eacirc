@@ -17,7 +17,7 @@
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_circuit(NULL), m_project(NULL), m_gaData(NULL),
-      m_readyToRun(0), m_actGener(0), m_oldGenerations(0) {
+      m_readyToRun(0), m_actGener(0), m_oldGenerations(0), m_evaluateStepVisitor(NULL) {
     if (pGlobals != NULL) {
         mainLogger.out(LOGGER_WARNING) << "Globals not NULL. Overwriting." << endl;
     }
@@ -35,6 +35,7 @@ EACirc::~EACirc() {
     }
     if (pGlobals) {
         pGlobals->testVectors.release();
+        pGlobals->stats.release();
         delete pGlobals;
     }
     pGlobals = NULL;
@@ -99,6 +100,8 @@ void EACirc::loadConfiguration(const string filename) {
 
     // allocate space for testVecotrs
     pGlobals->testVectors.allocate();
+    // allocate statistics
+    pGlobals->stats.allocate();
 
     // write configuration to file with standard name (compatibility of results file), free pRoot
     if (filename != FILE_CONFIG) {
@@ -154,6 +157,14 @@ void EACirc::saveState(const string filename) {
     pElem->LinkEndChild(new TiXmlText(toString(m_currentGalibSeed).c_str()));
     pRoot->LinkEndChild(pElem);
 
+    pElem = new TiXmlElement("pvalues_best_individual");
+    ostringstream pvalues;
+    for (unsigned int i = 0; i < pGlobals->stats.pvaluesBestIndividual->size(); i++) {
+        pvalues << pGlobals->stats.pvaluesBestIndividual->at(i) << " ";
+    }
+    pElem->LinkEndChild(new TiXmlText(pvalues.str().c_str()));
+    pRoot->LinkEndChild(pElem);
+
     pElem = new TiXmlElement("random_generators");
     pElem2 = new TiXmlElement("main_generator");
     pElem2->LinkEndChild(mainGenerator->exportGenerator());
@@ -192,6 +203,13 @@ void EACirc::loadState(const string filename) {
     m_settings.random.seed = m_originalSeed;
     // restore current galib seed
     istringstream(getXMLElementValue(pRoot,"current_galib_seed")) >> m_currentGalibSeed;
+    // restore pvalues of best individuals
+    istringstream pvalues(getXMLElementValue(pRoot,"pvalues_best_individual"));
+    double val = 0;
+    while (pvalues >> val) {
+        pGlobals->stats.pvaluesBestIndividual->push_back(val);
+    }
+
     // initialize random generators (main, quantum, bias)
     mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
@@ -314,8 +332,7 @@ void EACirc::loadPopulation(const string filename) {
         return;
     }
     
-    // FIX: population has to be empty, not genome-based
-    GAPopulation * population = new GAPopulation; //representation->createConfigPopulation(&m_settings);
+    GAPopulation * population = new GAPopulation;
     GAGenome * genome = m_circuit->createGenome(true);
     
     // LOAD genomes
@@ -350,10 +367,11 @@ void EACirc::createPopulation() {
     GAResetRNG(m_currentGalibSeed);
 
     // Create a basic genome used for this problem.
-    GAPopulation * p = m_circuit->createPopulation();
+    GAPopulation * population = m_circuit->createPopulation();
     // create genetic algorithm and initialize population
-    seedAndResetGAlib(*p);
-    delete p;
+    seedAndResetGAlib(*population);
+    delete population;
+    population = NULL;
     
     mainLogger.out(LOGGER_INFO) << "Initializing population, representation: " << m_circuit->shortDescription() << endl;
     m_gaData->initialize();
@@ -394,7 +412,11 @@ void EACirc::prepare() {
         for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
         fitnessProgressFile << "\tmax";
         for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
-        fitnessProgressFile << "\tmin" << endl;
+        fitnessProgressFile << "\tmin";
+        for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "\tpnm";
+        for (int i = 0; i < FITNESS_PRECISION_LOG +2 - 3; i++) fitnessProgressFile << " ";
+        fitnessProgressFile << "\tpvl" << endl;
         fitnessProgressFile.close();
     }
 
@@ -406,8 +428,14 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_INFO) << "Mapping net share ended (error code: " << errorCode << ")." << endl;
     }
 
+    // initialize backend
+    m_status = m_circuit->initialize();
+    if (m_status != STAT_OK) return;
+    mainLogger.out(LOGGER_INFO) << "Circuit backend now fully initialized. (" << m_circuit->shortDescription() << ")" << endl;
+
     // initialize project
     m_status = m_project->initializeProject();
+    if (m_status != STAT_OK) return;
     mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
 
     // initialize evaluator
@@ -482,6 +510,9 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     m_gaData->nGenerations(m_settings.main.numGenerations);
     m_gaData->pCrossover(m_settings.ga.probCrossing);
     m_gaData->pMutation(m_settings.ga.probMutation);
+    // cannot disable scaling, some evaluators produce fitness values that are not usable directly
+    //GANoScaling scaler;
+    //m_gaData->scaling(scaler);
     m_gaData->scoreFilename(FILE_GALIB_SCORES);
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->flushFrequency(1);	// specify how often to write the score to disk
@@ -500,7 +531,16 @@ void EACirc::evaluateStep() {
     fitProgressFile << left << setprecision(FITNESS_PRECISION_LOG) << fixed;
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Mean);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Maximum);
-    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum) << endl;
+    fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum);
+    fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->size();        
+    
+    if (pGlobals->stats.pvaluesBestIndividual->size() > 0){
+        fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->back();
+    } else {
+        fitProgressFile << "\t" << -1;
+    }
+            
+    fitProgressFile << endl;
     fitProgressFile.close();
 
     // add scores to graph files
@@ -513,15 +553,17 @@ void EACirc::evaluateStep() {
         avgFitFile.close();
     }
 
+    // add fitness of the best individual to statistics vector
+    GAGenome & bestGenome = m_gaData->population().best();
+    pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.score());
+
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {
-        GAGenome & genome = m_gaData->population().best();
-
         ostringstream fileName;
         fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
         string filePath = fileName.str();
-        m_circuit->io()->outputGenomeFiles(genome, filePath);
+        m_circuit->io()->outputGenomeFiles(bestGenome, filePath);
     }
 
     // save generation stats for total scores
@@ -529,6 +571,11 @@ void EACirc::evaluateStep() {
     pGlobals->stats.avgMinFitSum += m_gaData->statistics().current(GAStatistics::Minimum);
     pGlobals->stats.avgMaxFitSum += m_gaData->statistics().current(GAStatistics::Maximum);
     pGlobals->stats.avgCount++;
+    
+    // Call visitor, if non-null.
+    if (m_evaluateStepVisitor!=NULL){
+        m_evaluateStepVisitor(this);
+    }
 }
 
 void EACirc::run() {
@@ -582,6 +629,8 @@ void EACirc::run() {
             if (m_status == STAT_OK) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
+            // new test vectors, force re-evaluation
+            m_gaData->pop->flushEvalution();
         }
         if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
              m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
@@ -592,15 +641,17 @@ void EACirc::run() {
             evaluateNow = true;
         }
 
-        // RESET EVALUTION FOR ALL GENOMS
-        m_gaData->pop->flushEvalution();
-        // GA evolution step
-        m_gaData->step();
-
+        // evaluate population on new  and save statistics, if needed
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
+            m_gaData->pop->evaluate(gaTrue);
+            m_gaData->pop->scale(gaTrue);
+            m_gaData->stats.update(m_gaData->population());
             evaluateStep();
             evaluateNow = false;
         }
+
+        // perform GA evolution step
+        m_gaData->step();
 
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
@@ -617,6 +668,23 @@ void EACirc::run() {
     mainLogger.out(LOGGER_INFO) << "   AvgMax: " << pGlobals->stats.avgMaxFitSum / (double) pGlobals->stats.avgCount << endl;
     mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
 
+    // Kolmogorov-Smirnov test for the p-values uniformity.
+    const unsigned long pvalsSize = pGlobals->stats.pvaluesBestIndividual->size();
+    if (pvalsSize > 2){
+        mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
+        
+        double KS_critical_alpha_5 = KS_get_critical_value(pvalsSize);
+        double KS_P_value = KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
+        mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
+        mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
+        
+        if(KS_P_value > KS_critical_alpha_5) {
+            mainLogger.out(LOGGER_INFO) << "   KS is in 5% interval -> uniformity hypothesis rejected." << endl;
+        } else {
+            mainLogger.out(LOGGER_INFO) << "   KS is not in 5% interval -> is uniform." << endl;
+        }
+    }
+    
     // print the best circuit into separate file, prune if allowed
     GAGenome & genomeBest = m_gaData->population().best();
     m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);

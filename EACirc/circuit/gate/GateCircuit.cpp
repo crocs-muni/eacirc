@@ -13,10 +13,27 @@
 
 GateCircuit::GateCircuit() : ICircuit(CIRCUIT_GATE) { }
 
-GateCircuit::~GateCircuit() { }
+GateCircuit::~GateCircuit() {
+    if (executionInputLayer != NULL) delete[] executionInputLayer;
+    executionInputLayer = NULL;
+    if (executionMiddleLayerIn != NULL) delete[] executionMiddleLayerIn;
+    executionMiddleLayerIn = NULL;
+    if (executionMiddleLayerOut != NULL) delete[] executionMiddleLayerOut;
+    executionMiddleLayerOut = NULL;
+    if (executionOutputLayer != NULL) delete[] executionOutputLayer;
+    executionOutputLayer = NULL;
+}
 
 string GateCircuit::shortDescription() {
     return "gate circuit emulator";
+}
+
+int GateCircuit::initialize() {
+    executionInputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeInputLayer];
+    executionMiddleLayerIn = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
+    executionMiddleLayerOut = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
+    executionOutputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeOutputLayer];
+    return STAT_OK;
 }
 
 inline GAGenome::Initializer       GateCircuit::getInitializer() { return GACallbacks::initializer; }

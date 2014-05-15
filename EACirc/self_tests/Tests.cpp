@@ -171,10 +171,10 @@ TEST_CASE("circuit/connector-conversion","relative versus absolute connector mas
 TEST_CASE("polydist/term-eval", "term evaluation") {
     pGlobals = new GLOBALS;
     pGlobals->settings = new SETTINGS();
-    pGlobals->settings->polyCircuit.numVariables = 16;
-    pGlobals->settings->polyCircuit.numPolynomials = 16;
+    pGlobals->settings->main.circuitSizeInput = 16;
+    pGlobals->settings->main.circuitSizeOutput = 16;
     pGlobals->settings->polyCircuit.genomeInitMaxTerms = 50;
-    int termSize = Term::getTermSize(pGlobals->settings->polyCircuit.numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    int termSize = Term::getTermSize(pGlobals->settings->main.circuitSizeInput);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Polynomial circuit representation.
     PolynomialCircuit circuit;
@@ -241,7 +241,7 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     // Macro check.
     // Warning! Endinanness may play role in failing this test.
     pInput[0] = 0xff;             pInput[1] = 0xff;
-    CHECK(TERM_ITEM_EVAL_8(0x8011ul, pInput) == 1);
+    CHECK(TERM_ITEM_EVAL_GENOME(0x8011ul, pInput) == 1);
     
     // 1. evaluation, zero input
     pInput[0] = 0x0;                pInput[1] = 0x0;
@@ -278,3 +278,8 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     if (pGlobals != NULL) delete pGlobals;
     pGlobals = NULL;
 }
+
+// TODO: write Kolmogorov-Smirnov test for uniformity of P-values during
+// random vs. random test to validate computation.
+// Use EACirc visitor in evaluateStep to collect p-values to some vector and 
+// then perform KS test.

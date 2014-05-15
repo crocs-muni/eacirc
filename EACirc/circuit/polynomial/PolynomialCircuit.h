@@ -37,6 +37,17 @@ public:
     virtual bool postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome);
 
     int loadCircuitConfiguration(TiXmlNode* pRoot);
+    
+    /** Obtains number of variables from the global configuration.
+     * @return 
+     */
+    inline static int getNumVariables() { return pGlobals->settings->main.circuitSizeInput*8; }
+
+    /** Obtains number of polynomials from the global configuration.
+     * @return 
+     */
+    inline static int getNumPolynomials() { return pGlobals->settings->polyCircuit.numPolynomials; }
+
 private:
 
 };

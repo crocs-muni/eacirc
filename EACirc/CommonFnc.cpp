@@ -205,7 +205,7 @@ Functions", Zhang and Jin, John Wiley and Sons, 1996.
 taken from http://www.crbond.com/math.htm */
 double gamma0(double x) {
     int i,k,m;
-    double ga,gr,r,z;
+    double ga,gr,r=1.0,z;
 
     static double g[] = {
         1.0,

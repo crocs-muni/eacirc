@@ -19,8 +19,8 @@ PolynomialCircuit::~PolynomialCircuit() { }
 
 GAGenome* PolynomialCircuit::createGenome(bool setCallbacks) {
     // Has to compute genome dimensions.
-    int numVariables = pGlobals->settings->polyCircuit.numVariables;
-    int numPolynomials = pGlobals->settings->polyCircuit.numPolynomials;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int   termSize = Term::getTermSize(numVariables); // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = new GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>(
@@ -36,8 +36,8 @@ GAGenome* PolynomialCircuit::createGenome(bool setCallbacks) {
 }
 
 GAPopulation* PolynomialCircuit::createPopulation() {
-    int numVariables = pGlobals->settings->polyCircuit.numVariables;
-    int numPolynomials = pGlobals->settings->polyCircuit.numPolynomials;
+    int numVariables = PolynomialCircuit::getNumVariables();
+    int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> g(
@@ -56,8 +56,8 @@ bool PolynomialCircuit::postProcess(GAGenome& originalGenome, GAGenome& prunnedG
 
 int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     // parsing EACIRC/POLYNOMIAL_CIRCUIT
-    pGlobals->settings->polyCircuit.numVariables                   = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/NUM_VARIABLES").c_str());
     pGlobals->settings->polyCircuit.numPolynomials                 = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/NUM_POLYNOMIALS").c_str());
+    pGlobals->settings->polyCircuit.mutateTermStrategy             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MUTATE_TERM_STRATEGY").c_str());
     pGlobals->settings->polyCircuit.genomeInitMaxTerms             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MAX_TERMS").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermCountProbability = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_COUNT_P").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermStopProbability  = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_VAR_P").c_str());
@@ -67,6 +67,18 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     pGlobals->settings->polyCircuit.mutateRemoveTermStrategy       = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/RM_TERM_STRATEGY").c_str());
     pGlobals->settings->polyCircuit.crossoverRandomizePolySelect   = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/CROSSOVER_RANDOMIZE_POLY").c_str()) ? true : false;
     pGlobals->settings->polyCircuit.crossoverTermsProbability      = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/CROSSOVER_TERM_P").c_str());
-
+    
+    // Not defined ? use main configuration.
+    if (pGlobals->settings->polyCircuit.numPolynomials<=0){
+        pGlobals->settings->polyCircuit.numPolynomials = 8*pGlobals->settings->main.circuitSizeOutput;
+        mainLogger.out(LOGGER_INFO) << "Number of polynomials not set properly. Falling back to " << pGlobals->settings->polyCircuit.numPolynomials << endl;
+    }
+    
+    // Configuration check - invariant.
+    if (pGlobals->settings->polyCircuit.numPolynomials > 8*pGlobals->settings->main.circuitSizeOutput){
+        mainLogger.out(LOGGER_ERROR) << "Number of polynomials is larger than 8 * circuit size output " << pGlobals->settings->polyCircuit.numPolynomials << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
+    
     return STAT_OK;
 }
