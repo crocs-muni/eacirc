@@ -5,9 +5,9 @@
 
 int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs){
     // allocate repeatedly used variables
-    int numVariables = PolynomialCircuit::getNumVariables();
-    int numPolynomials = PolynomialCircuit::getNumPolynomials();
-    unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    const int numVariables = PolynomialCircuit::getNumVariables();
+    const int numPolynomials = PolynomialCircuit::getNumPolynomials();
+    const unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Assumption: base type is size of long.
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(unsigned long));

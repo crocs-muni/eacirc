@@ -25,9 +25,9 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     // Define probability distribution on the number of variables in term. Minimum is 1.
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int numVariables =  PolynomialCircuit::getNumVariables();
-    int numPolynomials = PolynomialCircuit::getNumPolynomials();
-    int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    const int numVariables =  PolynomialCircuit::getNumVariables();
+    const int numPolynomials = PolynomialCircuit::getNumPolynomials();
+    const int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Clear genome.
     for (int i = 0; i < genome.width(); i++) {
@@ -106,9 +106,9 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
     int numOfMutations = 0;
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
-    int numVariables = PolynomialCircuit::getNumVariables();
-    int numPolynomials = PolynomialCircuit::getNumPolynomials();
-    unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    const int numVariables = PolynomialCircuit::getNumVariables();
+    const int numPolynomials = PolynomialCircuit::getNumPolynomials();
+    const unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Current mutation strategy: 
     //  - [pick 1 polynomial to mutate ad random]
@@ -240,9 +240,9 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
         dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring2)
     };
     
-    int numVariables = PolynomialCircuit::getNumVariables();
-    int numPolynomials = PolynomialCircuit::getNumPolynomials();
-    unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
+    const int numVariables = PolynomialCircuit::getNumVariables();
+    const int numPolynomials = PolynomialCircuit::getNumPolynomials();
+    const unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     // Vectors for generating a random permutation on polynomials.
     std::vector<int> poly1(numPolynomials);
