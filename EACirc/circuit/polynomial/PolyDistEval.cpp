@@ -13,7 +13,7 @@ int PolyEval::polyEval(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, unsigned
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(unsigned long));
     
     // Reset output memory
-    memset(outputs, 0, ceil( (double)numPolynomials / (8.0*(double)sizeof(unsigned char))) );
+    memset(outputs, 0, pGlobals->settings->main.circuitSizeOutput);
     
     //
     // Evaluates distinguisher on the given input.
