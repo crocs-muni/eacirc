@@ -520,6 +520,12 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
 }
 
+void EACirc::preEvaluate() {
+    // add fitness of the best individual to statistics vector
+    GAGenome & bestGenome = m_gaData->population().best();
+    pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.evaluate(gaTrue));
+}
+
 void EACirc::evaluateStep() {
     if (m_status != STAT_OK) return;
     int totalGeneration = m_actGener + m_oldGenerations;
@@ -553,12 +559,9 @@ void EACirc::evaluateStep() {
         avgFitFile.close();
     }
 
-    // add fitness of the best individual to statistics vector
-    GAGenome & bestGenome = m_gaData->population().best();
-    pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.score());
-
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {
+        GAGenome & bestGenome = m_gaData->population().best();
         ostringstream fileName;
         fileName << FILE_CIRCUIT_PREFIX << "g" << totalGeneration << "_";
         fileName << setprecision(FILE_CIRCUIT_PRECISION) << fixed << m_gaData->statistics().current(GAStatistics::Maximum);
@@ -615,6 +618,7 @@ void EACirc::run() {
         // DO NOT EVOLVE.. (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_status = m_project->generateAndSaveTestVectors();
+            preEvaluate();
             m_gaData->pop->flushEvalution();
             m_gaData->pop->evaluate(gaTrue);
             m_gaData->pop->scale(gaTrue);
@@ -629,8 +633,6 @@ void EACirc::run() {
             if (m_status == STAT_OK) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
-            // new test vectors, force re-evaluation
-            m_gaData->pop->flushEvalution();
         }
         if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
              m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
@@ -641,8 +643,19 @@ void EACirc::run() {
             evaluateNow = true;
         }
 
+        // perform pre-evaluation, if needed
+        if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
+            preEvaluate();
+        }
+
+        // force re-evaluation if the test set is fresh
+        if (pGlobals->testVectors.newSet) {
+            m_gaData->pop->flushEvalution();
+        }
+
         // evaluate population on new  and save statistics, if needed
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
+            preEvaluate();
             m_gaData->pop->evaluate(gaTrue);
             m_gaData->pop->scale(gaTrue);
             m_gaData->stats.update(m_gaData->population());

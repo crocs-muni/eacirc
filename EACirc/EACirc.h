@@ -105,6 +105,12 @@ private:
       */
     void createPopulation();
 
+    /** statistics gathered with new test vectors but before population evaluation
+     * - can use statistics based on old test vectors (e.g. best)
+     * - used to save pvalue of best individual on new test set
+     */
+    void preEvaluate();
+
     /** evaluate computation
       * - writes to stats files, graph files
       * - print the best individual in current generation
