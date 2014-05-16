@@ -11,6 +11,11 @@
 #define TRUE                1
 #endif
 
+#ifndef constexpr
+// constexpr not supported in VS2013
+#define constexpr const
+#endif
+
 #ifndef UCHAR_MAX
 constexpr unsigned char UCHAR_MAX = std::numeric_limits<unsigned char>::max();
 #endif

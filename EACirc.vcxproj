@@ -148,12 +148,22 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EACirc\circuit\CircuitCommonFunctions.cpp" />
-    <ClCompile Include="EACirc\circuit\CircuitInterpreter.cpp" />
-    <ClCompile Include="EACirc\circuit\CircuitIO.cpp" />
-    <ClCompile Include="EACirc\circuit\GACallbacks.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\CircuitCommonFunctions.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\CircuitInterpreter.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\GACallbacks.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\GateCircuit.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\GateCircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\ICircuit.cpp" />
+    <ClCompile Include="EACirc\circuit\ICircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\GAPolyCallbacks.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\poly.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\PolyDistEval.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\PolynomialCircuit.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\PolynomialCircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\Term.cpp" />
     <ClCompile Include="EACirc\EACglobals.cpp" />
     <ClCompile Include="EACirc\evaluators\CategoriesEvaluator.cpp" />
+    <ClCompile Include="EACirc\evaluators\FeatureEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\HammingWeightEvaluator.cpp" />
     <ClCompile Include="EACirc\evaluators\IEvaluator.cpp" />
     <ClCompile Include="EACirc\CommonFnc.cpp" />
@@ -325,11 +335,21 @@
     <ClCompile Include="EACirc\XMLProcessor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EACirc\circuit\CircuitCommonFunctions.h" />
-    <ClInclude Include="EACirc\circuit\CircuitInterpreter.h" />
-    <ClInclude Include="EACirc\circuit\CircuitIO.h" />
-    <ClInclude Include="EACirc\circuit\GACallbacks.h" />
+    <ClInclude Include="EACirc\circuit\gate\CircuitCommonFunctions.h" />
+    <ClInclude Include="EACirc\circuit\gate\CircuitInterpreter.h" />
+    <ClInclude Include="EACirc\circuit\gate\GACallbacks.h" />
+    <ClInclude Include="EACirc\circuit\gate\GateCircuit.h" />
+    <ClInclude Include="EACirc\circuit\gate\GateCircuitIO.h" />
+    <ClInclude Include="EACirc\circuit\ICircuit.h" />
+    <ClInclude Include="EACirc\circuit\ICircuitIO.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\GAPolyCallbacks.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\poly.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\PolyDistEval.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\PolynomialCircuit.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\PolynomialCircuitIO.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\Term.h" />
     <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
+    <ClInclude Include="EACirc\evaluators\FeatureEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\HammingWeightEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\OutputCategoriesEvaluator.h" />
     <ClInclude Include="EACirc\evaluators\TopBitEvaluator.h" />
