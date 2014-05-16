@@ -39,18 +39,18 @@ class Term {
      * Number of input variables.
      * i.e., bit input size.
      */
-    term_size_t size = 0;
+    term_size_t size;
     
     /**
      * Size of the vector derived from the size.
      * ceil(size / 8*sizeof(term_elem_t))
      */
-    term_size_t vectorSize=0;
+    term_size_t vectorSize;
     
     /**
      * Internal term representation using a vector.
      */
-    term_t * term = NULL;
+    term_t * term;
     
     /**
      * Helper attribute - whether to ignore this term or not.
@@ -59,13 +59,13 @@ class Term {
      * 
      * @param cT
      */
-    bool ignore=false;
+    bool ignore;
     
   public:  	
     /**
      * Default constructor.
      */
-    Term () { }
+    Term () : size(0), vectorSize(0), term(NULL),  ignore(false) { }
     
     /**
      * Copy constructor.

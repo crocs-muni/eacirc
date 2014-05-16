@@ -4,7 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 
-Term::Term(const Term& cT){
+Term::Term(const Term& cT) : size(0), vectorSize(0), term(NULL),  ignore(false){
     // Initialize internal representation with the size from the source.
     this->setSize(cT.getSize());
     
@@ -12,11 +12,12 @@ Term::Term(const Term& cT){
     this->term = new term_t(*(cT.term));
 }
 
-Term::Term(term_size_t size){
+Term::Term(term_size_t size) : size(0), vectorSize(0), term(NULL),  ignore(false){
     this->initialize(size);
 }
 
-Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset){
+Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset) 
+    : size(0), vectorSize(0), term(NULL),  ignore(false){
     this->initialize(size, pGenome, polyIdx, offset);
 }
 
