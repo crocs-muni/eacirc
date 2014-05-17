@@ -33,7 +33,7 @@ EACirc::~EACirc() {
         delete pGlobals->evaluator;
         pGlobals->evaluator = NULL;
     }
-	if (pGlobals->settings->gateCircuit.jvmSim != NULL) {
+	if (pGlobals->settings && pGlobals->settings->gateCircuit.jvmSim != NULL) {
 		delete pGlobals->settings->gateCircuit.jvmSim;
 		pGlobals->settings->gateCircuit.jvmSim = NULL;
 	}
