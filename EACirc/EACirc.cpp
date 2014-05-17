@@ -522,8 +522,14 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
 
 void EACirc::preEvaluate() {
     // add fitness of the best individual to statistics vector
-    GAGenome & bestGenome = m_gaData->population().best();
-    pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.evaluate(gaTrue));
+    if (m_gaData->population().evaluated) {
+        GAGenome & bestGenome = m_gaData->population().best();
+        pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.evaluate(gaTrue));
+    } else {    // we just loaded population, use the first one (population is saved sorted)
+        GAGenome & bestGenome = m_gaData->population().individual(0);
+        pGlobals->stats.pvaluesBestIndividual->push_back(bestGenome.evaluate(gaTrue));
+    }
+
 }
 
 void EACirc::evaluateStep() {

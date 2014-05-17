@@ -11,7 +11,7 @@
 #define TRUE                1
 #endif
 
-#ifndef constexpr
+#ifdef _MSC_VER
 // constexpr not supported in VS2013
 #define constexpr const
 #endif
