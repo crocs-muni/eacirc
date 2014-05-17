@@ -71,25 +71,6 @@ inline double KS_get_critical_value(unsigned long sampleSize) { return 1.36/sqrt
  * @param sample
  * @return KS test statistic value
  */
-template <typename T>
-double KS_uniformity_test(std::vector<T> * sample){
-    std::sort(sample->begin(), sample->end());
-    double test_statistic = 0;
-    double temp = 0;
-    float N = sample->size();
-    int index;
-
-    for(int i = 1; i < N; i++){
-        double cur = static_cast<double>(sample->at(i));
-        
-        temp = max(abs(i/N - cur),abs((i-1)/N - cur));
-        if(temp > test_statistic) {
-            test_statistic = temp;
-            index = i;
-        }
-    }
-
-    return test_statistic;
-}
+double KS_uniformity_test(std::vector<double> * sample);
 
 #endif

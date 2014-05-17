@@ -25,7 +25,7 @@ private:
      */
     std::stringstream * m_histBuffer;
     unsigned int * m_histEntries;
-    const unsigned int m_histEntriesFlushLimit = 500;
+    static const unsigned int m_histEntriesFlushLimit = 500;
     
     /** Dumps histBuffer to the histogram file, clears the histogram buffer.
      */

@@ -14,7 +14,7 @@
 FeatureEvaluator::FeatureEvaluator() : IEvaluator(EVALUATOR_CATEGORIES), 
       m_categoriesStream0(NULL), m_categoriesStream1(NULL),
       m_totalStream0(0), m_totalStream1(0),
-      m_histBuffer(NULL), m_histEntries(NULL)  {
+      m_histBuffer(NULL), m_histEntries(NULL) {
     
     m_categoriesStream0 = new featureEvalType[pGlobals->settings->main.evaluatorPrecision];
     m_categoriesStream1 = new featureEvalType[pGlobals->settings->main.evaluatorPrecision];

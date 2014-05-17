@@ -266,3 +266,23 @@ double gamma0(double x) {
     }
     return ga;
 }
+
+double KS_uniformity_test(std::vector<double> * sample){
+    std::sort(sample->begin(), sample->end());
+    double test_statistic = 0;
+    double temp = 0;
+    float N = sample->size();
+    int index;
+
+    for(int i = 1; i < N; i++){
+        double cur = (sample->at(i));
+        
+        temp = max(abs(i/N - cur),abs((i-1)/N - cur));
+        if(temp > test_statistic) {
+            test_statistic = temp;
+            index = i;
+        }
+    }
+
+    return test_statistic;
+}
