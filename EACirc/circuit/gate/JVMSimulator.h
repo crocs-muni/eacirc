@@ -193,7 +193,7 @@ public:
 	inline void push_arrayref(int32_t ii);
 	inline int32_t pop_int();
 	inline int32_t pop_arrayref();
-	inline void emulate_ins(struct Pc *PC);
+	inline int emulate_ins(struct Pc *PC);
 	
 
 	int white(char c);

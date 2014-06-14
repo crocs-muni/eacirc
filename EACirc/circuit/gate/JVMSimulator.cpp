@@ -46,13 +46,13 @@ void JVMSimulator::call_push(char *fn, int nl)
 {
 	struct call_element *n=(struct call_element*)malloc(sizeof(struct call_element));
 	if (n == NULL) {
-		assert(false);
+		mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
 		exit(ERR_NO_MEMORY);
 	}
 	n->next=Call_stack;
 	n->function=(char*)malloc(strlen(fn)+1);
 	if (n->function == NULL) {
-		assert(false);
+		mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
 		exit(ERR_NO_MEMORY);
 	}
 	strcpy(n->function,fn);
@@ -67,8 +67,9 @@ int JVMSimulator::call_pop(struct Pc *PC)
 	PC->ln=Call_stack->next_line;
 	PC->current_ins=find_ins(PC->fn,PC->ln);
 	if (PC->current_ins == NULL) {
-		assert(false);
+		mainLogger.out(LOGGER_WARNING) << "Cannot find instruction during POP operation. Returning 1 (call stack empty)." << endl;
 		//exit(ERR_DATA_MISMATCH);
+		return 1;
 	}
 	struct call_element *d=Call_stack;
 	Call_stack=Call_stack->next;
@@ -98,7 +99,7 @@ void JVMSimulator::push_int(int32_t ii)
 {
 	struct element *n=(struct element*)malloc(sizeof(struct element));
 	if (n == NULL) {
-		assert(false);
+		mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
 		exit(ERR_NO_MEMORY);
 	}
 	n->next=Stack;
@@ -111,7 +112,7 @@ void JVMSimulator::push_arrayref(int32_t ii)
 {
 	struct element *n=(struct element*)malloc(sizeof(struct element));
 	if (n == NULL) {
-		assert(false);
+		mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
 		exit(ERR_NO_MEMORY);
 	}
 	n->next=Stack;
@@ -124,7 +125,11 @@ void JVMSimulator::push_arrayref(int32_t ii)
 void push(unsigned char c)
 {
 	struct element *n=(struct element*)malloc(sizeof(struct element));
-	if(n==NULL) exit(ERR_NO_MEMORY);
+	if(n==NULL) 
+	{
+		mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
+		exit(ERR_NO_MEMORY);
+	}
 	n->next=Stack;
 	n->data=c;
 	Stack=n;
@@ -139,10 +144,17 @@ void push_byte(signed char c)
 
 int32_t JVMSimulator::pop_int()
 {
-	if (Stack == NULL) return 0; //exit(ERR_STACK_EMPTY);
+	if (Stack == NULL)
+	{
+		//exit(ERR_STACK_EMPTY);
+		mainLogger.out(LOGGER_WARNING) << "Stack empty during POP. Returning 0." << endl;
+		return 0;
+	}
+		
 	if(Stack->data_type!=STACKTYPE_INTEGER) {
-		assert(false);
-		exit(ERR_STACK_DATAMISMATCH);
+		//exit(ERR_STACK_DATAMISMATCH);
+		mainLogger.out(LOGGER_WARNING) << "Data mismatch during POP. Returning 0." << endl;
+		return 0;
 	}
 	int32_t res = Stack->integer;
 	struct element *d = Stack;
@@ -154,12 +166,14 @@ int32_t JVMSimulator::pop_int()
 int32_t JVMSimulator::pop_arrayref()
 {
 	if (Stack == NULL) {
-		assert(false);
-		exit(ERR_STACK_EMPTY);
+		//exit(ERR_STACK_EMPTY);
+		mainLogger.out(LOGGER_WARNING) << "Stack empty during POP ARRAYREF. Returning 0." << endl;
+		return 0;
 	}
 	if (Stack->data_type != STACKTYPE_ARRAYREF) {
-		assert(false);
-		exit(ERR_STACK_DATAMISMATCH);
+		//exit(ERR_STACK_DATAMISMATCH);
+		mainLogger.out(LOGGER_WARNING) << "Data mismatch during POP ARRAYREF. Returning 0." << endl;
+		return 0;
 	}
 	int32_t res = Stack->integer;
 	struct element *d = Stack;
@@ -215,7 +229,7 @@ void fill_stack()
 }
 */
 
-void JVMSimulator::emulate_ins(struct Pc *PC)
+int JVMSimulator::emulate_ins(struct Pc *PC)
 {
 	//list_stack();
 	//printl();
@@ -352,8 +366,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				 PC->ln = atoi(PC->current_ins->param1);
 				 PC->current_ins = find_ins(PC->fn, PC->ln);
 				 if (PC->current_ins == NULL) {
-					assert(false);
-					exit(ERR_DATA_MISMATCH);
+					 mainLogger.out(LOGGER_WARNING) << "Wrong GOTO. Interrupting execution." << endl;
+					 //exit(ERR_DATA_MISMATCH);
+					 return -1;
 				 }
 				 jump = 1;
 	}
@@ -366,8 +381,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 					 PC->ln = atoi(PC->current_ins->param1);
 					 PC->current_ins = find_ins(PC->fn, PC->ln);
 					 if (PC->current_ins == NULL){
-						 assert(false);
-						 exit(ERR_DATA_MISMATCH);
+						 mainLogger.out(LOGGER_WARNING) << "Wrong IFEQ jump. Interrupting execution." << endl;
+						 //exit(ERR_DATA_MISMATCH);
+						 return -1;
 					 }
 					 jump = 1;
 				 }
@@ -382,8 +398,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 						  PC->ln = atoi(PC->current_ins->param1);
 						  PC->current_ins = find_ins(PC->fn, PC->ln);
 						  if (PC->current_ins == NULL){
-							  assert(false);
-							  exit(ERR_DATA_MISMATCH);
+							  mainLogger.out(LOGGER_WARNING) << "Wrong IF_ICMPGE jump. Interrupting execution." << endl;
+							  //exit(ERR_DATA_MISMATCH);
+							  return -1;
 						  }
 						  jump = 1;
 					  }
@@ -404,8 +421,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				fnct = fnct->next;
 			}
 			if (!found) {
-				assert(false);
-				exit(ERR_DATA_MISMATCH);
+				mainLogger.out(LOGGER_WARNING) << "Wrong INVOKESTATIC jump. Interrupting execution." << endl;
+				//exit(ERR_DATA_MISMATCH);
+				return -1;
 			}
 			int step_done = 0;
 			for (int a = 0; a<fnct->ins_array->filled_elements; a++)
@@ -416,29 +434,33 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				break;
 			}
 			if (!step_done) {
-				assert(false);
-				exit(ERR_DATA_MISMATCH);
+				mainLogger.out(LOGGER_WARNING) << "Data mismatch during INVOKESTATIC jump. Interrupting execution." << endl;
+				//exit(ERR_DATA_MISMATCH);
+				return -1;
 			}
 		}
 						 char cp[MAX_LINE_LENGTH], *p1, *p2;
 						 strcpy(cp, PC->current_ins->full_line);
 						 p1 = strstr(cp, "//Method ");
 						 if (!p1) {
-							 assert(false);
-							 exit(ERR_DATA_MISMATCH);
+							 mainLogger.out(LOGGER_WARNING) << "Data mismatch during INVOKESTATIC jump. Interrupting execution." << endl;
+							 //exit(ERR_DATA_MISMATCH);
+							 return -1;
 						 }
 						 p1 += 9;
 						 p2 = strchr(p1, ':');
 						 if (!p2) {
-							 assert(false);
-							 exit(ERR_DATA_MISMATCH);
+							 mainLogger.out(LOGGER_WARNING) << "Data mismatch during INVOKESTATIC jump. Interrupting execution." << endl;
+							 //exit(ERR_DATA_MISMATCH);
+							 return -1;
 						 }
 						 *p2 = 0;
 						 strcpy(PC->fn, p1); PC->ln = 0;
 						 PC->current_ins = find_ins(PC->fn, PC->ln);
 						 if (PC->current_ins == NULL) {
-							 assert(false);
-							 exit(ERR_DATA_MISMATCH);
+							 mainLogger.out(LOGGER_WARNING) << "Data mismatch during INVOKESTATIC jump. Interrupting execution." << endl;
+							 //exit(ERR_DATA_MISMATCH);
+							 return -1;
 						 }
 						 jump = 1;
 	}
@@ -447,8 +469,8 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 	case ARETURN:
 	{
 					if (call_pop(PC) == 1){
-						assert(false);
-						exit(ERR_FUNCTION_RETURNED);
+						//exit(ERR_FUNCTION_RETURNED);
+						return 1;
 					}
 					jump = 1;
 	}
@@ -460,8 +482,8 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 						// int32_t r=pop_int();
 						// printf("Returning result: %i\n",(int)r);
 						write_output();
-						assert(false);
-						exit(ERR_FUNCTION_RETURNED);
+						//exit(ERR_FUNCTION_RETURNED);
+						return 1;
 					}
 
 					jump = 1;
@@ -540,7 +562,8 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 					 {
 						 globalarrays[globalarrays_count].ia = (int32_t*)malloc(count*sizeof(int32_t));
 						 if (globalarrays[globalarrays_count].ia == NULL) {
-							 assert(false); exit(ERR_NO_MEMORY);
+							 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
+							 exit(ERR_NO_MEMORY);
 						 }
 						 globalarrays[globalarrays_count].type = T_INT;
 						 globalarrays[globalarrays_count].number_of_elements = count;
@@ -590,17 +613,27 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 				   int index = pop_int();
 				   int32_t ref = pop_arrayref();
 				   if (ref >= globalarrays_count) {
-					   assert(false); exit(ERR_ARRAYREF_NOT_VALID);
+					   mainLogger.out(LOGGER_WARNING) << "Array reference is not valid in AALOAD. Interrupting execution." << endl;
+					   //exit(ERR_ARRAYREF_NOT_VALID);
+					   return -1;
 				   }
 				   if (index >= globalarrays[ref].number_of_elements) {
-					   assert(false); exit(ERR_ARRAYINDEX_OUT_OF_RANGE);
+					   mainLogger.out(LOGGER_WARNING) << "Array index is out of range in AALOAD. Interrupting execution." << endl;
+					   //exit(ERR_ARRAYINDEX_OUT_OF_RANGE);
+					   return -1;
 				   }
 				   if (globalarrays[ref].type == T_INT)
 				   {
 					   push_int(globalarrays[ref].ia[index]);
 
 				   }
-				   else { /*TODO: handle also other data types */ assert(false);  exit(ERR_NOT_IMPLEMENTED); }
+				   else 
+				   { 
+					   /*TODO: handle also other data types */ 
+					   mainLogger.out(LOGGER_WARNING) << "This data type is not implemented for AALOAD. Interrupting execution." << endl;
+					   //exit(ERR_NOT_IMPLEMENTED); 
+					   return 1;
+				   }
 	}
 		break;
 	default:
@@ -622,8 +655,9 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 			fnct = fnct->next;
 		}
 		if (!found) {
-			assert(false);
-			exit(ERR_DATA_MISMATCH);
+			mainLogger.out(LOGGER_WARNING) << "Data mismatch in parsing the source code. Interrupting execution." << endl;
+			//exit(ERR_DATA_MISMATCH);
+			return -1;
 		}
 		int step_done = 0;
 		for (int a = 0; a<fnct->ins_array->filled_elements; a++)
@@ -635,10 +669,12 @@ void JVMSimulator::emulate_ins(struct Pc *PC)
 			break;
 		}
 		if (!step_done) {
-			assert(false);
-			exit(ERR_DATA_MISMATCH);
+			mainLogger.out(LOGGER_WARNING) << "Data mismatch in parsing the source code. Interrupting execution." << endl;
+			//exit(ERR_DATA_MISMATCH);
+			return -1;
 		}
 	}
+	return 0;
 }
 
 
@@ -732,7 +768,7 @@ void JVMSimulator::read_input()
 {
 	FILE *f=fopen("input.txt","rt");
 	if (f == NULL){
-		assert(false);
+		mainLogger.out(LOGGER_ERROR) << "Error parsing the imput file. Cannot open the file. Exitting..." << endl;
 		exit(ERR_PARSING_INPUT);
 	}
 	char number[MAX_LINE_LENGTH],*p;
@@ -747,7 +783,7 @@ void JVMSimulator::read_input()
 		{
 			int c=fgetc(f);
 			if (c == EOF){
-				assert(false);
+				mainLogger.out(LOGGER_ERROR) << "Error parsing the imput file. Exitting..." << endl;
 				exit(ERR_PARSING_INPUT);
 			}
 			if(c=='\n'||c=='\r')to_continue=0;
@@ -788,7 +824,7 @@ void JVMSimulator::write_output()
 {
 	FILE *f=fopen("output.txt","wt");
 	if (f == NULL){
-		assert(false);
+		mainLogger.out(LOGGER_ERROR) << "Error writing the output file. Exitting..." << endl;
 		exit(ERR_WRITING_OUTPUT);
 	}
 
@@ -838,11 +874,19 @@ int JVMSimulator::jvmsim_init()
 		{
 			// new function
 			struct F *fnew = (struct F*)malloc(sizeof(struct F));
-			if (fnew == NULL) return(ERR_NO_MEMORY);
+			if (fnew == NULL)
+			{
+				mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+				return(ERR_NO_MEMORY);
+			}
 			fnew->next = Functions;
 			Functions = fnew;
 			fnew->full_name = (char*)malloc(strlen(lastline) + 1);
-			if (fnew->full_name == NULL) return(ERR_NO_MEMORY);
+			if (fnew->full_name == NULL)
+			{
+				mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+				return(ERR_NO_MEMORY);
+			}
 			strcpy(fnew->full_name, lastline);
 			fnew->short_name = (char*)malloc(strlen(lastline) + 1);
 			if (fnew->short_name == NULL) return(ERR_NO_MEMORY);
@@ -858,7 +902,11 @@ int JVMSimulator::jvmsim_init()
 				if (*p2 == ' ') strcpy(fnew->short_name, p2 + 1);
 			}
 			fnew->ins_array = (struct I*)malloc(sizeof(struct I));
-			if (fnew->ins_array == NULL) return(ERR_NO_MEMORY);
+			if (fnew->ins_array == NULL)
+			{
+				mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+				return(ERR_NO_MEMORY);
+			}
 			fnew->ins_array->array = (struct Ins**)malloc(ALLOC_STEP*sizeof(struct Ins*));
 			fnew->ins_array->filled_elements = 0;
 			fnew->ins_array->maximum_elements = ALLOC_STEP;
@@ -872,17 +920,33 @@ int JVMSimulator::jvmsim_init()
 		if (Functions->ins_array->filled_elements >= Functions->ins_array->maximum_elements)
 		{
 			Functions->ins_array->array = (struct Ins**)realloc(Functions->ins_array->array, (Functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Ins*));
-			if (Functions->ins_array->array == NULL) return(ERR_NO_MEMORY);
+			if (Functions->ins_array->array == NULL)
+			{
+				mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+				return(ERR_NO_MEMORY);
+			}
 			Functions->ins_array->maximum_elements += ALLOC_STEP;
 		}
 		Functions->ins_array->array[Functions->ins_array->filled_elements] = (struct Ins*)malloc(sizeof(struct Ins));
-		if (Functions->ins_array->array[Functions->ins_array->filled_elements] == NULL) return(ERR_NO_MEMORY);
+		if (Functions->ins_array->array[Functions->ins_array->filled_elements] == NULL)
+		{
+			mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+			return(ERR_NO_MEMORY);
+		}
 		Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line = (char*)malloc(strlen(line) + 1);
-		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line == NULL) return(ERR_NO_MEMORY);
+		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line == NULL)
+		{
+			mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+			return(ERR_NO_MEMORY);
+		}
 		strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line, line);
 		Functions->ins_array->array[Functions->ins_array->filled_elements]->line_number = atoi(line);
 		Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction = (char*)malloc(strlen(line) + 1);
-		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction == NULL) return(ERR_NO_MEMORY);
+		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction == NULL)
+		{
+			mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+			return(ERR_NO_MEMORY);
+		}
 		char copyline[MAX_LINE_LENGTH], *p1, *p2;
 		strcpy(copyline, line);
 		p1 = strchr(copyline, ':');
@@ -896,10 +960,18 @@ int JVMSimulator::jvmsim_init()
 		strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction, p1);
 		Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction_code = code(Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction);
 		Functions->ins_array->array[Functions->ins_array->filled_elements]->param1 = (char*)malloc(strlen(line) + 1);
-		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->param1 == NULL) return(ERR_NO_MEMORY);
+		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->param1 == NULL)
+		{
+			mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+			return(ERR_NO_MEMORY);
+		}
 		strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->param1, "");
 		Functions->ins_array->array[Functions->ins_array->filled_elements]->param2 = (char*)malloc(strlen(line) + 1);
-		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->param2 == NULL) return(ERR_NO_MEMORY);
+		if (Functions->ins_array->array[Functions->ins_array->filled_elements]->param2 == NULL)
+		{
+			mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
+			return(ERR_NO_MEMORY);
+		}
 		strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->param2, "");
 		*p2 = s;
 		if (*p2)
@@ -953,7 +1025,8 @@ int JVMSimulator::jvmsim_run(string function_name, int line_from, int line_to, i
 	int insc = EMULATE_MAX_INSTRUCTIONS;
 	do
 	{
-		emulate_ins(&PC);
+		int result=emulate_ins(&PC);
+		if (!result) break;
 		//printf(".");
 		insc--;
 	} while ((strcmp(PC.fn, function_name.c_str()) || PC.ln<line_to) && insc);
