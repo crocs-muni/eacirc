@@ -3,3 +3,19 @@ compiler:
   - gcc
 
 script: make -f EACirc.makefile
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "dEzkoyH1XYZjiUIRp4bukXlZZbObGbUCkp7Wzu/d+ua02LZ6XLwH4Y9dIrFm4egeGtVNBKHUR1iQoSeO5GKIvqwvrlDA0n+4yegCJmsBh08PhSvS3vLApE6IYH4I69wQ8LtAE9t2UIUstGZokXpzvjpluw3hCTWVoNe9ude8sB8="
+
+addons:
+  coverity_scan:
+    project:
+      name: "petrs/EACirc"
+      description: "Build submitted via Travis CI"
+    notification_email: petr@svenda.com
+    build_command_prepend: ""
+    build_command:   "make -j 4"
+    branch_pattern: coverity_scan
