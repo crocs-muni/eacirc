@@ -24,6 +24,7 @@ const char* estreamToString(int cipher) {
     case ESTREAM_SALSA20:           return "Salsa20";
     case ESTREAM_SFINKS:            return "Sfinks";
     case ESTREAM_SOSEMANUK:         return "SOSEMANUK";
+    case ESTREAM_TEA:               return "TEA";
     case ESTREAM_TRIVIUM:           return "Trivium";
     case ESTREAM_TSC4:              return "TSC-4";
     case ESTREAM_WG:                return "WG";

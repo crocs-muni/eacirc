@@ -148,6 +148,11 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(SOSEMANUK_ctx));
                 memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(SOSEMANUK_ctx));
                 break;
+            case ESTREAM_TEA:
+                m_ciphers[cipherNumber][streamNumber] = new ECRYPT_TEA();
+                m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(TEA_ctx));
+                memset(m_internalStates[cipherNumber][streamNumber],0,sizeof(TEA_ctx));
+                break;
 /*            case ESTREAM_TRIVIUM:       // stopped working after IDE update
                 m_ciphers[cipherNumber][streamNumber] = new ECRYPT_Trivium();
                 m_internalStates[cipherNumber][streamNumber] = (void*)malloc(sizeof(TRIVIUM_ctx));
