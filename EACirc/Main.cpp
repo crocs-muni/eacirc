@@ -5,14 +5,18 @@
 #ifndef _GLIBCXX_USE_NANOSLEEP
 #define _GLIBCXX_USE_NANOSLEEP
 #endif
+#ifdef DEBUG
 #include <thread>
+#endif
 
 #define CATCH_CONFIG_RUNNER
 #include "self_tests/Catch.h"
 
 int main(int argc, char **argv) {
+#ifdef DEBUG
     // used in debug mode, wait for debugger to attach
-    //std::this_thread::sleep_for(std::chrono::milliseconds(3));
+    std::this_thread::sleep_for(std::chrono::milliseconds(3));
+#endif
 
     string configFilename = FILE_CONFIG;
     // COMMAND LINE ARGUMENTS PROCESSING
