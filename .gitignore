@@ -23,6 +23,7 @@ utils/start.bat
 [Bb]uild/
 [Rr]un/
 EACirc/galib/BUILD
+EACirc/EACirc
 # backup and system files
 *~
 *.autosave

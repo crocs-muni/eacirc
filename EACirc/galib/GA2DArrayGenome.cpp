@@ -269,8 +269,8 @@ GA2DArrayGenome<T>(width,height,f,u){
   aset = new GAAlleleSet<T>[1];
   aset[0] = s;
 
-  initializer(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_INITIALIZER);
-  mutator(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_MUTATOR);
+  GAGenome::initializer(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_INITIALIZER);
+  GAGenome::mutator(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_MUTATOR);
   comparator(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_COMPARATOR);
   crossover(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_CROSSOVER);
 }
@@ -286,8 +286,8 @@ GA2DArrayGenome<T>(width,height, f, u) {
   for(int i=0; i<naset; i++)
     aset[i] = sa.set(i);
 
-  initializer(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_INITIALIZER);
-  mutator(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_MUTATOR);
+  GAGenome::initializer(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_INITIALIZER);
+  GAGenome::mutator(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_MUTATOR);
   comparator(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_COMPARATOR);
   crossover(GA2DArrayAlleleGenome<T>::DEFAULT_2DARRAY_ALLELE_CROSSOVER);
 }

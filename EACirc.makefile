@@ -4,8 +4,10 @@
 # This makefile is for UNIX platforms only (due to shell commands and paths format).
 # Makefiles for GAlib and tinyXML can be used on other platforms, see details below.
 #
-# EACirc: unix environment required, compilation settings below.
+# EACirc: unix environment required, compilation settings below
 #         g++ version 4.7 or higher is needed
+#         clang 3.4 or higher
+#         compiler chosen according to system settings in vars CC and GCC
 # GAlib: Compilation settings and platform dependent variables are in galib/makefile.
 # tinyXML: Compilation settings and platform dependent variables are in tinyXML/makefile.
 #
@@ -13,25 +15,17 @@
 DEBUG		= NO
 # PROFILE can be set to YES to include profiling info, or NO otherwise
 PROFILE		= NO
-# output name for the compiled and linked application
-OUTNAME_MAIN	= eacirc
-#OUTNAME_CHECKER	= checker
-# folder to put linked application and config file into
-RUN_DIR		= run
 #*********************************************************************************
 
 # complation settings
-CXX			= g++
-CC			= gcc
-CXXFLAGS		= -std=c++11 -m32 # -Wall
-LDFLAGS			= -m32
+CXXFLAGS		= -std=c++11
 DEBUG_FLAGS		= -g -DDEBUG
 RELEASE_FLAGS	= -O3
 PROFILE_FLAGS	= -p
 
 # other global settings
-INC_DIRS= -IEACirc -IEACirc/galib -IEACirc/tinyXML
-INC_LIBS= -LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML
+INC_DIRS=-IEACirc -IEACirc/galib -IEACirc/tinyXML
+INC_LIBS=-LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML
 
 # === EACirc Main ===
 SOURCES=
@@ -40,13 +34,6 @@ HEADERS=
 include EACirc.pro
 OBJECTS_MAIN_TEMP:=$(SOURCES:.cpp=.ocpp)
 OBJECTS_MAIN:=$(OBJECTS_MAIN_TEMP:.c=.oc)
-
-# === EACirc Checker ===
-#SOURCES=
-#HEADERS=
-# libs and source (loaded from Qt project file)
-#include Checker.pro
-#OBJECTS_CHECKER:=$(SOURCES:.cpp=.ocpp)
 
 # rules and targets
 ifeq (YES, ${DEBUG})
@@ -58,14 +45,17 @@ ifeq (YES, $(PROFILE))
    FLAGS += $(PROFILE_CXXFLAGS)
 endif
 
-# all: libs main checker
 all: libs main
 
 libs:
 	cd EACirc/galib && $(MAKE)
+	@echo =====================================
 	@echo === GAlib was successfully built. ===
+	@echo =====================================
 	cd EACirc/tinyXML && $(MAKE)
+	@echo =======================================
 	@echo === tinyXML was successfully built. ===
+	@echo =======================================
 
 %.ocpp: %.cpp
 	$(CXX) $(CXXFLAGS) $(FLAGS) $(INC_DIRS) -c -o "$@" "$<"
@@ -74,31 +64,36 @@ libs:
 	$(CC) $(FLAGS) $(INC_DIRS) -c -o "$@" "$<"
 
 main: libs $(OBJECTS_MAIN)
-	mkdir -p $(RUN_DIR)
-	$(CXX) $(CXXFLAGS) $(FLAGS) -o $(RUN_DIR)/$(OUTNAME_MAIN) $(OBJECTS_MAIN) $(INC_DIRS) $(INC_LIBS)
-	if [ ! -f $(RUN_DIR)/config.xml ]; then cp EACirc/config.xml $(RUN_DIR)/; fi
-	@echo === $(OUTNAME_MAIN) was successfully built. ===
+	scripts/pre-build.sh
+	$(CXX) $(CXXFLAGS) $(FLAGS) -o EACirc/EACirc $(OBJECTS_MAIN) $(INC_DIRS) $(INC_LIBS)
+	scripts/post-build.sh
+	@echo ======================================
+	@echo === EACirc was successfully built. ===
+	@echo ======================================
 
-#checker: $(OBJECTS_CHECKER)
-#	mkdir -p $(RUN_DIR)
-#	$(CXX) $(CXXFLAGS) $(FLAGS) -o $(RUN_DIR)/$(OUTNAME_CHECKER) $(OBJECTS_CHECKER) $(INC_DIRS) $(INC_LIBS)
-#	@echo === $(OUTNAME_CHECKER) was successfully built. ===
+clean: cleanmain
 
-#cleanall: cleanresults cleanlibs cleanmain cleanchecker
-cleanall: cleanresults cleanlibs cleanmain
+cleanall: cleanlibs cleanmain cleanresults
 
 cleanresults:
-	cd $(RUN_DIR) && rm -f *.log *.txt *.bin *.c *.dot *.xml *.2
+	scripts/clean-results.sh
+	@echo ==========================================
 	@echo === Result files successfully cleaned. ===
+	@echo ==========================================
 
 cleanmain:
-	rm -f $(OBJECTS_MAIN) $(RUN_DIR)/$(OUTNAME_MAIN)
-	@echo === $(OUTNAME_MAIN) successfully cleaned. ===
-
-cleanchecker:
-	rm -f $(OBJECTS_CHECKER) $(RUN_DIR)/$(OUTNAME_CHECKER)
-	@echo === $(OUTNAME_CHECKER) successfully cleaned. ===
+	rm -f $(OBJECTS_MAIN) EACirc/EACirc
+	@echo =====================================================
+	@echo === EACirc main build files successfully cleaned. ===
+	@echo =====================================================
 
 cleanlibs:
 	cd EACirc/galib && $(MAKE) clean
 	cd EACirc/tinyXML && $(MAKE) clean
+	@echo ===============================================
+	@echo === GAlib and tinyXML successfully cleaned. ===
+	@echo ===============================================
+
+test: all
+	cd run && ./EACirc -log -test
+	scripts/clean-results.sh

@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# prepare run folder
+mkdir -p run
+
 # EACirc pre build script setting current commit hash to Version.h
 echo "// current git commit info (updated before build if correctly set-up)" >EACirc/Version.h
 
