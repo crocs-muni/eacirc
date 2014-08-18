@@ -12,7 +12,7 @@
 
 int main(int argc, char **argv) {
     // used in debug mode, wait for debugger to attach
-	std::this_thread::sleep_for(std::chrono::milliseconds(3));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
     string configFilename = FILE_CONFIG;
     // COMMAND LINE ARGUMENTS PROCESSING
