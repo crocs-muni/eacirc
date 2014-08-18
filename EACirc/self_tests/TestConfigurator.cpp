@@ -18,11 +18,12 @@ TestConfigurator::TestConfigurator()
         TiXmlNode* pRoot = pElem->Clone();
         string filename1 = getXMLElementValue(pRoot,"FILENAME_1");
         string filename2 = getXMLElementValue(pRoot,"FILENAME_2");
-        ifstream files[2];
-        files[1].open(filename1,ios_base::binary);
-        files[2].open(filename2,ios_base::binary);
-        if (files[1].is_open() && files[2].is_open()) {
+        ifstream file1(filename1);
+        ifstream file2(filename2);
+        if (file1.is_open() && file2.is_open()) {
             m_projects.push(PROJECT_FILE_DISTINGUISHER);
+            file1.close();
+            file2.close();
         } else {
             WARN(string("######## Project ")+toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
             WARN(string("######## Could not open files ")+filename1+", "+filename2+" ########");

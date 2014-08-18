@@ -23,9 +23,10 @@ TINYXML_USE_STL := NO
 RM     := rm -f
 # windows-equivalent
 # RM     := del /f /q
-CC     := gcc
-CXX    := g++
-LD     := g++
+# leave CC, GCC, LD settings from system
+#CC     := gcc
+#CXX    := g++
+#LD     := g++
 AR     := ar rv
 RANLIB := ranlib
 LIB    := libtinyXML.a
