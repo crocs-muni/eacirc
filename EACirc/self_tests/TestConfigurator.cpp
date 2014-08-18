@@ -2,12 +2,32 @@
 #include <iostream>
 #include "Catch.h"
 #include "EACirc.h"
+#include "tinyxml.h"
 
 TestConfigurator::TestConfigurator()
     : m_currentProject(0) {
     m_projects.push(PROJECT_ESTREAM);
     m_projects.push(PROJECT_SHA3);
-    m_projects.push(PROJECT_FILE_DISTINGUISHER);
+    // can we open files set in PROJECT_FILE_DISTINGUISHER?
+    string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
+    TiXmlDocument doc(string("configuration").c_str());
+    doc.Parse(conf.c_str());
+    TiXmlHandle hDoc(&doc);
+    TiXmlElement* pElem=hDoc.FirstChildElement().Element();
+    if (pElem != NULL) {
+        TiXmlNode* pRoot = pElem->Clone();
+        string filename1 = getXMLElementValue(pRoot,"FILENAME_1");
+        string filename2 = getXMLElementValue(pRoot,"FILENAME_2");
+        ifstream files[2];
+        files[1].open(filename1,ios_base::binary);
+        files[2].open(filename2,ios_base::binary);
+        if (files[1].is_open() && files[2].is_open()) {
+            m_projects.push(PROJECT_FILE_DISTINGUISHER);
+        } else {
+            WARN(string("######## Project ")+toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
+            WARN(string("######## Could not open files ")+filename1+", "+filename2+" ########");
+        }
+    }
 }
 
 TestConfigurator::TestConfigurator(int projectType)
