@@ -1,5 +1,3 @@
 language: cpp
-compiler:
-  - gcc
-
-script: make -f EACirc.makefile
+compiler: clang
+script: make -f EACirc.makefile test
