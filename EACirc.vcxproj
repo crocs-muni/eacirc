@@ -132,13 +132,13 @@
       </TreatOutputAsContent>
     </CustomBuildStep>
     <PreBuildEvent>
-      <Command>$(SolutionDir)pre-build.bat</Command>
+      <Command>$(SolutionDir)scripts\pre-build.bat</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Updating commit version information.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)post-build.bat $(Configuration)</Command>
+      <Command>$(SolutionDir)scripts\post-build.bat $(Configuration)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying configuration file.</Message>

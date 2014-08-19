@@ -75,7 +75,7 @@ struct SETTINGS_MAIN {
     bool loadInitialPopulation;     //! should initial population be loaded instead of randomly generated?
     int numGenerations;             //! number of generations to evolve
     int saveStateFrequency;         //! frequency of reseeding GAlib and saving state
-    int circuitSizeInput;           //! number if circuit input bytes
+    int circuitSizeInput;           //! number of circuit input bytes
     int circuitSizeOutput;          //! number of circuit output bytes
     SETTINGS_MAIN();
 };

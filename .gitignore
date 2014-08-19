@@ -3,7 +3,6 @@
 *.user
 *.Debug
 *.Release
-[Mm]akefile
 *.sdf
 *.opensdf
 # object files, linked application, build filed

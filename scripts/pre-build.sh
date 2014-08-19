@@ -1,4 +1,6 @@
 #! /bin/bash
+(set -o igncr) 2>/dev/null && set -o igncr; # this comment is needed
+# previous line tells bash to ignore '\r' (issue when running in WIN environments)
 
 # prepare run folder
 mkdir -p run
