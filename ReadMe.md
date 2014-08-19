@@ -1,6 +1,6 @@
 ﻿# EACirc Framework
 
-![Build status](https://travis-ci.org/petrs/EACirc.svg?branch=master)
+[![Build status](https://travis-ci.org/petrs/EACirc.svg?branch=master)](https://travis-ci.org/petrs/EACirc)
 
 EACirc is a framework for automatic problem solving. It uses supervised learning techniques based on evolutionary algorithms to construct and optimize software circuits in order to solve the given problem.
 
