@@ -19,19 +19,20 @@ The EACirc framework consists of main application and several supporting tools a
 * **EACirc** - the main application, constructs circuits using evolutionary principles.
 * **utils** - set of scripts and small programs used for results processing.
 
-For more information and details see [projec wiki pages](http://github.com/petrs/EACirc/wiki/Home).
+For more information and details see [project wiki pages](http://github.com/petrs/EACirc/wiki/Home).
 
 ## Authors
-The framework is developed at the [Laboratory of Security and Applied Cryptography](http://www.fi.muni.cz/research/laboratories/labak/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.
+The framework is developed at the [Centre for Research on Cryptography and Security (formerly Laboratory of Security and Applied Cryptography)](https://www.fi.muni.cz/research/crocs/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.
 
-* **Milan Čermák** 2012-now (CUDA support)
 * **Karel Kubíček** 2014-now (TEA, CAESAR)
-* **Zdenek Říha** 2013-now (bytecode emulator)
+* **Zdenek Říha** 2013-now (bytecode emulato)
 * **Marek Sýs** 2013-now (project concept, results interpretation)
 * **Petr Švenda** 2008-now (project lead, initial implementation)
 * **Martin Ukrop** 2012-now (framework model, refactoring, SHA-3 candidates testing, supporting tools)
 
 Former participation:
+* **Milan Čermák** 2012-2013 (CUDA support)
 * **Ondrej Dubovec** 2011-2012 (SHA-3 candidates testing)
 * **Matěj Prišťák** 2011-2012 (object model and refactoring, XML support, eStream candidates testing)
 * **Tobiáš Smolka** 2011-2012 (BOINC related support)
+ 
