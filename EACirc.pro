@@ -82,6 +82,7 @@ SOURCES += \
     EACirc/projects/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \
     EACirc/projects/estream/ciphers/wg/wg.cpp \
     EACirc/projects/estream/ciphers/tsc-4/tsc-4.cpp \
+    EACirc/projects/estream/ciphers/tea/tea.cpp \
     EACirc/projects/estream/ciphers/sosemanuk/sosemanuk.cpp \
     EACirc/projects/estream/ciphers/sfinks/sfinks.cpp \
     EACirc/projects/estream/ciphers/salsa20/salsa20.cpp \
@@ -302,6 +303,7 @@ HEADERS += \
     EACirc/projects/estream/ciphers/wg/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/tsc-4/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/trivium/ecrypt-sync.h \
+    EACirc/projects/estream/ciphers/tea/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/sosemanuk/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/sosemanuk/sosemanuk.h \
     EACirc/projects/estream/ciphers/sfinks/ecrypt-sync.h \

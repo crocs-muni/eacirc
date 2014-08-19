@@ -50,11 +50,12 @@
 #define ESTREAM_SALSA20         20
 #define ESTREAM_SFINKS          21
 #define ESTREAM_SOSEMANUK       22
-#define ESTREAM_TRIVIUM         23
-#define ESTREAM_TSC4            24
-#define ESTREAM_WG              25
-#define ESTREAM_YAMB            26
-#define ESTREAM_ZKCRYPT         27
+#define ESTREAM_TEA             23
+#define ESTREAM_TRIVIUM         24
+#define ESTREAM_TSC4            25
+#define ESTREAM_WG              26
+#define ESTREAM_YAMB            27
+#define ESTREAM_ZKCRYPT         28
 #define ESTREAM_RANDOM          99
 
 struct ESTREAM_SETTINGS {

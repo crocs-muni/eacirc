@@ -226,6 +226,7 @@
     <ClCompile Include="EACirc\projects\estream\ciphers\salsa20\salsa20.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\sfinks\sfinks.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\sosemanuk\sosemanuk.cpp" />
+    <ClCompile Include="EACirc\projects\estream\ciphers\tea\tea.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\trivium\trivium.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\tsc-4\tsc-4.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\wg\wg.cpp" />
@@ -389,6 +390,7 @@
     <ClInclude Include="EACirc\projects\estream\ciphers\sfinks\ecrypt-sync.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\sosemanuk\ecrypt-sync.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\sosemanuk\sosemanuk.h" />
+    <ClInclude Include="EACirc\projects\estream\ciphers\tea\ecrypt-sync.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\trivium\ecrypt-sync.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\tsc-4\ecrypt-sync.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\wg\ecrypt-sync.h" />
