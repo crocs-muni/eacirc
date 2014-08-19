@@ -4,7 +4,6 @@
 #include "pregenerated_tv/PregeneratedTvProject.h"
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
-#include "tea/TeaProject.h"
 #include "files/filesProject.h"
 
 IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) { }
@@ -156,9 +155,6 @@ IProject* IProject::getProject(int projectType) {
     case PROJECT_SHA3:
         project = new Sha3Project();
         break;
-    case PROJECT_TEA:
-        project = new TeaProject();
-        break;
     case PROJECT_FILE_DISTINGUISHER:
         project = new FilesProject();
         break;
@@ -175,7 +171,6 @@ string IProject::getTestingConfiguration(int projectType) {
     string projectConfiguration;
     switch (projectType) {
     case PROJECT_PREGENERATED_TV:
-    case PROJECT_TEA:
         projectConfiguration = "<PROJECT />";
         break;
     case PROJECT_ESTREAM:

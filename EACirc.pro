@@ -75,7 +75,6 @@ SOURCES += \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
-    EACirc/projects/tea/TeaProject.cpp \
     EACirc/projects/files/filesProject.cpp \
 
 # === eSTREAM cipher files ===
@@ -288,7 +287,6 @@ HEADERS += \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
-    EACirc/projects/tea/TeaProject.h \
     EACirc/projects/files/filesConstants.h \
     EACirc/projects/files/filesProject.h \
 

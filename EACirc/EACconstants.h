@@ -52,7 +52,6 @@ typedef unsigned __int64 uint64_t;
 #define PROJECT_PREGENERATED_TV     0
 #define PROJECT_ESTREAM             100
 #define PROJECT_SHA3                200
-#define PROJECT_TEA                 300
 #define PROJECT_FILE_DISTINGUISHER  400
 
 // FILENAMES

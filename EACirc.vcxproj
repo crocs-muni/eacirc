@@ -88,13 +88,13 @@
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
     <PreBuildEvent>
-      <Command>$(SolutionDir)pre-build.bat</Command>
+      <Command>$(SolutionDir)scripts\pre-build.bat</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Updating commit version information.</Message>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>$(SolutionDir)post-build.bat $(Configuration)</Command>
+      <Command>$(SolutionDir)scripts\post-build.bat $(Configuration)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copying configuration file.</Message>
@@ -324,7 +324,6 @@
     <ClCompile Include="EACirc\generators\md5.cpp" />
     <ClCompile Include="EACirc\generators\MD5RndGen.cpp" />
     <ClCompile Include="EACirc\generators\QuantumRndGen.cpp" />
-    <ClCompile Include="EACirc\projects\tea\TeaProject.cpp" />
     <ClCompile Include="EACirc\self_tests\TestConfigurator.cpp" />
     <ClCompile Include="EACirc\self_tests\Tests.cpp" />
     <ClCompile Include="EACirc\Status.cpp" />
@@ -567,7 +566,6 @@
     <ClInclude Include="EACirc\generators\md5.h" />
     <ClInclude Include="EACirc\generators\MD5RndGen.h" />
     <ClInclude Include="EACirc\generators\QuantumRndGen.h" />
-    <ClInclude Include="EACirc\projects\tea\TeaProject.h" />
     <ClInclude Include="EACirc\self_tests\Catch.h" />
     <ClInclude Include="EACirc\self_tests\TestConfigurator.h" />
     <ClInclude Include="EACirc\self_tests\Tests.h" />
