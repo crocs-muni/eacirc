@@ -1,7 +1,5 @@
-﻿# EACirc Framework
-
-[![Build status](https://travis-ci.org/petrs/EACirc.svg?branch=master)](https://travis-ci.org/petrs/EACirc)
-
+![EACirc](https://raw.githubusercontent.com/wiki/petrs/EACirc/img/logo-home.png)  
+[![Build status](https://travis-ci.org/petrs/EACirc.svg?branch=master)](https://travis-ci.org/petrs/EACirc)  
 EACirc is a framework for automatic problem solving. It uses supervised learning techniques based on evolutionary algorithms to construct and optimize software circuits in order to solve the given problem.
 
 Problems are solved by the means of hardware-like circuits - small, software-emulated circuits consisting of gates and interconnecting wires transforming input data into desired output data. The layout of these circuits is designed randomly at first. They are subsequently optimized in the process of supervised learning (inputs are provided alongside with correct outputs) until the the desired success rate is achieved. 
