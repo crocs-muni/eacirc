@@ -264,7 +264,6 @@ int CircuitIO::genomeToText(GAGenome& g, string fileName) {
     return genomeToTextSt(g, fileName);
 }
 
-
 int CircuitIO::outputGenomeFiles(GAGenome& g, string fileName){
     return outputGenomeFilesSt(g, fileName);
 }

@@ -1,5 +1,6 @@
 #include "Logger.h"
 #include "Version.h"
+#include "CommonFnc.h"
 // for documentation on using logger, see EACglobals.h
 
 Logger::Logger() : m_logging(false), m_using_file(false),
@@ -16,7 +17,7 @@ void Logger::setOutputStream(ostream& outStream) {
 }
 
 void Logger::setOutputFile(const string filePath) {
-    std::remove(filePath.c_str());
+    removeFile(filePath.c_str());
     delete m_out;
     m_out = new LoggerStream(this,*(new ofstream(filePath, fstream::app)));
 }

@@ -4,6 +4,12 @@
 #include <cmath>
 #include <stdexcept>
 
+Term::Term () : size(0), vectorSize(0), term(NULL),  ignore(false) { }
+
+Term::~Term () {
+    delete this->term;
+}
+
 Term::Term(const Term& cT) : size(0), vectorSize(0), term(NULL),  ignore(false){
     // Initialize internal representation with the size from the source.
     this->setSize(cT.getSize());

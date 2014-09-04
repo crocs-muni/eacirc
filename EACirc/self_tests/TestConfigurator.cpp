@@ -83,7 +83,7 @@ void TestConfigurator::compareFilesByLine(string filename1, string filename2) co
 
 void TestConfigurator::backupFile(string filename) {
     string backupFilename = filename + BACKUP_SUFFIX;
-    remove(backupFilename.c_str());
+    removeFile(backupFilename.c_str());
     CHECK(rename(filename.c_str(),backupFilename.c_str()) == 0);
 }
 

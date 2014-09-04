@@ -88,6 +88,7 @@ int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
                 // Just toggle ignore flag to save operations.
                 (*existingElem)->setIgnore(true);
             }
+            delete t;
         }
         
         // Dump set to the genome.

@@ -271,6 +271,7 @@ void EACirc::savePopulation(const string filename) {
         m_status = m_circuit->io()->genomeToBinary(genome ,textCircuit);
         if (m_status != STAT_OK) {
             mainLogger.out(LOGGER_ERROR) << "Could not save genome in population to file " << filename << "." << endl;
+            delete pElem;
             return;
         }
         pElem2 = new TiXmlElement("genome");
@@ -397,14 +398,14 @@ void EACirc::prepare() {
     }
 
     // prepare files for logging
-    std::remove(FILE_BOINC_FRACTION_DONE);
+    removeFile(FILE_BOINC_FRACTION_DONE);
     if (!m_settings.main.recommenceComputation) {
-        std::remove(FILE_FITNESS_PROGRESS);
-        std::remove(FILE_BEST_FITNESS);
-        std::remove(FILE_AVG_FITNESS);
-        std::remove(FILE_GALIB_SCORES);
-        std::remove(FILE_TEST_VECTORS_HR);
-        std::remove(FILE_HISTOGRAMS);
+        removeFile(FILE_FITNESS_PROGRESS);
+        removeFile(FILE_BEST_FITNESS);
+        removeFile(FILE_AVG_FITNESS);
+        removeFile(FILE_GALIB_SCORES);
+        removeFile(FILE_TEST_VECTORS_HR);
+        removeFile(FILE_HISTOGRAMS);
         ofstream fitnessProgressFile(FILE_FITNESS_PROGRESS, ios_base::trunc);
         fitnessProgressFile << "Fitness statistics for selected generations" << endl;
         for (int i = 0; i < log(pGlobals->settings->main.numGenerations)/log(10) - 3; i++) fitnessProgressFile << " ";
@@ -600,7 +601,7 @@ void EACirc::run() {
 
     // clear galib score file
     if (!pGlobals->settings->main.recommenceComputation) {
-        std::remove(FILE_GALIB_SCORES);
+        removeFile(FILE_GALIB_SCORES);
     }
 
     bool evaluateNow = false;

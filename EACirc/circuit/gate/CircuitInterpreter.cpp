@@ -122,14 +122,22 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
         break;
     case FNC_ROTL:
         if (connectorsDiscartFirst(absoluteConnectors,connection)) {
-            result = (layerInputValues[connection] << (argument1 % BITS_IN_UCHAR))
-                      | (layerInputValues[connection] >> (BITS_IN_UCHAR - argument1 % BITS_IN_UCHAR));
+            if (argument1 % BITS_IN_UCHAR == 0) {
+                layerInputValues[connection];
+            } else {
+                result = (layerInputValues[connection] << (argument1 % BITS_IN_UCHAR))
+                          | (layerInputValues[connection] >> (BITS_IN_UCHAR - argument1 % BITS_IN_UCHAR));
+            }
         }
         break;
     case FNC_ROTR:
         if (connectorsDiscartFirst(absoluteConnectors,connection)) {
-            result = (layerInputValues[connection] >> (argument1 % BITS_IN_UCHAR))
-                      | (layerInputValues[connection] << (BITS_IN_UCHAR - argument1 % BITS_IN_UCHAR));
+            if (argument1 % BITS_IN_UCHAR == 0) {
+                layerInputValues[connection];
+            } else {
+                result = (layerInputValues[connection] >> (argument1 % BITS_IN_UCHAR))
+                       | (layerInputValues[connection] << (BITS_IN_UCHAR - argument1 % BITS_IN_UCHAR));
+            }
         }
         break;
     case FNC_EQ:

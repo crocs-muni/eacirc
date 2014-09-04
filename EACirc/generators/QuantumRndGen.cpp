@@ -211,7 +211,8 @@ string QuantumRndGen::shortDescription() const {
 }
 
 QuantumRndGen::QuantumRndGen(TiXmlNode *pRoot)
-        : IRndGen(GENERATOR_QRNG,1) {  // cannot call IRndGen with seed 0, warning would be issued
+        : IRndGen(GENERATOR_QRNG,1), // cannot call IRndGen with seed 0, warning would be issued
+          m_accumulator(NULL), m_usesQRNGData(false), m_accLength(0), m_accPosition(0), m_fileIndex(0), m_internalRNG(NULL) {
     if (atoi(getXMLElementValue(pRoot,"@type").c_str()) != m_type) {
         mainLogger.out(LOGGER_ERROR) << "Incompatible generator types." << endl;
         return;

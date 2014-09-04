@@ -65,7 +65,12 @@ class Term {
     /**
      * Default constructor.
      */
-    Term () : size(0), vectorSize(0), term(NULL),  ignore(false) { }
+    Term ();
+
+    /**
+     * Destructor.
+     */
+    ~Term ();
     
     /**
      * Copy constructor.

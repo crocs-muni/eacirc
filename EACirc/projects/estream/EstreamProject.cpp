@@ -390,7 +390,7 @@ int EstreamProject::generateCipherDataStream() {
         if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_ONCE) {
             status = m_encryptorDecryptor->setupKey();
             if (status != STAT_OK) return status;
-            m_encryptorDecryptor->setupIV();
+            status = m_encryptorDecryptor->setupIV();
             if (status != STAT_OK) return status;
         }
 
@@ -399,7 +399,7 @@ int EstreamProject::generateCipherDataStream() {
             if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_SET) {
                 status = m_encryptorDecryptor->setupKey();
                 if (status != STAT_OK) return status;
-                m_encryptorDecryptor->setupIV();
+                status = m_encryptorDecryptor->setupIV();
                 if (status != STAT_OK) return status;
             }
             for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
@@ -407,7 +407,7 @@ int EstreamProject::generateCipherDataStream() {
                 if (pEstreamSettings->cipherInitializationFrequency == ESTREAM_INIT_CIPHERS_FOR_VECTOR) {
                     status = m_encryptorDecryptor->setupKey();
                     if (status != STAT_OK) return status;
-                    m_encryptorDecryptor->setupIV();
+                    status = m_encryptorDecryptor->setupIV();
                     if (status != STAT_OK) return status;
                 }
 

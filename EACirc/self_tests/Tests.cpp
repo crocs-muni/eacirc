@@ -268,10 +268,10 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     for(int i=0; i<16; i++){
         delete terms[i];
     }
-    delete terms;
-    if (g != NULL) delete g;
-    if (pInput != NULL) delete pInput;
-    if (pOutput != NULL) delete pOutput;
+    delete[] terms;
+    delete g;
+    delete[] pInput;
+    delete[] pOutput;
     if (pGlobals != NULL && pGlobals->settings != NULL) {
         delete pGlobals->settings;
         pGlobals->settings = NULL;

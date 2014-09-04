@@ -31,7 +31,7 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {
     int connectionIndex = 0;
-    while ( (( (GENOME_ITEM_TYPE) 1 << connectionIndex ) & connectorMask) == 0 && connectionIndex < BITS_IN_ULONG) {
+    while ( connectionIndex < BITS_IN_ULONG && (( (GENOME_ITEM_TYPE) 1 << connectionIndex ) & connectorMask) == 0 ) {
         connectionIndex++;
     }
     if (connectionIndex >= BITS_IN_ULONG) {

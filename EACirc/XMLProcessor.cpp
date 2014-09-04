@@ -54,7 +54,11 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->testVectors.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
     // compute extra info
-    pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
+    if (pSettings->testVectors.setChangeFrequency == 0) {
+        pSettings->testVectors.numTestSets = 1;
+    } else {
+        pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
+    }
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {
@@ -107,7 +111,6 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
         }
         return string(attrValue);
     }
-    return "";
 }
 
 int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value) {

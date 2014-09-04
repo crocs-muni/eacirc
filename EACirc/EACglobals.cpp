@@ -78,6 +78,7 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
     numPolynomials = -1;
     genomeInitTermStopProbability = -1;
+    genomeInitTermCountProbability = -1;
     genomeInitMaxTerms = -1;
     mutateTermStrategy=-1;
     crossoverRandomizePolySelect = false;
@@ -93,6 +94,7 @@ SETTINGS::SETTINGS() {
 }
 
 STATISTICS::STATISTICS() {
+    actGener = 0;
     avgMaxFitSum = 0;
     avgAvgFitSum = 0;
     avgMinFitSum = 0;
