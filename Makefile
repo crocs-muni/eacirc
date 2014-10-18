@@ -45,13 +45,19 @@ ifeq (YES, $(PROFILE))
    FLAGS += $(PROFILE_CXXFLAGS)
 endif
 
+.PHONY: all
 all: libs main
 
-libs:
+.PHONY: libs
+libs: libga.a libtinyXML.a
+
+libga.a:
 	cd EACirc/galib && $(MAKE)
 	@echo =====================================
 	@echo === GAlib was successfully built. ===
 	@echo =====================================
+
+libtinyXML.a:
 	cd EACirc/tinyXML && $(MAKE)
 	@echo =======================================
 	@echo === tinyXML was successfully built. ===
