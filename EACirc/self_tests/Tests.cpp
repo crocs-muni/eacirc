@@ -190,8 +190,8 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     }
     
     // x_0 * x_4 * x_15
-    terms[0]->setBit(0, 1);   
-    terms[0]->setBit(4, 1);   
+    terms[0]->setBit(0, 1);
+    terms[0]->setBit(4, 1);
     terms[0]->setBit(15, 1);
     
     // x_1
@@ -262,7 +262,7 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     // 4. evaluation, random 2
     pInput[0] = 0xa4;             pInput[1] = 0x2d;
     PolyEval::polyEval(g, pInput, pOutput);
-    CHECK(pOutput[0] == 0x3);     CHECK(pOutput[1] == 0x40);      
+    CHECK(pOutput[0] == 0x3);     CHECK(pOutput[1] == 0x40);
     
     // FREE
     for(int i=0; i<16; i++){
@@ -282,5 +282,5 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
 
 // TODO: write Kolmogorov-Smirnov test for uniformity of P-values during
 // random vs. random test to validate computation.
-// Use EACirc visitor in evaluateStep to collect p-values to some vector and 
+// Use EACirc visitor in evaluateStep to collect p-values to some vector and
 // then perform KS test.

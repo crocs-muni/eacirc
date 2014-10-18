@@ -1,6 +1,6 @@
 #include "Term.h"
 
-#include <assert.h> 
+#include <assert.h>
 #include <cmath>
 #include <stdexcept>
 
@@ -22,7 +22,7 @@ Term::Term(term_size_t size) : size(0), vectorSize(0), term(NULL),  ignore(false
     this->initialize(size);
 }
 
-Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset) 
+Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset)
     : size(0), vectorSize(0), term(NULL),  ignore(false){
     this->initialize(size, pGenome, polyIdx, offset);
 }
@@ -68,7 +68,7 @@ bool Term::evaluate(const unsigned char * input, term_size_t inputLen) const {
     assert(this->size > 0);
     
     // For now assume that the size of an internal term element
-    // is the same as input. 
+    // is the same as input.
     assert(sizeof(term_elem_t) >= sizeof(unsigned char));
     
     bool res = 1;
@@ -77,9 +77,9 @@ bool Term::evaluate(const unsigned char * input, term_size_t inputLen) const {
         for(unsigned int i=0; i<sizeof(POLY_GENOME_ITEM_TYPE); i++){
             const unsigned char mask = ((*it)>>(8*i)) & 0xfful;
             // If mask is null, do not process this input.
-            // It may happen the 8*POLY_GENOME_ITEM_TYPE is bigger than 
+            // It may happen the 8*POLY_GENOME_ITEM_TYPE is bigger than
             // number of variables, thus we would read ahead of input array.
-            // Term itself must not contain variables out of the range (guarantees 
+            // Term itself must not contain variables out of the range (guarantees
             // that an invalid memory is not read).
             if (mask == 0) continue;
             
@@ -145,7 +145,7 @@ void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyI
 }
 
 void Term::setBit(unsigned int bit, bool value){
-    if (bit > size){ 
+    if (bit > size){
         throw std::out_of_range("illegal bit position");
     }
     
@@ -158,7 +158,7 @@ void Term::setBit(unsigned int bit, bool value){
 }
 
 bool Term::getBit(unsigned int bit) const {
-    if (bit > size){ 
+    if (bit > size){
         throw std::out_of_range("illegal bit position");
     }
     
@@ -166,7 +166,7 @@ bool Term::getBit(unsigned int bit) const {
 }
 
 void Term::flipBit(unsigned int bit){
-    if (bit > size){ 
+    if (bit > size){
         throw std::out_of_range("illegal bit position");
     }
     

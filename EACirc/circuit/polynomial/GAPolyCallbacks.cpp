@@ -45,8 +45,8 @@ void GAPolyCallbacks::initializer(GAGenome& g){
     
     // Generate each polynomial
     for(int curP = 0; curP < numPolynomials; curP++){
-        // Number of terms in polynomial is determined by sampling 
-        // geometric distribution / Markov chain. 
+        // Number of terms in polynomial is determined by sampling
+        // geometric distribution / Markov chain.
         // With certain probability will generating new term stops.
         // Otherwise new ones are generated.
         // To generate polynomial with k terms, probability is: p^{k-1}*p.
@@ -102,7 +102,7 @@ float GAPolyCallbacks::evaluator(GAGenome &g) {
     return pGlobals->evaluator->getFitness();
 }
 
-int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){ 
+int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
     int numOfMutations = 0;
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> &genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
     
@@ -110,7 +110,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
     const int numPolynomials = PolynomialCircuit::getNumPolynomials();
     const unsigned int termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
-    // Current mutation strategy: 
+    // Current mutation strategy:
     //  - [pick 1 polynomial to mutate ad random]
     //  - pick 1 term from the given polynomial to mutate ad random.
     //  - pick 1 variable from the given term and flip it.
@@ -124,7 +124,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
             // Strategy 0 = pick a random bit and flip it.
             // Pros: Quick, easy and clean implementation and semantics. Impl.: O(1).
             // Cons: Provided terms with low weight are more useful, it is more probable
-            // this strategy will generate terms with high height thus producing not 
+            // this strategy will generate terms with high height thus producing not
             // useful terms in mutation.
             if (pGlobals->settings->polyCircuit.mutateTermStrategy == MUTATE_TERM_STRATEGY_FLIP){
                 // Pick random bit
@@ -136,13 +136,13 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
 
                 
             } else if (pGlobals->settings->polyCircuit.mutateTermStrategy == MUTATE_TERM_STRATEGY_ADDREMOVE){
-                // ADD/REMOVE strategy: either randomly add a new variable to the term or 
-                // randomly remove existing variable from the term. 
+                // ADD/REMOVE strategy: either randomly add a new variable to the term or
+                // randomly remove existing variable from the term.
                 // Pros: Better for hypothesis that shorter terms are more valuable for our purpose (i.e., distinguisher).
                 // Cons: Slower implementation, not that clean. Impl.: O(k) if k is size of a term (constant).
                 bool addVariable = GAFlipCoin(0.5);
                 
-                // Build vector of present variables in term, 
+                // Build vector of present variables in term,
                 // if we want to add a variable to a term, construct a list of non-set variables.
                 // if we want to remove a variable from a term, construct a list of set variables.
                 std::vector<int> vars;
@@ -158,7 +158,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                 }
                 
                 // If term is fully saturated (all variables, cannot add),
-                // if term is zero, cannot remove. 
+                // if term is zero, cannot remove.
                 if (vars.size()>0){
                     // Pick one variable at random to either remove or delete.
                     int var2operateOn = vars.at(GARandomInt(0, vars.size()-1));
@@ -166,7 +166,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                     const int bitPos = Term::getBitPos(var2operateOn, randTerm, termSize);
                     genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::getBitLoc(var2operateOn)));
                     numOfMutations+=1;
-                } 
+                }
             } else {
                 mainLogger.out(LOGGER_ERROR) << "Unknown mutate term strategy: " << pGlobals->settings->polyCircuit.mutateTermStrategy << endl;
                 return 0;
@@ -231,12 +231,12 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
 
 int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2, GAGenome* offspring1, GAGenome* offspring2){
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * parents[] = {
-        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*)&parent1, 
+        (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*)&parent1,
         (GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*)&parent2
     };
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * offsprings[] = {
-        dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring1), 
+        dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring1),
         dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*>(offspring2)
     };
     
@@ -268,13 +268,13 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
         // Copy polynomial of the parent0.
         int geneSize = parents[pIdx]->height();
         for(int i=0; i<geneSize; i++){
-                offsprings[0]->gene(cPoly, i, parents[pIdx]->gene(pIdxPoly2Pick[pIdx], i)); 
+                offsprings[0]->gene(cPoly, i, parents[pIdx]->gene(pIdxPoly2Pick[pIdx], i));
         }
         
         // Offspring 2 - complementary to the offspring 1 w.r.t. polynomial choice.
         geneSize = parents[!pIdx]->height();
         for(int i=0; i<geneSize; i++){
-                offsprings[1]->gene(cPoly, i, parents[!pIdx]->gene(pIdxPoly2Pick[!pIdx], i)); 
+                offsprings[1]->gene(cPoly, i, parents[!pIdx]->gene(pIdxPoly2Pick[!pIdx], i));
         }
         
         // If crossover of individual terms is allowed, perform single crossover
@@ -287,7 +287,7 @@ int GAPolyCallbacks::crossover(const GAGenome& parent1, const GAGenome& parent2,
             // Single point crossover on terms, [0, min(t1size, t2size)].
             int crossoverPlace = GARandomInt(0, numTerms[minTerms]-1);
             
-            // Do the single point crossover, exchange term size. 
+            // Do the single point crossover, exchange term size.
             offsprings[0]->gene(cPoly, 0, numTerms[1]);
             offsprings[1]->gene(cPoly, 0, numTerms[0]);
             

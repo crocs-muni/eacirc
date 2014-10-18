@@ -92,7 +92,7 @@ int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
         }
         
         // Dump set to the genome.
-        POLY_GENOME_ITEM_TYPE nonNullTerms = 0; 
+        POLY_GENOME_ITEM_TYPE nonNullTerms = 0;
         std::set<PTerm>::iterator it = termSet.begin();
         for(; it != termSet.end(); it++){
             // If term is set to zero, ignore it.
@@ -100,13 +100,13 @@ int PolyEval::normalize(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome){
                 continue;
             }
             
-            // Dumps current term to the genome, respecting offset. 
+            // Dumps current term to the genome, respecting offset.
             // One term has $termSize sub-term elements.
             (*it)->dumpToGenome(pGenome, cPoly, 1 + nonNullTerms * termSize);
             nonNullTerms+=1;
         }
         
-        // Do not actually resize array since it orthogonal. 
+        // Do not actually resize array since it orthogonal.
         // Just modify number of terms in the first element.
         // Zero number of terms means polynomial is constantly 0.
         pGenome->gene(cPoly, 0, nonNullTerms);

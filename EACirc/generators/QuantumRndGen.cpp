@@ -4,7 +4,7 @@
 #include "EACglobals.h"
 #include "XMLProcessor.h"
 
-QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath) 
+QuantumRndGen::QuantumRndGen(unsigned long seed, string QRBGSPath)
         : IRndGen(GENERATOR_QRNG,seed), m_usesQRNGData(false), m_fileIndex(0) {
     int status;
     m_accumulator = NULL;

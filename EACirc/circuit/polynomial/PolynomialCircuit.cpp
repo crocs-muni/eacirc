@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PolynomialCircuit.cpp
  * Author: ph4r05
- * 
+ *
  * Created on April 29, 2014, 4:20 PM
  */
 
@@ -21,10 +21,10 @@ GAGenome* PolynomialCircuit::createGenome(bool setCallbacks) {
     // Has to compute genome dimensions.
     int numVariables = PolynomialCircuit::getNumVariables();
     int numPolynomials = PolynomialCircuit::getNumPolynomials();
-    unsigned int   termSize = Term::getTermSize(numVariables); // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
+    unsigned int   termSize = Term::getTermSize(numVariables); // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> * g = new GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>(
-            numPolynomials, 
+            numPolynomials,
             1 + termSize * pGlobals->settings->polyCircuit.genomeInitMaxTerms,               // number of terms N + N terms.
             this->getEvaluator());
     
@@ -38,10 +38,10 @@ GAGenome* PolynomialCircuit::createGenome(bool setCallbacks) {
 GAPopulation* PolynomialCircuit::createPopulation() {
     int numVariables = PolynomialCircuit::getNumVariables();
     int numPolynomials = PolynomialCircuit::getNumPolynomials();
-    unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.    
+    unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
     
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE> g(
-            numPolynomials, 
+            numPolynomials,
             1 + termSize * pGlobals->settings->polyCircuit.genomeInitMaxTerms,               // number of terms N + N terms.
             this->getEvaluator());
     setGACallbacks(&g);

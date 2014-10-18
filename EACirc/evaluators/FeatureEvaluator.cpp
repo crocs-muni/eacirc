@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   FeatureEvaluator.cpp
  * Author: ph4r05
- * 
+ *
  * Created on May 7, 2014, 9:23 AM
  */
 
@@ -11,7 +11,7 @@
 #include <cassert>
 #define BITS_IN_OUTPUT (8u*sizeof(unsigned char))
 
-FeatureEvaluator::FeatureEvaluator() : IEvaluator(EVALUATOR_CATEGORIES), 
+FeatureEvaluator::FeatureEvaluator() : IEvaluator(EVALUATOR_CATEGORIES),
       m_categoriesStream0(NULL), m_categoriesStream1(NULL),
       m_totalStream0(0), m_totalStream1(0),
       m_histBuffer(NULL), m_histEntries(NULL) {

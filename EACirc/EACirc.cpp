@@ -545,7 +545,7 @@ void EACirc::evaluateStep() {
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Mean);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Maximum);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum);
-    fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->size();        
+    fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->size();
     
     if (pGlobals->stats.pvaluesBestIndividual->size() > 0){
         fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->back();

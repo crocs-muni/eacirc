@@ -119,7 +119,7 @@ int Hasher::initializeState() {
     if (!pSha3Settings->useFixedSeed) {
         rndGen->getRandomFromInterval(ULONG_MAX,&(pSha3Settings->seed));
     }
-    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {       
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         m_counters[algorithmNumber] = pSha3Settings->seed;
     }
     return STAT_OK;

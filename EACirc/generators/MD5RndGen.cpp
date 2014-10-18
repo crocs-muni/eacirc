@@ -95,7 +95,7 @@ int MD5RndGen::updateAccumulator() {
     memcpy(m_md5Accumulator, mdContext.digest, MD5_DIGEST_LENGTH);
     
     return STAT_OK;
-}  
+}
 
 int MD5RndGen::discartValue() {
     return updateAccumulator();

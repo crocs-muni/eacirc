@@ -23,7 +23,7 @@ void Logger::setOutputFile(const string filePath) {
 }
 
 void Logger::setlogging(bool state) {
-    if (state == m_logging) return;    
+    if (state == m_logging) return;
     if (state) {
         m_logging = state;
         out(LOGGER_INFO) << "Logging enabled." << endl;

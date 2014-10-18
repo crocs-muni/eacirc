@@ -64,7 +64,7 @@ int BYTE_ConvertFromHexStringToArray(string hexaString, unsigned char* pArray, u
 
         if (tempArrayPos > *pbArrayLen) {
             status = STAT_NOT_ENOUGHT_MEMORY;
-        }  
+        }
         else {
             memcpy(pArray, pTempArray, tempArrayPos);
         }
