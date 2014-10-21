@@ -5,6 +5,7 @@
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
 #include "files/filesProject.h"
+#include "caesar/CaesarProject.h"
 
 IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) { }
 
@@ -158,6 +159,9 @@ IProject* IProject::getProject(int projectType) {
     case PROJECT_FILE_DISTINGUISHER:
         project = new FilesProject();
         break;
+    case PROJECT_CAESAR:
+        project = new CaesarProject();
+        break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
         return NULL;
@@ -181,6 +185,9 @@ string IProject::getTestingConfiguration(int projectType) {
         break;
     case PROJECT_FILE_DISTINGUISHER:
         projectConfiguration = FilesProject::testingConfiguration();
+        break;
+    case PROJECT_CAESAR:
+        projectConfiguration = CaesarProject::testingConfiguration();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "No configuration - unknown project type (" << projectType << ")." << endl;

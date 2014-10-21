@@ -76,6 +76,9 @@ SOURCES += \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
     EACirc/projects/estream/EstreamInterface.cpp \
     EACirc/projects/files/filesProject.cpp \
+    EACirc/projects/caesar/CaesarProject.cpp \
+    EACirc/projects/caesar/CaesarInterface.cpp \
+    EACirc/projects/caesar/Encryptor.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -232,21 +235,20 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/Version.h \
-    EACirc/circuit/ICircuit.h \
-    EACirc/circuit/ICircuitIO.h \
-    EACirc/circuit/gate/GateCircuit.h \
-    EACirc/circuit/gate/GateCircuitIO.h \
-    EACirc/circuit/polynomial/PolynomialCircuit.h \
-    EACirc/circuit/polynomial/PolynomialCircuitIO.h
+    EACirc/projects/caesar/CaesarConstants.h
 
 # === individual representation ===
 HEADERS += \
+    EACirc/circuit/ICircuit.h \
+    EACirc/circuit/ICircuitIO.h \
 
 # === circuit processing ===
 HEADERS += \
     EACirc/circuit/gate/GACallbacks.h \
     EACirc/circuit/gate/CircuitInterpreter.h \
     EACirc/circuit/gate/CircuitCommonFunctions.h \
+    EACirc/circuit/gate/GateCircuit.h \
+    EACirc/circuit/gate/GateCircuitIO.h \
 
 # === polynomials ===
 HEADERS += \
@@ -254,6 +256,8 @@ HEADERS += \
     EACirc/circuit/polynomial/GAPolyCallbacks.h \
     EACirc/circuit/polynomial/Term.h \
     EACirc/circuit/polynomial/poly.h \
+    EACirc/circuit/polynomial/PolynomialCircuit.h \
+    EACirc/circuit/polynomial/PolynomialCircuitIO.h \
 
 # === standard evaluators ===
 HEADERS += \
@@ -290,6 +294,9 @@ HEADERS += \
     EACirc/projects/estream/EstreamInterface.h \
     EACirc/projects/files/filesConstants.h \
     EACirc/projects/files/filesProject.h \
+    EACirc/projects/caesar/CaesarProject.h \
+    EACirc/projects/caesar/CaesarInterface.h \
+    EACirc/projects/caesar/Encryptor.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \
