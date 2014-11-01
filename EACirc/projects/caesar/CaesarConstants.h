@@ -5,7 +5,10 @@
 #define CAESAR_DISTINGUISHER          301
 
 // CAESAR algorithm constants
-#define CAESAR_ALG1        1
+#define CAESAR_AES128CGM        1
+
+typedef unsigned char bits_t;
+typedef unsigned long long length_t;
 
 struct CAESAR_SETTINGS {
     int usageType;

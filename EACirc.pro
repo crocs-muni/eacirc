@@ -80,6 +80,13 @@ SOURCES += \
     EACirc/projects/caesar/CaesarInterface.cpp \
     EACirc/projects/caesar/Encryptor.cpp \
 
+# === CAESAR algorithms ===
+SOURCES += \
+    EACirc/projects/caesar/aead/common/crypto_verify_16.cpp \
+    EACirc/projects/caesar/aead/common/crypto_core_aes128encrypt.cpp \
+    EACirc/projects/caesar/aead/aes128gcm/encrypt.cpp \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm.cpp \
+
 # === eSTREAM cipher files ===
 SOURCES += \
     EACirc/projects/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \
@@ -235,7 +242,6 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/Version.h \
-    EACirc/projects/caesar/CaesarConstants.h
 
 # === individual representation ===
 HEADERS += \
@@ -294,9 +300,17 @@ HEADERS += \
     EACirc/projects/estream/EstreamInterface.h \
     EACirc/projects/files/filesConstants.h \
     EACirc/projects/files/filesProject.h \
+    EACirc/projects/caesar/CaesarConstants.h \
     EACirc/projects/caesar/CaesarProject.h \
     EACirc/projects/caesar/CaesarInterface.h \
     EACirc/projects/caesar/Encryptor.h \
+
+# === CAESAR algorithms ===
+HEADERS += \
+    EACirc/projects/caesar/aead/common/api.h \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm.h \
+    EACirc/projects/caesar/aead/aes128gcm/api.h \
+    EACirc/projects/caesar/aead/aes128gcm/encrypt.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \
