@@ -56,6 +56,12 @@ int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     // bind project settings into global settings
     pGlobals->settings->project = (void*) pCaesarSettings;
 
+    // configuration checks
+    if (pGlobals->settings->testVectors.inputLength != m_caesarSettings.plaintextLength) {
+        mainLogger.out(LOGGER_ERROR) << "Test vector input length does not match plaintext length!" << endl;
+        return STAT_PROJECT_ERROR;
+    }
+
     return STAT_OK;
 }
 
@@ -64,11 +70,14 @@ int CaesarProject::initializeProject() {
     m_encryptor = new Encryptor;
     // allocate ciphertext buffer
     m_ciphertext = new bits_t[pCaesarSettings->ciphertextLength];
+
+    // TODO create headers for human readable test vector file
+
     return STAT_OK;
 }
 
 int CaesarProject::initializeProjectState() {
-    return STAT_NOT_IMPLEMENTED_YET;
+    return m_encryptor->setup();
 }
 
 int CaesarProject::saveProjectState(TiXmlNode* pRoot) const {
@@ -79,11 +88,11 @@ int CaesarProject::saveProjectState(TiXmlNode* pRoot) const {
 }
 
 int CaesarProject::loadProjectState(TiXmlNode* pRoot) {
-    return STAT_NOT_IMPLEMENTED_YET;
+    return STAT_OK;
 }
 
 int CaesarProject::createTestVectorFilesHeaders() const {
-    return STAT_NOT_IMPLEMENTED_YET;
+    return STAT_OK;
 }
 
 int CaesarProject::generateTestVectors() {
@@ -101,7 +110,30 @@ int CaesarProject::generateTestVectors() {
 
     switch (pCaesarSettings->usageType) {
     case CAESAR_DISTINGUISHER:
-
+        // generate cipher stream
+        for (int vector = 0; vector < pGlobals->settings->testVectors.setSize/2; vector++) {
+            // ciphertext stream
+            status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
+            if (status != STAT_OK) { return status; }
+            memcpy(pGlobals->testVectors.inputs[vector], m_ciphertext, pGlobals->settings->testVectors.inputLength);
+            status = m_encryptor->update();
+            if (status != STAT_OK) { return status; }
+            // 0x00 to denote ciphertext stream
+            for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+                pGlobals->testVectors.outputs[vector][byte] = 0;
+            }
+        }
+        // generate random vectors
+        for (int vector = pGlobals->settings->testVectors.setSize/2; vector < pGlobals->settings->testVectors.setSize; vector++) {
+            // random stream
+            for (int byte = 0; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                rndGen->getRandomFromInterval(255, pGlobals->testVectors.inputs[vector] + byte);
+            }
+            // 0xff to denote random stream
+            for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+                pGlobals->testVectors.outputs[vector][byte] = UCHAR_MAX;
+            }
+        }
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "unknown usage type (" << pCaesarSettings->usageType << ") in " << shortDescription() << endl;
@@ -114,11 +146,9 @@ int CaesarProject::generateTestVectors() {
 
 int CaesarProject::generateCipherDataStream() {
     int status = STAT_OK;
-    status = m_encryptor->setup();
-    if (status != STAT_OK) { return status; }
 
     int st = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
     mainLogger.out(LOGGER_INFO) << "Encryption status: " << st << endl;
 
-    return STAT_OK;
+    return status;
 }

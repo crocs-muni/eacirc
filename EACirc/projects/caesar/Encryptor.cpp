@@ -98,6 +98,58 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
         mainLogger.out(LOGGER_ERROR) << "Decryption failed (status " << encryptionStatus << ")." << endl;
         return STAT_PROJECT_ERROR;
     }
+
+    // save debug information if required
+    if (pGlobals->settings->outputs.verbosity > 1) {
+        ofstream tvFile;
+        tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << "plain:     ";
+        for (length_t byte = 0; byte < pCaesarSettings->plaintextLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int) m_plaintext[byte];
+        }
+        tvFile << endl << "key:       ";
+        for (length_t byte = 0; byte < pCaesarSettings->keyLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int) m_key[byte];
+        }
+        tvFile << endl << "ad:        ";
+        for (length_t byte = 0; byte < pCaesarSettings->adLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int) m_ad[byte];
+        }
+        tvFile << endl << "smn:       ";
+        for (length_t byte = 0; byte < pCaesarSettings->smnLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int) m_smn[byte];
+        }
+        tvFile << endl << "pmn:       ";
+        for (length_t byte = 0; byte < pCaesarSettings->pmnLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int) m_pmn[byte];
+        }
+        tvFile << endl << "encrypted: ";
+        for (length_t byte = 0; byte < *clen; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int) c[byte];
+        }
+        if (pGlobals->settings->outputs.verbosity > 2) {
+            tvFile << endl << "decrypted: ";
+            for (length_t byte = 0; byte < m_decryptedPlaintextLength; byte++) {
+                tvFile << hex << setfill('0') << setw(2) << (int) m_decryptedPlaintext[byte];
+            }
+            tvFile << endl << "dec-smn:   ";
+            for (length_t byte = 0; byte < pCaesarSettings->smnLength; byte++) {
+                tvFile << hex << setfill('0') << setw(2) << (int) m_decryptedSmn[byte];
+            }
+        }
+        tvFile << endl << "---" << endl;
+        if (tvFile.fail()) {
+            mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile.close();
+    }
+
+    // veryfing decryption
     if (pCaesarSettings->plaintextLength != m_decryptedPlaintextLength) {
         mainLogger.out(LOGGER_ERROR) << "Decrypted plaintext length mismatch (" << pCaesarSettings->plaintextLength << " versus " << m_decryptedPlaintextLength << ")." << endl;
         return STAT_PROJECT_ERROR;
