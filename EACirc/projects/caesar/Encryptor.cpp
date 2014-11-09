@@ -165,3 +165,7 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
 
     return STAT_OK;
 }
+
+string Encryptor::shortDescription() {
+    return m_cipher->shortDescription();
+}

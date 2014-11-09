@@ -86,7 +86,7 @@ int IProject::createTestVectorFilesHeadersMain() const {
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile << dec << left;
-    tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator:" << pGlobals->evaluator->shortDescription() << ")" << endl;
+    tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator: " << pGlobals->evaluator->shortDescription() << ")" << endl;
     tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
     tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
     tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;

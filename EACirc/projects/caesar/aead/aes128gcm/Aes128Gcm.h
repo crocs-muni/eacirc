@@ -4,6 +4,7 @@
 #include "../../CaesarInterface.h"
 
 class Aes128Gcm : public CaesarInterface {
+    const int maxNumRounds = 10;
 public:
     Aes128Gcm(int numRounds);
     ~Aes128Gcm();

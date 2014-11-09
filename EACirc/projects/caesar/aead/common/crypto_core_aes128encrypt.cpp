@@ -104,7 +104,8 @@ int crypto_core_aes128encrypt(
     for (i = 0;i < 4;++i)
       state[i][j] = in[j * 4 + i] ^ expanded[i][j];
 
-  for (r = 0;r < 10;++r) {
+// original: for (r = 0;r < 10;++r) {
+  for (r = 0;r < numRounds; ++r) {
     for (i = 0;i < 4;++i)
       for (j = 0;j < 4;++j)
         newstate[i][j] = bytesub(state[i][j]);

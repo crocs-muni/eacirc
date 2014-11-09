@@ -69,6 +69,11 @@ public:
      */
     int encrypt(bits_t *c, length_t *clen);
 
+    /**
+     * @return shortDescription of the cipher
+     */
+    std::string shortDescription();
+
 };
 
 #endif // ENCRYPTOR_H

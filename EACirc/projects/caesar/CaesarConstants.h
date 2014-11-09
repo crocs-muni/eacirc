@@ -17,8 +17,6 @@ typedef unsigned long long length_t;
 
 struct CAESAR_SETTINGS {
     int usageType;
-    bool useFixedSeed;
-    unsigned long seed;
     int algorithm;
     bool limitAlgRounds;
     int algorithmRoundsCount;
@@ -40,8 +38,6 @@ struct CAESAR_SETTINGS {
 
     CAESAR_SETTINGS(void) {
         usageType = -1;
-        useFixedSeed = false;
-        seed = 0;
         algorithm = -1;
         limitAlgRounds = false;
         algorithmRoundsCount = -1;

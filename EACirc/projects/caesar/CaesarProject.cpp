@@ -57,6 +57,7 @@ int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     pGlobals->settings->project = (void*) pCaesarSettings;
 
     // configuration checks
+    // TODO: do somthing with signed/unsigned comparison
     if (pGlobals->settings->testVectors.inputLength != m_caesarSettings.plaintextLength) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input length does not match plaintext length!" << endl;
         return STAT_PROJECT_ERROR;
@@ -92,6 +93,25 @@ int CaesarProject::loadProjectState(TiXmlNode* pRoot) {
 }
 
 int CaesarProject::createTestVectorFilesHeaders() const {
+    ofstream tvFile;
+    tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
+    if (!tvFile.is_open()) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+        return STAT_FILE_WRITE_FAIL;
+    }
+    tvFile << dec << left;
+    tvFile << pCaesarSettings->algorithm << " \t\t(algorithm:" << m_encryptor->shortDescription() << ")" << endl;
+    tvFile << pCaesarSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+    tvFile << pCaesarSettings->algorithmRoundsCount << " \t\t(algorithm rounds - if limited)" << endl;
+    tvFile << pCaesarSettings->plaintextLength << " \t\t(plaintext length)" << endl;
+    tvFile << pCaesarSettings->adLength << " \t\t(associated data length)" << endl;
+    tvFile << pCaesarSettings->plaintextType << " \t\t(plaintext type)" << endl;
+    tvFile << pCaesarSettings->keyType << " \t\t(key type)" << endl;
+    tvFile << pCaesarSettings->adType << " \t\t(associated data type)" << endl;
+    tvFile << pCaesarSettings->smnType << " \t\t(secret message number type)" << endl;
+    tvFile << pCaesarSettings->pmnType << " \t\t(public message number type)" << endl;
+    tvFile.close();
+
     return STAT_OK;
 }
 

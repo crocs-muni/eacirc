@@ -1,5 +1,6 @@
 #include "encrypt.h"
 #include "../common/api.h"
+// original: #define AES(out,in,k) crypto_core_aes128encrypt(out,in,k,0)
 #define AES(out,in,k) CaesarCommon::crypto_core_aes128encrypt(out,in,k,0)
 
 namespace Aes128Gcm_raw {
@@ -171,6 +172,7 @@ int crypto_aead_decrypt(
 
   addmul(accum,finalblock,16,H);
   for (i = 0;i < 16;++i) accum[i] ^= T[i];
+// original:   if (crypto_verify_16(accum,c) != 0) return -1;
   if (CaesarCommon::crypto_verify_16(accum,c) != 0) return -1;
 
   c = origc;
