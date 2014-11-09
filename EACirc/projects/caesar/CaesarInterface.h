@@ -10,11 +10,6 @@ protected:
     int m_algorithm;
     //! number of rounds
     int m_numRounds;
-    //! algorothm constants
-    int m_keyLength;
-    int m_secretMessageNumberLength;
-    int m_publicMessageNumberLength;
-    int m_cipertextOverhead;
 
 public:
     CaesarInterface(int a, int nr, int kl, int smnl, int pmnl, int co);
@@ -34,12 +29,6 @@ public:
     virtual int decrypt(bits_t *m, length_t *outputmlen, bits_t *nsec,
                         const bits_t *c, length_t clen, const bits_t *ad, length_t adlen,
                         const bits_t *npub, const bits_t *k) = 0;
-
-    /** get algorothm constatns */
-    int getKeyLength();
-    int getSecretMessageNumberLength();
-    int getPublicMessageNumberLength();
-    int getCipertextOverhead();
 
     /** human readable ag=lgorithm description */
     virtual std::string shortDescription() const = 0;

@@ -11,8 +11,9 @@ class CaesarProject : public IProject {
     //! settings for CAESAR project
     CAESAR_SETTINGS m_caesarSettings;
 
-    bits_t* m_message;
+    //! encrypted plaintext
     bits_t* m_ciphertext;
+    //! number of valid bytes in m_ciphertext
     length_t m_realCiphertextLength;
 
     /** generate binary output of ciphertext to cout

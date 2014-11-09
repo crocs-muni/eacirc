@@ -3,12 +3,10 @@
 CAESAR_SETTINGS* pCaesarSettings = NULL;
 
 CaesarProject::CaesarProject()
-    : IProject(PROJECT_CAESAR), m_encryptor(NULL), m_message(NULL), m_ciphertext(NULL),
-      m_realCiphertextLength(0) { }
+    : IProject(PROJECT_CAESAR), m_encryptor(NULL), m_ciphertext(NULL), m_realCiphertextLength(0) { }
 
 CaesarProject::~CaesarProject() {
     if (m_encryptor != NULL) { delete m_encryptor; m_encryptor = NULL; }
-    if (m_message != NULL) { delete m_message; m_message = NULL; }
     if (m_ciphertext != NULL) { delete m_ciphertext; m_ciphertext = NULL; }
 }
 
@@ -20,8 +18,6 @@ string CaesarProject::testingConfiguration() {
     string config =
             "<CAESAR>"
             "    <USAGE_TYPE>301</USAGE_TYPE>"
-            "    <USE_FIXED_SEED>0</USE_FIXED_SEED>"
-            "    <SEED>145091104</SEED>"
             "    <ALGORITHM>1</ALGORITHM>"
             "    <LIMIT_NUM_OF_ROUNDS>0</LIMIT_NUM_OF_ROUNDS>"
             "    <ALGORITHM_ROUNDS>3</ALGORITHM_ROUNDS>"
@@ -40,8 +36,6 @@ string CaesarProject::testingConfiguration() {
 
 int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_caesarSettings.usageType = atoi(getXMLElementValue(pRoot,"CAESAR/USAGE_TYPE").c_str());
-    m_caesarSettings.useFixedSeed = (atoi(getXMLElementValue(pRoot,"CAESAR/USE_FIXED_SEED").c_str())) ? true : false;
-    istringstream(getXMLElementValue(pRoot,"CAESAR/SEED")) >> m_caesarSettings.seed;
     m_caesarSettings.algorithm = atoi(getXMLElementValue(pRoot,"CAESAR/ALGORITHM").c_str());
     m_caesarSettings.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"CAESAR/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
     m_caesarSettings.algorithmRoundsCount = atoi(getXMLElementValue(pRoot,"CAESAR/ALGORITHM_ROUNDS").c_str());
@@ -68,8 +62,7 @@ int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
 int CaesarProject::initializeProject() {
     // allocate encryptor
     m_encryptor = new Encryptor;
-    // allocate message and ciphertext fields
-    m_message = new bits_t[pCaesarSettings->plaintextLength];
+    // allocate ciphertext buffer
     m_ciphertext = new bits_t[pCaesarSettings->ciphertextLength];
     return STAT_OK;
 }
@@ -120,10 +113,11 @@ int CaesarProject::generateTestVectors() {
 }
 
 int CaesarProject::generateCipherDataStream() {
-    m_encryptor->setup();
-    memset(m_message, 1, pCaesarSettings->plaintextLength);
+    int status = STAT_OK;
+    status = m_encryptor->setup();
+    if (status != STAT_OK) { return status; }
 
-    int st = m_encryptor->encrypt(m_message, m_ciphertext, &m_realCiphertextLength);
+    int st = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
     mainLogger.out(LOGGER_INFO) << "Encryption status: " << st << endl;
 
     return STAT_OK;

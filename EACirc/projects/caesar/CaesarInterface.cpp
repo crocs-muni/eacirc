@@ -4,26 +4,14 @@
 #include "EACglobals.h"
 
 CaesarInterface::CaesarInterface(int a, int nr, int kl, int smnl, int pmnl, int co)
-    : m_algorithm(a), m_numRounds(nr), m_keyLength(kl), m_secretMessageNumberLength(smnl),
-      m_publicMessageNumberLength(pmnl), m_cipertextOverhead(co) { }
+    : m_algorithm(a), m_numRounds(nr) {
+    pCaesarSettings->keyLength = kl;
+    pCaesarSettings->smnLength = smnl;
+    pCaesarSettings->pmnLength = pmnl;
+    pCaesarSettings->cipertextOverhead = co;
+}
 
 CaesarInterface::~CaesarInterface() { }
-
-int CaesarInterface::getKeyLength() {
-    return m_keyLength;
-}
-
-int CaesarInterface::getSecretMessageNumberLength() {
-    return m_secretMessageNumberLength;
-}
-
-int CaesarInterface::getPublicMessageNumberLength() {
-    return m_publicMessageNumberLength;
-}
-
-int CaesarInterface::getCipertextOverhead() {
-    return m_cipertextOverhead;
-}
 
 CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds) {
     switch (algorithm) {
