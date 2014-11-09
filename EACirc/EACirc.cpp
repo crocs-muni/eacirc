@@ -7,12 +7,12 @@
 #include "XMLProcessor.h"
 
 #ifdef _WIN32
-	#include <Windows.h>
-	#define getpid() GetCurrentProcessId()
+    #include <Windows.h>
+    #define getpid() GetCurrentProcessId()
 #endif
 #ifdef __linux__
-	#include <sys/types.h>
-	#include <unistd.h>
+    #include <sys/types.h>
+    #include <unistd.h>
 #endif
 
 EACirc::EACirc()
@@ -85,7 +85,7 @@ void EACirc::loadConfiguration(const string filename) {
     }
     m_status = m_circuit->loadCircuitConfiguration(pRoot);
     if (m_status != STAT_OK) return;
-    mainLogger.out(LOGGER_INFO) << "Circuit representation configuration loaded. (" << m_circuit->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Circuit representation configuration loaded (" << m_circuit->shortDescription() << ")." << endl;
 
     // load project and its configuration
     m_project = IProject::getProject(m_settings.main.projectType);
@@ -96,7 +96,7 @@ void EACirc::loadConfiguration(const string filename) {
     }
     m_status = m_project->loadProjectConfiguration(pRoot);
     if (m_status != STAT_OK) return;
-    mainLogger.out(LOGGER_INFO) << "Project configuration loaded. (" << m_project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project configuration loaded (" << m_project->shortDescription() << ")." << endl;
 
     // allocate space for testVecotrs
     pGlobals->testVectors.allocate();
@@ -332,10 +332,10 @@ void EACirc::loadPopulation(const string filename) {
         delete pRoot;
         return;
     }
-    
+
     GAPopulation * population = new GAPopulation;
     GAGenome * genome = m_circuit->createGenome(true);
-    
+
     // LOAD genomes
     TiXmlElement* pGenome = getXMLElement(pRoot,"population/genome")->ToElement();
     string textCircuit;
@@ -373,10 +373,10 @@ void EACirc::createPopulation() {
     seedAndResetGAlib(*population);
     delete population;
     population = NULL;
-    
+
     mainLogger.out(LOGGER_INFO) << "Initializing population, representation: " << m_circuit->shortDescription() << endl;
     m_gaData->initialize();
-    
+
     // reset GAlib seed
     mainGenerator->getRandomFromInterval(UINT_MAX, &m_currentGalibSeed);
     seedAndResetGAlib(m_gaData->population());
@@ -432,12 +432,12 @@ void EACirc::prepare() {
     // initialize backend
     m_status = m_circuit->initialize();
     if (m_status != STAT_OK) return;
-    mainLogger.out(LOGGER_INFO) << "Circuit backend now fully initialized. (" << m_circuit->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Circuit backend now fully initialized (" << m_circuit->shortDescription() << ")." << endl;
 
     // initialize project
     m_status = m_project->initializeProject();
     if (m_status != STAT_OK) return;
-    mainLogger.out(LOGGER_INFO) << "Project now fully initialized. (" << m_project->shortDescription() << ")" << endl;
+    mainLogger.out(LOGGER_INFO) << "Project now fully initialized (" << m_project->shortDescription() << ")." << endl;
 
     // initialize evaluator
     if (m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
@@ -451,7 +451,7 @@ void EACirc::prepare() {
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize evaluator (" << m_settings.main.evaluatorType << ")." << endl;
         m_status = STAT_CONFIG_INCORRECT;
     }
-    
+
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
     }
@@ -546,13 +546,13 @@ void EACirc::evaluateStep() {
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Maximum);
     fitProgressFile << "\t" << m_gaData->statistics().current(GAStatistics::Minimum);
     fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->size();
-    
+
     if (pGlobals->stats.pvaluesBestIndividual->size() > 0){
         fitProgressFile << "\t" << pGlobals->stats.pvaluesBestIndividual->back();
     } else {
         fitProgressFile << "\t" << -1;
     }
-            
+
     fitProgressFile << endl;
     fitProgressFile.close();
 
@@ -581,7 +581,7 @@ void EACirc::evaluateStep() {
     pGlobals->stats.avgMinFitSum += m_gaData->statistics().current(GAStatistics::Minimum);
     pGlobals->stats.avgMaxFitSum += m_gaData->statistics().current(GAStatistics::Maximum);
     pGlobals->stats.avgCount++;
-    
+
     // Call visitor, if non-null.
     if (m_evaluateStepVisitor!=NULL){
         m_evaluateStepVisitor(this);
@@ -692,19 +692,19 @@ void EACirc::run() {
     const unsigned long pvalsSize = pGlobals->stats.pvaluesBestIndividual->size();
     if (pvalsSize > 2){
         mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
-        
+
         double KS_critical_alpha_5 = KS_get_critical_value(pvalsSize);
         double KS_P_value = KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
         mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
         mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
-        
+
         if(KS_P_value > KS_critical_alpha_5) {
             mainLogger.out(LOGGER_INFO) << "   KS is in 5% interval -> uniformity hypothesis rejected." << endl;
         } else {
             mainLogger.out(LOGGER_INFO) << "   KS is not in 5% interval -> is uniform." << endl;
         }
     }
-    
+
     // print the best circuit into separate file, prune if allowed
     GAGenome & genomeBest = m_gaData->population().best();
     m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);

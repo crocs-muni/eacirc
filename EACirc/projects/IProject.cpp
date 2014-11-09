@@ -123,6 +123,8 @@ int IProject::generateAndSaveTestVectors() {
 
 int IProject::saveTestVectors() const {
     ofstream tvFile;
+
+    // save binary form
     tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
     if (!tvFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
@@ -133,10 +135,38 @@ int IProject::saveTestVectors() const {
         tvFile.write((char*)(pGlobals->testVectors.outputs[testVector]), pGlobals->settings->testVectors.outputLength);
     }
     if (tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS << ")." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile.close();
+
+    // save human-readable form
+    if (pGlobals->settings->outputs.verbosity > 0) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << endl << "##### Final Test set for generation " << pGlobals->stats.actGener << " #####" << endl;
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
+            tvFile << "in:  ";
+            for (int byte = 0; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                tvFile << hex << setfill('0') << setw(2) << (int) pGlobals->testVectors.inputs[testVector][byte];
+            }
+            tvFile << endl;
+            tvFile << "out: ";
+            for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+                tvFile << hex << setfill('0') << setw(2) << (int) pGlobals->testVectors.outputs[testVector][byte];
+            }
+            tvFile << endl;
+        }
+        if (tvFile.fail()) {
+            mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile.close();
+    }
+
     return STAT_OK;
 }
 
