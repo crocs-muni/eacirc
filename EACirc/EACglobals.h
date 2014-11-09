@@ -82,6 +82,7 @@ struct SETTINGS_MAIN {
 
 //! settings corresponding to EACIRC/OUTPUTS
 struct SETTINGS_OUTPUTS {
+    int verbosity;                  //! log verposity level
     bool graphFiles;                //! should graph files be created?
     bool intermediateCircuits;      //! should intermediate circuits be saved?
     bool allowPrunning;             //! save prunned versions as well?

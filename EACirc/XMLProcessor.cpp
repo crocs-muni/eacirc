@@ -20,6 +20,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->main.circuitSizeInput = atoi(getXMLElementValue(pRoot,"MAIN/CIRCUIT_SIZE_INPUT").c_str());
 
     // parsing EACIRC/OUTPUTS
+    pSettings->outputs.verbosity = atoi(getXMLElementValue(pRoot,"OUTPUTS/VERBOSITY").c_str());
     pSettings->outputs.graphFiles = (atoi(getXMLElementValue(pRoot,"OUTPUTS/GRAPH_FILES").c_str())) ? true : false;
     pSettings->outputs.intermediateCircuits = (atoi(getXMLElementValue(pRoot,"OUTPUTS/INTERMEDIATE_CIRCUITS").c_str())) ? true : false;
     pSettings->outputs.allowPrunning = (atoi(getXMLElementValue(pRoot,"OUTPUTS/ALLOW_PRUNNING").c_str())) ? true : false;
@@ -45,7 +46,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->ga.probMutation = (float) atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
     pSettings->ga.mutateFunctions = atoi(getXMLElementValue(pRoot,"GA/MUTATE_FUNCTIONS").c_str()) ? true : false;
     pSettings->ga.mutateConnectors = atoi(getXMLElementValue(pRoot,"GA/MUTATE_CONNECTORS").c_str()) ? true : false;
-    
+
     // parsing EACIRC/TEST_VECTORS
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
     pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());
