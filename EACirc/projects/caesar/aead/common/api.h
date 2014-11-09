@@ -2,6 +2,7 @@
 #define CAESAR_COMMON_H
 
 namespace CaesarCommon {
+extern int numRounds;
 
 int crypto_verify_16(const unsigned char *x,const unsigned char *y);
 int crypto_core_aes128encrypt(

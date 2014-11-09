@@ -1,9 +1,18 @@
 #include "Aes128Gcm.h"
 #include "encrypt.h"
+#include "../common/api.h"
 
 Aes128Gcm::Aes128Gcm(int numRounds)
     : CaesarInterface(CAESAR_AES128CGM, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
-    Aes128Gcm_raw::numRounds = m_numRounds;
+    // TODO add checks for number of rounds
+    if (numRounds == -1) {
+        // TODO set standard number of rounds
+        Aes128Gcm_raw::numRounds = 0;
+        CaesarCommon::numRounds = 0;
+    } else {
+        Aes128Gcm_raw::numRounds = m_numRounds;
+        CaesarCommon::numRounds = m_numRounds;
+    }
 }
 
 Aes128Gcm::~Aes128Gcm() { }

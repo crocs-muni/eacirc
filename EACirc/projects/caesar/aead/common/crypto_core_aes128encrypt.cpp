@@ -1,6 +1,7 @@
 #include "api.h"
 
 namespace CaesarCommon {
+int numRounds;
 
 static unsigned char multiply(unsigned int c,unsigned int d)
 {

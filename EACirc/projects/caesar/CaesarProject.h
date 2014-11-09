@@ -11,6 +11,19 @@ class CaesarProject : public IProject {
     //! settings for CAESAR project
     CAESAR_SETTINGS m_caesarSettings;
 
+    bits_t* m_message;
+    bits_t* m_ciphertext;
+    length_t m_realCiphertextLength;
+
+    /** generate binary output of ciphertext to cout
+      * - used to generate data stream for statistical testing (dieharder, etc.)
+      * - at least the number of bytes specified in config file is generated (rounded to nearest set)
+      * - generation is infinite if streamSize is set to 0
+      * - after generation, whole program ends with status INTENTIONAL_EXIT
+      * @return status
+      */
+    int generateCipherDataStream();
+
 public:
     /** constructor, memory allocation
       */

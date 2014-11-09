@@ -17,7 +17,7 @@ protected:
     int m_cipertextOverhead;
 
 public:
-    CaesarInterface(int a, int nr, int kl, int sml, int pml, int co);
+    CaesarInterface(int a, int nr, int kl, int smnl, int pmnl, int co);
     virtual ~CaesarInterface();
 
     /** encryption and decryption functions
