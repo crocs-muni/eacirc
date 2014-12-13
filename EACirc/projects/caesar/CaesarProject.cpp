@@ -135,7 +135,15 @@ int CaesarProject::generateTestVectors() {
             // ciphertext stream
             status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
             if (status != STAT_OK) { return status; }
-            memcpy(pGlobals->testVectors.inputs[vector], m_ciphertext, pGlobals->settings->testVectors.inputLength);
+            // copy authentication tag
+            memcpy(pGlobals->testVectors.inputs[vector], m_ciphertext+m_caesarSettings.plaintextLength, m_realCiphertextLength-m_caesarSettings.plaintextLength);
+            // fill with zeroes
+            if (m_realCiphertextLength-m_caesarSettings.plaintextLength < pGlobals->settings->testVectors.inputLength) {
+                mainLogger.out(LOGGER_WARNING) << "Authentication tag shorter than test vector input -- padded with zeroes." << endl;
+                for (int byte = m_realCiphertextLength-m_caesarSettings.plaintextLength; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                    pGlobals->testVectors.inputs[vector][byte] = 0;
+                }
+            }
             status = m_encryptor->update();
             if (status != STAT_OK) { return status; }
             // 0x00 to denote ciphertext stream
