@@ -6,7 +6,7 @@ TARGET=EACirc
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
     -Wno-unused-function -Wno-unused-value
 
-QMAKE_TARGET = eacirc2
+QMAKE_TARGET = EACirc
 QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML

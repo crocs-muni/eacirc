@@ -54,6 +54,7 @@ void Encryptor::increaseArray(bits_t* data, length_t dataLength) {
 }
 
 int Encryptor::setup() {
+    if (m_cipher == NULL) { return STAT_PROJECT_ERROR; }
     int status = STAT_OK;
     status = initArray(m_ad, pCaesarSettings->adLength, pCaesarSettings->adType);
     if (status != STAT_OK) { return status; }
@@ -65,7 +66,6 @@ int Encryptor::setup() {
     if (status != STAT_OK) { return status; }
     status = initArray(m_plaintext, pCaesarSettings->plaintextLength, pCaesarSettings->plaintextType);
     if (status != STAT_OK) { return status; }
-
     m_setup = true;
     return status;
 }

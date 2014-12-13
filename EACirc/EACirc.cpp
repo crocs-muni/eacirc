@@ -642,7 +642,7 @@ void EACirc::run() {
             }
         }
         if ( m_settings.testVectors.evaluateBeforeTestVectorChange &&
-             m_actGener %(m_settings.testVectors.setChangeFrequency) == 0) {
+             m_actGener % (m_settings.testVectors.setChangeFrequency) == 0) {
             evaluateNow = true;
         }
         if (!m_settings.testVectors.evaluateBeforeTestVectorChange &&
@@ -660,7 +660,7 @@ void EACirc::run() {
             m_gaData->pop->flushEvalution();
         }
 
-        // evaluate population on new  and save statistics, if needed
+        // evaluate population on new and save statistics, if needed
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
             preEvaluate();
             m_gaData->pop->evaluate(gaTrue);

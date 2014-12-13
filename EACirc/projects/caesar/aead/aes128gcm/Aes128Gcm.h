@@ -1,5 +1,5 @@
-#ifndef CLASS_H
-#define CLASS_H
+#ifndef AES128GCM_H
+#define AES128GCM_H
 
 #include "../../CaesarInterface.h"
 
@@ -17,4 +17,4 @@ public:
     std::string shortDescription() const;
 };
 
-#endif // CLASS_H
+#endif // AES128GCM_H

@@ -1,5 +1,5 @@
-#ifndef CLASS_H
-#define CLASS_H
+#ifndef ACORN128_H
+#define ACORN128_H
 
 #include "../../CaesarInterface.h"
 
@@ -17,4 +17,4 @@ public:
     std::string shortDescription() const;
 };
 
-#endif // CLASS_H
+#endif // ACORN128_H
