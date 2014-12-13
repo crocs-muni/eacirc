@@ -1,7 +1,9 @@
 #include "CaesarInterface.h"
+#include "EACglobals.h"
+
 // CAESAR algorithms
 #include "aead/aes128gcm/Aes128Gcm.h"
-#include "EACglobals.h"
+#include "aead/acorn123/Acorn128.h"
 
 CaesarInterface::CaesarInterface(int a, int nr, int kl, int smnl, int pmnl, int co)
     : m_algorithm(a), m_numRounds(nr) {

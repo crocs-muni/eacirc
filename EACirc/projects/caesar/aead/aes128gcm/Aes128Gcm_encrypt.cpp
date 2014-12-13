@@ -1,4 +1,4 @@
-#include "encrypt.h"
+#include "Aes128Gcm_encrypt.h"
 #include "../common/api.h"
 // original: #define AES(out,in,k) crypto_core_aes128encrypt(out,in,k,0)
 #define AES(out,in,k) CaesarCommon::crypto_core_aes128encrypt(out,in,k,0)

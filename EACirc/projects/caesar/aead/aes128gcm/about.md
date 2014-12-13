@@ -10,8 +10,8 @@
 
 ## Changes to the code
 
-* File renamed to cpp.
-* 'crypto_aead.h' include changed to 'encrypt.h'.
+* File renamed to cpp, name prefixed.
+* 'crypto_aead.h' include changed to 'Aes128gcm_encrypt.h'.
 * Common includes changed to '../common/api.h'.
 * Namespace added.
 * Varible numRounds added.

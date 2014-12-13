@@ -1,5 +1,5 @@
 #include "Aes128Gcm.h"
-#include "encrypt.h"
+#include "Aes128Gcm_encrypt.h"
 #include "../common/api.h"
 #include "EACglobals.h"
 

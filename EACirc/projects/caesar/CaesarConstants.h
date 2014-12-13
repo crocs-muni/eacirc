@@ -11,6 +11,7 @@
 
 // CAESAR algorithm constants
 #define CAESAR_AES128CGM        1
+#define CAESAR_ACORN128         2
 
 typedef unsigned char bits_t;
 typedef unsigned long long length_t;

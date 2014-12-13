@@ -84,8 +84,10 @@ SOURCES += \
 SOURCES += \
     EACirc/projects/caesar/aead/common/crypto_verify_16.cpp \
     EACirc/projects/caesar/aead/common/crypto_core_aes128encrypt.cpp \
-    EACirc/projects/caesar/aead/aes128gcm/encrypt.cpp \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm_encrypt.cpp \
     EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm.cpp \
+    EACirc/projects/caesar/aead/acorn128/Acorn128.cpp \
+    EACirc/projects/caesar/aead/acorn128/Acorn128_encrypt.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -310,7 +312,10 @@ HEADERS += \
     EACirc/projects/caesar/aead/common/api.h \
     EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm.h \
     EACirc/projects/caesar/aead/aes128gcm/api.h \
-    EACirc/projects/caesar/aead/aes128gcm/encrypt.h \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm_encrypt.h \
+    EACirc/projects/caesar/aead/acorn128/Acorn128.h \
+    EACirc/projects/caesar/aead/acorn128/api.h \
+    EACirc/projects/caesar/aead/acorn128/Acorn128_encrypt.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \
@@ -514,4 +519,9 @@ HEADERS += \
     EACirc/galib/std_stream.h
 
 OTHER_FILES += \
-    EACirc/config.xml
+    EACirc/config.xml \
+
+# CAESAR candidates info files
+OTHER_FILES += \
+    EACirc/projects/caesar/aead/acorn128/about.md \
+    EACirc/projects/caesar/aead/aes128gcm/about.md \
