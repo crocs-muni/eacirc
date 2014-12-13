@@ -25,7 +25,7 @@ PROFILE_FLAGS	= -p
 
 # other global settings
 INC_DIRS=-IEACirc -IEACirc/galib -IEACirc/tinyXML
-INC_LIBS=-LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML
+INC_LIBS=-LEACirc/galib -LEACirc/tinyXML -lga -ltinyXML -lcrypto
 
 # === EACirc Main ===
 SOURCES=
