@@ -3,7 +3,7 @@
 #include "generators/IRndGen.h"
 
 Encryptor::Encryptor()
-    : m_cipher(CaesarInterface::getCaesarFunction(pCaesarSettings->algorithm, pCaesarSettings->algorithmRoundsCount)),
+    : m_cipher(CaesarInterface::getCaesarFunction(pCaesarSettings->algorithm, pCaesarSettings->algorithmRoundsCount, pCaesarSettings->algorithmMode)),
       m_key(new bits_t[pCaesarSettings->keyLength]),
       m_ad(new bits_t[pCaesarSettings->adLength]),
       m_smn(new bits_t[pCaesarSettings->smnLength]),

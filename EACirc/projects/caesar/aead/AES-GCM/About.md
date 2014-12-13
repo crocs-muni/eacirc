@@ -15,8 +15,8 @@
 ## Changes to the code
 
 * File renamed to cpp, name prefixed.
-* 'crypto_aead.h' include changed to 'Aes128gcm_encrypt.h'.
+* Includes sorted out.
 * Common includes changed to '../common/api.h'.
 * Namespace added.
-* Varible numRounds added.
+* Variable numRounds added.
 * Functions 'crypto_core_aes128encrypt' and 'crypto_verify_16' called from namespace CaesarCommon.

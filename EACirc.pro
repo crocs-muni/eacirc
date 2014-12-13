@@ -7,10 +7,11 @@ SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but
     -Wno-unused-function -Wno-unused-value
 
 QMAKE_TARGET = EACirc
-QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
+QMAKE_LFLAGS_RELEASE += # -static -static-libgcc -static-libstdc++
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
 INCLUDEPATH += ./EACirc ./EACirc/galib ./EACirc/tinyXML
+LIBS += -lcrypto
 
 # === main project files ===
 SOURCES += \
@@ -88,6 +89,8 @@ SOURCES += \
     EACirc/projects/caesar/aead/AES-GCM/AesGcm.cpp \
     EACirc/projects/caesar/aead/ACORN/Acorn.cpp \
     EACirc/projects/caesar/aead/ACORN/Acorn_encrypt.cpp \
+    EACirc/projects/caesar/aead/OCB/Ocb.cpp \
+    EACirc/projects/caesar/aead/OCB/Ocb_encrypt.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -316,6 +319,9 @@ HEADERS += \
     EACirc/projects/caesar/aead/ACORN/Acorn.h \
     EACirc/projects/caesar/aead/ACORN/api.h \
     EACirc/projects/caesar/aead/ACORN/Acorn_encrypt.h \
+    EACirc/projects/caesar/aead/OCB/api.h \
+    EACirc/projects/caesar/aead/OCB/Ocb.h \
+    EACirc/projects/caesar/aead/OCB/Ocb_encrypt.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \
@@ -526,3 +532,4 @@ OTHER_FILES += \
     EACirc/projects/caesar/aead/common/About.md \
     EACirc/projects/caesar/aead/ACORN/About.md \
     EACirc/projects/caesar/aead/AES-GCM/About.md \
+    EACirc/projects/caesar/aead/OCB/About.md \

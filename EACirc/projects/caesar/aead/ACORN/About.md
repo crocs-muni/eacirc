@@ -15,6 +15,6 @@
 ## Changes to the code
 
 * File renamed to cpp, name prefixed.
-* 'crypto_aead.h' include changed to 'Acorn128_encrypt.h'.
+* Includes sorted out.
 * Namespace added.
-* Varible numRounds added.
+* Variable numRounds added.

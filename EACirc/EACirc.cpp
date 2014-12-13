@@ -253,7 +253,11 @@ void EACirc::createState() {
     mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
-    m_project->initializeProjectState();
+    m_status = m_project->initializeProjectState();
+    if (m_status != STAT_OK) {
+        mainLogger.out(LOGGER_ERROR) << "Project intial state setup failed (" << m_project->shortDescription() << ")." << endl;
+        return;
+    }
     mainLogger.out(LOGGER_INFO) << "Project intial state setup successful (" << m_project->shortDescription() << ")." << endl;
 }
 
@@ -437,7 +441,7 @@ void EACirc::prepare() {
     // initialize project
     m_status = m_project->initializeProject();
     if (m_status != STAT_OK) return;
-    mainLogger.out(LOGGER_INFO) << "Project now fully initialized (" << m_project->shortDescription() << ")." << endl;
+    mainLogger.out(LOGGER_INFO) << "Project now initialized (" << m_project->shortDescription() << ")." << endl;
 
     // initialize evaluator
     if (m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {

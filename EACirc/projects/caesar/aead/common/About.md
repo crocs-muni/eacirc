@@ -11,5 +11,5 @@
 
 * Header 'api.h' created and included in source.
 * Namespace added.
-* Varible numRounds added.
+* Variable numRounds added.
 * AES implementation to be changed?

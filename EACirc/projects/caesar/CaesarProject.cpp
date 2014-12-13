@@ -37,6 +37,7 @@ string CaesarProject::testingConfiguration() {
 int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_caesarSettings.usageType = atoi(getXMLElementValue(pRoot,"CAESAR/USAGE_TYPE").c_str());
     m_caesarSettings.algorithm = atoi(getXMLElementValue(pRoot,"CAESAR/ALGORITHM").c_str());
+    m_caesarSettings.algorithmMode = atoi(getXMLElementValue(pRoot,"CAESAR/ALGORITHM_MODE").c_str());
     m_caesarSettings.limitAlgRounds = (atoi(getXMLElementValue(pRoot,"CAESAR/LIMIT_NUM_OF_ROUNDS").c_str())) ? true : false;
     m_caesarSettings.algorithmRoundsCount = atoi(getXMLElementValue(pRoot,"CAESAR/ALGORITHM_ROUNDS").c_str());
     istringstream(getXMLElementValue(pRoot,"CAESAR/PLAINTEXT_LENGTH")) >> m_caesarSettings.plaintextLength;

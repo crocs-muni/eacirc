@@ -36,9 +36,10 @@ public:
     /** allocate new caesar algorithm according to parameters
       * @param algorithm        CAESAR algorithm constant
       * @param numRounds        number of rounds used
+      * @param mode             cipher mode (if needed)
       * @return allocated CAESAR algorithm obejct
       */
-    static CaesarInterface* getCaesarFunction(int algorithm, int numRounds);
+    static CaesarInterface* getCaesarFunction(int algorithm, int numRounds, int mode);
 };
 
 #endif // CAESARINTERFACE_H
