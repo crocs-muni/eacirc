@@ -5,6 +5,7 @@
 *.Release
 *.sdf
 *.opensdf
+
 # object files, linked application, build filed
 *.o
 *.ocpp
@@ -23,12 +24,17 @@ utils/start.bat
 [Rr]un/
 EACirc/galib/BUILD
 EACirc/EACirc
+
 # backup and system files
 *~
 *.autosave
 notes.txt
 *.dgml
 *.cd
+
+# Version file (with current commit hash)
+EACirc/Version.h
+
 # results files with circuits created during debuging
 circuit_*.dot
 circuit_*.c

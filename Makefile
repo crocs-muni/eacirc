@@ -69,8 +69,11 @@ libtinyXML.a:
 %.oc: %.c
 	$(CC) $(FLAGS) $(INC_DIRS) -c -o "$@" "$<"
 
-main: libs $(OBJECTS_MAIN)
+.PHONY: preBuild
+preBuild:
 	scripts/pre-build.sh
+
+main: libs preBuild $(OBJECTS_MAIN)
 	$(CXX) $(CXXFLAGS) $(FLAGS) -o EACirc/EACirc $(OBJECTS_MAIN) $(INC_DIRS) $(INC_LIBS)
 	scripts/post-build.sh
 	@echo ======================================
