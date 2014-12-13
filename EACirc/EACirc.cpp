@@ -662,7 +662,6 @@ void EACirc::run() {
 
         // evaluate population on new and save statistics, if needed
         if (evaluateNow || m_settings.testVectors.evaluateEveryStep) {
-            preEvaluate();
             m_gaData->pop->evaluate(gaTrue);
             m_gaData->pop->scale(gaTrue);
             m_gaData->stats.update(m_gaData->population());
