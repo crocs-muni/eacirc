@@ -1,9 +1,9 @@
-#include "Aes128Gcm_encrypt.h"
+#include "AesGcm_encrypt.h"
 #include "../common/api.h"
 // original: #define AES(out,in,k) crypto_core_aes128encrypt(out,in,k,0)
 #define AES(out,in,k) CaesarCommon::crypto_core_aes128encrypt(out,in,k,0)
 
-namespace Aes128Gcm_raw {
+namespace AesGcm_raw {
 int numRounds;
 
 static void store32(unsigned char *x,unsigned long long u)

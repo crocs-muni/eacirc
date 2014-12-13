@@ -1,9 +1,9 @@
-#ifndef CRYPTO_AEAD_H
-#define CRYPTO_AEAD_H
+#ifndef AESGCM_ENCRYPT_H
+#define AESGCM_ENCRYPT_H
 
 #include "api.h"
 
-namespace Aes128Gcm_raw {
+namespace AesGcm_raw {
 extern int numRounds;
 
 int crypto_aead_encrypt(unsigned char *c, unsigned long long *clen,
@@ -17,6 +17,6 @@ int crypto_aead_decrypt(unsigned char *m, unsigned long long *outputmlen,
                         const unsigned char *c, unsigned long long clen,
                         const unsigned char *ad, unsigned long long adlen,
                         const unsigned char *npub, const unsigned char *k);
-} // namespace Aes128Gcm_raw
+} // namespace AesGcm_raw
 
-#endif // CRYPTO_AEAD_H
+#endif // AESGCM_ENCRYPT_H

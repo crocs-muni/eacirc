@@ -1,13 +1,13 @@
-#ifndef ACORN128_H
-#define ACORN128_H
+#ifndef AESGCM_H
+#define AESGCM_H
 
 #include "../../CaesarInterface.h"
 
-class Acorn128 : public CaesarInterface {
-    const int maxNumRounds = -1;
+class AesGcm : public CaesarInterface {
+    const int maxNumRounds = 10;
 public:
-    Acorn128(int numRounds);
-    ~Acorn128();
+    AesGcm(int numRounds);
+    ~AesGcm();
     int encrypt(bits_t *c, length_t *clen, const bits_t *m, length_t mlen,
                         const bits_t *ad, length_t adlen, const bits_t *nsec, const bits_t *npub,
                         const bits_t *k);
@@ -17,4 +17,4 @@ public:
     std::string shortDescription() const;
 };
 
-#endif // ACORN128_H
+#endif // AESGCM_H

@@ -1,10 +1,10 @@
 #include <string.h>
-#include "Acorn128_encrypt.h"
+#include "Acorn_encrypt.h"
 
 #define maj(x,y,z)   (  ((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z))  )
 #define ch(x,y,z)    (  ((x) & (y)) ^ ( ((x) ^ 1) & (z))  )
 
-namespace Acorn128_raw {
+namespace Acorn_raw {
 int numRounds;
 
 unsigned char KSG128(unsigned char *state)
@@ -20,7 +20,7 @@ unsigned char FBK128(unsigned char *state, unsigned char *ks, unsigned char ca, 
     return f;
 }
 
-//encrypt one bit 
+//encrypt one bit
 void Encrypt_StateUpdate128(unsigned char *state, unsigned char plaintextbit, unsigned char *ciphertextbit, unsigned char *ks, unsigned char ca, unsigned char cb)
 {
     unsigned int  j;
@@ -40,7 +40,7 @@ void Encrypt_StateUpdate128(unsigned char *state, unsigned char plaintextbit, un
     *ciphertextbit = *ks ^ plaintextbit;
 }
 
-//decrypt one bit 
+//decrypt one bit
 void Decrypt_StateUpdate128(unsigned char *state, unsigned char *plaintextbit, unsigned char ciphertextbit, unsigned char *ks, unsigned char ca, unsigned char cb)
 {
     unsigned int  j;
@@ -53,11 +53,11 @@ void Decrypt_StateUpdate128(unsigned char *state, unsigned char *plaintextbit, u
     state[107] ^= state[66]  ^ state[61];
     state[61]  ^= state[23]  ^ state[0];
 
-    f = FBK128(state, ks, ca, cb);  
+    f = FBK128(state, ks, ca, cb);
 
-    for (j = 0; j <= 291; j++) state[j] = state[j+1]; 
-    *plaintextbit = *ks ^ ciphertextbit; 
-    state[292] = f ^ *plaintextbit; 
+    for (j = 0; j <= 291; j++) state[j] = state[j+1];
+    *plaintextbit = *ks ^ ciphertextbit;
+    state[292] = f ^ *plaintextbit;
 }
 
 // encrypt one byte
@@ -82,7 +82,7 @@ void acorn128_enc_onebyte(unsigned char *state, unsigned char plaintextbyte,
 }
 
 
-// decrypt one byte  
+// decrypt one byte
 void acorn128_dec_onebyte(unsigned char *state, unsigned char *plaintextbyte,
        unsigned char ciphertextbyte, unsigned char *ksbyte, unsigned char cabyte, unsigned char cbbyte)
 {
@@ -142,13 +142,13 @@ void acorn128_tag_generation(unsigned long long msglen, unsigned long long adlen
 
 //encrypt a message.
 int crypto_aead_encrypt(
-	unsigned char *c,unsigned long long *clen,
-	const unsigned char *m,unsigned long long mlen,
-	const unsigned char *ad,unsigned long long adlen,
-	const unsigned char *nsec,
-	const unsigned char *npub,
-	const unsigned char *k
-	)
+    unsigned char *c,unsigned long long *clen,
+    const unsigned char *m,unsigned long long mlen,
+    const unsigned char *ad,unsigned long long adlen,
+    const unsigned char *nsec,
+    const unsigned char *npub,
+    const unsigned char *k
+    )
 {
     unsigned long i;
     unsigned char plaintextbyte, ciphertextbyte, ksbyte, mac[16];
@@ -207,13 +207,13 @@ int crypto_aead_encrypt(
 
 
 int crypto_aead_decrypt(
-	unsigned char *m,unsigned long long *mlen,
-	unsigned char *nsec,
-	const unsigned char *c,unsigned long long clen,
-	const unsigned char *ad,unsigned long long adlen,
-	const unsigned char *npub,
-	const unsigned char *k
-	)
+    unsigned char *m,unsigned long long *mlen,
+    unsigned char *nsec,
+    const unsigned char *c,unsigned long long clen,
+    const unsigned char *ad,unsigned long long adlen,
+    const unsigned char *npub,
+    const unsigned char *k
+    )
 {
     unsigned long i;
     unsigned char plaintextbyte, ciphertextbyte, ksbyte;

@@ -1,9 +1,9 @@
-#ifndef CRYPTO_AEAD_H
-#define CRYPTO_AEAD_H
+#ifndef ACORN_ENCRYPT_H
+#define ACORN_ENCRYPT_H
 
 #include "api.h"
 
-namespace Acorn128_raw {
+namespace Acorn_raw {
 extern int numRounds;
 
 int crypto_aead_encrypt(unsigned char *c, unsigned long long *clen,
@@ -17,6 +17,6 @@ int crypto_aead_decrypt(unsigned char *m, unsigned long long *outputmlen,
                         const unsigned char *c, unsigned long long clen,
                         const unsigned char *ad, unsigned long long adlen,
                         const unsigned char *npub, const unsigned char *k);
-} // namespace Acorn128_raw
+} // namespace Acorn_raw
 
-#endif // CRYPTO_AEAD_H
+#endif // ACORN_ENCRYPT_H

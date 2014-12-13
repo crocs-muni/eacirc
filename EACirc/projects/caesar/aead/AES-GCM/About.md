@@ -1,4 +1,4 @@
-# AES-128-GCM v1
+# AES-GCM
 
 **Designers:** David A. McGrew, John Viega
 
@@ -7,6 +7,10 @@
 **Version:** v1
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes128gcmv1
 **Download date:** 2014-11-01
+
+## Available modes
+
+* key 128 bits, tag 128 bits
 
 ## Changes to the code
 
