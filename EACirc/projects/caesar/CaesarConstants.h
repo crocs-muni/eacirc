@@ -15,7 +15,6 @@ typedef unsigned long long length_t;
 struct CAESAR_SETTINGS {
     int usageType;
     int algorithm;
-    int algorithmMode;
     bool limitAlgRounds;
     int algorithmRoundsCount;
     length_t plaintextLength;
@@ -37,7 +36,6 @@ struct CAESAR_SETTINGS {
     CAESAR_SETTINGS(void) {
         usageType = -1;
         algorithm = -1;
-        algorithmMode = -1;
         limitAlgRounds = false;
         algorithmRoundsCount = -1;
         plaintextLength = -1;

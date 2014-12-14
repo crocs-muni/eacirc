@@ -39,7 +39,7 @@ public:
       * @param mode             cipher mode (if needed)
       * @return allocated CAESAR algorithm obejct
       */
-    static CaesarInterface* getCaesarFunction(int algorithm, int numRounds, int mode);
+    static CaesarInterface* getCaesarFunction(int algorithm, int numRounds);
 };
 
 #endif // CAESARINTERFACE_H

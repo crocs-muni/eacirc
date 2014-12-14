@@ -12,7 +12,7 @@ CaesarInterface::CaesarInterface(int a, int nr, int kl, int smnl, int pmnl, int 
 
 CaesarInterface::~CaesarInterface() { }
 
-CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds, int mode) {
+CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds) {
     switch (algorithm) {
         case CAESAR_ACORN128: { return new Acorn128(numRounds); };
         case CAESAR_AEADAES128OCBTAGLEN128V1: { return new Aeadaes128ocbtaglen128v1(numRounds); };
