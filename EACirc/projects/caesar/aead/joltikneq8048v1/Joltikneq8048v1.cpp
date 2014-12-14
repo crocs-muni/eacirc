@@ -4,7 +4,7 @@
 #include "EACglobals.h"
 
 Joltikneq8048v1::Joltikneq8048v1(int numRounds)
-    : CaesarInterface(CAESAR_ACORN, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
+    : CaesarInterface(CAESAR_JOLTIKNEQ8048V1, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
     if (numRounds < -1 || numRounds > maxNumRounds) {
         mainLogger.out(LOGGER_WARNING) << "Weird number of rouds (" << numRounds << ") for " << shortDescription() << endl;
     }

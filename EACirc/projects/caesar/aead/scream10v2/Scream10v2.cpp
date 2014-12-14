@@ -4,7 +4,7 @@
 #include "EACglobals.h"
 
 Scream10v2::Scream10v2(int numRounds)
-    : CaesarInterface(CAESAR_ACORN, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
+    : CaesarInterface(CAESAR_SCREAM10V2, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
     if (numRounds < -1 || numRounds > maxNumRounds) {
         mainLogger.out(LOGGER_WARNING) << "Weird number of rouds (" << numRounds << ") for " << shortDescription() << endl;
     }

@@ -307,6 +307,7 @@ HEADERS += \
 # === CAESAR algorithms ===
 HEADERS += \
     EACirc/projects/caesar/aead/common/api.h \
+    EACirc/projects/caesar/aead/aead.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \

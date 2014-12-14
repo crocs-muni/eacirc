@@ -4,7 +4,7 @@
 #include "EACglobals.h"
 
 Shellaes128v1d4n64::Shellaes128v1d4n64(int numRounds)
-    : CaesarInterface(CAESAR_ACORN, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
+    : CaesarInterface(CAESAR_SHELLAES128V1D4N64, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
     if (numRounds < -1 || numRounds > maxNumRounds) {
         mainLogger.out(LOGGER_WARNING) << "Weird number of rouds (" << numRounds << ") for " << shortDescription() << endl;
     }

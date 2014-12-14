@@ -4,7 +4,7 @@
 #include "EACglobals.h"
 
 Omdsha256k128n96tau96v1::Omdsha256k128n96tau96v1(int numRounds)
-    : CaesarInterface(CAESAR_ACORN, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
+    : CaesarInterface(CAESAR_OMDSHA256K128N96TAU96V1, numRounds, CRYPTO_KEYBYTES, CRYPTO_NSECBYTES, CRYPTO_NPUBBYTES, CRYPTO_ABYTES) {
     if (numRounds < -1 || numRounds > maxNumRounds) {
         mainLogger.out(LOGGER_WARNING) << "Weird number of rouds (" << numRounds << ") for " << shortDescription() << endl;
     }
