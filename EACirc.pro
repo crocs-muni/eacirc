@@ -345,7 +345,7 @@ HEADERS += \
     EACirc/projects/estream/ciphers/ffcsr/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/ffcsr/ffcsrh-sync.h \
     EACirc/projects/estream/ciphers/edon80/ecrypt-sync.h \
-    EACirc/projects/estream/ciphers/dragon/ecrypt-sync.h \
+    EACirc/projects/estream/ciphers/drag-on/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/dicing/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/decim/decimv2.h \
     EACirc/projects/estream/ciphers/decim/ecrypt-sync.h \
@@ -547,11 +547,11 @@ SOURCES += \
  EACirc/projects/caesar/aead/aegis256/aegis256_aes.cpp \
  EACirc/projects/caesar/aead/aegis256/aegis256_encrypt.cpp \
  EACirc/projects/caesar/aead/aegis256/Aegis256.cpp \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_avalanche.cpp \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_largenumbers.cpp \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_pcmac.cpp \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_rmac.cpp \
- EACirc/projects/caesar/aead/aes128avalanchev1/Aes128avalanchev1.cpp \
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_avalanche.cpp \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_largenumbers.cpp \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_pcmac.cpp \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_rmac.cpp \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/Aes128avalanchev1.cpp \ # compilaation ok, sigsegv while running
 # EACirc/projects/caesar/aead/aes128cpfbv1/aes128cpfbv1_encrypt.cpp \
 # EACirc/projects/caesar/aead/aes128cpfbv1/Aes128cpfbv1.cpp \
  EACirc/projects/caesar/aead/aes128gcmv1/aes128gcmv1_encrypt.cpp \
@@ -1133,10 +1133,10 @@ HEADERS += \
  EACirc/projects/caesar/aead/aegis256/aegis256_api.h \
  EACirc/projects/caesar/aead/aegis256/aegis256_encrypt.h \
  EACirc/projects/caesar/aead/aegis256/Aegis256.h \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_api.h \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_avalanche.h \
- EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_encrypt.h \
- EACirc/projects/caesar/aead/aes128avalanchev1/Aes128avalanchev1.h \
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_api.h \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_avalanche.h \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/aes128avalanchev1_encrypt.h \ # compilaation ok, sigsegv while running
+# EACirc/projects/caesar/aead/aes128avalanchev1/Aes128avalanchev1.h \ # compilaation ok, sigsegv while running
 # EACirc/projects/caesar/aead/aes128cpfbv1/aes128cpfbv1_api.h \
 # EACirc/projects/caesar/aead/aes128cpfbv1/aes128cpfbv1_encrypt.h \
 # EACirc/projects/caesar/aead/aes128cpfbv1/Aes128cpfbv1.h \
@@ -1971,7 +1971,7 @@ OTHER_FILES += \
  EACirc/projects/caesar/aead/aegis128/About.md \
  EACirc/projects/caesar/aead/aegis128l/About.md \
  EACirc/projects/caesar/aead/aegis256/About.md \
- EACirc/projects/caesar/aead/aes128avalanchev1/About.md \
+# EACirc/projects/caesar/aead/aes128avalanchev1/About.md \ # compilaation ok, sigsegv while running
 # EACirc/projects/caesar/aead/aes128cpfbv1/About.md \
  EACirc/projects/caesar/aead/aes128gcmv1/About.md \
  EACirc/projects/caesar/aead/aes128marble4rv1/About.md \

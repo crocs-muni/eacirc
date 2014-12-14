@@ -14,7 +14,7 @@
 #include "aegis128/Aegis128.h"
 #include "aegis128l/Aegis128l.h"
 #include "aegis256/Aegis256.h"
-#include "aes128avalanchev1/Aes128avalanchev1.h"
+// #include "aes128avalanchev1/Aes128avalanchev1.h"
 // #include "aes128cpfbv1/Aes128cpfbv1.h"
 #include "aes128gcmv1/Aes128gcmv1.h"
 #include "aes128marble4rv1/Aes128marble4rv1.h"
