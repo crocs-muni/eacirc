@@ -554,6 +554,8 @@ SOURCES += \
 # EACirc/projects/caesar/aead/aes128avalanchev1/Aes128avalanchev1.cpp \ # compilaation ok, sigsegv while running
 # EACirc/projects/caesar/aead/aes128cpfbv1/aes128cpfbv1_encrypt.cpp \
 # EACirc/projects/caesar/aead/aes128cpfbv1/Aes128cpfbv1.cpp \
+
+SOURCES += \
  EACirc/projects/caesar/aead/aes128gcmv1/aes128gcmv1_encrypt.cpp \
  EACirc/projects/caesar/aead/aes128gcmv1/Aes128gcmv1.cpp \
  EACirc/projects/caesar/aead/aes128marble4rv1/aes128marble4rv1_aes_core.cpp \
@@ -571,6 +573,8 @@ SOURCES += \
 # EACirc/projects/caesar/aead/aes128n12silcv1/aes128n12silcv1_silc.cpp \
 # EACirc/projects/caesar/aead/aes128n12silcv1/aes128n12silcv1_utils.cpp \
 # EACirc/projects/caesar/aead/aes128n12silcv1/Aes128n12silcv1.cpp \
+
+SOURCES += \
  EACirc/projects/caesar/aead/aes128n8clocv1/aes128n8clocv1_aes_core.cpp \
  EACirc/projects/caesar/aead/aes128n8clocv1/aes128n8clocv1_cloc.cpp \
  EACirc/projects/caesar/aead/aes128n8clocv1/aes128n8clocv1_encrypt.cpp \
@@ -1140,6 +1144,8 @@ HEADERS += \
 # EACirc/projects/caesar/aead/aes128cpfbv1/aes128cpfbv1_api.h \
 # EACirc/projects/caesar/aead/aes128cpfbv1/aes128cpfbv1_encrypt.h \
 # EACirc/projects/caesar/aead/aes128cpfbv1/Aes128cpfbv1.h \
+
+HEADERS += \
  EACirc/projects/caesar/aead/aes128gcmv1/aes128gcmv1_api.h \
  EACirc/projects/caesar/aead/aes128gcmv1/aes128gcmv1_encrypt.h \
  EACirc/projects/caesar/aead/aes128gcmv1/Aes128gcmv1.h \
@@ -1161,6 +1167,8 @@ HEADERS += \
 # EACirc/projects/caesar/aead/aes128n12silcv1/aes128n12silcv1_silc.h \
 # EACirc/projects/caesar/aead/aes128n12silcv1/aes128n12silcv1_encrypt.h \
 # EACirc/projects/caesar/aead/aes128n12silcv1/Aes128n12silcv1.h \
+
+HEADERS += \
  EACirc/projects/caesar/aead/aes128n8clocv1/aes128n8clocv1_aes.h \
  EACirc/projects/caesar/aead/aes128n8clocv1/aes128n8clocv1_aes_locl.h \
  EACirc/projects/caesar/aead/aes128n8clocv1/aes128n8clocv1_api.h \
