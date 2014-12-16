@@ -388,9 +388,6 @@
     <ClCompile Include="EACirc\projects\sha3\hash_functions\Tangle\Tangle_sha3.cpp">
       <Filter>SHA3 functions</Filter>
     </ClCompile>
-    <ClCompile Include="EACirc\projects\tea\TeaProject.cpp">
-      <Filter>SHA3 functions</Filter>
-    </ClCompile>
     <ClCompile Include="EACirc\projects\sha3\hash_functions\Twister\Twister_sha3.cpp">
       <Filter>SHA3 functions</Filter>
     </ClCompile>
@@ -454,6 +451,40 @@
     <ClCompile Include="EACirc\circuit\ICircuit.cpp" />
     <ClCompile Include="EACirc\circuit\ICircuitIO.cpp" />
     <ClCompile Include="EACirc\evaluators\FeatureEvaluator.cpp" />
+    <ClCompile Include="EACirc\projects\estream\ciphers\tea\tea.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\CaesarInterface.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\CaesarProject.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\Encryptor.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\acorn128\Acorn128.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\acorn128\acorn128_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis128\Aegis128.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis128\aegis128_aes.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis128\aegis128_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis128l\Aegis128l.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis128l\aegis128l_aes.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis128l\aegis128l_ecrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis256\Aegis256.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis256\aegis256_aes.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aegis256\aegis256_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128gcmv1\Aes128gcmv1.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128gcmv1\aes128gcmv1_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128marble4rv1\Aes128marble4rv1.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_aes_core.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_marble.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_utils.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n12clocv1\Aes128n12clocv1.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_aes_core.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_cloc.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_utils.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n8clocv1\Aes128n8clocv1.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_aes_core.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_cloc.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_utils.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\common\crypto_core_aes128encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\common\crypto_verify_16.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
@@ -972,9 +1003,6 @@
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Tangle\Tangle_sha3.h">
       <Filter>SHA3 functions</Filter>
     </ClInclude>
-    <ClInclude Include="EACirc\projects\tea\TeaProject.h">
-      <Filter>SHA3 functions</Filter>
-    </ClInclude>
     <ClInclude Include="EACirc\projects\sha3\hash_functions\Twister\Twister_sha3.h">
       <Filter>SHA3 functions</Filter>
     </ClInclude>
@@ -1038,6 +1066,46 @@
     <ClInclude Include="EACirc\circuit\ICircuit.h" />
     <ClInclude Include="EACirc\circuit\ICircuitIO.h" />
     <ClInclude Include="EACirc\evaluators\FeatureEvaluator.h" />
+    <ClInclude Include="EACirc\projects\estream\ciphers\tea\ecrypt-sync.h" />
+    <ClInclude Include="EACirc\projects\caesar\Encryptor.h" />
+    <ClInclude Include="EACirc\projects\caesar\CaesarConstants.h" />
+    <ClInclude Include="EACirc\projects\caesar\CaesarInterface.h" />
+    <ClInclude Include="EACirc\projects\caesar\CaesarProject.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aead.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\acorn128\Acorn128.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\acorn128\acorn128_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\acorn128\acorn128_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis128\Aegis128.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis128\aegis128_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis128\aegis128_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis128l\Aegis128l.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis128l\aegis128l_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis128l\aegis128l_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis256\Aegis256.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis256\aegis256_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aegis256\aegis256_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128gcmv1\Aes128gcmv1.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128gcmv1\aes128gcmv1_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128gcmv1\aes128gcmv1_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128marble4rv1\Aes128marble4rv1.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_aes.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_aes_locl.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128marble4rv1\aes128marble4rv1_marble.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n12clocv1\Aes128n12clocv1.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_aes.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_aes_locl.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_cloc.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n12clocv1\aes128n12clocv1_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n8clocv1\Aes128n8clocv1.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_aes.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_aes_locl.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_cloc.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128n8clocv1\aes128n8clocv1_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\common\api.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="EACirc\config.xml" />

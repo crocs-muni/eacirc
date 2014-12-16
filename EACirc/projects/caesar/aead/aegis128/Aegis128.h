@@ -4,7 +4,7 @@
 #include "../../CaesarInterface.h"
 
 class Aegis128 : public CaesarInterface {
-    const int maxNumRounds = -1;
+    static const int maxNumRounds = -1;
 public:
     Aegis128(int numRounds);
     ~Aegis128();

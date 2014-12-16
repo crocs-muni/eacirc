@@ -15,6 +15,7 @@ CaesarInterface::~CaesarInterface() { }
 CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds) {
     switch (algorithm) {
         case CAESAR_ACORN128: { return new Acorn128(numRounds); };
+#ifndef _WIN32
         case CAESAR_AEADAES128OCBTAGLEN128V1: { return new Aeadaes128ocbtaglen128v1(numRounds); };
         case CAESAR_AEADAES128OCBTAGLEN64V1: { return new Aeadaes128ocbtaglen64v1(numRounds); };
         case CAESAR_AEADAES128OCBTAGLEN96V1: { return new Aeadaes128ocbtaglen96v1(numRounds); };
@@ -24,6 +25,7 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_AEADAES256OCBTAGLEN128V1: { return new Aeadaes256ocbtaglen128v1(numRounds); };
         case CAESAR_AEADAES256OCBTAGLEN64V1: { return new Aeadaes256ocbtaglen64v1(numRounds); };
         case CAESAR_AEADAES256OCBTAGLEN96V1: { return new Aeadaes256ocbtaglen96v1(numRounds); };
+#endif
         case CAESAR_AEGIS128: { return new Aegis128(numRounds); };
         case CAESAR_AEGIS128L: { return new Aegis128l(numRounds); };
         case CAESAR_AEGIS256: { return new Aegis256(numRounds); };

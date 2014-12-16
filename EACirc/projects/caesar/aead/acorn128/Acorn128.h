@@ -4,7 +4,7 @@
 #include "../../CaesarInterface.h"
 
 class Acorn128 : public CaesarInterface {
-    const int maxNumRounds = -1;
+    static const int maxNumRounds = -1;
 public:
     Acorn128(int numRounds);
     ~Acorn128();

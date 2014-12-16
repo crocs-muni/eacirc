@@ -56,12 +56,7 @@ int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     // bind project settings into global settings
     pGlobals->settings->project = (void*) pCaesarSettings;
 
-    // configuration checks
-    // TODO: do somthing with signed/unsigned comparison
-    if (pGlobals->settings->testVectors.inputLength != m_caesarSettings.plaintextLength) {
-        mainLogger.out(LOGGER_ERROR) << "Test vector input length does not match plaintext length!" << endl;
-        return STAT_PROJECT_ERROR;
-    }
+    // TODO configuration checks
 
     return STAT_OK;
 }

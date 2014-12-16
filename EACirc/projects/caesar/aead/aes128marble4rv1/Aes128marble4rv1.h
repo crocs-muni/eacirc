@@ -4,7 +4,7 @@
 #include "../../CaesarInterface.h"
 
 class Aes128marble4rv1 : public CaesarInterface {
-    const int maxNumRounds = -1;
+    static const int maxNumRounds = -1;
 public:
     Aes128marble4rv1(int numRounds);
     ~Aes128marble4rv1();

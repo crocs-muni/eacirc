@@ -2,6 +2,7 @@
 #define AEAD_H
 
 #include "acorn128/Acorn128.h"
+#ifndef _WIN32
 #include "aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h"
 #include "aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h"
 #include "aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h"
@@ -11,6 +12,7 @@
 #include "aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h"
 #include "aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h"
 #include "aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h"
+#endif
 #include "aegis128/Aegis128.h"
 #include "aegis128l/Aegis128l.h"
 #include "aegis256/Aegis256.h"

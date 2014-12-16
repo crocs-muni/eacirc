@@ -4,7 +4,7 @@
 #include "../../CaesarInterface.h"
 
 class Aeadaes128ocbtaglen128v1 : public CaesarInterface {
-    const int maxNumRounds = -1;
+    static const int maxNumRounds = -1;
 public:
     Aeadaes128ocbtaglen128v1(int numRounds);
     ~Aeadaes128ocbtaglen128v1();
