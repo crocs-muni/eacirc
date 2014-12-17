@@ -11,6 +11,8 @@
 #include "GAPopulation.h"
 #include "XMLProcessor.h"
 
+#define max(a,b) (((a)>(b))?(a):(b))
+
 GateCircuit::GateCircuit() : ICircuit(CIRCUIT_GATE) { }
 
 GateCircuit::~GateCircuit() {

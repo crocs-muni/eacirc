@@ -1,5 +1,7 @@
 #include "HammingWeightEvaluator.h"
 
+#define max(a,b) (((a)>(b))?(a):(b))
+
 HammingWeightEvaluator::HammingWeightEvaluator()
     : IEvaluator(EVALUATOR_HAMMING_WEIGHT), m_weightsStream0(NULL), m_weightsStream1(NULL),
       m_totalStream0(0), m_totalStream1(0), m_numUnderThreshold(0) {
