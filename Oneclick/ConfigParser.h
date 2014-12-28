@@ -90,13 +90,16 @@ private:
 	void setAlgorithmsRounds(std::vector<int> rounds , std::vector<int> algorithms , std::vector<std::vector<int>> specificRounds);
 
 	/** Converts string value from given tag to integer.
+	  * Tag must exist and can not be empty
 	  * @param path				path to tag with desired value
 	  * @return integer
 	  * @throws	runtime_error	if in tag are other than numeral values
+	  *							if tag doesn't exist/is empty
 	  */
 	int getXMLValue(std::string path);
 
 	/** Creates vector of sorted integral values without duplicities.
+	  * Given tag can be empty.
 	  * @param path				path to tag with desired values
 	  * @return integers		numeral values from tags
 	  */
@@ -104,9 +107,10 @@ private:
 
 	/** Creates vector of vectors, in each vector one algorithm with specified rounds is stored.
 	  * First element in each vector is constant of algorithm. Vectors are sorted according to
-	  * theirs first elements. Rounds in vectors are sorted too. From duplicities survive the one latter
-	  * in tag.
+	  * their first elements. Rounds in vectors are sorted too. From duplicities survive the one latter
+	  * in tag. Tag will be ignored if algorithm or rounds are not specified.
 	  * @return specificRounds	parsed children of tag SPECIFIC_ROUNDS
+	  * @throws runtime_error	if tag ROUNDS has no attribute "algorithm"
 	  */
 	std::vector<std::vector<int>> getSpecificRounds();
 

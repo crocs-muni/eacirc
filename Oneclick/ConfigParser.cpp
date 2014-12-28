@@ -1,7 +1,7 @@
 #include "ConfigParser.h"
 
 ConfigParser::ConfigParser(std::string path) {
-	if(loadXMLFile(root , path) == STAT_FILE_OPEN_FAIL) { throw runtime_error("can't open XML file: " + path); }
+	if(loadXMLFile(root , path) == STAT_FILE_OPEN_FAIL) throw runtime_error("can't open XML file: " + path); 
 	wuIdentifier = getXMLElementValue(root , PATH_OC_WU_ID);
 	clones = getXMLValue(PATH_OC_CLONES);
 	delayBound = getXMLValue(PATH_OC_DELAY_BND);
@@ -14,12 +14,13 @@ ConfigParser::ConfigParser(std::string path) {
 }
 
 ConfigParser::~ConfigParser() {
-	//i should dealocate something here, probably nodes...
-	delete root;//???
+	delete root;
 }
 
 int ConfigParser::getXMLValue(std::string path) {
 	std::string temp = getXMLElementValue(root , path);
+	if(temp.length() == 0) throw runtime_error("empty or nonexistent XML tag: " + path);
+
 	for(int i = 0; i < temp.length(); i++) {
 		if(temp[i] < 48 || temp[i] > 57) {
 			throw runtime_error("invalid characters in xml element: " + path);
@@ -39,21 +40,25 @@ std::vector<int> ConfigParser::getMultipleXMLValues(std::string path) {
 
 std::vector<std::vector<int>> ConfigParser::getSpecificRounds() {
 	std::string path = PATH_OC_SPEC_RNDS;
-	TiXmlNode * specRndsNode = getXMLElement(root , path);
-	TiXmlElement * rndsElement;
 	std::vector<std::vector<int>> values;
 	std::vector<int> single;
+	TiXmlNode * specRndsNode = getXMLElement(root , path);
+	TiXmlElement * rndsElement;
+	if(specRndsNode == NULL) return values;
 
 	if(specRndsNode->FirstChild()) {
 		rndsElement = specRndsNode->FirstChildElement();
 		for(;;) {
 			const char * alg = rndsElement->Attribute("algorithm");
+			if(alg == NULL) throw runtime_error("tag ROUNDS don't have attribute \"algorithm\"");
 			const char * rnds = rndsElement->GetText();
-			single = parseStringValue(rnds , path);
-			single.insert(single.begin() ,atoi(alg));
-			sort(&single , 1);
-			values.push_back(single);
-			single.clear();
+			if(strlen(alg) > 0 && rnds != NULL) {
+				single = parseStringValue(rnds , path);
+				single.insert(single.begin() , atoi(alg));
+				sort(&single , 1);
+				values.push_back(single);
+				single.clear();
+			}
 			if(!rndsElement->NextSiblingElement()) break;
 			rndsElement = rndsElement->NextSiblingElement();
 		}
