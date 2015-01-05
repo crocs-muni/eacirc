@@ -4,7 +4,7 @@
 // for documentation on using logger, see EACglobals.h
 
 Logger::Logger() : m_logging(false), m_using_file(false),
-	m_out(new LoggerStream(this,clog)) {}
+    m_out(new LoggerStream(this,clog)) {}
 
 Logger::~Logger() {
     out(LOGGER_INFO) << "Exiting logger." << endl;
@@ -28,7 +28,7 @@ void Logger::setlogging(bool state) {
         m_logging = state;
         out(LOGGER_INFO) << "Logging enabled." << endl;
         out(LOGGER_INFO) << "EACirc framework (build " << GIT_COMMIT_SHORT << ")." << endl;
-        out(LOGGER_INFO) << "current date: " << getDate() << endl;
+        out(LOGGER_INFO) << "Current date: " << getDate() << endl;
     } else {
         out(LOGGER_INFO) << "Logging disabled" << endl;
         m_logging = state;

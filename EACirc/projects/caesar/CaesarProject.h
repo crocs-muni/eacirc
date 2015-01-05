@@ -25,6 +25,14 @@ class CaesarProject : public IProject {
       */
     int generateCipherDataStream();
 
+    /** Prepade single test vector from CAESAR data.
+     * - prepared according to usageType and other settings
+     * @param tvInputs      pointer to array to fill inputs in
+     * @param tvOutputs     pointer to array to fill outputs in
+     * @return status
+     */
+    int prepareSingleTestVector(unsigned char* tvInputs, unsigned char* tvOutputs);
+
 public:
     /** constructor, memory allocation
       */

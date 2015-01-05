@@ -3,7 +3,8 @@
 #include "generators/IRndGen.h"
 
 Encryptor::Encryptor()
-    : m_cipher(CaesarInterface::getCaesarFunction(pCaesarSettings->algorithm, pCaesarSettings->algorithmRoundsCount)),
+    : m_cipher(CaesarInterface::getCaesarFunction(pCaesarSettings->algorithm,
+                                  pCaesarSettings->limitAlgRounds ? pCaesarSettings->algorithmRoundsCount : -1)),
       m_key(new bits_t[pCaesarSettings->keyLength]),
       m_ad(new bits_t[pCaesarSettings->adLength]),
       m_smn(new bits_t[pCaesarSettings->smnLength]),
@@ -167,5 +168,11 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
 }
 
 string Encryptor::shortDescription() {
-    return m_cipher->shortDescription();
+    string desription =  m_cipher->shortDescription() + ", ";
+    if (pCaesarSettings->limitAlgRounds) {
+        desription += toString(pCaesarSettings->algorithmRoundsCount) + " rounds";
+    } else {
+        desription += "unlimited version";
+    }
+    return desription;
 }
