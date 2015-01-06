@@ -1,10 +1,14 @@
+#include "aes256gcmv1_encrypt.h"
+// CHANGE api included instead of crypto core headers
+#include "../common/api.h"
+// #include "crypto_verify_16.h"
+// #include "crypto_core_aes256encrypt.h"
+// CHANGE namespace added
+#define AES(out,in,k) CaesarCommon::crypto_core_aes256encrypt(out,in,k,0)
+
+// CHANGE namespace moved due to includes
 namespace Aes256gcmv1_raw {
 int numRounds = -1;
-
-#include "aes256gcmv1_encrypt.h"
-#include "crypto_verify_16.h"
-#include "crypto_core_aes256encrypt.h"
-#define AES(out,in,k) crypto_core_aes256encrypt(out,in,k,0)
 
 static void store32(unsigned char *x,unsigned long long u)
 {
@@ -172,7 +176,8 @@ int crypto_aead_decrypt(
 
   addmul(accum,finalblock,16,H);
   for (i = 0;i < 16;++i) accum[i] ^= T[i];
-  if (crypto_verify_16(accum,c) != 0) return -1;
+  // CHANGE namespace added
+  if (CaesarCommon::crypto_verify_16(accum,c) != 0) return -1;
 
   c = origc;
   mlen = origmlen;

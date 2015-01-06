@@ -85,6 +85,7 @@ SOURCES += \
 SOURCES += \
     EACirc/projects/caesar/aead/common/crypto_verify_16.cpp \
     EACirc/projects/caesar/aead/common/crypto_core_aes128encrypt.cpp \
+    EACirc/projects/caesar/aead/common/crypto_core_aes256encrypt.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
@@ -613,26 +614,26 @@ SOURCES += \
 # EACirc/projects/caesar/aead/aes256avalanchev1/aes256avalanchev1_pcmac.cpp \
 # EACirc/projects/caesar/aead/aes256avalanchev1/aes256avalanchev1_rmac.cpp \
 # EACirc/projects/caesar/aead/aes256avalanchev1/Aes256avalanchev1.cpp \
-
-SOURCES += \
 # EACirc/projects/caesar/aead/aes256cpfbv1/aes256cpfbv1_encrypt.cpp \
 # EACirc/projects/caesar/aead/aes256cpfbv1/Aes256cpfbv1.cpp \
-# EACirc/projects/caesar/aead/aes256gcmv1/aes256gcmv1_encrypt.cpp \
-# EACirc/projects/caesar/aead/aes256gcmv1/Aes256gcmv1.cpp \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_encrypt.cpp \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_OTR.cpp \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_t-aes_enc_only.cpp \
-# EACirc/projects/caesar/aead/aes256otrpv1/Aes256otrpv1.cpp \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_encrypt.cpp \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_OTR.cpp \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_t-aes_enc_only.cpp \
-# EACirc/projects/caesar/aead/aes256otrsv1/Aes256otrsv1.cpp \
-# EACirc/projects/caesar/aead/aescopav1/aescopav1_aes-core.cpp \
-# EACirc/projects/caesar/aead/aescopav1/aescopav1_encrypt.cpp \
-# EACirc/projects/caesar/aead/aescopav1/Aescopav1.cpp \
-# EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_aes.cpp \
-# EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_encrypt.cpp \
-# EACirc/projects/caesar/aead/aesjambuv1/Aesjambuv1.cpp \
+
+SOURCES += \
+ EACirc/projects/caesar/aead/aes256gcmv1/aes256gcmv1_encrypt.cpp \
+ EACirc/projects/caesar/aead/aes256gcmv1/Aes256gcmv1.cpp \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_encrypt.cpp \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_OTR.cpp \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_t-aes_enc_only.cpp \
+ EACirc/projects/caesar/aead/aes256otrpv1/Aes256otrpv1.cpp \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_encrypt.cpp \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_OTR.cpp \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_t-aes_enc_only.cpp \
+ EACirc/projects/caesar/aead/aes256otrsv1/Aes256otrsv1.cpp \
+ EACirc/projects/caesar/aead/aescopav1/aescopav1_aes-core.cpp \
+ EACirc/projects/caesar/aead/aescopav1/aescopav1_encrypt.cpp \
+ EACirc/projects/caesar/aead/aescopav1/Aescopav1.cpp \
+ EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_aes.cpp \
+ EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_encrypt.cpp \
+ EACirc/projects/caesar/aead/aesjambuv1/Aesjambuv1.cpp \
 # EACirc/projects/caesar/aead/aezv1/aezv1_aez_ref.cpp \
 # EACirc/projects/caesar/aead/aezv1/aezv1_encrypt.cpp \
 # EACirc/projects/caesar/aead/aezv1/aezv1_rijndael-alg-fst.cpp \
@@ -1219,34 +1220,34 @@ HEADERS += \
  # EACirc/projects/caesar/aead/aes256avalanchev1/aes256avalanchev1_avalanche.h \
  # EACirc/projects/caesar/aead/aes256avalanchev1/aes256avalanchev1_encrypt.h \
  # EACirc/projects/caesar/aead/aes256avalanchev1/Aes256avalanchev1.h \
+ # EACirc/projects/caesar/aead/aes256cpfbv1/aes256cpfbv1_api.h \
+ # EACirc/projects/caesar/aead/aes256cpfbv1/aes256cpfbv1_encrypt.h \
+ # EACirc/projects/caesar/aead/aes256cpfbv1/Aes256cpfbv1.h \
 
 HEADERS += \
-# EACirc/projects/caesar/aead/aes256cpfbv1/aes256cpfbv1_api.h \
-# EACirc/projects/caesar/aead/aes256cpfbv1/aes256cpfbv1_encrypt.h \
-# EACirc/projects/caesar/aead/aes256cpfbv1/Aes256cpfbv1.h \
-# EACirc/projects/caesar/aead/aes256gcmv1/aes256gcmv1_api.h \
-# EACirc/projects/caesar/aead/aes256gcmv1/aes256gcmv1_encrypt.h \
-# EACirc/projects/caesar/aead/aes256gcmv1/Aes256gcmv1.h \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_api.h \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_OTR.h \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_t-aes_define.h \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_t-aes_table_enc_only.h \
-# EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_encrypt.h \
-# EACirc/projects/caesar/aead/aes256otrpv1/Aes256otrpv1.h \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_api.h \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_OTR.h \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_t-aes_define.h \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_t-aes_table_enc_only.h \
-# EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_encrypt.h \
-# EACirc/projects/caesar/aead/aes256otrsv1/Aes256otrsv1.h \
-# EACirc/projects/caesar/aead/aescopav1/aescopav1_aes-core.h \
-# EACirc/projects/caesar/aead/aescopav1/aescopav1_api.h \
-# EACirc/projects/caesar/aead/aescopav1/aescopav1_encrypt.h \
-# EACirc/projects/caesar/aead/aescopav1/Aescopav1.h \
-# EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_aes.h \
-# EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_api.h \
-# EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_encrypt.h \
-# EACirc/projects/caesar/aead/aesjambuv1/Aesjambuv1.h \
+ EACirc/projects/caesar/aead/aes256gcmv1/aes256gcmv1_api.h \
+ EACirc/projects/caesar/aead/aes256gcmv1/aes256gcmv1_encrypt.h \
+ EACirc/projects/caesar/aead/aes256gcmv1/Aes256gcmv1.h \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_api.h \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_OTR.h \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_t-aes_define.h \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_t-aes_table_enc_only.h \
+ EACirc/projects/caesar/aead/aes256otrpv1/aes256otrpv1_encrypt.h \
+ EACirc/projects/caesar/aead/aes256otrpv1/Aes256otrpv1.h \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_api.h \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_OTR.h \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_t-aes_define.h \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_t-aes_table_enc_only.h \
+ EACirc/projects/caesar/aead/aes256otrsv1/aes256otrsv1_encrypt.h \
+ EACirc/projects/caesar/aead/aes256otrsv1/Aes256otrsv1.h \
+ EACirc/projects/caesar/aead/aescopav1/aescopav1_aes-core.h \
+ EACirc/projects/caesar/aead/aescopav1/aescopav1_api.h \
+ EACirc/projects/caesar/aead/aescopav1/aescopav1_encrypt.h \
+ EACirc/projects/caesar/aead/aescopav1/Aescopav1.h \
+ EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_aes.h \
+ EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_api.h \
+ EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_encrypt.h \
+ EACirc/projects/caesar/aead/aesjambuv1/Aesjambuv1.h \
 # EACirc/projects/caesar/aead/aezv1/aezv1_api.h \
 # EACirc/projects/caesar/aead/aezv1/aezv1_rijndael-alg-fst.h \
 # EACirc/projects/caesar/aead/aezv1/aezv1_encrypt.h \
@@ -2001,12 +2002,12 @@ OTHER_FILES += \
  EACirc/projects/caesar/aead/aes128poetv1aes4/About.md \
  EACirc/projects/caesar/aead/aes192avalanchev1/About.md \
  EACirc/projects/caesar/aead/aes256avalanchev1/About.md \
- EACirc/projects/caesar/aead/aes256cpfbv1/About.md \
+# EACirc/projects/caesar/aead/aes256cpfbv1/About.md \
  EACirc/projects/caesar/aead/aes256gcmv1/About.md \
-# EACirc/projects/caesar/aead/aes256otrpv1/About.md \
-# EACirc/projects/caesar/aead/aes256otrsv1/About.md \
-# EACirc/projects/caesar/aead/aescopav1/About.md \
-# EACirc/projects/caesar/aead/aesjambuv1/About.md \
+ EACirc/projects/caesar/aead/aes256otrpv1/About.md \
+ EACirc/projects/caesar/aead/aes256otrsv1/About.md \
+ EACirc/projects/caesar/aead/aescopav1/About.md \
+ EACirc/projects/caesar/aead/aesjambuv1/About.md \
 # EACirc/projects/caesar/aead/aezv1/About.md \
 # EACirc/projects/caesar/aead/aezv3/About.md \
 # EACirc/projects/caesar/aead/artemia128v1/About.md \

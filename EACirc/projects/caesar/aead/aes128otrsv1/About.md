@@ -14,4 +14,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
-* 'xor' function renamed to 'xor2' (xor is an alternative token in C++ and cannot be redefined)
+* 'xor' function renamed to 'xor2' (xor is an alternative token in C++ and cannot be redefined).
