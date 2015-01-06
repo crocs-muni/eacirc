@@ -226,5 +226,8 @@ int CaesarProject::generateCipherDataStream() {
         mainLogger.out(LOGGER_ERROR) << "Cipher data generation failed (" << alreadyGenerated << " bytes generated)." << endl;
     }
 
+    delete[] tvInputs;
+    delete[] tvOutputs;
+
     return status;
 }
