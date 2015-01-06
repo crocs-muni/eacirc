@@ -634,13 +634,13 @@ SOURCES += \
  EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_aes.cpp \
  EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_encrypt.cpp \
  EACirc/projects/caesar/aead/aesjambuv1/Aesjambuv1.cpp \
-# EACirc/projects/caesar/aead/aezv1/aezv1_aez_ref.cpp \
-# EACirc/projects/caesar/aead/aezv1/aezv1_encrypt.cpp \
-# EACirc/projects/caesar/aead/aezv1/aezv1_rijndael-alg-fst.cpp \
-# EACirc/projects/caesar/aead/aezv1/Aezv1.cpp \
-# EACirc/projects/caesar/aead/aezv3/aezv3_aez_ref.cpp \
-# EACirc/projects/caesar/aead/aezv3/aezv3_rijndael-alg-fst.cpp \
-# EACirc/projects/caesar/aead/aezv3/Aezv3.cpp \
+ EACirc/projects/caesar/aead/aezv1/aezv1_aez_ref.cpp \
+ EACirc/projects/caesar/aead/aezv1/aezv1_encrypt.cpp \
+ EACirc/projects/caesar/aead/aezv1/aezv1_rijndael-alg-fst.cpp \
+ EACirc/projects/caesar/aead/aezv1/Aezv1.cpp \
+ EACirc/projects/caesar/aead/aezv3/aezv3_aez_ref.cpp \
+ EACirc/projects/caesar/aead/aezv3/aezv3_rijndael-alg-fst.cpp \
+ EACirc/projects/caesar/aead/aezv3/Aezv3.cpp \
 # EACirc/projects/caesar/aead/artemia128v1/artemia128v1_encrypt.cpp \
 # EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_decryption.cpp \
 # EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_encryption.cpp \
@@ -1248,14 +1248,14 @@ HEADERS += \
  EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_api.h \
  EACirc/projects/caesar/aead/aesjambuv1/aesjambuv1_encrypt.h \
  EACirc/projects/caesar/aead/aesjambuv1/Aesjambuv1.h \
-# EACirc/projects/caesar/aead/aezv1/aezv1_api.h \
-# EACirc/projects/caesar/aead/aezv1/aezv1_rijndael-alg-fst.h \
-# EACirc/projects/caesar/aead/aezv1/aezv1_encrypt.h \
-# EACirc/projects/caesar/aead/aezv1/Aezv1.h \
-# EACirc/projects/caesar/aead/aezv3/aezv3_api.h \
-# EACirc/projects/caesar/aead/aezv3/aezv3_rijndael-alg-fst.h \
-# EACirc/projects/caesar/aead/aezv3/aezv3_encrypt.h \
-# EACirc/projects/caesar/aead/aezv3/Aezv3.h \
+ EACirc/projects/caesar/aead/aezv1/aezv1_api.h \
+ EACirc/projects/caesar/aead/aezv1/aezv1_rijndael-alg-fst.h \
+ EACirc/projects/caesar/aead/aezv1/aezv1_encrypt.h \
+ EACirc/projects/caesar/aead/aezv1/Aezv1.h \
+ EACirc/projects/caesar/aead/aezv3/aezv3_api.h \
+ EACirc/projects/caesar/aead/aezv3/aezv3_rijndael-alg-fst.h \
+ EACirc/projects/caesar/aead/aezv3/aezv3_encrypt.h \
+ EACirc/projects/caesar/aead/aezv3/Aezv3.h \
 # EACirc/projects/caesar/aead/artemia128v1/artemia128v1_api.h \
 # EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae.h \
 # EACirc/projects/caesar/aead/artemia128v1/artemia128v1_encrypt.h \
@@ -2008,8 +2008,8 @@ OTHER_FILES += \
  EACirc/projects/caesar/aead/aes256otrsv1/About.md \
  EACirc/projects/caesar/aead/aescopav1/About.md \
  EACirc/projects/caesar/aead/aesjambuv1/About.md \
-# EACirc/projects/caesar/aead/aezv1/About.md \
-# EACirc/projects/caesar/aead/aezv3/About.md \
+ EACirc/projects/caesar/aead/aezv1/About.md \
+ EACirc/projects/caesar/aead/aezv3/About.md \
 # EACirc/projects/caesar/aead/artemia128v1/About.md \
 # EACirc/projects/caesar/aead/artemia256v1/About.md \
 # EACirc/projects/caesar/aead/ascon128v1/About.md \

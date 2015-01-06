@@ -1,6 +1,3 @@
-namespace Aezv3_raw {
-int numRounds = -1;
-
 /*
 // AEZ v3 reference code. AEZ info: http://www.cs.ucdavis.edu/~rogaway/aez
 //
@@ -43,7 +40,11 @@ typedef unsigned char byte;
    INTERMEDIATE_VALUE_KAT must be defined in its header for AES4/AES10
    functionality. Also, it defines the "u32" type used for AES internal keys.
 */
-#include "rijndael-alg-fst.h"
+#include "aezv3_rijndael-alg-fst.h"
+
+// CHANGE namespace moved due to includes
+namespace Aezv3_raw {
+int numRounds = -1;
 
 /* ------------------------------------------------------------------------- */
 
@@ -94,7 +95,7 @@ static void Extract(byte *K, unsigned kbytes, byte extracted_key[3*16]) {
     unsigned i,j,k,empty;
     byte buf[16];
     u32 aes4_key_z[4*5],aes4_key_c[4*5];
-    
+
     empty = (kbytes==0);
     memset(extracted_key,0,48);
     for (i=0;i<16;i++) ((byte *)aes4_key_z)[i]=(byte)i;
@@ -252,7 +253,7 @@ static void AEZcore(byte *K, unsigned kbytes, byte delta[16],
     unsigned j, inbytes_orig = inbytes;
 
     memset(X,0,16); memset(Y,0,16);
-    
+
     /* Pass 1 over in[0:-32], store intermediate values in out[0:-32] */
     for (j=1; inbytes >= 64; j++, inbytes-=32, in+=32, out+=32) {
         E(K, kbytes, 1, j, in+16, tmp); xor_bytes(in, tmp, 16, out);
@@ -449,7 +450,7 @@ void Encrypt(byte *K, unsigned kbytes,
 }
 
 /* ------------------------------------------------------------------------- */
-/* aez mapping for CAESAR competition                                        
+/* aez mapping for CAESAR competition
 #define CRYPTO_KEYBYTES 16
 #define CRYPTO_NSECBYTES 0
 #define CRYPTO_NPUBBYTES 12

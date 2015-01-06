@@ -1,6 +1,3 @@
-namespace Aezv1_raw {
-int numRounds = -1;
-
 #include "aezv1_encrypt.h"
 #include "aezv1_api.h"
 
@@ -10,6 +7,10 @@ int numRounds = -1;
 #define CRYPTO_NPUBBYTES 12
 #define CRYPTO_ABYTES 16
 */
+
+// CHANGE namespace moved due to includes
+namespace Aezv1_raw {
+int numRounds = -1;
 
 typedef unsigned char byte;
 

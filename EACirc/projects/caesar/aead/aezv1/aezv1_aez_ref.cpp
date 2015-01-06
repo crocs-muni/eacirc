@@ -1,7 +1,4 @@
-namespace Aezv1_raw {
-int numRounds = -1;
-
-/* 
+/*
 // AEZ v1.1 reference code. AEZ info: http://www.cs.ucdavis.edu/~rogaway/aez
 //
 // ** This version is slow and susceptible to side-channel attacks. **
@@ -39,7 +36,10 @@ int numRounds = -1;
 
 typedef unsigned char byte;
 
-#include "rijndael-alg-fst.h"     /* Defines "u32" type for AES internal key */
+#include "aezv1_rijndael-alg-fst.h"     /* Defines "u32" type for AES internal key */
+
+// CHANGE namespace moved due to includes
+namespace Aezv1_raw {
 
 /* ------------------------------------------------------------------------- */
 
@@ -203,7 +203,7 @@ static void CipherMEM(byte *K, byte *T, unsigned tbytes, byte *in,
         Variant(K, 0, 0, 5, 10, 1, Kmac);
     } else if ((i==1) && (inbytes < 16)) {   /* Original in 17..31 bytes */
         Variant(K, (i+7)/8, (i-1)%8, 0, 0, 0, (u32 *)Ki);
-        memcpy(buf,Y0,inbytes%16);                       
+        memcpy(buf,Y0,inbytes%16);
         xor_bytes(Y0,in,X0,inbytes%16); xor_bytes(Y0,Y0,Ki,inbytes%16);
         if (inv) rijndaelDecrypt(Kecb, 10, Y0, Y0);
         else     rijndaelEncrypt(Kecb, 10, Y0, Y0);
