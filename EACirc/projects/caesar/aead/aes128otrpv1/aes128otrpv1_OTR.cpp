@@ -38,7 +38,8 @@ extern int Encryption(int skeylen, uint8 *plain, uint8 *cipher);
 /* basic internal functions */
 static void ozp(uint32 length, const uint8 *in, uint8 *out);
 static void mul2(const uint8 *in, uint8 *out);
-static void xor(const uint8 *x, const uint8 *y, uint8 *z);
+// CHANGE 'xor' renamed to 'xor2' (xor is an alternative token in C++ and cannot be redefined)
+static void xor2(const uint8 *x, const uint8 *y, uint8 *z);
 static void xorp(uint32 length, const uint8 *x, const uint8 *y, uint8 *z);
 
 /* internal variables */
@@ -69,7 +70,7 @@ int nEnc(const uint8 *nonce, uint32 nonce_len){
     ozp(nonce_len, nonce, tmp);
     Encryption(KeyLen, tmp, L);	// L = E(N10*)
     if(ADP==Seri){
-        xor(L,TA,L); // L ^= TA
+        xor2(L,TA,L); // L ^= TA
     }
     mul2(L, Ld);
     mul2(Ld, Ld);
@@ -104,14 +105,14 @@ int EFunc(
 
     /* 2-round Feistel for the full chunks */
     for(i = 0; i < ell; i++, j = j+DBLOCK){
-        xor(Ld,plaintext+j,tmp);
+        xor2(Ld,plaintext+j,tmp);
         Encryption(KeyLen, tmp, tmp);
-        xor(tmp,plaintext+(j+BLOCK),ciphertext+j);
-        xor(Ld,L,LdL);
-        xor(LdL,ciphertext+j,tmp);
+        xor2(tmp,plaintext+(j+BLOCK),ciphertext+j);
+        xor2(Ld,L,LdL);
+        xor2(LdL,ciphertext+j,tmp);
         Encryption(KeyLen, tmp, tmp);
-        xor(tmp,plaintext+j,ciphertext+(j+BLOCK));
-        xor(Sum,plaintext+(j+BLOCK),Sum);
+        xor2(tmp,plaintext+j,ciphertext+(j+BLOCK));
+        xor2(Sum,plaintext+(j+BLOCK),Sum);
         mul2(Ld,Ld); // Ld = 2Ld
     }
     /* Last chunk */
@@ -119,27 +120,27 @@ int EFunc(
         Encryption(KeyLen, Ld, Z);
         xorp(last, Z,plaintext+j,ciphertext+j);
         ozp(last,plaintext+j,tmp);
-        xor(tmp,Sum,Sum);
+        xor2(tmp,Sum,Sum);
         memcpy(Llast,Ld,BLOCK); //Llast=Ld
     }
     else{//even blocks, last > BLOCK always holds. 2-round Feistel with last swap
-        xor(Ld,plaintext+j,tmp);
+        xor2(Ld,plaintext+j,tmp);
         Encryption(KeyLen,tmp,Z);
         xorp(last-BLOCK,Z,plaintext+(j+BLOCK),ciphertext+(j+BLOCK));
-        xor(Ld,L,Llast); // Llast = Ld xor L
+        xor2(Ld,L,Llast); // Llast = Ld xor L
         ozp(last-BLOCK,ciphertext+(j+BLOCK),tmp);
-        xor(Sum,tmp,Sum);
-        xor(Sum,Z,Sum);
-        xor(Llast,tmp,tmp);
+        xor2(Sum,tmp,Sum);
+        xor2(Sum,Z,Sum);
+        xor2(Llast,tmp,tmp);
         Encryption(KeyLen,tmp,tmp);
-        xor(tmp,plaintext+j,ciphertext+j);
+        xor2(tmp,plaintext+j,ciphertext+j);
     }
     /* TE generation */
     mul2(Llast,tmp);
-    xor(Llast,tmp,Llast); //Llast = 3Llast
-    xor(Sum,Llast,Sum);	//Sum = 3Llast xor Sum
+    xor2(Llast,tmp,Llast); //Llast = 3Llast
+    xor2(Sum,Llast,Sum);	//Sum = 3Llast xor Sum
     if(last == BLOCK || last == DBLOCK){//last = 16 or 32
-        xor(Sum,L,Sum);
+        xor2(Sum,L,Sum);
     }
     Encryption(KeyLen,Sum,TE);
     return SUCCESS;
@@ -173,14 +174,14 @@ int DFunc(
 
     /* 2-round Feistel for the full chunks */
     for(i = 0; i < ell; i++, j=j+DBLOCK){
-        xor(Ld,L,LdL);
-        xor(LdL,ciphertext+j,tmp);
+        xor2(Ld,L,LdL);
+        xor2(LdL,ciphertext+j,tmp);
         Encryption(KeyLen, tmp, tmp);
-        xor(tmp,ciphertext+(j+BLOCK),plaintext+j);
-        xor(Ld,plaintext+j,tmp);
+        xor2(tmp,ciphertext+(j+BLOCK),plaintext+j);
+        xor2(Ld,plaintext+j,tmp);
         Encryption(KeyLen, tmp, tmp);
-        xor(tmp,ciphertext+j,plaintext+(j+BLOCK));
-        xor(Sum,plaintext+(j+BLOCK),Sum);
+        xor2(tmp,ciphertext+j,plaintext+(j+BLOCK));
+        xor2(Sum,plaintext+(j+BLOCK),Sum);
         mul2(Ld,Ld); // Ld = 2Ld
     }
     /* Last chunk */
@@ -188,27 +189,27 @@ int DFunc(
         Encryption(KeyLen, Ld, Z);
         xorp(last, Z,ciphertext+j,plaintext+j);
         ozp(last,plaintext+j,tmp);
-        xor(tmp,Sum,Sum);
+        xor2(tmp,Sum,Sum);
         memcpy(Llast,Ld,BLOCK); //Llast = Ld
     }
     else{//even blocks, last > BLOCK always holds. 2-round Feistel with last swap
-        xor(Ld,L,Llast); //Llast = Ld xor L
+        xor2(Ld,L,Llast); //Llast = Ld xor L
         ozp(last-BLOCK,ciphertext+(j+BLOCK),tmp);
-        xor(Sum,tmp,Sum);
-        xor(Llast,tmp,tmp);
+        xor2(Sum,tmp,Sum);
+        xor2(Llast,tmp,tmp);
         Encryption(KeyLen,tmp,tmp);
-        xor(tmp,ciphertext+j,plaintext+j);
-        xor(Ld,plaintext+j,tmp);
+        xor2(tmp,ciphertext+j,plaintext+j);
+        xor2(Ld,plaintext+j,tmp);
         Encryption(KeyLen,tmp,Z);
         xorp(last-BLOCK,Z,ciphertext+(j+BLOCK),plaintext+(j+BLOCK));
-        xor(Sum,Z,Sum);
+        xor2(Sum,Z,Sum);
     }
     /* TE generation */
     mul2(Llast,tmp);
-    xor(Llast,tmp,Llast); //Llast = 3Llast
-    xor(Sum,Llast,Sum);	//Sum = 3Llast xor Sum
+    xor2(Llast,tmp,Llast); //Llast = 3Llast
+    xor2(Sum,Llast,Sum);	//Sum = 3Llast xor Sum
     if(last == BLOCK || last == DBLOCK){//last = 16 or 32
-        xor(Sum,L,Sum);
+        xor2(Sum,L,Sum);
     }
     Encryption(KeyLen,Sum,TE);
     return SUCCESS;
@@ -231,22 +232,22 @@ int AFunc(
     memcpy(mask,Qd,BLOCK);
     /* XE */
     for(i = 0; i < m; i++, j=j+BLOCK){
-        xor(mask,header+j,tmp);
+        xor2(mask,header+j,tmp);
         Encryption(KeyLen,tmp,tmp);
-        xor(ASum,tmp,ASum);
+        xor2(ASum,tmp,ASum);
         mul2(mask,mask);
     }
     /* last block */
     ozp(last,header+j,tmp);
-    xor(ASum,tmp,ASum);
+    xor2(ASum,tmp,ASum);
 
     if(last != BLOCK ){
-        xor(mask,Q,mask);
+        xor2(mask,Q,mask);
     }
     else{
-        xor(mask,Q2,mask);
+        xor2(mask,Q2,mask);
     }
-    xor(ASum,mask,ASum);
+    xor2(ASum,mask,ASum);
     Encryption(KeyLen,ASum,TA);
     return SUCCESS;
 }
@@ -267,17 +268,17 @@ int AFuncS(
 
     /* CBC */
     for(i = 0; i < m; i++, j=j+BLOCK){
-        xor(chain,header+j,chain);
+        xor2(chain,header+j,chain);
         Encryption(KeyLen,chain,chain);
     }
     /* last block */
     ozp(last,header+j,tmp);
-    xor(tmp,chain,chain);
+    xor2(tmp,chain,chain);
     if(last != BLOCK ){
-        xor(chain,Q2,chain);
+        xor2(chain,Q2,chain);
     }
     else{
-        xor(chain,Qd,chain);
+        xor2(chain,Qd,chain);
     }
     Encryption(KeyLen,chain,TA);
     return SUCCESS;
@@ -391,7 +392,7 @@ static void mul2(const uint8 *in, uint8 *out)
     out[15] = (in[15] << 1) ^ cst_mul[t];
 }
 
-static void xor(const uint8 *x, const uint8 *y, uint8 *z)
+static void xor2(const uint8 *x, const uint8 *y, uint8 *z)
 {
     uint32 i;
     for(i = 0; i < BLOCK; i++){

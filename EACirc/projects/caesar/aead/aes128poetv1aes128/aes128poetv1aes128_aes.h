@@ -1,5 +1,3 @@
-namespace Aes128poetv1aes128_raw {
-
 /* crypto/aes/aes.h -*- mode:C; c-file-style: "eay" -*- */
 /* ====================================================================
  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.
@@ -57,6 +55,9 @@ namespace Aes128poetv1aes128_raw {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Aes128poetv1aes128_raw {
 
 #if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_AMD64) || defined(_M_X64))
 # define SWAP(x) (_lrotl(x, 8) & 0x00ff00ff | _lrotr(x, 8) & 0xff00ff00)

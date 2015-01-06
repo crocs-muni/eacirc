@@ -1,9 +1,10 @@
-namespace Aes128poetv1aes128_raw {
-
 #include <string.h>
 
+// CHANGE namespace moved due to includes
+namespace Aes128poetv1aes128_raw {
+
 void gf_mul(unsigned char *a, const unsigned char *x,
-	    const unsigned char *y)
+        const unsigned char *y)
 {
   int i;
   int j;

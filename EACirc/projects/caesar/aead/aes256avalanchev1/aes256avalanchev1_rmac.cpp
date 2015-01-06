@@ -1,11 +1,8 @@
-namespace Aes256avalanchev1_raw {
-int numRounds = -1;
-
 //-------------------------------------------------------------------------------
 //-- Title        : AVALANCHE
 //-- File         : RMAC.c
 //-- Project      : aes256avalanchev1.1
-//-- Author       : C4C Development Team 
+//-- Author       : C4C Development Team
 //-- Organization : King Abdulaziz City for Science and Technology (KACST)
 //-- Created      : 08.01.2014
 //-------------------------------------------------------------------------------
@@ -17,7 +14,10 @@ int numRounds = -1;
 //-- without the written permission of the copyright owner.
 //-------------------------------------------------------------------------------
 /*----------------- Header Files --------------------------*/
-#include "avalanche.h"
+#include "aes256avalanchev1_avalanche.h"
+
+// CHANGE namespace moved due to includes
+namespace Aes256avalanchev1_raw {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //  AppendOne - Appends one to the MSB
@@ -26,48 +26,48 @@ int numRounds = -1;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void AppendOne(const Byte *m, Byte *mApp, int length)
 {
-	Byte mask = WORD_LEFT_BIT;
-	unsigned int flag = 1, flagFull = 1, i = 0;
-	int j;
-	if (length == 0)
-		mApp[0] = 0x01;
-	else
-	{
-		for (i = 0; i < length; i++)
-			mApp[i] = m[i];
-		//	this only works when last bit is zero, if not we need a new index
-		//	 Remove all leading zero (at MSB):
-		//	 Shift the index to the first non-zero digit of Exponent (e)
-		i = length - 1;
+    Byte mask = WORD_LEFT_BIT;
+    unsigned int flag = 1, flagFull = 1, i = 0;
+    int j;
+    if (length == 0)
+        mApp[0] = 0x01;
+    else
+    {
+        for (i = 0; i < length; i++)
+            mApp[i] = m[i];
+        //	this only works when last bit is zero, if not we need a new index
+        //	 Remove all leading zero (at MSB):
+        //	 Shift the index to the first non-zero digit of Exponent (e)
+        i = length - 1;
 
-		while (!mApp[i])
-		{
-			flagFull = 0;
-			i--;
-		}
+        while (!mApp[i])
+        {
+            flagFull = 0;
+            i--;
+        }
 
-		// Shift the mask (0x0...10...0) for the first non-zero bit within Exponent (e)
-		while (!(mask & mApp[i]))
-		{
-			flag = 0;
-			mask >>= 1;
-		}
+        // Shift the mask (0x0...10...0) for the first non-zero bit within Exponent (e)
+        while (!(mask & mApp[i]))
+        {
+            flag = 0;
+            mask >>= 1;
+        }
 
-		if (flag && !flagFull)
-			mApp[i + 1] = 1;
+        if (flag && !flagFull)
+            mApp[i + 1] = 1;
 
-		else if (!flag)
-		{
-			mask <<= 1;
-			mApp[i] = mApp[i] ^ mask;
-		}
+        else if (!flag)
+        {
+            mask <<= 1;
+            mApp[i] = mApp[i] ^ mask;
+        }
 
-		else if (flag && flagFull)
-		{
-			mApp[i + 1] = 0x01;
+        else if (flag && flagFull)
+        {
+            mApp[i + 1] = 0x01;
 
-		}
-	}
+        }
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,34 +77,34 @@ void AppendOne(const Byte *m, Byte *mApp, int length)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void Sign(Chunk prime, Chunk key, const Byte *m, int length, Chunk Tag)
 {
-	int i;
-	Chunk mRes;
-	Byte *result, *mApp;
-	if (length < 16)
-	{
-		result = (Byte*) malloc((SIZE * 2) * sizeof(Byte));
-		mApp = (Byte*) malloc((SIZE * 2) * sizeof(Byte));
-		memset(mApp, 0, SIZE * 2);
+    int i;
+    Chunk mRes;
+    Byte *result, *mApp;
+    if (length < 16)
+    {
+        result = (Byte*) malloc((SIZE * 2) * sizeof(Byte));
+        mApp = (Byte*) malloc((SIZE * 2) * sizeof(Byte));
+        memset(mApp, 0, SIZE * 2);
 
-	}
-	else
-	{
-		result = (Byte*) malloc((length * 2) * sizeof(Byte));
-		mApp = (Byte*) malloc((length * 2) * sizeof(Byte));
-		memset(mApp, 0, length * 2);
-	}
+    }
+    else
+    {
+        result = (Byte*) malloc((length * 2) * sizeof(Byte));
+        mApp = (Byte*) malloc((length * 2) * sizeof(Byte));
+        memset(mApp, 0, length * 2);
+    }
 
-	AppendOne(m, mApp, length);
+    AppendOne(m, mApp, length);
 
-	Reduce(mApp, prime, mRes, length);
+    Reduce(mApp, prime, mRes, length);
 
-	InterleavedModularMultiplication(key, mRes, prime, result);
+    InterleavedModularMultiplication(key, mRes, prime, result);
 
-	for (i = 0; i < SIZE; ++i) //converted from little endian to big endian
-		Tag[i] = result[SIZE - 1 - i];
+    for (i = 0; i < SIZE; ++i) //converted from little endian to big endian
+        Tag[i] = result[SIZE - 1 - i];
 
-	free(result);
-	free(mApp);
+    free(result);
+    free(mApp);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,9 +114,9 @@ void Sign(Chunk prime, Chunk key, const Byte *m, int length, Chunk Tag)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 int Verify(Chunk tag, Chunk tagFromCipher)
 {
-	int result;
-	result = NumCompare(tag, tagFromCipher);
-	return result;
+    int result;
+    result = NumCompare(tag, tagFromCipher);
+    return result;
 }
 
 } // namespace Aes256avalanchev1_raw

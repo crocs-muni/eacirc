@@ -1,23 +1,24 @@
-namespace Aes128poetv1aes4_raw {
-int numRounds = -1;
-
 #include <stdlib.h>
 #include <string.h>
 
 #include "aes128poetv1aes4_encrypt.h"
-#include "poet.h"
+#include "aes128poetv1aes4_poet.h"
 #include "aes128poetv1aes4_api.h"
 
+// CHANGE namespace moved due to includes
+namespace Aes128poetv1aes4_raw {
+int numRounds = -1;
 
 int crypto_aead_encrypt(unsigned char *c,unsigned long long *clen,
-			const unsigned char *m, unsigned long long mlen,
-			const unsigned char *ad,unsigned long long adlen,
-			const unsigned char *nsec,
-			const unsigned char *npub,
-			const unsigned char *k)
+            const unsigned char *m, unsigned long long mlen,
+            const unsigned char *ad,unsigned long long adlen,
+            const unsigned char *nsec,
+            const unsigned char *npub,
+            const unsigned char *k)
 {
   struct poet_ctx ctx;
-  unsigned char *header = malloc((size_t) (adlen+CRYPTO_NPUBBYTES));
+  // CHANGE type casting added (because of c++)
+  unsigned char *header = (unsigned char *) malloc((size_t) (adlen+CRYPTO_NPUBBYTES));
   unsigned char *tag = c+mlen;
 
   *clen=mlen+CRYPTO_NPUBBYTES;
@@ -34,14 +35,15 @@ int crypto_aead_encrypt(unsigned char *c,unsigned long long *clen,
 
 
 int crypto_aead_decrypt(unsigned char *m,unsigned long long *mlen,
-			unsigned char *nsec,
-			const unsigned char *c,unsigned long long clen,
-			const unsigned char *ad,unsigned long long adlen,
-			const unsigned char *npub,
-			const unsigned char *k)
+            unsigned char *nsec,
+            const unsigned char *c,unsigned long long clen,
+            const unsigned char *ad,unsigned long long adlen,
+            const unsigned char *npub,
+            const unsigned char *k)
 {
   struct poet_ctx ctx;
-  unsigned char *header =  malloc((size_t) (adlen+CRYPTO_NPUBBYTES));
+  // CHANGE type casting added (because of c++)
+  unsigned char *header = (unsigned char *) malloc((size_t) (adlen+CRYPTO_NPUBBYTES));
   unsigned char tag[CRYPTO_NPUBBYTES];
   int result;
 

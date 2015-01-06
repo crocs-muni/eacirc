@@ -1,5 +1,3 @@
-namespace Aes128otrsv1_raw {
-
 /* Copyright (c) 2014, NEC Corporation. All rights reserved.
 *
 * LICENSE
@@ -28,6 +26,9 @@ namespace Aes128otrsv1_raw {
 */
 #include "aes128otrsv1_api.h"
 
+// CHANGE namespace moved due to includes
+namespace Aes128otrsv1_raw {
+
 typedef unsigned char	uint8;
 typedef unsigned int	uint32;
 
@@ -46,24 +47,24 @@ typedef unsigned int	uint32;
 /* OTR Core Functions */
 extern int Setup(const unsigned char *skey);
 extern int AE_Encrypt(
-		  const unsigned char *nonce,
-		  unsigned int nonce_len,
-		  const unsigned char *plaintext,
-		  unsigned int pl_len,
-		  const unsigned char *header,
-		  unsigned int h_len,
-		  unsigned int t_len,
-		  unsigned char *ciphertext,
-		  unsigned char *tag); //output, ciphertext and tag
+          const unsigned char *nonce,
+          unsigned int nonce_len,
+          const unsigned char *plaintext,
+          unsigned int pl_len,
+          const unsigned char *header,
+          unsigned int h_len,
+          unsigned int t_len,
+          unsigned char *ciphertext,
+          unsigned char *tag); //output, ciphertext and tag
 extern int AE_Decrypt(
-		  const unsigned char *nonce,
-		  unsigned int nonce_len,
-		  const unsigned char *ciphertext,
-		  unsigned int ci_len,
-		  const unsigned char *header,
-		  unsigned int h_len,
-		  unsigned int t_len,
-  		  const unsigned char *tag,
-		  unsigned char *plaintext);
+          const unsigned char *nonce,
+          unsigned int nonce_len,
+          const unsigned char *ciphertext,
+          unsigned int ci_len,
+          const unsigned char *header,
+          unsigned int h_len,
+          unsigned int t_len,
+          const unsigned char *tag,
+          unsigned char *plaintext);
 
 } // namespace Aes128otrsv1_raw

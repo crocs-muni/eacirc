@@ -1,11 +1,8 @@
-namespace Aes256avalanchev1_raw {
-int numRounds = -1;
-
 //-------------------------------------------------------------------------------
 //-- Title        : AVALANCHE
 //-- File         : PCMAC.c
 //-- Project      : aes256avalanchev1.1
-//-- Author       : C4C Development Team 
+//-- Author       : C4C Development Team
 //-- Organization : King Abdulaziz City for Science and Technology (KACST)
 //-- Created      : 08.01.2014
 //-------------------------------------------------------------------------------
@@ -17,7 +14,10 @@ int numRounds = -1;
 //-- without the written permission of the copyright owner.
 //-------------------------------------------------------------------------------
 /*----------------- Header Files --------------------------*/
-#include "avalanche.h"
+#include "aes256avalanchev1_avalanche.h"
+
+// CHANGE namespace moved due to includes
+namespace Aes256avalanchev1_raw {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // NumRand - Random Number Generator to generate number of length = FIELD_BIT_SIZE
@@ -26,12 +26,12 @@ int numRounds = -1;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 Byte NumRand(int j)
 {
-	unsigned char rand;
+    unsigned char rand;
 
-	rand = (unsigned char) time(0) + j;
-	rand *= rand;
-	srand(rand);
-	return rand;
+    rand = (unsigned char) time(0) + j;
+    rand *= rand;
+    srand(rand);
+    return rand;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,10 +41,10 @@ Byte NumRand(int j)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void NumGenerator(Chunk x, int random)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < SIZE; i++)
-		x[i] = NumRand(random++);
+    for (i = 0; i < SIZE; i++)
+        x[i] = NumRand(random++);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,10 +54,10 @@ void NumGenerator(Chunk x, int random)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void XORKey(Byte* nCtr, Byte* key, Byte* finalKey)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < kSIZE; i++) //16 round for 128 bit (16*8)
-		finalKey[i] = key[i] ^ nCtr[i];
+    for (i = 0; i < kSIZE; i++) //16 round for 128 bit (16*8)
+        finalKey[i] = key[i] ^ nCtr[i];
 
 }
 
@@ -68,13 +68,13 @@ void XORKey(Byte* nCtr, Byte* key, Byte* finalKey)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void Increment(Byte* nCtr)
 {
-	unsigned short isFull = 0; //carry to indicate if an index is full
-	Byte increment[kSIZE] =
-	{ 0 }; //array to increment by 1
+    unsigned short isFull = 0; //carry to indicate if an index is full
+    Byte increment[kSIZE] =
+    { 0 }; //array to increment by 1
 
-	increment[kSIZE - 1]++;
+    increment[kSIZE - 1]++;
 
-	CtrAdd(nCtr, increment, nCtr, &isFull);
+    CtrAdd(nCtr, increment, nCtr, &isFull);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,50 +83,50 @@ void Increment(Byte* nCtr)
 //            * OUTPUT: Filled array plainText
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void SetupForEnc(AESArguments *input, const unsigned char *m, Chunk r,
-		unsigned long long mLen, unsigned long long numOfChunks)
+        unsigned long long mLen, unsigned long long numOfChunks)
 {
-	int i = 0, j = 0;
-	unsigned char temp[SIZE]; //temp double sized to avoid buffer overflow
-	int sizeOfPadding = 0;
-	int sizeOfLastChunk = 0;
-	sizeOfLastChunk = mLen % SIZE;
-	if (sizeOfLastChunk != 0)
-		sizeOfPadding = SIZE - sizeOfLastChunk - 1;
-	for (i = 0; i < SIZE; i++)
-		input[0].plainText[i] = r[i];
+    int i = 0, j = 0;
+    unsigned char temp[SIZE]; //temp double sized to avoid buffer overflow
+    int sizeOfPadding = 0;
+    int sizeOfLastChunk = 0;
+    sizeOfLastChunk = mLen % SIZE;
+    if (sizeOfLastChunk != 0)
+        sizeOfPadding = SIZE - sizeOfLastChunk - 1;
+    for (i = 0; i < SIZE; i++)
+        input[0].plainText[i] = r[i];
 
-	for (i = 0; i < numOfChunks - 2; i++)
-	{
-		memset(temp, 0, SIZE);
-		memcpy(temp, m + (SIZE * i), SIZE);
-		for (j = 0; j < SIZE; j++)
-			input[i + 1].plainText[j] = temp[j];
-	}
+    for (i = 0; i < numOfChunks - 2; i++)
+    {
+        memset(temp, 0, SIZE);
+        memcpy(temp, m + (SIZE * i), SIZE);
+        for (j = 0; j < SIZE; j++)
+            input[i + 1].plainText[j] = temp[j];
+    }
 
-	memset(temp, 0, SIZE);
-	memcpy(temp, m + (SIZE * i), SIZE - sizeOfPadding - 1); //for last chunk
+    memset(temp, 0, SIZE);
+    memcpy(temp, m + (SIZE * i), SIZE - sizeOfPadding - 1); //for last chunk
 
-	if (sizeOfLastChunk == 0)
-	{
-		memset(temp, 0, SIZE);
-		temp[0] = EOT;
-	}
-	
-	if (sizeOfPadding == 0 && sizeOfLastChunk == 15)
-		temp[SIZE-1] = EOT;
-	
-	//padding
-	if (sizeOfLastChunk != 0 && sizeOfLastChunk != 15)
-	{
-		temp[SIZE - sizeOfPadding - 1] = EOT;
-		//pad the last chunk
-		for (i = 0; i < sizeOfPadding - 1; i++)
-			temp[SIZE - sizeOfPadding + i] = pad;
-		temp[SIZE - 1] = (char) sizeOfPadding;
-	}
-	
-	for (j = 0; j < SIZE; j++)
-		input[numOfChunks - 1].plainText[j] = temp[j];
+    if (sizeOfLastChunk == 0)
+    {
+        memset(temp, 0, SIZE);
+        temp[0] = EOT;
+    }
+
+    if (sizeOfPadding == 0 && sizeOfLastChunk == 15)
+        temp[SIZE-1] = EOT;
+
+    //padding
+    if (sizeOfLastChunk != 0 && sizeOfLastChunk != 15)
+    {
+        temp[SIZE - sizeOfPadding - 1] = EOT;
+        //pad the last chunk
+        for (i = 0; i < sizeOfPadding - 1; i++)
+            temp[SIZE - sizeOfPadding + i] = pad;
+        temp[SIZE - 1] = (char) sizeOfPadding;
+    }
+
+    for (j = 0; j < SIZE; j++)
+        input[numOfChunks - 1].plainText[j] = temp[j];
 
 }
 
@@ -136,18 +136,18 @@ void SetupForEnc(AESArguments *input, const unsigned char *m, Chunk r,
 //            * OUTPUT: Filled array cipherText
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void SetupForDec(AESArguments *input, const unsigned char *c,
-		unsigned long long numOfChunks)
+        unsigned long long numOfChunks)
 {
-	int i = 0, j = 0;
-	Byte temp[SIZE + 1];
+    int i = 0, j = 0;
+    Byte temp[SIZE + 1];
 
-	for (i = 0; i < numOfChunks; i++)
-	{
-		memcpy(temp, c + (SIZE * i), SIZE);
-		for (j = 0; j < SIZE; j++)
-			input[i].cipherText[j] = temp[j];
+    for (i = 0; i < numOfChunks; i++)
+    {
+        memcpy(temp, c + (SIZE * i), SIZE);
+        for (j = 0; j < SIZE; j++)
+            input[i].cipherText[j] = temp[j];
 
-	}
+    }
 
 }
 
@@ -158,10 +158,10 @@ void SetupForDec(AESArguments *input, const unsigned char *c,
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void ModularAddition(Chunk a, Chunk b)
 {
-	int i;
+    int i;
 
-	for (i = 0; i < SIZE; i++)
-		a[i] ^= b[i];
+    for (i = 0; i < SIZE; i++)
+        a[i] ^= b[i];
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,32 +170,32 @@ void ModularAddition(Chunk a, Chunk b)
 //            * OUTPUT: Chunk tag
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void TagGeneration(const unsigned char *m, Chunk r, Chunk tag,
-		unsigned long long numOfChunks)
+        unsigned long long numOfChunks)
 {
-	Chunk temp;
-	int i, j, k;
+    Chunk temp;
+    int i, j, k;
 
-	memset(tag, 0, SIZE);
-	for (i = 0; i < numOfChunks - 2; i++)
-	{
-		memcpy(temp, m + (SIZE * i), SIZE);
-		if (i == numOfChunks - 2)
-		{
-			for (j = 0; j < SIZE; j++)
-				if (temp[j] == EOT)
-				{
-					for (k = j; k < SIZE; k++)
-						temp[k] = 0x00;
+    memset(tag, 0, SIZE);
+    for (i = 0; i < numOfChunks - 2; i++)
+    {
+        memcpy(temp, m + (SIZE * i), SIZE);
+        if (i == numOfChunks - 2)
+        {
+            for (j = 0; j < SIZE; j++)
+                if (temp[j] == EOT)
+                {
+                    for (k = j; k < SIZE; k++)
+                        temp[k] = 0x00;
 
-					break;
-				}
-		}
-		ModularAddition(tag, temp);
-	}
+                    break;
+                }
+        }
+        ModularAddition(tag, temp);
+    }
 
-	for (i = 0; i < SIZE; i++)
-		temp[i] = r[i];
-	ModularAddition(tag, temp);
+    for (i = 0; i < SIZE; i++)
+        temp[i] = r[i];
+    ModularAddition(tag, temp);
 
 }
 

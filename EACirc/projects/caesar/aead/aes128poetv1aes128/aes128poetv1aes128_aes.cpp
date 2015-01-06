@@ -1,6 +1,3 @@
-namespace Aes128poetv1aes128_raw {
-int numRounds = -1;
-
 /* crypto/aes/aes_core.c -*- mode:C; c-file-style: "eay" -*- */
 /**
  * rijndael-alg-fst.c
@@ -40,7 +37,10 @@ int numRounds = -1;
 
 #include <stdlib.h>
 //#include <openssl/aes.h>
-#include "aes.h"
+#include "aes128poetv1aes128_aes.h"
+
+// CHANGE namespace moved due to includes
+namespace Aes128poetv1aes128_raw {
 
 inline void dump_hex2 (char *label, u32 *c, int len)
 {

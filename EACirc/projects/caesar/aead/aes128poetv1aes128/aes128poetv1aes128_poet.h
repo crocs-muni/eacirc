@@ -1,11 +1,12 @@
-namespace Aes128poetv1aes128_raw {
-
 #ifndef _POET_H_
 #define _POET_HL_
 
 #include <stdint.h>
-#include "aes.h"
+#include "aes128poetv1aes128_aes.h"
 #include "aes128poetv1aes128_api.h"
+
+// CHANGE namespace moved due to includes
+namespace Aes128poetv1aes128_raw {
 
 #define BLOCKLEN      CRYPTO_NPUBBYTES
 #define BLOCKLEN_BITS CRYPTO_NPUBBYTES*8
@@ -48,23 +49,23 @@ struct poet_ctx {
 void keysetup(struct poet_ctx *ctx, const uint8_t key[KEYLEN]);
 
 void process_header(struct poet_ctx *ctx, const uint8_t  *header,
-		    uint64_t header_len );
+            uint64_t header_len );
 
 
 void encrypt_block(struct poet_ctx *ctx, const uint8_t plaintext[16],
-		   uint8_t ciphertext[16]);
+           uint8_t ciphertext[16]);
 
 void encrypt_final(struct poet_ctx *ctx, const uint8_t *plaintext,
-		   uint64_t plen, uint8_t *ciphertext, uint8_t tag[BLOCKLEN]);
+           uint64_t plen, uint8_t *ciphertext, uint8_t tag[BLOCKLEN]);
 
 
 
 void decrypt_block(struct poet_ctx *ctx, const uint8_t ciphertext[16],
-		   uint8_t plaintext[16]);
+           uint8_t plaintext[16]);
 
 int decrypt_final(struct poet_ctx *ctx, const uint8_t *ciphertext,
-		   uint64_t clen, const uint8_t tag[BLOCKLEN],
-		  uint8_t *plaintext);
+           uint64_t clen, const uint8_t tag[BLOCKLEN],
+          uint8_t *plaintext);
 #endif //  _POET_H_
 
 } // namespace Aes128poetv1aes128_raw

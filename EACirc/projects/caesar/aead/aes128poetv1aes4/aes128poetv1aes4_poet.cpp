@@ -1,14 +1,14 @@
-namespace Aes128poetv1aes4_raw {
-int numRounds = -1;
-
 #ifdef DEBUG
 #include<stdio.h>
 #endif
 
 #include <string.h>
 
-#include "poet.h"
-#include "gf_mul.h"
+#include "aes128poetv1aes4_poet.h"
+#include "aes128poetv1aes4_gf_mul.h"
+
+// CHANGE namespace moved due to includes
+namespace Aes128poetv1aes4_raw {
 
 #define TOP_HASH     AES_encrypt_4round(ctx->x, ctx->x, &(ctx->aes_lt))
 #define BOTTOM_HASH  AES_encrypt_4round(ctx->y, ctx->y, &(ctx->aes_lb))
@@ -63,7 +63,7 @@ inline void xor_block(uint8_t *c, const uint8_t  *a, const uint8_t  *b)
 
 
 void process_header(struct poet_ctx *ctx, const uint8_t  *header,
-		    uint64_t header_len)
+            uint64_t header_len)
 {
   block mask;
   block factor;
@@ -126,7 +126,7 @@ void process_header(struct poet_ctx *ctx, const uint8_t  *header,
 /***************************************************************************/
 
 void encrypt_block(struct poet_ctx *ctx, const uint8_t plaintext[16],
-		   uint8_t ciphertext[16])
+           uint8_t ciphertext[16])
 {
   block tmp;
   TOP_HASH;
@@ -147,7 +147,7 @@ void encrypt_block(struct poet_ctx *ctx, const uint8_t plaintext[16],
 /***************************************************************************/
 
 void encrypt_final(struct poet_ctx *ctx, const uint8_t *plaintext,
-		   uint64_t plen, uint8_t *ciphertext, uint8_t tag[BLOCKLEN])
+           uint64_t plen, uint8_t *ciphertext, uint8_t tag[BLOCKLEN])
 {
 #ifdef DEBUG
   int i;
@@ -223,7 +223,7 @@ void encrypt_final(struct poet_ctx *ctx, const uint8_t *plaintext,
 /***************************************************************************/
 
 void decrypt_block(struct poet_ctx *ctx, const uint8_t ciphertext[16],
-		   uint8_t plaintext[16])
+           uint8_t plaintext[16])
 {
   block tmp;
   BOTTOM_HASH;
@@ -244,8 +244,8 @@ void decrypt_block(struct poet_ctx *ctx, const uint8_t ciphertext[16],
 /***************************************************************************/
 
 int decrypt_final(struct poet_ctx *ctx, const uint8_t *ciphertext,
-		   uint64_t clen, const uint8_t tag[BLOCKLEN],
-		   uint8_t *plaintext)
+           uint64_t clen, const uint8_t tag[BLOCKLEN],
+           uint8_t *plaintext)
 {
 #ifdef DEBUG
   int i;

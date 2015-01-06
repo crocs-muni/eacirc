@@ -37,10 +37,10 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
 //        case CAESAR_AES128N12SILCV1: { return new Aes128n12silcv1(numRounds); };
         case CAESAR_AES128N8CLOCV1: { return new Aes128n8clocv1(numRounds); };
 //        case CAESAR_AES128N8SILCV1: { return new Aes128n8silcv1(numRounds); };
-//        case CAESAR_AES128OTRPV1: { return new Aes128otrpv1(numRounds); };
-//        case CAESAR_AES128OTRSV1: { return new Aes128otrsv1(numRounds); };
-//        case CAESAR_AES128POETV1AES128: { return new Aes128poetv1aes128(numRounds); };
-//        case CAESAR_AES128POETV1AES4: { return new Aes128poetv1aes4(numRounds); };
+        case CAESAR_AES128OTRPV1: { return new Aes128otrpv1(numRounds); };
+        case CAESAR_AES128OTRSV1: { return new Aes128otrsv1(numRounds); };
+        case CAESAR_AES128POETV1AES128: { return new Aes128poetv1aes128(numRounds); };
+        case CAESAR_AES128POETV1AES4: { return new Aes128poetv1aes4(numRounds); };
 //        case CAESAR_AES192AVALANCHEV1: { return new Aes192avalanchev1(numRounds); };
 //        case CAESAR_AES256AVALANCHEV1: { return new Aes256avalanchev1(numRounds); };
 //        case CAESAR_AES256CPFBV1: { return new Aes256cpfbv1(numRounds); };

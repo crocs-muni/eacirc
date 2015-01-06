@@ -1,10 +1,8 @@
-namespace Aes256avalanchev1_raw {
-
 //-------------------------------------------------------------------------------
 //-- Title        : AVALANCHE
 //-- File         : AVALANCHE.h
 //-- Project      : aes256avalanchev1.1
-//-- Author       : C4C Development Team 
+//-- Author       : C4C Development Team
 //-- Organization : King Abdulaziz City for Science and Technology (KACST)
 //-- Created      : 08.01.2014
 //-------------------------------------------------------------------------------
@@ -29,8 +27,11 @@ namespace Aes256avalanchev1_raw {
 #include "aes256avalanchev1_encrypt.h"
 #include "openssl/aes.h"
 
+// CHANGE namespace moved due to includes
+namespace Aes256avalanchev1_raw {
+
 /***************	Sizes	********************/
-#define col			4 
+#define col			4
 #define row			4
 #define SIZE		16
 #define hSIZE		32
@@ -61,9 +62,9 @@ typedef Byte NumProduct[SIZE * 2];
 
 typedef struct AES_Arguments
 {
-	Byte plainText[SIZE];
-	Byte cipherText[SIZE];
-	Byte nonce[kSIZE];
+    Byte plainText[SIZE];
+    Byte cipherText[SIZE];
+    Byte nonce[kSIZE];
 } AESArguments;
 
 /************ Function Declaration**************/
@@ -71,7 +72,7 @@ typedef struct AES_Arguments
 void CtrAdd(Byte *a, Byte *b, Byte *result, unsigned short *carryFlag);
 int NumCompare(Chunk A, Chunk B);
 void InterleavedModularMultiplication(Chunk a, Chunk b, Chunk mod,
-		Byte * result);
+        Byte * result);
 void Reduce(Byte *Result, Chunk n, Chunk result, int length);
 //IO.c
 void ReadFileForEnc(Byte* input, unsigned long long mLen);
@@ -84,11 +85,11 @@ void FileSettingForEnc(Byte *cipherText, unsigned long long numOfChunks);
 void FileSettingForDec(Byte *plainText, unsigned long long mlen);
 //PCMAC.c
 void SetupForEnc(AESArguments *input, const unsigned char *m, Chunk r,
-		unsigned long long mLen, unsigned long long numOfChunks);
+        unsigned long long mLen, unsigned long long numOfChunks);
 void SetupForDec(AESArguments *input, const unsigned char *c,
-		unsigned long long numOfChunks);
+        unsigned long long numOfChunks);
 void TagGeneration(const unsigned char *m, Chunk r, Chunk tag,
-		unsigned long long numOfChunks);
+        unsigned long long numOfChunks);
 void NumGenerator(Chunk x, int random);
 void XORKey(Byte* nCtr, Byte* key, Byte* finalKey);
 void ConvertCharToHex(char cipherInHex[], char temp[]);
