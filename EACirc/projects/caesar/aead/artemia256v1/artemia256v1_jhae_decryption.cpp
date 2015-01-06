@@ -1,10 +1,10 @@
-namespace Artemia256v1_raw {
-int numRounds = -1;
-
-#include "jhae.h"
+#include "artemia256v1_jhae.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Artemia256v1_raw {
 
 int jhae_decryption_verification(unsigned char *msg, unsigned long long *msglen,
                                  const unsigned char *key,

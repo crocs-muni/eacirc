@@ -10,9 +10,9 @@ CategoriesEvaluator::CategoriesEvaluator()
 }
 
 CategoriesEvaluator::~CategoriesEvaluator() {
-    delete m_categoriesStream0;
+    delete[] m_categoriesStream0;
     m_categoriesStream0 = NULL;
-    delete m_categoriesStream1;
+    delete[] m_categoriesStream1;
     m_categoriesStream1 = NULL;
 }
 

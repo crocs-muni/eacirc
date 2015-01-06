@@ -1,9 +1,9 @@
-namespace Artemia128v1_raw {
-int numRounds = -1;
-
-#include "jhae.h"
+#include "artemia128v1_jhae.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+// CHANGE namespace moved due to includes
+namespace Artemia128v1_raw {
 
 unsigned char* padding_message(const unsigned char *block,
                                int length,

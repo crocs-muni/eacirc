@@ -7,7 +7,7 @@ CaesarProject::CaesarProject()
 
 CaesarProject::~CaesarProject() {
     if (m_encryptor != NULL) { delete m_encryptor; m_encryptor = NULL; }
-    if (m_ciphertext != NULL) { delete m_ciphertext; m_ciphertext = NULL; }
+    if (m_ciphertext != NULL) { delete[] m_ciphertext; m_ciphertext = NULL; }
 }
 
 string CaesarProject::shortDescription() const {
@@ -157,7 +157,8 @@ int CaesarProject::prepareSingleTestVector(unsigned char* tvInputs, unsigned cha
         status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
         if (status != STAT_OK) { return status; }
         // copy authentication tag
-        memcpy(tvInputs, m_ciphertext+m_caesarSettings.plaintextLength, m_realCiphertextLength-m_caesarSettings.plaintextLength);
+        memcpy(tvInputs, m_ciphertext+m_caesarSettings.plaintextLength,
+                min(m_realCiphertextLength-m_caesarSettings.plaintextLength, (length_t)pGlobals->settings->testVectors.inputLength));
         // fill with zeroes
         if ((int) (m_realCiphertextLength-m_caesarSettings.plaintextLength) < pGlobals->settings->testVectors.inputLength) {
             mainLogger.out(LOGGER_WARNING) << "Authentication tag shorter than test vector input -- padded with zeroes." << endl;

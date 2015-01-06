@@ -1,9 +1,9 @@
-namespace Artemia256v1_raw {
-int numRounds = -1;
-
-#include "jhae.h"
+#include "artemia256v1_jhae.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+// CHANGE namespace moved due to includes
+namespace Artemia256v1_raw {
 
 int jhae_encryption_authentication(unsigned char *c, unsigned long long *clen,
                                   unsigned char *t,

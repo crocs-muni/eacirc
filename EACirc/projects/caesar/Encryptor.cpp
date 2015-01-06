@@ -10,7 +10,8 @@ Encryptor::Encryptor()
       m_smn(new bits_t[pCaesarSettings->smnLength]),
       m_pmn(new bits_t[pCaesarSettings->pmnLength]),
       m_plaintext(new bits_t[pCaesarSettings->plaintextLength]),
-      m_decryptedPlaintext(new bits_t[pCaesarSettings->plaintextLength]),
+      // decrypted plaintext is one block bigger, in case the cipher creates a new block by padding
+      m_decryptedPlaintext(new bits_t[pCaesarSettings->plaintextLength+32]),
       m_decryptedSmn(new bits_t[pCaesarSettings->smnLength]),
       m_decryptedPlaintextLength(0),
       m_setup(false) {
@@ -19,13 +20,13 @@ Encryptor::Encryptor()
 
 Encryptor::~Encryptor() {
     if (m_cipher) { delete m_cipher; m_cipher = NULL; }
-    if (m_key) { delete m_key; m_key = NULL; }
-    if (m_ad) { delete m_ad; m_ad = NULL; }
-    if (m_smn) { delete m_smn; m_smn = NULL; }
-    if (m_pmn) { delete m_pmn; m_pmn = NULL; }
-    if (m_plaintext) { delete m_plaintext; m_plaintext = NULL; }
-    if (m_decryptedPlaintext) { delete m_decryptedPlaintext; m_decryptedPlaintext = NULL; }
-    if (m_decryptedSmn) { delete m_decryptedSmn; m_decryptedSmn = NULL; }
+    if (m_key) { delete[] m_key; m_key = NULL; }
+    if (m_ad) { delete[] m_ad; m_ad = NULL; }
+    if (m_smn) { delete[] m_smn; m_smn = NULL; }
+    if (m_pmn) { delete[] m_pmn; m_pmn = NULL; }
+    if (m_plaintext) { delete[] m_plaintext; m_plaintext = NULL; }
+    if (m_decryptedPlaintext) { delete[] m_decryptedPlaintext; m_decryptedPlaintext = NULL; }
+    if (m_decryptedSmn) { delete[] m_decryptedSmn; m_decryptedSmn = NULL; }
 }
 
 int Encryptor::initArray(bits_t* data, length_t dataLength, int dataType) {

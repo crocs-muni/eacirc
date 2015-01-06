@@ -641,25 +641,25 @@ SOURCES += \
  EACirc/projects/caesar/aead/aezv3/aezv3_aez_ref.cpp \
  EACirc/projects/caesar/aead/aezv3/aezv3_rijndael-alg-fst.cpp \
  EACirc/projects/caesar/aead/aezv3/Aezv3.cpp \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_encrypt.cpp \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_decryption.cpp \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_encryption.cpp \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_padding.cpp \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_permutation.cpp \
-# EACirc/projects/caesar/aead/artemia128v1/Artemia128v1.cpp \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_encrypt.cpp \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_decryption.cpp \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_encryption.cpp \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_padding.cpp \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_permutation.cpp \
-# EACirc/projects/caesar/aead/artemia256v1/Artemia256v1.cpp \
-# EACirc/projects/caesar/aead/ascon128v1/ascon128v1_ascon.cpp \
-# EACirc/projects/caesar/aead/ascon128v1/Ascon128v1.cpp \
-# EACirc/projects/caesar/aead/ascon96v1/ascon96v1_ascon.cpp \
-# EACirc/projects/caesar/aead/ascon96v1/Ascon96v1.cpp \
-# EACirc/projects/caesar/aead/calicov8/calicov8_calico.cpp \
-# EACirc/projects/caesar/aead/calicov8/calicov8_encrypt.cpp \
-# EACirc/projects/caesar/aead/calicov8/Calicov8.cpp \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_encrypt.cpp \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_decryption.cpp \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_encryption.cpp \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_padding.cpp \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae_permutation.cpp \
+ EACirc/projects/caesar/aead/artemia128v1/Artemia128v1.cpp \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_encrypt.cpp \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_decryption.cpp \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_encryption.cpp \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_padding.cpp \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae_permutation.cpp \
+ EACirc/projects/caesar/aead/artemia256v1/Artemia256v1.cpp \
+ EACirc/projects/caesar/aead/ascon128v1/ascon128v1_ascon.cpp \
+ EACirc/projects/caesar/aead/ascon128v1/Ascon128v1.cpp \
+ EACirc/projects/caesar/aead/ascon96v1/ascon96v1_ascon.cpp \
+ EACirc/projects/caesar/aead/ascon96v1/Ascon96v1.cpp \
+ EACirc/projects/caesar/aead/calicov8/calicov8_calico.cpp \
+ EACirc/projects/caesar/aead/calicov8/calicov8_encrypt.cpp \
+ EACirc/projects/caesar/aead/calicov8/Calicov8.cpp \
 # EACirc/projects/caesar/aead/cba1/cba1_encrypt.cpp \
 # EACirc/projects/caesar/aead/cba1/Cba1.cpp \
 # EACirc/projects/caesar/aead/cba10/cba10_encrypt.cpp \
@@ -1256,24 +1256,24 @@ HEADERS += \
  EACirc/projects/caesar/aead/aezv3/aezv3_rijndael-alg-fst.h \
  EACirc/projects/caesar/aead/aezv3/aezv3_encrypt.h \
  EACirc/projects/caesar/aead/aezv3/Aezv3.h \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_api.h \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae.h \
-# EACirc/projects/caesar/aead/artemia128v1/artemia128v1_encrypt.h \
-# EACirc/projects/caesar/aead/artemia128v1/Artemia128v1.h \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_api.h \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae.h \
-# EACirc/projects/caesar/aead/artemia256v1/artemia256v1_encrypt.h \
-# EACirc/projects/caesar/aead/artemia256v1/Artemia256v1.h \
-# EACirc/projects/caesar/aead/ascon128v1/ascon128v1_api.h \
-# EACirc/projects/caesar/aead/ascon128v1/ascon128v1_encrypt.h \
-# EACirc/projects/caesar/aead/ascon128v1/Ascon128v1.h \
-# EACirc/projects/caesar/aead/ascon96v1/ascon96v1_api.h \
-# EACirc/projects/caesar/aead/ascon96v1/ascon96v1_encrypt.h \
-# EACirc/projects/caesar/aead/ascon96v1/Ascon96v1.h \
-# EACirc/projects/caesar/aead/calicov8/calicov8_api.h \
-# EACirc/projects/caesar/aead/calicov8/calicov8_calico.h \
-# EACirc/projects/caesar/aead/calicov8/calicov8_encrypt.h \
-# EACirc/projects/caesar/aead/calicov8/Calicov8.h \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_api.h \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_jhae.h \
+ EACirc/projects/caesar/aead/artemia128v1/artemia128v1_encrypt.h \
+ EACirc/projects/caesar/aead/artemia128v1/Artemia128v1.h \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_api.h \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_jhae.h \
+ EACirc/projects/caesar/aead/artemia256v1/artemia256v1_encrypt.h \
+ EACirc/projects/caesar/aead/artemia256v1/Artemia256v1.h \
+ EACirc/projects/caesar/aead/ascon128v1/ascon128v1_api.h \
+ EACirc/projects/caesar/aead/ascon128v1/ascon128v1_encrypt.h \
+ EACirc/projects/caesar/aead/ascon128v1/Ascon128v1.h \
+ EACirc/projects/caesar/aead/ascon96v1/ascon96v1_api.h \
+ EACirc/projects/caesar/aead/ascon96v1/ascon96v1_encrypt.h \
+ EACirc/projects/caesar/aead/ascon96v1/Ascon96v1.h \
+ EACirc/projects/caesar/aead/calicov8/calicov8_api.h \
+ EACirc/projects/caesar/aead/calicov8/calicov8_calico.h \
+ EACirc/projects/caesar/aead/calicov8/calicov8_encrypt.h \
+ EACirc/projects/caesar/aead/calicov8/Calicov8.h \
 # EACirc/projects/caesar/aead/cba1/cba1_api.h \
 # EACirc/projects/caesar/aead/cba1/cba1_encrypt.h \
 # EACirc/projects/caesar/aead/cba1/Cba1.h \
@@ -2010,11 +2010,11 @@ OTHER_FILES += \
  EACirc/projects/caesar/aead/aesjambuv1/About.md \
  EACirc/projects/caesar/aead/aezv1/About.md \
  EACirc/projects/caesar/aead/aezv3/About.md \
-# EACirc/projects/caesar/aead/artemia128v1/About.md \
-# EACirc/projects/caesar/aead/artemia256v1/About.md \
-# EACirc/projects/caesar/aead/ascon128v1/About.md \
-# EACirc/projects/caesar/aead/ascon96v1/About.md \
-# EACirc/projects/caesar/aead/calicov8/About.md \
+ EACirc/projects/caesar/aead/artemia128v1/About.md \
+ EACirc/projects/caesar/aead/artemia256v1/About.md \
+ EACirc/projects/caesar/aead/ascon128v1/About.md \
+ EACirc/projects/caesar/aead/ascon96v1/About.md \
+ EACirc/projects/caesar/aead/calicov8/About.md \
 # EACirc/projects/caesar/aead/cba1/About.md \
 # EACirc/projects/caesar/aead/cba10/About.md \
 # EACirc/projects/caesar/aead/cba2/About.md \

@@ -1,9 +1,10 @@
-namespace Ascon96v1_raw {
-int numRounds = -1;
-
 #include <stdio.h>
 #include "ascon96v1_api.h"
 #include "ascon96v1_encrypt.h"
+
+// CHANGE namespace moved due to includes
+namespace Ascon96v1_raw {
+int numRounds = -1;
 
 typedef unsigned char u8;
 typedef unsigned long long u64;

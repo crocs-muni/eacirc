@@ -1,8 +1,8 @@
-namespace Artemia256v1_raw {
-int numRounds = -1;
-
-#include "jhae.h"
+#include "artemia256v1_jhae.h"
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Artemia256v1_raw {
 
 // AES SBOX
 const unsigned char AES_SBOX[] = {

@@ -1,6 +1,3 @@
-namespace Artemia256v1_raw {
-int numRounds = -1;
-
 /*
  * encrypt.c
  *
@@ -10,7 +7,11 @@ int numRounds = -1;
 
 #include "artemia256v1_encrypt.h"
 #include "artemia256v1_api.h"
-#include "jhae.h"
+#include "artemia256v1_jhae.h"
+
+// CHANGE namespace moved due to includes
+namespace Artemia256v1_raw {
+int numRounds = -1;
 
 /*
  * The code for the cipher implementation,
