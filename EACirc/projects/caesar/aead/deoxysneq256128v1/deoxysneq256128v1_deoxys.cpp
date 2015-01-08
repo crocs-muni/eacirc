@@ -1,6 +1,3 @@
-namespace Deoxysneq256128v1_raw {
-int numRounds = -1;
-
 /*
  * Deoxys=/=-256-128 Reference C Implementation
  *
@@ -28,8 +25,11 @@ int numRounds = -1;
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "deoxys.h"
-#include "tweakableBC.h"
+#include "deoxysneq256128v1_deoxys.h"
+#include "deoxysneq256128v1_tweakableBC.h"
+
+// CHANGE namespace moved due to includes
+namespace Deoxysneq256128v1_raw {
 
 /* Define the three MSB of the tweak (that depend on the stage) */
 #define MSB_AD 			      (0x2<<5)
@@ -375,7 +375,7 @@ int deoxys_aead_decrypt(const uint8_t *ass_data, size_t ass_data_len,
 
     /* Update the length of the plaintext */
     *m_len=c_len;
-    
+
     return 0;
 }
 

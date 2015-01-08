@@ -1,6 +1,3 @@
-namespace Deoxysneq128128v1_raw {
-int numRounds = -1;
-
 /*
  * Deoxys=/=-128-128 Reference C Implementation
  *
@@ -28,8 +25,11 @@ int numRounds = -1;
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "deoxys.h"
-#include "tweakableBC.h"
+#include "deoxysneq128128v1_deoxys.h"
+#include "deoxysneq128128v1_tweakableBC.h"
+
+// CHANGE namespace moved due to includes
+namespace Deoxysneq128128v1_raw {
 
 /* Define the three MSB of the tweak (that depend on the stage) */
 #define MSB_AD 			      (0x2<<5)

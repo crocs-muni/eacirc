@@ -1,45 +1,46 @@
-namespace Cmcc44v1_raw {
-int numRounds = -1;
-
 /*     Copyright (C) <2014> <Jonathan Trostle>
 
-Permission is hereby granted, free of charge, to any person obtaining 
-a copy of this software and associated documentation files (the 
-"Software"), to deal in the Software without restriction, including 
-without limitation the rights to use, copy, modify, merge, publish, 
-distribute, sublicense, and/or sell copies of the Software, and to 
-permit persons to whom the Software is furnished to do so, subject 
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject
 to the following conditions:
 
-    The above copyright notice and this permission notice shall be 
+    The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "cmcc44v1_api.h"
 #include "cmcc44v1_encrypt.h"
-#include "crypto_verify_16.h"
-#include "crypto_core_aes128encrypt.h"
+// CHANGE api included instead of crypto core headers
+#include "../common/api.h"
+// #include "crypto_verify_16.h"
+// #include "crypto_core_aes128encrypt.h"
 #define ABS 16  /* ABS = AES_BLOCK_SIZE */
-#define AES(out,in,k) crypto_core_aes128encrypt(out,in,k,0)
+// CHANGE namespace added
+#define AES(out,in,k) CaesarCommon::crypto_core_aes128encrypt(out,in,k,0)
 
+// CHANGE namespace moved due to includes
+namespace Cmcc44v1_raw {
+int numRounds = -1;
 
 typedef unsigned char uc;
 
-int ctr(uc *v, const uc *k, const uc *plain, unsigned long long plain_len, 
-	uc *out)
+int ctr(uc *v, const uc *k, const uc *plain, unsigned long long plain_len,
+    uc *out)
 {
-  /* Reference implementation assumes <= 2^{39}-128 bits will be 
+  /* Reference implementation assumes <= 2^{39}-128 bits will be
      processed */
   int size, last_block_length;
   int whole=1; /*TRUE if last block not whole */
@@ -48,7 +49,7 @@ int ctr(uc *v, const uc *k, const uc *plain, unsigned long long plain_len,
   int i;
   long long int j;
   last_block_length = plain_len % 16;
-  if(last_block_length == 0) 
+  if(last_block_length == 0)
     last_block_length = 16;
   if(last_block_length == 16)
     whole = 0;
@@ -69,33 +70,33 @@ int ctr(uc *v, const uc *k, const uc *plain, unsigned long long plain_len,
   while(no_blocks > 0)
     {
       if(v[15] < 255)
-	{
-	  v[15] += 1;
-	}
+    {
+      v[15] += 1;
+    }
       else if(v[15] == 255)
-	{
-	  v[15] = 0;
-	  if(v[14] < 255)
-	    v[14] += 1;
-	  else if(v[14] == 255)
-	    {
-	      v[14] = 0;
-	      if(v[13] < 255)
-		v[13] += 1;
-	      else if(v[13] == 255)
-		{
-		  v[13] = 0;
-		  v[12] += 1;
-		}
-	    }
-	}
+    {
+      v[15] = 0;
+      if(v[14] < 255)
+        v[14] += 1;
+      else if(v[14] == 255)
+        {
+          v[14] = 0;
+          if(v[13] < 255)
+        v[13] += 1;
+          else if(v[13] == 255)
+        {
+          v[13] = 0;
+          v[12] += 1;
+        }
+        }
+    }
       AES(c,v,k);
       if(no_blocks == 1)
-	size = last_block_length;
+    size = last_block_length;
       else
-	size = ABS;
+    size = ABS;
       for(i=0; i<size; i++)
-	out[i+j] = plain[i+j] ^ c[i];
+    out[i+j] = plain[i+j] ^ c[i];
       j += 16;
       no_blocks--;
     }
@@ -105,7 +106,7 @@ int ctr(uc *v, const uc *k, const uc *plain, unsigned long long plain_len,
 int get_subkeys(uc *key1, uc *key2, const uc *aes_key)
 {
   uc zero[ABS]={0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-			  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
   int i, msb, new_msb, flag;
   AES(key1,zero,aes_key);
   if((key1[0] & 0x80) != 0) flag = 1; else flag = 0;
@@ -115,7 +116,7 @@ int get_subkeys(uc *key1, uc *key2, const uc *aes_key)
       new_msb = key1[i] & 0x80;
       key1[i] = key1[i] << 1;
       if(msb != 0)
-	key1[i] += 1;
+    key1[i] += 1;
       msb = new_msb;
     }
   if(flag == 1)
@@ -127,7 +128,7 @@ int get_subkeys(uc *key1, uc *key2, const uc *aes_key)
       new_msb = key1[i] & 0x80;
       key2[i] = key1[i] << 1;
       if(msb != 0)
-	key2[i] += 1;
+    key2[i] += 1;
       msb = new_msb;
     }
   if(flag == 1)
@@ -136,7 +137,7 @@ int get_subkeys(uc *key1, uc *key2, const uc *aes_key)
 }
 
 int pad(uc *buf, unsigned int pad_length, unsigned long long length,
-	uc *k1, uc *k2)
+    uc *k1, uc *k2)
 { /* assumes buf has room to pad which is true for cbc_buffer
      length is length of buf string; length + pad_length is div. by 16*/
   int i, n;
@@ -144,7 +145,7 @@ int pad(uc *buf, unsigned int pad_length, unsigned long long length,
     {
       /* we have a whole block to pad */
       for(i=length-ABS; i <= length-1; i++)
-	buf[i] ^= k1[i - length + ABS];
+    buf[i] ^= k1[i - length + ABS];
       return 0;
     }
   else if(pad_length > 16 || pad_length < 1)
@@ -156,10 +157,10 @@ int pad(uc *buf, unsigned int pad_length, unsigned long long length,
     {
       buf[length] = 0x80;
       for(i=0; i< pad_length-1;i++)
-	buf[length+1+i] = 0x00; /* NOW XOR last 16 bytes with K2 */
+    buf[length+1+i] = 0x00; /* NOW XOR last 16 bytes with K2 */
       n = ABS - pad_length;
       for(i=0; i < ABS; i++)
-	buf[length-n+i] ^= k2[i];
+    buf[length-n+i] ^= k2[i];
     }
   return 0;
 }
@@ -167,7 +168,7 @@ int pad(uc *buf, unsigned int pad_length, unsigned long long length,
 int cmac(uc *msg, const uc *aes_key, unsigned long long length, uc *tag)
 {
   /* length is length of msg */
-  unsigned int pad_length;  
+  unsigned int pad_length;
   int i;
   uc k1[16], k2[16], temp[16];
   unsigned long long no_blocks, j;
@@ -183,14 +184,14 @@ int cmac(uc *msg, const uc *aes_key, unsigned long long length, uc *tag)
   for(j=1; j<no_blocks; j++)
     {
       for(i=0;i < ABS;i++)
-	temp[i] = msg[16*j + i] ^ tag[i];
+    temp[i] = msg[16*j + i] ^ tag[i];
       AES(tag,temp,aes_key);
     }
   return 0;
 }
 
-int cbc_encrypt(uc *in, unsigned long long length, uc *out, 
-		const uc *aes_key, uc *iv)
+int cbc_encrypt(uc *in, unsigned long long length, uc *out,
+        const uc *aes_key, uc *iv)
 {
   /* ASSUMES length is divisible by ABS */
   unsigned long long j, i;
@@ -207,7 +208,7 @@ int cbc_encrypt(uc *in, unsigned long long length, uc *out,
   for(j=1; j < no_blocks; j++)
     {
       for(i=0; i < ABS; i++)
-	ivc[i] = in[16*j + i] ^ out[16*(j-1) + i];
+    ivc[i] = in[16*j + i] ^ out[16*(j-1) + i];
       AES(out + 16*j,ivc,aes_key);
     }
   return 0;
@@ -216,17 +217,17 @@ int cbc_encrypt(uc *in, unsigned long long length, uc *out,
 
 
 int crypto_aead_encrypt(
-			uc *c, unsigned long long *clen,
-			const uc *m, unsigned long long mlen,
-			const uc *ad, unsigned long long adlen,
-			const uc *nsec,
-			const uc *npub,
-			const uc *k)
+            uc *c, unsigned long long *clen,
+            const uc *m, unsigned long long mlen,
+            const uc *ad, unsigned long long adlen,
+            const uc *nsec,
+            const uc *npub,
+            const uc *k)
 {
   /* ASSUME CALLER has allocated the buffer c with *clen bytes */
   /* ASSUME message is in buffer m which has at least mlen bytes */
   /* uc big_m[ABS] = { [0 ... 15] = 0xb6 }; */
-  uc big_m[ABS] = {0xb6, 0xb6, 0xb6, 0xb6,0xb6, 0xb6, 0xb6, 0xb6, 
+  uc big_m[ABS] = {0xb6, 0xb6, 0xb6, 0xb6,0xb6, 0xb6, 0xb6, 0xb6,
                    0xb6, 0xb6, 0xb6, 0xb6,0xb6, 0xb6, 0xb6, 0xb6};
   unsigned long long p1_length, p2_length, cbc_length, j;
   int i, pad_length, temp, index;
@@ -247,23 +248,24 @@ int crypto_aead_encrypt(
     cbc_length += ABS - temp;
   pad_length = cbc_length - p1_length;
   /* malloc the buffer of size cbc_length and add padding to it
-     then cbc it. But Y will end up in this buffer so make the 
+     then cbc it. But Y will end up in this buffer so make the
      length cbc_length plus adlen plus padding: */
-  cbc_buffer = malloc(cbc_length + adlen + 
-		      (ABS - (adlen%ABS))*sizeof(unsigned char));
+  // CHANGE type casting added due to c++
+  cbc_buffer = (uc*) malloc(cbc_length + adlen +
+              (ABS - (adlen%ABS))*sizeof(unsigned char));
   if(cbc_buffer == NULL)
     return -3;
   if(p1_length <= mlen)
     {
       for(j=0;j<p1_length;j++)
-	cbc_buffer[j] = m[j];
+    cbc_buffer[j] = m[j];
     }
   else if(mlen < p1_length)
     {
       for(j=0; j<mlen;j++)
-	cbc_buffer[j] = m[j];
+    cbc_buffer[j] = m[j];
       for(j=mlen;j < p1_length;j++)
-	cbc_buffer[j] = 0x00;
+    cbc_buffer[j] = 0x00;
     }
   /* pad_length = 0 implies a full block
      will append A to cbc_buffer after getting X
@@ -283,12 +285,13 @@ int crypto_aead_encrypt(
     for(j = p1_length; j < mlen;j++)
       cbc_buffer[j - p1_length] ^= m[j];
   /* save X for later use */
-  /* with a little extra complexity we could maintain X in 
+  /* with a little extra complexity we could maintain X in
      cbc_buffer by saving the bytes of X that are affected by
      padding and then overwriting the affected bytes later on
      when we need to reconstitute X. This would eliminate the
      copy below */
-  x = malloc(p2_length*sizeof(unsigned char));
+  // CHANGE type casting added due to c++
+  x = (uc*) malloc(p2_length*sizeof(unsigned char));
   if(x == NULL)
     return -3;
   for(j=0; j < p2_length; j++)
@@ -297,23 +300,24 @@ int crypto_aead_encrypt(
     cbc_buffer[j] = ad[j - p2_length];
   if(cmac(cbc_buffer, k+32, p2_length+adlen, tag) == -1)
     return -4;
-  scratch = malloc(cbc_length*sizeof(unsigned char *));
+  // CHANGE type casting added due to c++
+  scratch = (uc*) malloc(cbc_length*sizeof(unsigned char *));
   if(scratch == NULL)
     return -3;
 
   if(p1_length <= mlen)
     {
     if(ctr(tag, k+48, m, p1_length,scratch) == -1)
-      return -4; 
+      return -4;
     }
   else if(mlen < p1_length)
     {
       for(j=0; j<mlen;j++)
-	small[j] = m[j];
+    small[j] = m[j];
       for(j=mlen;j < p1_length;j++)
-	small[j] = 0x00;
+    small[j] = 0x00;
       if(ctr(tag, k+48, small, p1_length,scratch) == -1)
-	return -4;
+    return -4;
     }
 
   /* pad scratch (holds X2), then cbc encrypt it. Then xor in X
@@ -339,16 +343,16 @@ int crypto_aead_encrypt(
 }
 
 int crypto_aead_decrypt(
-			uc *m, unsigned long long *mlen,
-			uc *nsec,
-			const uc *c, unsigned long long clen,
-			const uc *ad, unsigned long long adlen,
-			const uc *npub,
-			const uc *k
-			)
+            uc *m, unsigned long long *mlen,
+            uc *nsec,
+            const uc *c, unsigned long long clen,
+            const uc *ad, unsigned long long adlen,
+            const uc *npub,
+            const uc *k
+            )
 {
   /* uc big_m[ABS] = { [0 ... 15] = 0xb6 }; */
-  uc big_m[ABS] = {0xb6, 0xb6, 0xb6, 0xb6,0xb6, 0xb6, 0xb6, 0xb6, 
+  uc big_m[ABS] = {0xb6, 0xb6, 0xb6, 0xb6,0xb6, 0xb6, 0xb6, 0xb6,
                    0xb6, 0xb6, 0xb6, 0xb6,0xb6, 0xb6, 0xb6, 0xb6};
   unsigned long long p1_length, p2_length, cbc_length, j;
   int i, pad_length, temp, index;
@@ -373,10 +377,11 @@ int crypto_aead_decrypt(
     cbc_length += ABS - temp;
   pad_length = cbc_length - p1_length;
   /* malloc the buffer of size cbc_length and add padding to it
-     then cbc it. But Y will end up in this buffer so make the 
+     then cbc it. But Y will end up in this buffer so make the
      length cbc_length plus adlen plus padding: */
-  cbc_buffer = malloc(cbc_length 
-	     + adlen + (ABS - (adlen%ABS))*sizeof(unsigned char));
+  // CHANGE type casting added due to c++
+  cbc_buffer = (uc*) malloc(cbc_length
+         + adlen + (ABS - (adlen%ABS))*sizeof(unsigned char));
   if(cbc_buffer == NULL)
     return -3;
   /* GOT TO HERE IN CHECKING */
@@ -398,12 +403,13 @@ int crypto_aead_decrypt(
   for(j=0; j < p2_length; j++)
     cbc_buffer[j] ^= c[j];
   /* save X for later use */
-  /* with a little extra complexity we could maintain X in 
+  /* with a little extra complexity we could maintain X in
      cbc_buffer by saving the bytes of X that are affected by
      padding and then overwriting the affected bytes later on
      when we need to reconstitute X. This would eliminate the
      copy of the potentially big string below */
-  x = malloc(p2_length*sizeof(unsigned char));
+  // CHANGE type casting added due to c++
+  x = (uc*) malloc(p2_length*sizeof(unsigned char));
   if(x == NULL)
     return -3;
   for(j=0; j < p2_length; j++)
@@ -412,7 +418,8 @@ int crypto_aead_decrypt(
      cbc_buffer[j] = ad[j - p2_length];
   if(cmac(cbc_buffer, k+32, p2_length+adlen, tag) == -1)
     return -4;
-  scratch = malloc(cbc_length*sizeof(unsigned char *));
+  // CHANGE type casting added due to c++
+  scratch = (uc*) malloc(cbc_length*sizeof(unsigned char *));
   if(scratch == NULL)
     return -3;
   if(ctr(tag, k+48, c+p2_length, p1_length,scratch) == -1)
@@ -426,17 +433,17 @@ int crypto_aead_decrypt(
   else
     {
       for(j=0; j < *mlen; j++)
-	m[j] = scratch[j];
+    m[j] = scratch[j];
       /* check the rest of P1 to make sure they are zero bytes */
       /*for(j=0; j < p1_length-*mlen; j++)*/
       for(j = *mlen; j < p1_length; j++) /*check for invalid */
-	{
-	  /*if(scratch[*mlen + j] != 0x00)*/
-	    if(scratch[j] != 0x00)
-	    {
-	      return -1;
-	    }
-	}
+    {
+      /*if(scratch[*mlen + j] != 0x00)*/
+        if(scratch[j] != 0x00)
+        {
+          return -1;
+        }
+    }
     }
   /*pad, cbc_encrypt, then xor with X. Result will be P2 */
   /* then segment P2 into msg bytes and Z, check Z, copy msg into m */
@@ -445,21 +452,21 @@ int crypto_aead_decrypt(
   if(pad(scratch, pad_length, p1_length, k1,k2) == -1)
     return -4;
   if(cbc_encrypt(scratch,cbc_length,scratch,k+16,w) == -1)
-    return -4; 
+    return -4;
   for(j=0; j < p2_length; j++)
     scratch[j] ^= x[j];
   if(*mlen > p1_length)
     {
       for(j=0; j < (*mlen - p1_length); j++)
-	m[j + p1_length] = scratch[j];
+    m[j + p1_length] = scratch[j];
       for(j=(*mlen - p1_length); j < p2_length; j++)
-	if(scratch[j] != 0x00)
-	  return -1;
+    if(scratch[j] != 0x00)
+      return -1;
     }
   else
     for(j=0; j < p2_length; j++)
       if(scratch[j] != 0x00)
-	return -1;
+    return -1;
   free(scratch);
   scratch = NULL;
   free(x);

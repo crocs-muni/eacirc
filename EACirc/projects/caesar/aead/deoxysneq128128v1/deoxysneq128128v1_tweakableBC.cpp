@@ -1,6 +1,3 @@
-namespace Deoxysneq128128v1_raw {
-int numRounds = -1;
-
 /*
  * Deoxys=/=-128-128 Reference C Implementation
  *
@@ -29,6 +26,9 @@ int numRounds = -1;
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Deoxysneq128128v1_raw {
 
 #define GETRCON(r) ( ((uint32_t)rcon[r]<<24) ^ ((uint32_t)rcon[r]<<16) ^ ((uint32_t)rcon[r]<<8) ^ ((uint32_t)rcon[r]<<0) )
 #define GETU32(pt) (((uint32_t)(pt)[0] << 24) ^ ((uint32_t)(pt)[1] << 16) ^ ((uint32_t)(pt)[2] <<  8) ^ ((uint32_t)(pt)[3]))
@@ -821,7 +821,7 @@ int deoxysKeySetupEnc256(uint32_t* rtweakey,
 /*
 ** Prepare the round subtweakeys for the decryption process
 */
-int deoxysKeySetupDec256(uint32_t* rtweakey, 
+int deoxysKeySetupDec256(uint32_t* rtweakey,
                          const uint8_t* TweakKey,
                          int no_tweakeys)
 {
@@ -872,9 +872,10 @@ int deoxysKeySetupDec256(uint32_t* rtweakey,
 /*
 ** Tweakable block cipher encryption function
 */
+// CHANGE const added due to c++
 void aesTweakEncrypt(uint32_t tweakey_size,
-                     uint8_t pt[16],
-                     uint8_t key[],
+                     const uint8_t pt[16],
+                     const uint8_t key[],
                      uint8_t ct[16]) {
 
     uint32_t s0;

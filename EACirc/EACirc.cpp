@@ -474,6 +474,7 @@ void EACirc::initializeState() {
     } else {
         createState();
     }
+    if (m_status != STAT_OK) { return; }
     // create headers in test vector files
     m_status = m_project->createTestVectorFilesHeadersMain();
     if (m_status != STAT_OK) return;

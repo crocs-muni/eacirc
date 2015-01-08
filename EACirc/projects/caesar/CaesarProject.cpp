@@ -74,7 +74,11 @@ int CaesarProject::initializeProject() {
 
 int CaesarProject::initializeProjectState() {
     int status = m_encryptor->setup();
-    mainLogger.out(LOGGER_INFO) << "Cipher initialized (" << m_encryptor->shortDescription() << ")." << endl;
+    if (status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "Cipher initialized (" << m_encryptor->shortDescription() << ")." << endl;
+    } else {
+        mainLogger.out(LOGGER_ERROR) << "Cipher could not be initialized (" << statusToString(status) << ")." << endl;
+    }
     return status;
 }
 

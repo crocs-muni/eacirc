@@ -1,35 +1,35 @@
-namespace Deoxyseq128128v1_raw {
-int numRounds = -1;
-
 /*
  * Deoxys=-128-128 Reference C Implementation
- * 
+ *
  * Copyright 2014:
  *     Jeremy Jean <JJean@ntu.edu.sg>
  *     Ivica Nikolic <INikolic@ntu.edu.sg>
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
- * 
+ *
  */
 
 #include <stdlib.h>
 #include "deoxyseq128128v1_api.h"
-#include "deoxys.h"
+#include "deoxyseq128128v1_deoxys.h"
 #include "deoxyseq128128v1_encrypt.h"
 
+// CHANGE namespace moved due to includes
+namespace Deoxyseq128128v1_raw {
+int numRounds = -1;
 
 /*
  the code for the cipher implementation goes here,
@@ -46,9 +46,9 @@ int crypto_aead_encrypt(unsigned char *c, unsigned long long *clen,
                         const unsigned char *nsec,
                         const unsigned char *npub,
                         const unsigned char *k
-                        ) 
+                        )
 {
-    
+
     size_t outlen = 0;
     deoxys_aead_encrypt(ad, adlen, m, mlen, k, npub, c, &outlen);
     *clen = outlen;
