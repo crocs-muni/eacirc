@@ -42,12 +42,15 @@ int main(int args , char * argv[]) {
 	//	-script for creating workunits on BOINC server
 	//	-script for downloading results from BOINC server
 	//Based on config file given in second argument.
+	FileGenerator * fg = NULL;
 	if(!executed && strcmp(mode , "-g") == 0) {
 		executed = true;
 		try {
-			FileGenerator fg = FileGenerator(path);
+			fg = new FileGenerator(path);
+			delete fg;
 		} catch(std::runtime_error e) {
 			oneclickLogger << FileLogger::LOG_ERROR << e.what() << "\n";
+			delete fg;
 		}
 	}
 
