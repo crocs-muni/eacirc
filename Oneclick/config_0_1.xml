@@ -9,7 +9,6 @@
 		<NUM_GENERATIONS></NUM_GENERATIONS>	<!-- Tag can be empty/nonexistent -->
 		<WU_IDENTIFIER></WU_IDENTIFIER>		<!-- Tag can be empty/nonexistent -->
 		<CLONES></CLONES>					<!-- Can NOT be empty, must exist -->
-		<DELAY_BOUND></DELAY_BOUND>			<!-- Can NOT be empty, must exist -->	
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>sample XML document for EACirc Oneclick</NOTES>

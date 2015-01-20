@@ -1,8 +1,8 @@
 #Script sample for creation script for downloading results.
 #All changes here will propagate to the resulting script.
 
-#IN CASE OF CHANGING ONE OR MORE KEYWORDS, CHANGE ACCORDING
-#CONSTANTS IN FILE ONECLICKCONSTANTS.H. OTHERWISE ONECLICK
+#IN CASE OF CHANGING ONE OR MORE KEYWORDS, CHANGE CONSTANTS
+#ACCORDINGLY IN FILE ONECLICKCONSTANTS.H. OTHERWISE ONECLICK
 #APPLICATION WONT WORK. KEYWORDS ARE UPPERCASE.
 
 #Change this script if BOINC web interface or some URL changes.
@@ -66,6 +66,8 @@ sub download_clones ($$$) {
 	my $fetcher_url = 'http://centaur.fi.muni.cz:8000/boinc/labak/fetcher.php?filename=';
 	
 	#This loop will download all clones of one workunit.
+	#Originally, config and log file is downloaded for each workunit.
+	#If you wish to change that, add corresponding line into the loop.
 	for (my $i = 1 ; $i <= CLONE_COUNT ; $i++) {
 		download_file("$fetcher_url$wu"."[$i]_0_0" , "$directory"."config_$i.xml" , $mech);
 		download_file("$fetcher_url$wu"."[$i]_0_1" , "$directory"."log_$i.log" , $mech);
@@ -80,7 +82,7 @@ sub download_file ($$$) {
 	
 	#Check for local file existence
 	if(-e $file) {
-		print "$file already exists, didnt download.\n";
+		print "$file already exists, didn't download.\n";
 		return;
 	}
 	

@@ -4,13 +4,16 @@
 #include <string>
 #include <sstream>
 
-#include "XMLProcessor.h"
 #include "EACconstants.h"
-#include "EstreamInterface.h"
-#include "Sha3Interface.h"
+#include "projects/estream/EstreamInterface.h"
+#include "projects/sha3/Sha3Interface.h"
+
+#include "XMLproc.h"
+#include "FileLogger.hpp"
+#include "Utils.h"
 
 /** Constants used in Oneclick app, mostly default values, filepaths
-  * and paths to elements in XML file. Common methods declared here.
+  * and paths to elements in XML file. 
   * If XML structure changes over time change it in here also!!! 
   * Otherwise Oneclick won't work. Same goes for default values
   * in script samples.
@@ -21,8 +24,16 @@
 #define FILE_SCRIPT_UPLOAD_SAMPLE	"upload_script_sample.pl"
 #define FILE_SCRIPT_DOWNLOAD		"download_script.pl"
 #define FILE_SCRIPT_DOWNLOAD_SAMPLE	"download_script_sample.pl"
+#define FILE_LOG					"oneclick.log"
+#define FILE_PROCESSED_RESULTS		"processed_results.txt"
+
+//Identifiers of downloaded files from boinc
+#define IDENTIFIER_CONFIG			"config"
+#define IDENTIFIER_LOG				"log"
 
 //Default paths to directories
+//Directory path have to end with a separator!!
+//Use "/" instead of "\" as a separator
 #define DIRECTORY_CFGS				"./configs/"
 #define DIRECTORY_RESULTS			"./results/"
 #define DIRECTORY_SCRIPT_SAMPLES	"./script_samples/"
@@ -37,12 +48,11 @@
 #define PATH_OC_SPEC_RNDS			"OC_OPTIONS/SPECIFIC_ROUNDS"
 #define PATH_OC_CLONES				"OC_OPTIONS/CLONES"
 #define PATH_OC_WU_ID				"OC_OPTIONS/WU_IDENTIFIER"
-#define PATH_OC_DELAY_BND			"OC_OPTIONS/DELAY_BOUND"
 #define PATH_OC_NUM_GENS			"OC_OPTIONS/NUM_GENERATIONS"
 
 //Paths to tags in EACirc section - same for all projects
 #define PATH_EACIRC					"EACIRC"
-#define PATH_EAC_GENS				"EACIRC/NUM_GENERATONS"
+#define PATH_EAC_GENS				"EACIRC/MAIN/NUM_GENERATIONS"
 #define PATH_EAC_PROJECT			"EACIRC/MAIN/PROJECT"
 #define PATH_EAC_NOTES				"EACIRC/NOTES"
 
@@ -72,7 +82,6 @@
 #define KEYWORD_WU_NAME					"WU_NAME"
 #define KEYWORD_CONFIG_PATH				"CONFIG_PATH"
 #define KEYWORD_CLONES					"CLONE_COUNT"
-#define KEYWORD_DELAY_BOUND				"DELAY_BOUND"
 #define KEYWORD_DIRECTORY_PATH			"DIRECTORY_PATH"
 #define KEYWORD_WU_NAME					"WU_NAME"
 #define KEYWORD_WU_DIRECTORY			"WU_DIRECTORY"
@@ -90,32 +99,36 @@
 #define DEFAULT_SCRIPT_LINE_SEPARATOR			";"					//separator of line in scripts (should be changed only for good reason)
 
 /////////////////////////////////////////////////////
-//*************Global methods**********************//
+//****************Error return values**************//
 /////////////////////////////////////////////////////
 
-#define min(a,b) (((a)<(b))?(a):(b))
+#define ERROR_NO_VALID_FILES					2
 
-/** Method used for getting human-readable names of projects and algorithms.
-  * Also sets algorithm and number of rounds into given config file.
-  * When new project is added to EACirc framework, new "case" have to be added for project in this method!!!
-  * Case sets projectName and algorithmName to human-readable destription of project and algorithm.
-  * Case also sets values of ALGORITHM and ROUND in project specific settings. Paths to these
-  * tags should be added into Oneclick constants.
-  * @param root					root of DOM structure of XML config
-  * @param projectConstant		constant of project
-  * @param algorithmConstant	constant of algorithm
-  * @paran rounds				number of rounds used
-  * @param projectName			name of project will be entered here
-  * @param algorithmName		name of algorithm will be entered here
-  * @throws						throws runtime_error in case that project or algorithm constant
-  *								doesn't refer to any existing project/alg
-  */
-void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , int rounds , std::string * projectName , std::string * algorithmName);
+/////////////////////////////////////////////////////
+//****************Global methods*******************//
+/////////////////////////////////////////////////////
 
-/** Converts integral value to string
-  * @param x		integer to be converted
-  * @return	string	converted integer		
-  */
-std::string itostr(int x);
+extern FileLogger oneclickLogger;
+
+class OneclickConstants {
+public:
+
+	/** Method used for getting human-readable names of projects and algorithms.
+	  * Also sets algorithm and number of rounds into given config file.
+	  * When new project is added to EACirc framework, new "case" have to be added for project in this method!!!
+	  * Case sets projectName and algorithmName to human-readable destription of project and algorithm.
+	  * Case also sets values of ALGORITHM and ROUND in project specific settings. Paths to these
+	  * tags should be added into Oneclick constants.
+	  * @param root					root of DOM structure of XML config
+	  * @param projectConstant		constant of project
+	  * @param algorithmConstant	constant of algorithm
+	  * @paran rounds				number of rounds used
+	  * @param projectName			name of project will be entered here
+	  * @param algorithmName		name of algorithm will be entered here
+	  * @throws						throws runtime_error in case that project or algorithm constant
+	  *								doesn't refer to any existing project/alg
+	  */
+	static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , int rounds , std::string * projectName , std::string * algorithmName);
+};
 
 #endif //ONECLICKCONSTANTS_H

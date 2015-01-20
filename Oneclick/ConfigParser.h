@@ -6,7 +6,6 @@
 #include <string>
 #include <exception>
 
-#include "XMLProcessor.h"
 #include "OneclickConstants.h"
 
 class ConfigParser {
@@ -16,7 +15,6 @@ private:
 	std::vector<int> numGenerations;
 	std::string wuIdentifier;
 	int clones;
-	int delayBound;
 	int project;
 public:
 	/** Constructor for ConfigParser class, loads given XML file, parses it,
@@ -62,12 +60,6 @@ public:
 	  * @return clones
 	  */
 	int getClones() { return clones; };
-
-	/** Returns value of dekay bound. This is a setting for a BOINC server.
-	  * If left empty, default value will be used.
-	  * @return delayBound
-	  */
-	int getDelayBound() { return delayBound; };
 
 	/** Returns identifier of a project. Used in naming of WUs.
 	  * @return project

@@ -1,16 +1,17 @@
 #include "ConfigParser.h"
 
 ConfigParser::ConfigParser(std::string path) {
-	if(loadXMLFile(root , path) == STAT_FILE_OPEN_FAIL) throw runtime_error("can't open XML file: " + path); 
+	if(loadXMLFile(root , path) == STAT_FILE_OPEN_FAIL) throw std::runtime_error("can't open XML file: " + path);
+	oneclickLogger << FileLogger::LOG_INFO << "started parsing config file\n";
 	wuIdentifier = getXMLElementValue(root , PATH_OC_WU_ID);
 	clones = getXMLValue(PATH_OC_CLONES);
-	delayBound = getXMLValue(PATH_OC_DELAY_BND);
 	numGenerations = getMultipleXMLValues(PATH_OC_NUM_GENS);
 	project = getXMLValue(PATH_EAC_PROJECT);
 	std::vector<int> rounds = getMultipleXMLValues(PATH_OC_RNDS);
 	std::vector<int> algorithms = getMultipleXMLValues(PATH_OC_ALGS);
 	std::vector<std::vector<int>> specificRounds = getSpecificRounds();
 	setAlgorithmsRounds(rounds , algorithms , specificRounds);
+	oneclickLogger << FileLogger::LOG_INFO << "finished parsing config file\n";
 }
 
 ConfigParser::~ConfigParser() {
@@ -19,11 +20,11 @@ ConfigParser::~ConfigParser() {
 
 int ConfigParser::getXMLValue(std::string path) {
 	std::string temp = getXMLElementValue(root , path);
-	if(temp.length() == 0) throw runtime_error("empty or nonexistent XML tag: " + path);
+	if(temp.length() == 0) throw std::runtime_error("empty or nonexistent XML tag: " + path);
 
 	for(int i = 0; i < temp.length(); i++) {
 		if(temp[i] < 48 || temp[i] > 57) {
-			throw runtime_error("invalid characters in xml element: " + path);
+			throw std::runtime_error("invalid characters in xml element: " + path);
 		}
 	}
 	return atoi(temp.c_str());
@@ -50,7 +51,7 @@ std::vector<std::vector<int>> ConfigParser::getSpecificRounds() {
 		rndsElement = specRndsNode->FirstChildElement();
 		for(;;) {
 			const char * alg = rndsElement->Attribute("algorithm");
-			if(alg == NULL) throw runtime_error("tag ROUNDS don't have attribute \"algorithm\"");
+			if(alg == NULL) throw std::runtime_error("tag ROUNDS don't have attribute \"algorithm\"");
 			const char * rnds = rndsElement->GetText();
 			if(strlen(alg) > 0 && rnds != NULL) {
 				single = parseStringValue(rnds , path);
@@ -67,7 +68,7 @@ std::vector<std::vector<int>> ConfigParser::getSpecificRounds() {
 }
 
 int ConfigParser::parseRange(std::string * temp , std::string elementValue , int iterator , std::vector<int> * result , std::string path) {
-	if(temp->length() == 0) { throw runtime_error("invalid structure of xml element: " + path); }
+	if(temp->length() == 0) { throw std::runtime_error("invalid structure of xml element: " + path); }
 	int bottom = atoi(temp->c_str());
 	int top = 0;
 	temp->clear();
@@ -80,7 +81,7 @@ int ConfigParser::parseRange(std::string * temp , std::string elementValue , int
 			break;
 		}
 		if(elementValue[iterator] != ' ') { temp->push_back(elementValue[iterator]); } else {
-			if(temp->length() == 0) { throw runtime_error("invalid structure of xml element: " + path); }
+			if(temp->length() == 0) { throw std::runtime_error("invalid structure of xml element: " + path); }
 			top = atoi(temp->c_str());
 			temp->clear();
 			break;
@@ -112,7 +113,7 @@ std::vector<int> ConfigParser::parseStringValue(std::string elementValue , std::
 
 	for(int i = 0; i < elementValue.length(); i++) {
 		if((elementValue[i] < 48 || elementValue[i] > 57) && elementValue[i] != ' ' && elementValue[i] != '-') {
-			throw runtime_error("invalid characters in xml element: " + path);
+			throw std::runtime_error("invalid characters in xml element: " + path);
 		}
 	}
 
