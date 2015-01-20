@@ -1,30 +1,29 @@
-namespace Enchilada128v1_raw {
-int numRounds = -1;
-
-
 /*
-	Sandy Harris, May 2014
+    Sandy Harris, May 2014
 
-	version for enchilada cipher
-	https://aezoo.compute.dtu.dk/doku.php?id=enchilada
+    version for enchilada cipher
+    https://aezoo.compute.dtu.dk/doku.php?id=enchilada
 
-	Fetched Brian Gladman's code
-	from http://brgladman.org/oldsite/AES/
+    Fetched Brian Gladman's code
+    from http://brgladman.org/oldsite/AES/
 
-	Simplified some, eliminated options I did not need
+    Simplified some, eliminated options I did not need
 
-	Assume 32-bit operations & standard libraries
-	Get rid of some ifdefs, including his VERSION_1
+    Assume 32-bit operations & standard libraries
+    Get rid of some ifdefs, including his VERSION_1
 
-	I do not use his aes.h
-	Macros needed only in ths code are defined below
-	encrypt/decrypt prototypes are in enchilada.h
-	Some not needed for this application
+    I do not use his aes.h
+    Macros needed only in ths code are defined below
+    encrypt/decrypt prototypes are in enchilada.h
+    Some not needed for this application
 
-	His license is below
+    His license is below
 */
 
-#include "enchilada.h"
+#include "enchilada128v1_enchilada.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada128v1_raw {
 
 #define N_ROW                   4
 #define N_COL                   4
@@ -239,7 +238,7 @@ static byte hibit(const byte x)
 static byte gf_inv(const byte x)
 {   byte p1 = x, p2 = BPOLY, n1 = hibit(x), n2 = 0x80, v1 = 1, v2 = 0;
 
-    if(x < 2) 
+    if(x < 2)
         return x;
 
     for( ; ; )
@@ -247,20 +246,20 @@ static byte gf_inv(const byte x)
         if(n1)
             while(n2 >= n1)             /* divide polynomial p2 by p1    */
             {
-                n2 /= n1;               /* shift smaller polynomial left */ 
+                n2 /= n1;               /* shift smaller polynomial left */
                 p2 ^= (p1 * n2) & 0xff; /* and remove from larger one    */
-                v2 ^= (v1 * n2);        /* shift accumulated value and   */ 
+                v2 ^= (v1 * n2);        /* shift accumulated value and   */
                 n2 = hibit(p2);         /* add into result               */
             }
         else
             return v1;
 
-        if(n2)                          /* repeat with values swapped    */ 
+        if(n2)                          /* repeat with values swapped    */
             while(n1 >= n2)
             {
-                n1 /= n2; 
-                p1 ^= p2 * n1; 
-                v1 ^= v2 * n1; 
+                n1 /= n2;
+                p1 ^= p2 * n1;
+                v1 ^= v2 * n1;
                 n1 = hibit(p1);
             }
         else
@@ -270,7 +269,7 @@ static byte gf_inv(const byte x)
 
 /* The forward and inverse affine transformations used in the S-box */
 byte fwd_affine(const byte x)
-{   
+{
     u32 w = x;
     w ^= (w << 1) ^ (w << 2) ^ (w << 3) ^ (w << 4);
     return 0x63 ^ ((w ^ (w >> 8)) & 0xff);
@@ -307,7 +306,7 @@ static void copy_and_key( void *d, const void *s, const void *k )
 
 static void shift_sub_rows( byte *st )
 {
-	byte tt;
+    byte tt;
 
     st[ 0] = s_box(st[ 0]); st[ 4] = s_box(st[ 4]);
     st[ 8] = s_box(st[ 8]); st[12] = s_box(st[12]);
@@ -389,7 +388,9 @@ static void inv_mix_sub_columns( byte *dt, byte *st )
 int aes_encrypt( const byte *in, byte *out, const byte *rk )
 {
         byte s1[AES_BYTES], r, *keys ;
-	keys = rk ;
+// CHANGE const casting due to C/C++ differences
+//    keys = rk ;
+    keys = const_cast<byte*>(rk) ;
         copy_and_key( s1, in, keys );
 
         for( r = 1 ; r < 10 ; ++r )
@@ -407,7 +408,9 @@ int aes_encrypt( const byte *in, byte *out, const byte *rk )
 int aes_decrypt( const byte *in, byte *out, const byte *rk )
 {
         byte s1[AES_BYTES], r, *keys;
-	keys = rk ;
+// CHANGE const casting due to C/C++ differences
+//    keys = rk ;
+    keys = const_cast<byte*>(rk) ;
         copy_and_key( s1, in, keys + 10 * AES_BYTES );
         inv_shift_sub_rows( s1 );
 

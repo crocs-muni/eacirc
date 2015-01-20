@@ -1,6 +1,3 @@
-namespace Enchilada256v1_raw {
-int numRounds = -1;
-
 /*
  -------------------------------------------------------------------------
  Copyright (c) 2001, Dr Brian Gladman <                 >, Worcester, UK.
@@ -8,37 +5,40 @@ int numRounds = -1;
 
  LICENSE TERMS
 
- The free distribution and use of this software in both source and binary 
+ The free distribution and use of this software in both source and binary
  form is allowed (with or without changes) provided that:
 
-   1. distributions of this source code include the above copyright 
+   1. distributions of this source code include the above copyright
       notice, this list of conditions and the following disclaimer;
 
    2. distributions in binary form include the above copyright
       notice, this list of conditions and the following disclaimer
       in the documentation and/or other associated materials;
 
-   3. the copyright holder's name is not used to endorse products 
-      built using this software without specific written permission. 
+   3. the copyright holder's name is not used to endorse products
+      built using this software without specific written permission.
 
  DISCLAIMER
 
  This software is provided 'as is' with no explicit or implied warranties
- in respect of its properties, including, but not limited to, correctness 
+ in respect of its properties, including, but not limited to, correctness
  and fitness for purpose.
  -------------------------------------------------------------------------
  Issue Date: 29/07/2002
 
  This file contains the code for implementing encryption and decryption
- for AES (Rijndael) for block and key sizes of 16, 24 and 32 bytes. It  
+ for AES (Rijndael) for block and key sizes of 16, 24 and 32 bytes. It
  can optionally be replaced by code written in assembler using NASM.
 */
 
-#include "aesopt.h"
+#include "enchilada256v1_aesopt.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada256v1_raw {
 
 #if defined(BLOCK_SIZE) && (BLOCK_SIZE & 7)
 #error An illegal block size has been specified.
-#endif  
+#endif
 
 #define unused  77  /* Sunset Strip */
 
@@ -51,7 +51,7 @@ int numRounds = -1;
 #define locals(y,x)     x[4],y[4]
 #else
 #define locals(y,x)     x##0,x##1,x##2,x##3,y##0,y##1,y##2,y##3
- /* 
+ /*
    the following defines prevent the compiler requiring the declaration
    of generated but unused variables in the fwd_var and inv_var macros
  */
@@ -165,18 +165,18 @@ switch(nc) \
 #if defined(ENCRYPTION)
 
 /* I am grateful to Frank Yellin for the following construction
-   (and that for decryption) which, given the column (c) of the 
-   output state variable, gives the input state variables which 
+   (and that for decryption) which, given the column (c) of the
+   output state variable, gives the input state variables which
    are needed in its computation for each row (r) of the state.
 
-   For the fixed block size options, compilers should be able to 
-   reduce this complex expression (and the equivalent one for 
-   decryption) to a static variable reference at compile time. 
+   For the fixed block size options, compilers should be able to
+   reduce this complex expression (and the equivalent one for
+   decryption) to a static variable reference at compile time.
    But for variable block size code, there will be some limbs on
    which conditional clauses will be returned.
 */
 
-/* y = output word, x = input word, r = row, c = column for r = 0, 
+/* y = output word, x = input word, r = row, c = column for r = 0,
    1, 2 and 3 = column accessed for row r.
 */
 
@@ -245,7 +245,7 @@ aes_rval aes_enc_blk(const unsigned char in_blk[], unsigned char out_blk[], cons
 
     if(!(cx->n_blk & 1)) return aes_bad;
 
-    state_in(b0, in_blk, kp); 
+    state_in(b0, in_blk, kp);
 
 #if (ENC_UNROLL == FULL)
 
@@ -253,31 +253,31 @@ aes_rval aes_enc_blk(const unsigned char in_blk[], unsigned char out_blk[], cons
 
     switch(cx->n_rnd)
     {
-    case 14:    round(fwd_rnd,  b1, b0, kp - 4 * nc); 
+    case 14:    round(fwd_rnd,  b1, b0, kp - 4 * nc);
                 round(fwd_rnd,  b0, b1, kp - 3 * nc);
-    case 12:    round(fwd_rnd,  b1, b0, kp - 2 * nc); 
+    case 12:    round(fwd_rnd,  b1, b0, kp - 2 * nc);
                 round(fwd_rnd,  b0, b1, kp -     nc);
-    case 10:    round(fwd_rnd,  b1, b0, kp         );             
+    case 10:    round(fwd_rnd,  b1, b0, kp         );
                 round(fwd_rnd,  b0, b1, kp +     nc);
-                round(fwd_rnd,  b1, b0, kp + 2 * nc); 
+                round(fwd_rnd,  b1, b0, kp + 2 * nc);
                 round(fwd_rnd,  b0, b1, kp + 3 * nc);
-                round(fwd_rnd,  b1, b0, kp + 4 * nc); 
+                round(fwd_rnd,  b1, b0, kp + 4 * nc);
                 round(fwd_rnd,  b0, b1, kp + 5 * nc);
-                round(fwd_rnd,  b1, b0, kp + 6 * nc); 
+                round(fwd_rnd,  b1, b0, kp + 6 * nc);
                 round(fwd_rnd,  b0, b1, kp + 7 * nc);
                 round(fwd_rnd,  b1, b0, kp + 8 * nc);
                 round(fwd_lrnd, b0, b1, kp + 9 * nc);
     }
 #else
-    
+
 #if (ENC_UNROLL == PARTIAL)
     {   aes_32t    rnd;
         for(rnd = 0; rnd < (cx->n_rnd >> 1) - 1; ++rnd)
         {
             kp += nc;
-            round(fwd_rnd, b1, b0, kp); 
+            round(fwd_rnd, b1, b0, kp);
             kp += nc;
-            round(fwd_rnd, b0, b1, kp); 
+            round(fwd_rnd, b0, b1, kp);
         }
         kp += nc;
         round(fwd_rnd,  b1, b0, kp);
@@ -286,7 +286,7 @@ aes_rval aes_enc_blk(const unsigned char in_blk[], unsigned char out_blk[], cons
         for(rnd = 0; rnd < cx->n_rnd - 1; ++rnd)
         {
             kp += nc;
-            round(fwd_rnd, p1, p0, kp); 
+            round(fwd_rnd, p1, p0, kp);
             pt = p0, p0 = p1, p1 = pt;
         }
 #endif
@@ -379,27 +379,27 @@ aes_rval aes_dec_blk(const unsigned char in_blk[], unsigned char out_blk[], cons
                 round(inv_rnd,  b0, b1, kp + 3 * nc);
     case 12:    round(inv_rnd,  b1, b0, kp + 2 * nc);
                 round(inv_rnd,  b0, b1, kp + nc    );
-    case 10:    round(inv_rnd,  b1, b0, kp         );             
+    case 10:    round(inv_rnd,  b1, b0, kp         );
                 round(inv_rnd,  b0, b1, kp -     nc);
-                round(inv_rnd,  b1, b0, kp - 2 * nc); 
+                round(inv_rnd,  b1, b0, kp - 2 * nc);
                 round(inv_rnd,  b0, b1, kp - 3 * nc);
-                round(inv_rnd,  b1, b0, kp - 4 * nc); 
+                round(inv_rnd,  b1, b0, kp - 4 * nc);
                 round(inv_rnd,  b0, b1, kp - 5 * nc);
-                round(inv_rnd,  b1, b0, kp - 6 * nc); 
+                round(inv_rnd,  b1, b0, kp - 6 * nc);
                 round(inv_rnd,  b0, b1, kp - 7 * nc);
                 round(inv_rnd,  b1, b0, kp - 8 * nc);
                 round(inv_lrnd, b0, b1, kp - 9 * nc);
     }
 #else
-    
+
 #if (DEC_UNROLL == PARTIAL)
     {   aes_32t    rnd;
         for(rnd = 0; rnd < (cx->n_rnd >> 1) - 1; ++rnd)
         {
-            kp -= nc; 
-            round(inv_rnd, b1, b0, kp); 
-            kp -= nc; 
-            round(inv_rnd, b0, b1, kp); 
+            kp -= nc;
+            round(inv_rnd, b1, b0, kp);
+            kp -= nc;
+            round(inv_rnd, b0, b1, kp);
         }
         kp -= nc;
         round(inv_rnd, b1, b0, kp);
@@ -408,7 +408,7 @@ aes_rval aes_dec_blk(const unsigned char in_blk[], unsigned char out_blk[], cons
         for(rnd = 0; rnd < cx->n_rnd - 1; ++rnd)
         {
             kp -= nc;
-            round(inv_rnd, p1, p0, kp); 
+            round(inv_rnd, p1, p0, kp);
             pt = p0, p0 = p1, p1 = pt;
         }
 #endif

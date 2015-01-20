@@ -1,18 +1,17 @@
-namespace Enchilada128v1_raw {
-int numRounds = -1;
-
-
 /*
-	Bernstein's code
-	from the crypto_stream directory of test framework
+    Bernstein's code
+    from the crypto_stream directory of test framework
 
-	Plus some macros from include/ecrypt_portable.h
-	which his depend on
+    Plus some macros from include/ecrypt_portable.h
+    which his depend on
 
-	Only parts needed for Enchilada are here
-*/	
+    Only parts needed for Enchilada are here
+*/
 
-#include "enchilada.h"
+#include "enchilada128v1_enchilada.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada128v1_raw {
 
 #define U32V(v) ((u32)(v) & U32C(0xFFFFFFFF))
 
@@ -74,8 +73,9 @@ static void salsa20_wordtobyte(byte output[64],const u32 input[16])
   for (i = 0;i < 16;++i) U32TO8_LITTLE(output + 4 * i,x[i]);
 }
 
-static const char sigma[16] = "expand 32-byte k";
-static const char tau[16] = "expand 16-byte k";
+// CHANGE of length ("+1" added) due to array length
+static const char sigma[16+1] = "expand 32-byte k";
+static const char tau[16+1] = "expand 16-byte k";
 
 void chacha_keysetup(u32 *x,const byte *k,u32 kbits,u32 ivbits)
 {

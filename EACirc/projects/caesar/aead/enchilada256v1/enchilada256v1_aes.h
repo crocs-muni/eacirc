@@ -1,5 +1,3 @@
-namespace Enchilada256v1_raw {
-
 /*
  -------------------------------------------------------------------------
  Copyright (c) 2001, Dr Brian Gladman <                 >, Worcester, UK.
@@ -7,23 +5,23 @@ namespace Enchilada256v1_raw {
 
  LICENSE TERMS
 
- The free distribution and use of this software in both source and binary 
+ The free distribution and use of this software in both source and binary
  form is allowed (with or without changes) provided that:
 
-   1. distributions of this source code include the above copyright 
+   1. distributions of this source code include the above copyright
       notice, this list of conditions and the following disclaimer;
 
    2. distributions in binary form include the above copyright
       notice, this list of conditions and the following disclaimer
       in the documentation and/or other associated materials;
 
-   3. the copyright holder's name is not used to endorse products 
-      built using this software without specific written permission. 
+   3. the copyright holder's name is not used to endorse products
+      built using this software without specific written permission.
 
  DISCLAIMER
 
  This software is provided 'as is' with no explicit or implied warranties
- in respect of its properties, including, but not limited to, correctness 
+ in respect of its properties, including, but not limited to, correctness
  and fitness for purpose.
  -------------------------------------------------------------------------
  Issue Date: 29/07/2002
@@ -37,6 +35,9 @@ namespace Enchilada256v1_raw {
 /*  This include is used only to find 8 and 32 bit unsigned integer types   */
 
 #include "limits.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada256v1_raw {
 
 #if UCHAR_MAX == 0xff       /* an unsigned 8 bit type for internal AES use  */
   typedef unsigned char      aes_08t;
@@ -52,14 +53,14 @@ namespace Enchilada256v1_raw {
 #error Please define an unsigned 32 bit type in aes.h
 #endif
 
-/*  BLOCK_SIZE is in BYTES: 16, 24, 32 or undefined for aes.c and 16, 20, 
-    24, 28, 32 or undefined for aespp.c.  When left undefined a slower 
-    version that provides variable block length is compiled.    
+/*  BLOCK_SIZE is in BYTES: 16, 24, 32 or undefined for aes.c and 16, 20,
+    24, 28, 32 or undefined for aespp.c.  When left undefined a slower
+    version that provides variable block length is compiled.
 */
 
 /*
-	Changed to 32; need 256-bit blocks
-	Sandy Harris
+    Changed to 32; need 256-bit blocks
+    Sandy Harris
 */
 #define BLOCK_SIZE  32
 

@@ -1,23 +1,24 @@
-namespace Enchilada256v1_raw {
-
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+// CHANGE namespace moved due to includes
+namespace Enchilada256v1_raw {
+
 /*
-	Some convenient types
-	I use these throughout
-	including replacing Gladman's uint_32t etc. in aes.c
+    Some convenient types
+    I use these throughout
+    including replacing Gladman's uint_32t etc. in aes.c
 */
 typedef uint64_t u64 ;
 typedef uint32_t u32 ;
 typedef unsigned char byte ;
 
 /*
-	Rijndael 256-bit blocks
-	ChaCha 512-bit
-	Authentication 128
+    Rijndael 256-bit blocks
+    ChaCha 512-bit
+    Authentication 128
 */
 #define RD_WORDS 8
 #define RD_BYTES (RD_WORDS*4)
@@ -51,9 +52,9 @@ void add_256(u32 *s, u32 *t );
 void xor_256(u32 *s, u32 *t ) ;
 
 /*
-	declarations for main functions in enchilada.c
-	copied from Bernstein's example AES-GCM code
-	to be sure they match test framework
+    declarations for main functions in enchilada.c
+    copied from Bernstein's example AES-GCM code
+    to be sure they match test framework
 */
 int crypto_aead_encrypt(
   unsigned char *c,unsigned long long *clen,
@@ -78,20 +79,20 @@ int crypto_aead_decrypt(
 int rijndael_encrypt( const byte *, byte *, const byte * ) ;
 
 /*
-	one public function in auth.c
-	authentication from Bernstein's aes-gcm example code
+    one public function in auth.c
+    authentication from Bernstein's aes-gcm example code
 */
 void addmul(byte *, const byte *, u64, const byte *) ;
 
 /*
-	Prototypes from ecrypt-sync.h
-	originally part of the ecrypt competition framework
-	included with the chacha code
-	not all used in enchilada
+    Prototypes from ecrypt-sync.h
+    originally part of the ecrypt competition framework
+    included with the chacha code
+    not all used in enchilada
 
-	ECRYPT changed to chacha
+    ECRYPT changed to chacha
 
-	corresponding code is in my version of chacha.c
+    corresponding code is in my version of chacha.c
 */
 
 /*
@@ -100,8 +101,8 @@ void addmul(byte *, const byte *, u64, const byte *) ;
  * above.
  */
 void chacha_keysetup(
-  u32 *ctx, const byte *key, 
-  u32 keysize,                /* Key size in bits. */ 
+  u32 *ctx, const byte *key,
+  u32 keysize,                /* Key size in bits. */
   u32 ivsize);                /* IV size in bits. */
 
 /*
@@ -112,9 +113,9 @@ void chacha_keysetup(
  */
 void chacha_ivsetup( u32 *, const byte *);
 
-void chacha_encrypt_bytes( u32 *ctx, const byte *plaintext, 
-  byte *ciphertext, 
-  u32 msglen);                /* Message length in bytes. */ 
+void chacha_encrypt_bytes( u32 *ctx, const byte *plaintext,
+  byte *ciphertext,
+  u32 msglen);                /* Message length in bytes. */
 
 void chacha_keystream_bytes(u32 *ctx, byte *dest, u32 nbytes) ;
 } // namespace Enchilada256v1_raw

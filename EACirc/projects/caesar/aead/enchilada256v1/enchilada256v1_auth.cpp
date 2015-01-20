@@ -1,15 +1,14 @@
-namespace Enchilada256v1_raw {
-int numRounds = -1;
-
-
 /*
-	AES-GCM authentication code
+    AES-GCM authentication code
 
-	taken from Bernstein's example implementation
-	distributed with test code
+    taken from Bernstein's example implementation
+    distributed with test code
 */
 
-#include "enchilada.h"
+#include "enchilada256v1_enchilada.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada256v1_raw {
 
 /*
 a = (a + x) * y in the finite field

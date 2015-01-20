@@ -1,18 +1,17 @@
-namespace Enchilada256v1_raw {
-int numRounds = -1;
-
-
 /*
-	Bernstein's code
-	from the crypto_stream directory of test framework
+    Bernstein's code
+    from the crypto_stream directory of test framework
 
-	Plus some macros from include/ecrypt_portable.h
-	which his depend on
+    Plus some macros from include/ecrypt_portable.h
+    which his depend on
 
-	Only parts needed for Enchilada are here
-*/	
+    Only parts needed for Enchilada are here
+*/
 
-#include "enchilada.h"
+#include "enchilada256v1_enchilada.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada256v1_raw {
 
 #define U32V(v) ((u32)(v) & U32C(0xFFFFFFFF))
 
