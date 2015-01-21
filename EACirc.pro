@@ -733,6 +733,8 @@ SOURCES += \
 # EACirc/projects/caesar/aead/enchilada256v1/enchilada256v1_chacha.cpp \
 # EACirc/projects/caesar/aead/enchilada256v1/enchilada256v1_enchilada256.cpp \
 # EACirc/projects/caesar/aead/enchilada256v1/Enchilada256v1.cpp \
+
+SOURCES += \
  EACirc/projects/caesar/aead/hs1sivhiv1/hs1sivhiv1_encrypt.cpp \
  EACirc/projects/caesar/aead/hs1sivhiv1/Hs1sivhiv1.cpp \
  EACirc/projects/caesar/aead/hs1sivlov1/hs1sivlov1_encrypt.cpp \
@@ -1389,6 +1391,8 @@ HEADERS += \
 # EACirc/projects/caesar/aead/enchilada256v1/enchilada256v1_enchilada.h \
 # EACirc/projects/caesar/aead/enchilada256v1/enchilada256v1_encrypt.h \
 # EACirc/projects/caesar/aead/enchilada256v1/Enchilada256v1.h \
+
+HEADERS += \
  EACirc/projects/caesar/aead/hs1sivhiv1/hs1sivhiv1_api.h \
  EACirc/projects/caesar/aead/hs1sivhiv1/hs1sivhiv1_encrypt.h \
  EACirc/projects/caesar/aead/hs1sivhiv1/Hs1sivhiv1.h \
