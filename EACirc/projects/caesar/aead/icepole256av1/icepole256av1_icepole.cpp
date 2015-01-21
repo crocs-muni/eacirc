@@ -1,7 +1,7 @@
-namespace Icepole256av1_raw {
-int numRounds = -1;
+#include "icepole256av1_icepole.h"
 
-#include "icepole.h"
+// CHANGE namespace moved due to includes
+namespace Icepole256av1_raw {
 
 /* little endian load of 8 len characters into least significant bits of the resulting value */
 uint64_t load64(const unsigned char * p, unsigned int len)
@@ -14,7 +14,7 @@ uint64_t load64(const unsigned char * p, unsigned int len)
     }
     return v;
 }
-    
+
 void store64(unsigned char * p, uint64_t v, unsigned int len)
 {
     unsigned int i;
@@ -53,25 +53,25 @@ void Mu(ICESTATE SS, ICESTATE S)
 
 void Rho(ICESTATE SS, ICESTATE S)
 {
-    SS[0][0] = S[0][0]; 
+    SS[0][0] = S[0][0];
     SS[0][1] = ROTL(S[0][1], 36);
     SS[0][2] = ROTL(S[0][2],  3);
     SS[0][3] = ROTL(S[0][3], 41);
     SS[0][4] = ROTL(S[0][4], 18);
-    
-    SS[1][0] = ROTL(S[1][0],  1); 
+
+    SS[1][0] = ROTL(S[1][0],  1);
     SS[1][1] = ROTL(S[1][1], 44);
     SS[1][2] = ROTL(S[1][2], 10);
     SS[1][3] = ROTL(S[1][3], 45);
     SS[1][4] = ROTL(S[1][4],  2);
-    
-    SS[2][0] = ROTL(S[2][0], 62); 
+
+    SS[2][0] = ROTL(S[2][0], 62);
     SS[2][1] = ROTL(S[2][1],  6);
     SS[2][2] = ROTL(S[2][2], 43);
     SS[2][3] = ROTL(S[2][3], 15);
     SS[2][4] = ROTL(S[2][4], 61);
 
-    SS[3][0] = ROTL(S[3][0], 28); 
+    SS[3][0] = ROTL(S[3][0], 28);
     SS[3][1] = ROTL(S[3][1], 55);
     SS[3][2] = ROTL(S[3][2], 25);
     SS[3][3] = ROTL(S[3][3], 21);
@@ -200,7 +200,7 @@ void initState256a(ICESTATE S, const unsigned char * k, const unsigned char * no
     S[1][0] = S[1][0] ^ load64(k+8, 8);
     S[2][0] = S[2][0] ^ load64(k+16, 8);
     S[3][0] = S[3][0] ^ load64(k+24, 8);
-    
+
     S[0][1] = S[0][1] ^ load64(nonce, 8);
     S[1][1] = S[1][1] ^ load64(nonce+8, 4);
 
@@ -220,70 +220,70 @@ void initState256a(ICESTATE S, const unsigned char * k, const unsigned char * no
 }
 
 void processIceBlock(
-    ICESTATE S, 
-    const unsigned char * source, 
+    ICESTATE S,
+    const unsigned char * source,
     unsigned char ** dest,
-    unsigned long long blocklen, 
+    unsigned long long blocklen,
     unsigned int frameBit
 )
 {
-	uint64_t q;
-	uint64_t snew;
-	uint64_t padding;
-	unsigned int qlen; 
-	unsigned int i = 0;	
-	assert(blocklen <= 128);
-	
-	do {
-        qlen = (blocklen < 8 ? (unsigned int) blocklen : 8); 
+    uint64_t q;
+    uint64_t snew;
+    uint64_t padding;
+    unsigned int qlen;
+    unsigned int i = 0;
+    assert(blocklen <= 128);
+
+    do {
+        qlen = (blocklen < 8 ? (unsigned int) blocklen : 8);
         q = load64(source, qlen);
         snew = S[i%4][i/4] ^ q;
         if (dest) {
             store64(*dest, snew, qlen);
             *dest += qlen;
-        }        
+        }
         padding = qlen < 8 ? ((uint64_t)frameBit | 0x02ULL) << (8*qlen) : 0;
         S[i%4][i/4] ^= q ^ padding;
         ++i;
         source += qlen;
         blocklen -= qlen;
-	} while (qlen == 8);
-	P6(S,S);
+    } while (qlen == 8);
+    P6(S,S);
 }
 
 void processIceBlockRev(
-	ICESTATE S, 
-	const unsigned char * source, 
-	unsigned char ** dest,
-	unsigned long long blocklen, 
-	unsigned int frameBit
-	)
+    ICESTATE S,
+    const unsigned char * source,
+    unsigned char ** dest,
+    unsigned long long blocklen,
+    unsigned int frameBit
+    )
 {
-	uint64_t q;
-	uint64_t snew;
-	uint64_t padding;
-	uint64_t bitmask;
-	unsigned int qlen; 
-	unsigned int i = 0;	
-	assert(blocklen <= 128);
+    uint64_t q;
+    uint64_t snew;
+    uint64_t padding;
+    uint64_t bitmask;
+    unsigned int qlen;
+    unsigned int i = 0;
+    assert(blocklen <= 128);
 
-	do {
-		qlen = (blocklen < 8 ? (unsigned int) blocklen : 8); 
-		q = load64(source, qlen);
-		snew = S[i%4][i/4] ^ q;
-		bitmask = (qlen==8 ? 0 : 1ULL<< 8*qlen) - 1ULL;
-		snew = snew & bitmask;
-		if (dest) {
-			store64(*dest, snew, qlen);
-			*dest += qlen;
-		}        
-		padding = qlen < 8 ? ((uint64_t)frameBit | 0x02ULL) << (8*qlen) : 0;
-		S[i%4][i/4] ^= snew ^ padding;
-		++i;
-		source += qlen;
-		blocklen -= qlen;
-	} while (qlen == 8);
-	P6(S,S);
+    do {
+        qlen = (blocklen < 8 ? (unsigned int) blocklen : 8);
+        q = load64(source, qlen);
+        snew = S[i%4][i/4] ^ q;
+        bitmask = (qlen==8 ? 0 : 1ULL<< 8*qlen) - 1ULL;
+        snew = snew & bitmask;
+        if (dest) {
+            store64(*dest, snew, qlen);
+            *dest += qlen;
+        }
+        padding = qlen < 8 ? ((uint64_t)frameBit | 0x02ULL) << (8*qlen) : 0;
+        S[i%4][i/4] ^= snew ^ padding;
+        ++i;
+        source += qlen;
+        blocklen -= qlen;
+    } while (qlen == 8);
+    P6(S,S);
 }
 
 

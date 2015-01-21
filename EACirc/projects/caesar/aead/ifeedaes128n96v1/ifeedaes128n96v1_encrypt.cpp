@@ -1,9 +1,10 @@
-namespace Ifeedaes128n96v1_raw {
-int numRounds = -1;
-
 #include "ifeedaes128n96v1_encrypt.h"
 #include "ifeedaes128n96v1_api.h"
 #include <stdio.h>
+
+// CHANGE namespace moved due to includes
+namespace Ifeedaes128n96v1_raw {
+int numRounds = -1;
 
 //AES round key
 unsigned char RoundKey[176];
@@ -27,7 +28,7 @@ int sbox[256] =
     0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e, //D
     0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf, //E
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
-}; 
+};
 
 unsigned char RC[] = {0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91};
 
@@ -46,7 +47,7 @@ void keyschedule(unsigned char *primekey, int roundNum)
         KN = 32;
         break;
     }
-    
+
     for(i = 0; i < KN; i++)
     {
         RoundKey[i] = primekey[i];
@@ -57,7 +58,7 @@ void keyschedule(unsigned char *primekey, int roundNum)
 
         if(i % 4 == 0)
         {
-          
+
             RoundKey[4 * i] = sbox[RoundKey[4 * (i - 1) + 1]] ^ RC[i / 4] ^ RoundKey[4 * (i - 4)];
 
             RoundKey[4 * i + 1] = sbox[RoundKey[4 * (i - 1) + 2]] ^ RoundKey[4 * (i - 4) + 1];
@@ -68,7 +69,7 @@ void keyschedule(unsigned char *primekey, int roundNum)
         }
         else
         {
-            
+
             RoundKey[4 * i] = RoundKey[4 * (i - 1)] ^ RoundKey[4 * (i - 4)];
             RoundKey[4 * i + 1] = RoundKey[4 * (i - 1) + 1] ^ RoundKey[4 * (i - 4) + 1];
             RoundKey[4 * i + 2] = RoundKey[4 * (i - 1) + 2] ^ RoundKey[4 * (i - 4) + 2];
@@ -87,32 +88,32 @@ void AES128Enc(unsigned char *in, unsigned char *out)
     unsigned char Tmp, Tm, t;
     unsigned char state[4][4];
 
-    
+
     for(i = 0; i < 4; i++)
         for(j = 0; j < 4; j++)
             state[j][i] = in[i * 4 + j];
 
-    
+
     for(i = 0; i < 4; i++)
         for(j = 0; j < 4; j++)
             state[j][i] ^= RoundKey[ i * 4 + j];
 
-    
+
     for(round = 1; round < 10; round++)
     {
-       
+
         for(i = 0; i < 4; i++)
             for(j = 0; j < 4; j++)
                 state[i][j] = sbox[state[i][j]];
 
-        
+
         temp = state[1][0];
         state[1][0] = state[1][1];
         state[1][1] = state[1][2];
         state[1][2] = state[1][3];
         state[1][3] = temp;
 
-       
+
         temp = state[2][0];
         state[2][0] = state[2][2];
         state[2][2] = temp;
@@ -121,7 +122,7 @@ void AES128Enc(unsigned char *in, unsigned char *out)
         state[2][1] = state[2][3];
         state[2][3] = temp;
 
-       
+
         temp = state[3][0];
         state[3][0] = state[3][3];
         state[3][3] = state[3][2];
@@ -129,7 +130,7 @@ void AES128Enc(unsigned char *in, unsigned char *out)
         state[3][1] = temp;
 
 
-       
+
         for(i = 0; i < 4; i++)
         {
             t = state[0][i];
@@ -149,26 +150,26 @@ void AES128Enc(unsigned char *in, unsigned char *out)
         }
 
 
-       
+
         for(i = 0; i < 4; i++)
             for(j = 0; j < 4; j++)
                 state[j][i] ^= RoundKey[round * 16 + i * 4 + j];
 
     }
 
-   
+
     for(i = 0; i < 4; i++)
         for(j = 0; j < 4; j++)
             state[i][j] = sbox[state[i][j]];
 
-    
+
     temp = state[1][0];
     state[1][0] = state[1][1];
     state[1][1] = state[1][2];
     state[1][2] = state[1][3];
     state[1][3] = temp;
 
-    
+
     temp = state[2][0];
     state[2][0] = state[2][2];
     state[2][2] = temp;
@@ -177,18 +178,18 @@ void AES128Enc(unsigned char *in, unsigned char *out)
     state[2][1] = state[2][3];
     state[2][3] = temp;
 
-   
+
     temp = state[3][0];
     state[3][0] = state[3][3];
     state[3][3] = state[3][2];
     state[3][2] = state[3][1];
     state[3][1] = temp;
-    
+
     for(i = 0; i < 4; i++)
         for(j = 0; j < 4; j++)
             state[j][i] ^= RoundKey[160 + i * 4 + j];
 
-    
+
     for(i = 0; i < 4; i++)
         for(j = 0; j < 4; j++)
             out[i * 4 + j] = state[j][i];
@@ -241,7 +242,7 @@ int crypto_aead_encrypt(
     for(i = 0; i < 2; i++)	 Times2(Z[i], Z[i + 1]);
 
     Times2(Z[2], NextZ); // NextZ is now Z3
-	
+
     //Authenticating associated data ad by MacAES
     if(adlen == 0)
     {
@@ -295,18 +296,18 @@ int crypto_aead_encrypt(
     // generating the secret value U
     AES128Enc(PaddedPMN, U);
 
-	if(mlen==0)
-	{
-		 for(j = 0; j < 16; j++)  AESInputBlock[j] = Z[2][j]^ U[j];
+    if(mlen==0)
+    {
+         for(j = 0; j < 16; j++)  AESInputBlock[j] = Z[2][j]^ U[j];
 
-		 AES128Enc(AESInputBlock, AESOutputBlock);
+         AES128Enc(AESInputBlock, AESOutputBlock);
 
-		 for(j = 0; j < 16; j++) c[j] = AESOutputBlock[j] ^ MacAESTag[j];
-	
-	}
-	else
-	{
-		l = mlen / 16;
+         for(j = 0; j < 16; j++) c[j] = AESOutputBlock[j] ^ MacAESTag[j];
+
+    }
+    else
+    {
+        l = mlen / 16;
 
     if (mlen % 16 != 0)
     {
@@ -329,8 +330,8 @@ int crypto_aead_encrypt(
     }
     else
     {
-        
-		for(j = 0; j < 16; j++)
+
+        for(j = 0; j < 16; j++)
         {
             LastPlaintextBlock[j] = m[(l - 1) * 16 + j];
             PaddedBlock[j] = 0x0;
@@ -388,8 +389,8 @@ int crypto_aead_encrypt(
         AES128Enc(AESInputBlock, AESOutputBlock);
         for(j = 0; j < 16; j++) c[l * 16 + j] = AESOutputBlock[j] ^ MacAESTag[j];
     }
-	
-	}
+
+    }
 
     return 0;
 }
@@ -467,11 +468,11 @@ int crypto_aead_decrypt(
         AES128Enc(AESInputBlock, MacAESTag);
     }
 
-   
+
 
     if(clen < 16) return -2; // invaild ciphertext
-	
-	*mlen = clen - 16;
+
+    *mlen = clen - 16;
 
     // padding PublicPlaintextNumber with 10*
     for(j = 0; j < CRYPTO_NPUBBYTES; j++) PaddedPMN[j] = npub[j];
@@ -481,19 +482,19 @@ int crypto_aead_decrypt(
     // generating the secret value U
     AES128Enc(PaddedPMN, U);
 
-	if(clen == 16)
-	{
-		for(j=0;j<16;j++) AESInputBlock[j] = Z[2][j] ^ U[j];  
-		
-		AES128Enc(AESInputBlock, AESOutputBlock);
+    if(clen == 16)
+    {
+        for(j=0;j<16;j++) AESInputBlock[j] = Z[2][j] ^ U[j];
 
-		for(j = 0; j < 16; j++)
+        AES128Enc(AESInputBlock, AESOutputBlock);
+
+        for(j = 0; j < 16; j++)
         {
             if(c[j] != (AESOutputBlock[j] ^ MacAESTag[j])) return -1;
         }
 
-	}
-	else {
+    }
+    else {
 
     l = clen / 16 - 1;
     if (clen % 16 != 0)
@@ -527,8 +528,8 @@ int crypto_aead_decrypt(
 
     // Decryption from Ciphertext
     // Producing the first l-1 plaintext blocks
-	
-	Times2(Z[2], NextZ); // NextZ is now Z3
+
+    Times2(Z[2], NextZ); // NextZ is now Z3
 
     for(j = 0; j < 16; j++)  AESInputBlock[j] = NextZ[j] ^ U[j]; // NextZ is now Z3
 
@@ -589,7 +590,7 @@ int crypto_aead_decrypt(
             if(c[l * 16 + j] != (AESOutputBlock[j] ^ MacAESTag[j])) return -1;
         }
     }
-	}
+    }
 
     return 0;
 }

@@ -1,25 +1,25 @@
+#include "icepole128av1_encrypt.h"
+#include "icepole128av1_icepole.h"
+
+// CHANGE namespace moved due to includes
 namespace Icepole128av1_raw {
 int numRounds = -1;
 
-#include "icepole128av1_encrypt.h"
-#include "icepole.h"
-
-
 int crypto_aead_encrypt(
-	unsigned char *c,unsigned long long *clen,
-	const unsigned char *m,unsigned long long mlen,
-	const unsigned char *ad,unsigned long long adlen,
-	const unsigned char *nsec,
-	const unsigned char *npub,
-	const unsigned char *k )
+    unsigned char *c,unsigned long long *clen,
+    const unsigned char *m,unsigned long long mlen,
+    const unsigned char *ad,unsigned long long adlen,
+    const unsigned char *nsec,
+    const unsigned char *npub,
+    const unsigned char *k )
 {
     ICESTATE S;
     unsigned int frameBit;
     initState128a(S, k, npub);
 
     /* ciphertext length is plaintext len + size of tag and nsec */
-    *clen = mlen + ICEPOLETAGLEN; 
-    
+    *clen = mlen + ICEPOLETAGLEN;
+
     /* secret message number is of zero length */
     frameBit = 0;
     processIceBlock(S, NULL, NULL, 0, frameBit);
@@ -45,7 +45,7 @@ int crypto_aead_encrypt(
         }
         processIceBlock(S, m, &c, blocklen, frameBit);
         m += blocklen;
-        mlen -= blocklen;    
+        mlen -= blocklen;
     } while (mlen > 0);
 
     /* store authentication tag at the end of the ciphertext */
@@ -57,30 +57,30 @@ int crypto_aead_encrypt(
 }
 
 int crypto_aead_decrypt(
-	unsigned char *m,unsigned long long *mlen,
-	unsigned char *nsec,
-	const unsigned char *c,unsigned long long clen,
-	const unsigned char *ad,unsigned long long adlen,
-	const unsigned char *npub,
-	const unsigned char *k
+    unsigned char *m,unsigned long long *mlen,
+    unsigned char *nsec,
+    const unsigned char *c,unsigned long long clen,
+    const unsigned char *ad,unsigned long long adlen,
+    const unsigned char *npub,
+    const unsigned char *k
 )
 {
     ICESTATE S;
     uint64_t Tcomp[2]; /* computed authentication tag */
     uint64_t Trecv[2]; /* received authentication tag */
     unsigned int frameBit;
-    
+
     /* ciphertext cannot be shorter than the tag length */
     if (clen < ICEPOLETAGLEN) {
         return -1;
     }
-    
+
     initState128a(S, k, npub);
 
     /* secret message number is zero-length */
     frameBit = 0;
     processIceBlockRev(S, NULL, NULL, 0, frameBit);
-   
+
     /* process associated data blocks */
     do {
         unsigned long long blocklen = 128;
@@ -92,7 +92,7 @@ int crypto_aead_decrypt(
         ad += blocklen;
         adlen -= blocklen;
     } while (adlen > 0);
-    
+
     /* process ciphertext blocks to get auth tag */
     *mlen = 0;
     clen -= ICEPOLETAGLEN; /* need to stop before auth tag*/
@@ -105,7 +105,7 @@ int crypto_aead_decrypt(
         processIceBlockRev(S, c, &m, blocklen, frameBit);
         c += blocklen;
         *mlen += blocklen;
-        clen -= blocklen;    
+        clen -= blocklen;
     } while (clen > 0);
 
     /* compare computed and received auth tags */
@@ -117,7 +117,7 @@ int crypto_aead_decrypt(
         *mlen = 0;
         return -1;
     }
-    
+
     return 0;
 }
 

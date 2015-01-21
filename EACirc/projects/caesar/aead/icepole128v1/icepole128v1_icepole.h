@@ -1,10 +1,11 @@
-namespace Icepole128v1_raw {
-
 #ifndef _ICEPOLE_H_
 #define _ICEPOLE_H_
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
+
+// CHANGE namespace moved due to includes
+namespace Icepole128v1_raw {
 
 #define ROTL(a,k) ((a)<<(k) | (a)>>(64-(k)))
 #define MAXROUND 12
@@ -26,24 +27,24 @@ void P6(ICESTATE SS, ICESTATE S);
 void P12(ICESTATE SS, ICESTATE S);
 
 void initState(
-    ICESTATE S, 
-    const unsigned char * k, 
+    ICESTATE S,
+    const unsigned char * k,
     const unsigned char *nonce
 );
 
 void processIceBlock(
-    ICESTATE S, 
-    const unsigned char * source, 
+    ICESTATE S,
+    const unsigned char * source,
     unsigned char ** dest,
-    unsigned long long blocklen, 
+    unsigned long long blocklen,
     unsigned int frameBit
 );
 
 void processIceBlockRev(
-    ICESTATE S, 
-    const unsigned char * source, 
+    ICESTATE S,
+    const unsigned char * source,
     unsigned char ** dest,
-    unsigned long long blocklen, 
+    unsigned long long blocklen,
     unsigned int frameBit
 );
 #endif

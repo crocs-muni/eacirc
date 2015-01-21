@@ -1,6 +1,3 @@
-namespace Hs1sivv1_raw {
-int numRounds = -1;
-
 /*
 // HS1-SIV Draft v2.0 reference code.
 //
@@ -78,15 +75,19 @@ int numRounds = -1;
 #include <stdio.h>
 /*#include "prf.h"*/
 
+// CHANGE namespace moved due to includes
+namespace Hs1sivv1_raw {
+int numRounds = -1;
+
 #if __GNUC__
-	#define HS1_SIV_ALIGN(n) __attribute__ ((aligned(n)))
+    #define HS1_SIV_ALIGN(n) __attribute__ ((aligned(n)))
 #elif _MSC_VER
-	#define HS1_SIV_ALIGN(n) __declspec(align(n))
+    #define HS1_SIV_ALIGN(n) __declspec(align(n))
 #elif (__STDC_VERSION >= 201112L) || (__cplusplus >= 201103L)
-	#define HS1_SIV_ALIGN(n) alignas(n)
+    #define HS1_SIV_ALIGN(n) alignas(n)
 #else /* Not GNU/Microsoft/C11: delete alignment uses.     */
     #pragma message ( "Struct alignment not guaranteed" )
-	#define HS1_SIV_ALIGN(n)
+    #define HS1_SIV_ALIGN(n)
 #endif
 
 HS1_SIV_ALIGN(16)
@@ -110,13 +111,13 @@ static uint32_t swap32(uint32_t x) {
 
 static uint64_t swap64(uint64_t x) {
     return ((x & UINT64_C(0x00000000000000ff)) << 56) |
-		   ((x & UINT64_C(0x000000000000ff00)) << 40) |
-		   ((x & UINT64_C(0x0000000000ff0000)) << 24) |
-		   ((x & UINT64_C(0x00000000ff000000)) <<  8) |
-	       ((x & UINT64_C(0x000000ff00000000)) >>  8) |
-		   ((x & UINT64_C(0x0000ff0000000000)) >> 24) |
-		   ((x & UINT64_C(0x00ff000000000000)) >> 40) |
-		   ((x & UINT64_C(0xff00000000000000)) >> 56);
+           ((x & UINT64_C(0x000000000000ff00)) << 40) |
+           ((x & UINT64_C(0x0000000000ff0000)) << 24) |
+           ((x & UINT64_C(0x00000000ff000000)) <<  8) |
+           ((x & UINT64_C(0x000000ff00000000)) >>  8) |
+           ((x & UINT64_C(0x0000ff0000000000)) >> 24) |
+           ((x & UINT64_C(0x00ff000000000000)) >> 40) |
+           ((x & UINT64_C(0xff00000000000000)) >> 56);
 }
 
 static int le() { const union { int x; char e; } l = { 1 }; return l.e; }
@@ -224,12 +225,14 @@ void hs1siv_chacha256(void *out, unsigned outbytes, unsigned char *iv, void *use
 {
     chacha_ctx_t ctx;
 
-    chacha_keysetup(&ctx, user_key, 256);
+    // CHANGE typecasting added
+    chacha_keysetup(&ctx, (unsigned char*)user_key, 256);
     chacha_ivsetup(&ctx,iv);
     #if ( ! HS1_SIV_XOR )
     memset(out, 0, outbytes);
     #endif
-    chacha_xor(&ctx,out,out,outbytes);
+    // CHANGE typecasting added
+    chacha_xor(&ctx,(unsigned char*)out,(unsigned char*)out,outbytes);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

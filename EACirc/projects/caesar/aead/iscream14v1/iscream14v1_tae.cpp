@@ -1,23 +1,28 @@
-namespace Iscream14v1_raw {
-int numRounds = -1;
+// CHANGE crypto_uintXX typedefs
+// #include "crypto_uint16.h"
+// #include "crypto_uint8.h"
+#include <cstdint>
+typedef uint8_t crypto_uint8;
+typedef uint16_t crypto_uint16;
 
-#include "crypto_uint16.h"
-#include "crypto_uint8.h"
 #include <string.h>
 #include <assert.h>
 
 #include "iscream14v1_api.h"
 #include "iscream14v1_encrypt.h"
 
+// CHANGE namespace moved due to includes
+namespace Iscream14v1_raw {
+
 #define blocklen 16
 void LS_encrypt(const crypto_uint8 input[blocklen],
-		const crypto_uint8 key[blocklen],
-		const crypto_uint8 tweak[blocklen],
-		crypto_uint8 output[blocklen]);
+        const crypto_uint8 key[blocklen],
+        const crypto_uint8 tweak[blocklen],
+        crypto_uint8 output[blocklen]);
 void LS_decrypt(const crypto_uint8 input[blocklen],
-		const crypto_uint8 key[blocklen],
-		const crypto_uint8 tweak[blocklen],
-		crypto_uint8 output[blocklen]);
+        const crypto_uint8 key[blocklen],
+        const crypto_uint8 tweak[blocklen],
+        crypto_uint8 output[blocklen]);
 
 static void increment(crypto_uint8 T[blocklen]) {
   int i = 15;
@@ -50,65 +55,65 @@ int crypto_aead_encrypt(
       unsigned char block[blocklen] = {0};
 
       if (i+blocklen < adlen) {
-	/* Normal block */
-	memcpy(block, ad+i, blocklen);
+    /* Normal block */
+    memcpy(block, ad+i, blocklen);
       } else if (i+blocklen == adlen) {
-	/* Final block: full */
-	memcpy(block, ad+i, blocklen);
-	T[12] = 0xd0;
-	T[13] = 0;
-	T[14] = 0;
-	T[15] = 0;
+    /* Final block: full */
+    memcpy(block, ad+i, blocklen);
+    T[12] = 0xd0;
+    T[13] = 0;
+    T[14] = 0;
+    T[15] = 0;
       } else {
-	/* Final block: partial with padding */
-	memcpy(block, ad+i, adlen % blocklen);
-	block[adlen % blocklen] = 0x80;
-	T[12] = 0xd8;
-	T[13] = 0;
-	T[14] = 0;
-	T[15] = 0;
+    /* Final block: partial with padding */
+    memcpy(block, ad+i, adlen % blocklen);
+    block[adlen % blocklen] = 0x80;
+    T[12] = 0xd8;
+    T[13] = 0;
+    T[14] = 0;
+    T[15] = 0;
       }
 
       LS_encrypt(block, K, T, block);
       for (j = 0; j < blocklen; j++)
-	auth[j] ^= block[j];
+    auth[j] ^= block[j];
       increment(T);
     }
 
-    
+
     /* Process Message */
     memset(T, 0, blocklen);
     memcpy(T, npub, CRYPTO_NPUBBYTES);
 
     for (i=0; i < mlen; i+=blocklen) {
       if (i+blocklen < mlen) {
-	/* Normal block */
-	for (j=0; j < blocklen; j++)
-	  sum[j] ^= m[i+j];
-	LS_encrypt(m+i, K, T, c+i);
+    /* Normal block */
+    for (j=0; j < blocklen; j++)
+      sum[j] ^= m[i+j];
+    LS_encrypt(m+i, K, T, c+i);
 
-	increment(T);
+    increment(T);
       } else {
-	/* Final block: full or partial */
-	unsigned char block[blocklen] = {0};
-	int l;
-	if (mlen % blocklen) {
-	  l = mlen % blocklen;
-	  T[12] = 0xc8;
-	} else {
-	  l = 16;
-	  T[12] = 0xc0;
-	}
-	block[15] = 8*l;
-	T[13] = 0;
-	T[14] = 0;
-	T[15] = 0;
+    /* Final block: full or partial */
+    unsigned char block[blocklen] = {0};
+    int l;
+    if (mlen % blocklen) {
+      l = mlen % blocklen;
+      T[12] = 0xc8;
+    } else {
+      l = 16;
+      T[12] = 0xc0;
+    }
+    block[15] = 8*l;
+    T[13] = 0;
+    T[14] = 0;
+    T[15] = 0;
 
-	LS_encrypt(block, K, T, block);
-	for (j=0; j < l; j++) {
-	  sum[j] ^= m[i+j];
-	  c[i+j] = block[j] ^ m[i+j];
-	}
+    LS_encrypt(block, K, T, block);
+    for (j=0; j < l; j++) {
+      sum[j] ^= m[i+j];
+      c[i+j] = block[j] ^ m[i+j];
+    }
       }
     }
 
@@ -145,71 +150,71 @@ int crypto_aead_decrypt(
     /* Process Associated Data */
     memcpy(T, npub, CRYPTO_NPUBBYTES);
     T[12]  = 0x80;           /* control bits for a.d. */
-    
+
     for (i=0; i<adlen; i+=blocklen) {
 
       unsigned char block[blocklen] = {0};
 
       if (i+blocklen < adlen) {
-	/* Normal block */
-	memcpy(block, ad+i, blocklen);
+    /* Normal block */
+    memcpy(block, ad+i, blocklen);
       } else if (i+blocklen == adlen) {
-	/* Final block: full */
-	memcpy(block, ad+i, blocklen);
-	T[12] = 0xd0;
-	T[13] = 0;
-	T[14] = 0;
-	T[15] = 0;
+    /* Final block: full */
+    memcpy(block, ad+i, blocklen);
+    T[12] = 0xd0;
+    T[13] = 0;
+    T[14] = 0;
+    T[15] = 0;
       } else {
-	/* Final block: partial with padding */
-	memcpy(block, ad+i, adlen % blocklen);
-	block[adlen % blocklen] = 0x80;
-	T[12] = 0xd8;
-	T[13] = 0;
-	T[14] = 0;
-	T[15] = 0;
+    /* Final block: partial with padding */
+    memcpy(block, ad+i, adlen % blocklen);
+    block[adlen % blocklen] = 0x80;
+    T[12] = 0xd8;
+    T[13] = 0;
+    T[14] = 0;
+    T[15] = 0;
       }
 
       LS_encrypt(block, K, T, block);
       for (j = 0; j < blocklen; j++)
-	auth[j] ^= block[j];
+    auth[j] ^= block[j];
       increment(T);
     }
 
-    
+
     /* Process Message */
     memset(T, 0, blocklen);
     memcpy(T, npub, CRYPTO_NPUBBYTES);
 
     for (i=0; i < *outputmlen; i+=blocklen) {
       if (i+blocklen < *outputmlen) {
-	/* Normal block */
-	LS_decrypt(c+i, K, T, m+i);
-	for (j=0; j < blocklen; j++)
-	  sum[j] ^= m[i+j];
+    /* Normal block */
+    LS_decrypt(c+i, K, T, m+i);
+    for (j=0; j < blocklen; j++)
+      sum[j] ^= m[i+j];
 
-	increment(T);
+    increment(T);
       } else {
-	/* Final block: full or partial */
-	unsigned char block[blocklen] = {0};
-	int l;
-	if (*outputmlen % blocklen) {
-	  l = *outputmlen % blocklen;
-	  T[12] = 0xc8;
-	} else {
-	  l = 16;
-	  T[12] = 0xc0;
-	}
-	block[15] = 8*l;
-	T[13] = 0;
-	T[14] = 0;
-	T[15] = 0;
+    /* Final block: full or partial */
+    unsigned char block[blocklen] = {0};
+    int l;
+    if (*outputmlen % blocklen) {
+      l = *outputmlen % blocklen;
+      T[12] = 0xc8;
+    } else {
+      l = 16;
+      T[12] = 0xc0;
+    }
+    block[15] = 8*l;
+    T[13] = 0;
+    T[14] = 0;
+    T[15] = 0;
 
-	LS_encrypt(block, K, T, block);
-	for (j=0; j < l; j++) {
-	  m[i+j] = block[j] ^ c[i+j];
-	  sum[j] ^= m[i+j];
-	}
+    LS_encrypt(block, K, T, block);
+    for (j=0; j < l; j++) {
+      m[i+j] = block[j] ^ c[i+j];
+      sum[j] ^= m[i+j];
+    }
       }
     }
 
@@ -219,13 +224,13 @@ int crypto_aead_decrypt(
     LS_encrypt(sum, K, T, sum);
     for (i = 0; i < CRYPTO_ABYTES; i++)
       if (c[*outputmlen+i] != (auth[i] ^ sum[i])) {
-	memset(m, 0, *outputmlen);
-	return -1;
+    memset(m, 0, *outputmlen);
+    return -1;
       }
-    
+
     return 0;
 }
- 
+
 
 
 
