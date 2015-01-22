@@ -46,7 +46,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../EACirc;./Boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../EACirc;./Boost;./bricks;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -61,35 +64,42 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>../EACirc; ./src ; ../EACirc/tinyXML</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>EACirc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../run</AdditionalLibraryDirectories>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileGenerator.cpp" />
-    <ClCompile Include="ConfigParser.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="OneclickConstants.cpp" />
-    <ClCompile Include="ResultProcessor.cpp" />
+    <ClCompile Include="src\ConfigParser.cpp" />
+    <ClCompile Include="src\FileGenerator.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\OneclickConstants.cpp" />
+    <ClCompile Include="src\ResultProcessor.cpp" />
+    <ClCompile Include="src\XMLproc.cpp" />
     <ClCompile Include="tinyXML\tinystr.cpp" />
     <ClCompile Include="tinyXML\tinyxml.cpp" />
     <ClCompile Include="tinyXML\tinyxmlerror.cpp" />
     <ClCompile Include="tinyXML\tinyxmlparser.cpp" />
-    <ClCompile Include="XMLproc.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileGenerator.h" />
-    <ClInclude Include="ConfigParser.h" />
-    <ClInclude Include="FileLogger.hpp" />
-    <ClInclude Include="OneclickConstants.h" />
-    <ClInclude Include="ResultProcessor.h" />
+    <ClInclude Include="src\ConfigParser.h" />
+    <ClInclude Include="src\dirent.h" />
+    <ClInclude Include="src\FileGenerator.h" />
+    <ClInclude Include="src\FileLogger.hpp" />
+    <ClInclude Include="src\FileSystem.h" />
+    <ClInclude Include="src\OneclickConstants.h" />
+    <ClInclude Include="src\ResultProcessor.h" />
+    <ClInclude Include="src\Utils.h" />
+    <ClInclude Include="src\XMLproc.h" />
     <ClInclude Include="tinyXML\tinystr.h" />
     <ClInclude Include="tinyXML\tinyxml.h" />
-    <ClInclude Include="Utils.h" />
-    <ClInclude Include="XMLproc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
