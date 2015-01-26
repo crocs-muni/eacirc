@@ -9,7 +9,7 @@
 #include "EACglobals.h"
 #include "GA1DArrayGenome.h"
 #include "circuit/ICircuit.h"
-#include "GACallbacks.h"
+#include "GAGateCallbacks.h"
 
 class GateCircuit : public ICircuit {
 public:
@@ -20,7 +20,7 @@ public:
     ~GateCircuit();
 
     string shortDescription();
-    
+
     /** allocate arrays for interpreter
      * @return status
      */
@@ -35,7 +35,7 @@ public:
 
     GAGenome * createGenome(bool setCallbacks = false);
     GAPopulation * createPopulation();
-    
+
     bool postProcess(GAGenome &original, GAGenome &prunned);
     int loadCircuitConfiguration(TiXmlNode* pRoot);
 };

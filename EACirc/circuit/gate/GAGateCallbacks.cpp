@@ -1,34 +1,34 @@
-#include "GACallbacks.h"
+#include "GAGateCallbacks.h"
 #include "EACglobals.h"
 #include "evaluators/IEvaluator.h"
 #include "generators/IRndGen.h"
-#include "CircuitInterpreter.h"
-#include "CircuitCommonFunctions.h"
+#include "GateInterpreter.h"
+#include "GateCommonFunctions.h"
 
-void GACallbacks::initializer(GAGenome& genome) {
+void GAGateCallbacks::initializer(GAGenome& genome) {
     GA1DArrayGenome<GENOME_ITEM_TYPE>& g = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) genome;
-    GACallbacks::initializer_basic(g);
+    GAGateCallbacks::initializer_basic(g);
 }
 
-float GACallbacks::evaluator(GAGenome &g) {
+float GAGateCallbacks::evaluator(GAGenome &g) {
     GA1DArrayGenome<GENOME_ITEM_TYPE>  &genome = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) g;
     // reset evaluator state for this individual
     pGlobals->evaluator->resetEvaluator();
     // execute circuit & evaluate success for each test vector
     for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-        CircuitInterpreter::executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
+        GateInterpreter::executeCircuit(&genome, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
         pGlobals->evaluator->evaluateCircuit(pGlobals->testVectors.circuitOutputs[testVector], pGlobals->testVectors.outputs[testVector]);
     }
     // retrieve fitness from evaluator
     return pGlobals->evaluator->getFitness();
 }
 
-int GACallbacks::mutator(GAGenome &genome, float probMutation) {
+int GAGateCallbacks::mutator(GAGenome &genome, float probMutation) {
     GA1DArrayGenome<GENOME_ITEM_TYPE> &g = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) genome;
     return mutator_basic(g, probMutation);
 }
 
-int GACallbacks::crossover(const GAGenome &parent1, const GAGenome &parent2, GAGenome *offspring1, GAGenome *offspring2) {
+int GAGateCallbacks::crossover(const GAGenome &parent1, const GAGenome &parent2, GAGenome *offspring1, GAGenome *offspring2) {
     GA1DArrayGenome<GENOME_ITEM_TYPE> &p1 = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) parent1;
     GA1DArrayGenome<GENOME_ITEM_TYPE> &p2 = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) parent2;
     GA1DArrayGenome<GENOME_ITEM_TYPE>* o1 = (GA1DArrayGenome<GENOME_ITEM_TYPE>*) offspring1;
@@ -37,7 +37,7 @@ int GACallbacks::crossover(const GAGenome &parent1, const GAGenome &parent2, GAG
     //return crossover_perLayer(p1, p2, o1, o2);
 }
 
-void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
+void GAGateCallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
 
     // clear genome
     for (int i = 0; i < genome.size(); i++) genome.gene(i, 0);
@@ -108,7 +108,7 @@ void GACallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome) {
 
 }
 
-int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float probMutation) {
+int GAGateCallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float probMutation) {
     int numOfMutations = 0;
     int offset;
     //
@@ -198,7 +198,7 @@ int GACallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, float 
     return numOfMutations;
 }
 
-int GACallbacks::crossover_perLayer(const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent1, const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent2,
+int GAGateCallbacks::crossover_perLayer(const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent1, const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent2,
                                     GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring1, GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring2) {
     // take random layer and cut individuals in 2 parts horisontally
     int crossPoint = GARandomInt(1,pGlobals->settings->gateCircuit.numLayers) * 2;
@@ -219,7 +219,7 @@ int GACallbacks::crossover_perLayer(const GA1DArrayGenome<GENOME_ITEM_TYPE> &par
     // return number of offsprings
     return (offspring1 != NULL ? 1 : 0) + (offspring2 != NULL ? 1 : 0);
 }
-int GACallbacks::crossover_perColumn(const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent1, const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent2,
+int GAGateCallbacks::crossover_perColumn(const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent1, const GA1DArrayGenome<GENOME_ITEM_TYPE> &parent2,
                                      GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring1, GA1DArrayGenome<GENOME_ITEM_TYPE> *offspring2) {
     // take random point in layer size and cut individuals in 2 parts verically
     int crossPoint = GARandomInt(1,pGlobals->settings->gateCircuit.sizeLayer);
@@ -239,6 +239,6 @@ int GACallbacks::crossover_perColumn(const GA1DArrayGenome<GENOME_ITEM_TYPE> &pa
     return (offspring1 != NULL ? 1 : 0) + (offspring2 != NULL ? 1 : 0);
 }
 
-GENOME_ITEM_TYPE GACallbacks::changeBit(GENOME_ITEM_TYPE genomeValue, int width) {
+GENOME_ITEM_TYPE GAGateCallbacks::changeBit(GENOME_ITEM_TYPE genomeValue, int width) {
     return genomeValue ^ (1 << GARandomInt(0, width-1));
 }

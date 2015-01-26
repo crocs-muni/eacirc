@@ -1,4 +1,4 @@
-#include "CircuitCommonFunctions.h"
+#include "GateCommonFunctions.h"
 
 #define BOTTOM_BYTE 0xff
 

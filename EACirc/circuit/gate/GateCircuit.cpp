@@ -5,9 +5,9 @@
 
 #include "GateCircuit.h"
 #include "GateCircuitIO.h"
-#include "CircuitCommonFunctions.h"
-#include "GACallbacks.h"
-#include "CircuitInterpreter.h"
+#include "GateCommonFunctions.h"
+#include "GAGateCallbacks.h"
+#include "GateInterpreter.h"
 #include "GAPopulation.h"
 #include "XMLProcessor.h"
 
@@ -36,11 +36,11 @@ int GateCircuit::initialize() {
     return STAT_OK;
 }
 
-inline GAGenome::Initializer       GateCircuit::getInitializer() { return GACallbacks::initializer; }
-inline GAGenome::Evaluator         GateCircuit::getEvaluator()   { return GACallbacks::evaluator;   }
-inline GAGenome::Mutator           GateCircuit::getMutator()     { return GACallbacks::mutator;     }
+inline GAGenome::Initializer       GateCircuit::getInitializer() { return GAGateCallbacks::initializer; }
+inline GAGenome::Evaluator         GateCircuit::getEvaluator()   { return GAGateCallbacks::evaluator;   }
+inline GAGenome::Mutator           GateCircuit::getMutator()     { return GAGateCallbacks::mutator;     }
 inline GAGenome::Comparator        GateCircuit::getComparator()  { return NULL; }
-inline GAGenome::SexualCrossover   GateCircuit::getSexualCrossover()  { return GACallbacks::crossover; }
+inline GAGenome::SexualCrossover   GateCircuit::getSexualCrossover()  { return GAGateCallbacks::crossover; }
 inline GAGenome::AsexualCrossover  GateCircuit::getAsexualCrossover() { return NULL; }
 
 GAGenome* GateCircuit::createGenome(bool setCallbacks) {
@@ -48,14 +48,14 @@ GAGenome* GateCircuit::createGenome(bool setCallbacks) {
     if (setCallbacks){
         setGACallbacks(g);
     }
-    
+
     return g;
 }
 
 GAPopulation* GateCircuit::createPopulation() {
     GA1DArrayGenome<GENOME_ITEM_TYPE> g(pGlobals->settings->gateCircuit.genomeSize, getEvaluator());
     setGACallbacks(&g);
-    
+
     GAPopulation * population = new GAPopulation(g, pGlobals->settings->ga.popupationSize);
     return population;
 }
@@ -64,7 +64,7 @@ bool GateCircuit::postProcess(GAGenome& original, GAGenome& prunned) {
     if (!pGlobals->settings->outputs.allowPrunning) {
         return false;
     }
-    int status = CircuitInterpreter::pruneCircuit(original, prunned);
+    int status = GateInterpreter::pruneCircuit(original, prunned);
     if (status != STAT_OK) {
         mainLogger.out(LOGGER_WARNING) << "Could not post-process genome (" << status << ")." << endl;
         return false;

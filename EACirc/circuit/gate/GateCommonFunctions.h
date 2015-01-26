@@ -1,5 +1,5 @@
-#ifndef CIRCUITCOMMONFUNCTIONS_H
-#define CIRCUITCOMMONFUNCTIONS_H
+#ifndef GATE_COMMON_FUNCTIONS_H
+#define GATE_COMMON_FUNCTIONS_H
 
 #include "EACglobals.h"
 #include "GA1DArrayGenome.h"
@@ -67,4 +67,4 @@ unsigned char getNeutralValue(unsigned char function);
  */
 string functionToString(unsigned char function);
 
-#endif // CIRCUITCOMMONFUNCTIONS_H
+#endif // GATE_COMMON_FUNCTIONS_H

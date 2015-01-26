@@ -21,6 +21,11 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
+    EACirc/circuit/polynomial/PolyCommonFunctions.cpp \
+    EACirc/circuit/polynomial/PolynomialInterpreter.cpp \
+    EACirc/circuit/gate/GateInterpreter.cpp \
+    EACirc/circuit/gate/GateCommonFunctions.cpp \
+    EACirc/circuit/gate/GAGateCallbacks.cpp
 
 # === individual representation ===
 SOURCES += \
@@ -31,18 +36,13 @@ SOURCES += \
 SOURCES += \
     EACirc/circuit/gate/GateCircuitIO.cpp \
     EACirc/circuit/gate/GateCircuit.cpp \
-    EACirc/circuit/gate/GACallbacks.cpp \
-    EACirc/circuit/gate/CircuitInterpreter.cpp \
-    EACirc/circuit/gate/CircuitCommonFunctions.cpp \
 
 # === polynomial circuits ===
 SOURCES += \
     EACirc/circuit/polynomial/PolynomialCircuit.cpp \
     EACirc/circuit/polynomial/PolynomialCircuitIO.cpp \
     EACirc/circuit/polynomial/Term.cpp   \
-    EACirc/circuit/polynomial/PolyDistEval.cpp   \
     EACirc/circuit/polynomial/GAPolyCallbacks.cpp \
-    EACirc/circuit/polynomial/poly.cpp \
 
 # === evaluators ===
 SOURCES += \
@@ -244,6 +244,11 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/Version.h \
+    EACirc/circuit/polynomial/PolyCommonFunctions.h \
+    EACirc/circuit/gate/GateInterpreter.h \
+    EACirc/circuit/gate/GateCommonFunctions.h \
+    EACirc/circuit/gate/GAGateCallbacks.h \
+    EACirc/circuit/polynomial/PolynomialInterpreter.h
 
 # === individual representation ===
 HEADERS += \
@@ -252,18 +257,13 @@ HEADERS += \
 
 # === circuit processing ===
 HEADERS += \
-    EACirc/circuit/gate/GACallbacks.h \
-    EACirc/circuit/gate/CircuitInterpreter.h \
-    EACirc/circuit/gate/CircuitCommonFunctions.h \
     EACirc/circuit/gate/GateCircuit.h \
     EACirc/circuit/gate/GateCircuitIO.h \
 
 # === polynomials ===
 HEADERS += \
-    EACirc/circuit/polynomial/PolyDistEval.h \
     EACirc/circuit/polynomial/GAPolyCallbacks.h \
     EACirc/circuit/polynomial/Term.h \
-    EACirc/circuit/polynomial/poly.h \
     EACirc/circuit/polynomial/PolynomialCircuit.h \
     EACirc/circuit/polynomial/PolynomialCircuitIO.h \
 
