@@ -131,8 +131,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                 int randomBit = GARandomInt(0, numVariables-1);
 
                 // Get value of the random bit
-                const int bitPos = Term::getBitPos(randomBit, randTerm, termSize);
-                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::getBitLoc(randomBit)));
+                const int bitPos = Term::elementIndexWithinVector(randomBit, randTerm, termSize);
+                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::bitIndexWithinElement(randomBit)));
 
 
             } else if (pGlobals->settings->polyCircuit.mutateTermStrategy == MUTATE_TERM_STRATEGY_ADDREMOVE){
@@ -147,8 +147,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                 // if we want to remove a variable from a term, construct a list of set variables.
                 std::vector<int> vars;
                 for(int i=0; i<numVariables; i++){
-                    const int bitPos = Term::getBitPos(i, randTerm, termSize);
-                    const int bitLoc = Term::getBitLoc(i);
+                    const int bitPos = Term::elementIndexWithinVector(i, randTerm, termSize);
+                    const int bitLoc = Term::bitIndexWithinElement(i);
                     const bool isVariableInTerm = (genome.gene(cPoly, bitPos) & (1ul << bitLoc)) > 0;
 
                     // Add to the variable set either if it is present or not.
@@ -163,8 +163,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                     // Pick one variable at random to either remove or delete.
                     int var2operateOn = vars.at(GARandomInt(0, vars.size()-1));
                     // Toggle specified variable in the term.
-                    const int bitPos = Term::getBitPos(var2operateOn, randTerm, termSize);
-                    genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::getBitLoc(var2operateOn)));
+                    const int bitPos = Term::elementIndexWithinVector(var2operateOn, randTerm, termSize);
+                    genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::bitIndexWithinElement(var2operateOn)));
                     numOfMutations+=1;
                 }
             } else {
@@ -187,8 +187,8 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                     genome.gene(cPoly, 1 + numTerms*termSize + i, 0);
                 }
 
-                const int bitPos = Term::getBitPos(randomBit, numTerms, termSize);
-                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (Term::getBitLoc(randomBit))));
+                const int bitPos = Term::elementIndexWithinVector(randomBit, numTerms, termSize);
+                genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << (Term::bitIndexWithinElement(randomBit))));
 
                 numTerms+=1;
                 numOfMutations+=1;

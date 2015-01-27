@@ -1,5 +1,5 @@
-#ifndef _EACIRC_TERM_H
-#define _EACIRC_TERM_H
+#ifndef _TERM_H
+#define _TERM_H
 
 #include "PolyCommonFunctions.h"
 #include <assert.h>
@@ -50,7 +50,7 @@ class Term {
     /**
      * Internal term representation using a vector.
      */
-    term_t * term;
+    term_t* term;
 
     /**
      * Helper attribute - whether to ignore this term or not.
@@ -64,40 +64,47 @@ class Term {
   public:
     /**
      * Default constructor.
+     * Construct an empty term, internal vector is not initialized.
      */
-    Term ();
+    Term();
 
     /**
      * Destructor.
      */
-    ~Term ();
+    ~Term();
 
     /**
      * Copy constructor.
+     * Copy sizes and internal vector.
+     * @param other     term to copy
      */
-    Term (const Term &cT);
+    Term(const Term &other);
 
     /**
-     * Instantiate using size.
+     * Instantiate using size, internal vector is reinitialized and cleaned.
+     * @param size      desired size
      */
-    Term (term_size_t size);
+    Term(term_size_t size);
 
     /**
      * Instantiate using genome.
      */
-    Term (term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
+    Term(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
 
     /**
      * Getter for the size.
+     * @return size
      */
-    term_size_t getSize (void) const {return (size);}
+    term_size_t getSize(void) const;
 
     /**
      * Returns number of term building blocks if term has provided bit size.
      * @param bitSize
      * @return
      */
-    static inline unsigned int getTermSize(unsigned int bitSize) { return OWN_CEIL((double) bitSize / (8.0*(double)sizeof(term_elem_t))); };
+    static inline unsigned int getTermSize(unsigned int bitSize) {
+        return OWN_CEIL((double) bitSize / (8.0*(double)sizeof(term_elem_t)));
+    }
 
     /**
      * Returns number of term building blocks if term has provided bit size, provided storage type.
@@ -105,101 +112,131 @@ class Term {
      * @param typeSize
      * @return
      */
-    static inline unsigned int getTermSize(unsigned int bitSize, unsigned int typeSize) { return OWN_CEIL((double) bitSize / (8.0*(double)typeSize)); };
+    static inline unsigned int getTermSize(unsigned int bitSize, unsigned int typeSize) {
+        return OWN_CEIL((double) bitSize / (8.0*(double)typeSize));
+    }
 
     /**
-     * Setter only for the size. Performs no initialization.
+     * Setter only for the size and vectorSize. Performs no initialization.
      */
-    Term * setSize(term_size_t size) {
-        this->size = size;
-        this->vectorSize = (term_size_t) OWN_CEIL((double) size / (8.0*(double)sizeof(term_elem_t)));
-        return this;
-    }
+    Term* setSizes(term_size_t size);
 
     /**
      * Term initializer, set size has to be called before.
      */
-    Term * initialize();
+    Term* initialize();
 
     /**
-     * Term initializer, able to set new size.
-     * @param
-     * @return
+     * Term initializer, resizes the container if necessary.
+     * @param size      new term size
+     * @return self
      */
-    Term * initialize(term_size_t);
+    Term* initialize(term_size_t size);
 
-    /**
-     * Initialize term from the genome.
-     *
-     * @param pGenome
-     * @param polyIdx           1. D index (which polynomial to use.
-     * @param offset            2. D offset where to start reading.
-     * @return
+    /** Initialize term from the genome.
+     * @param pGenome           genome for reading
+     * @param polyIdx           1. D index (which polynomial to use)
+     * @param offset            2. D offset (where to start reading)
+     * @return self
      */
-    Term * initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
+    Term* initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
 
-    /**
-     * Dumps term to the genome.
+    /** Dumps term to the genome.
      * Writes vector[0] .. vector[n] to the genome (thus ordering is x_0 ... x_size).
-     *
-     * @param pGenome
-     * @param polyIdx
-     * @param offset
+     * @param pGenome           genome to write to
+     * @param polyIdx           D index (which polynomial to use)
+     * @param offset            D offset (where to start writing)
      */
     void dumpToGenome(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset) const;
 
-    /**
-     * Sets particular bit in the term,
-     * @param bit
-     * @param value
+    /** Sets particular bit in the term.
+     * @throws          out_of_range exception, if bit position is too big
+     * @param bit       bt position to write
+     * @param value     desired value
      */
     void setBit(unsigned int bit, bool value);
+
+    /** Gets particular bit value in the term.
+     * @throws          out_of_range exception, if bit position is too big
+     * @param bit       bit position to read
+     * @return          bit value
+     */
     bool getBit(unsigned int bit) const;
+
+    /** Flips particular bit value in the term.
+     * @throws          out_of_range exception, if bit position is too big
+     * @param bit       bit position to read
+     */
     void flipBit(unsigned int bit);
 
-    bool getIgnore() const { return this->ignore; }
-    Term * setIgnore(bool ign) { this->ignore = ign; return this; }
+    /** Get ignore flag.
+     * @return          ignore flag
+     */
+    bool getIgnore() const;
 
-    // Comparator for sorting
+    /** Set ignore flag.
+     * @param ignore    flag to set
+     * @return          self
+     */
+    Term* setIgnore(bool ignore);
+
+    // Comparators for sorting
+    //  1: I'm smaller than the other
+    // -1: I'm bigger than the other
     int compareTo(const Term& other) const;
-    int compareTo(const Term * other) const;
+    int compareTo(const Term* other) const;
 
     // Assignment operator
     Term& operator=(const Term& other);
-    bool operator<(const Term& other)   const { return this->compareTo(other)==-1;    }
-    bool operator<=(const Term& other)  const { return this->compareTo(other)!=1;     }
-    bool operator>(const Term& other)   const { return this->compareTo(other)==1;     }
-    bool operator>=(const Term& other)  const { return this->compareTo(other)!=-1;    }
+
+    // Comparison operators
+    bool operator<(const Term& other) const;
+    bool operator<=(const Term& other) const;
+    bool operator>(const Term& other) const;
+    bool operator>=(const Term& other) const;
 
     // Operations required by the library.
-    //friend bool operator= (Term &cT);
+    // friend bool operator= (Term &cT);
     friend bool operator== (const Term &cT1, const Term &cT2);
     friend bool operator!= (const Term &cT1, const Term &cT2);
 
     // Evaluation
+    /** Evaluate this term on given data.
+     * @param input     input data to process with this Term
+     * @param inputLen  length of the inpu data (number of unsigned chars)
+     * @return          1/0 if term is a subset of input
+     *                  i.e. if every input bit corresponding to 1s in term is also 1
+     */
     bool evaluate(const unsigned char * input, term_size_t inputLen) const;
 
     /**
      * Returns position of a particular bit w.r.t. term elements (POLY_GENOME_ITEM_TYPE).
      * Returns index of POLY_GENOME_ITEM_TYPE
-     * @return
+     * @param bitIndex      bit index in term
+     * @param termIndex     which term is the desired bit in?
+     * @param termSize      what is the size of terms?
+     * @return              term element position
      */
-    static inline unsigned int getBitPos(int bitIdx, int termIdx, unsigned int termSize) { return 1 + termIdx*termSize + (bitIdx/(8*sizeof(POLY_GENOME_ITEM_TYPE))); }
+    static inline unsigned int elementIndexWithinVector(int bitIndex, int termIndex, unsigned int termSize) {
+        return 1 + termIndex*termSize + (bitIndex/(8*sizeof(POLY_GENOME_ITEM_TYPE)));
+    }
 
     /**
      * Returns position of a particular bit inside term element.
      * Returns bit position inside POLY_GENOME_ITEM_TYPE.
-     * @return
+     * @param bitIndex      bit index in term
+     * @return              its position inside particular memory unit (POLY_GENOME_ITEM_TYPE)
      */
-    static inline unsigned int getBitLoc(int bitIdx) { return bitIdx % (8*sizeof(POLY_GENOME_ITEM_TYPE)); }
+    static inline unsigned int bitIndexWithinElement(int bitIndex) {
+        return bitIndex % (8*sizeof(POLY_GENOME_ITEM_TYPE));
+    }
 };
 
 // Pointer to the term.
-typedef Term * PTerm;
+typedef Term* PTerm;
 
-inline bool operator== (const Term &cT1, const Term &cT2){ return cT1.compareTo(cT2) == 0; }
-
-inline bool operator!= (const Term &cT1, const Term &cT2){ return !(cT1 == cT2); }
+inline bool operator== (const Term &cT1, const Term &cT2);
+inline bool operator!= (const Term &cT1, const Term &cT2);
 
 // Term comparator
 struct TermComparator {
@@ -211,6 +248,4 @@ struct PTermComparator {
   bool operator() (const PTerm& lhs, const PTerm& rhs) const { return lhs->compareTo(rhs) == -1; }
 };
 
-
-
-#endif  // end of file
+#endif // _TERM_H
