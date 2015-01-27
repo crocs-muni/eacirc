@@ -88,8 +88,12 @@ class Term {
 
     /**
      * Instantiate using genome.
+     * @param size          desired term size
+     * @param pGenome       genome to load from
+     * @param polyIndex     index of the polynomial are we loading
+     * @param offset        offset within term from which we are loading
      */
-    Term(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
+    Term(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIndex, const int offset);
 
     /**
      * Getter for the size.
@@ -99,8 +103,8 @@ class Term {
 
     /**
      * Returns number of term building blocks if term has provided bit size.
-     * @param bitSize
-     * @return
+     * @param bitSize       desired number of bits
+     * @return              needed number of building blocks for them
      */
     static inline unsigned int getTermSize(unsigned int bitSize) {
         return OWN_CEIL((double) bitSize / (8.0*(double)sizeof(term_elem_t)));
@@ -108,9 +112,9 @@ class Term {
 
     /**
      * Returns number of term building blocks if term has provided bit size, provided storage type.
-     * @param bitSize
-     * @param typeSize
-     * @return
+     * @param bitSize       desired number of bits
+     * @param typeSize      size of type we want to use
+     * @return              needed number of building blocks of specified type for them
      */
     static inline unsigned int getTermSize(unsigned int bitSize, unsigned int typeSize) {
         return OWN_CEIL((double) bitSize / (8.0*(double)typeSize));
@@ -118,11 +122,13 @@ class Term {
 
     /**
      * Setter only for the size and vectorSize. Performs no initialization.
+     * @return self
      */
     Term* setSizes(term_size_t size);
 
     /**
      * Term initializer, set size has to be called before.
+     * @return self
      */
     Term* initialize();
 
@@ -135,19 +141,19 @@ class Term {
 
     /** Initialize term from the genome.
      * @param pGenome           genome for reading
-     * @param polyIdx           1. D index (which polynomial to use)
+     * @param polyIndex         1. D index (which polynomial to use)
      * @param offset            2. D offset (where to start reading)
      * @return self
      */
-    Term* initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset);
+    Term* initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIndex, const int offset);
 
     /** Dumps term to the genome.
      * Writes vector[0] .. vector[n] to the genome (thus ordering is x_0 ... x_size).
      * @param pGenome           genome to write to
-     * @param polyIdx           D index (which polynomial to use)
+     * @param polyIndex         D index (which polynomial to use)
      * @param offset            D offset (where to start writing)
      */
-    void dumpToGenome(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset) const;
+    void dumpToGenome(GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIndex, const int offset) const;
 
     /** Sets particular bit in the term.
      * @throws          out_of_range exception, if bit position is too big

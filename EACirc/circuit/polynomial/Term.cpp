@@ -22,9 +22,9 @@ Term::Term(term_size_t size) : size(0), vectorSize(0), term(NULL),  ignore(false
     this->initialize(size);
 }
 
-Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset)
+Term::Term(term_size_t size, GA2DArrayGenome<unsigned long>* pGenome, const int polyIndex, const int offset)
     : size(0), vectorSize(0), term(NULL), ignore(false) {
-    this->initialize(size, pGenome, polyIdx, offset);
+    this->initialize(size, pGenome, polyIndex, offset);
 }
 
 term_size_t Term::getSize() const {
@@ -70,7 +70,7 @@ Term* Term::initialize() {
     return this;
 }
 
-Term* Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIdx, const int offset){
+Term* Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>* pGenome, const int polyIndex, const int offset) {
     // Assume genome storage is the same to our term store, for code simplicity.
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(term_elem_t));
 
@@ -82,12 +82,12 @@ Term* Term::initialize(term_size_t size, GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>*
     this->initialize(numVariables);
     // Copy term from the genome.
     for (int i = 0; i < termSize; i++) {
-        term->push_back(pGenome->gene(polyIdx, offset + i));
+        term->push_back(pGenome->gene(polyIndex, offset + i));
     }
     return this;
 }
 
-void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyIdx, const int offset) const {
+void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyIndex, const int offset) const {
     // Assume genome storage is the same to our term store, for code simplicity.
     assert(sizeof(POLY_GENOME_ITEM_TYPE) == sizeof(term_elem_t));
 
@@ -95,7 +95,7 @@ void Term::dumpToGenome(GA2DArrayGenome<unsigned long>* pGenome, const int polyI
     term_t::iterator it1 = term->begin();
     term_t::const_iterator it1End = term->end();
     for (int i = 0; it1 != it1End; it1++, i++){
-        pGenome->gene(polyIdx, offset + i, *it1);
+        pGenome->gene(polyIndex, offset + i, *it1);
     }
 }
 
