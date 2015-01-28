@@ -16,6 +16,9 @@
 *.exe
 *.hi
 *.asv
+Oneclick/*.pl
+Oneclick/configs/*.xml
+Oneclick/results
 utils/get_scores
 utils/start.bat
 [Dd]ebug/
