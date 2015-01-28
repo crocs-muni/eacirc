@@ -158,8 +158,8 @@ int EstreamProject::createTestVectorFilesHeaders() const {
     tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
     tvFile << pEstreamSettings->usageType << " \t\t(usage type)" << endl;
     tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
-    tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
-    tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
+    tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
+    tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
     tvFile << pEstreamSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
     tvFile << pEstreamSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
     if (pEstreamSettings->limitAlgRounds) {
@@ -178,13 +178,13 @@ int EstreamProject::createTestVectorFilesHeaders() const {
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
-    tvFile << "  stream1: using " << estreamToString(pEstreamSettings->algorithm1);
+    tvFile << "  stream1: using " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm1);
     if (pEstreamSettings->limitAlgRounds) {
         tvFile << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
     } else {
         tvFile << " (unlimited version)" << endl;
     }
-    tvFile << "  stream2: using " << estreamToString(pEstreamSettings->algorithm2);
+    tvFile << "  stream2: using " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm2);
     if (pEstreamSettings->limitAlgRounds) {
         tvFile << " (" << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
     } else {
@@ -372,7 +372,7 @@ int EstreamProject::generateCipherDataStream() {
             mainLogger.out() << " is set to random, stream data generation skipped." << endl;
             continue;
         } else {
-            mainLogger.out(LOGGER_INFO) << "Generating stream for " << estreamToString(algorithm);
+            mainLogger.out(LOGGER_INFO) << "Generating stream for " << EstreamCiphers::estreamToString(algorithm);
             if (numRounds == -1) {
                 mainLogger.out() << " (unlimitted version)." << endl;
             } else {

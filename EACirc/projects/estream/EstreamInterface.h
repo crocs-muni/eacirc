@@ -7,22 +7,16 @@
 typedef void* ECRYPT_ctx;
 
 class EstreamInterface {
-	public:
+    public:
         int numRounds;
-		EstreamInterface() : numRounds(0) {}
+        EstreamInterface() : numRounds(0) {}
         virtual ~EstreamInterface() {}
-		virtual void ECRYPT_init(void) = 0;
-		virtual void ECRYPT_keysetup(void* ctx, const u8 * key, u32 keysize,	u32 ivsize) = 0;
-		virtual void ECRYPT_ivsetup(void* ctx, const u8 * iv) = 0;
-		virtual void ECRYPT_encrypt_bytes(void* ctx, const u8 * plaintext, u8 * ciphertext, u32 msglen) = 0;
-		virtual void ECRYPT_decrypt_bytes(void* ctx, const u8 * ciphertext, u8 * plaintext, u32 msglen) = 0;
+        virtual void ECRYPT_init(void) = 0;
+        virtual void ECRYPT_keysetup(void* ctx, const u8 * key, u32 keysize,	u32 ivsize) = 0;
+        virtual void ECRYPT_ivsetup(void* ctx, const u8 * iv) = 0;
+        virtual void ECRYPT_encrypt_bytes(void* ctx, const u8 * plaintext, u8 * ciphertext, u32 msglen) = 0;
+        virtual void ECRYPT_decrypt_bytes(void* ctx, const u8 * ciphertext, u8 * plaintext, u32 msglen) = 0;
 };
-
-/** converts eStream cipher constant to human-readable string
-  * @param cipher       cipher constant
-  * @return human readable cipher description
-  */
-const char* estreamToString(int cipher);
 
 #include "projects/estream/ciphers/abc/ecrypt-sync.h"
 #include "projects/estream/ciphers/achterbahn/ecrypt-sync.h"

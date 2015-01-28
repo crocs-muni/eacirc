@@ -54,7 +54,7 @@ Hasher::Hasher() {
         case SHA3_DYNAMICSHA2:  m_hashFunctions[algorithmNumber] = new DSHA2(numRounds); break;
         case SHA3_ECHO:         m_hashFunctions[algorithmNumber] = new Echo(numRounds); break;
             //case SHA3_ECOH:         m_hashFunctions[algorithmNumber] = new Ecoh(numRounds); break;
-        case SHA3_EDON:         checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_EDON:         checkNumRounds(numRounds,SHA3_EDON);
                                 m_hashFunctions[algorithmNumber] = new Edon; break;
             //case SHA3_ENRUPT:       m_hashFunctions[algorithmNumber] = new EnRUPT(numRounds); break;
         case SHA3_ESSENCE:      m_hashFunctions[algorithmNumber] = new Essence(numRounds); break;
@@ -62,33 +62,33 @@ Hasher::Hasher() {
         case SHA3_GROSTL:       m_hashFunctions[algorithmNumber] = new Grostl(numRounds); break;
         case SHA3_HAMSI:        m_hashFunctions[algorithmNumber] = new Hamsi(numRounds); break;
         case SHA3_JH:           m_hashFunctions[algorithmNumber] = new JH(numRounds); break;
-        case SHA3_KECCAK:       checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_KECCAK:       checkNumRounds(numRounds,SHA3_KECCAK);
                                 m_hashFunctions[algorithmNumber] = new Keccak; break;
-        case SHA3_KHICHIDI:     checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_KHICHIDI:     checkNumRounds(numRounds,SHA3_KHICHIDI);
                                 m_hashFunctions[algorithmNumber] = new Khichidi; break;
         case SHA3_LANE:         m_hashFunctions[algorithmNumber] = new Lane(numRounds); break;
         case SHA3_LESAMNTA:     m_hashFunctions[algorithmNumber] = new Lesamnta(numRounds); break;
         case SHA3_LUFFA:        m_hashFunctions[algorithmNumber] = new Luffa(numRounds); break;
             //case SHA3_LUX:          m_hashFunctions[algorithmNumber] = new Lux(numRounds); break;
-        case SHA3_MSCSHA3:      checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_MSCSHA3:      checkNumRounds(numRounds,SHA3_MSCSHA3);
                                 m_hashFunctions[algorithmNumber] = new Mscsha; break;
         case SHA3_MD6:          m_hashFunctions[algorithmNumber] = new MD6(numRounds); break;
         case SHA3_MESHHASH:     m_hashFunctions[algorithmNumber] = new MeshHash(numRounds); break;
-        case SHA3_NASHA:        checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_NASHA:        checkNumRounds(numRounds,SHA3_NASHA);
                                 m_hashFunctions[algorithmNumber] = new Nasha; break;
             //case SHA3_SANDSTORM:    m_hashFunctions[algorithmNumber] = new Sandstorm(numRounds); break;
         case SHA3_SARMAL:       m_hashFunctions[algorithmNumber] = new Sarmal(numRounds); break;
-        case SHA3_SHABAL:       checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_SHABAL:       checkNumRounds(numRounds,SHA3_SARMAL);
                                 m_hashFunctions[algorithmNumber] = new Shabal; break;
-        case SHA3_SHAMATA:      checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_SHAMATA:      checkNumRounds(numRounds,SHA3_SHAMATA);
                                 m_hashFunctions[algorithmNumber] = new Shamata; break;
         case SHA3_SHAVITE3:     m_hashFunctions[algorithmNumber] = new SHAvite(numRounds); break;
         case SHA3_SIMD:         m_hashFunctions[algorithmNumber] = new Simd(numRounds); break;
-        case SHA3_SKEIN:        checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_SKEIN:        checkNumRounds(numRounds,SHA3_SKEIN);
                                 m_hashFunctions[algorithmNumber] = new Skein; break;
-        case SHA3_SPECTRALHASH: checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_SPECTRALHASH: checkNumRounds(numRounds,SHA3_SPECTRALHASH);
                                 m_hashFunctions[algorithmNumber] = new SpectralHash; break;
-        case SHA3_STREAMHASH:   checkNumRounds(numRounds,Sha3Interface::sha3ToString(algorithm));
+        case SHA3_STREAMHASH:   checkNumRounds(numRounds,SHA3_STREAMHASH);
                                 m_hashFunctions[algorithmNumber] = new StreamHash; break;
             //case SHA3_SWIFFTX:      m_hashFunctions[algorithmNumber] = new Swifftx(numRounds); break;
         case SHA3_TANGLE:       m_hashFunctions[algorithmNumber] = new Tangle(numRounds); break;
@@ -132,7 +132,7 @@ int Hasher::saveHasherState(TiXmlNode* pRoot) const {
         int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
         pElem = new TiXmlElement((string("algorithm")+toString(algorithmNumber+1)).c_str());
         pElem->SetAttribute("type",algorithm);
-        pElem->SetAttribute("description",Sha3Interface::sha3ToString(algorithm));
+        pElem->SetAttribute("description",Sha3Functions::sha3ToString(algorithm));
         if (algorithm != SHA3_RANDOM) {
             pElem2 = new TiXmlElement("hash_output_length");
             pElem2->LinkEndChild(new TiXmlText(toString(m_hashOutputLengths[algorithmNumber]).c_str()));
@@ -207,20 +207,20 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
                 int hashStatus = SHA3_HASH_SUCCESS;
                 hashStatus = m_hashFunctions[algorithmNumber]->Init(8*m_hashOutputLengths[algorithmNumber]);
                 if (hashStatus != SHA3_HASH_SUCCESS) {
-                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Interface::sha3ToString(algorithm);
+                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Functions::sha3ToString(algorithm);
                     mainLogger.out() << " could not be initialized (status: " << hashStatus << ")." << endl;
                     return STAT_PROJECT_ERROR;
                 }
                 hashStatus = m_hashFunctions[algorithmNumber]->Update((const unsigned char*)&(m_counters[algorithmNumber]),
                                                                       8*sizeof(m_counters[algorithmNumber]));
                 if (hashStatus != SHA3_HASH_SUCCESS) {
-                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Interface::sha3ToString(algorithm);
+                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Functions::sha3ToString(algorithm);
                     mainLogger.out() << " could not update hash (status: " << hashStatus << ")." << endl;
                     return STAT_PROJECT_ERROR;
                 }
                 hashStatus = m_hashFunctions[algorithmNumber]->Final(m_hashOutputs[algorithmNumber]);
                 if (hashStatus != SHA3_HASH_SUCCESS) {
-                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Interface::sha3ToString(algorithm);
+                    mainLogger.out(LOGGER_ERROR) << "Hash function " << Sha3Functions::sha3ToString(algorithm);
                     mainLogger.out() << " could not finalize hash (status: " << hashStatus << ")." << endl;
                     return STAT_PROJECT_ERROR;
                 }
@@ -263,8 +263,9 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     return status;
 }
 
-void Hasher::checkNumRounds(int numRounds,string algorithmName) {
+void Hasher::checkNumRounds(int numRounds, int algorithmConstant) {
     if (numRounds > -1) {
-        mainLogger.out(LOGGER_WARNING) << algorithmName << " cannot be limited in rounds - using UNLIMITTED VERSION!." << endl;
+        mainLogger.out(LOGGER_WARNING) << Sha3Functions::sha3ToString(algorithmConstant);
+        mainLogger.out() << " cannot be limited in rounds - using UNLIMITTED VERSION!." << endl;
     }
 }

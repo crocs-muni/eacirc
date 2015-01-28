@@ -95,8 +95,8 @@ int Sha3Project::createTestVectorFilesHeaders() const {
     tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
     tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
     tvFile << pSha3Settings->plaintextType << " \t\t(plaintext type)" << endl;
-    tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
-    tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
+    tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Functions::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
+    tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Functions::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
     tvFile << pSha3Settings->hashLength1 << " \t\t(hash length for algorithm1)" << endl;
     tvFile << pSha3Settings->hashLength2 << " \t\t(hash length for algorithm2)" << endl;
     tvFile << pSha3Settings->seed << " \t\t(initial seed for counters)" << endl;
@@ -115,13 +115,13 @@ int Sha3Project::createTestVectorFilesHeaders() const {
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile << "Using SHA-3 hash functions and random generator to generate test vectors." << endl;
-    tvFile << "  stream1: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm1);
+    tvFile << "  stream1: using " << Sha3Functions::sha3ToString(pSha3Settings->algorithm1);
     if (pSha3Settings->limitAlgRounds) {
         tvFile << " (" << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
     } else {
         tvFile << " (unlimited version)" << endl;
     }
-    tvFile << "  stream2: using " << Sha3Interface::sha3ToString(pSha3Settings->algorithm2);
+    tvFile << "  stream2: using " << Sha3Functions::sha3ToString(pSha3Settings->algorithm2);
     if (pSha3Settings->limitAlgRounds) {
         tvFile << " (" << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
     } else {
@@ -250,7 +250,7 @@ int Sha3Project::generateHashDataStream() {
             mainLogger.out() << " is set to random, stream data generation skipped." << endl;
             continue;
         } else {
-            mainLogger.out(LOGGER_INFO) << "Generating stream for " << Sha3Interface::sha3ToString(algorithm);
+            mainLogger.out(LOGGER_INFO) << "Generating stream for " << Sha3Functions::sha3ToString(algorithm);
             if (numRounds == -1) {
                 mainLogger.out() << " (unlimitted version)." << endl;
             } else {

@@ -11,10 +11,10 @@ class Sha3Interface {
 public:
     Sha3Interface() {}
     virtual ~Sha3Interface() {}
-	virtual int Init(int hashbitlen) = 0;
-	virtual int Update(const BitSequence *data, DataLength databitlen) = 0;
-	virtual int Final(BitSequence *hashval) = 0;
-	virtual int Hash(int hashbitlen, const BitSequence *data, DataLength databitlen, BitSequence *hashval) = 0;
+    virtual int Init(int hashbitlen) = 0;
+    virtual int Update(const BitSequence *data, DataLength databitlen) = 0;
+    virtual int Final(BitSequence *hashval) = 0;
+    virtual int Hash(int hashbitlen, const BitSequence *data, DataLength databitlen, BitSequence *hashval) = 0;
 
     /** allocate new hash function object according to parameters
       * @param algorithm        hash function constant
@@ -23,11 +23,6 @@ public:
       */
     static Sha3Interface* getSha3Function(int algorithm, int numRounds);
 
-    /** converts SHA-3 algorithm constant to human-readable string
-      * @param algorithm        algorithm constant
-      * @return human readable algorithm description
-      */
-    static const char* sha3ToString(int algorithm);
 };
 
 #endif

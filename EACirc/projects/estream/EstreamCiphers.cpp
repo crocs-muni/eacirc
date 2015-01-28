@@ -1,6 +1,6 @@
-#include "EstreamInterface.h"
+#include "EstreamCiphers.h"
 
-const char* estreamToString(int cipher) {
+const char* EstreamCiphers::estreamToString(int cipher) {
     switch (cipher) {
     case ESTREAM_ABC:               return "ABC";
     case ESTREAM_ACHTERBAHN:        return "Achterbahn";

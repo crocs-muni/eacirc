@@ -24,7 +24,7 @@ class Hasher {
 
     /** if number of rounds > -1, log info about number of rounds not supported
       */
-    void checkNumRounds(int numRounds,string algorithmName);
+    void checkNumRounds(int numRounds, int algorithmConstant);
 
 public:
     /** constructor

@@ -72,9 +72,10 @@ SOURCES += \
     EACirc/projects/sha3/Sha3Project.cpp \
     EACirc/projects/sha3/Hasher.cpp \
     EACirc/projects/sha3/Sha3Interface.cpp \
+    EACirc/projects/sha3/Sha3Functions.cpp \
+    EACirc/projects/estream/EstreamCiphers.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
-    EACirc/projects/estream/EstreamInterface.cpp \
     EACirc/projects/files/filesProject.cpp \
     EACirc/projects/caesar/CaesarProject.cpp \
     EACirc/projects/caesar/CaesarInterface.cpp \
@@ -296,6 +297,8 @@ HEADERS += \
     EACirc/projects/sha3/Sha3Interface.h \
     EACirc/projects/sha3/Sha3Constants.h \
     EACirc/projects/sha3/Hasher.h \
+    EACirc/projects/sha3/Sha3Functions.h \
+    EACirc/projects/estream/EstreamCiphers.h \
     EACirc/projects/estream/EstreamProject.h \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
