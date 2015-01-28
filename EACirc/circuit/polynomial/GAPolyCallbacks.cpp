@@ -51,7 +51,7 @@ void GAPolyCallbacks::initializer(GAGenome& g){
         // Otherwise new ones are generated.
         // To generate polynomial with k terms, probability is: p^{k-1}*p.
         int curTerms;
-        for(curTerms = 0; curTerms <  pGlobals->settings->polyCircuit.genomeInitMaxTerms; curTerms++){
+        for(curTerms = 0; curTerms <  pGlobals->settings->polyCircuit.maxNumTerms; curTerms++){
             // Generating polynomials with chain
             if (curTerms >= 1 && GAFlipCoin(pGlobals->settings->polyCircuit.genomeInitTermStopProbability)) {
                 break;
@@ -174,7 +174,7 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
         }
 
         // Add a new term to the polynomial?
-        if (numTerms < static_cast<unsigned long>(pGlobals->settings->polyCircuit.genomeInitMaxTerms)){
+        if (numTerms < static_cast<unsigned long>(pGlobals->settings->polyCircuit.maxNumTerms)){
             for(unsigned int addTermCtr = 0; GAFlipCoin(pGlobals->settings->polyCircuit.mutateAddTermProbability); addTermCtr++){
                 // Pick random bit
                 int randomBit = GARandomInt(0, numVariables-1);

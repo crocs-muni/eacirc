@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PolynomialCircuit.h
  * Author: ph4r05
  *
@@ -12,13 +12,13 @@
 
 class PolynomialCircuit : public ICircuit {
 public:
-    // 
+    //
     PolynomialCircuit();
     virtual ~PolynomialCircuit();
-    
+
     // Short description of the representation.
-    virtual string shortDescription() { return "PolyRepr"; }
-    
+    virtual string shortDescription();
+
     // Getters for GA callbacks.
     virtual inline GAGenome::Initializer       getInitializer() { return GAPolyCallbacks::initializer; }
     virtual inline GAGenome::Evaluator         getEvaluator()   { return GAPolyCallbacks::evaluator;   }
@@ -27,26 +27,38 @@ public:
     virtual inline GAGenome::SexualCrossover   getSexualCrossover()  { return GAPolyCallbacks::crossover; }
     virtual inline GAGenome::AsexualCrossover  getAsexualCrossover() { return NULL; }
 
-    // Constructs empty genome from settings.
-    virtual GAGenome * createGenome(bool setCallbacks = false);
-    
-    // Creates a configuration population.
-    virtual GAPopulation * createPopulation();
-    
+    /** Constructs empty genome from settings.
+     * @param setCallbacks      should all GA callbacks be set?
+     * @return                  newly allocated 2D genome
+     */
+    virtual GAGenome* createGenome(bool setCallbacks = false);
+
+    /** Allocates a new population according to global settings.
+     * - callbacks are set
+     * @return      newly allocated population
+     */
+    virtual GAPopulation* createPopulation();
+
     // Individual post-processing.
     virtual bool postProcess(GAGenome &originalGenome, GAGenome &prunnedGenome);
 
-    int loadCircuitConfiguration(TiXmlNode* pRoot);
-    
-    /** Obtains number of variables from the global configuration.
-     * @return 
+    /** Process configuration sub-tree for polynomial back-end.
+     * @param pRoot     parsed XML tree with configuration (root=EACIRC)
+     * @return          status
      */
-    inline static int getNumVariables() { return pGlobals->settings->main.circuitSizeInput*8; }
+    int loadCircuitConfiguration(TiXmlNode* pRoot);
+
+    /** Obtains number of variables from the global configuration.
+     * => i.e. number of bits for input
+     * @return
+     */
+    static inline int getNumVariables() { return pGlobals->settings->main.circuitSizeInput*8; }
 
     /** Obtains number of polynomials from the global configuration.
-     * @return 
+     * => i.e. number of independent polynomials (output bits)
+     * @return
      */
-    inline static int getNumPolynomials() { return pGlobals->settings->polyCircuit.numPolynomials; }
+    static inline int getNumPolynomials() { return pGlobals->settings->polyCircuit.numPolynomials; }
 
 private:
 

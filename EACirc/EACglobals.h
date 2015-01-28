@@ -148,7 +148,7 @@ struct SETTINGS_POLY_CIRCUIT {
     int mutateRemoveTermStrategy;           //! strategy for removing a term in a mutation, multiple / single / geometric / ...
     bool crossoverRandomizePolySelect;      //! randomize polynomial ordering in the crossover?
     double crossoverTermsProbability;       //! p for crossing of the terms using 2 parent polynomials.
-    int genomeInitMaxTerms;                 //! upper bound for a number of terms in a polynomial.
+    int maxNumTerms;                        //! upper bound for a number of terms in a polynomial.
     SETTINGS_POLY_CIRCUIT();
 };
 

@@ -80,7 +80,7 @@ SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
     numPolynomials = -1;
     genomeInitTermStopProbability = -1;
     genomeInitTermCountProbability = -1;
-    genomeInitMaxTerms = -1;
+    maxNumTerms = -1;
     mutateTermStrategy=-1;
     crossoverRandomizePolySelect = false;
     crossoverTermsProbability = -1;

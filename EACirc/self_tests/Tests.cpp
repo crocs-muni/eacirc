@@ -174,7 +174,7 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     pGlobals->settings->main.circuitSizeInput = 2;
     pGlobals->settings->main.circuitSizeOutput = 2;
     pGlobals->settings->polyCircuit.numPolynomials = 16;
-    pGlobals->settings->polyCircuit.genomeInitMaxTerms = 50;
+    pGlobals->settings->polyCircuit.maxNumTerms = 50;
     int termSize = Term::getTermSize(pGlobals->settings->main.circuitSizeInput*8);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     // Polynomial circuit representation.
