@@ -66,7 +66,7 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
 
     // Sanity checks
     if (pGlobals->settings->polyCircuit.numPolynomials <= 0
-            || pGlobals->settings->polyCircuit.numPolynomials*BITS_IN_UCHAR > pGlobals->settings->main.circuitSizeOutput){
+            || pGlobals->settings->polyCircuit.numPolynomials > pGlobals->settings->main.circuitSizeOutput*BITS_IN_UCHAR){
         mainLogger.out(LOGGER_ERROR) << "Number of polynomials not set properly." << endl;
         return STAT_CONFIG_INCORRECT;
     }
