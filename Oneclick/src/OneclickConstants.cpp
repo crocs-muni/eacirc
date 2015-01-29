@@ -10,7 +10,7 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
 
 		//Setting of algorithm name - project has to have implemeted interface with 
 		//std::string projectToString(int function) method
-		algorithmName->append(estreamToString(algorithmConstant));
+		algorithmName->append(EstreamCiphers::estreamToString(algorithmConstant));
 
 		//Check for existence of specified algorithm
 		if(algorithmName->compare("(unknown stream cipher)") == 0) {
@@ -22,9 +22,10 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
 		setXMLElementValue(root , PATH_ESTR_ALG , Utils::itostr(algorithmConstant));
 		setXMLElementValue(root , PATH_ESTR_RND , Utils::itostr(rounds));
 		break;
+
 	case PROJECT_SHA3:
 		projectName->append("SHA3");
-		algorithmName->append(Sha3Interface::sha3ToString(algorithmConstant));
+		algorithmName->append(Sha3Functions::sha3ToString(algorithmConstant));
 		if(algorithmName->compare("(unknown hash function)") == 0) {
 			throw std::runtime_error("unknown algorithm constant: " + Utils::itostr(algorithmConstant));
 		}

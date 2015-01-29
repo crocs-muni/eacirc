@@ -36,6 +36,7 @@ bool ResultProcessor::checkConfigs(std::string directory , FileLogger * dirLogge
 
 	bool isSampleSet = false;
 	int configCount = 0;
+	int logCount = 0;
 	int badConfigCount = 0;
 	std::string sampleConfig;
 	std::string currentConfig;
@@ -60,10 +61,13 @@ bool ResultProcessor::checkConfigs(std::string directory , FileLogger * dirLogge
 			filePath.erase();
 			currentConfig.erase();
 		}
+
+		if(dirIter.is_file() && dirIter.name().find(IDENTIFIER_LOG) != -1) logCount++;
 	}
 
-	oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configCount) << " configs in directory\n";
-	*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configCount) << " configs in directory\n";
+	oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configCount) << " configs and " << Utils::itostr(logCount) << " logs in directory\n";
+	*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configCount) << " configs and " << Utils::itostr(logCount) << " logs in directory\n";
+
 	if(badConfigCount == 0) {
 		oneclickLogger << FileLogger::LOG_INFO << "no different configs in directory\n\n";
 		*dirLogger << FileLogger::LOG_INFO << "no different configs in directory\n\n";

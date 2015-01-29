@@ -1,12 +1,11 @@
 //almost funny header here
 
 //TODO
-//	-EACirc dependency - refactor would be nice
+//	linux port, QT project, makefile
 
 #include <exception>
 #include <iostream>
 #include <sstream>
-#include <regex>
 
 #include "FileSystem.h"
 
@@ -16,8 +15,6 @@
 std::string writeUsage();
 
 int main(int args , char * argv[]) {
-
-
 
 	bool executed = false;
 	if(args < 3 || args > 4) {

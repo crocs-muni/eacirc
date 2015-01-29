@@ -16,6 +16,8 @@
 *.exe
 *.hi
 *.asv
+oneclick.log
+test.xml
 Oneclick/*.pl
 Oneclick/configs/*.xml
 Oneclick/results
