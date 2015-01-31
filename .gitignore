@@ -16,11 +16,6 @@
 *.exe
 *.hi
 *.asv
-oneclick.log
-test.xml
-Oneclick/*.pl
-Oneclick/configs/*.xml
-Oneclick/results
 utils/get_scores
 utils/start.bat
 [Dd]ebug/
@@ -56,3 +51,11 @@ fitness_progress.txt
 bestfit_graph.txt
 avgfit_graph.txt
 config.xml
+
+# Oneclick result files and logs
+
+Oneclick/exec/configs
+Oneclick/exec/results
+Oneclick/exec/*.log
+Oneclick/exec/*.pl
+
