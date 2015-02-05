@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include <stdexcept>
 #include <ctime>
 #include <vector>
 
@@ -25,7 +26,7 @@
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
 
-static class Utils {
+class Utils {
 public:
 	/** Converts integral value to string
 	  * @param x		integer to be converted
@@ -51,7 +52,7 @@ public:
 		file.close();
 		if(file.is_open()) throw std::runtime_error("can't close input file: " + path);
 		return buffer.str();
-	};
+    }
 
 	/** Opens file, loads string into it, closes it.
 	  * Source's content is erased.
@@ -67,7 +68,7 @@ public:
 		if(file.is_open()) throw std::runtime_error("can't close output file: " + path);
 		source->clear();
 		//oneclickLogger << FileLogger::LOG_INFO << "created file " << path;
-	};
+    }
 
 	/** Returns string after last separator in path.
 	  * If no separator is found, whole path is returned.
@@ -100,7 +101,7 @@ public:
 		std::stringstream temp;
 		temp << "[" << buffer << "] ";
 		return temp.str();
-	};
+    }
 
 	/** Retuns date in yy-mm-dd format.
 	  * @return				date
@@ -113,7 +114,7 @@ public:
 		timeinfo = localtime(&rawtime);
 		strftime(buffer , 80 , "%Y-%m-%d" , timeinfo);
 		return std::string(buffer);
-	};
+    }
 
 	/** Splits string into shorter strings, separated by separator
 	  * @param				toSplit string to be splitted
@@ -132,7 +133,7 @@ public:
 		}
 		if(temp.length() > 0) result.push_back(temp);
 		return result;
-	};
+    }
 
 	/** Creates directory.
 	  * @param path			absolute or relative
@@ -149,6 +150,6 @@ public:
 		#else
 		throw std::runtime_error("not implemented for this platform");
 		#endif
-	};
+    }
 };
 #endif //UTILS_H

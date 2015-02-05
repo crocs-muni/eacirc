@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <exception>
+#include <stdexcept>
 #include <regex>
 #include <iostream>
 #include <iomanip>

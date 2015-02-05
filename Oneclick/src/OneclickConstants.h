@@ -112,8 +112,6 @@
 //****************Global methods*******************//
 /////////////////////////////////////////////////////
 
-extern FileLogger oneclickLogger;
-
 class OneclickConstants {
 public:
 
@@ -134,5 +132,7 @@ public:
 	  */
 	static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , int rounds , std::string * projectName , std::string * algorithmName);
 };
+
+extern FileLogger oneclickLogger;
 
 #endif //ONECLICKCONSTANTS_H

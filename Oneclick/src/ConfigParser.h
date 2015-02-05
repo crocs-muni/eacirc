@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <exception>
+#include <stdexcept>
 
 #include "OneclickConstants.h"
 

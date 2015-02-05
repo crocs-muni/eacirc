@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <exception>
+#include <stdexcept>
 #include <sstream>
 #include <fstream>
 
@@ -40,7 +41,7 @@ private:
 	  * @return						prototype of the specified method
 	  * @throws runtime_error		if methodName has no occurence in source
 	  */
-	std::string FileGenerator::getMethodPrototype(std::string source , std::string methodName);
+    std::string getMethodPrototype(std::string source , std::string methodName);
 
 	/** Replaces one string with another in target string.
 	  * @param target				string in which changes will be made
@@ -48,7 +49,7 @@ private:
 	  * @param instead				with this string
 	  * @throw runtime_error		if string replace has no occurence in target string
 	  */
-	void FileGenerator::replaceInString(std::string * target , std::string replace , std::string instead);
+    void replaceInString(std::string * target , std::string replace , std::string instead);
 
 	/** Inserts method call into script string.
 	  * If target string contains method prototype,
@@ -65,7 +66,7 @@ private:
 	  * @return						new position - at the end of
 	  *								inserted string in target string
 	  */
-	int FileGenerator::insertIntoScript(std::string * target , std::string methodPrototype , std::string toInsert , int position , bool firstInsert);
+    int insertIntoScript(std::string * target , std::string methodPrototype , std::string toInsert , int position , bool firstInsert);
 };
 
 #endif //FILEGENERATOR_H

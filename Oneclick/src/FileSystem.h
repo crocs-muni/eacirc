@@ -41,7 +41,7 @@ namespace fs {
 			}
 		}
 
-		void operator++() {
+        void operator++(int) {
 			if(dir != NULL) {
 				if(item == NULL) {
 					rewinddir(dir);
