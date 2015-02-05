@@ -15,12 +15,11 @@
 std::string writeUsage();
 
 int main(int args , char * argv[]) {
-
 	bool executed = false;
 	if(args < 3 || args > 4) {
 		executed = true;
 		oneclickLogger.setLogToConsole(true);
-		oneclickLogger << FileLogger::LOG_ERROR << "missing arguments\n";
+		oneclickLogger << FileLogger::LOG_ERROR << "wrong argument count\n";
 		oneclickLogger << writeUsage();
 	}
 	bool logToConsole = false;
@@ -43,7 +42,7 @@ int main(int args , char * argv[]) {
 	//	-configuration files for EACirc
 	//	-script for creating workunits on BOINC server
 	//	-script for downloading results from BOINC server
-	//Based on config file given in second argument.
+	//Based on config file given in third argument.
 	FileGenerator * fg = NULL;
 	if(!executed && strcmp(mode , "-g") == 0) {
 		executed = true;

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <exception>
 #include <ctime>
+#include <vector>
 
 
 #if defined WIN32 || defined _WIN32
@@ -112,6 +113,25 @@ public:
 		timeinfo = localtime(&rawtime);
 		strftime(buffer , 80 , "%Y-%m-%d" , timeinfo);
 		return std::string(buffer);
+	};
+
+	/** Splits string into shorter strings, separated by separator
+	  * @param				toSplit string to be splitted
+	  * @return				vector of strings
+	  */
+	static std::vector<std::string> split(std::string toSplit , char separator) {
+		std::vector<std::string> result;
+		std::string temp;
+		for(int i = 0 ; i < toSplit.length() ; i++) {
+			if(toSplit[i] != separator) {
+				temp.push_back(toSplit[i]);
+			} else {
+				if(temp.length() > 0) result.push_back(temp);
+				temp.clear();
+			}
+		}
+		if(temp.length() > 0) result.push_back(temp);
+		return result;
 	};
 
 	/** Creates directory.

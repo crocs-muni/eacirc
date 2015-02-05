@@ -63,16 +63,17 @@ public:
 	  * @throw runtime_error	if invalid directory was given
 	  */
 	ResultProcessor(std::string path);
-
+private:
 	/** Checks configs in given directories. If some configs differ, directory
 	  * is ignored in result processing.
 	  * @param directory		directory to be checked
+	  * @param algName			empty string, algorithm name will be set into it
 	  * @param dirLogger		directory specific logger, logs
 	  *							different configs
 	  * @return					true if all configs are same, false otherwise
 	  * @throw runtime_error	if invalid directory is given
 	  */
-	bool checkConfigs(std::string directory , FileLogger * dirLogger);
+	bool checkConfigs(std::string directory , std::string * algName , FileLogger * dirLogger);
 
 	/** Check all logs in given directory for errors and warnings,
 	  *	if log has no errors, result from log is processed.
@@ -84,12 +85,16 @@ public:
 	  *							returns error constant (ERROR_NO_VALID_FILES)
 	  * @throw runtime_error    invalid directory was given
 	  */
-	double checkErrorsGetScore(std::string directory , FileLogger * dirLogger);
+	float checkErrorsGetScore(std::string directory , FileLogger * dirLogger);
 
 	/** Writes scores for all batches into .txt file FILE_PROCESSED_RESULTS
 	  * @throws runtime_error	when output file can't be opened
 	  */
 	void writeScores();
+
+	int getFileIndex(std::string fileName);
+
+	std::string getNotes(std::string config);
 };
 
 #endif //RESULTPROCESSOR_H

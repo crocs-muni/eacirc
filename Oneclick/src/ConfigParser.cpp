@@ -20,14 +20,18 @@ ConfigParser::~ConfigParser() {
 
 int ConfigParser::getXMLValue(std::string path) {
 	std::string temp = getXMLElementValue(root , path);
+	int result = 0;
+
 	if(temp.length() == 0) throw std::runtime_error("empty or nonexistent XML tag: " + path);
 
-	for(int i = 0; i < temp.length(); i++) {
-		if(temp[i] < 48 || temp[i] > 57) {
-			throw std::runtime_error("invalid characters in xml element: " + path);
-		}
+	try {
+		result = std::stoi(temp , nullptr);
+		return result;
+	} catch(std::invalid_argument e) {
+		throw std::runtime_error("invalid value in xml element: " + path);
+	} catch(std::out_of_range e) {
+		throw std::runtime_error("value out of range in xml element: " + path);
 	}
-	return atoi(temp.c_str());
 }
 
 std::vector<int> ConfigParser::getMultipleXMLValues(std::string path) {

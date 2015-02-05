@@ -27,15 +27,17 @@
 #define FILE_LOG					"oneclick.log"
 #define FILE_PROCESSED_RESULTS		"processed_results.txt"
 
-//Identifiers of downloaded files from boinc
-#define IDENTIFIER_CONFIG			"config"
-#define IDENTIFIER_LOG				"log"
+//Indexes of result files downloaded from BOINC
+//Index is at the end of file name, separated by INDEX_SEPARATOR
+#define INDEX_CONFIG				0
+#define INDEX_LOG					1
+#define INDEX_SEPARATOR				'_'
+
 
 //Default paths to directories
 //Directory path have to end with a separator!!
 //Use "/" instead of "\" as a separator
 #define DIRECTORY_CFGS				"./configs/"
-#define DIRECTORY_RESULTS			"./results/"
 #define DIRECTORY_SCRIPT_SAMPLES	"./script_samples/"
 
 /////////////////////////////////////////////////////
@@ -79,24 +81,26 @@
 //*****Keywords and methods in script samples******//
 /////////////////////////////////////////////////////
 
-#define KEYWORD_WU_NAME					"WU_NAME"
-#define KEYWORD_CONFIG_PATH				"CONFIG_PATH"
-#define KEYWORD_CLONES					"CLONE_COUNT"
-#define KEYWORD_DIRECTORY_PATH			"DIRECTORY_PATH"
-#define KEYWORD_WU_NAME					"WU_NAME"
-#define KEYWORD_WU_DIRECTORY			"WU_DIRECTORY"
-#define KEYWORD_METHOD_CREATE_DIRECTORY	"CREATE_DIRECTORY"
-#define KEYWORD_METHOD_DOWNLOAD_CLONES	"DOWNLOAD_CLONES"
-#define KEYWORD_METHOD_CREATE_WU		"CREATE_WU"
+#define KEYWORD_WU_NAME							"WU_NAME"
+#define KEYWORD_CONFIG_PATH						"CONFIG_PATH"
+#define KEYWORD_CLONES							"CLONE_COUNT"
+#define KEYWORD_DIRECTORY_PATH					"DIRECTORY_PATH"
+#define KEYWORD_WU_NAME							"WU_NAME"
+#define KEYWORD_WU_DIRECTORY					"WU_DIRECTORY"
+#define KEYWORD_REM_DIR_NAME					"REM_DIR_NAME"
+#define KEYWORD_ARCHIVE_NAME					"ARCHIVE_NAME"
+#define KEYWORD_METHOD_DOWNLOAD_REM_DIR			"DOWNLOAD_REM_DIR"
+#define KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE	"EXTRACT_DELETE_ARCHIVE"
+#define KEYWORD_METHOD_CREATE_WU				"CREATE_WU"
 
 /////////////////////////////////////////////////////
 //*****Default values used in script samples*******//
 /////////////////////////////////////////////////////
 
-#define DEFAULT_METHOD_CREATE_WU_NAME			"create_wu"			//name of method for creation of single worunit in script
-#define DEFAULT_METHOD_CREATE_DIRECTORY_NAME	"create_directory"	//method for creation of specified folder
-#define DEFAULT_METHOD_DOWNLOAD_CLONES_NAME		"download_clones"	//method for downloading all clones of single alg from BOINC server
-#define DEFAULT_SCRIPT_LINE_SEPARATOR			";"					//separator of line in scripts (should be changed only for good reason)
+#define DEFAULT_METHOD_CREATE_WU_NAME				"create_wu"					//name of method for creation of single worunit in script
+#define DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME		"download_rem_dir"			//name of method for downloading remote directory from BOINC server
+#define DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME	"extract_delete_archive"	//name of method for extracting and deleting given archive
+#define DEFAULT_SCRIPT_LINE_SEPARATOR				";"							//separator of line in scripts (should be changed only for good reason)
 
 /////////////////////////////////////////////////////
 //****************Error return values**************//

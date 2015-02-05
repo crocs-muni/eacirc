@@ -27,8 +27,8 @@ void FileGenerator::generateFiles() {
 
 	//Replacing keywords in scripts
 	bool createWuFirstInsert = true;
-	bool createDirectoryFirstInsert = true;
-	bool downloadClonesFirstInsert = true;
+	bool downloadRemDirFirstInsert = true;
+	bool extractDeleteArchiveFirstInsert = true;
 
 	std::string uploadScriptSample =
 		Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_UPLOAD_SAMPLE);
@@ -40,17 +40,16 @@ void FileGenerator::generateFiles() {
 	std::string downloadScriptSample = 
 		Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_DOWNLOAD_SAMPLE);
 	oneclickLogger << FileLogger::LOG_INFO << "file " << FILE_SCRIPT_DOWNLOAD_SAMPLE << " was loaded into memory\n";
-	std::string createDirectoryMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_CREATE_DIRECTORY);
-	std::string downloadClonesMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_DOWNLOAD_CLONES);
-	int downloadScriptPosition = min(downloadScriptSample.find(createDirectoryMethodPrototype) ,
-		downloadScriptSample.find(downloadClonesMethodPrototype));
-	replaceInString(&downloadScriptSample , KEYWORD_CLONES , Utils::itostr(clones));
+	std::string downloadRemDirMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_DOWNLOAD_REM_DIR);
+	std::string extractDeleteArchiveMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE);
+	int downloadScriptPosition = min(downloadScriptSample.find(downloadRemDirMethodPrototype) ,
+		downloadScriptSample.find(extractDeleteArchiveMethodPrototype));
 
 	//Variables declaration
 	TiXmlNode * n = NULL;
 	std::string configName , wuName , notes , projectName;
-	std::string algorithmName , wuDirectory , createWuMethod;
-	std::string createDirectoryMethod , downloadClonesMethod;
+	std::string algorithmName , archiveName , createWuMethod;
+	std::string downloadRemDirMethod , extractDeleteArchiveMethod;
 	
 
 	oneclickLogger << FileLogger::LOG_INFO << "started generating config files\n";
@@ -61,7 +60,8 @@ void FileGenerator::generateFiles() {
 				//Tags in config file are set and human readable description of alg and project are given.
 				OneclickConstants::setAlgorithmSpecifics(root , project , algorithmsRounds[k][0] , 
 					algorithmsRounds[k][l] , &projectName , &algorithmName);
-				notes = algorithmName;
+				notes = projectName;
+				notes.append(": " + algorithmName);
 
 				//Created names for workunit and config file
 				if(wuIdentifier.length() > 0) wuName = wuIdentifier + "_";
@@ -79,31 +79,27 @@ void FileGenerator::generateFiles() {
 				uploadScriptPosition = insertIntoScript(&uploadScriptSample , createWuMethodPrototype , 
 					createWuMethod , uploadScriptPosition , createWuFirstInsert);
 				createWuFirstInsert = false;
-				
-				//Adding line into download script
 
-				//Creation of directory for workunit results
-				//Default directory name format is PROJECT_ALGORITHM_rRounds/
-				//Have to end with separator
-				wuDirectory = DIRECTORY_RESULTS + projectName + "_" + algorithmName + "_r" + Utils::itostr(algorithmsRounds[k][l]) + "/";
-				createDirectoryMethod = createDirectoryMethodPrototype;
-				replaceInString(&createDirectoryMethod , KEYWORD_METHOD_CREATE_DIRECTORY , DEFAULT_METHOD_CREATE_DIRECTORY_NAME);
-				replaceInString(&createDirectoryMethod , KEYWORD_DIRECTORY_PATH , wuDirectory);
-				downloadScriptPosition = insertIntoScript(&downloadScriptSample , createDirectoryMethodPrototype , 
-					createDirectoryMethod , downloadScriptPosition , createDirectoryFirstInsert);
-				createDirectoryFirstInsert = false;
+				//Adding lines into download script
+				//Downloading remote directory from server
+				downloadRemDirMethod = downloadRemDirMethodPrototype;
+				replaceInString(&downloadRemDirMethod , KEYWORD_METHOD_DOWNLOAD_REM_DIR , DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME);
+				replaceInString(&downloadRemDirMethod , KEYWORD_REM_DIR_NAME , wuName);
+				downloadScriptPosition = insertIntoScript(&downloadScriptSample , downloadRemDirMethodPrototype ,
+					downloadRemDirMethod , downloadScriptPosition , downloadRemDirFirstInsert);
+				downloadRemDirFirstInsert = false;
 
-				//Script for downloading workunit results
-				downloadClonesMethod = downloadClonesMethodPrototype;
-				replaceInString(&downloadClonesMethod , KEYWORD_METHOD_DOWNLOAD_CLONES , DEFAULT_METHOD_DOWNLOAD_CLONES_NAME);
-				replaceInString(&downloadClonesMethod , KEYWORD_WU_NAME , wuName);
-				replaceInString(&downloadClonesMethod , KEYWORD_WU_DIRECTORY , wuDirectory);
-				downloadScriptPosition = insertIntoScript(&downloadScriptSample , downloadClonesMethodPrototype , 
-					downloadClonesMethod , downloadScriptPosition , downloadClonesFirstInsert);
-				downloadClonesFirstInsert = false;
+				//Extracting and deleting archive
+				archiveName = wuName + ".zip";
+				extractDeleteArchiveMethod = extractDeleteArchiveMethodPrototype;
+				replaceInString(&extractDeleteArchiveMethod , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE , DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME);
+				replaceInString(&extractDeleteArchiveMethod , KEYWORD_ARCHIVE_NAME , archiveName);
+				downloadScriptPosition = insertIntoScript(&downloadScriptSample , extractDeleteArchiveMethodPrototype ,
+					extractDeleteArchiveMethod , downloadScriptPosition , extractDeleteArchiveFirstInsert);
+				extractDeleteArchiveFirstInsert = false;
 
 				//Set tags in config file - human readable description and number of generations
-				notes.append(" function with " + Utils::itostr(algorithmsRounds[k][l]) + " rounds.");
+				notes.append(" - " + Utils::itostr(algorithmsRounds[k][l]) + " rounds");
 				if(setXMLElementValue(root , PATH_EAC_NOTES , notes) == STAT_INVALID_ARGUMETS) 
 					throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_EAC_NOTES);
 				if(setXMLElementValue(root , PATH_EAC_GENS , Utils::itostr(numGenerations[i])) == STAT_INVALID_ARGUMETS)
@@ -116,7 +112,7 @@ void FileGenerator::generateFiles() {
 
 				//Cleaning up
 				n = NULL;
-				downloadClonesMethod.clear() ; wuDirectory.clear() ; createWuMethod.clear() ; createDirectoryMethod.clear();
+				downloadRemDirMethod.clear() ; archiveName.clear() ; createWuMethod.clear() ; extractDeleteArchiveMethod.clear();
 				wuName.clear() ; notes.clear() ; configName.clear() ; algorithmName.clear() ; projectName.clear();
 			}
 		}
@@ -143,7 +139,7 @@ void FileGenerator::replaceInString(std::string * target , std::string replace ,
 }
 
 int FileGenerator::insertIntoScript(std::string * target , std::string methodPrototype , std::string toInsert , int position , bool firstInsert) {
-	if(/*position == target->find(methodPrototype)*/ firstInsert) {
+	if(firstInsert) {
 		target->replace(position , methodPrototype.length() , toInsert);
 		return (position + toInsert.length() + 2);
 	} else {

@@ -12,12 +12,18 @@
 use strict;
 use warnings;
 use WWW::Mechanize;
-sub login($$$);
-sub download_clones($$$);
-sub download_file($$$);
-sub create_directory($);
+use Archive::Extract;
 
-{
+#Default directory for results, you can change it here
+#Dont have to be changed in main application
+use constant RESULT_DIR => 'results';
+
+sub login($$$);
+sub download_rem_dir($$);
+sub create_directory($);
+sub extract_delete_archive($);
+
+{	
 	my $mech = WWW::Mechanize->new(autocheck => 1);
 	#Enter login data here
 	print 'Name: ';
@@ -26,17 +32,78 @@ sub create_directory($);
 	print 'Pwd : ';
 	my $pwd = <STDIN>;
 	chomp($pwd);
-	
 	login($usr , $pwd , $mech);
-	create_directory('results');
+
+	create_directory(RESULT_DIR);
 	
-	CREATE_DIRECTORY('DIRECTORY_PATH');
-	DOWNLOAD_CLONES('WU_NAME' , 'WU_DIRECTORY' , $mech);
+	DOWNLOAD_REM_DIR      ('REM_DIR_NAME' , $mech);
+	EXTRACT_DELETE_ARCHIVE('ARCHIVE_NAME');
 	#There has to be at least one line beginning with \t after method prototype. Leave this comment here.
 	
-	print "If all workunit results were not downloaded, wait for their completion and run this script again.\n";
 	print "Press ENTER to exit.\n";
 	<STDIN>;
+}
+
+#Performs check for local and remote files existence.
+#If files exists locally or dont exist remotely, writes error, doesnt download.
+#Otherwise downloads and stores archive with remote directory.
+#Remote directory have to be in results directory of EACirc project on BOINC server.
+sub download_rem_dir($$) {
+	my ($dir , $mech) = (shift , shift , shift);
+	my $file = $dir . ".zip";
+	
+	#Download script adress URL + prefix
+	my $prefix = 'http://centaur.fi.muni.cz:8000/boinc/labak/dirZip?dir=';
+	#Download script suffix, change count argument
+	#in order to download more files. 2 is default.
+	my $suffix = '&count=2';
+	
+	#Check for local file existence
+	if(-e $file) {
+		print "$file already exists, didn't download.\n";
+		return;
+	}
+	my $url = $prefix . $dir . $suffix;
+	$mech->get("$url");
+	
+	#Check for existence of file on BOINC server.
+	#If nonexistent does nothing.
+	if($mech->content() =~ /An error occurred/) {
+		print "Directory $dir is not on BOINC server. Try again later or check directory name.\n";
+		return;
+	}
+	
+	#Downloading the file
+	$mech->save_content($file);
+	print "$file downloaded.\n";
+}
+
+#Extracts given archive into ./results/ directory
+#If given string is not filename does nothing.
+#After succesfull extraction deletes archive.
+#In case error occurs, writes error, file is not deleted.
+sub extract_delete_archive ($) {
+	my ($name) = (shift);
+	
+	if (-e $name) {
+		my $archive = Archive::Extract->new ( archive => $name);
+		my $ok = $archive->extract ( to =>  RESULT_DIR);
+		if ($ok) {
+			unlink $name;
+			return;
+		}
+		print "Error when extracting $name:" . $archive->error . "\n";
+		return;
+	}
+}
+
+#Creates folder if nonexistent, otherwise does nothing
+sub create_directory ($) {
+	my ($directory) = (shift);
+	if(-e $directory) {
+		return;
+	}
+	mkdir $directory;
 }
 
 #Logs into BOINC.
@@ -59,54 +126,3 @@ sub login ($$$) {
 		exit;
 	}
 }
-
-#Downloads results of all clones of one workunit.
-#If you wish to download additional files from BOINC specify it here.
-sub download_clones ($$$) {
-	my ($wu , $directory , $mech) = (shift , shift , shift);
-	#URL WITH FILE FETCHER ON BOINC
-	my $fetcher_url = 'http://centaur.fi.muni.cz:8000/boinc/labak/fetcher.php?filename=';
-	
-	#This loop will download all clones of one workunit.
-	#Originally, config and log file is downloaded for each workunit.
-	#If you wish to change that, add corresponding line into the loop.
-	for (my $i = 1 ; $i <= CLONE_COUNT ; $i++) {
-		download_file("$fetcher_url$wu"."[$i]_0_0" , "$directory"."config_$i.xml" , $mech);
-		download_file("$fetcher_url$wu"."[$i]_0_1" , "$directory"."log_$i.log" , $mech);
-	}
-}
-
-#Performs check for local and remote files existence.
-#If files exists locally or dont exist remotely, writes error, doesnt download.
-#Otherwise downloads and stores files.
-sub download_file ($$$) {
-	my ($url , $file , $mech) = (shift , shift , shift);
-	
-	#Check for local file existence
-	if(-e $file) {
-		print "$file already exists, didn't download.\n";
-		return;
-	}
-	
-	$mech->get("$url");
-	
-	#Check for existence of file on BOINC server.
-	#If nonexistent does nothing.
-	if($mech->content() =~ /An error occurred/) {
-		print "File $url is not on BOINC server. Try again later or check filename.\n";
-		return;
-	}
-	
-	#Downloading the file
-	$mech->save_content($file);
-}
-
-#Creates folder if nonexistent, otherwise does nothing
-sub create_directory ($) {
-	my ($directory) = (shift);
-	if(-e $directory) {
-		return;
-	}
-	mkdir $directory;
-}
-

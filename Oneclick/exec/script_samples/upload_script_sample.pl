@@ -92,6 +92,7 @@ sub create_wu ($$$) {
 	#$mech->field('outfiles' , 'config.xml, eacirc.log, scores.log, fitness_progress.txt, [histograms.txt], population_initial.xml, population.xml, state_initial.xml, state.xml, [avgfit_graph.txt], [bestfit_graph.txt], [EAC_circuit.xml], [EAC_circuit.dot], [EAC_circuit.c], [EAC_circuit.txt]');
 	$mech->click('next-step');
 	#Creation done.
+	print "$wu_name created.\n";
 }
 
 
