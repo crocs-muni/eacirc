@@ -13,9 +13,10 @@ use strict;
 use warnings;
 use WWW::Mechanize;
 use Archive::Extract;
+use Term::ReadKey;
 
 #Script constants
-use constant RESULT_DIR => 'results';
+use constant RESULT_DIR => './results/';
 use constant FILES_COUNT => '2';
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
 use constant DIRZIP_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak/dirZip?dir=';
@@ -29,11 +30,12 @@ sub extract_delete_archive($);
 	my $mech = WWW::Mechanize->new(autocheck => 1);
 	#Enter login data here
 	print 'Name: ';
-	my $usr = <STDIN>;
-	chomp($usr);
+	chomp(my $usr = <STDIN>);
 	print 'Pwd : ';
-	my $pwd = <STDIN>;
-	chomp($pwd);
+	ReadMode('noecho');
+	chomp(my $pwd = <STDIN>);
+	ReadMode(0);
+	print "\n";
 	login($usr , $pwd , $mech);
 
 	create_directory(RESULT_DIR);
@@ -52,7 +54,7 @@ sub extract_delete_archive($);
 #Remote directory have to be in results directory of EACirc project on BOINC server.
 sub download_rem_dir($$) {
 	my ($dir , $mech) = (shift , shift , shift);
-	my $file = $dir . ".zip";
+	my $file = RESULT_DIR . $dir . ".zip";
 	
 	#Download script adress URL + prefix
 	my $prefix = DIRZIP_URL;
@@ -86,6 +88,7 @@ sub download_rem_dir($$) {
 #In case error occurs, writes error, file is not deleted.
 sub extract_delete_archive ($) {
 	my ($name) = (shift);
+	$name = RESULT_DIR . $name;
 	
 	if (-e $name) {
 		my $archive = Archive::Extract->new ( archive => $name);

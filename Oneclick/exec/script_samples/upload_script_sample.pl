@@ -11,6 +11,7 @@
 use warnings;
 use strict;
 use WWW::Mechanize;
+use Term::ReadKey;
 
 #Script constants
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
@@ -25,12 +26,12 @@ sub login ($$$);
 	my $mech = WWW::Mechanize->new(autocheck => 1);
 	#Enter login data here
 	print 'Name: ';
-	my $usr = <STDIN>;
-	chomp($usr);
+	chomp(my $usr = <STDIN>);
 	print 'Pwd : ';
-	my $pwd = <STDIN>;
-	chomp($pwd);
-	
+	ReadMode('noecho');
+	chomp(my $pwd = <STDIN>);
+	ReadMode(0);
+	print "\n";
 	login($usr , $pwd , $mech);
 	
 	CREATE_WU('WU_NAME' , 'CONFIG_PATH' , $mech);
