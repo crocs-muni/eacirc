@@ -93,8 +93,18 @@ private:
 	  */
 	void writeScores();
 
+	/** Parses filename and gets index at the end.
+	  * Index is separated by "_". Returns -1 if no
+	  * index is found
+	  * @param fileName			name of the file
+	  * @return index
+	  */
 	int getFileIndex(std::string fileName);
 
+	/** Retrieve tag <NOTES> from config file.
+	  * @param config			config file loaded into string
+	  * @return					string with notes
+	  */
 	std::string getNotes(std::string config);
 };
 

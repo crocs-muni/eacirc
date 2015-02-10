@@ -18,6 +18,7 @@ ResultProcessor::ResultProcessor(std::string path) {
 				//Directory check unsuccesfull => no processing
 				Score dirScore;
 				dirScore.setVal(checkErrorsGetScore(dirIter.path() , dirLogger));
+				if(algName.length() == 0) algName = dirIter.name();
 				dirScore.setAlgName(algName);
 				scores.push_back(dirScore);
 			}
@@ -230,7 +231,7 @@ std::string ResultProcessor::getNotes(std::string config) {
 	std::regex_search(config , res , notesPatt);
 
 	if(res.size() != 2)
-		throw std::runtime_error("first config in directory is corrupted - no NOTES tag");
+		return "";
 
 	return res[1];
 }

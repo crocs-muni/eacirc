@@ -11,6 +11,12 @@
 use warnings;
 use strict;
 use WWW::Mechanize;
+
+#Script constants
+use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
+use constant CREATE_WORK_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
+use constant PROJECT_ID => '11';
+
 sub create_wu ($$$);
 sub login ($$$);
 
@@ -37,8 +43,7 @@ sub login ($$$);
 #This subroutine will log you in
 sub login ($$$) {
 	my($usr , $pwd , $agent) = (shift , shift , shift);
-	#LOGIN PAGE URL
-	my $url = 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
+	my $url = LOGIN_URL;
 	$agent->get($url);
 	#Login to boinc web interface 
 	$agent->form_number(1);
@@ -58,13 +63,12 @@ sub login ($$$) {
 sub create_wu ($$$) {
 	my($wu_name , $config_path , $mech) = (shift , shift , shift);
 	#Creating single workunit
-	#CREATE WORK URL
-	my $url = 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
+	my $url = CREATE_WORK_URL;
 	$mech->get($url);
 	#Step 1/4
 	$mech->form_number(1);
 	#SETTING PROJECT ID, 11 is default EACirc project, 3 is testing app
-	$mech->select('step0[appid]' , '3');
+	$mech->select('step0[appid]' , PROJECT_ID);
 	$mech->field('step0[name]' , $wu_name);
 	$mech->click('next-step');
 	#Unique WU name check

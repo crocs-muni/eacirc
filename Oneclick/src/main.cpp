@@ -1,7 +1,7 @@
 //almost funny header here
 
 //TODO
-//	linux port, QT project, makefile
+//	linux port, makefile
 
 #include <exception>
 #include <iostream>

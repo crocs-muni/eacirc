@@ -67,7 +67,6 @@ public:
 		file.close();
 		if(file.is_open()) throw std::runtime_error("can't close output file: " + path);
 		source->clear();
-		//oneclickLogger << FileLogger::LOG_INFO << "created file " << path;
     }
 
 	/** Returns string after last separator in path.

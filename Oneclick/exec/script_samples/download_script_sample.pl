@@ -14,9 +14,11 @@ use warnings;
 use WWW::Mechanize;
 use Archive::Extract;
 
-#Default directory for results, you can change it here
-#Dont have to be changed in main application
+#Script constants
 use constant RESULT_DIR => 'results';
+use constant FILES_COUNT => '2';
+use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
+use constant DIRZIP_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak/dirZip?dir=';
 
 sub login($$$);
 sub download_rem_dir($$);
@@ -53,10 +55,10 @@ sub download_rem_dir($$) {
 	my $file = $dir . ".zip";
 	
 	#Download script adress URL + prefix
-	my $prefix = 'http://centaur.fi.muni.cz:8000/boinc/labak/dirZip?dir=';
+	my $prefix = DIRZIP_URL;
 	#Download script suffix, change count argument
 	#in order to download more files. 2 is default.
-	my $suffix = '&count=2';
+	my $suffix = '&count=' . FILES_COUNT;
 	
 	#Check for local file existence
 	if(-e $file) {
@@ -111,7 +113,7 @@ sub create_directory ($) {
 sub login ($$$) {
 	my($usr , $pwd , $agent) = (shift , shift , shift);
 	#LOGIN PAGE URL
-	my $url = 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
+	my $url = LOGIN_URL;
 	$agent->get($url);
 	#Login to boinc web interface 
 	$agent->form_number(1);
