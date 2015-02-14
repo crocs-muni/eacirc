@@ -65,28 +65,34 @@ public:
 	  */
 	ResultProcessor(std::string path);
 private:
-	/** Checks configs in given directories. If some configs differ, directory
-	  * is ignored in result processing.
-	  * @param directory		directory to be checked
+	/** Checks config files on given paths for differences.
+	  * @param configPaths		vector of paths to be checked
 	  * @param algName			empty string, algorithm name will be set into it
-	  * @param dirLogger		directory specific logger, logs
-	  *							different configs
+	  * @param dirLogger		batch specific logger, logs different configs
 	  * @return					true if all configs are same, false otherwise
-	  * @throw runtime_error	if invalid directory is given
 	  */
-	bool checkConfigs(std::string directory , std::string * algName , FileLogger * dirLogger);
+	bool checkConfigs(std::vector<std::string> configPaths , std::string & algName , FileLogger * dirLogger);
 
-	/** Check all logs in given directory for errors and warnings,
-	  *	if log has no errors, result from log is processed.
-	  * @param directory		dir to process
-	  * @dirLogger				logs directory specifis events =
+	/** Checks logs on given paths for errors and warnings.
+	  *	If log has no errors, results from log are processed and pValue is stored.
+	  * @param logPaths			paths to logs to process
+	  * @param pValues			string to store pValues from logs with no errors
+	  * @dirLogger				logs batch specifis events =
 	  *							= errors, warnings, missing results, 
-	  *							inconsistent results
+	  *							inconsistent results, too many results
 	  * @return result			0-1 => uniformLogs/validLogs, if validLogs = 0
 	  *							returns error constant (ERROR_NO_VALID_FILES)
-	  * @throw runtime_error    invalid directory was given
 	  */
-	float checkErrorsGetScore(std::string directory , FileLogger * dirLogger);
+	float checkErrorsGetScore(std::vector<std::string> logPaths , std::string & pValues , FileLogger * dirLogger);
+
+	/** Recursively searches given directory,
+	  * stores paths to files with given index.
+	  * @param directory		directory to search in
+	  * @param paths			paths to files
+	  * @param fileIndex		file indexes to look for
+	  * @throws runtime_error	if given argument is not a directory
+	  */
+	void getFilePaths(std::string directory , std::vector<std::string> & paths , int fileIndex);
 
 	/** Writes scores for all batches into .txt file FILE_PROCESSED_RESULTS
 	  * @throws runtime_error	when output file can't be opened

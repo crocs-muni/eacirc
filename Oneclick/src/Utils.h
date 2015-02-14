@@ -60,13 +60,13 @@ public:
 	  * @param source			string to be saved
 	  * @throws runtime_error	when file can't be opened
 	  */
-	static void saveStringToFile(std::string path , std::string * source) {
+	static void saveStringToFile(std::string path , std::string & source) {
 		std::ofstream file(path , std::ios::out);
 		if(!file.is_open()) throw std::runtime_error("can't open output file: " + path);
-		file << *source;
+		file << source;
 		file.close();
 		if(file.is_open()) throw std::runtime_error("can't close output file: " + path);
-		source->clear();
+		source.clear();
     }
 
 	/** Returns string after last separator in path.

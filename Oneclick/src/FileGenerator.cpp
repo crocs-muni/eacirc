@@ -119,9 +119,9 @@ void FileGenerator::generateFiles() {
 	}
 	oneclickLogger << FileLogger::LOG_INFO << "finished generating config files\n";
 	
-	Utils::saveStringToFile(FILE_SCRIPT_UPLOAD , &uploadScriptSample);
+	Utils::saveStringToFile(FILE_SCRIPT_UPLOAD , uploadScriptSample);
 	oneclickLogger << FileLogger::LOG_INFO << "created file " << FILE_SCRIPT_UPLOAD << "\n";
-	Utils::saveStringToFile(FILE_SCRIPT_DOWNLOAD , &downloadScriptSample);
+	Utils::saveStringToFile(FILE_SCRIPT_DOWNLOAD , downloadScriptSample);
 	oneclickLogger << FileLogger::LOG_INFO << "created file " << FILE_SCRIPT_DOWNLOAD << "\n";
 }
 
