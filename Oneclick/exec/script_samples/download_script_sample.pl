@@ -73,7 +73,7 @@ sub download_rem_dir($$) {
 	#Check for existence of file on BOINC server.
 	#If nonexistent does nothing.
 	if($mech->content() =~ /An error occurred/) {
-		print "Directory $dir is not on BOINC server. Try again later or check directory name.\n";
+		print "Error on server occurred when downloading directory $dir\n";
 		return;
 	}
 	
