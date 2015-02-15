@@ -28,11 +28,24 @@
 #define FILE_PROCESSED_RESULTS		"processed_results.txt"
 
 //Indexes of result files downloaded from BOINC
-//Index is at the end of file name, separated by INDEX_SEPARATOR
-#define INDEX_CONFIG				0
-#define INDEX_LOG					1
+//At the moment only configs and logs are used, can change in time
+//Index is at the beginning of file name, separated by INDEX_SEPARATOR
 #define INDEX_SEPARATOR				'_'
-
+#define INDEX_CONFIG				0
+#define INDEX_EACIRC				1
+#define INDEX_SCORES				2
+#define INDEX_FITNESS_PROGRESS		3
+#define INDEX_HISTOGRAMS			4
+#define INDEX_POPULATION_INITIAL	5
+#define INDEX_POPULATION			6
+#define INDEX_STATE_INITIAL			7
+#define INDEX_STATE					8
+#define INDEX_AVGFIT_GRAPH			9
+#define INDEX_BESTFIT_GRAPH			10
+#define INDEX_EAC_CIRCUIT_XML		11
+#define INDEX_EAC_CIRCUIT_DOT		12
+#define INDEX_EAC_CIRCUIT_C			13
+#define INDEX_EAC_CIRCUIT_TXT		14
 
 //Default paths to directories
 //Directory path have to end with a separator!!

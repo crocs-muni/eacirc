@@ -24,12 +24,12 @@ public:
 	/** Sets attribute algName.
 	  * @param a	will be algName
 	  */
-	void setAlgName(std::string a) {algName = a;};
+	void setAlgName(std::string a) { algName = a; }
 
 	/** Sets attribute val.
 	  * @param s	will be val
 	  */
-	void setVal(float s) {val = s;};
+	void setVal(float s) { val = s; }
 
 	/** Returns formatted string, contains algname    val.
 	  * @return formatted result
@@ -49,7 +49,7 @@ public:
 			result << val;
 		}
 		return result.str();
-	};
+    }
 };
 
 class ResultProcessor {

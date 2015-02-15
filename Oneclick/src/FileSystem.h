@@ -4,7 +4,15 @@
 #include <iostream>
 #include <string>
 
+#if defined WIN32 || defined _WIN32
 #include "dirent.h"
+#elif defined __linux__
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#else
+#error "not implemeted for this platform"
+#endif
 
 // Simple wrapper for dirent.h
 
@@ -62,11 +70,11 @@ namespace fs {
 
 		bool operator!=(directory_iterator b) { return (item != b.item); }
 
-		bool is_directory() { return S_ISDIR(item->d_type); }
+		bool is_directory() { return S_ISREG(item->d_type); }
 
 		bool is_file() { return S_ISREG(item->d_type); }
 	};
-};
+}
 
 
 

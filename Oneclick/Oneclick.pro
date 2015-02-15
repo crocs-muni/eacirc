@@ -26,7 +26,6 @@ qtcAddDeployment()
 
 HEADERS += \
     src/ConfigParser.h \
-    src/dirent.h \
     src/FileGenerator.h \
     src/FileLogger.hpp \
     src/FileSystem.h \
@@ -37,7 +36,8 @@ HEADERS += \
     src/tinyXML/tinystr.h \
     src/tinyXML/tinyxml.h \
     ../EACirc/projects/estream/EstreamCiphers.h \
-    ../EACirc/projects/sha3/Sha3Functions.h
+    ../EACirc/projects/sha3/Sha3Functions.h \
+    src/dirent.h
 
 DISTFILES += \
     src/tinyXML/tinyXML_LICENCE.txt

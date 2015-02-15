@@ -19,7 +19,7 @@ ResultProcessor::ResultProcessor(std::string path) {
 
 			//Getting paths to all logs and configs in subdirectories
 			getFilePaths(dirIter.path() , configPaths , INDEX_CONFIG);
-			getFilePaths(dirIter.path() , logPaths , INDEX_LOG);
+			getFilePaths(dirIter.path() , logPaths , INDEX_EACIRC);
 			oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
 			*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
 
