@@ -53,6 +53,7 @@ avgfit_graph.txt
 config.xml
 
 # Oneclick result files and logs
+Oneclick/exec/processed_results.txt
 Oneclick/exec/*.bat
 Oneclick/exec/configs
 Oneclick/exec/results

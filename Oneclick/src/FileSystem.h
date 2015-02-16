@@ -70,7 +70,7 @@ namespace fs {
 
 		bool operator!=(directory_iterator b) { return (item != b.item); }
 
-		bool is_directory() { return S_ISREG(item->d_type); }
+		bool is_directory() { return S_ISDIR(item->d_type); }
 
 		bool is_file() { return S_ISREG(item->d_type); }
 	};

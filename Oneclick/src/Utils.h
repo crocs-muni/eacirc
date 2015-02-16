@@ -28,13 +28,18 @@
 
 class Utils {
 public:
-	/** Converts integral value to string
+	/** Converts integral value to string. 
+	  * Number is prefixed with 0 if digit count is
+	  * less than width argument.
 	  * @param x		integer to be converted
+	  * @param width	length of resulting string
 	  * @return	string	converted integer
 	  */
-	static std::string itostr(int x) {
+	static std::string itostr(int i , int width = 0) {
 		std::stringstream ss;
-		ss << x;
+		ss.width(width);
+		ss.fill('0');
+		ss << i;
 		return ss.str();
 	};
 
@@ -135,6 +140,7 @@ public:
     }
 
 	/** Creates directory.
+	  * Permissions 0777 under Linux.
 	  * @param path			absolute or relative
 	  */
 	static void createDirectory(std::string path) {
