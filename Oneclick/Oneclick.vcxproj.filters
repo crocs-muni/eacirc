@@ -13,46 +13,40 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\tinyXML">
-      <UniqueIdentifier>{6fb65b36-7d6f-4e31-bdf2-3408ef463bd6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\EACirc dependencies">
       <UniqueIdentifier>{520b3435-e7dd-4f45-9926-4d27e65edb38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PostProcessors">
+      <UniqueIdentifier>{aa526278-5d33-425d-a0c2-0a80bccd3ae3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{24139ecd-8e58-407c-a022-064a1680115a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities\tinyXML">
+      <UniqueIdentifier>{6fb65b36-7d6f-4e31-bdf2-3408ef463bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{33726eb3-1b3d-487f-b76d-7a66bdc22800}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\OneclickConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResultProcessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\XMLproc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ConfigParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\dirent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\FileGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FileLogger.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tinyXML\tinystr.h">
-      <Filter>Header Files\tinyXML</Filter>
+      <Filter>Header Files\Utilities\tinyXML</Filter>
     </ClInclude>
     <ClInclude Include="src\tinyXML\tinyxml.h">
-      <Filter>Header Files\tinyXML</Filter>
+      <Filter>Header Files\Utilities\tinyXML</Filter>
     </ClInclude>
     <ClInclude Include="..\EACirc\EACconstants.h">
       <Filter>Header Files\EACirc dependencies</Filter>
@@ -63,15 +57,36 @@
     <ClInclude Include="..\EACirc\projects\sha3\Sha3Functions.h">
       <Filter>Header Files\EACirc dependencies</Filter>
     </ClInclude>
+    <ClInclude Include="src\PostProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ResultProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dirent.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FileSystem.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PValuePostPr.h">
+      <Filter>Header Files\PostProcessors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XMLproc.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AvgValPostPr.h">
+      <Filter>Header Files\PostProcessors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OneclickConstants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ResultProcessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\XMLproc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ConfigParser.cpp">
@@ -84,22 +99,25 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tinyXML\tinystr.cpp">
-      <Filter>Header Files\tinyXML</Filter>
+      <Filter>Header Files\Utilities\tinyXML</Filter>
     </ClCompile>
     <ClCompile Include="src\tinyXML\tinyxml.cpp">
-      <Filter>Header Files\tinyXML</Filter>
+      <Filter>Header Files\Utilities\tinyXML</Filter>
     </ClCompile>
     <ClCompile Include="src\tinyXML\tinyxmlerror.cpp">
-      <Filter>Header Files\tinyXML</Filter>
+      <Filter>Header Files\Utilities\tinyXML</Filter>
     </ClCompile>
     <ClCompile Include="src\tinyXML\tinyxmlparser.cpp">
-      <Filter>Header Files\tinyXML</Filter>
+      <Filter>Header Files\Utilities\tinyXML</Filter>
     </ClCompile>
     <ClCompile Include="..\EACirc\projects\estream\EstreamCiphers.cpp">
       <Filter>Header Files\EACirc dependencies</Filter>
     </ClCompile>
     <ClCompile Include="..\EACirc\projects\sha3\Sha3Functions.cpp">
       <Filter>Header Files\EACirc dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XMLproc.cpp">
+      <Filter>Source Files\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

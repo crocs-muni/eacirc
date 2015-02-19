@@ -14,12 +14,15 @@
     <ClInclude Include="..\EACirc\EACconstants.h" />
     <ClInclude Include="..\EACirc\projects\estream\EstreamCiphers.h" />
     <ClInclude Include="..\EACirc\projects\sha3\Sha3Functions.h" />
+    <ClInclude Include="src\AvgValPostPr.h" />
     <ClInclude Include="src\ConfigParser.h" />
     <ClInclude Include="src\dirent.h" />
     <ClInclude Include="src\FileGenerator.h" />
     <ClInclude Include="src\FileLogger.hpp" />
     <ClInclude Include="src\FileSystem.h" />
     <ClInclude Include="src\OneclickConstants.h" />
+    <ClInclude Include="src\PostProcessor.h" />
+    <ClInclude Include="src\PValuePostPr.h" />
     <ClInclude Include="src\ResultProcessor.h" />
     <ClInclude Include="src\tinyXML\tinystr.h" />
     <ClInclude Include="src\tinyXML\tinyxml.h" />

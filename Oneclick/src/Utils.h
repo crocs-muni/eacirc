@@ -26,6 +26,8 @@
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
 
+#define INDEX_SEPARATOR				'_'
+
 class Utils {
 public:
 	/** Converts integral value to string. 
@@ -49,7 +51,6 @@ public:
 	  * @throws runtime_error	when file can't be opened
 	  */
 	static std::string readFileToString(std::string path) {
-		//oneclickLogger << FileLogger::LOG_INFO << "reading file " << path << " to string";
 		std::ifstream file(path , std::ios::in);
 		if(!file.is_open()) throw std::runtime_error("can't open input file: " + path);
 		std::stringstream buffer;
@@ -89,6 +90,19 @@ public:
 				result.insert(result.begin() , path[i]);
 			}
 		}
+		return result;
+	}
+
+	/** Returns string before last separator in path (including separator).
+	  * If no separator is found nothing is returned. If path ends with separator
+	  * path is returned. ./exampleDir/exampleFile.txt returns ./exampleDir/
+	  * @param path				path to be parsed
+	  * @return					extracted path without last item
+	  */
+	static std::string getPathWithoutLastItem(std::string path) {
+		std::string result;
+		int index = path.find_last_of('/');
+		result = path.substr(0 , index + 1);
 		return result;
 	}
 
@@ -138,6 +152,26 @@ public:
 		if(temp.length() > 0) result.push_back(temp);
 		return result;
     }
+
+	/** Parses filename and gets index at the beginning.
+	* Index is separated by "_". Returns -1 if no
+	* index is found
+	* @param fileName			name of the file
+	* @return index
+	*/
+	static int getFileIndex(std::string fileName) {
+		int result = 0;
+		std::vector<std::string> splitted = Utils::split(fileName , INDEX_SEPARATOR);
+
+		try {
+			result = stoi(splitted[0] , nullptr);
+			return result;
+		} catch(std::invalid_argument e) {
+			return -1;
+		} catch(std::out_of_range e) {
+			return -1;
+		}
+	}
 
 	/** Creates directory.
 	  * Permissions 0777 under Linux.

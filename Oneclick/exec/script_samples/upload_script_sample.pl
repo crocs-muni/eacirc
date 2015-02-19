@@ -16,6 +16,7 @@ use Term::ReadKey;
 #Script constants
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
 use constant CREATE_WORK_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
+#SETTING PROJECT ID, 11 is default EACirc project, 3 is testing app
 use constant PROJECT_ID => '11';
 
 sub create_wu ($$$);
@@ -68,7 +69,6 @@ sub create_wu ($$$) {
 	$mech->get($url);
 	#Step 1/4
 	$mech->form_number(1);
-	#SETTING PROJECT ID, 11 is default EACirc project, 3 is testing app
 	$mech->select('step0[appid]' , PROJECT_ID);
 	$mech->field('step0[name]' , $wu_name);
 	$mech->click('next-step');

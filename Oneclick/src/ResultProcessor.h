@@ -13,48 +13,13 @@
 
 #include "FileSystem.h"
 #include "OneclickConstants.h"
-
-/** Class for storing result of single batch.
-  */
-class Score {
-private:
-	std::string algName;
-	float val;
-public:
-	/** Sets attribute algName.
-	  * @param a	will be algName
-	  */
-	void setAlgName(std::string a) { algName = a; }
-
-	/** Sets attribute val.
-	  * @param s	will be val
-	  */
-	void setVal(float s) { val = s; }
-
-	/** Returns formatted string, contains algname    val.
-	  * @return formatted result
-	  */
-	std::string toString() {
-		std::stringstream result;
-		result << std::setw(30);
-		result << std::left;
-		result << algName;
-
-		result << std::setprecision(6);
-		result << std::setw(15);
-		result << std::right;
-		if(val == ERROR_NO_VALID_FILES) {
-			result << "no valid logs";
-		} else {
-			result << val;
-		}
-		return result.str();
-    }
-};
+#include "PostProcessor.h"
+#include "PValuePostPr.h"
+#include "AvgValPostPr.h"
 
 class ResultProcessor {
 private:
-	std::vector<Score> scores;
+	PostProcessor * pprocessor;
 public:
 	/** Constructor for ResultProcessor class.
 	  * Checks given directory for config and log errors.
@@ -63,7 +28,7 @@ public:
 	  *							(one directory per batch)
 	  * @throw runtime_error	if invalid directory was given
 	  */
-	ResultProcessor(std::string path);
+	ResultProcessor(std::string path , int pprocNum);
 private:
 	/** Checks config files on given paths for differences.
 	  * @param configPaths		vector of paths to be checked
@@ -83,7 +48,7 @@ private:
 	  * @return result			0-1 => uniformLogs/validLogs, if validLogs = 0
 	  *							returns error constant (ERROR_NO_VALID_FILES)
 	  */
-	float checkErrorsGetScore(std::vector<std::string> logPaths , std::string & pValues , FileLogger * dirLogger);
+	void checkErrorsProcess(std::vector<std::string> logPaths , FileLogger * dirLogger);
 
 	/** Recursively searches given directory,
 	  * stores paths to files with given index.
@@ -94,24 +59,13 @@ private:
 	  */
 	void getFilePaths(std::string directory , std::vector<std::string> & paths , int fileIndex);
 
-	/** Writes scores for all batches into .txt file FILE_PROCESSED_RESULTS
-	  * @throws runtime_error	when output file can't be opened
-	  */
-	void writeScores();
-
-	/** Parses filename and gets index at the end.
-	  * Index is separated by "_". Returns -1 if no
-	  * index is found
-	  * @param fileName			name of the file
-	  * @return index
-	  */
-	int getFileIndex(std::string fileName);
-
 	/** Retrieve tag <NOTES> from config file.
 	  * @param config			config file loaded into string
 	  * @return					string with notes
 	  */
 	std::string getNotes(std::string config);
+
+	void initPProcessor(int pprocNum);
 };
 
 #endif //RESULTPROCESSOR_H

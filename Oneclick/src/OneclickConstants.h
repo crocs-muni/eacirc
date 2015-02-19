@@ -27,10 +27,14 @@
 #define FILE_LOG					"oneclick.log"
 #define FILE_PROCESSED_RESULTS		"processed_results.txt"
 
-//Indexes of result files downloaded from BOINC
-//At the moment only configs and logs are used, can change in time
-//Index is at the beginning of file name, separated by INDEX_SEPARATOR
-#define INDEX_SEPARATOR				'_'
+/////////////////////////////////////////////////////
+//**************Default file indexes***************//
+/////////////////////////////////////////////////////
+
+/** At the moment only configs and logs are used, can change in time
+  * Index is at the beginning of file name, separated by INDEX_SEPARATOR
+  * INDEX_SEPARATOR constant is defined in Utils.h file
+  */
 #define INDEX_CONFIG				0
 #define INDEX_EACIRC				1
 #define INDEX_SCORES				2
@@ -47,9 +51,29 @@
 #define INDEX_EAC_CIRCUIT_C			13
 #define INDEX_EAC_CIRCUIT_TXT		14
 
-//Default paths to directories
-//Directory path have to end with a separator!!
-//Use "/" instead of "\" as a separator
+/////////////////////////////////////////////////////
+//*********Constants of program modes**************//
+/////////////////////////////////////////////////////
+//Add new modes at the end, not beginning (next should be 3)
+
+#define MODE_FILE_GENERATION		1
+#define MODE_RESULT_PROCESSING		2
+
+/////////////////////////////////////////////////////
+//********Constants of post processors*************//
+/////////////////////////////////////////////////////
+//Add new postprocessors at the end, not beginning (next should be 3)
+
+#define PPROCESSOR_PVAL				1
+#define PPROCESSOR_AVG				2
+
+/////////////////////////////////////////////////////
+//********Default paths to directories.************//
+/////////////////////////////////////////////////////
+
+/** Directory path have to end with a separator!!
+  * Use "/" instead of "\" as a separator
+  */
 #define DIRECTORY_CFGS				"./configs/"
 #define DIRECTORY_SCRIPT_SAMPLES	"./script_samples/"
 
@@ -91,7 +115,7 @@
   */
 
 /////////////////////////////////////////////////////
-//*****Keywords and methods in script samples******//
+//*****Keywords and methods in script samples.*****//
 /////////////////////////////////////////////////////
 
 #define KEYWORD_WU_NAME							"WU_NAME"
@@ -107,7 +131,7 @@
 #define KEYWORD_METHOD_CREATE_WU				"CREATE_WU"
 
 /////////////////////////////////////////////////////
-//*****Default values used in script samples*******//
+//*****Default values used in script samples.******//
 /////////////////////////////////////////////////////
 
 #define DEFAULT_METHOD_CREATE_WU_NAME				"create_wu"					//name of method for creation of single worunit in script
@@ -143,7 +167,8 @@ public:
 	  * @throws						throws runtime_error in case that project or algorithm constant
 	  *								doesn't refer to any existing project/alg
 	  */
-	static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , int rounds , std::string * projectName , std::string * algorithmName);
+	static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , 
+		int rounds , std::string * projectName , std::string * algorithmName);
 };
 
 extern FileLogger oneclickLogger;

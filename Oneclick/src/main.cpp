@@ -1,41 +1,23 @@
-//almost funny header here
-
-//TODO
-//	linux port, makefile
-
 #include <exception>
 #include <iostream>
 #include <sstream>
-
-#include "FileSystem.h"
 
 #include "ResultProcessor.h"
 #include "FileGenerator.h"
 
 std::string writeUsage();
+bool setProgramOptions(char * argv[] , int args , bool & logToConsole , int & mode , int & pprocNum , std::string & path);
+int strtoi(std::string s);
 
 int main(int args , char * argv[]) {
 	bool executed = false;
-	if(args < 3 || args > 4) {
-		executed = true;
-		oneclickLogger.setLogToConsole(true);
-		oneclickLogger << FileLogger::LOG_ERROR << "wrong argument count\n";
-		oneclickLogger << writeUsage();
-	}
+	bool validArguments = false;
 	bool logToConsole = false;
-	char * mode = NULL;
-	char * path = NULL;
+	int mode = 0;
+	int pprocNum = 0;
+	std::string path;
 
-	if(args == 3) {
-		mode = argv[1];
-		path = argv[2];
-	}
-
-	if(args == 4) {
-		if(strcmp(argv[1] , "-log2c") == 0) logToConsole = true;
-		mode = argv[2];
-		path = argv[3];
-	}
+	validArguments = setProgramOptions(argv , args , logToConsole , mode , pprocNum , path);
 	oneclickLogger.setLogToConsole(logToConsole);
 
 	//Generation of:
@@ -43,9 +25,10 @@ int main(int args , char * argv[]) {
 	//	-script for creating workunits on BOINC server
 	//	-script for downloading results from BOINC server
 	//Based on config file given in third argument.
-	FileGenerator * fg = NULL;
-	if(!executed && strcmp(mode , "-g") == 0) {
+	//FileGenerator * fg = NULL;
+	if(validArguments && mode == MODE_FILE_GENERATION) {
 		executed = true;
+		FileGenerator * fg = NULL;
 		try {
 			fg = new FileGenerator(path);
 			delete fg;
@@ -57,11 +40,10 @@ int main(int args , char * argv[]) {
 
 	//Processing of files in result directory given in second argument.
 	//Creates files with results.
-	if(!executed && strcmp(mode , "-p") == 0) {
+	if(validArguments && mode == MODE_RESULT_PROCESSING) {
 		executed = true;
-
 		try {
-			ResultProcessor rp = ResultProcessor(path);
+			ResultProcessor rp = ResultProcessor(path , pprocNum);
 		} catch(std::runtime_error e) {
 			oneclickLogger << FileLogger::LOG_ERROR << e.what() << "\n";
 		}
@@ -69,7 +51,7 @@ int main(int args , char * argv[]) {
 	
 	//Nothing happened
 	if(!executed) {
-		oneclickLogger << FileLogger::LOG_ERROR << "unknown \"-mode\" argument\n";
+		oneclickLogger << FileLogger::LOG_ERROR << "wrong usage of arguments\n";
 		oneclickLogger << writeUsage();
 	}
 
@@ -78,9 +60,53 @@ int main(int args , char * argv[]) {
 
 std::string writeUsage() {
 	std::stringstream ss;
-	ss << "[USAGE] Application takes three arguments: -log2c -mode path\n";
+	ss << "[USAGE] Application takes these arguments: -log2c -mode pproc path\n";
 	ss << "-log2c : use only if you want to see log in console, leave empty otherwise\n";
 	ss << " -mode : use \"-g\" (file generation) or \"-p\" (result processing)\n";
+	ss << " pproc : defines post-processor that will be used in result processing mode (-p)\n";
+	ss << "         use integer value (1 or 2). For more information refer to documentation\n";
 	ss << "  path : path to config file (-g) or result directory (-p)\n";
 	return ss.str();
+}
+
+bool setProgramOptions(char * argv[]  , int args , bool & logToConsole , int & mode , int & pprocNum , std::string & path) {
+	int next = 1;
+	if(next == args) return false;
+
+	if(strcmp(argv[next] , "-log2c") == 0) {
+		logToConsole = true;
+		next++;
+	}
+	if(next == args) return false;
+
+	//mode = strtoi(argv[next]);
+	if(strcmp(argv[next] , "-g") == 0) mode = MODE_FILE_GENERATION;
+	if(strcmp(argv[next] , "-p") == 0) mode = MODE_RESULT_PROCESSING;
+	next++;
+	if(next == args) return false;
+
+	if(mode == MODE_RESULT_PROCESSING && ((logToConsole && args == 5) || (!logToConsole && args == 4))) {
+		pprocNum = strtoi(argv[next]);
+		next++;
+	} else {
+		pprocNum = 1;
+	}
+	if(next == args) return false;
+
+	path = argv[next];
+	next++;
+	if(next != args) return false;
+	return true;
+}
+
+int strtoi(std::string s) {
+	int x;
+	try {
+		x = std::stoi(s , nullptr);
+		return x;
+	} catch(std::invalid_argument e) {
+		return 0;
+	} catch(std::out_of_range e) {
+		return 0;
+	}
 }

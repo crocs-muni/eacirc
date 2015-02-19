@@ -1,17 +1,23 @@
 #include "ResultProcessor.h"
 
-ResultProcessor::ResultProcessor(std::string path) {
+ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
 	fs::directory_iterator end;
 	fs::directory_iterator dirIter(path);
 	if(dirIter == end) throw std::runtime_error("given argument is not a path to existing directory: " + path);
 	oneclickLogger << FileLogger::LOG_INFO << "started processing results\n\n";
+
+	initPProcessor(pprocNum);
+
 	std::string algName;
 	std::string pValues;
 	std::vector<std::string> configPaths;
 	std::vector<std::string> logPaths;
 
+	//pprocessor = new PValuePostPr();
+
 	for(; dirIter != end ; dirIter++) {
 		if(dirIter.is_directory() && dirIter.name().compare(".") != 0 && dirIter.name().compare("..")) {
+
 			//Creates directory logger. All directory specific info are logged here also.
 			FileLogger * dirLogger = new FileLogger(dirIter.path() + "/batch.log");
 			oneclickLogger << FileLogger::LOG_INFO << "processing batch: " << dirIter.name() << "\n";
@@ -20,6 +26,7 @@ ResultProcessor::ResultProcessor(std::string path) {
 			//Getting paths to all logs and configs in subdirectories
 			getFilePaths(dirIter.path() , configPaths , INDEX_CONFIG);
 			getFilePaths(dirIter.path() , logPaths , INDEX_EACIRC);
+
 			oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
 			*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
 
@@ -27,16 +34,17 @@ ResultProcessor::ResultProcessor(std::string path) {
 			oneclickLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
 			*dirLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
 			if(checkConfigs(configPaths , algName , dirLogger)) {
-				//Getting scores and p-values from logs
-				//Checks errors and warnings
-				oneclickLogger << FileLogger::LOG_INFO << "getting score, checking errors/warnings in logs\n";
-				*dirLogger << FileLogger::LOG_INFO << "getting score, checking errors/warnings in logs\n";
-				Score dirScore;
-				dirScore.setVal(checkErrorsGetScore(logPaths , pValues , dirLogger));
+
+				//Checks errors and warnings, if okay run PostProcessor
+				oneclickLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
+				*dirLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
+				
 				if(algName.length() == 0) algName = dirIter.name();
-				dirScore.setAlgName(algName);
-				scores.push_back(dirScore);
-				Utils::saveStringToFile(dirIter.path() + "/pValues.txt" , pValues);
+				pprocessor->setBatchDirectoryPath(dirIter.path() + "/");
+				pprocessor->setBatchName(algName);
+				checkErrorsProcess(logPaths , dirLogger);
+				pprocessor->calculateBatchResults();
+
 				oneclickLogger << FileLogger::LOG_INFO << "batch processed\n\n";
 				*dirLogger << FileLogger::LOG_INFO << "batch processed\n\n";
 			} else {
@@ -50,7 +58,8 @@ ResultProcessor::ResultProcessor(std::string path) {
 			delete dirLogger;
 		}
 	}
-	writeScores();
+
+	pprocessor->saveResults();
 	oneclickLogger << FileLogger::LOG_INFO << "finished processing results\n";
 }
 
@@ -85,39 +94,25 @@ bool ResultProcessor::checkConfigs(std::vector<std::string> configPaths, std::st
 	}
 }
 
-float ResultProcessor::checkErrorsGetScore(std::vector<std::string> logPaths , std::string & pValues , FileLogger * dirLogger) {
+void ResultProcessor::checkErrorsProcess(std::vector<std::string> logPaths , FileLogger * dirLogger) {
 	int errorCount = 0;
 	int wrnCount = 0;
-	int validFileCount = 0;
-	int uniformFileCount = 0;
-	bool uniformity;
-	bool hasResult;
 	bool validity;
 
 	std::regex errPatt   ("\\[\\d\\d:\\d\\d:\\d\\d\\] error: .*");
 	std::regex wrnPatt   ("\\[\\d\\d:\\d\\d:\\d\\d\\] warning: .*");
-	std::regex uniPatt   ("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.");
-	std::regex nonUniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.");
-	std::regex pValPatt  ("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)");
-
-	std::smatch pVal;
-	std::smatch emptyMatch;
 	std::sregex_token_iterator endExpr;
 	std::string logFile;
-
+	std::string wuDirectory;
 	for(int i = 0 ; i < logPaths.size() ; i++) {
 		errorCount = 0;
 		wrnCount = 0;
-		uniformity = false;
-		hasResult = false;
 		validity = true;
 		logFile = Utils::readFileToString(logPaths[i]);
+		wuDirectory = Utils::getPathWithoutLastItem(logPaths[i]);
 
 		std::sregex_token_iterator errors(logFile.begin() , logFile.end() , errPatt , 0);
 		std::sregex_token_iterator warnings(logFile.begin() , logFile.end() , wrnPatt , 0);
-		std::sregex_token_iterator uniform(logFile.begin() , logFile.end() , uniPatt , 0);
-		std::sregex_token_iterator nonUniform(logFile.begin() , logFile.end() , nonUniPatt , 0);
-		std::regex_search(logFile , pVal , pValPatt);
 
 		for(; errors != endExpr ; errors++) {
 			errorCount++;
@@ -131,76 +126,23 @@ float ResultProcessor::checkErrorsGetScore(std::vector<std::string> logPaths , s
 			oneclickLogger << FileLogger::LOG_WARNING << "warning in log file: " << Utils::getLastItemInPath(logPaths[i]) << " == " << *warnings << "\n";
 		}
 
-		if(uniform != endExpr && nonUniform == endExpr) { uniformity = true; hasResult = true; }
-		if(uniform == endExpr && nonUniform != endExpr) { uniformity = false; hasResult = true; }
-		if(uniform != endExpr && nonUniform != endExpr) { validity = false; }
-		if(pVal.size() != 2) {hasResult = false; }
-
-		if(validity) {
-			if(errorCount == 0) {
-				if(hasResult) {
-					pValues.append(pVal[1]);
-					pValues.append("\n");
-					validFileCount++;
-					if(uniformity) {
-						uniformFileCount++;
-					}
-				} else {
-					*dirLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains no result. Ignoring file.\n";
-					oneclickLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains no result. Ignoring file.\n";
-					*dirLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
-					oneclickLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
-				}
-			} else {
-				*dirLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains errors. Ignoring file.\n";
-				oneclickLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains errors. Ignoring file.\n";
-				*dirLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
-				oneclickLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
-			}
-
-			if(errorCount == 0 && wrnCount != 0 && hasResult) {
-				*dirLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
-				oneclickLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
+		if(errorCount == 0) {
+			validity = pprocessor->process(wuDirectory);
+			if(validity == false) {
+				oneclickLogger << FileLogger::LOG_WARNING << "directory " << wuDirectory << " contains no valid results for processing\n";
+				*dirLogger << FileLogger::LOG_WARNING << "directory " << wuDirectory << " contains no valid results for processing\n";
 			}
 		} else {
-			*dirLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains two or more inconsistent results. Ignoring file.\n";
-			oneclickLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << "contains two or more inconsistent results. Ignoring file.\n";
+			*dirLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains errors. Ignoring file.\n";
+			oneclickLogger << FileLogger::LOG_WARNING << Utils::getLastItemInPath(logPaths[i]) << " contains errors. Ignoring file.\n";
+		}
+
+		if(errorCount != 0 || wrnCount != 0) {
 			*dirLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
 			oneclickLogger << FileLogger::LOG_INFO << Utils::getLastItemInPath(logPaths[i]) << " has " << Utils::itostr(wrnCount) << " warnings and " << Utils::itostr(errorCount) << " errors.\n";
 		}
-		pVal = emptyMatch;
+
 		logFile.erase();
-	}
-
-	if(validFileCount != 0) {
-		return (float)uniformFileCount / (float)validFileCount;
-	} else {
-		return ERROR_NO_VALID_FILES;
-	}
-}
-
-void ResultProcessor::writeScores() {
-	std::ofstream resultFile(FILE_PROCESSED_RESULTS , std::ios::out);
-	if(!resultFile.is_open()) throw std::runtime_error("can't open file: " + (std::string)FILE_PROCESSED_RESULTS);
-
-	for(int i = 0 ; i < scores.size() ; i++) {
-		resultFile << scores[i].toString() << "\n";
-	}
-
-	resultFile.close();
-}
-
-int ResultProcessor::getFileIndex(std::string fileName) {
-	int result = 0;
-	std::vector<std::string> splitted = Utils::split(fileName , INDEX_SEPARATOR);
-	
-	try {
-		result = stoi(splitted[0] , nullptr);
-		return result;
-	} catch (std::invalid_argument e) {
-		return -1;
-	} catch(std::out_of_range e) {
-		return -1;
 	}
 }
 
@@ -226,8 +168,22 @@ void ResultProcessor::getFilePaths(std::string directory , std::vector<std::stri
 			getFilePaths(dirIter.path() , paths , fileIndex);
 		}
 
-		if(dirIter.is_file() && getFileIndex(dirIter.name()) == fileIndex) {
+		if(dirIter.is_file() && Utils::getFileIndex(dirIter.name()) == fileIndex) {
 			paths.push_back(dirIter.path());
 		}
+	}
+}
+
+void ResultProcessor::initPProcessor(int pprocNum) {
+	switch(pprocNum) {
+	case PPROCESSOR_PVAL:
+		pprocessor = new PValuePostPr();
+		break;
+	case PPROCESSOR_AVG:
+		pprocessor = new AvgValPostPr();
+		break;
+	default:
+		throw std::runtime_error("unknown post-processor set in command line arguments");
+		break;
 	}
 }

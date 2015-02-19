@@ -22,7 +22,7 @@ void FileGenerator::generateFiles() {
 	TiXmlNode * eacNode = NULL;
 	eacNode = getXMLElement(root , PATH_EACIRC);
 
-	//Creates directory, SHOULD be working on linux too
+	//Creates directory, SHOULD (is) be working on linux too
 	Utils::createDirectory(DIRECTORY_CFGS);
 
 	//Replacing keywords in scripts
@@ -100,6 +100,11 @@ void FileGenerator::generateFiles() {
 
 				//Set tags in config file - human readable description and number of generations
 				notes.append(" - " + Utils::itostr(algorithmsRounds[k][l]) + " rounds");
+				if(wuIdentifier.length() > 0) {
+					notes.append(" [");
+					notes.append(wuIdentifier);
+					notes.append("]");
+				}
 				if(setXMLElementValue(root , PATH_EAC_NOTES , notes) == STAT_INVALID_ARGUMETS) 
 					throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_EAC_NOTES);
 				if(setXMLElementValue(root , PATH_EAC_GENS , Utils::itostr(numGenerations[i])) == STAT_INVALID_ARGUMETS)
