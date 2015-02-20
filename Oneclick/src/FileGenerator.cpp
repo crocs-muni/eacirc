@@ -124,11 +124,21 @@ void FileGenerator::generateFiles() {
 		}
 	}
 	oneclickLogger << FileLogger::LOG_INFO << "finished generating config files\n";
-	
-	Utils::saveStringToFile(FILE_SCRIPT_UPLOAD , uploadScriptSample);
-	oneclickLogger << FileLogger::LOG_INFO << "created file " << FILE_SCRIPT_UPLOAD << "\n";
-	Utils::saveStringToFile(FILE_SCRIPT_DOWNLOAD , downloadScriptSample);
-	oneclickLogger << FileLogger::LOG_INFO << "created file " << FILE_SCRIPT_DOWNLOAD << "\n";
+
+	std::string uploadScriptName;
+	std::string downloadScriptName;
+
+	if(wuIdentifier.length() > 0) {
+		uploadScriptName.append(wuIdentifier + "_");
+		downloadScriptName.append(wuIdentifier + "_");
+	}
+	uploadScriptName.append(FILE_SCRIPT_UPLOAD);
+	downloadScriptName.append(FILE_SCRIPT_DOWNLOAD);
+
+	Utils::saveStringToFile(uploadScriptName , uploadScriptSample);
+	oneclickLogger << FileLogger::LOG_INFO << "created file " << uploadScriptName << "\n";
+	Utils::saveStringToFile(downloadScriptName , downloadScriptSample);
+	oneclickLogger << FileLogger::LOG_INFO << "created file " << downloadScriptName << "\n";
 }
 
 std::string FileGenerator::getMethodPrototype(std::string source , std::string methodName) {
