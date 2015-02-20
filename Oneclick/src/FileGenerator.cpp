@@ -64,9 +64,10 @@ void FileGenerator::generateFiles() {
 				notes.append(": " + algorithmName);
 
 				//Created names for workunit and config file
-				if(wuIdentifier.length() > 0) wuName = wuIdentifier + "_";
+				//if(wuIdentifier.length() > 0) wuName = wuIdentifier + "_";
 				wuName = (wuName + Utils::getDate() + "_EAC_" + projectName + "_a" + Utils::itostr(algorithmsRounds[k][0] , 2) +
 					+ "r" + Utils::itostr(algorithmsRounds[k][l] , 2) + "_g" + Utils::itostr(numGenerations[i]));
+				if(wuIdentifier.length() > 0) wuName.append("_" + wuIdentifier);
 
 				configName = wuName;
 				configName.append(".xml");
