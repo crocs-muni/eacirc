@@ -1,11 +1,11 @@
-#include "CircuitInterpreter.h"
+#include "GateInterpreter.h"
 
 unsigned char* executionInputLayer = NULL;
 unsigned char* executionMiddleLayerIn = NULL;
 unsigned char* executionMiddleLayerOut = NULL;
 unsigned char* executionOutputLayer = NULL;
 
-int CircuitInterpreter::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
+int GateInterpreter::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, unsigned char* inputs, unsigned char* outputs) {
     // allocate repeatedly used variables
     int offsetConnectors;
     int offsetFunctions;
@@ -74,11 +74,11 @@ int CircuitInterpreter::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenom
     return STAT_OK;
 }
 
-int CircuitInterpreter::pruneCircuit(GAGenome &originalGenome, GAGenome &prunnedGenome) {
+int GateInterpreter::pruneCircuit(GAGenome &originalGenome, GAGenome &prunnedGenome) {
     return STAT_NOT_IMPLEMENTED_YET;
 }
 
-int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char& result) {
+int GateInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char& result) {
     // temporary variables
     int connection = 0;
     int connection2 = 0;
@@ -182,6 +182,6 @@ int CircuitInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE 
     return STAT_OK;
 }
 
-int CircuitInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
+int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
     return STAT_NOT_IMPLEMENTED_YET;
 }

@@ -1,5 +1,5 @@
-#ifndef _EACIRC_POLY_H
-#define _EACIRC_POLY_H
+#ifndef POLY_COMMON_FUNCTIONS_H
+#define POLY_COMMON_FUNCTIONS_H
 
 // One single element is unsigned long
 // Originally term was here, but length of the term is set in configuration
@@ -23,7 +23,7 @@
  * Function to evaluate one term element of an arbitrary size.
  * @param trm
  * @param input
- * @return 
+ * @return
  */
 unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 
@@ -46,13 +46,13 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 
 //
 // Term evaluation operation actually used in the experiment for unsigned long type (sizeof(unsigned long)==8).
-// Evaluation: 
+// Evaluation:
 //
 //     7        6        5        4        3        2        1        0
 // +----------------------------------------------------------------------+
 // | in[7] |  in[6] |  in[5] |  in[4] |  in[3] |  in[2] |  in[1] |  in[0] | unsigned char * input
-// +----------------------------------------------------------------------+ 
-//     &        &        &        &        &        &        &        &   
+// +----------------------------------------------------------------------+
+//     &        &        &        &        &        &        &        &
 // +----------------------------------------------------------------------+
 // | tr[7] |  tr[6] |  tr[5] |  tr[4] |  tr[3] |  tr[2] |  tr[1] |  tr[0] | POLY_GENOME_ITEM_TYPE
 // +----------------------------------------------------------------------+
@@ -60,7 +60,7 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 // x_63                                                                 x_0
 //
 // tr[i] == MASK_TERM(tr, i)
-// 
+//
 #define TERM_ITEM_EVAL_8(trm, input) (                                                         \
     (MASK_TERM(trm, 0) == 0 ? 1 : (((*((input)+0)) & MASK_TERM(trm, 0)) == MASK_TERM(trm, 0))) & \
     (MASK_TERM(trm, 1) == 0 ? 1 : (((*((input)+1)) & MASK_TERM(trm, 1)) == MASK_TERM(trm, 1))) & \
@@ -83,16 +83,16 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 #if defined(COMPILER_X64)
 // Compilation for 64 bit platform.
 #define TERM_ITEM_EVAL_GENOME(trm, input) TERM_ITEM_EVAL_8(trm, input)
-#else 
+#else
 // Determine if long is of length 4 B
 #if defined(__SIZEOF_LONG__) && __SIZEOF_LONG__ == 4
 // Assume we are compiling for 32 bit platform, if macro for size of long is defined,
 // and is of size 4 bytes, use macro to evaluate 4 B type.
 #define TERM_ITEM_EVAL_GENOME(trm, input) TERM_ITEM_EVAL_4(trm, input)
 #endif
-#endif 
+#endif
 
-// Using default implementation by function call. 
+// Using default implementation by function call.
 // System is neither x86_64 nor GCC having __SIZEOF_LONG__ set to 4.
 #ifndef TERM_ITEM_EVAL_GENOME
 #define TERM_ITEM_EVAL_GENOME(trm, input)  term_item_eval(trm, input)
@@ -102,4 +102,4 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input);
 #define OWN_CEIL(x)  (    (((int)(x)) < (x)) ? ((int)(x))+1 : ((int)(x))    )
 #define OWN_FLOOR(x) (    (((int)(x)) < (x)) ? ((int)(x))-1 : ((int)(x))    )
 
-#endif // end of file
+#endif // POLY_COMMON_FUNCTIONS_H

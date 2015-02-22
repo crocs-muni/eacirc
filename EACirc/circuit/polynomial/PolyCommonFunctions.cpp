@@ -1,4 +1,4 @@
-#include "poly.h"
+#include "PolyCommonFunctions.h"
 
 unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input){
     unsigned int res=1;
@@ -10,10 +10,10 @@ unsigned int term_item_eval(POLY_GENOME_ITEM_TYPE trm, unsigned char * input){
         // Term itself must not contain variables out of the range (guarantees
         // that an invalid memory is not read).
         if (mask == 0) continue;
-        
+
         res &= (*((input)+i) & mask) == mask;
     }
-    
+
     return res;
 }
 

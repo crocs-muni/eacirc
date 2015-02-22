@@ -1,7 +1,7 @@
-#ifndef CIRCUITINTERPRETER_H
-#define CIRCUITINTERPRETER_H
+#ifndef GATE_INTERPRETER_H
+#define GATE_INTERPRETER_H
 
-#include "CircuitCommonFunctions.h"
+#include "GateCommonFunctions.h"
 
 // temporary arrays for executeCircuit (to prevent multiple allocations)
 extern unsigned char* executionInputLayer;     //! input layer (memory + inputs)
@@ -9,7 +9,7 @@ extern unsigned char* executionMiddleLayerIn;  //! common layer used as input
 extern unsigned char* executionMiddleLayerOut; //! common layer used as output
 extern unsigned char* executionOutputLayer;    //! output layer (memoty + outputs)
 
-class CircuitInterpreter {
+class GateInterpreter {
 public:
     /** execute circuit over given inputs, return outputs
      * @param pGenome       circuit to executeCircuit
@@ -46,4 +46,4 @@ private:
     static int executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result);
 };
 
-#endif // CIRCUITINTERPRETER_H
+#endif // GATE_INTERPRETER_H

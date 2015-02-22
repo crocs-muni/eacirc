@@ -1,10 +1,10 @@
-#ifndef GACALLBACKS_H
-#define GACALLBACKS_H
+#ifndef GA_GATE_CALLBACKS_H
+#define GA_GATE_CALLBACKS_H
 
 #include "EACglobals.h"
 #include "GA1DArrayGenome.h"
 
-class GACallbacks {
+class GAGateCallbacks {
 public:
     /** initializes genome
      * @param genome
@@ -83,4 +83,4 @@ private:
     static GENOME_ITEM_TYPE changeBit(GENOME_ITEM_TYPE genomeValue, int width);
 };
 
-#endif // GACALLBACKS_H
+#endif // GA_GATE_CALLBACKS_H

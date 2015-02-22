@@ -6,7 +6,7 @@
 #ifndef GATECIRCUITIO_H
 #define GATECIRCUITIO_H
 
-#include "CircuitCommonFunctions.h"
+#include "GateCommonFunctions.h"
 #include "tinyXML/tinyxml.h"
 #include "circuit/ICircuitIO.h"
 
@@ -22,7 +22,7 @@ public:
     virtual int genomeToCode(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".c");
     virtual int genomeToGraph(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".dot");
     virtual TiXmlElement* populationHeader(int populationSize);
-    
+
     /** load genome from binary number form
      * @param binaryCircuit (number form in string)
      * @param genome object to fill (by reference)

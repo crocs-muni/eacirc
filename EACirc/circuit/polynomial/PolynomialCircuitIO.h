@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PolynomialCircuitIO.h
  * Author: ph4r05
  *
@@ -8,7 +8,7 @@
 #ifndef POLYNOMIALCIRCUITIO_H
 #define	POLYNOMIALCIRCUITIO_H
 
-#include "poly.h"
+#include "PolyCommonFunctions.h"
 #include "EACglobals.h"
 #include "circuit/ICircuitIO.h"
 #include "GAGenome.h"
@@ -27,27 +27,29 @@ public:
     virtual int genomeToCode(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".c");
     virtual int genomeToGraph(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".dot");
     virtual TiXmlElement* populationHeader(int populationSize);
-    
+
+    // static functions follow, these are called from virual non-static ones
+
     /** load genome from binary number form
      * @param binaryCircuit (number form in string)
      * @param genome object to fill (by reference)
      * @return status
      */
-    static int genomeFromBinarySt(string binaryCircuit, GAGenome& g);
+    static int genomeFromBinary_static(string binaryCircuit, GAGenome& g);
 
     /** load genome from text format
      * @param filename (file to read genome from)
      * @param genome object to fill (by reference)
      * @return status
      */
-    static int genomeFromTextSt(string filename, GAGenome& g);
+    static int genomeFromText_static(string filename, GAGenome& g);
 
     /** output genome to external files (TXT, DOT, C, XML)
      * @param genome
      * @param fileName (without suffix)
      * @return status
      */
-    static int outputGenomeFilesSt(GAGenome& g, string fileName = FILE_CIRCUIT_DEFAULT);
+    static int outputGenomeFiles_static(GAGenome& g, string fileName = FILE_CIRCUIT_DEFAULT);
 
     /** save genome in number format
      * - no connector transformation
@@ -56,7 +58,7 @@ public:
      * @param circuit in number format by reference
      * @return status
      */
-    static int genomeToBinarySt(GAGenome& g, string& binaryCircuit);
+    static int genomeToBinary_static(GAGenome& g, string& binaryCircuit);
 
     /** save genome as population to external file
      * - no connector transformation
@@ -65,7 +67,7 @@ public:
      * @param fileName to use, including suffix (FILE_POPULATION if left empty)
      * @return status
      */
-    static int genomeToPopulationSt(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".xml");
+    static int genomeToPopulation_static(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".xml");
 
     /** save genome in text format to external file
      * - connector transformation applies (saved with absolute connectors)
@@ -73,14 +75,14 @@ public:
      * @param fileName to use, including suffix (FILE_POPULATION if left empty)
      * @return status
      */
-    static int genomeToTextSt(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".txt");
+    static int genomeToText_static(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".txt");
 
     /** save genome as C program to external file
      * @param genome to save
      * @param fileName to use, including suffix (FILE_POPULATION if left empty)
      * @return status
      */
-    static int genomeToCodeSt(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".c");
+    static int genomeToCode_static(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".c");
 
     /** save genome in graph format (DOT) to external file
      * - use Graphviz to view the file
@@ -88,13 +90,13 @@ public:
      * @param fileName to use, including suffix (FILE_POPULATION if left empty)
      * @return status
      */
-    static int genomeToGraphSt(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".dot");
+    static int genomeToGraph_static(GAGenome& g, string fileName = string(FILE_CIRCUIT_DEFAULT)+".dot");
 
     /** allocate XML structure for header in population file
       * @param populationSize       size of the population (info in the header)
       * @return pointer to root element "eacirc_population"
       */
-    static TiXmlElement* populationHeaderSt(int populationSize);
+    static TiXmlElement* populationHeader_static(int populationSize);
 };
 
 
