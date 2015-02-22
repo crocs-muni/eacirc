@@ -6,13 +6,15 @@ ESTREAM_SETTINGS* pEstreamSettings = NULL;
 // TODO clean-up initialization section
 EstreamProject::EstreamProject()
     : IProject(PROJECT_ESTREAM), m_tvOutputs(NULL), m_tvInputs(NULL), m_plaintextIn(NULL), m_plaintextOut(NULL),
-      m_numVectors(NULL), m_encryptorDecryptor(NULL) {
+      m_plaintextCounter(NULL), m_numVectors(NULL), m_encryptorDecryptor(NULL) {
     m_tvOutputs = new unsigned char[pGlobals->settings->testVectors.outputLength];
     memset(m_tvOutputs,0,pGlobals->settings->testVectors.outputLength);
     m_tvInputs = new unsigned char[pGlobals->settings->testVectors.inputLength];
     memset(m_tvInputs,0,pGlobals->settings->testVectors.inputLength);
     m_plaintextIn = new unsigned char[pGlobals->settings->testVectors.inputLength];
     m_plaintextOut = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    m_plaintextCounter = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    memset(m_plaintextCounter,0,pGlobals->settings->testVectors.inputLength); // counter plaintexts rely on this!
     m_numVectors = new int[2];
 }
 
@@ -25,6 +27,8 @@ EstreamProject::~EstreamProject() {
     m_plaintextIn = NULL;
     if (m_plaintextOut) delete[] m_plaintextOut;
     m_plaintextOut = NULL;
+    if (m_plaintextCounter) delete[] m_plaintextCounter;
+    m_plaintextCounter = NULL;
     if (m_numVectors) delete[] m_numVectors;
     m_numVectors = NULL;
     if (m_encryptorDecryptor) delete m_encryptorDecryptor;
@@ -96,6 +100,16 @@ int EstreamProject::initializeProjectState() {
     return status;
 }
 
+void EstreamProject::increaseArray(unsigned char* data, int dataLength) {
+    for (int i = 0; i < dataLength; i++) {
+        if (data[i] != UCHAR_MAX) {
+            data[i]++;
+            return;
+        }
+        data[i] = 0;
+    }
+}
+
 int EstreamProject::setupPlaintext() {
     switch (pEstreamSettings->plaintextType) {
     case ESTREAM_GENTYPE_ZEROS:
@@ -109,6 +123,10 @@ int EstreamProject::setupPlaintext() {
         break;
     case ESTREAM_GENTYPE_BIASRANDOM:
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) biasRndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
+        break;
+    case ESTREAM_GENTYPE_COUNTER: // BEWARE: Counter relies on inputArray being set to zero at the beginning!
+        increaseArray(m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
+        memcpy(m_plaintextIn, m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown plaintext type for " << shortDescription() << endl;
@@ -124,27 +142,36 @@ int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
     if (m_estreamSettings.cipherInitializationFrequency != ESTREAM_INIT_CIPHERS_ONCE) {
         pRoot2->SetAttribute("loadable",1);
     } else {
-        ostringstream ssKeyAndIV;
+        ostringstream ss;
 
         pNode = new TiXmlElement("key");
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-        ssKeyAndIV << setw(2) << hex << (int)(m_encryptorDecryptor->m_key[input]);
-        pNode->LinkEndChild(new TiXmlText(ssKeyAndIV.str().c_str()));
+        ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_key[input]);
+        pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
         pRoot2->LinkEndChild(pNode);
 
-        ssKeyAndIV.str("");
+        ss.str("");
         pNode = new TiXmlElement("iv");
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-        ssKeyAndIV << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
-        pNode->LinkEndChild(new TiXmlText(ssKeyAndIV.str().c_str()));
+        ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
+        pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
         pRoot2->LinkEndChild(pNode);
+
+        if (m_estreamSettings.plaintextType == ESTREAM_GENTYPE_COUNTER) {
+            ss.str("");
+            pNode = new TiXmlElement("plaintext-counter");
+            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
+            ss << setw(2) << hex << (int)(m_plaintextCounter[input]);
+            pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
+            pRoot2->LinkEndChild(pNode);
+        }
     }
     return STAT_OK;
 }
 
 int EstreamProject::loadProjectState(TiXmlNode* pRoot) {
 
-    return STAT_OK;
+    return STAT_NOT_IMPLEMENTED_YET;
 }
 
 int EstreamProject::createTestVectorFilesHeaders() const {

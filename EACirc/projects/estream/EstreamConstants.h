@@ -19,6 +19,7 @@
 #define ESTREAM_GENTYPE_ONES        1
 #define ESTREAM_GENTYPE_RANDOM      2
 #define ESTREAM_GENTYPE_BIASRANDOM  3
+#define ESTREAM_GENTYPE_COUNTER     4
 
 // filenames for streams
 #define ESTREAM_FILE_STREAM_1      "estream_stream1.bin"
