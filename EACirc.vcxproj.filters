@@ -12,7 +12,6 @@
     <ClCompile Include="EACirc\Main.cpp" />
     <ClCompile Include="EACirc\projects\estream\ciphers\mag\mag.cpp" />
     <ClCompile Include="EACirc\projects\estream\EncryptorDecryptor.cpp" />
-    <ClCompile Include="EACirc\projects\estream\EstreamInterface.cpp" />
     <ClCompile Include="EACirc\projects\estream\EstreamProject.cpp" />
     <ClCompile Include="EACirc\projects\files\filesProject.cpp" />
     <ClCompile Include="EACirc\projects\IProject.cpp" />
@@ -437,21 +436,32 @@
       <Filter>SHA3 functions</Filter>
     </ClCompile>
     <ClCompile Include="EACirc\self_tests\TestConfigurator.cpp" />
-    <ClCompile Include="EACirc\circuit\gate\CircuitCommonFunctions.cpp" />
-    <ClCompile Include="EACirc\circuit\gate\CircuitInterpreter.cpp" />
-    <ClCompile Include="EACirc\circuit\gate\GACallbacks.cpp" />
+    <ClCompile Include="EACirc\evaluators\FeatureEvaluator.cpp" />
+    <ClCompile Include="EACirc\projects\estream\ciphers\tea\tea.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\GAGateCallbacks.cpp" />
     <ClCompile Include="EACirc\circuit\gate\GateCircuit.cpp" />
     <ClCompile Include="EACirc\circuit\gate\GateCircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\GateCommonFunctions.cpp" />
+    <ClCompile Include="EACirc\circuit\gate\GateInterpreter.cpp" />
     <ClCompile Include="EACirc\circuit\polynomial\GAPolyCallbacks.cpp" />
-    <ClCompile Include="EACirc\circuit\polynomial\poly.cpp" />
-    <ClCompile Include="EACirc\circuit\polynomial\PolyDistEval.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\PolyCommonFunctions.cpp" />
     <ClCompile Include="EACirc\circuit\polynomial\PolynomialCircuit.cpp" />
     <ClCompile Include="EACirc\circuit\polynomial\PolynomialCircuitIO.cpp" />
+    <ClCompile Include="EACirc\circuit\polynomial\PolynomialInterpreter.cpp" />
     <ClCompile Include="EACirc\circuit\polynomial\Term.cpp" />
     <ClCompile Include="EACirc\circuit\ICircuit.cpp" />
     <ClCompile Include="EACirc\circuit\ICircuitIO.cpp" />
-    <ClCompile Include="EACirc\evaluators\FeatureEvaluator.cpp" />
-    <ClCompile Include="EACirc\projects\estream\ciphers\tea\tea.cpp" />
+    <ClCompile Include="EACirc\projects\estream\EstreamCiphers.cpp" />
+    <ClCompile Include="EACirc\projects\sha3\Sha3Functions.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\CaesarInterface.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\CaesarProject.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\Encryptor.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\common\crypto_core_aes128encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\common\crypto_verify_16.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128gcm\Aes128Gcm.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\aes128gcm\Aes128Gcm_encrypt.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\acorn128\Acorn128.cpp" />
+    <ClCompile Include="EACirc\projects\caesar\aead\acorn128\Acorn128_encrypt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EACirc\evaluators\CategoriesEvaluator.h" />
@@ -1034,6 +1044,24 @@
     <ClInclude Include="EACirc\circuit\ICircuitIO.h" />
     <ClInclude Include="EACirc\evaluators\FeatureEvaluator.h" />
     <ClInclude Include="EACirc\projects\estream\ciphers\tea\ecrypt-sync.h" />
+    <ClInclude Include="EACirc\circuit\gate\GAGateCallbacks.h" />
+    <ClInclude Include="EACirc\circuit\gate\GateCommonFunctions.h" />
+    <ClInclude Include="EACirc\circuit\gate\GateInterpreter.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\PolyCommonFunctions.h" />
+    <ClInclude Include="EACirc\circuit\polynomial\PolynomialInterpreter.h" />
+    <ClInclude Include="EACirc\projects\estream\EstreamCiphers.h" />
+    <ClInclude Include="EACirc\projects\sha3\Sha3Functions.h" />
+    <ClInclude Include="EACirc\projects\caesar\CaesarConstants.h" />
+    <ClInclude Include="EACirc\projects\caesar\CaesarInterface.h" />
+    <ClInclude Include="EACirc\projects\caesar\CaesarProject.h" />
+    <ClInclude Include="EACirc\projects\caesar\Encryptor.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\common\api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128gcm\api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128gcm\Aes128Gcm.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\aes128gcm\Aes128Gcm_encrypt.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\acorn128\api.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\acorn128\Acorn128.h" />
+    <ClInclude Include="EACirc\projects\caesar\aead\acorn128\Acorn128_encrypt.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="EACirc\config.xml" />
@@ -1045,5 +1073,14 @@
     <Filter Include="Galib">
       <UniqueIdentifier>{525bbee8-5d67-4250-8883-6d3b7f343a31}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EACirc\projects\caesar\aead\common\about.md" />
+    <None Include="EACirc\projects\caesar\aead\aes128gcm\about.md" />
+    <None Include="EACirc\projects\caesar\aead\acorn128\about.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="EACirc\self_tests\Catch_LICENCE.txt" />
+    <Text Include="EACirc\tinyXML\tinyXML_LICENCE.txt" />
   </ItemGroup>
 </Project>
