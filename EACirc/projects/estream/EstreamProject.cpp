@@ -116,7 +116,7 @@ int EstreamProject::setupPlaintext() {
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0x00;
         break;
     case ESTREAM_GENTYPE_ONES:
-        for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0x01;
+        for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0xff;
         break;
     case ESTREAM_GENTYPE_RANDOM:
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) rndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
@@ -127,6 +127,20 @@ int EstreamProject::setupPlaintext() {
     case ESTREAM_GENTYPE_COUNTER: // BEWARE: Counter relies on inputArray being set to zero at the beginning!
         increaseArray(m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
         memcpy(m_plaintextIn, m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
+        break;
+    case ESTREAM_GENTYPE_FLIP5BITS:
+        for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0xff;
+        flipBits(m_plaintextIn, pGlobals->settings->testVectors.inputLength, 5, rndGen);
+        break;
+    case ESTREAM_GENTYPE_HALFBLOCKSAC:
+        if (pGlobals->settings->testVectors.inputLength % 2 == 1) {
+            mainLogger.out(LOGGER_ERROR) << "Uneven plaintext length, cannot do half-block SAC! Using zeroes." << endl;
+            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0x00;
+        }
+        for (int input = 0; input < pGlobals->settings->testVectors.inputLength / 2; input++) rndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
+        memcpy(m_plaintextIn + pGlobals->settings->testVectors.inputLength / 2, m_plaintextIn, pGlobals->settings->testVectors.inputLength / 2);
+        // flip one (1st) bit of the first block
+        m_plaintextIn[0] ^= static_cast<unsigned char>(1);
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown plaintext type for " << shortDescription() << endl;

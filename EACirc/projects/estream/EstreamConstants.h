@@ -15,11 +15,13 @@
 #define ESTREAM_INIT_CIPHERS_FOR_VECTOR     2
 
 // eStream data types (for key, iv, plaintext)
-#define ESTREAM_GENTYPE_ZEROS       0
-#define ESTREAM_GENTYPE_ONES        1
-#define ESTREAM_GENTYPE_RANDOM      2
-#define ESTREAM_GENTYPE_BIASRANDOM  3
-#define ESTREAM_GENTYPE_COUNTER     4
+#define ESTREAM_GENTYPE_ZEROS        0
+#define ESTREAM_GENTYPE_ONES         1
+#define ESTREAM_GENTYPE_RANDOM       2
+#define ESTREAM_GENTYPE_BIASRANDOM   3
+#define ESTREAM_GENTYPE_COUNTER      4
+#define ESTREAM_GENTYPE_FLIP5BITS    5
+#define ESTREAM_GENTYPE_HALFBLOCKSAC 6
 
 // filenames for streams
 #define ESTREAM_FILE_STREAM_1      "estream_stream1.bin"
