@@ -28,13 +28,12 @@ public:
 	  */
 	std::string toString() {
 		std::stringstream result;
-		result << std::setw(30);
+		result << std::setw(60);
 		result << std::left;
 		result << algName;
 
 		result << std::setprecision(6);
-		result << std::setw(15);
-		result << std::right;
+		result << std::fixed;
 		if(val == ERROR_NO_VALID_FILES) {
 			result << "no valid results";
 		} else {

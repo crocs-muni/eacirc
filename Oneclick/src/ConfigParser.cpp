@@ -5,12 +5,8 @@ ConfigParser::ConfigParser(std::string path) {
 	oneclickLogger << FileLogger::LOG_INFO << "started parsing config file\n";
 	wuIdentifier = getXMLElementValue(root , PATH_OC_WU_ID);
 	clones = getXMLValue(PATH_OC_CLONES);
-	numGenerations = getMultipleXMLValues(PATH_OC_NUM_GENS);
 	project = getXMLValue(PATH_EAC_PROJECT);
-	std::vector<int> rounds = getMultipleXMLValues(PATH_OC_RNDS);
-	std::vector<int> algorithms = getMultipleXMLValues(PATH_OC_ALGS);
-	std::vector<std::vector<int>> specificRounds = getSpecificRounds();
-	setAlgorithmsRounds(rounds , algorithms , specificRounds);
+	setConfigs();
 	oneclickLogger << FileLogger::LOG_INFO << "finished parsing config file\n";
 }
 
@@ -18,7 +14,107 @@ ConfigParser::~ConfigParser() {
 	delete root;
 }
 
-int ConfigParser::getXMLValue(std::string path) {
+void ConfigParser::setConfigs() {
+	algorithm_rounds_v algorithmsRounds = createAlgorithmsRounds();
+
+	//Creating initial configs with nothing but algorithm and rounds set
+    for(unsigned i = 0 ; i < algorithmsRounds.size() ; i++) {
+        for(unsigned k = 0 ; k < algorithmsRounds[i].second.size() ; k++) {
+			Config cfg(algorithmsRounds[i].first , algorithmsRounds[i].second[k]);
+			configs.push_back(cfg);
+		}
+	}
+
+	//Getting additional settings from Oneclick Config
+	std::vector<std::pair<std::string , std::vector<int>>> settings = parseChildrenTags(PATH_OC_ADD_SETT , PATH_OC_ATT_ADD_SETT);
+    unsigned originalSize = 0;
+
+	//Creating every possible combination of settings algorithms and rounds
+    for(unsigned current = 0 ; current < settings.size() ; current++) {
+		originalSize = configs.size();
+
+        for(unsigned i = 0 ; i < originalSize ; i++) {
+			Config originalConfig(configs.front());
+			configs.pop_front();
+
+            for(unsigned k = 0 ; k < settings[current].second.size() ; k++) {
+				Config newConfig(originalConfig);
+				newConfig.addSetting(settings[current].first , settings[current].second[k]);
+				configs.push_back(newConfig);
+			}
+		}
+	}
+}
+
+ConfigParser::algorithm_rounds_v ConfigParser::createAlgorithmsRounds() {
+	//std::vector<std::pair<int , std::vector<int>>> algorithmsRounds;
+	algorithm_rounds_v algorithmsRounds;
+	std::vector<int> rounds = getMultipleXMLValues(PATH_OC_RNDS);
+	std::vector<int> algorithms = getMultipleXMLValues(PATH_OC_ALGS);
+	attribute_values_v tempSpecRounds = parseChildrenTags(PATH_OC_SPEC_RNDS , PATH_OC_ATT_SPEC_RNDS);
+	algorithm_rounds_v specificRounds;
+
+	//Conversion of tempSpecRounds into desired format
+	algorithm_rounds singleAlg;
+    for(unsigned i = 0 ; i < tempSpecRounds.size() ; i++) {
+		try {
+			singleAlg.first = std::stoi(tempSpecRounds[i].first);
+			singleAlg.second = tempSpecRounds[i].second;
+			specificRounds.push_back(singleAlg);
+			singleAlg.second.clear();
+		} catch(std::invalid_argument) { throw std::runtime_error("attribute algorithm in SPECIFIC_ROUNDS contains invalid characters");
+		} catch(std::out_of_range) {     throw std::runtime_error("attribute algorithm constant in SPECIFIC_ROUNDS is out of range"); }
+	}
+
+	//Saving algorithms into algorithm_rounds_v structure
+    for(unsigned i = 0 ; i < algorithms.size() ; i++) {
+		singleAlg.first = algorithms[i];
+        for(unsigned k = 0 ; k < rounds.size() ; k++) {
+			singleAlg.second.push_back(rounds[k]);
+		}
+		algorithmsRounds.push_back(singleAlg);
+		singleAlg.second.clear();
+	}
+	//Adding algorithms with different rounds set
+    for(unsigned i = 0 ; i < specificRounds.size() ; i++) {
+		algorithmsRounds.push_back(specificRounds[i]);
+	}
+	sort2D(algorithmsRounds);
+	return algorithmsRounds;
+}
+
+ConfigParser::attribute_values_v ConfigParser::parseChildrenTags(const std::string & parentPath , const std::string & childAttribute) {
+	attribute_values_v parsedTags;
+	attribute_values singleTag;
+	std::vector<int> valuesInTag;
+	const char * attributeValue;
+	const char * tagText;
+
+	TiXmlNode * parentNode = getXMLElement(root , parentPath);
+	TiXmlElement * childElement;
+	if(parentNode == NULL) return parsedTags;
+
+	if(parentNode->FirstChild()) {
+		childElement = parentNode->FirstChildElement();
+		for(;;) {
+			attributeValue = childElement->Attribute(childAttribute.c_str());
+			if(attributeValue == NULL) throw std::runtime_error("child of tag " + parentPath + " doesn't have attribute \"" + childAttribute + "\"");
+			tagText = childElement->GetText();
+			if(strlen(attributeValue) > 0 && tagText != NULL) {
+				valuesInTag = parseStringValue(tagText , parentPath);
+				sort(valuesInTag);
+				singleTag.first = attributeValue;
+				singleTag.second = valuesInTag;
+				parsedTags.push_back(singleTag);
+			}
+			if(!childElement->NextSiblingElement()) break;
+			childElement = childElement->NextSiblingElement();
+		}
+	}
+	return parsedTags;
+}
+
+int ConfigParser::getXMLValue(const std::string & path) {
 	std::string temp = getXMLElementValue(root , path);
 	int result = 0;
 
@@ -34,94 +130,26 @@ int ConfigParser::getXMLValue(std::string path) {
 	}
 }
 
-std::vector<int> ConfigParser::getMultipleXMLValues(std::string path) {
+std::vector<int> ConfigParser::getMultipleXMLValues(const std::string & path) {
 	std::string elementValue = getXMLElementValue(root , path);
 	std::string temp;
 	std::vector<int> values;
 	values = parseStringValue(elementValue , path);
-	sort(&values , 0);
+	sort(values);
 	return values;
 }
 
-std::vector<std::vector<int>> ConfigParser::getSpecificRounds() {
-	std::string path = PATH_OC_SPEC_RNDS;
-	std::vector<std::vector<int>> values;
-	std::vector<int> single;
-	TiXmlNode * specRndsNode = getXMLElement(root , path);
-	TiXmlElement * rndsElement;
-	if(specRndsNode == NULL) return values;
-
-	if(specRndsNode->FirstChild()) {
-		rndsElement = specRndsNode->FirstChildElement();
-		for(;;) {
-			const char * alg = rndsElement->Attribute("algorithm");
-			if(alg == NULL) throw std::runtime_error("tag ROUNDS don't have attribute \"algorithm\"");
-			const char * rnds = rndsElement->GetText();
-			if(strlen(alg) > 0 && rnds != NULL) {
-				single = parseStringValue(rnds , path);
-				single.insert(single.begin() , atoi(alg));
-				sort(&single , 1);
-				values.push_back(single);
-				single.clear();
-			}
-			if(!rndsElement->NextSiblingElement()) break;
-			rndsElement = rndsElement->NextSiblingElement();
-		}
-	}
-	return sort2D(values);
-}
-
-int ConfigParser::parseRange(std::string * temp , std::string elementValue , int iterator , std::vector<int> * result , std::string path) {
-	if(temp->length() == 0) { throw std::runtime_error("invalid structure of xml element: " + path); }
-	int bottom = atoi(temp->c_str());
-	int top = 0;
-	temp->clear();
-	iterator++;
-	for(iterator; iterator < elementValue.length(); iterator++) {
-		if(iterator == (elementValue.length() - 1)) {
-			temp->push_back(elementValue[iterator]);
-			top = atoi(temp->c_str());
-			temp->clear();
-			break;
-		}
-		if(elementValue[iterator] != ' ') { temp->push_back(elementValue[iterator]); } else {
-			if(temp->length() == 0) { throw std::runtime_error("invalid structure of xml element: " + path); }
-			top = atoi(temp->c_str());
-			temp->clear();
-			break;
-		}
-	}
-	for(bottom; bottom <= top; bottom++) { result->push_back(bottom); }
-	return iterator;
-}
-
-void ConfigParser::setAlgorithmsRounds(std::vector<int> rounds , std::vector<int> algorithms , std::vector<std::vector<int>> specificRounds) {
-	std::vector<int> singleAlg;
-	for(int i = 0 ; i < algorithms.size() ; i++) {
-		singleAlg.push_back(algorithms[i]);
-		for(int k = 0 ; k < rounds.size() ; k++) {
-			singleAlg.push_back(rounds[k]);
-		}
-		algorithmsRounds.push_back(singleAlg);
-		singleAlg.clear();
-	}
-	for(int i = 0 ; i < specificRounds.size() ; i++) {
-		algorithmsRounds.push_back(specificRounds[i]);
-	}
-	algorithmsRounds = sort2D(algorithmsRounds);
-}
-
-std::vector<int> ConfigParser::parseStringValue(std::string elementValue , std::string path) {
+std::vector<int> ConfigParser::parseStringValue(const std::string & elementValue , const std::string & path) {
 	std::string temp;
 	std::vector<int> result;
 
-	for(int i = 0; i < elementValue.length(); i++) {
+    for(unsigned i = 0; i < elementValue.length(); i++) {
 		if((elementValue[i] < 48 || elementValue[i] > 57) && elementValue[i] != ' ' && elementValue[i] != '-') {
 			throw std::runtime_error("invalid characters in xml element: " + path);
 		}
 	}
 
-	for(int i = 0; i < elementValue.length(); i++) {
+    for(unsigned i = 0; i < elementValue.length(); i++) {
 		if(i == (elementValue.length() - 1)) {
 			temp.push_back(elementValue[i]);
 			result.push_back(atoi(temp.c_str()));
@@ -134,7 +162,7 @@ std::vector<int> ConfigParser::parseStringValue(std::string elementValue , std::
 			temp.clear();
 			break;
 		case '-':
-			i = parseRange(&temp , elementValue , i , &result , path);
+			i = parseRange(temp , elementValue , i , result , path);
 			break;
 		default:
 			temp.push_back(elementValue[i]);
@@ -145,32 +173,58 @@ std::vector<int> ConfigParser::parseStringValue(std::string elementValue , std::
 	return result;
 }
 
-void ConfigParser::sort(std::vector<int> * a , int begin) {
-	for(int i = begin ; i < a->size() ; i++) {
-		for(int k = i ; k > begin ; k--) {
-			if(a->at(k) < a->at(k - 1)) {
-				int temp = a->at(k);
-				a->at(k) = a->at(k - 1);
-				a->at(k - 1) = temp;
+int ConfigParser::parseRange(std::string & temp , const std::string & elementValue , unsigned iterator , std::vector<int> & result , const std::string & path) {
+	if(temp.length() == 0) { throw std::runtime_error("invalid structure of xml element: " + path); }
+	int bottom = atoi(temp.c_str());
+	int top = 0;
+	temp.clear();
+	iterator++;
+    for( ; iterator < elementValue.length(); iterator++) {
+		if(iterator == (elementValue.length() - 1)) {
+			temp.push_back(elementValue[iterator]);
+			top = atoi(temp.c_str());
+			temp.clear();
+			break;
+		}
+		if(elementValue[iterator] != ' ') { temp.push_back(elementValue[iterator]); } else {
+			if(temp.length() == 0) { throw std::runtime_error("invalid structure of xml element: " + path); }
+			top = atoi(temp.c_str());
+			temp.clear();
+			break;
+		}
+	}
+    for( ; bottom <= top; bottom++) { result.push_back(bottom); }
+	return iterator;
+}
+
+void ConfigParser::sort(std::vector<int> & a , unsigned begin) {
+    for(unsigned i = begin ; i < a.size() ; i++) {
+        for(unsigned k = i ; k > begin ; k--) {
+			if(a.at(k) < a.at(k - 1)) {
+				int temp = a.at(k);
+				a.at(k) = a.at(k - 1);
+				a.at(k - 1) = temp;
 			} else {
 				break;
 			}
 		}
 	}
-	for(int i = begin ; ; i++) {
-		if(i >= a->size() - 1 || a->size() == 0) break;
-		if(a->at(i) == a->at(i + 1)) {
-			a->erase(a->begin() + i);
+    for(unsigned i = begin ; ; i++) {
+		if(i >= a.size() - 1 || a.size() == 0) break;
+		if(a.at(i) == a.at(i + 1)) {
+			a.erase(a.begin() + i);
 			i--;
 		}
 	}
 }
 
-std::vector<std::vector<int>> ConfigParser::sort2D(std::vector<std::vector<int>> a) {
-	for(int i = 0 ; i < a.size() ; i++) {
-		for(int k = i ; k > 0 ; k--) {
-			if(a[k][0] < a[k - 1][0]) {
-				std::vector<int> temp = a[k];
+void ConfigParser::sort2D(ConfigParser::algorithm_rounds_v & a) {
+	std::pair<int , std::vector<int>> temp;
+	//sort
+    for(unsigned i = 0 ; i < a.size() ; i++) {
+        for(unsigned k = i ; k > 0 ; k--) {
+			if(a[k].first < a[k - 1].first) {
+				temp = a[k];
 				a[k] = a[k - 1];
 				a[k - 1] = temp;
 			} else {
@@ -178,13 +232,13 @@ std::vector<std::vector<int>> ConfigParser::sort2D(std::vector<std::vector<int>>
 			}
 		}
 	}
-	for(int i = 0 ; ; i++) {
+	//eliminate duplicities (the latter one survive)
+    for(unsigned i = 0 ; ; i++) {
 		if(i >= a.size() - 1 || a.size() == 0) break;
-		if(a[i][0] == a[i + 1][0]) {
+		if(a[i].first == a[i + 1].first) {
 			a.erase(a.begin() + i);
 			i--;
 		}
 	}
-	return a;
 }
 

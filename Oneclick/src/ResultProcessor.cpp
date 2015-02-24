@@ -69,7 +69,7 @@ bool ResultProcessor::checkConfigs(std::vector<std::string> configPaths, std::st
 	std::string sampleConfig;
 	std::string currentConfig;
 
-	for(int i = 0 ; i < configPaths.size() ; i++) {
+    for(unsigned i = 0 ; i < configPaths.size() ; i++) {
 		if(!isSampleSet) {
 			sampleConfig = Utils::readFileToString(configPaths[i]);
 			algName = getNotes(sampleConfig);
@@ -104,7 +104,7 @@ void ResultProcessor::checkErrorsProcess(std::vector<std::string> logPaths , Fil
 	std::sregex_token_iterator endExpr;
 	std::string logFile;
 	std::string wuDirectory;
-	for(int i = 0 ; i < logPaths.size() ; i++) {
+    for(unsigned i = 0 ; i < logPaths.size() ; i++) {
 		errorCount = 0;
 		wrnCount = 0;
 		validity = true;
