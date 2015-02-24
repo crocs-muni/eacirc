@@ -141,7 +141,7 @@ public:
 	static std::vector<std::string> split(std::string toSplit , char separator) {
 		std::vector<std::string> result;
 		std::string temp;
-		for(int i = 0 ; i < toSplit.length() ; i++) {
+        for(unsigned i = 0 ; i < toSplit.length() ; i++) {
 			if(toSplit[i] != separator) {
 				temp.push_back(toSplit[i]);
 			} else {

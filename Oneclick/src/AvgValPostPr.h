@@ -11,7 +11,7 @@
 
 #define AVERAGES_FILE "averages.txt"
 
-/** Post-processor to be used with older EACirc evaluator (25).
+/** Post-processor to be used with EACirc Top Bit evaluator (25).
   * File with extracted averages from logs is created for every batch.
   * Average of all averages is calculated for every batch, stored in FILE_PROCESSED_RESULTS
   */
@@ -89,7 +89,8 @@ public:
 	}
 
 	void saveResults() {
-		Utils::saveStringToFile(FILE_PROCESSED_RESULTS , writeScores());
+        std::string results = writeScores();
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , results);
 		validLogCount = 0;
 		avgSum = 0;
 		batchDirPath.erase();
@@ -99,7 +100,7 @@ public:
 private:
 	std::string writeScores() {
 		std::string result("Output file created by averages result post-processor.\n");
-		for(int i = 0 ; i < scores.size() ; i++) {
+        for(unsigned i = 0 ; i < scores.size() ; i++) {
 			result.append(scores[i].toString());
 			result.append("\n");
 		}

@@ -81,10 +81,13 @@
 //********Default paths in XML config file.********//
 /////////////////////////////////////////////////////
 
-//Paths to tags in Oneclick section
+//Paths to tags in Oneclick section and attributes
 #define PATH_OC_ALGS				"OC_OPTIONS/ALGORITHMS"
 #define PATH_OC_RNDS				"OC_OPTIONS/ROUNDS"
 #define PATH_OC_SPEC_RNDS			"OC_OPTIONS/SPECIFIC_ROUNDS"
+#define PATH_OC_ATT_SPEC_RNDS		"algorithm"
+#define PATH_OC_ADD_SETT			"OC_OPTIONS/ADDITIONAL_SETTINGS"
+#define PATH_OC_ATT_ADD_SETT		"path"
 #define PATH_OC_CLONES				"OC_OPTIONS/CLONES"
 #define PATH_OC_WU_ID				"OC_OPTIONS/WU_IDENTIFIER"
 #define PATH_OC_NUM_GENS			"OC_OPTIONS/NUM_GENERATIONS"
@@ -168,7 +171,7 @@ public:
 	  *								doesn't refer to any existing project/alg
 	  */
 	static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , 
-		int rounds , std::string * projectName , std::string * algorithmName);
+		int rounds , std::string & projectName , std::string & algorithmName);
 };
 
 extern FileLogger oneclickLogger;
