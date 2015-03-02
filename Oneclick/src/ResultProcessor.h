@@ -26,6 +26,7 @@ public:
 	  * If directory is valid, processes its results and writes them into file.
 	  * @paran path				path to directory with results
 	  *							(one directory per batch)
+	  * @param pprocNum			constant of post-processor to be used
 	  * @throw runtime_error	if invalid directory was given
 	  */
 	ResultProcessor(std::string path , int pprocNum);
@@ -65,6 +66,11 @@ private:
 	  */
 	std::string getNotes(std::string config);
 
+	/** Initializes corresponding post-processor.
+	  * @param pprocNum				constant of requested PP
+	  * @throws std::runtime_error	if no case for requested constant 
+	  *								exists
+	  */
 	void initPProcessor(int pprocNum);
 };
 

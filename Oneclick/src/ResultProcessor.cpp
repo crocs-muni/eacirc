@@ -182,6 +182,7 @@ void ResultProcessor::initPProcessor(int pprocNum) {
 	case PPROCESSOR_AVG:
 		pprocessor = new AvgValPostPr();
 		break;
+	//Add cases for new PProcessors here.
 	default:
 		throw std::runtime_error("unknown post-processor set in command line arguments");
 		break;
