@@ -2,10 +2,20 @@
 #include "CommonFnc.h"
 #include "evaluators/IEvaluator.h"
 #include "pregenerated_tv/PregeneratedTvProject.h"
-#include "estream/EstreamProject.h"
-#include "sha3/Sha3Project.h"
 #include "files/filesProject.h"
-#include "caesar/CaesarProject.h"
+
+#ifdef ESTREAM
+    #include "estream/EstreamProject.h"
+#endif
+
+#ifdef SHA3
+    #include "sha3/Sha3Project.h"
+#endif
+
+#ifdef CAESAR
+    #include "caesar/CaesarProject.h"
+#endif
+
 
 IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) { }
 
@@ -180,18 +190,24 @@ IProject* IProject::getProject(int projectType) {
     case PROJECT_PREGENERATED_TV:
         project = new PregeneratedTvProject();
         break;
+#ifdef ESTREAM
     case PROJECT_ESTREAM:
         project = new EstreamProject();
         break;
+#endif
+#ifdef SHA3
     case PROJECT_SHA3:
         project = new Sha3Project();
         break;
+#endif
     case PROJECT_FILE_DISTINGUISHER:
         project = new FilesProject();
         break;
+#ifdef CAESAR
     case PROJECT_CAESAR:
         project = new CaesarProject();
         break;
+#endif
     default:
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
         return NULL;
@@ -207,18 +223,24 @@ string IProject::getTestingConfiguration(int projectType) {
     case PROJECT_PREGENERATED_TV:
         projectConfiguration = "<PROJECT />";
         break;
+#ifdef ESTREAM
     case PROJECT_ESTREAM:
         projectConfiguration = EstreamProject::testingConfiguration();
         break;
+#endif
+#ifdef SHA3
     case PROJECT_SHA3:
         projectConfiguration = Sha3Project::testingConfiguration();
         break;
+#endif
     case PROJECT_FILE_DISTINGUISHER:
         projectConfiguration = FilesProject::testingConfiguration();
         break;
+#ifdef CAESAR
     case PROJECT_CAESAR:
         projectConfiguration = CaesarProject::testingConfiguration();
         break;
+#endif
     default:
         mainLogger.out(LOGGER_ERROR) << "No configuration - unknown project type (" << projectType << ")." << endl;
         return "";
