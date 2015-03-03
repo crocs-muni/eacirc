@@ -3,7 +3,7 @@
 #include "CommonFnc.h"
 #include "evaluators/IEvaluator.h"
 #include "XMLProcessor.h"
-#include "GAPopulation.h"
+#include <GAPopulation.h>
 #include "generators/IRndGen.h"
 #include "circuit/GACallbacks.h"
 #include "circuit/CircuitIO.h"

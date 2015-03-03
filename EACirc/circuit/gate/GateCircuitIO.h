@@ -7,8 +7,8 @@
 #define GATECIRCUITIO_H
 
 #include "GateCommonFunctions.h"
-#include "tinyXML/tinyxml.h"
 #include "circuit/ICircuitIO.h"
+#include <tinyxml.h>
 
 class CircuitIO : public ICircuitIO {
 public:

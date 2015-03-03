@@ -1,4 +1,4 @@
-#include "Catch.h"
+#include <Catch.h>
 #include "TestConfigurator.h"
 #include "XMLProcessor.h"
 #include "circuit/gate/GateCommonFunctions.h"

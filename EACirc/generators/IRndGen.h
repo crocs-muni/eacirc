@@ -4,7 +4,7 @@
 //#include "EACglobals.h"
 #include <string>
 #include <random>
-#include "tinyxml.h"
+#include <tinyxml.h>
 #include "CommonFnc.h"
 
 class IRndGen {

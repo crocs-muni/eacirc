@@ -11,9 +11,9 @@
 #include "PolyCommonFunctions.h"
 #include "EACglobals.h"
 #include "circuit/ICircuitIO.h"
-#include "GAGenome.h"
-#include "GA2DArrayGenome.h"
-#include "tinyXML/tinyxml.h"
+#include <GAGenome.h>
+#include <GA2DArrayGenome.h>
+#include <tinyxml.h>
 
 class PolyIO : public ICircuitIO {
 public:

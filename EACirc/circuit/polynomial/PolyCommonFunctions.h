@@ -10,8 +10,8 @@
 #include "EACglobals.h"
 
 // We use 2D array genome (polynomials, terms).
-#include "GAGenome.h"
-#include "GA2DArrayGenome.h"
+#include <GAGenome.h>
+#include <GA2DArrayGenome.h>
 
 // Determine whether we are building for a 64-bit platform.
 // _LP64: http://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html

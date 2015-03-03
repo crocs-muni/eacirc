@@ -3,7 +3,7 @@
 #include "generators/BiasRndGen.h"
 #include "generators/QuantumRndGen.h"
 #include "generators/MD5RndGen.h"
-#include "garandom.h"
+#include <garandom.h>
 #include "XMLProcessor.h"
 
 #ifdef _WIN32

@@ -2,7 +2,7 @@
 #define GA_GATE_CALLBACKS_H
 
 #include "EACglobals.h"
-#include "GA1DArrayGenome.h"
+#include <GA1DArrayGenome.h>
 
 class GAGateCallbacks {
 public:

@@ -1,7 +1,7 @@
 #ifndef XMLPROCESSOR_H
 #define XMLPROCESSOR_H
 
-#include "tinyxml.h"
+#include <tinyxml.h>
 #include "EACglobals.h"
 
 /** loads configuration data from file to settings structure

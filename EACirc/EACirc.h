@@ -2,7 +2,7 @@
 #define EACIRC_H
 
 #include "EACglobals.h"
-#include "GASStateGA.h"
+#include <GASStateGA.h>
 #include "projects/IProject.h"
 #include "circuit/ICircuit.h"
 

@@ -3,8 +3,8 @@
 
 #include "EACglobals.h"
 #include "PolyCommonFunctions.h"
-#include "GAGenome.h"
-#include "GA2DArrayGenome.h"
+#include <GAGenome.h>
+#include <GA2DArrayGenome.h>
 
 #define MUTATE_TERM_STRATEGY_FLIP 0
 #define MUTATE_TERM_STRATEGY_ADDREMOVE 1

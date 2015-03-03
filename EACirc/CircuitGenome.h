@@ -1,9 +1,9 @@
 #ifndef CIRCUIT_GENOME_H
 #define CIRCUIT_GENOME_H
 
-#include "GA1DArrayGenome.h"
+#include <GA1DArrayGenome.h>
 #include "EACglobals.h"
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 /*
 	INPUTS

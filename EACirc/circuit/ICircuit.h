@@ -7,8 +7,8 @@
 #define	ICIRCUIT_H
 
 #include "EACglobals.h"
-#include "GAGenome.h"
-#include "GAPopulation.h"
+#include <GAGenome.h>
+#include <GAPopulation.h>
 #include "ICircuitIO.h"
 
 class ICircuit {

@@ -7,7 +7,7 @@
 #define	GATECIRCUIT_H
 
 #include "EACglobals.h"
-#include "GA1DArrayGenome.h"
+#include <GA1DArrayGenome.h>
 #include "circuit/ICircuit.h"
 #include "GAGateCallbacks.h"
 

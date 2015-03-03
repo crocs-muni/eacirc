@@ -8,7 +8,7 @@
 #include "GateCommonFunctions.h"
 #include "GAGateCallbacks.h"
 #include "GateInterpreter.h"
-#include "GAPopulation.h"
+#include <GAPopulation.h>
 #include "XMLProcessor.h"
 
 #define max(a,b) (((a)>(b))?(a):(b))

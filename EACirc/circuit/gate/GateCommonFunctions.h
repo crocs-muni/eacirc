@@ -2,7 +2,7 @@
 #define GATE_COMMON_FUNCTIONS_H
 
 #include "EACglobals.h"
-#include "GA1DArrayGenome.h"
+#include <GA1DArrayGenome.h>
 
 /** get function type from node value
  * @param nodeValue

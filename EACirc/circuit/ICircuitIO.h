@@ -7,8 +7,8 @@
 #define	ICIRCUITIO_H
 
 #include "EACglobals.h"
-#include "GAGenome.h"
-#include "tinyXML/tinyxml.h"
+#include <GAGenome.h>
+#include <tinyxml.h>
 
 class ICircuitIO {
 public:

@@ -1,8 +1,8 @@
 #include "TestConfigurator.h"
 #include <iostream>
-#include "Catch.h"
+#include <Catch.h>
 #include "EACirc.h"
-#include "tinyxml.h"
+#include <tinyxml.h>
 
 TestConfigurator::TestConfigurator()
     : m_currentProject(0) {
