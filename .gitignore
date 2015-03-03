@@ -32,9 +32,6 @@ notes.txt
 *.dgml
 *.cd
 
-# Version file (with current commit hash)
-EACirc/Version.h
-
 # results files with circuits created during debuging
 circuit_*.dot
 circuit_*.c
