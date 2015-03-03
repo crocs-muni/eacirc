@@ -17,16 +17,16 @@ set(SOURCES
 # === circuit gate processing ===
     circuit/gate/GateCircuitIO.cpp
     circuit/gate/GateCircuit.cpp
-    circuit/gate/GACallbacks.cpp
-    circuit/gate/CircuitInterpreter.cpp
-    circuit/gate/CircuitCommonFunctions.cpp
+    circuit/gate/GateInterpreter.cpp
+    circuit/gate/GateCommonFunctions.cpp
+    circuit/gate/GAGateCallbacks.cpp
 # === polynomial circuits ===
     circuit/polynomial/PolynomialCircuit.cpp
     circuit/polynomial/PolynomialCircuitIO.cpp
     circuit/polynomial/Term.cpp
-    circuit/polynomial/PolyDistEval.cpp
     circuit/polynomial/GAPolyCallbacks.cpp
-    circuit/polynomial/poly.cpp
+    circuit/polynomial/PolyCommonFunctions.cpp
+    circuit/polynomial/PolynomialInterpreter.cpp
 # === evaluators ===
     evaluators/IEvaluator.cpp
     evaluators/TopBitEvaluator.cpp
@@ -63,18 +63,18 @@ set(HEADERS
     circuit/ICircuit.h
     circuit/ICircuitIO.h
 # === circuit gate processing ===
-    circuit/gate/GACallbacks.h
-    circuit/gate/CircuitInterpreter.h
-    circuit/gate/CircuitCommonFunctions.h
     circuit/gate/GateCircuit.h
     circuit/gate/GateCircuitIO.h
+    circuit/gate/GateInterpreter.h
+    circuit/gate/GateCommonFunctions.h
+    circuit/gate/GAGateCallbacks.h
  # === polynomial circuits ===
-    circuit/polynomial/PolyDistEval.h
     circuit/polynomial/GAPolyCallbacks.h
     circuit/polynomial/Term.h
-    circuit/polynomial/poly.h
     circuit/polynomial/PolynomialCircuit.h
     circuit/polynomial/PolynomialCircuitIO.h
+    circuit/polynomial/PolyCommonFunctions.h
+    circuit/polynomial/PolynomialInterpreter.h
 # === evaluators ===
     evaluators/IEvaluator.h
     evaluators/TopBitEvaluator.h
