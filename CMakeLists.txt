@@ -8,8 +8,8 @@ project(EACirc CXX C)
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++")
-elseif (MSVC12 OR MSVC13)
-    # === todo ===
+elseif (MSVC AND (MSVC_VERSION GREATER 1700))
+    # === nothing special yet ===
 else()
     message(FATAL_ERROR "unsuported compiler: ${CMAKE_CXX_COMPILER}")
 endif ()
