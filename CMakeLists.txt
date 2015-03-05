@@ -46,6 +46,12 @@ add_subdirectory(projects/sha3)
 # === EACirc ===
 add_subdirectory(EACirc)
 
+# === Oneclick ===
+option(BUILD_ONECLICK "Build Oneclick" OFF)
+if(BUILD_ONECLICK)
+    add_subdirectory(Oneclick)
+endif()
+
 # === 3rd party dependencies ===
 add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
