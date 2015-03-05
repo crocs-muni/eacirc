@@ -1,7 +1,7 @@
 #ifndef XMLPROCESSOR_H
 #define XMLPROCESSOR_H
 
-#include "tinyXML/tinyxml.h"
+#include <tinyxml.h>
 
 #include "Status.h"
 

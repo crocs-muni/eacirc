@@ -5,8 +5,8 @@
 #include <sstream>
 
 #include "EACconstants.h"
-#include "projects/estream/EstreamCiphers.h"
-#include "projects/sha3/Sha3Functions.h"
+#include "estream/EstreamCiphers.h"
+#include "sha3/Sha3Functions.h"
 
 #include "XMLproc.h"
 #include "FileLogger.hpp"
