@@ -1,6 +1,3 @@
-//TODO: possible config parser and filegenerator rework - config generation could be iterated through any EACirc tag...
-//		not sure yet...
-
 #include <exception>
 #include <iostream>
 #include <sstream>
