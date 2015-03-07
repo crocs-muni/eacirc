@@ -5,6 +5,8 @@ CONFIG -= qt
 
 INCLUDEPATH += $$PWD/../EACirc
 
+QMAKE_CXXFLAGS += -Wall -Wextra -Weffc++
+
 CONFIG += c++11
 
 SOURCES += \

@@ -8,8 +8,7 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
 
 	initPProcessor(pprocNum);
 
-	std::string algName;
-	std::string pValues;
+    std::string algName;
 	std::vector<std::string> configPaths;
 	std::vector<std::string> logPaths;
 

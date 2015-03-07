@@ -32,11 +32,10 @@ private:
 	std::smatch emptyMatch;
 	std::sregex_token_iterator endExpr;
 public:
-	PValuePostPr() : validLogCount(0) , uniformLogCount(0) {
-		uniPatt.assign		("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.");
-		nonUniPatt.assign	("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.");
-		pValPatt.assign		("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)");
-	}
+    PValuePostPr() : validLogCount(0) , uniformLogCount(0) ,
+        uniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.") ,
+        nonUniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.") ,
+        pValPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)") {}
 
 	bool process(std::string path) {
 		fs::directory_iterator dirIter(path);

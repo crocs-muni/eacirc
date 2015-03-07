@@ -23,13 +23,13 @@ private:
 	std::vector<Score> scores;
 	std::string averages;
 
-	std::regex avgPatt;
+    std::regex avgPatt;
 
 	std::smatch avg;
 	std::smatch emptyMatch;
 public:
-	AvgValPostPr() : validLogCount(0) , avgSum(0) {
-		avgPatt.assign("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)");
+    AvgValPostPr() : validLogCount(0) , avgSum(0) , avgPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)") {
+        //avgPatt.assign("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)");
 	}
 
 	bool process(std::string path) {
