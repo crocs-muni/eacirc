@@ -9,8 +9,8 @@ set(SOURCES
     src/ResultProcessor.cpp
     src/XMLproc.cpp
     # === project files ===
-    ${PROJECT_SOURCE_DIR}/projects/estream/EstreamCiphers.cpp
-    ${PROJECT_SOURCE_DIR}/projects/sha3/Sha3Functions.cpp
+    ${PROJECTS_DIR}/estream/EstreamCiphers.cpp
+    ${PROJECTS_DIR}/sha3/Sha3Functions.cpp
 )
 
 
@@ -25,8 +25,8 @@ set(HEADERS
     src/XMLproc.h
     src/dirent.h
     # === project files ===
-    ${PROJECT_SOURCE_DIR}/projects/estream/EstreamCiphers.h
-    ${PROJECT_SOURCE_DIR}/projects/sha3/Sha3Functions.h
+    ${PROJECTS_DIR}/estream/EstreamCiphers.h
+    ${PROJECTS_DIR}/sha3/Sha3Functions.h
 )
 
 
@@ -36,6 +36,6 @@ source_group(projects REGULAR_EXPRESSION "${CMAKE_SOURCE_DIR}/projects/.*")
 add_executable(oneclick ${SOURCES} ${HEADERS})
 target_include_directories(oneclick
     PRIVATE ${PROJECT_SOURCE_DIR}/EACirc
-    PRIVATE ${PROJECT_SOURCE_DIR}/projects
+    PRIVATE ${PROJECTS_DIR}
 )
 target_link_libraries(oneclick tinyXML)

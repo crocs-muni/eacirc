@@ -24,12 +24,11 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
 endif()
 
 
-
-
-# === Define EACirc target name ===
+# === Variables ===
 set(EACIRC_TARGET EACirc)
 
-#=== Define run directory ===
+set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
+
 set(RUN_DIR ${CMAKE_BINARY_DIR}/run)
 
 

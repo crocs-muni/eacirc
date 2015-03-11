@@ -108,7 +108,7 @@ add_executable(${EACIRC_TARGET} ${SOURCES} ${HEADERS} ${OTHER_FILES})
 
 target_include_directories(${EACIRC_TARGET}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE ${CMAKE_SOURCE_DIR}/projects
+    PRIVATE ${PROJECTS_DIR}
 )
 target_link_libraries(${EACIRC_TARGET}
     galib
