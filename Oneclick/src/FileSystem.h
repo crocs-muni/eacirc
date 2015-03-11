@@ -26,7 +26,7 @@ namespace fs {
 	public:
 		directory_iterator() {}
 
-		directory_iterator(std::string p) {
+		directory_iterator(const std::string & p) {
 			dir = opendir(p.c_str());
 			if(dir != NULL) {
 				item = readdir(dir);
@@ -66,9 +66,9 @@ namespace fs {
 			}
 		}
 
-		bool operator==(directory_iterator b) { return (item == b.item); }
+		bool operator==(const directory_iterator & b) { return (item == b.item); }
 
-		bool operator!=(directory_iterator b) { return (item != b.item); }
+		bool operator!=(const directory_iterator & b) { return (item != b.item); }
 
 		bool is_directory() { return S_ISDIR(item->d_type); }
 

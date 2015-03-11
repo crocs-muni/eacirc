@@ -11,7 +11,7 @@
 
 #define PVALUES_FILE "pValues.txt"
 
-/** Post-processor to be used with newer evaluator (26). Is set as default.
+/** Post-processor to be used with EACirc Categories evaluator (26). Is set as default.
   * Creates file with extracted pValues from logs for each batch.
   * Ratio of uniform workunits in batch is stored in PROCESSED_RESULTS_FILE
   * for each batch.
@@ -32,11 +32,10 @@ private:
 	std::smatch emptyMatch;
 	std::sregex_token_iterator endExpr;
 public:
-	PValuePostPr() : validLogCount(0) , uniformLogCount(0) {
-		uniPatt.assign		("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.");
-		nonUniPatt.assign	("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.");
-		pValPatt.assign		("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)");
-	}
+    PValuePostPr() : validLogCount(0) , uniformLogCount(0) ,
+        uniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.") ,
+        nonUniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.") ,
+        pValPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)") {}
 
 	bool process(std::string path) {
 		fs::directory_iterator dirIter(path);
@@ -90,7 +89,8 @@ public:
 	}
 
 	void saveResults() {
-		Utils::saveStringToFile(FILE_PROCESSED_RESULTS , writeScores());
+        std::string result = writeScores();
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , result);
 		validLogCount = 0;
 		uniformLogCount = 0;
 		batchDirPath.erase();
@@ -100,7 +100,7 @@ public:
 private:
 	std::string writeScores() {
 		std::string result("Output file created by p-values result post-processor.\n");
-		for(int i = 0 ; i < scores.size() ; i++) {
+        for(unsigned i = 0 ; i < scores.size() ; i++) {
 			result.append(scores[i].toString());
 			result.append("\n");
 		}

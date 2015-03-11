@@ -11,7 +11,7 @@
 
 #define AVERAGES_FILE "averages.txt"
 
-/** Post-processor to be used with older EACirc evaluator (25).
+/** Post-processor to be used with EACirc Top Bit evaluator (25).
   * File with extracted averages from logs is created for every batch.
   * Average of all averages is calculated for every batch, stored in FILE_PROCESSED_RESULTS
   */
@@ -23,13 +23,13 @@ private:
 	std::vector<Score> scores;
 	std::string averages;
 
-	std::regex avgPatt;
+    std::regex avgPatt;
 
 	std::smatch avg;
 	std::smatch emptyMatch;
 public:
-	AvgValPostPr() : validLogCount(0) , avgSum(0) {
-		avgPatt.assign("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)");
+    AvgValPostPr() : validLogCount(0) , avgSum(0) , avgPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)") {
+        //avgPatt.assign("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)");
 	}
 
 	bool process(std::string path) {
@@ -89,7 +89,8 @@ public:
 	}
 
 	void saveResults() {
-		Utils::saveStringToFile(FILE_PROCESSED_RESULTS , writeScores());
+        std::string results = writeScores();
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , results);
 		validLogCount = 0;
 		avgSum = 0;
 		batchDirPath.erase();
@@ -99,7 +100,7 @@ public:
 private:
 	std::string writeScores() {
 		std::string result("Output file created by averages result post-processor.\n");
-		for(int i = 0 ; i < scores.size() ; i++) {
+        for(unsigned i = 0 ; i < scores.size() ; i++) {
 			result.append(scores[i].toString());
 			result.append("\n");
 		}

@@ -8,8 +8,7 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
 
 	initPProcessor(pprocNum);
 
-	std::string algName;
-	std::string pValues;
+    std::string algName;
 	std::vector<std::string> configPaths;
 	std::vector<std::string> logPaths;
 
@@ -69,7 +68,7 @@ bool ResultProcessor::checkConfigs(std::vector<std::string> configPaths, std::st
 	std::string sampleConfig;
 	std::string currentConfig;
 
-	for(int i = 0 ; i < configPaths.size() ; i++) {
+    for(unsigned i = 0 ; i < configPaths.size() ; i++) {
 		if(!isSampleSet) {
 			sampleConfig = Utils::readFileToString(configPaths[i]);
 			algName = getNotes(sampleConfig);
@@ -104,7 +103,7 @@ void ResultProcessor::checkErrorsProcess(std::vector<std::string> logPaths , Fil
 	std::sregex_token_iterator endExpr;
 	std::string logFile;
 	std::string wuDirectory;
-	for(int i = 0 ; i < logPaths.size() ; i++) {
+    for(unsigned i = 0 ; i < logPaths.size() ; i++) {
 		errorCount = 0;
 		wrnCount = 0;
 		validity = true;
@@ -182,6 +181,7 @@ void ResultProcessor::initPProcessor(int pprocNum) {
 	case PPROCESSOR_AVG:
 		pprocessor = new AvgValPostPr();
 		break;
+	//Add cases for new PProcessors here.
 	default:
 		throw std::runtime_error("unknown post-processor set in command line arguments");
 		break;

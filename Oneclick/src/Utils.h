@@ -50,7 +50,7 @@ public:
 	  * @return					content of the file
 	  * @throws runtime_error	when file can't be opened
 	  */
-	static std::string readFileToString(std::string path) {
+    static std::string readFileToString(const std::string & path) {
 		std::ifstream file(path , std::ios::in);
 		if(!file.is_open()) throw std::runtime_error("can't open input file: " + path);
 		std::stringstream buffer;
@@ -66,7 +66,7 @@ public:
 	  * @param source			string to be saved
 	  * @throws runtime_error	when file can't be opened
 	  */
-	static void saveStringToFile(std::string path , std::string & source) {
+    static void saveStringToFile(const std::string & path , std::string & source) {
 		std::ofstream file(path , std::ios::out);
 		if(!file.is_open()) throw std::runtime_error("can't open output file: " + path);
 		file << source;
@@ -81,7 +81,7 @@ public:
 	  * @param path				path to be parsed
 	  * @return					extracted directory or file name
 	  */
-	static std::string getLastItemInPath(std::string path) {
+    static std::string getLastItemInPath(const std::string & path) {
 		std::string result;
 		for(int i = path.length() - 1 ; i >= 0 ; i--) {
 			if(path[i] == '/') {
@@ -99,7 +99,7 @@ public:
 	  * @param path				path to be parsed
 	  * @return					extracted path without last item
 	  */
-	static std::string getPathWithoutLastItem(std::string path) {
+    static std::string getPathWithoutLastItem(const std::string & path) {
 		std::string result;
 		int index = path.find_last_of('/');
 		result = path.substr(0 , index + 1);
@@ -138,10 +138,10 @@ public:
 	  * @param				toSplit string to be splitted
 	  * @return				vector of strings
 	  */
-	static std::vector<std::string> split(std::string toSplit , char separator) {
+    static std::vector<std::string> split(const std::string & toSplit , char separator) {
 		std::vector<std::string> result;
 		std::string temp;
-		for(int i = 0 ; i < toSplit.length() ; i++) {
+        for(unsigned i = 0 ; i < toSplit.length() ; i++) {
 			if(toSplit[i] != separator) {
 				temp.push_back(toSplit[i]);
 			} else {
@@ -159,7 +159,7 @@ public:
 	* @param fileName			name of the file
 	* @return index
 	*/
-	static int getFileIndex(std::string fileName) {
+    static int getFileIndex(const std::string & fileName) {
 		int result = 0;
 		std::vector<std::string> splitted = Utils::split(fileName , INDEX_SEPARATOR);
 
@@ -177,7 +177,7 @@ public:
 	  * Permissions 0777 under Linux.
 	  * @param path			absolute or relative
 	  */
-	static void createDirectory(std::string path) {
+    static void createDirectory(const std::string & path) {
 		#if defined WIN32 || defined _WIN32
 		if(_mkdir(path.c_str()) != 0) {
 			if(errno != EEXIST) { throw std::runtime_error("error when creating directory: " + path); }

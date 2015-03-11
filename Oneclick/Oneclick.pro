@@ -5,6 +5,8 @@ CONFIG -= qt
 
 INCLUDEPATH += $$PWD/../EACirc
 
+QMAKE_CXXFLAGS += -Wall -Wextra -Weffc++
+
 CONFIG += c++11
 
 SOURCES += \
@@ -37,7 +39,10 @@ HEADERS += \
     src/tinyXML/tinyxml.h \
     ../EACirc/projects/estream/EstreamCiphers.h \
     ../EACirc/projects/sha3/Sha3Functions.h \
-    src/dirent.h
+    src/dirent.h \
+    src/AvgValPostPr.h \
+    src/PostProcessor.h \
+    src/PValuePostPr.h
 
 DISTFILES += \
     src/tinyXML/tinyXML_LICENCE.txt
