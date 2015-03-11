@@ -16,14 +16,10 @@
 *.exe
 *.hi
 *.asv
-utils/get_scores
-utils/start.bat
 [Dd]ebug/
 [Rr]elease/
-[Bb]uild/
+[Bb]uild*/
 [Rr]un/
-EACirc/galib/BUILD
-EACirc/EACirc
 
 # backup and system files
 *~
@@ -31,23 +27,6 @@ EACirc/EACirc
 notes.txt
 *.dgml
 *.cd
-
-# results files with circuits created during debuging
-circuit_*.dot
-circuit_*.c
-circuit_*.cat
-circuit_*.txt
-circuit_*.xml
-test_vectors_hr.txt
-test_vectors.bin
-state_initial.xml
-scores.log
-population_initial.xml
-fraction_done.txt
-fitness_progress.txt
-bestfit_graph.txt
-avgfit_graph.txt
-config.xml
 
 # Oneclick result files and logs
 Oneclick/exec/processed_results.txt
