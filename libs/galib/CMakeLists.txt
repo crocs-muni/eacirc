@@ -2,6 +2,10 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 
+include(${PROJECT_SOURCE_DIR}/cmake/remove_cxx_flags.cmake)
+remove_cxx_flags(SUPRESS_LIBS_WARNINGS)
+
+
 set(SOURCES
     garandom.cpp
     gaerror.cpp

@@ -42,6 +42,8 @@ if(BUILD_ONECLICK)
     add_subdirectory(oneclick)
 endif()
 # === 3rd party dependencies ===
+set(SUPRESS_LIBS_WARNINGS "-Wall -Wextra -Weff" CACHE STRING "Supress warnings when building 3rd party libs")
+
 add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
