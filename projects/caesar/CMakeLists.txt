@@ -1,9 +1,8 @@
 # === caesar ===
 cmake_minimum_required(VERSION 3.0.2)
 
-if(NOT BUILD_CAESAR)
-    return()
-endif()
+
+include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 
 
 set(SOURCES
@@ -40,6 +39,5 @@ set(OTHER_FILES
 )
 
 
-add_library(caesar STATIC ${SOURCES} ${HEADERS})
+add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})
 target_link_libraries(caesar tinyXML)
-target_include_directories(caesar PRIVATE ${PROJECT_SOURCE_DIR}/EACirc)

@@ -2,6 +2,10 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 
+include(${PROJECT_SOURCE_DIR}/cmake/detect_version.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
+
+
 set(SOURCES
 # === main project files ===
     Main.cpp
@@ -101,37 +105,25 @@ set(OTHER_FILES
 )
 
 
+# === configure files ===
 detect_version(Version.h)
 
 
-add_executable(${EACIRC_TARGET} ${SOURCES} ${HEADERS} ${OTHER_FILES})
+# === eacirc target ===
+add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
 
-target_include_directories(${EACIRC_TARGET}
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE ${PROJECTS_DIR}
-)
-target_link_libraries(${EACIRC_TARGET}
-    galib
-    tinyXML
-    catch
-)
-
-if(BUILD_CAESAR)
-    target_link_libraries(${EACIRC_TARGET} caesar)
-    target_compile_definitions(${EACIRC_TARGET} PRIVATE -DCAESAR)
-endif()
-if(BUILD_ESTREAM)
-    target_link_libraries(${EACIRC_TARGET} estream)
-    target_compile_definitions(${EACIRC_TARGET} PRIVATE -DESTREAM)
-endif()
-if(BUILD_SHA3)
-    target_link_libraries(${EACIRC_TARGET} sha3)
-    target_compile_definitions(${EACIRC_TARGET} PRIVATE -DSHA3)
-endif()
+target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS_DIR})
+target_link_libraries(eacirc galib tinyXML catch)
 
 
-add_custom_command(TARGET ${EACIRC_TARGET} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory  ${RUN_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${EACIRC_TARGET}> ${RUN_DIR}
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/config.xml ${RUN_DIR}
+# === link projects ===
+link_eacirc_project(caesar)
+link_eacirc_project(estream)
+link_eacirc_project(sha3)
+
+
+# === install ===
+install(TARGETS eacirc DESTINATION ${RUN_DIR})
+install(SCRIPT ${PROJECT_SOURCE_DIR}/cmake/copy_if_not_exists.cmake
+    CODE "copy_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/config.xml ${RUN_DIR}/config.xml)"
 )

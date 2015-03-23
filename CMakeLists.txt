@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
-include(cmake/detect_version.cmake)
+project(EACirc)
 
-
-project(EACirc CXX C)
+include(cmake/copy_if_not_exists.cmake)
 
 
 # === Set CXX flags ===
@@ -24,34 +23,28 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
 endif()
 
 
-# === Variables ===
-set(EACIRC_TARGET EACirc)
 
+# === Global variables ===
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
+set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 
-set(RUN_DIR ${CMAKE_BINARY_DIR}/run)
 
 
-# === EACirc projects ===
-option(BUILD_CAESAR "Enable building of Caesar" ON)
-option(BUILD_ESTREAM "Enable building of Estream" ON)
-option(BUILD_SHA3 "Enable building of SHA-3" ON)
-
+# === projects ===
 add_subdirectory(projects/caesar)
 add_subdirectory(projects/estream)
 add_subdirectory(projects/sha3)
-
-
-# === EACirc ===
-add_subdirectory(EACirc)
-
-# === Oneclick ===
-option(BUILD_ONECLICK "Build Oneclick" OFF)
-if(BUILD_ONECLICK)
-    add_subdirectory(Oneclick)
-endif()
-
+# === executables ===
+add_subdirectory(eacirc)
+add_subdirectory(oneclick)
 # === 3rd party dependencies ===
 add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
+
+
+
+# === testing ===
+enable_testing()
+add_test(NAME test COMMAND eacirc -log -test WORKING_DIRECTORY ${RUN_DIR})
+add_test(NAME clean COMMAND eacirc -log -test WORKING_DIRECTORY ${RUN_DIR})

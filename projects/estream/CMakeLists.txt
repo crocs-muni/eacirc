@@ -1,9 +1,8 @@
 # === estream ===
 cmake_minimum_required(VERSION 3.0.2)
 
-if(NOT BUILD_ESTREAM)
-    return()
-endif()
+
+include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 
 
 set(SOURCES
@@ -125,6 +124,5 @@ set(HEADERS
 )
 
 
-add_library(estream STATIC ${SOURCES} ${HEADERS})
+add_eacirc_project(estream ${SOURCES} ${HEADERS})
 target_link_libraries(estream tinyXML galib)
-target_include_directories(estream PRIVATE ${PROJECT_SOURCE_DIR}/EACirc)

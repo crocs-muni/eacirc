@@ -1,9 +1,8 @@
 # === sha3 ===
 cmake_minimum_required(VERSION 3.0.2)
 
-if(NOT BUILD_SHA3)
-    return()
-endif()
+
+include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 
 
 set(SOURCES
@@ -233,6 +232,5 @@ set(HEADERS
 )
 
 
-add_library(sha3 STATIC ${SOURCES} ${HEADERS})
+add_eacirc_project(sha3 ${SOURCES} ${HEADERS})
 target_link_libraries(sha3 tinyXML)
-target_include_directories(sha3 PRIVATE ${PROJECT_SOURCE_DIR}/EACirc)
