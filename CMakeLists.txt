@@ -36,7 +36,11 @@ add_subdirectory(projects/estream)
 add_subdirectory(projects/sha3)
 # === executables ===
 add_subdirectory(eacirc)
-add_subdirectory(oneclick)
+
+option(BUILD_ONECLICK "Include oneclick in build" ON)
+if(BUILD_ONECLICK)
+    add_subdirectory(oneclick)
+endif()
 # === 3rd party dependencies ===
 add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
