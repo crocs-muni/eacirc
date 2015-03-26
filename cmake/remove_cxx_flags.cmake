@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 
-function(remove_cxx_flags FLAGS)
+macro(remove_cxx_flags FLAGS)
+    list(LENGTH ${FLAGS} LEN)
+    if(${LEN} EQUAL 0)
+        return()
+    endif()
+
     string(REGEX MATCHALL "-[^\ ]+" ALL_FLAGS ${CMAKE_CXX_FLAGS})
     string(REGEX MATCHALL "-[^\ ]+" TO_REMOVE ${SUPRESS_LIBS_WARNINGS})
 
@@ -13,4 +18,4 @@ function(remove_cxx_flags FLAGS)
     endforeach(FLAG)
 
     set(CMAKE_CXX_FLAGS ${RESULT})
-endfunction(remove_cxx_flags)
+endmacro(remove_cxx_flags)

@@ -232,5 +232,9 @@ set(HEADERS
 )
 
 
+# === source groups ===
+source_group(hash_functions     REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/hash_functions/.*")
+
+
 add_eacirc_project(sha3 ${SOURCES} ${HEADERS})
 target_link_libraries(sha3 tinyXML)

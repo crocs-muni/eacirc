@@ -124,5 +124,9 @@ set(HEADERS
 )
 
 
+# === source groups ===
+source_group(ciphers     REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/ciphers/.*")
+
+
 add_eacirc_project(estream ${SOURCES} ${HEADERS})
 target_link_libraries(estream tinyXML galib)

@@ -109,6 +109,20 @@ set(OTHER_FILES
 detect_version(Version.h)
 
 
+
+# === source groups ===
+source_group(circuit         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
+    source_group(gate            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
+    source_group(polynomial      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
+source_group(evaluators      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
+source_group(generators      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
+source_group(projects        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/.*")
+    source_group(pregenerated_tv REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/pregenerated_tv/.*")
+    source_group(files           REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/files/.*")
+source_group(self_tests      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/self_tests/.*")
+
+
+
 # === eacirc target ===
 add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
 

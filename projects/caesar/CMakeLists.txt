@@ -39,5 +39,9 @@ set(OTHER_FILES
 )
 
 
+# === source groups ===
+source_group(aead     REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/.*")
+
+
 add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})
 target_link_libraries(caesar tinyXML)

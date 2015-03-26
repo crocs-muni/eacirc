@@ -7,14 +7,17 @@ include(cmake/copy_if_not_exists.cmake)
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++")
+
+    # === Supress warnings when building 3rd party libs on Linux ===
+    set(SUPRESS_LIBS_WARNINGS "-Wall -Wextra -Weffc++" CACHE STRING "Supress warnings when building 3rd party libs")
 elseif (MSVC AND (MSVC_VERSION GREATER 1700))
     # === nothing special yet ===
 else()
     message(FATAL_ERROR "unsuported compiler: ${CMAKE_CXX_COMPILER}")
-endif ()
+endif()
 
 
-# === Enable profiling using gcc ===
+# === Enable profiling when using gcc ===
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
      option(ENABLE_PROFILING "Enable profiling" OFF)
     if(ENABLE_PROFILING)
@@ -42,8 +45,6 @@ if(BUILD_ONECLICK)
     add_subdirectory(oneclick)
 endif()
 # === 3rd party dependencies ===
-set(SUPRESS_LIBS_WARNINGS "-Wall -Wextra -Weff" CACHE STRING "Supress warnings when building 3rd party libs")
-
 add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
