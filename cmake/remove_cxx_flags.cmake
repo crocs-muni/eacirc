@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 
 
-macro(remove_cxx_flags FLAGS)
+function(remove_cxx_flags FLAGS)
     list(LENGTH ${FLAGS} LEN)
     if(${LEN} EQUAL 0)
         return()
@@ -18,4 +18,4 @@ macro(remove_cxx_flags FLAGS)
     endforeach(FLAG)
 
     set(CMAKE_CXX_FLAGS ${RESULT})
-endmacro(remove_cxx_flags)
+endfunction(remove_cxx_flags)
