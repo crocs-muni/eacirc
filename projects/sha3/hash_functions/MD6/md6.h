@@ -60,20 +60,8 @@
 #define MD6_H_INCLUDED
 
 
-/* inttypes.h (which includes stdint.h)
-** inttypes.h and stdint.h  are part of the normal environment 
-** for gcc, but not for MS Visual Studio.  Fortunately,
-** compatible implementations are available from Google at:
-**   http://msinttypes.googlecode.com/svn/trunk/stdint.h
-**   http://msinttypes.googlecode.com/svn/trunk/inttypes.h
-** If these two files are in the same directory as md6.h, then
-** MD6 will compile OK with MS Visual Studio.
-*/
-#if defined  _MSC_VER
-#include "inttypes.h"
-#else
 #include <inttypes.h>
-#endif
+
 
 /* MD6 wordsize.
 **
