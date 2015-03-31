@@ -17,5 +17,5 @@ function(remove_cxx_flags FLAGS)
         string(CONCAT RESULT ${RESULT} ${FLAG})
     endforeach(FLAG)
 
-    set(CMAKE_CXX_FLAGS ${RESULT})
+    set(CMAKE_CXX_FLAGS ${RESULT} PARENT_SCOPE)
 endfunction(remove_cxx_flags)
