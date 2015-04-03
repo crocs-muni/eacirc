@@ -27,6 +27,14 @@ endif()
 
 
 
+# === detect CUDA ===
+find_package(CUDA)
+if(CUDA_FOUND)
+    option(BUILD_CUDA "Build CUDA code" ON)
+endif()
+
+
+
 # === Global variables ===
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
 set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
