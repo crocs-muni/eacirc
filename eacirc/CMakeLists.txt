@@ -53,10 +53,6 @@ set(SOURCES
     self_tests/TestConfigurator.cpp
 )
 
-set(CUDA_SOURCES
-# === something ===
-)
-
 set(HEADERS
 # === main project files ===
     Main.h
@@ -131,7 +127,7 @@ source_group(self_tests      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/sel
 
 # === eacirc target ===
 if(BUILD_CUDA)
-    cuda_add_executable(eacirc ${SOURCES} ${CUDA_SOURCES} ${HEADERS} ${OTHER_FILES})
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
     target_compile_definitions(eacirc PRIVATE CUDA)
 else()
     add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
