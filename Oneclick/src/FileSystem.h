@@ -4,12 +4,13 @@
 #include <iostream>
 #include <string>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #if defined WIN32 || defined _WIN32
 #include "dirent.h"
 #elif defined __linux__
 #include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #else
 #error "not implemeted for this platform"
 #endif
@@ -70,18 +71,18 @@ namespace fs {
 
 		bool operator!=(const directory_iterator & b) { return (item != b.item); }
 
-		bool is_directory() { return S_ISDIR(item->d_type); }
+		bool is_directory() {
+			struct stat s;
+			stat(item_path.c_str(), &s);
+			return S_ISDIR(s.st_mode);
+		}
 
-		bool is_file() { return S_ISREG(item->d_type); }
+		bool is_file() {
+			struct stat s;
+			stat(item_path.c_str(), &s);
+			return S_ISREG(s.st_mode);
+		}
 	};
 }
-
-
-
-
-
-
-
-
 
 #endif //FILESYSTEM_H

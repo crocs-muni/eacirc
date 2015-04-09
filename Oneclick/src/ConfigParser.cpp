@@ -200,9 +200,7 @@ void ConfigParser::sort(std::vector<int> & a , unsigned begin) {
     for(unsigned i = begin ; i < a.size() ; i++) {
         for(unsigned k = i ; k > begin ; k--) {
 			if(a[k] < a[k - 1]) {
-				int temp = a[k];
-				a[k] = a[k - 1];
-				a[k - 1] = temp;
+				std::iter_swap(a.begin() + k, a.begin() + k - 1);
 			} else {
 				break;
 			}
@@ -218,14 +216,12 @@ void ConfigParser::sort(std::vector<int> & a , unsigned begin) {
 }
 
 void ConfigParser::sort2D(ConfigParser::algorithm_rounds_v & a) {
-	std::pair<int , std::vector<int>> temp;
+	//std::pair<int , std::vector<int>> temp;
 	//sort
     for(unsigned i = 0 ; i < a.size() ; i++) {
         for(unsigned k = i ; k > 0 ; k--) {
 			if(a[k].first < a[k - 1].first) {
-				temp = a[k];
-				a[k] = a[k - 1];
-				a[k - 1] = temp;
+				std::iter_swap(a.begin() + k, a.begin() + k - 1);
 			} else {
 				break;
 			}

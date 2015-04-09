@@ -1,9 +1,9 @@
 #include "ResultProcessor.h"
 
 ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
-	fs::directory_iterator end;
-	fs::directory_iterator dirIter(path);
-	if(dirIter == end) throw std::runtime_error("given argument is not a path to existing directory: " + path);
+	//fs::directory_iterator end;
+	//fs::directory_iterator dirIter(path);
+	//if(dirIter == end) throw std::runtime_error("given argument is not a path to existing directory: " + path);
 	oneclickLogger << FileLogger::LOG_INFO << "started processing results\n\n";
 
 	initPProcessor(pprocNum);
@@ -11,58 +11,55 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
     std::string algName;
 	std::vector<std::string> configPaths;
 	std::vector<std::string> logPaths;
+	std::vector<std::string> dirPaths;
+	
+    getDirectoryPaths(path , dirPaths);
 
-	//pprocessor = new PValuePostPr();
+	for (unsigned i = 0 ; i < dirPaths.size() ; i++) {
+		//Creates directory logger. All directory specific info are logged here also.
+		FileLogger * dirLogger = new FileLogger(dirPaths[i] + "/batch.log");
+		oneclickLogger << FileLogger::LOG_INFO << "processing batch: " << Utils::getLastItemInPath(dirPaths[i]) << "\n";
+		*dirLogger << FileLogger::LOG_INFO << "processing batch: " << Utils::getLastItemInPath(dirPaths[i]) << "\n";
 
-	for(; dirIter != end ; dirIter++) {
-		if(dirIter.is_directory() && dirIter.name().compare(".") != 0 && dirIter.name().compare("..")) {
+		//Getting paths to all logs and configs in subdirectories
+		getFilePaths(dirPaths[i], configPaths, INDEX_CONFIG);
+		getFilePaths(dirPaths[i], logPaths, INDEX_EACIRC);
 
-			//Creates directory logger. All directory specific info are logged here also.
-			FileLogger * dirLogger = new FileLogger(dirIter.path() + "/batch.log");
-			oneclickLogger << FileLogger::LOG_INFO << "processing batch: " << dirIter.name() << "\n";
-			*dirLogger << FileLogger::LOG_INFO << "processing batch: " << dirIter.name() << "\n";
+		oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
+		*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
 
-			//Getting paths to all logs and configs in subdirectories
-			getFilePaths(dirIter.path() , configPaths , INDEX_CONFIG);
-			getFilePaths(dirIter.path() , logPaths , INDEX_EACIRC);
+		//Check for config consistency, won't procceed otherwise
+		oneclickLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
+		*dirLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
+		if(checkConfigs(configPaths , algName , dirLogger)) {
 
-			oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
-			*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
-
-			//Check for config consistency, won't procceed otherwise
-			oneclickLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
-			*dirLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
-			if(checkConfigs(configPaths , algName , dirLogger)) {
-
-				//Checks errors and warnings, if okay run PostProcessor
-				oneclickLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
-				*dirLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
+			//Checks errors and warnings, if okay run PostProcessor
+			oneclickLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
+			*dirLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
 				
-				if(algName.length() == 0) algName = dirIter.name();
-				pprocessor->setBatchDirectoryPath(dirIter.path() + "/");
-				pprocessor->setBatchName(algName);
-				checkErrorsProcess(logPaths , dirLogger);
-				pprocessor->calculateBatchResults();
+			if (algName.length() == 0) algName = Utils::getLastItemInPath(dirPaths[i]);
+			pprocessor->setBatchDirectoryPath(dirPaths[i] + "/");
+			pprocessor->setBatchName(algName);
+			checkErrorsProcess(logPaths , dirLogger);
+			pprocessor->calculateBatchResults();
 
-				oneclickLogger << FileLogger::LOG_INFO << "batch processed\n\n";
-				*dirLogger << FileLogger::LOG_INFO << "batch processed\n\n";
-			} else {
-				oneclickLogger << FileLogger::LOG_WARNING << "batch won't be processed. Remove invalid runs before processing!\n\n";
-				*dirLogger << FileLogger::LOG_WARNING << "batch won't be processed. Remove invalid runs before processing!\n\n";
-			}
-
-			configPaths.clear();
-			logPaths.clear();
-			algName.clear();
-			delete dirLogger;
+			oneclickLogger << FileLogger::LOG_INFO << "batch processed\n\n";
+			*dirLogger << FileLogger::LOG_INFO << "batch processed\n\n";
+		} else {
+			oneclickLogger << FileLogger::LOG_WARNING << "batch won't be processed. Remove invalid runs before processing!\n\n";
+			*dirLogger << FileLogger::LOG_WARNING << "batch won't be processed. Remove invalid runs before processing!\n\n";
 		}
-	}
 
+		configPaths.clear();
+		logPaths.clear();
+		algName.clear();
+		delete dirLogger;
+	}
 	pprocessor->saveResults();
 	oneclickLogger << FileLogger::LOG_INFO << "finished processing results\n";
 }
 
-bool ResultProcessor::checkConfigs(std::vector<std::string> configPaths, std::string & algName , FileLogger * dirLogger) {
+bool ResultProcessor::checkConfigs(const std::vector<std::string> & configPaths, std::string & algName , FileLogger * dirLogger) {
 	bool isSampleSet = false;
 	int badConfigCount = 0;
 	std::string sampleConfig;
@@ -93,7 +90,7 @@ bool ResultProcessor::checkConfigs(std::vector<std::string> configPaths, std::st
 	}
 }
 
-void ResultProcessor::checkErrorsProcess(std::vector<std::string> logPaths , FileLogger * dirLogger) {
+void ResultProcessor::checkErrorsProcess(const std::vector<std::string> & logPaths , FileLogger * dirLogger) {
 	int errorCount = 0;
 	int wrnCount = 0;
 	bool validity;
@@ -157,7 +154,7 @@ std::string ResultProcessor::getNotes(std::string config) {
 	return res[1];
 }
 
-void ResultProcessor::getFilePaths(std::string directory , std::vector<std::string> & paths , int fileIndex) {
+void ResultProcessor::getFilePaths(const std::string & directory , std::vector<std::string> & paths , int fileIndex) {
 	fs::directory_iterator end;
 	fs::directory_iterator dirIter(directory);
 	if(dirIter == end) throw std::runtime_error("given argument is not a path to existing directory: " + directory);
@@ -171,6 +168,34 @@ void ResultProcessor::getFilePaths(std::string directory , std::vector<std::stri
 			paths.push_back(dirIter.path());
 		}
 	}
+    sortStrings(paths);
+}
+
+void ResultProcessor::getDirectoryPaths(const std::string & directory, std::vector<std::string> & dirPaths) {
+	fs::directory_iterator end;
+	fs::directory_iterator dirIter(directory);
+	if (dirIter == end) throw std::runtime_error("given argument is not a path to existing directory: " + directory);
+
+	//Saves all paths to directories except . and ..
+	for (; dirIter != end; dirIter++){
+		if (dirIter.is_directory() && dirIter.name().compare(".") != 0 && dirIter.name().compare("..") != 0) {
+			dirPaths.push_back(dirIter.path());
+		}
+	}
+    sortStrings(dirPaths);
+}
+
+void ResultProcessor::sortStrings(std::vector<std::string> & strings) {
+    //Sorts strings aplhabetically - ascending order
+    for (unsigned i = 0; i < strings.size(); i++){
+        for (unsigned k = i; k > 0; k--){
+            if (strings[k].compare(strings[k - 1]) < 0){
+                std::iter_swap(strings.begin() + k, strings.begin() + k - 1);
+            } else {
+                break;
+            }
+        }
+    }
 }
 
 void ResultProcessor::initPProcessor(int pprocNum) {

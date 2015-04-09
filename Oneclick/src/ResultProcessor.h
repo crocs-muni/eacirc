@@ -37,7 +37,7 @@ private:
 	  * @param dirLogger		batch specific logger, logs different configs
 	  * @return					true if all configs are same, false otherwise
 	  */
-	bool checkConfigs(std::vector<std::string> configPaths , std::string & algName , FileLogger * dirLogger);
+	bool checkConfigs(const std::vector<std::string> & configPaths , std::string & algName , FileLogger * dirLogger);
 
 	/** Checks logs on given paths for errors and warnings.
 	  *	If log has no errors, results from log are processed and pValue is stored.
@@ -49,16 +49,29 @@ private:
 	  * @return result			0-1 => uniformLogs/validLogs, if validLogs = 0
 	  *							returns error constant (ERROR_NO_VALID_FILES)
 	  */
-	void checkErrorsProcess(std::vector<std::string> logPaths , FileLogger * dirLogger);
+	void checkErrorsProcess(const std::vector<std::string> & logPaths , FileLogger * dirLogger);
 
 	/** Recursively searches given directory,
 	  * stores paths to files with given index.
+      * Paths are sorted in ascending order.
 	  * @param directory		directory to search in
 	  * @param paths			paths to files
 	  * @param fileIndex		file indexes to look for
 	  * @throws runtime_error	if given argument is not a directory
 	  */
-	void getFilePaths(std::string directory , std::vector<std::string> & paths , int fileIndex);
+	void getFilePaths(const std::string & directory , std::vector<std::string> & paths , int fileIndex);
+
+	/** Gets all paths to directories in given directory.
+	  * Files and directories . and .. are ignored.
+	  * Paths are sorted in ascending order.
+	  * @param directory		directory to look in
+	  * @param dirPaths			output vector with dirPaths
+	  *	@throws runtime_error	if given directory argument isn't
+	  *							path to directory
+	  */
+    void getDirectoryPaths(const std::string & directory, std::vector<std::string> & paths);
+
+    void sortStrings(std::vector<std::string> & strings);
 
 	/** Retrieve tag <NOTES> from config file.
 	  * @param config			config file loaded into string
