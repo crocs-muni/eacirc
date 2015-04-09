@@ -5,9 +5,7 @@ CONFIG -= qt
 
 INCLUDEPATH += $$PWD/../EACirc
 
-QMAKE_CXXFLAGS += -Wall -Wextra -Weffc++
-
-CONFIG += c++11
+QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra
 
 SOURCES += \
     src/ConfigParser.cpp \
