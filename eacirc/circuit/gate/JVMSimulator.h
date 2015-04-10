@@ -10,7 +10,6 @@
 #include <stdint.h>
 
 #include <EACconstants.h>
-
 using namespace std;
 
 // Compile-time parameters
@@ -33,6 +32,7 @@ using namespace std;
 #define ERR_PARSING_INPUT			11
 #define ERR_WRITING_OUTPUT			12
 #define ERR_MAX_NUMBER_OF_INSTRUCTIONS_EXHAUSTED 13
+#define ERR_NO_SUCH_FUNCTION		14
 
 // Instructions
 #define NOP		0x00
@@ -179,11 +179,12 @@ public:
     string shortDescription();
 
 	int jvmsim_init();
-	int jvmsim_run(string function_name, int line_from, int line_to, int use_files);
+	int jvmsim_run(int function_number, int line_from, int line_to, int use_files);
 	int jvmsim_main(int argc, char* argv[]);
-
-	string getFunctionNameByID(int functionID);
-
+	
+	int get_num_of_functions();
+	F* get_function_by_number(unsigned char num);
+	
 	inline struct Ins *find_ins(char *fn, int in);
 	inline void call_push(char *fn, int nl);
 	inline int call_pop(struct Pc *PC);
@@ -194,7 +195,6 @@ public:
 	inline int32_t pop_int();
 	inline int32_t pop_arrayref();
 	inline int emulate_ins(struct Pc *PC);
-	
 
 	int white(char c);
 	int code(char* i);
@@ -202,8 +202,5 @@ public:
 	void read_input();
 	void write_output();
 };
-
-
-
 
 #endif

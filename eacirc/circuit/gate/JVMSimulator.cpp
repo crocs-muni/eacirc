@@ -572,7 +572,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 					 }
 	}
 		break;
-	case ASTORE_0:
+	/*case ASTORE_0:
 	{
 					 int32_t ref = pop_arrayref();
 					 locals[0] = ref;
@@ -629,13 +629,13 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 				   }
 				   else 
 				   { 
-					   /*TODO: handle also other data types */ 
+				   /*TODO: handle also other data types */ /*
 					   mainLogger.out(LOGGER_WARNING) << "This data type is not implemented for AALOAD. Interrupting execution." << endl;
 					   //exit(ERR_NOT_IMPLEMENTED); 
 					   return 1;
 				   }
 	}
-		break;
+		break;*/
 	default:
 		break;
 	}
@@ -1003,17 +1003,23 @@ int JVMSimulator::jvmsim_init()
 	return ERR_NO_ERROR;
 }
 
-int JVMSimulator::jvmsim_run(string function_name, int line_from, int line_to, int use_files)
+int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, int use_files)
 {
 	if(use_files)
 		read_input();
 	//locals[0]=101; locals[1]=102;
 
+	F* function = get_function_by_number(function_number);
+	if (function == NULL){
+		mainLogger.out(LOGGER_ERROR) << "Cannot find function with nubmer: " << function_number << endl;
+		return (ERR_NO_SUCH_FUNCTION);
+	}
+
 	max_local_used = 0;
 	memset(locals,0,sizeof(int32_t)*MAX_NUMBER_OF_LOCAL_VARIABLES);
 
 	struct Pc PC = { "", 0, NULL };
-	strcpy(PC.fn, function_name.c_str()); PC.ln = line_from;
+	strcpy(PC.fn, function->short_name); PC.ln = line_from;
 	for (int plus = 0; plus<10; plus++)
 	{
 		PC.current_ins = find_ins(PC.fn, PC.ln);
@@ -1029,16 +1035,41 @@ int JVMSimulator::jvmsim_run(string function_name, int line_from, int line_to, i
 		if (!result) break;
 		//printf(".");
 		insc--;
-	} while ((strcmp(PC.fn, function_name.c_str()) || PC.ln<line_to) && insc);
+	} while ((strcmp(PC.fn, function->short_name) || PC.ln<line_to) && insc);
 	if(use_files)
 		write_output();
 	if (!insc)
 		return (ERR_MAX_NUMBER_OF_INSTRUCTIONS_EXHAUSTED);
 	else
 		return (ERR_NO_ERROR);
-
 }
 
+int JVMSimulator::get_num_of_functions(){
+	int ret = 0;
+	F* current = Functions;
+
+	while (current != NULL){
+		ret++;
+		current = current->next;
+	}
+
+	return ret;
+}
+
+F* JVMSimulator::get_function_by_number(unsigned char num){
+	F* current = Functions;
+
+	for (unsigned char i = 0; i < num; i++){
+		current = current->next;
+		if (current == NULL){
+			return NULL;
+		}
+	}
+
+	return current;
+}
+
+/*
 int JVMSimulator::jvmsim_main(int argc, char* argv[])
 {
 	jvmsim_init();
@@ -1069,9 +1100,9 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
 
 	printf("Usage: %s getfunctions\n       %s run function_name start_line_number end_line_number\n\n",argv[0],argv[0]);
 	return ERR_NO_ERROR;
-}
+}*/
 
-string JVMSimulator::getFunctionNameByID(int functionID) {
+/*string JVMSimulator::getFunctionNameByID(int functionID) {
 	struct F *fnct = Functions;
 
 	// If bigger functionID is supplied, scale by modulo
@@ -1087,4 +1118,4 @@ string JVMSimulator::getFunctionNameByID(int functionID) {
 		fnct = fnct->next;
 	}
 	return "NO_SUCH_FUNCTION";
-}
+}*/

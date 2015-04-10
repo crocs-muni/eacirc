@@ -79,10 +79,17 @@ void GAGateCallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genom
                 function = GARandomInt(0,FNC_MAX);
             } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
             nodeSetFunction(genomeItem, function);
-            // set arguments to random value (0-255)
-			for (int argIndex = 1; argIndex <= NUM_FNC_ARGUMENTS; argIndex++) {
-				nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+
+			if (function == FNC_JVM) {
+				//set JVM arguments
+				nodeSetJVMArguments(genomeItem);
+			} else {
+				// set argument1 to random value (0-255)
+				for (int argIndex = 1; argIndex <= NUM_FNC_ARGUMENTS; argIndex++) {
+					nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+				}
 			}
+
             genome.gene(offset + slot, genomeItem);
         }
     }
@@ -105,9 +112,17 @@ void GAGateCallbacks::initializer_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genom
             function = GARandomInt(0,FNC_MAX);
         } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
         nodeSetFunction(genomeItem, function);
-		for (int argIndex = 1; argIndex <= NUM_FNC_ARGUMENTS; argIndex++) {
-			nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+		
+		if (function == FNC_JVM) {
+			//set JVM arguments
+			nodeSetJVMArguments(genomeItem);
+		} else {
+			// set argument1 to random value (0-255)
+			for (int argIndex = 1; argIndex <= NUM_FNC_ARGUMENTS; argIndex++) {
+				nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+			}
 		}
+
         genome.gene(offset + slot, genomeItem);
     }
 
@@ -167,14 +182,26 @@ int GAGateCallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, fl
                     } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
                     GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
                     nodeSetFunction(genomeItem, function);
+					//JVM arguments has to be valid
+					if (function == FNC_JVM){
+						nodeSetJVMArguments(genomeItem);
+					}
                     genome.gene(offset + slot, genomeItem);
                 }
 				for (int argIndex = 1; argIndex <= NUM_FNC_ARGUMENTS; argIndex++) {
 					if (GAFlipCoin(probMutation)) { // muatate argument
 						numOfMutations++;
-						// set argument1 to random value (0-255)
 						GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
-						nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+						
+						if (nodeGetFunction(genomeItem) == FNC_JVM){
+							//set JVM arguments
+							//TODO: change only one argument
+							nodeSetJVMArguments(genomeItem);
+						} else{
+							// set argument1 to random value (0-255)
+							nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+						}
+
 						genome.gene(offset + slot, genomeItem);
 					}
 				}
@@ -191,6 +218,12 @@ int GAGateCallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, fl
                 } while (pGlobals->settings->gateCircuit.allowedFunctions[function] == 0);
                 GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
                 nodeSetFunction(genomeItem, function);
+
+				//JVM arguments has to be valid
+				if (function == FNC_JVM){
+					nodeSetJVMArguments(genomeItem);
+				}
+
                 genome.gene(offset + slot, genomeItem);
             }
 			for (int argIndex = 1; argIndex <= NUM_FNC_ARGUMENTS; argIndex++) {
@@ -198,7 +231,16 @@ int GAGateCallbacks::mutator_basic(GA1DArrayGenome<GENOME_ITEM_TYPE>& genome, fl
 					numOfMutations++;
 					// set argument1 to random value (0-255)
 					GENOME_ITEM_TYPE genomeItem = genome.gene(offset + slot);
-					nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+					
+					if (nodeGetFunction(genomeItem) == FNC_JVM){
+						//set JVM arguments
+						//TODO: change only one argument
+						nodeSetJVMArguments(genomeItem);
+					} else{
+						// set argument1 to random value (0-255)
+						nodeSetArgument(genomeItem, argIndex, GARandomInt(0, UCHAR_MAX));
+					}
+
 					genome.gene(offset + slot, genomeItem);
 				}
 			}

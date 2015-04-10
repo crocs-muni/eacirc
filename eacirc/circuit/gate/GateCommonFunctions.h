@@ -30,6 +30,11 @@ void nodeSetFunction(GENOME_ITEM_TYPE& nodeValue, unsigned char function);
  */
 void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned char argumentValue);
 
+/** assign all valid JVM arguments
+ * @param nodeValue
+ */
+void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue);
+
 /** read and discart the first connection from given conenctor mask
  * @param connectorMask     connector mask (relative or absolute) - is changed during run!
  * @param connection        position of the first connection from the left (0-31), undefined if no connection exists

@@ -190,13 +190,14 @@ int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_
 		pGlobals->settings->gateCircuit.jvmSim->push_int((int32_t)layerInputValues[connection]);
 
 	// Obtain arguments of JVM function
-	unsigned char argument1 = nodeGetArgument(node, 1); // function ID (name) 	
+	unsigned char argument1 = nodeGetArgument(node, 1); // function ID	
 	unsigned char argument2 = nodeGetArgument(node, 2);	// instruction from
 	unsigned char argument3 = nodeGetArgument(node, 3); // instruction to
 
 	// Execute given subpart of bytecode 
 	//int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run("FFMul", 1, 10, false);
-	int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(pGlobals->settings->gateCircuit.jvmSim->getFunctionNameByID(argument1), argument2, argument3, false);
+	int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, argument3, false);
+
 	if (runval != 0) { 
 		//assert(runval == 0);
 		//mainLogger.out(LOGGER_ERROR) << "jvmsim_run failed to execute with value " << runval << ")." << endl; 

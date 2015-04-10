@@ -1,4 +1,5 @@
 #include "GateCommonFunctions.h"
+#include <algorithm>
 
 #define BOTTOM_BYTE 0xff
 
@@ -27,6 +28,25 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
     int shift = (4 - argumentNumber) * BITS_IN_UCHAR;
     nodeValue = nodeValue & (~((GENOME_ITEM_TYPE) BOTTOM_BYTE << shift));
     nodeValue |= ((GENOME_ITEM_TYPE) argumentValue << shift);
+}
+
+void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue){
+	//mainLogger.out(LOGGER_INFO) << "get_random_argument: " << nodeValue << endl;
+	printf("number of  functions: %d\n", pGlobals->settings->gateCircuit.jvmSim->get_num_of_functions());
+
+	int functionNumber = GARandomInt(0, pGlobals->settings->gateCircuit.jvmSim->get_num_of_functions() - 1);
+	F* function = pGlobals->settings->gateCircuit.jvmSim->get_function_by_number(functionNumber);
+
+	if (function == NULL) {
+		mainLogger.out(LOGGER_ERROR) << "Function is NULL" << endl;
+		exit(ERR_NO_SUCH_FUNCTION);
+	}
+
+	nodeSetArgument(nodeValue, 1, functionNumber);
+	nodeSetArgument(nodeValue, 2, 0);
+	int endLine = GARandomInt(0, min(UCHAR_MAX, function->ins_array->filled_elements));
+	nodeSetArgument(nodeValue, 3, endLine);
+	mainLogger.out(LOGGER_INFO) << "function chosen: " <<  function->short_name << "(" << functionNumber <<  ") [0," << endLine << "] - " << nodeValue << endl;
 }
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {
