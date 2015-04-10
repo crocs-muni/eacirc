@@ -24,6 +24,7 @@ set(SOURCES
     circuit/gate/GateInterpreter.cpp
     circuit/gate/GateCommonFunctions.cpp
     circuit/gate/GAGateCallbacks.cpp
+    circuit/gate/JVMSimulator.cpp
 # === polynomial circuits ===
     circuit/polynomial/PolynomialCircuit.cpp
     circuit/polynomial/PolynomialCircuitIO.cpp
@@ -72,6 +73,7 @@ set(HEADERS
     circuit/gate/GateInterpreter.h
     circuit/gate/GateCommonFunctions.h
     circuit/gate/GAGateCallbacks.h
+    circuit/gate/JVMSimulator.h
  # === polynomial circuits ===
     circuit/polynomial/GAPolyCallbacks.h
     circuit/polynomial/Term.h
