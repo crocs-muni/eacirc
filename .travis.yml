@@ -2,7 +2,21 @@ language: cpp
 
 compiler: clang
 
-script: make test
+install:
+  - ORIGPWD=`pwd`
+  - export CMAKESCRIPT=/tmp/cmake.sh
+  - wget -O $CMAKESCRIPT http://www.cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.sh
+  - sudo mkdir /opt/cmake && cd /opt/cmake
+  - sudo bash $CMAKESCRIPT --skip-license
+  - export PATH=/opt/cmake/bin/:$PATH
+  - cd $ORIGPWD
+
+script:
+  - mkdir build && cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_ONECLICK=OFF
+  - make
+  - make install
+  - make test
 
 env:
   global:
