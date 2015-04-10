@@ -27,6 +27,7 @@
 notes.txt
 *.dgml
 *.cd
+*.swp
 
 # Oneclick result files and logs
 Oneclick/exec/processed_results.txt
