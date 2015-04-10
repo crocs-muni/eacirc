@@ -47,7 +47,6 @@ void ConfigParser::setConfigs() {
 }
 
 ConfigParser::algorithm_rounds_v ConfigParser::createAlgorithmsRounds() {
-	//std::vector<std::pair<int , std::vector<int>>> algorithmsRounds;
 	algorithm_rounds_v algorithmsRounds;
 	std::vector<int> rounds = getMultipleXMLValues(PATH_OC_RNDS);
 	std::vector<int> algorithms = getMultipleXMLValues(PATH_OC_ALGS);
@@ -200,10 +199,8 @@ int ConfigParser::parseRange(std::string & temp , const std::string & elementVal
 void ConfigParser::sort(std::vector<int> & a , unsigned begin) {
     for(unsigned i = begin ; i < a.size() ; i++) {
         for(unsigned k = i ; k > begin ; k--) {
-			if(a.at(k) < a.at(k - 1)) {
-				int temp = a.at(k);
-				a.at(k) = a.at(k - 1);
-				a.at(k - 1) = temp;
+			if(a[k] < a[k - 1]) {
+				std::iter_swap(a.begin() + k, a.begin() + k - 1);
 			} else {
 				break;
 			}
@@ -211,7 +208,7 @@ void ConfigParser::sort(std::vector<int> & a , unsigned begin) {
 	}
     for(unsigned i = begin ; ; i++) {
 		if(i >= a.size() - 1 || a.size() == 0) break;
-		if(a.at(i) == a.at(i + 1)) {
+		if(a[i] == a[i + 1]) {
 			a.erase(a.begin() + i);
 			i--;
 		}
@@ -219,14 +216,12 @@ void ConfigParser::sort(std::vector<int> & a , unsigned begin) {
 }
 
 void ConfigParser::sort2D(ConfigParser::algorithm_rounds_v & a) {
-	std::pair<int , std::vector<int>> temp;
+	//std::pair<int , std::vector<int>> temp;
 	//sort
     for(unsigned i = 0 ; i < a.size() ; i++) {
         for(unsigned k = i ; k > 0 ; k--) {
 			if(a[k].first < a[k - 1].first) {
-				temp = a[k];
-				a[k] = a[k - 1];
-				a[k - 1] = temp;
+				std::iter_swap(a.begin() + k, a.begin() + k - 1);
 			} else {
 				break;
 			}
