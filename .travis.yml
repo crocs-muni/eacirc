@@ -1,0 +1,23 @@
+language: cpp
+
+compiler: clang
+
+script: make test
+
+env:
+  global:
+   # encrypted COVERITY_SCAN_TOKEN
+   - secure: dEzkoyH1XYZjiUIRp4bukXlZZbObGbUCkp7Wzu/d+ua02LZ6XLwH4Y9dIrFm4egeGtVNBKHUR1iQoSeO5GKIvqwvrlDA0n+4yegCJmsBh08PhSvS3vLApE6IYH4I69wQ8LtAE9t2UIUstGZokXpzvjpluw3hCTWVoNe9ude8sB8=
+
+addons:
+  # Coverity static code scan
+  coverity_scan:
+    project:
+      name: petrs/EACirc
+    notification_email: mukrop@mail.muni.cz petr@svenda.com
+    # command to prepare coverity scan for clang compiler
+    build_command_prepend: cov-configure --comptype clangcxx --compiler `which clang++`
+    # command to build project
+    build_command: make
+    # brach to analyse
+    branch_pattern: coverity_scan

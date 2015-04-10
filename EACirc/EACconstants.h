@@ -4,15 +4,16 @@
 #include <limits>
 
 #ifndef FALSE
-#define FALSE               0
+#define FALSE 0
 #endif
 
 #ifndef TRUE
-#define TRUE                1
+#define TRUE 1
 #endif
 
-#ifndef constexpr	 	
-	#define constexpr const// constexpr not supported in VS2013
+#ifdef _MSC_VER
+// constexpr not supported in VS2013
+#define constexpr const
 #endif
 
 #ifndef UCHAR_MAX
@@ -51,7 +52,7 @@ typedef unsigned __int64 uint64_t;
 #define PROJECT_PREGENERATED_TV     0
 #define PROJECT_ESTREAM             100
 #define PROJECT_SHA3                200
-#define PROJECT_TEA                 300
+#define PROJECT_CAESAR              300
 #define PROJECT_FILE_DISTINGUISHER  400
 
 // FILENAMES
@@ -109,6 +110,7 @@ typedef unsigned __int64 uint64_t;
 #define EVALUATOR_HAMMING_WEIGHT    24
 #define EVALUATOR_TOP_BIT           25
 #define EVALUATOR_CATEGORIES        26
+#define EVALUATOR_FEATURES          27
 // note: all project specific evaluators must have constant above this
 #define EVALUATOR_PROJECT_SPECIFIC_MINIMUM PROJECT_ESTREAM
 
@@ -148,7 +150,6 @@ typedef unsigned __int64 uint64_t;
 #define FNC_JVM     19
 #define FNC_MAX     FNC_JVM
 
-/*
 // BYTECODE OPS CODES - used for emulation of internode program (not all at the moment, see list below)
 #define AALOAD      0x32
 #define AASTORE     0x53
@@ -214,7 +215,7 @@ typedef unsigned __int64 uint64_t;
 #define	RETURN			0xb1
 #define	SIPUSH			0x11
 #define	POP				0x57
-*/
+
 /* already implemented
 IADD
 ISUB
@@ -237,4 +238,4 @@ BIPUSH
 SIPUSH
 DUP
 */
-#endif                                                       
+#endif

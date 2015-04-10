@@ -1,5 +1,8 @@
 #include "CommonFnc.h"
 #include "EACglobals.h"
+#include "generators/IRndGen.h"
+#include <bitset>
+#include <set>
 
 #ifndef M_PI    // to resolve cmath constants problems
 #define M_PI 3.141592653589793238462
@@ -10,7 +13,7 @@ using namespace std;
 int BYTE_ConvertFromHexStringToArray(string hexaString, unsigned char* pArray, unsigned char* pbArrayLen) {
     int     status = STAT_OK;
     unsigned long   arrayLen = *pbArrayLen;
-    
+
     status = BYTE_ConvertFromHexStringToArray(hexaString, pArray, &arrayLen);
     if (arrayLen > 0xFF) status = STAT_NOT_ENOUGHT_DATA_TYPE;
     else *pbArrayLen = (unsigned char) arrayLen;
@@ -29,34 +32,34 @@ int BYTE_ConvertFromHexStringToArray(string hexaString, unsigned char* pArray, u
 
     // EAT SPACES
     //hexaString.TrimLeft(); hexaString.TrimRight();
-	TrimLeadingSpaces(hexaString);
-	TrimTrailingSpaces(hexaString);
+    TrimLeadingSpaces(hexaString);
+    TrimTrailingSpaces(hexaString);
     hexaString += " ";
     //hexaString.GetLength();
-	hexaString.length();
+    hexaString.length();
 
     if (status == STAT_OK) {
         pTempArray = new unsigned char[hexaString.length()];
         memset(pTempArray, 0, hexaString.length());
 
         pos = pos2 = 0;
-		while ((pos = hexaString.find(' ', pos2)) != string::npos) {
+        while ((pos = hexaString.find(' ', pos2)) != string::npos) {
             hexNum = hexaString.substr(pos2, pos - pos2);
             //hexNum.TrimLeft(); hexNum.TrimRight();
-			TrimLeadingSpaces(hexNum);
-			TrimTrailingSpaces(hexNum);
+            TrimLeadingSpaces(hexNum);
+            TrimTrailingSpaces(hexNum);
             if (hexNum.length() > 0) {
-				
-				std::istringstream iss(hexNum);
 
-				if(!(iss>>std::hex>>num)){
+                std::istringstream iss(hexNum);
+
+                if(!(iss>>std::hex>>num)){
                     mainLogger.out(LOGGER_ERROR) << "BYTE_ConvertFromHexStringToArray: Invalid argument!" << endl;
-					exit(1);
-				}
-        
+                    exit(1);
+                }
+
                 if (num == 0xFF) pTempArray[tempArrayPos] = 0xFF;
                 else pTempArray[tempArrayPos] = (unsigned char) num & 0xFF;
-                
+
                 tempArrayPos++;
             }
             pos2 = pos + 1;
@@ -64,7 +67,7 @@ int BYTE_ConvertFromHexStringToArray(string hexaString, unsigned char* pArray, u
 
         if (tempArrayPos > *pbArrayLen) {
             status = STAT_NOT_ENOUGHT_MEMORY;
-        }  
+        }
         else {
             memcpy(pArray, pTempArray, tempArrayPos);
         }
@@ -84,35 +87,35 @@ int BYTE_ConvertFromArrayToHexString(unsigned char* pArray, unsigned long pbArra
     *pHexaString = "";
     for (i = 0; i < pbArrayLen; i++) {
         //hexNum.Format("%.2x", pArray[i]);
-		ostringstream os1;
-		os1 << pArray[i];
+        ostringstream os1;
+        os1 << pArray[i];
         hexNum = os1.str();
-		hexNum += " ";
+        hexNum += " ";
 
         *pHexaString += hexNum;
     }
 
     //pHexaString->TrimRight(" ");
-	TrimTrailingSpaces(*pHexaString);
+    TrimTrailingSpaces(*pHexaString);
 
     return status;
 }
 
 //trimming functions found here: http://codereflect.com/2007/01/31/how-to-trim-leading-or-trailing-spaces-of-string-in-c/
 void TrimLeadingSpaces(string& str) {
-	// Code for Trim Leading Spaces only
-	size_t startpos = str.find_first_not_of(" \t"); // Find the first character position after excluding leading blank spaces
-	if( string::npos != startpos ) {
-		str = str.substr( startpos );
-	}
+    // Code for Trim Leading Spaces only
+    size_t startpos = str.find_first_not_of(" \t"); // Find the first character position after excluding leading blank spaces
+    if( string::npos != startpos ) {
+        str = str.substr( startpos );
+    }
 }
 
 void TrimTrailingSpaces(string& str) {
-	// Code for Trim trailing Spaces only
-	size_t endpos = str.find_last_not_of(" \t"); // Find the first character position from reverse af
-	if( string::npos != endpos ) {
-		str = str.substr( 0, endpos+1 );
-	}
+    // Code for Trim trailing Spaces only
+    size_t endpos = str.find_last_not_of(" \t"); // Find the first character position from reverse af
+    if( string::npos != endpos ) {
+        str = str.substr( 0, endpos+1 );
+    }
 }
 
 double StringToDouble(string &s, bool failIfLeftoverChars) {
@@ -125,26 +128,34 @@ double StringToDouble(string &s, bool failIfLeftoverChars) {
        //exit(1);
        x = 0;
    }
-     
+
    return x;
 }
 
-int copyFile(string source, string destination) {
-    ifstream inFile(source, ios_base::binary);
-    if (!inFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot open file (" << source << ")." << endl;
-        return STAT_FILE_OPEN_FAIL;
+void removeFile(string filename) {
+    int returnValue = std::remove(filename.c_str());
+    if (returnValue > 0) {
+        mainLogger.out(LOGGER_WARNING) << "Could not remove file \"" << filename << "\" (error code " << returnValue << ")." << endl;
     }
-    ofstream outFile(destination, ios_base::binary | ios_base::trunc);
-    if (!outFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write to file (" << destination << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
-    }
-    outFile << inFile.rdbuf();
-    inFile.close();
-    outFile.close();
+}
 
-    return STAT_OK;
+int flipBits(unsigned char* data, int numUChars, unsigned int numFlips, IRndGen* random) {
+    int status = STAT_OK;
+    if (numUChars * BITS_IN_UCHAR > 1024) {
+        return STAT_DATA_INCORRECT_LENGTH;
+    }
+    bitset<1024> *bits;
+    set<int> indices;
+    int randomNumber;
+    bits = reinterpret_cast<std::bitset<1024>*>(data);
+
+    while(indices.size() != numFlips){
+        status = random->getRandomFromInterval(numUChars*BITS_IN_UCHAR, &randomNumber);
+        indices.insert(randomNumber);
+    }
+    for(std::set<int>::iterator it = indices.begin(); it != indices.end(); it++)
+        bits->flip(*it);
+    return status;
 }
 
 double chisqr(int Dof, double Cv) {
@@ -205,7 +216,7 @@ Functions", Zhang and Jin, John Wiley and Sons, 1996.
 taken from http://www.crbond.com/math.htm */
 double gamma0(double x) {
     int i,k,m;
-    double ga,gr,r,z;
+    double ga,gr,r=1.0,z;
 
     static double g[] = {
         1.0,
@@ -265,4 +276,24 @@ double gamma0(double x) {
         }
     }
     return ga;
+}
+
+double KS_uniformity_test(std::vector<double> * sample){
+    std::sort(sample->begin(), sample->end());
+    double test_statistic = 0;
+    double temp = 0;
+    float N = sample->size();
+    int index;
+
+    for(int i = 1; i < N; i++){
+        double cur = (sample->at(i));
+
+        temp = max(abs(i/N - cur),abs((i-1)/N - cur));
+        if(temp > test_statistic) {
+            test_statistic = temp;
+            index = i;
+        }
+    }
+
+    return test_statistic;
 }

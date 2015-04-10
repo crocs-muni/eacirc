@@ -20,6 +20,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->main.circuitSizeInput = atoi(getXMLElementValue(pRoot,"MAIN/CIRCUIT_SIZE_INPUT").c_str());
 
     // parsing EACIRC/OUTPUTS
+    pSettings->outputs.verbosity = atoi(getXMLElementValue(pRoot,"OUTPUTS/VERBOSITY").c_str());
     pSettings->outputs.graphFiles = (atoi(getXMLElementValue(pRoot,"OUTPUTS/GRAPH_FILES").c_str())) ? true : false;
     pSettings->outputs.intermediateCircuits = (atoi(getXMLElementValue(pRoot,"OUTPUTS/INTERMEDIATE_CIRCUITS").c_str())) ? true : false;
     pSettings->outputs.allowPrunning = (atoi(getXMLElementValue(pRoot,"OUTPUTS/ALLOW_PRUNNING").c_str())) ? true : false;
@@ -45,7 +46,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->ga.probMutation = (float) atof(getXMLElementValue(pRoot,"GA/PROB_MUTATION").c_str());
     pSettings->ga.mutateFunctions = atoi(getXMLElementValue(pRoot,"GA/MUTATE_FUNCTIONS").c_str()) ? true : false;
     pSettings->ga.mutateConnectors = atoi(getXMLElementValue(pRoot,"GA/MUTATE_CONNECTORS").c_str()) ? true : false;
-    
+
     // parsing EACIRC/TEST_VECTORS
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
     pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());
@@ -54,7 +55,11 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->testVectors.evaluateEveryStep = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_EVERY_STEP").c_str())) ? true : false;
     pSettings->testVectors.evaluateBeforeTestVectorChange = (atoi(getXMLElementValue(pRoot,"TEST_VECTORS/EVALUATE_BEFORE_TEST_VECTOR_CHANGE").c_str())) ? true : false;
     // compute extra info
-    pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
+    if (pSettings->testVectors.setChangeFrequency == 0) {
+        pSettings->testVectors.numTestSets = 1;
+    } else {
+        pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
+    }
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {
@@ -95,7 +100,8 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
     }
     if (path.find('@') == path.npos) {
         // getting text node
-        return pNode->ToElement()->GetText();
+        const char* text = pNode->ToElement()->GetText();
+        return text != NULL ? string(text) : "";
     } else {
         // getting attribute
         string attrName = path.substr(path.find('@')+1,path.length()-path.find('@')-1).c_str();
@@ -106,7 +112,6 @@ string getXMLElementValue(TiXmlNode*& pRoot, string path) {
         }
         return string(attrValue);
     }
-    return "";
 }
 
 int setXMLElementValue(TiXmlNode*& pRoot, string path, const string& value) {

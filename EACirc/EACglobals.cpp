@@ -21,6 +21,7 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
 }
 
 SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
+    verbosity = 0;
     graphFiles = true;
     intermediateCircuits = false;
     allowPrunning = false;
@@ -77,10 +78,11 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 }
 
 SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
-    numVariables = -1;
     numPolynomials = -1;
     genomeInitTermStopProbability = -1;
-    genomeInitMaxTerms = -1;
+    genomeInitTermCountProbability = -1;
+    maxNumTerms = -1;
+    mutateTermStrategy=-1;
     crossoverRandomizePolySelect = false;
     crossoverTermsProbability = -1;
     mutateAddTermProbability = -1;
@@ -94,11 +96,13 @@ SETTINGS::SETTINGS() {
 }
 
 STATISTICS::STATISTICS() {
+    actGener = 0;
     avgMaxFitSum = 0;
     avgAvgFitSum = 0;
     avgMinFitSum = 0;
     avgCount = 0;
     prunningInProgress = false;
+    pvaluesBestIndividual = NULL;
 }
 
 TEST_VECTORS::TEST_VECTORS() {
@@ -106,21 +110,16 @@ TEST_VECTORS::TEST_VECTORS() {
     outputs = NULL;
     circuitOutputs = NULL;
     newSet = false;
-    executionInputLayer = NULL;
-    executionMiddleLayerIn = NULL;
-    executionMiddleLayerOut = NULL;
-    executionOutputLayer = NULL;
 }
 
 void TEST_VECTORS::allocate() {
     if (pGlobals->settings->testVectors.inputLength == -1 || pGlobals->settings->testVectors.outputLength == -1
-            || pGlobals->settings->gateCircuit.sizeOutputLayer == -1) {
+            || pGlobals->settings->main.circuitSizeOutput == -1) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input/output size or circuit output size not set." << endl;
         return;
     }
     // if memory is allocated, release
-    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL || executionInputLayer != NULL
-            || executionMiddleLayerIn != NULL || executionMiddleLayerOut != NULL || executionOutputLayer != NULL) release();
+    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL) release();
     // allocate memory for inputs, outputs, citcuitOutputs
     inputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
     outputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
@@ -133,10 +132,6 @@ void TEST_VECTORS::allocate() {
         circuitOutputs[i] = new unsigned char[pGlobals->settings->main.circuitSizeOutput];
         memset(circuitOutputs[i],0,pGlobals->settings->main.circuitSizeOutput);
     }
-    executionInputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeInputLayer];
-    executionMiddleLayerIn = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
-    executionMiddleLayerOut = new unsigned char[pGlobals->settings->gateCircuit.sizeLayer];
-    executionOutputLayer = new unsigned char[pGlobals->settings->gateCircuit.sizeOutputLayer];
 }
 
 void TEST_VECTORS::release() {
@@ -155,14 +150,19 @@ void TEST_VECTORS::release() {
         delete[] circuitOutputs;
         circuitOutputs = NULL;
     }
-    if (executionInputLayer != NULL) delete[] executionInputLayer;
-    executionInputLayer = NULL;
-    if (executionMiddleLayerIn != NULL) delete[] executionMiddleLayerIn;
-    executionMiddleLayerIn = NULL;
-    if (executionMiddleLayerOut != NULL) delete[] executionMiddleLayerOut;
-    executionMiddleLayerOut = NULL;
-    if (executionOutputLayer != NULL) delete[] executionOutputLayer;
-    executionOutputLayer = NULL;
+}
+
+void STATISTICS::allocate() {
+    if (pvaluesBestIndividual!=NULL){
+        release();
+    }
+
+    pvaluesBestIndividual = new vector<double>;
+}
+
+void STATISTICS::release() {
+    if (pvaluesBestIndividual!=NULL) delete pvaluesBestIndividual;
+    pvaluesBestIndividual = NULL;
 }
 
 GLOBALS::GLOBALS() {

@@ -14,6 +14,8 @@ private:
     //! temporary arrays for initial and encrypted-decrypted plaintext (should be the same)
     u8* m_plaintextIn;
     u8* m_plaintextOut;
+    //! array to store counter value
+    u8* m_plaintextCounter;
     //! array used for ballacing test vectors
     int* m_numVectors;
     //! object providing eStream cipher facilities
@@ -39,6 +41,13 @@ private:
       * @return status
       */
     int setupPlaintext();
+
+    /** increase counter in multibyte array
+     * @param data          counter array
+     * @param dataLength    data length
+     */
+    static void increaseArray(unsigned char* data, int dataLength);
+
 public:
     /** constructor, memory allocation
       */

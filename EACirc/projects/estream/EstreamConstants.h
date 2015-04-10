@@ -15,10 +15,13 @@
 #define ESTREAM_INIT_CIPHERS_FOR_VECTOR     2
 
 // eStream data types (for key, iv, plaintext)
-#define ESTREAM_GENTYPE_ZEROS       0
-#define ESTREAM_GENTYPE_ONES        1
-#define ESTREAM_GENTYPE_RANDOM      2
-#define ESTREAM_GENTYPE_BIASRANDOM  3
+#define ESTREAM_GENTYPE_ZEROS        0
+#define ESTREAM_GENTYPE_ONES         1
+#define ESTREAM_GENTYPE_RANDOM       2
+#define ESTREAM_GENTYPE_BIASRANDOM   3
+#define ESTREAM_GENTYPE_COUNTER      4
+#define ESTREAM_GENTYPE_FLIP5BITS    5
+#define ESTREAM_GENTYPE_HALFBLOCKSAC 6
 
 // filenames for streams
 #define ESTREAM_FILE_STREAM_1      "estream_stream1.bin"
@@ -27,35 +30,7 @@
 // cipher constants
 #define STREAM_BLOCK_SIZE       16
 
-// eStream cipher constants
-#define ESTREAM_ABC             1
-#define ESTREAM_ACHTERBAHN      2
-#define ESTREAM_CRYPTMT         3
-#define ESTREAM_DECIM           4
-#define ESTREAM_DICING          5
-#define ESTREAM_DRAGON          6
-#define ESTREAM_EDON80          7
-#define ESTREAM_FFCSR           8
-#define ESTREAM_FUBUKI          9
-#define ESTREAM_GRAIN           10
-#define ESTREAM_HC128           11
-#define ESTREAM_HERMES          12
-#define ESTREAM_LEX             13
-#define ESTREAM_MAG             14
-#define ESTREAM_MICKEY          15
-#define ESTREAM_MIR1            16
-#define ESTREAM_POMARANCH       17
-#define ESTREAM_PY              18
-#define ESTREAM_RABBIT          19
-#define ESTREAM_SALSA20         20
-#define ESTREAM_SFINKS          21
-#define ESTREAM_SOSEMANUK       22
-#define ESTREAM_TRIVIUM         23
-#define ESTREAM_TSC4            24
-#define ESTREAM_WG              25
-#define ESTREAM_YAMB            26
-#define ESTREAM_ZKCRYPT         27
-#define ESTREAM_RANDOM          99
+#include "EstreamCiphers.h"
 
 struct ESTREAM_SETTINGS {
     int usageType;

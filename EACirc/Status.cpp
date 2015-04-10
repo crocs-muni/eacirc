@@ -8,9 +8,6 @@ const char* statusToString(int error) {
     case STAT_NOT_ENOUGHT_MEMORY:       return "STAT_NOT_ENOUGHT_MEMORY";
     case STAT_DATA_CORRUPTED:           return "STAT_DATA_CORRUPTED";
     case STAT_DATA_INCORRECT_LENGTH:    return "STAT_DATA_INCORRECT_LENGTH";
-    case STAT_CIPHER_INIT_FAIL:         return "STAT_CIPHER_INIT_FAIL";
-    case STAT_ENCRYPT_FAIL:             return "STAT_ENCRYPT_FAIL";
-    case STAT_DECRYPT_FAIL:             return "STAT_DECRYPT_FAIL";
     case STAT_FILE_OPEN_FAIL:           return "STAT_FILE_OPEN_FAIL";
     case STAT_NOT_ENOUGHT_DATA_TYPE:    return "STAT_NOT_ENOUGHT_DATA_TYPE";
     case STAT_USERDATA_BAD:             return "STAT_USERDATA_BAD";

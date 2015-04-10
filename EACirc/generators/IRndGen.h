@@ -26,11 +26,11 @@ public:
     virtual int getRandomFromInterval(float, float *) = 0;
     virtual int discartValue() = 0;
 
-    virtual string shortDescription() const = 0;
+    virtual std::string shortDescription() const = 0;
     virtual TiXmlNode* exportGenerator() const = 0;
 };
 
-ostream& operator <<(ostream& out, const IRndGen& generator);
-istream& operator >>(istream& in, IRndGen& generator);
+std::ostream& operator <<(std::ostream& out, const IRndGen& generator);
+std::istream& operator >>(std::istream& in, IRndGen& generator);
 
 #endif

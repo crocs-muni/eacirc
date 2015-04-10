@@ -2,6 +2,7 @@
 #include "TopBitEvaluator.h"
 #include "CategoriesEvaluator.h"
 #include "HammingWeightEvaluator.h"
+#include "FeatureEvaluator.h"
 
 IEvaluator::IEvaluator(int type) : m_type(type) { }
 
@@ -25,6 +26,9 @@ IEvaluator *IEvaluator::getStandardEvaluator(int type) {
         break;
     case EVALUATOR_CATEGORIES:
         return new CategoriesEvaluator();
+        break;
+    case EVALUATOR_FEATURES:
+        return new FeatureEvaluator();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown evaluator type \"" << type << "\"." << endl;

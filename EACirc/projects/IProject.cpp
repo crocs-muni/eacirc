@@ -4,8 +4,8 @@
 #include "pregenerated_tv/PregeneratedTvProject.h"
 #include "estream/EstreamProject.h"
 #include "sha3/Sha3Project.h"
-#include "tea/TeaProject.h"
 #include "files/filesProject.h"
+#include "caesar/CaesarProject.h"
 
 IProject::IProject(int type) : m_type(type), m_projectEvaluator(NULL) { }
 
@@ -86,7 +86,7 @@ int IProject::createTestVectorFilesHeadersMain() const {
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile << dec << left;
-    tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator:" << pGlobals->evaluator->shortDescription() << ")" << endl;
+    tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator: " << pGlobals->evaluator->shortDescription() << ")" << endl;
     tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
     tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
     tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
@@ -123,6 +123,8 @@ int IProject::generateAndSaveTestVectors() {
 
 int IProject::saveTestVectors() const {
     ofstream tvFile;
+
+    // save binary form
     tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
     if (!tvFile.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
@@ -133,10 +135,38 @@ int IProject::saveTestVectors() const {
         tvFile.write((char*)(pGlobals->testVectors.outputs[testVector]), pGlobals->settings->testVectors.outputLength);
     }
     if (tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS << ")." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
     tvFile.close();
+
+    // save human-readable form
+    if (pGlobals->settings->outputs.verbosity > 0) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << endl << "##### Final Test set for generation " << pGlobals->stats.actGener << " #####" << endl;
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
+            tvFile << "in:  ";
+            for (int byte = 0; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                tvFile << hex << setfill('0') << setw(2) << (int) pGlobals->testVectors.inputs[testVector][byte];
+            }
+            tvFile << endl;
+            tvFile << "out: ";
+            for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+                tvFile << hex << setfill('0') << setw(2) << (int) pGlobals->testVectors.outputs[testVector][byte];
+            }
+            tvFile << endl;
+        }
+        if (tvFile.fail()) {
+            mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile.close();
+    }
+
     return STAT_OK;
 }
 
@@ -156,11 +186,11 @@ IProject* IProject::getProject(int projectType) {
     case PROJECT_SHA3:
         project = new Sha3Project();
         break;
-    case PROJECT_TEA:
-        project = new TeaProject();
-        break;
     case PROJECT_FILE_DISTINGUISHER:
         project = new FilesProject();
+        break;
+    case PROJECT_CAESAR:
+        project = new CaesarProject();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Cannot initialize project - unknown type (" << projectType << ")." << endl;
@@ -175,7 +205,6 @@ string IProject::getTestingConfiguration(int projectType) {
     string projectConfiguration;
     switch (projectType) {
     case PROJECT_PREGENERATED_TV:
-    case PROJECT_TEA:
         projectConfiguration = "<PROJECT />";
         break;
     case PROJECT_ESTREAM:
@@ -186,6 +215,9 @@ string IProject::getTestingConfiguration(int projectType) {
         break;
     case PROJECT_FILE_DISTINGUISHER:
         projectConfiguration = FilesProject::testingConfiguration();
+        break;
+    case PROJECT_CAESAR:
+        projectConfiguration = CaesarProject::testingConfiguration();
         break;
     default:
         mainLogger.out(LOGGER_ERROR) << "No configuration - unknown project type (" << projectType << ")." << endl;

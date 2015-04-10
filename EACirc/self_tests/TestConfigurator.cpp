@@ -2,12 +2,33 @@
 #include <iostream>
 #include "Catch.h"
 #include "EACirc.h"
+#include "tinyxml.h"
 
 TestConfigurator::TestConfigurator()
     : m_currentProject(0) {
     m_projects.push(PROJECT_ESTREAM);
     m_projects.push(PROJECT_SHA3);
-    m_projects.push(PROJECT_FILE_DISTINGUISHER);
+    // can we open files set in PROJECT_FILE_DISTINGUISHER?
+    string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
+    TiXmlDocument doc(string("configuration").c_str());
+    doc.Parse(conf.c_str());
+    TiXmlHandle hDoc(&doc);
+    TiXmlElement* pElem=hDoc.FirstChildElement().Element();
+    if (pElem != NULL) {
+        TiXmlNode* pRoot = pElem->Clone();
+        string filename1 = getXMLElementValue(pRoot,"FILENAME_1");
+        string filename2 = getXMLElementValue(pRoot,"FILENAME_2");
+        ifstream file1(filename1);
+        ifstream file2(filename2);
+        if (file1.is_open() && file2.is_open()) {
+            m_projects.push(PROJECT_FILE_DISTINGUISHER);
+            file1.close();
+            file2.close();
+        } else {
+            WARN(string("######## Project ")+toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
+            WARN(string("######## Could not open files ")+filename1+", "+filename2+" ########");
+        }
+    }
 }
 
 TestConfigurator::TestConfigurator(int projectType)
@@ -62,7 +83,7 @@ void TestConfigurator::compareFilesByLine(string filename1, string filename2) co
 
 void TestConfigurator::backupFile(string filename) {
     string backupFilename = filename + BACKUP_SUFFIX;
-    remove(backupFilename.c_str());
+    removeFile(backupFilename.c_str());
     CHECK(rename(filename.c_str(),backupFilename.c_str()) == 0);
 }
 
@@ -148,7 +169,7 @@ string TestConfigurator::mainConfiguration =
         "    <SEED>123456789</SEED>"
         "    <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>"
         "    <USE_NET_SHARE>0</USE_NET_SHARE>"
-        "    <QRNG_PATH>../../qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
+        "    <QRNG_PATH>../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
         "    <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>"
         "</RANDOM>"
         "<CUDA>"
@@ -194,15 +215,17 @@ string TestConfigurator::mainConfiguration =
         "    </ALLOWED_FUNCTIONS>"
         "</GATE_CIRCUIT>"
         "<POLYNOMIAL_CIRCUIT>"
-        "    <MAX_TERMS>0</MAX_TERMS>"
-        "    <TERM_COUNT_P>0</TERM_COUNT_P>"
-        "    <TERM_VAR_P>0</TERM_VAR_P>"
-        "    <ADD_TERM_P>0</ADD_TERM_P>"
+        "    <NUM_POLYNOMIALS>1</NUM_POLYNOMIALS>"
+        "    <MUTATE_TERM_STRATEGY>0</MUTATE_TERM_STRATEGY>"
+        "    <MAX_TERMS>50</MAX_TERMS>"
+        "    <TERM_COUNT_P>0.70</TERM_COUNT_P>"
+        "    <TERM_VAR_P>0.60</TERM_VAR_P>"
+        "    <ADD_TERM_P>0.05</ADD_TERM_P>"
         "    <ADD_TERM_STRATEGY>0</ADD_TERM_STRATEGY>"
-        "    <RM_TERM_P>0</RM_TERM_P>"
+        "    <RM_TERM_P>0.05</RM_TERM_P>"
         "    <RM_TERM_STRATEGY>0</RM_TERM_STRATEGY>"
-        "    <CROSSOVER_RANDOMIZE_POLY>0</CROSSOVER_RANDOMIZE_POLY>"
-        "    <CROSSOVER_TERM_P>0</CROSSOVER_TERM_P>"
+        "    <CROSSOVER_RANDOMIZE_POLY>1</CROSSOVER_RANDOMIZE_POLY>"
+        "    <CROSSOVER_TERM_P>0.1</CROSSOVER_TERM_P>"
         "</POLYNOMIAL_CIRCUIT>"
         "<TEST_VECTORS>"
         "    <INPUT_LENGTH>16</INPUT_LENGTH>"

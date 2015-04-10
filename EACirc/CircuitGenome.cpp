@@ -28,19 +28,19 @@ int CircuitGenome::GetFunctionLabel(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYP
 			std::stringstream out;
             unsigned char tmp = nodeGetArgument(functionID,1);
             out << (nodeGetArgument(functionID,1) & 0x07);
-            *pLabel = "ROL_" + out.str(); 
+            *pLabel = "ROL_" + out.str();
             break;
         }
         case FNC_SHIR: {
 			std::stringstream out;
             out << (nodeGetArgument(functionID,1) & 0x07);
-            *pLabel = "ROR_" + out.str(); 
+            *pLabel = "ROR_" + out.str();
             break;
         }
         case FNC_BITSELECTOR: {
 			std::stringstream out;
             out << (nodeGetArgument(functionID,1) & 0x07);
-            *pLabel = "BSL_" + out.str(); 
+            *pLabel = "BSL_" + out.str();
             break;
         }
         //case FNC_SUM: *pLabel = "SUM"; break;
@@ -68,7 +68,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
 
     // CREATE LOCAL COPY
     for (int i = 0; i < genome.size(); i++) {
-        prunnedGenome.gene(i, genome.gene(i)); 
+        prunnedGenome.gene(i, genome.gene(i));
     }
 
     if (pGlobals->stats.prunningInProgress) {
@@ -83,13 +83,13 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
         
         float origFit = GACallbacks::evaluator(prunnedGenome);
         
-        int prunneRepeat = 0; 
+        int prunneRepeat = 0;
         bChangeDetected = TRUE;
         while (bChangeDetected && prunneRepeat < 10) {
             bChangeDetected = FALSE;
             prunneRepeat++;
             
-            // DISABLE GENES STARTING FROM END 
+            // DISABLE GENES STARTING FROM END
             for (int i = prunnedGenome.size() - 1; i >= 0; i--) {
                 GENOME_ITEM_TYPE   origValue = prunnedGenome.gene(i);
                 
@@ -103,7 +103,7 @@ int CircuitGenome::PruneCircuit(GAGenome &g, GAGenome &prunnedG) {
                         
                         float newFit = GACallbacks::evaluator(prunnedGenome);
                         if (origFit > newFit) {
-                            // GENE WAS IMPORTANT, SET BACK 
+                            // GENE WAS IMPORTANT, SET BACK
                             prunnedGenome.gene(i, origValue);
                         }
                         else {
@@ -164,7 +164,7 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
 
     // CREATE LOCAL COPY
     for (int i = 0; i < genome.size(); i++) {
-        prunnedGenome.gene(i, genome.gene(i)); 
+        prunnedGenome.gene(i, genome.gene(i));
     }
 
     if (pGlobals->stats.prunningInProgress) {
@@ -179,13 +179,13 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
         
         float origFit = GACallbacks::evaluator(prunnedGenome);
         
-        int prunneRepeat = 0; 
+        int prunneRepeat = 0;
         bChangeDetected = TRUE;
         while (bChangeDetected && prunneRepeat < 10) {
             bChangeDetected = FALSE;
             prunneRepeat++;
             
-			// DISABLE GENES STARTING FROM END 
+			// DISABLE GENES STARTING FROM END
 			for (int layer = 1; layer < 2 * pGlobals->settings->circuit.numLayers; layer = layer + 2) {
                 int offsetCON = (layer-1) * pGlobals->settings->circuit.genomeWidth;
                 int offsetFNC = (layer) * pGlobals->settings->circuit.genomeWidth;
@@ -203,7 +203,7 @@ int CircuitGenome::PruneCircuitNew(GAGenome &g, GAGenome &prunnedG) {
 
                     float newFit = GACallbacks::evaluator(prunnedGenome);
                     if (origFit > newFit) {
-                        // SOME PART OF THE GENE WAS IMPORTANT, SET BACK 
+                        // SOME PART OF THE GENE WAS IMPORTANT, SET BACK
 						prunnedGenome.gene(offsetFNC + slot, origValueFnc);	
 						prunnedGenome.gene(offsetCON + slot, origValueCon);		
 
@@ -261,7 +261,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
     int offsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
     for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (usePredictorMask == NULL || usePredictorMask[i] == 1) {
-			// ADD THIS ONE TO LIST OF USED NODES 
+			// ADD THIS ONE TO LIST OF USED NODES
 			displayNodes[offsetFNC + i] = 1;	
 		}
     }
@@ -275,7 +275,7 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
         int numLayerInputs = 0;
         if (layer == 1) {
             // WHEN SECTORING IS USED THEN FIRST LAYER OBTAIN internalLayerSize INPUTS
-            //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize; 
+            //if (pGACirc->bSectorInputData) numLayerInputs = pGACirc->internalLayerSize;
             numLayerInputs = pGlobals->settings->circuit.sizeInput;
         }
         else numLayerInputs = pGlobals->settings->circuit.sizeLayer;
@@ -286,11 +286,11 @@ int CircuitGenome::GetUsedNodes(GAGenome &g, unsigned char* usePredictorMask, un
         // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
         int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
 		// IN_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-        if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
+        if (layer / 2 == 0) numLayerConnectors = numLayerInputs;
 		// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-		if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
+		if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;
 		// IF NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER => LIMIT TO numLayerInputs
-		if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs; 
+		if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs;
 
 	    int	halfConnectors = (numLayerConnectors - 1) / 2;
 
@@ -373,21 +373,21 @@ int CircuitGenome::HasConnection(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE c
 	else bHasConnection = FALSE;
 	
     switch (nodeGetFunction(functionID)) {
-        // 
+        //
 		// FUNCTIONS WITH ONLY ONE CONNECTOR
 		//
 		case FNC_NOP:  // no break
         case FNC_SHIL: // no break
         case FNC_SHIR: // no break
         case FNC_BITSELECTOR: {
-			// Check if this connection is the first one 
+			// Check if this connection is the first one
 			// If not, then set connection flag bHasConnection to FALSE
 			for (int i = 0; i < bit; i++) {
                 if (connectionMask & (GENOME_ITEM_TYPE) pGlobals->precompPow[i]) bHasConnection = FALSE;
 			}
 			break;
         }
-        // 
+        //
 		// FUNCTIONS WITH NO CONNECTOR
 		//
         case FNC_CONST: // no break
@@ -405,17 +405,17 @@ int CircuitGenome::IsOperand(GENOME_ITEM_TYPE functionID, GENOME_ITEM_TYPE conne
     
     switch (nodeGetFunction(functionID)) {
         case FNC_NOP:	*pOperand = ""; break;
-        case FNC_OR:	*pOperand = "|"; break;    
-        case FNC_AND:	*pOperand = "&"; break;    
-        case FNC_XOR:	*pOperand = "^"; break;    
-        case FNC_NOR:	*pOperand = "| ~"; break;    
-        case FNC_NAND:	*pOperand = "& ~"; break;    
+        case FNC_OR:	*pOperand = "|"; break;
+        case FNC_AND:	*pOperand = "&"; break;
+        case FNC_XOR:	*pOperand = "^"; break;
+        case FNC_NOR:	*pOperand = "| ~"; break;
+        case FNC_NAND:	*pOperand = "& ~"; break;
         //case FNC_SUM:	*pOperand = "+"; break;
-        case FNC_SUBS:	*pOperand = "-"; break;     
-        case FNC_ADD:	*pOperand = "+"; break;    
-        case FNC_MULT:	*pOperand = "*"; break;    
-        case FNC_DIV:	*pOperand = "/"; break;     
-		case FNC_EQUAL: *pOperand = "=="; break;     
+        case FNC_SUBS:	*pOperand = "-"; break;
+        case FNC_ADD:	*pOperand = "+"; break;
+        case FNC_MULT:	*pOperand = "*"; break;
+        case FNC_DIV:	*pOperand = "/"; break;
+		case FNC_EQUAL: *pOperand = "=="; break;
 
         case FNC_CONST: // no break
 		case FNC_READX: {
@@ -461,32 +461,32 @@ int CircuitGenome::GetNeutralValue(GENOME_ITEM_TYPE functionID, string* pOperand
     
     switch (nodeGetFunction(functionID)) {
         case FNC_OR: // no break
-        case FNC_XOR: 
-        case FNC_NAND: 
-        case FNC_SUBS: 
+        case FNC_XOR:
+        case FNC_NAND:
+        case FNC_SUBS:
         //case FNC_SUM:
         case FNC_ADD: {
-            *pOperand = "0"; break;    
+            *pOperand = "0"; break;
         }
         
         case FNC_MULT:
         case FNC_DIV: {
-            *pOperand = "1"; break;    
+            *pOperand = "1"; break;
         }
 
-        case FNC_AND: 
-        case FNC_NOR: { 
-            *pOperand = "0xff"; break;    
+        case FNC_AND:
+        case FNC_NOR: {
+            *pOperand = "0xff"; break;
         }
 
-        case FNC_NOP: 
-        case FNC_CONST: 
-        case FNC_SHIL: 
-        case FNC_BITSELECTOR: 
-		case FNC_READX: 
+        case FNC_NOP:
+        case FNC_CONST:
+        case FNC_SHIL:
+        case FNC_BITSELECTOR:
+		case FNC_READX:
 		case FNC_EQUAL:
         case FNC_SHIR: {
-            *pOperand = ""; break;    
+            *pOperand = ""; break;
         }
 
         default: {
@@ -598,9 +598,9 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
     string							value2;
     string							visualCirc = "";
     string							codeCirc = "";
-	string 							actualSlotID; 
-	string 							previousSlotID; 
-	int								bCodeCircuit = TRUE; 
+	string 							actualSlotID;
+	string 							previousSlotID;
+	int								bCodeCircuit = TRUE;
     unsigned char*					displayNodes = NULL;
 
     displayNodes = new unsigned char[pGlobals->settings->circuit.genomeSize];
@@ -610,7 +610,7 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
 
 	// 1. Prune circuit (if required)
 	// 2. Create header (DOT, C)
-	// 3. 
+	// 3.
 
 
 
@@ -620,17 +620,17 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
     //
     if (pGlobals->settings->outputs.allowPrunning && bPruneCircuit) {
         // PRUNE
-        status = PruneCircuit(inputGenome, genome);    
+        status = PruneCircuit(inputGenome, genome);
         bCodeCircuit = TRUE;
 
-		// COMPUTE NODES TO DISPLAY 
+		// COMPUTE NODES TO DISPLAY
         memset(displayNodes, 0, pGlobals->settings->circuit.genomeSize);
-		status = GetUsedNodes(genome, usePredictorMask, displayNodes);        
+		status = GetUsedNodes(genome, usePredictorMask, displayNodes);
     }
     else {
         // JUST COPY
         for (int i = 0; i < genome.size(); i++) {
-			genome.gene(i, inputGenome.gene(i)); 
+			genome.gene(i, inputGenome.gene(i));
 		}
 		// ALL NODES WILL BE DISPLAYED
         memset(displayNodes, 1, pGlobals->settings->circuit.genomeSize);
@@ -644,14 +644,14 @@ int CircuitGenome::PrintCircuitMemory(GAGenome &g, string filePath, unsigned cha
 	//
 	// TODO: REFACT: HEADER
 	//
-    // VISUAL CIRC: INPUTS 
+    // VISUAL CIRC: INPUTS
     visualCirc += "digraph EACircuit {\r\n\
 rankdir=BT;\r\n\
 edge [dir=none];\r\n\
 size=\"6,6\";\r\n\
 ordering=out;\r\n";
 
-	// CODE CIRCUIT: 
+	// CODE CIRCUIT:
     if (bCodeCircuit) {
 		// FUNCTION HEADER
         codeCirc += "int headerCircuit_inputLayerSize = " + toString(pGlobals->settings->circuit.sizeInput) + ";\n";
@@ -730,7 +730,7 @@ ordering=out;\r\n";
      		if (pGlobals->settings->circuit.useMemory) {
 				codeCirc += "    for (int sector = 0; sector < NUM_SECTORS; sector++) {\n";
 
-				// set values from input data into respective inputs 
+				// set values from input data into respective inputs
 				// NOTE: memory inputs are initialized at the end of cycle
                 for (int dataInput = pGlobals->settings->circuit.sizeMemory; dataInput < pGlobals->settings->circuit.sizeInput; dataInput++) {
 					ostringstream os3;
@@ -764,7 +764,7 @@ ordering=out;\r\n";
 				ostringstream os4;
 				os4 << "\"" << (layer / 2 + 1) << "_" << slot << "_" << value << "\"; ";
 				actualSlotID = os4.str();
-                value2 += actualSlotID; 
+                value2 += actualSlotID;
             }
 		}
 		value2 += "}\r\n";
@@ -777,9 +777,9 @@ ordering=out;\r\n";
             // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
             int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
 			// IN_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
+            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;
 			// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
+			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;
 			
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
 
@@ -796,7 +796,7 @@ ordering=out;\r\n";
 			value2 = os5.str();
 			message += value2;
             
-			// 
+			//
 			// VISUAL CIRC: CREATE CONNECTION BETWEEN LAYERS
 			//
 			// USE ONLY GENES THAT WERE NOT PRUNNED OUT
@@ -811,8 +811,8 @@ ordering=out;\r\n";
 
 				int    bFirstArgument = TRUE;
 				int    bAtLeastOneConnection = FALSE;
-			    
-				// CODE CIRCUIT: 
+			
+				// CODE CIRCUIT:
 				if (bCodeCircuit) {
                     switch (nodeGetFunction(genome.gene(offsetFNC + slot))) {
 						case FNC_CONST: {
@@ -828,7 +828,7 @@ ordering=out;\r\n";
 						case FNC_NOR: {
 							//value2.Format("    unsigned char VAR_%s = 0 | ~", actualSlotID);
 							ostringstream os8;
-							os8 << "        unsigned char VAR_" << actualSlotID << " = 0 | ~"; 
+							os8 << "        unsigned char VAR_" << actualSlotID << " = 0 | ~";
 							value2 = os8.str();
 							codeCirc += value2;
 							bFirstArgument = FALSE;
@@ -838,17 +838,17 @@ ordering=out;\r\n";
 						case FNC_NAND: {
 							//value2.Format("    unsigned char VAR_%s = 0xff & ~ ", actualSlotID);
 							ostringstream os9;
-							os9 << "        unsigned char VAR_" << actualSlotID << " = 0xff & ~ "; 
+							os9 << "        unsigned char VAR_" << actualSlotID << " = 0xff & ~ ";
 							value2 = os9.str();
 							codeCirc += value2;
 							bFirstArgument = FALSE;
 							bAtLeastOneConnection = TRUE;
 							break;
 						}
-		                
+		
 					}
 				}
-			    
+			
 				if (bCodeCircuit) {
 					// DIV AND SUBST HAVE PREVIOUS LAYER SLOT AS BASIC INPUT
 					// USE ONLY GENES THAT WERE NOT PRUNNED OUT
@@ -869,7 +869,7 @@ ordering=out;\r\n";
 							os11 << "IN_" << slot;
 							previousSlotID = os11.str();
 						}
-					    
+					
 						//value2.Format("    unsigned char VAR_%s =", actualSlotID);
 						ostringstream os12;
 						os12 << "        unsigned char VAR_" << actualSlotID << " =";
@@ -877,17 +877,17 @@ ordering=out;\r\n";
 						codeCirc += value2;
 
 						ostringstream os13;
-	                    					    
+	                    					
                         switch (nodeGetFunction(genome.gene(offsetFNC + slot))) {
-							case FNC_NOP: os13 << " VAR_" << previousSlotID; value2 = os13.str(); break; 
-							case FNC_SUBS: os13 << " VAR_" << previousSlotID << " - "; value2 = os13.str(); break; 
-							case FNC_ADD: os13 << " VAR_" << previousSlotID << " + "; value2 = os13.str(); break; 
-							case FNC_MULT: os13 << " VAR_" << previousSlotID << " * "; value2 = os13.str(); break; 
-							case FNC_DIV: os13 << " VAR_" << previousSlotID << " / "; value2 = os13.str(); break; 
+							case FNC_NOP: os13 << " VAR_" << previousSlotID; value2 = os13.str(); break;
+							case FNC_SUBS: os13 << " VAR_" << previousSlotID << " - "; value2 = os13.str(); break;
+							case FNC_ADD: os13 << " VAR_" << previousSlotID << " + "; value2 = os13.str(); break;
+							case FNC_MULT: os13 << " VAR_" << previousSlotID << " * "; value2 = os13.str(); break;
+							case FNC_DIV: os13 << " VAR_" << previousSlotID << " / "; value2 = os13.str(); break;
                             case FNC_SHIL: os13 << " VAR_" << previousSlotID << " << " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
                             case FNC_SHIR: os13 << " VAR_" << previousSlotID << " >> " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
                             case FNC_BITSELECTOR: os13 << " VAR_" << previousSlotID + " & " << (nodeGetArgument(genome.gene(offsetFNC + slot) & 0x07, 1)); value2 = os13.str(); break;
-							case FNC_EQUAL: os13 << " VAR_" << previousSlotID << " == "; value2 = os13.str(); break; 
+							case FNC_EQUAL: os13 << " VAR_" << previousSlotID << " == "; value2 = os13.str(); break;
 							case FNC_READX: {
 								if (codeCirc[codeCirc.length()-1] == ']') {
 									codeCirc.pop_back();
@@ -896,11 +896,11 @@ ordering=out;\r\n";
 								else {
 									os13 << " inputs[ VAR_" << previousSlotID << "%pGACirc->numInputs ]"; value2 = os13.str();
 								}
-								break; 
+								break;
 							}
-							default: 
+							default:
 								unsigned long a = genome.gene(offsetFNC + slot);
-								value2 = "!!!"; 
+								value2 = "!!!";
 						}
 						codeCirc += value2;
 
@@ -908,7 +908,7 @@ ordering=out;\r\n";
 						bAtLeastOneConnection = FALSE;
 					}
 				}
-			    
+			
 
 				//
 				// TODO: REFACT: CONNECTIONS
@@ -919,7 +919,7 @@ ordering=out;\r\n";
 					if (HasConnection(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit)) {
 						//int    bExplicitConnection = TRUE;
 						bAtLeastOneConnection = TRUE;
-	                    
+	
 						if (layer > 1) {
                             int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.genomeWidth;
                             int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.genomeWidth;
@@ -942,7 +942,7 @@ ordering=out;\r\n";
 						os23 << "\"" << actualSlotID << "\" -> \"" << previousSlotID << "\";\r\n";
 						value2 = os23.str();
 						visualCirc += value2;
-	                    
+	
 						if (bCodeCircuit) {
 							string operand;
 							if (bFirstArgument) {
@@ -973,14 +973,14 @@ ordering=out;\r\n";
 						}
 					}
 				}
-	            
+	
 				if (bCodeCircuit) {
 					if (bAtLeastOneConnection) {
 						// ADD FINALIZING VALUE THAT IS NEUTRAL TO GIVEN OPERATION (E.G. 0 FOR XOR)
 						string operand;
 						GetNeutralValue(genome.gene(offsetFNC + slot), &operand);
 						//value2.Format(" %s", operand);
-						value2 = " " + operand; 
+						value2 = " " + operand;
 						codeCirc += value2;
 						codeCirc += ";\n";
 					}
@@ -1012,11 +1012,11 @@ ordering=out;\r\n";
     // VISUAL CIRC: CONNECT OUTPUT LAYER
     //for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 
-	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n"; 
+	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n";
 
 	// propagate memory outputs to inputs to next iteration (if required)
     if (pGlobals->settings->circuit.useMemory) {
-		// set memory inputs by respective memory outputs 
+		// set memory inputs by respective memory outputs
         for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.sizeMemory; memorySlot++) {
             int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
             int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.genomeWidth;
@@ -1036,17 +1036,17 @@ ordering=out;\r\n";
 	int outputOffset = 0;
     for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (i == numMemoryOutputs) {
-			visualCirc += "node [color=red];\r\n"; 
+			visualCirc += "node [color=red];\r\n";
 		}
 /*
 		if (usePredictorMask == NULL || usePredictorMask[i] == 1) {
 			//value2.Format("node [color=red];\r\n");
-			value2 = "node [color=red];\r\n"; 
+			value2 = "node [color=red];\r\n";
 			visualCirc += value2;
 		}
 		else {
 			//value2.Format("node [color=lightblue2];\r\n");
-			value2 = "node [color=lightblue2];\r\n"; 
+			value2 = "node [color=lightblue2];\r\n";
 			visualCirc += value2;
 		}
 */		
@@ -1068,7 +1068,7 @@ ordering=out;\r\n";
 			os31 << "\"" << actualSlotID << "\" -> \"" << previousSlotID << "\";\r\n";
 			value2 = os31.str();
 		    visualCirc += value2;
-		    
+		
             if (bCodeCircuit) {
 			    //value2.Format("    outputs[%d] = VAR_%s;\r\n", i, previousSlotID);
 				ostringstream os32;
@@ -1170,13 +1170,13 @@ int CircuitGenome::PrintCircuitMemory_DOT(GAGenome &g, string filePath, unsigned
     string							value2;
     string							visualCirc = "";
 //    string							codeCirc = "";
-	string 							actualSlotID; 
-	string 							previousSlotID; 
-	int								bCodeCircuit = TRUE; 
+	string 							actualSlotID;
+	string 							previousSlotID;
+	int								bCodeCircuit = TRUE;
 
     int numMemoryOutputs = (pGlobals->settings->circuit.useMemory) ? pGlobals->settings->circuit.sizeMemory : 0;
     
-    // VISUAL CIRC: INPUTS 
+    // VISUAL CIRC: INPUTS
     visualCirc += "digraph EACircuit {\r\n\
 rankdir=BT;\r\n\
 edge [dir=none];\r\n\
@@ -1233,7 +1233,7 @@ ordering=out;\r\n";
 				ostringstream os4;
 				os4 << "\"" << (layer / 2 + 1) << "_" << slot << "_" << value << "\"; ";
 				actualSlotID = os4.str();
-                value2 += actualSlotID; 
+                value2 += actualSlotID;
             }
 		}
 		value2 += "}\r\n";
@@ -1246,15 +1246,15 @@ ordering=out;\r\n";
             // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
             int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
 			// IN_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
+            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;
 			// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
+			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;
 			
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
 
             GENOME_ITEM_TYPE effectiveCon = genome.gene(offsetCON + slot);
 			
-			// 
+			//
 			// VISUAL CIRC: CREATE CONNECTION BETWEEN LAYERS
 			//
 			// USE ONLY GENES THAT WERE NOT PRUNNED OUT
@@ -1269,13 +1269,13 @@ ordering=out;\r\n";
 
 				int    bFirstArgument = TRUE;
 				int    bAtLeastOneConnection = FALSE;
-		    
+		
 				for (int bit = 0; bit < stopBit; bit++) {
 					// IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN TAKE INPUT
 					if (HasConnection(genome.gene(offsetFNC + slot), effectiveCon, slot, connectOffset, bit)) {
 						int    bExplicitConnection = TRUE;
 						bAtLeastOneConnection = TRUE;
-	                    
+	
 						if (layer > 1) {
                             int prevOffsetFNC = (layer - 2) * pGlobals->settings->circuit.genomeWidth;
                             int prevOffsetCON = (layer - 3) * pGlobals->settings->circuit.genomeWidth;
@@ -1302,7 +1302,7 @@ ordering=out;\r\n";
 						}
 					}
 				}
-	            
+	
 			}
         }
     }
@@ -1314,11 +1314,11 @@ ordering=out;\r\n";
     // VISUAL CIRC: CONNECT OUTPUT LAYER
     //for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 
-	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n"; 
+	if (pGlobals->settings->circuit.useMemory) visualCirc += "node [color=magenta];\r\n";
 
 	// propagate memory outputs to inputs to next iteration (if required)
     if (pGlobals->settings->circuit.useMemory) {
-		// set memory inputs by respective memory outputs 
+		// set memory inputs by respective memory outputs
         for (int memorySlot = 0; memorySlot < pGlobals->settings->circuit.sizeMemory; memorySlot++) {
             int prevOffsetFNC = (2 * pGlobals->settings->circuit.numLayers - 1) * pGlobals->settings->circuit.genomeWidth;
             int prevOffsetCON = (2 * pGlobals->settings->circuit.numLayers - 2) * pGlobals->settings->circuit.genomeWidth;
@@ -1333,7 +1333,7 @@ ordering=out;\r\n";
 	int outputOffset = 0;
     for (int i = 0; i < pGlobals->settings->circuit.sizeOutputLayer; i++) {
 		if (i == numMemoryOutputs) {
-			visualCirc += "node [color=red];\r\n"; 
+			visualCirc += "node [color=red];\r\n";
 		}
 		
 		if (true) {
@@ -1410,7 +1410,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 		// | MEMORY_INPUTS_i | DATA_INPUTS_i |
 		// ######### CIRCUIT #############
 		// | MEMORY_INTPUTS_i+1 | DATA_OUTPUTS_i |
-		// 
+		//
         // sizeof(MEMORY_INPUTS_i) == pGlobals->settings->circuit.memorySize (0 if useMemory = false)
 		// sizeof(DATA_INPUTS_i) == pGlobals->settings->circuit.sizeInputLayer - pGlobals->settings->circuit.memorySize
         // wanted: sizeof(DATA_INPUTS_i) == pGlobals->settings->circuit.sizeInput
@@ -1433,9 +1433,9 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 
 #ifdef ENABLE_SLIDING_WINDOW
 	// Inputs is not partitioned into separate sectors with pGlobals->settings->circuit.sizeInputLayer length, but with overlapping parts with pGlobals->settings->circuit.sizeInputLayer length
-    for (float sector = 0; sector < numSectors; sector += 1 / (float) sectorLength) { 
+    for (float sector = 0; sector < numSectors; sector += 1 / (float) sectorLength) {
 #else
-    for (int sector = 0; sector < numSectors; sector++) { 
+    for (int sector = 0; sector < numSectors; sector++) {
 #endif
         // PREPARE INPUTS FOR ACTUAL RUN OF CIRCUIT
         if (numSectors == 1) {
@@ -1479,11 +1479,11 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
             // ORDINARY LAYERS HAVE SPECIFIED NUMBER SETTINGS_CIRCUIT::numConnectors
             int	numLayerConnectors = pGlobals->settings->circuit.numConnectors;
 			// IN_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;    
+            if (layer / 2 == 0) numLayerConnectors = numLayerInputs;
 			// OUT_SELECTOR_LAYER HAS FULL INTERCONNECTION (CONNECTORS)
-			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;    
+			if (layer == (2 * pGlobals->settings->circuit.numLayers - 1)) numLayerConnectors = numLayerInputs;
 			// IF NUMBER OF CONNECTORS IS HIGHER THAN NUMBER OF FUNCTIONS IN LAYER => LIMIT TO numLayerInputs
-			if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs; 
+			if (numLayerConnectors > numLayerInputs) numLayerConnectors = numLayerInputs;
 
 			// halfConnectors is used for relative interpretation of connectors
 			int	halfConnectors = (numLayerConnectors - 1) / 2;
@@ -1503,7 +1503,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
 			    stopBit = numLayerConnectors;
 
 				//
-				// EVALUATE FUNCTION BASED ON ITS INPUTS 
+				// EVALUATE FUNCTION BASED ON ITS INPUTS
 				//
                 switch (nodeGetFunction(pGenome->gene(offsetFNC + slot))) {
                     case FNC_NOP: {
@@ -1569,7 +1569,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                         break;
 					}
                     case FNC_ROTL: {
-                        // SHIFT IS ENCODED IN FUNCTION IDENTFICATION 
+                        // SHIFT IS ENCODED IN FUNCTION IDENTFICATION
 						// MAXIMUM SHIFT IS 7
                         for (int bit = 0; bit < stopBit; bit++) {
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
@@ -1581,7 +1581,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                         break;
                     }
                     case FNC_ROTR: {
-                        // SHIFT IS ENCODED IN FUNCTION IDENTFICATION 
+                        // SHIFT IS ENCODED IN FUNCTION IDENTFICATION
 						// MAXIMUM SHIFT IS 7
                         for (int bit = 0; bit < stopBit; bit++) {
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
@@ -1593,7 +1593,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                     }
                     case FNC_BITSELECTOR: {
                         // BIT SELECTOR
-                        // MASK IS ENCODED IN FUNCTION IDENTFICATION 
+                        // MASK IS ENCODED IN FUNCTION IDENTFICATION
                         for (int bit = 0; bit < stopBit; bit++) {
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result = localInputs[connectOffset + bit] & (nodeGetArgument(pGenome->gene(offsetFNC + slot) & 0x07),1);
@@ -1633,7 +1633,7 @@ void CircuitGenome::executeCircuit(GA1DArrayGenome<GENOME_ITEM_TYPE>* pGenome, u
                         // AND ADD ALL VALUES FROM CONNECTED INPUTS
                         result = 0;
                         for (int bit = 0; bit < stopBit; bit++) {
-                            // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN ADD THIS INPUT 
+                            // IF 1 IS ON bit-th POSITION (CONNECTION LAYER), THEN ADD THIS INPUT
                             if (connect & (GENOME_ITEM_TYPE) pGlobals->precompPow[bit]) {
                                 result += localInputs[connectOffset + bit];
                             }

@@ -3,9 +3,9 @@
 *.user
 *.Debug
 *.Release
-[Mm]akefile
 *.sdf
 *.opensdf
+
 # object files, linked application, build filed
 *.o
 *.ocpp
@@ -23,12 +23,18 @@ utils/start.bat
 [Bb]uild/
 [Rr]un/
 EACirc/galib/BUILD
+EACirc/EACirc
+
 # backup and system files
 *~
 *.autosave
 notes.txt
 *.dgml
 *.cd
+
+# Version file (with current commit hash)
+EACirc/Version.h
+
 # results files with circuits created during debuging
 circuit_*.dot
 circuit_*.c
@@ -45,3 +51,12 @@ fitness_progress.txt
 bestfit_graph.txt
 avgfit_graph.txt
 config.xml
+
+# Oneclick result files and logs
+Oneclick/exec/processed_results.txt
+Oneclick/exec/*.bat
+Oneclick/exec/configs
+Oneclick/exec/results
+Oneclick/exec/*.log
+Oneclick/exec/*.pl
+

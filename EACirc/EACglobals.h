@@ -8,10 +8,9 @@ class IEvaluator;
 //#include "evaluators/IEvaluator.h"
 class IRndGen;
 //#include "generators/IRndGen.h"
-#include "circuit/gate/JVMSimulator.h"
 #include <cmath>
-#include <algorithm>
 #include <cstring>
+#include <vector>
 using namespace std;
 
 // forward declarations
@@ -76,13 +75,14 @@ struct SETTINGS_MAIN {
     bool loadInitialPopulation;     //! should initial population be loaded instead of randomly generated?
     int numGenerations;             //! number of generations to evolve
     int saveStateFrequency;         //! frequency of reseeding GAlib and saving state
-    int circuitSizeInput;           //! number if circuit input bytes
+    int circuitSizeInput;           //! number of circuit input bytes
     int circuitSizeOutput;          //! number of circuit output bytes
     SETTINGS_MAIN();
 };
 
 //! settings corresponding to EACIRC/OUTPUTS
 struct SETTINGS_OUTPUTS {
+    int verbosity;                  //! log verposity level
     bool graphFiles;                //! should graph files be created?
     bool intermediateCircuits;      //! should intermediate circuits be saved?
     bool allowPrunning;             //! save prunned versions as well?
@@ -139,8 +139,8 @@ struct SETTINGS_GATE_CIRCUIT {
 
 //! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
 struct SETTINGS_POLY_CIRCUIT {
-    int numVariables;                       //! number of input variables in polynomial (i.e., input bit size).
-    int numPolynomials;                     //! number of polynomials in a distinguisher (i.e., outpit bit size).
+    int mutateTermStrategy;                 //! strategy for mutating single term. 0=bitflip, 1=either add or remove variable.
+    int numPolynomials;                     //! number of polynomials. Bit size of the output layer. 8*numPolynomials <= outputSize.
     double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
     double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.
     double mutateAddTermProbability;        //! p for adding a new term in a mutation, monomial.
@@ -148,8 +148,8 @@ struct SETTINGS_POLY_CIRCUIT {
     double mutateRemoveTermProbability;     //! p for removing a term in a mutation, monomial.
     int mutateRemoveTermStrategy;           //! strategy for removing a term in a mutation, multiple / single / geometric / ...
     bool crossoverRandomizePolySelect;      //! randomize polynomial ordering in the crossover?
-    bool crossoverTermsProbability;         //! crossing of the terms probability.
-    int genomeInitMaxTerms;                 //! upper bound for a number of terms in a polynomial.
+    double crossoverTermsProbability;       //! p for crossing of the terms using 2 parent polynomials.
+    int maxNumTerms;                        //! upper bound for a number of terms in a polynomial.
     SETTINGS_POLY_CIRCUIT();
 };
 
@@ -189,7 +189,10 @@ struct STATISTICS {
     int avgCount;                   //! count used as divisor in avgMaxFit, avgAvgFit, avgMinFit
     bool prunningInProgress;        //! is prunning currently in progress?
     int actGener;
+    std::vector<double> * pvaluesBestIndividual; //! pvalues of the best individual evaluated on new test vectors (validation).
     STATISTICS();
+    void allocate();
+    void release();
 };
 
 //! test vectors and their outputs
@@ -198,11 +201,6 @@ struct TEST_VECTORS {
     unsigned char** outputs;                //! (correct) test vector outputs for current set
     unsigned char** circuitOutputs;         //! circuit outputs for current set (to ease memory allocation)
     bool newSet;                            //! has new set been generated? (for CUDA usage)
-    // temporary arrays for executeCircuit (to prevent multiple allocations)
-    unsigned char* executionInputLayer;     //! input layer (memory + inputs)
-    unsigned char* executionMiddleLayerIn;  //! common layer used as input
-    unsigned char* executionMiddleLayerOut; //! common layer used as output
-    unsigned char* executionOutputLayer;    //! output layer (memoty + outputs)
     TEST_VECTORS();
     void allocate();
     void release();

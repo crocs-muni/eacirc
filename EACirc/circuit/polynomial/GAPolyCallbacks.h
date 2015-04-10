@@ -2,9 +2,18 @@
 #define GAPOLYCALLBACKS_H
 
 #include "EACglobals.h"
-#include "poly.h"
+#include "PolyCommonFunctions.h"
 #include "GAGenome.h"
 #include "GA2DArrayGenome.h"
+
+#define MUTATE_TERM_STRATEGY_FLIP 0
+#define MUTATE_TERM_STRATEGY_ADDREMOVE 1
+
+#define MUTATE_ADD_TERM_STRATEGY_ONCE 0
+#define MUTATE_ADD_TERM_STRATEGY_GEOMETRIC 1
+
+#define MUTATE_RM_TERM_STRATEGY_ONCE 0
+#define MUTATE_RM_TERM_STRATEGY_GEOMETRIC 1
 
 class GAPolyCallbacks {
 public:
@@ -34,29 +43,28 @@ public:
      * @return number of created offsprings
      */
     static int crossover(const GAGenome &parent1, const GAGenome &parent2, GAGenome *offspring1, GAGenome *offspring2);
-private:
 
-    
+private:
     /** change one bit somewhere in given width (lower bits)
      * @param genomeValue   value of the genome item to change
      * @param width         number of bits applicable for change
      * @return              changed genome item value
      */
     static POLY_GENOME_ITEM_TYPE changeBit(POLY_GENOME_ITEM_TYPE genomeValue, int width);
-    
+
     /**
      * Random number generator using GAlib (determinism).
      * @param max
-     * @return 
+     * @return
      */
     inline static int randomGen(int max) { return GARandomInt(0, max-1); }
-    
+
     /**
-     * Shuffling container with RandomAccessIterator. 
+     * Shuffling container with RandomAccessIterator.
      * Knuth shuffles in O(n), unbiased algorithm (all permutations equally probable).
-     * 
+     *
      * Uses GA random generator for determinism (if desired).
-     * 
+     *
      * @param first
      * @param last
      */

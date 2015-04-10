@@ -1,11 +1,12 @@
 TEMPLATE=app
 CONFIG+=console
 CONFIG-=qt
+TARGET=EACirc
 
 SUPPRESSED_WARNINGS = -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable \
     -Wno-unused-function -Wno-unused-value
 
-QMAKE_TARGET = eacirc2
+QMAKE_TARGET = EACirc
 QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 QMAKE_CXXFLAGS += -std=c++11 -Wall -Wextra $$SUPPRESSED_WARNINGS # -Weffc++
 QMAKE_CXXFLAGS += -isystem ../EACirc/galib -isystem ../EACirc/tinyXML
@@ -20,6 +21,11 @@ SOURCES += \
     EACirc/Status.cpp \
     EACirc/EACirc.cpp \
     EACirc/EACglobals.cpp \
+    EACirc/circuit/polynomial/PolyCommonFunctions.cpp \
+    EACirc/circuit/polynomial/PolynomialInterpreter.cpp \
+    EACirc/circuit/gate/GateInterpreter.cpp \
+    EACirc/circuit/gate/GateCommonFunctions.cpp \
+    EACirc/circuit/gate/GAGateCallbacks.cpp
 
 # === individual representation ===
 SOURCES += \
@@ -30,18 +36,13 @@ SOURCES += \
 SOURCES += \
     EACirc/circuit/gate/GateCircuitIO.cpp \
     EACirc/circuit/gate/GateCircuit.cpp \
-    EACirc/circuit/gate/GACallbacks.cpp \
-    EACirc/circuit/gate/CircuitInterpreter.cpp \
-    EACirc/circuit/gate/CircuitCommonFunctions.cpp \
 
 # === polynomial circuits ===
 SOURCES += \
     EACirc/circuit/polynomial/PolynomialCircuit.cpp \
     EACirc/circuit/polynomial/PolynomialCircuitIO.cpp \
     EACirc/circuit/polynomial/Term.cpp   \
-    EACirc/circuit/polynomial/PolyDistEval.cpp   \
     EACirc/circuit/polynomial/GAPolyCallbacks.cpp \
-    EACirc/circuit/polynomial/poly.cpp \
 
 # === evaluators ===
 SOURCES += \
@@ -49,6 +50,7 @@ SOURCES += \
     EACirc/evaluators/TopBitEvaluator.cpp \
     EACirc/evaluators/CategoriesEvaluator.cpp \
     EACirc/evaluators/HammingWeightEvaluator.cpp \
+    EACirc/evaluators/FeatureEvaluator.cpp \
 
 # === random generators ===
 SOURCES += \
@@ -70,17 +72,30 @@ SOURCES += \
     EACirc/projects/sha3/Sha3Project.cpp \
     EACirc/projects/sha3/Hasher.cpp \
     EACirc/projects/sha3/Sha3Interface.cpp \
+    EACirc/projects/sha3/Sha3Functions.cpp \
+    EACirc/projects/estream/EstreamCiphers.cpp \
     EACirc/projects/estream/EstreamProject.cpp \
     EACirc/projects/estream/EncryptorDecryptor.cpp \
-    EACirc/projects/estream/EstreamInterface.cpp \
-    EACirc/projects/tea/TeaProject.cpp \
     EACirc/projects/files/filesProject.cpp \
+    EACirc/projects/caesar/CaesarProject.cpp \
+    EACirc/projects/caesar/CaesarInterface.cpp \
+    EACirc/projects/caesar/Encryptor.cpp \
+
+# === CAESAR algorithms ===
+SOURCES += \
+    EACirc/projects/caesar/aead/common/crypto_verify_16.cpp \
+    EACirc/projects/caesar/aead/common/crypto_core_aes128encrypt.cpp \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm_encrypt.cpp \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm.cpp \
+    EACirc/projects/caesar/aead/acorn128/Acorn128.cpp \
+    EACirc/projects/caesar/aead/acorn128/Acorn128_encrypt.cpp \
 
 # === eSTREAM cipher files ===
 SOURCES += \
     EACirc/projects/estream/ciphers/zk-crypt/zk-crypt-v3.cpp \
     EACirc/projects/estream/ciphers/wg/wg.cpp \
     EACirc/projects/estream/ciphers/tsc-4/tsc-4.cpp \
+    EACirc/projects/estream/ciphers/tea/tea.cpp \
     EACirc/projects/estream/ciphers/sosemanuk/sosemanuk.cpp \
     EACirc/projects/estream/ciphers/sfinks/sfinks.cpp \
     EACirc/projects/estream/ciphers/salsa20/salsa20.cpp \
@@ -230,28 +245,28 @@ HEADERS += \
     EACirc/Status.h \
     EACirc/EACirc.h \
     EACirc/Version.h \
-    EACirc/circuit/ICircuit.h \
-    EACirc/circuit/ICircuitIO.h \
-    EACirc/circuit/gate/GateCircuit.h \
-    EACirc/circuit/gate/GateCircuitIO.h \
-    EACirc/circuit/polynomial/PolynomialCircuit.h \
-    EACirc/circuit/polynomial/PolynomialCircuitIO.h
+    EACirc/circuit/polynomial/PolyCommonFunctions.h \
+    EACirc/circuit/gate/GateInterpreter.h \
+    EACirc/circuit/gate/GateCommonFunctions.h \
+    EACirc/circuit/gate/GAGateCallbacks.h \
+    EACirc/circuit/polynomial/PolynomialInterpreter.h
 
 # === individual representation ===
 HEADERS += \
+    EACirc/circuit/ICircuit.h \
+    EACirc/circuit/ICircuitIO.h \
 
 # === circuit processing ===
 HEADERS += \
-    EACirc/circuit/gate/GACallbacks.h \
-    EACirc/circuit/gate/CircuitInterpreter.h \
-    EACirc/circuit/gate/CircuitCommonFunctions.h \
+    EACirc/circuit/gate/GateCircuit.h \
+    EACirc/circuit/gate/GateCircuitIO.h \
 
 # === polynomials ===
 HEADERS += \
-    EACirc/circuit/polynomial/PolyDistEval.h \
     EACirc/circuit/polynomial/GAPolyCallbacks.h \
     EACirc/circuit/polynomial/Term.h \
-    EACirc/circuit/polynomial/poly.h \
+    EACirc/circuit/polynomial/PolynomialCircuit.h \
+    EACirc/circuit/polynomial/PolynomialCircuitIO.h \
 
 # === standard evaluators ===
 HEADERS += \
@@ -259,6 +274,7 @@ HEADERS += \
     EACirc/evaluators/TopBitEvaluator.h \
     EACirc/evaluators/CategoriesEvaluator.h \
     EACirc/evaluators/HammingWeightEvaluator.h \
+    EACirc/evaluators/FeatureEvaluator.h \
 
 # === random generators ===
 HEADERS += \
@@ -281,13 +297,28 @@ HEADERS += \
     EACirc/projects/sha3/Sha3Interface.h \
     EACirc/projects/sha3/Sha3Constants.h \
     EACirc/projects/sha3/Hasher.h \
+    EACirc/projects/sha3/Sha3Functions.h \
+    EACirc/projects/estream/EstreamCiphers.h \
     EACirc/projects/estream/EstreamProject.h \
     EACirc/projects/estream/EncryptorDecryptor.h \
     EACirc/projects/estream/EstreamConstants.h \
     EACirc/projects/estream/EstreamInterface.h \
-    EACirc/projects/tea/TeaProject.h \
     EACirc/projects/files/filesConstants.h \
     EACirc/projects/files/filesProject.h \
+    EACirc/projects/caesar/CaesarConstants.h \
+    EACirc/projects/caesar/CaesarProject.h \
+    EACirc/projects/caesar/CaesarInterface.h \
+    EACirc/projects/caesar/Encryptor.h \
+
+# === CAESAR algorithms ===
+HEADERS += \
+    EACirc/projects/caesar/aead/common/api.h \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm.h \
+    EACirc/projects/caesar/aead/aes128gcm/api.h \
+    EACirc/projects/caesar/aead/aes128gcm/Aes128Gcm_encrypt.h \
+    EACirc/projects/caesar/aead/acorn128/Acorn128.h \
+    EACirc/projects/caesar/aead/acorn128/api.h \
+    EACirc/projects/caesar/aead/acorn128/Acorn128_encrypt.h \
 
 # === eSTREAM cipher files ===
 HEADERS += \
@@ -301,6 +332,7 @@ HEADERS += \
     EACirc/projects/estream/ciphers/wg/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/tsc-4/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/trivium/ecrypt-sync.h \
+    EACirc/projects/estream/ciphers/tea/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/sosemanuk/ecrypt-sync.h \
     EACirc/projects/estream/ciphers/sosemanuk/sosemanuk.h \
     EACirc/projects/estream/ciphers/sfinks/ecrypt-sync.h \
@@ -490,4 +522,9 @@ HEADERS += \
     EACirc/galib/std_stream.h
 
 OTHER_FILES += \
-    EACirc/config.xml
+    EACirc/config.xml \
+
+# CAESAR candidates info files
+OTHER_FILES += \
+    EACirc/projects/caesar/aead/acorn128/about.md \
+    EACirc/projects/caesar/aead/aes128gcm/about.md \

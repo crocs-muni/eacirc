@@ -12,6 +12,12 @@
 #define EACIRC_INITIALIZED 0x04
 
 class EACirc {
+public: 
+    /** Visitor function pointer for EACirc.
+     */
+    typedef void (*EACircVisitor)(EACirc *);
+    
+private:    
     //! current error status
     int m_status;
     //! main seed for this computation (can be reproduced with this seed and settings)
@@ -32,6 +38,8 @@ class EACirc {
     int m_actGener;
     //! generations completed in previous runs
     int m_oldGenerations;
+    //! evaluateStep function visitor - called on evaluate step.
+    EACirc::EACircVisitor m_evaluateStepVisitor;
 
     /** checks, if configuration has no contradictions
       */
@@ -97,11 +105,18 @@ class EACirc {
       */
     void createPopulation();
 
+    /** statistics gathered with new test vectors but before population evaluation
+     * - can use statistics based on old test vectors (e.g. best)
+     * - used to save pvalue of best individual on new test set
+     */
+    void preEvaluate();
+
     /** evaluate computation
       * - writes to stats files, graph files
       * - print the best individual in current generation
       */
     void evaluateStep();
+    
 public:
     EACirc();
     ~EACirc();
