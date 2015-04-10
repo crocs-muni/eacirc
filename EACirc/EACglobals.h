@@ -8,6 +8,7 @@ class IEvaluator;
 //#include "evaluators/IEvaluator.h"
 class IRndGen;
 //#include "generators/IRndGen.h"
+#include "circuit/gate/JVMSimulator.h"
 #include <cmath>
 #include <cstring>
 #include <vector>

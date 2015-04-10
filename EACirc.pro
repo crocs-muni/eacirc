@@ -36,6 +36,7 @@ SOURCES += \
 SOURCES += \
     EACirc/circuit/gate/GateCircuitIO.cpp \
     EACirc/circuit/gate/GateCircuit.cpp \
+    EACirc/circuit/gate/JVMSimulator.cpp \
 
 # === polynomial circuits ===
 SOURCES += \
@@ -260,6 +261,7 @@ HEADERS += \
 HEADERS += \
     EACirc/circuit/gate/GateCircuit.h \
     EACirc/circuit/gate/GateCircuitIO.h \
+    EACirc/circuit/gate/JVMSimulator.h \
 
 # === polynomials ===
 HEADERS += \

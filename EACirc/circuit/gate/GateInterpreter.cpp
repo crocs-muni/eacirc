@@ -182,7 +182,7 @@ int GateInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE abs
     return STAT_OK;
 }
 
-int CircuitInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
+int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
 
 	int connection = 0;
 	// Prepare all inputs values to JVM stack
