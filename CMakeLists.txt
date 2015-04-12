@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(EACirc)
 
+include(cmake/eacirc_project.cmake)
 include(cmake/copy_if_not_exists.cmake)
 
 
@@ -34,9 +35,9 @@ set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 
 
 # === projects ===
-add_subdirectory(projects/caesar)
-add_subdirectory(projects/estream)
-add_subdirectory(projects/sha3)
+include_eacirc_project(caesar)
+include_eacirc_project(estream)
+include_eacirc_project(sha3)
 # === executables ===
 add_subdirectory(eacirc)
 
