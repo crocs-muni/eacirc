@@ -27,6 +27,6 @@ function(include_eacirc_project NAME)
     option(BUILD_${UPPERCASE_NAME} "Build project ${NAME}" ON)
 
     if(BUILD_${UPPERCASE_NAME})
-        add_subdirectory(${PROJECT_SOURCE_DIR}/projects/${NAME})
+        add_subdirectory(${PROJECTS_DIR}/${NAME})
     endif()
 endfunction()
