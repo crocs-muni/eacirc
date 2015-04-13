@@ -53,6 +53,10 @@ set(SOURCES
     self_tests/TestConfigurator.cpp
 )
 
+set(CUDA_SOURCES
+# === something ===
+)
+
 set(HEADERS
 # === main project files ===
     Main.h
