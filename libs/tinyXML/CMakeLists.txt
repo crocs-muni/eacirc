@@ -24,3 +24,7 @@ add_library(tinyXML STATIC ${SOURCES} ${HEADERS} )
 target_include_directories(tinyXML
     INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+set_target_properties(tinyXML
+    PROPERTIES FOLDER libs
+)

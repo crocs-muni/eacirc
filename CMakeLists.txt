@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(EACirc)
 
-include(cmake/copy_if_not_exists.cmake)
+include(cmake/eacirc_project.cmake)
 
 
 # === Set CXX flags ===
@@ -42,9 +42,9 @@ set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 
 
 # === projects ===
-add_subdirectory(projects/caesar)
-add_subdirectory(projects/estream)
-add_subdirectory(projects/sha3)
+include_eacirc_project(caesar)
+include_eacirc_project(estream)
+include_eacirc_project(sha3)
 # === executables ===
 add_subdirectory(eacirc)
 
@@ -61,4 +61,4 @@ add_subdirectory(libs/catch)
 
 # === testing ===
 enable_testing()
-add_test(NAME test COMMAND eacirc -log -test WORKING_DIRECTORY ${RUN_DIR})
+add_test(NAME test COMMAND eacirc -log -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)

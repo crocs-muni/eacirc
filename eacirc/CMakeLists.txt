@@ -113,15 +113,15 @@ detect_version(Version.h)
 
 
 # === source groups ===
-source_group(circuit         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
-    source_group(gate            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
-    source_group(polynomial      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
-source_group(evaluators      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
-source_group(generators      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
-source_group(projects        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/.*")
-    source_group(pregenerated_tv REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/pregenerated_tv/.*")
-    source_group(files           REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/files/.*")
-source_group(self_tests      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/self_tests/.*")
+source_group("circuit"         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
+source_group("circuit\\gate"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
+source_group("circuit\\polynomial"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
+source_group("evaluators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
+source_group("generators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
+source_group("projects"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/.*")
+source_group("projects\\pregenerated_tv" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/pregenerated_tv/.*")
+source_group("projects\\files"           REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/files/.*")
+source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/self_tests/.*")
 
 
 
@@ -137,14 +137,14 @@ target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS
 target_link_libraries(eacirc galib tinyXML catch)
 
 
+# === build target to run directory ===
+set_target_properties(eacirc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
+add_custom_command(TARGET eacirc POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_CURRENT_SOURCE_DIR}/config.xml -DDST=$<TARGET_FILE_DIR:eacirc>/config.xml -P ${CMAKE_SOURCE_DIR}/cmake/copy_if_not_exists.cmake
+)
+
+
 # === link projects ===
 link_eacirc_project(caesar)
 link_eacirc_project(estream)
 link_eacirc_project(sha3)
-
-
-# === install ===
-install(TARGETS eacirc DESTINATION ${RUN_DIR})
-install(SCRIPT ${PROJECT_SOURCE_DIR}/cmake/copy_if_not_exists.cmake
-    CODE "copy_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/config.xml ${RUN_DIR}/config.xml)"
-)

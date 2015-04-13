@@ -104,3 +104,7 @@ target_include_directories(galib
     PUBLIC INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
+
+set_target_properties(galib
+    PROPERTIES FOLDER libs
+)
