@@ -132,14 +132,14 @@ target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS
 target_link_libraries(eacirc galib tinyXML catch)
 
 
+# === build target to run directory ===
+set_target_properties(eacirc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
+add_custom_command(TARGET eacirc POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_CURRENT_SOURCE_DIR}/config.xml -DDST=${RUN_DIR}/config.xml -P ${CMAKE_SOURCE_DIR}/cmake/copy_if_not_exists.cmake
+)
+
+
 # === link projects ===
 link_eacirc_project(caesar)
 link_eacirc_project(estream)
 link_eacirc_project(sha3)
-
-
-# === install ===
-install(TARGETS eacirc DESTINATION ${RUN_DIR})
-install(SCRIPT ${PROJECT_SOURCE_DIR}/cmake/copy_if_not_exists.cmake
-    CODE "copy_if_not_exists(${CMAKE_CURRENT_SOURCE_DIR}/config.xml ${RUN_DIR}/config.xml)"
-)

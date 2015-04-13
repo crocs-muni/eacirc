@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.0.2)
 project(EACirc)
 
 include(cmake/eacirc_project.cmake)
-include(cmake/copy_if_not_exists.cmake)
 
 
 # === Set CXX flags ===
