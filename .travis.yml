@@ -15,7 +15,6 @@ script:
   - mkdir build && cd build
   - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_ONECLICK=OFF
   - make
-  - make install
   - make test
 
 env:

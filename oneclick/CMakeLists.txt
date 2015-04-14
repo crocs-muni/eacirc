@@ -43,5 +43,5 @@ target_include_directories(oneclick
 target_link_libraries(oneclick tinyXML)
 
 
-# === install ===
-install(TARGETS oneclick DESTINATION ${RUN_DIR})
+# === build target to run directory ===
+set_target_properties(oneclick PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})
