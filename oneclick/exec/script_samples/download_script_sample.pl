@@ -12,10 +12,11 @@
 use strict;
 use warnings;
 use WWW::Mechanize;
-use Archive::Extract;
+use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
+use File::Path;
 use Term::ReadKey;
 
-#Script constants
+#Script default values constants
 use constant RESULT_DIR => './results/';
 use constant FILES_COUNT => '2';
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
@@ -71,7 +72,7 @@ sub download_rem_dir($$) {
 	$mech->get("$url");
 	
 	#Check for existence of file on BOINC server.
-	#If nonexistent does nothing.
+	#If error occurs does nothing.
 	if($mech->content() =~ /An error occurred/) {
 		print "Error on server occurred when downloading directory $dir\n";
 		return;
@@ -86,23 +87,36 @@ sub download_rem_dir($$) {
 #If given string is not filename does nothing.
 #After succesfull extraction deletes archive.
 #In case error occurs, writes error, file is not deleted.
+#UNIX: Default folder permissions are 0777, umask is applied.
 sub extract_delete_archive ($) {
 	my ($name) = (shift);
 	$name = RESULT_DIR . $name;
 	
 	if (-e $name) {
-		my $archive = Archive::Extract->new ( archive => $name);
-		my $ok = $archive->extract ( to =>  RESULT_DIR);
-		if ($ok) {
-			unlink $name;
-			return;
+		my $archive = Archive::Zip->new();
+		unless ( $archive->read($name) == AZ_OK ) {
+			die 'read error';
 		}
-		print "Error when extracting $name:" . $archive->error . "\n";
-		return;
+		my @members = $archive->members();
+
+		foreach my $element (@members) {
+			if ($element->isDirectory()) {
+				#This has to be done manually, Archive::Zip creates
+				#directories with default permissions 0666 (...)
+				mkpath(RESULT_DIR . $element->fileName());
+			} else {
+				unless ($archive->extractMember($element , RESULT_DIR . $element->fileName()) == AZ_OK) {
+					die 'read error';
+				}
+			}
+		}
+		#Delete downloaded archive
+		unlink $name;
 	}
 }
 
 #Creates folder if nonexistent, otherwise does nothing
+#UNIX: Default perrmissions are 0777, umask is applied
 sub create_directory ($) {
 	my ($directory) = (shift);
 	if(-e $directory) {
