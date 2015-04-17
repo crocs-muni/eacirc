@@ -130,7 +130,7 @@ int EstreamProject::setupPlaintext() {
         break;
     case ESTREAM_GENTYPE_FLIP5BITS:
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0xff;
-        flipBits(m_plaintextIn, pGlobals->settings->testVectors.inputLength, 5, rndGen);
+        CommonFnc::flipBits(m_plaintextIn, pGlobals->settings->testVectors.inputLength, 5, rndGen);
         break;
     case ESTREAM_GENTYPE_HALFBLOCKSAC:
         if (pGlobals->settings->testVectors.inputLength % 2 == 1) {

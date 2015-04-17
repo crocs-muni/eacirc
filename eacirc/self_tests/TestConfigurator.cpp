@@ -25,7 +25,7 @@ TestConfigurator::TestConfigurator()
             file1.close();
             file2.close();
         } else {
-            WARN(string("######## Project ")+toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
+            WARN(string("######## Project ")+CommonFnc::toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
             WARN(string("######## Could not open files ")+filename1+", "+filename2+" ########");
         }
     }
@@ -45,7 +45,7 @@ bool TestConfigurator::nextProject() {
     m_currentProject = m_projects.front();
     m_projects.pop();
     WARN("########");
-    WARN(string("######## Testing project ")+toString(m_currentProject)+" ########");
+    WARN(string("######## Testing project ")+CommonFnc::toString(m_currentProject)+" ########");
     WARN("########");
     return true;
 }
@@ -81,7 +81,7 @@ void TestConfigurator::compareFilesByLine(string filename1, string filename2) co
 
 void TestConfigurator::backupFile(string filename) {
     string backupFilename = filename + BACKUP_SUFFIX;
-    removeFile(backupFilename.c_str());
+    CommonFnc::removeFile(backupFilename.c_str());
     CHECK(rename(filename.c_str(),backupFilename.c_str()) == 0);
 }
 
@@ -129,7 +129,7 @@ void TestConfigurator::prepareConfiguration(int projectType) const {
     // set correct project constant
     TiXmlNode* pRootConfig = NULL;
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
-    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT",toString(projectType)) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT",CommonFnc::toString(projectType)) == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
 }

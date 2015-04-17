@@ -15,10 +15,10 @@ Logger::~Logger() {
 void Logger::setOutputFile(const string filePath) {
     delete m_out;
     //remove old log
-    removeFile(m_logfile.c_str());
+    CommonFnc::removeFile(m_logfile.c_str());
     m_logfile = filePath;
     // remove new log
-    removeFile(m_logfile.c_str());
+    CommonFnc::removeFile(m_logfile.c_str());
     m_out = new LoggerStream(this,*(new ofstream(filePath, fstream::app)));
     outputBuildInfo();
 }

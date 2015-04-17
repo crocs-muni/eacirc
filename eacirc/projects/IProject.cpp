@@ -40,7 +40,7 @@ int IProject::initializeProjectState() {
 
 TiXmlNode* IProject::saveProjectStateMain() const {
     TiXmlElement* pNode = new TiXmlElement("project");
-    pNode->SetAttribute("type",toString(m_type).c_str());
+    pNode->SetAttribute("type",CommonFnc::toString(m_type).c_str());
     pNode->SetAttribute("description",shortDescription().c_str());
     pNode->SetAttribute("loadable",0);
     if (saveProjectState(pNode) != STAT_OK) {

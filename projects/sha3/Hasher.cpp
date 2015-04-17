@@ -130,18 +130,18 @@ int Hasher::saveHasherState(TiXmlNode* pRoot) const {
     TiXmlElement* pElem2 = NULL;
     for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
-        pElem = new TiXmlElement((string("algorithm")+toString(algorithmNumber+1)).c_str());
+        pElem = new TiXmlElement((string("algorithm")+CommonFnc::toString(algorithmNumber+1)).c_str());
         pElem->SetAttribute("type",algorithm);
         pElem->SetAttribute("description",Sha3Functions::sha3ToString(algorithm));
         if (algorithm != SHA3_RANDOM) {
             pElem2 = new TiXmlElement("hash_output_length");
-            pElem2->LinkEndChild(new TiXmlText(toString(m_hashOutputLengths[algorithmNumber]).c_str()));
+            pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_hashOutputLengths[algorithmNumber]).c_str()));
             pElem->LinkEndChild(pElem2);
             pElem2 = new TiXmlElement("counter");
-            pElem2->LinkEndChild(new TiXmlText(toString(m_counters[algorithmNumber]).c_str()));
+            pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_counters[algorithmNumber]).c_str()));
             pElem->LinkEndChild(pElem2);
             pElem2 = new TiXmlElement("used_bytes");
-            pElem2->LinkEndChild(new TiXmlText(toString(m_usedBytes[algorithmNumber]).c_str()));
+            pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_usedBytes[algorithmNumber]).c_str()));
             pElem->LinkEndChild(pElem2);
             ostringstream hash;
             for (int byte = 0; byte < m_hashOutputLengths[algorithmNumber]; byte++) {
@@ -162,7 +162,7 @@ int Hasher::loadHasherState(TiXmlNode* pRoot) {
     int algorithm;
     for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
-        pElem = getXMLElement(pRoot,string("algorithm")+toString(algorithmNumber+1));
+        pElem = getXMLElement(pRoot,string("algorithm")+CommonFnc::toString(algorithmNumber+1));
         if (atoi(getXMLElementValue(pElem,"@type").c_str()) != algorithm) {
             mainLogger.out(LOGGER_ERROR) << "Incompatible algorithm types." << endl;
             return STAT_CONFIG_INCORRECT;

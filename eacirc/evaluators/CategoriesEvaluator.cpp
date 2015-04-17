@@ -48,7 +48,7 @@ float CategoriesEvaluator::getFitness() const {
         }
     }
     dof--; // last category is fully determined by others
-    float fitness = (1.0 - chisqr(dof,chiSquareValue));
+    float fitness = (1.0 - CommonFnc::chisqr(dof,chiSquareValue));
     ofstream hist(FILE_HISTOGRAMS, ios_base::app);
     hist << pGlobals->stats.actGener << endl;
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {

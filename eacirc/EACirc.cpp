@@ -33,10 +33,10 @@ EACirc::~EACirc() {
         delete pGlobals->evaluator;
         pGlobals->evaluator = NULL;
     }
-	if (pGlobals->settings && pGlobals->settings->gateCircuit.jvmSim != NULL) {
-		delete pGlobals->settings->gateCircuit.jvmSim;
-		pGlobals->settings->gateCircuit.jvmSim = NULL;
-	}
+    if (pGlobals->settings && pGlobals->settings->gateCircuit.jvmSim != NULL) {
+        delete pGlobals->settings->gateCircuit.jvmSim;
+        pGlobals->settings->gateCircuit.jvmSim = NULL;
+    }
     if (pGlobals) {
         pGlobals->testVectors.release();
         pGlobals->stats.release();
@@ -149,16 +149,16 @@ void EACirc::saveState(const string filename) {
     TiXmlElement* pElem2;
 
     pElem = new TiXmlElement("generations_required");
-    pElem->LinkEndChild(new TiXmlText(toString(m_settings.main.numGenerations + m_oldGenerations).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_settings.main.numGenerations + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("generations_finished");
-    pElem->LinkEndChild(new TiXmlText(toString(m_actGener + m_oldGenerations).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_actGener + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("main_seed");
-    pElem->LinkEndChild(new TiXmlText(toString(m_originalSeed).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_originalSeed).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("current_galib_seed");
-    pElem->LinkEndChild(new TiXmlText(toString(m_currentGalibSeed).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_currentGalibSeed).c_str()));
     pRoot->LinkEndChild(pElem);
 
     pElem = new TiXmlElement("pvalues_best_individual");
@@ -402,14 +402,14 @@ void EACirc::prepare() {
     }
 
     // prepare files for logging
-    removeFile(FILE_BOINC_FRACTION_DONE);
+    CommonFnc::removeFile(FILE_BOINC_FRACTION_DONE);
     if (!m_settings.main.recommenceComputation) {
-        removeFile(FILE_FITNESS_PROGRESS);
-        removeFile(FILE_BEST_FITNESS);
-        removeFile(FILE_AVG_FITNESS);
-        removeFile(FILE_GALIB_SCORES);
-        removeFile(FILE_TEST_VECTORS_HR);
-        removeFile(FILE_HISTOGRAMS);
+        CommonFnc::removeFile(FILE_FITNESS_PROGRESS);
+        CommonFnc::removeFile(FILE_BEST_FITNESS);
+        CommonFnc::removeFile(FILE_AVG_FITNESS);
+        CommonFnc::removeFile(FILE_GALIB_SCORES);
+        CommonFnc::removeFile(FILE_TEST_VECTORS_HR);
+        CommonFnc::removeFile(FILE_HISTOGRAMS);
         ofstream fitnessProgressFile(FILE_FITNESS_PROGRESS, ios_base::trunc);
         fitnessProgressFile << "Fitness statistics for selected generations" << endl;
         for (int i = 0; i < log(pGlobals->settings->main.numGenerations)/log(10) - 3; i++) fitnessProgressFile << " ";
@@ -456,10 +456,10 @@ void EACirc::prepare() {
         m_status = STAT_CONFIG_INCORRECT;
     }
 
-	// initialize JVM simulator if required
-	if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM] == 1) {
-		pGlobals->settings->gateCircuit.jvmSim = new JVMSimulator();
-	}
+    // initialize JVM simulator if required
+    if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM] == 1) {
+        pGlobals->settings->gateCircuit.jvmSim = new JVMSimulator();
+    }
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
@@ -610,7 +610,7 @@ void EACirc::run() {
 
     // clear galib score file
     if (!pGlobals->settings->main.recommenceComputation) {
-        removeFile(FILE_GALIB_SCORES);
+        CommonFnc::removeFile(FILE_GALIB_SCORES);
     }
 
     bool evaluateNow = false;
@@ -701,8 +701,8 @@ void EACirc::run() {
     if (pvalsSize > 2){
         mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
 
-        double KS_critical_alpha_5 = KS_get_critical_value(pvalsSize);
-        double KS_P_value = KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
+        double KS_critical_alpha_5 = CommonFnc::KS_get_critical_value(pvalsSize);
+        double KS_P_value = CommonFnc::KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
         mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
         mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
 

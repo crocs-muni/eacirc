@@ -245,7 +245,7 @@ QuantumRndGen::QuantumRndGen(TiXmlNode *pRoot)
 
 TiXmlNode* QuantumRndGen::exportGenerator() const {
     TiXmlElement* pRoot = new TiXmlElement("generator");
-    pRoot->SetAttribute("type",toString(m_type).c_str());
+    pRoot->SetAttribute("type",CommonFnc::toString(m_type).c_str());
     pRoot->SetAttribute("description",shortDescription().c_str());
 
     TiXmlElement* originalSeed = new TiXmlElement("original_seed");

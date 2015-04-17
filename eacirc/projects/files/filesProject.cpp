@@ -118,21 +118,21 @@ int FilesProject::saveProjectState(TiXmlNode *pRoot) const {
     TiXmlElement* pElem2 = NULL;
     pRoot2->SetAttribute("loadable",1);
     pElem = new TiXmlElement("usage_type");
-    pElem->LinkEndChild(new TiXmlText(toString(m_filesSettings.usageType).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_filesSettings.usageType).c_str()));
     pRoot2->LinkEndChild(pElem);
     for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
-        pElem = new TiXmlElement((string("file_")+toString(file+1)).c_str());
+        pElem = new TiXmlElement((string("file_")+CommonFnc::toString(file+1)).c_str());
         pElem2 = new TiXmlElement("filename");
         pElem2->LinkEndChild(new TiXmlText(m_filesSettings.filenames[file].c_str()));
         pElem->LinkEndChild(pElem2);
         pElem2 = new TiXmlElement("file_size");
-        pElem2->LinkEndChild(new TiXmlText(toString(m_filesSettings.fileSizes[file]).c_str()));
+        pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_filesSettings.fileSizes[file]).c_str()));
         pElem->LinkEndChild(pElem2);
         pElem2 = new TiXmlElement("initial_read_offset");
-        pElem2->LinkEndChild(new TiXmlText(toString(m_filesSettings.initialOffsets[file]).c_str()));
+        pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_filesSettings.initialOffsets[file]).c_str()));
         pElem->LinkEndChild(pElem2);
         pElem2 = new TiXmlElement("current_read_offset");
-        pElem2->LinkEndChild(new TiXmlText(toString(m_readOffsets[file]).c_str()));
+        pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_readOffsets[file]).c_str()));
         pElem->LinkEndChild(pElem2);
         pRoot2->LinkEndChild(pElem);
     }
@@ -149,7 +149,7 @@ int FilesProject::loadProjectState(TiXmlNode *pRoot) {
     istringstream ss;
     unsigned long value;
     for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
-        configPrefix = "file_" + toString(file+1);
+        configPrefix = "file_" + CommonFnc::toString(file+1);
         ss.str(getXMLElementValue(pRoot,configPrefix+"/file_size"));
         ss >> value;
         if (value != m_filesSettings.fileSizes[file]) {

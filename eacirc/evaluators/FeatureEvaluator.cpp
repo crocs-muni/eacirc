@@ -15,10 +15,10 @@ FeatureEvaluator::FeatureEvaluator() : IEvaluator(EVALUATOR_CATEGORIES),
       m_categoriesStream0(NULL), m_categoriesStream1(NULL),
       m_totalStream0(0), m_totalStream1(0),
       m_histBuffer(NULL), m_histEntries(NULL) {
-    
+
     m_categoriesStream0 = new featureEvalType[pGlobals->settings->main.evaluatorPrecision];
     m_categoriesStream1 = new featureEvalType[pGlobals->settings->main.evaluatorPrecision];
-    
+
     m_histBuffer = new std::stringstream;
     m_histEntries = new unsigned int;
     (*m_histEntries) = 0;
@@ -30,18 +30,18 @@ FeatureEvaluator::~FeatureEvaluator() {
         delete m_categoriesStream0;
     }
     m_categoriesStream0 = NULL;
-    
+
     if (m_categoriesStream1!=NULL){
         delete m_categoriesStream1;
     }
     m_categoriesStream1 = NULL;
-    
+
     dumpHistogramFile();
     if (m_histBuffer != NULL){
         delete m_histBuffer;
     }
     m_histBuffer = NULL;
-    
+
     if (m_histEntries!=NULL){
         delete m_histEntries;
     }
@@ -53,13 +53,13 @@ void FeatureEvaluator::dumpHistogramFile() const {
     if (m_histBuffer->tellp() <= 0){
         return;
     }
-    
+
     // Fitness to histograms.
     ofstream hist(FILE_HISTOGRAMS, ios_base::app);
     hist << (m_histBuffer->str());
     m_histBuffer->flush();
     hist.close();
-    
+
     // Clear string buffer.
     m_histBuffer->str(std::string());
     m_histBuffer->clear();
@@ -78,9 +78,9 @@ void FeatureEvaluator::evaluateCircuit(unsigned char* circuitOutputs, unsigned c
         currentStreamMap = m_categoriesStream1;
         m_totalStream1++;
     }
-    
+
     assert(pGlobals->settings->main.evaluatorPrecision>0);
-    
+
     // Each bit corresponds to the separate feature of the data set.
     const unsigned int maxOutBits = BITS_IN_OUTPUT*pGlobals->settings->main.circuitSizeOutput;
     for (unsigned int bit = 0; bit < static_cast<unsigned int>(pGlobals->settings->main.evaluatorPrecision) && bit < maxOutBits; bit++){
@@ -103,26 +103,26 @@ float FeatureEvaluator::getFitness() const {
         }
     }
     dof--; // last category is fully determined by others
-    float fitness = (1.0 - chisqr(dof,chiSquareValue));
-    
+    float fitness = (1.0 - CommonFnc::chisqr(dof,chiSquareValue));
+
     // Fitness to histograms.
     (*m_histBuffer) << pGlobals->stats.actGener << endl;
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
         (*m_histBuffer) << setw(4) << right << setfill('0') << m_categoriesStream0[category] << " ";
     }
     (*m_histBuffer) << endl;
-    
+
     for (int category = 0; category < pGlobals->settings->main.evaluatorPrecision; category++) {
         (*m_histBuffer) << setw(4) << right << setfill('0') << m_categoriesStream1[category] << " ";
     }
     (*m_histBuffer) << endl << endl;
     (*m_histEntries) += 1;
-    
+
     // If buffer is large enough, dump it to the histogram file.
     if ((*m_histEntries) >= m_histEntriesFlushLimit){
         dumpHistogramFile();
     }
-    
+
     return fitness;
 }
 
@@ -130,7 +130,7 @@ void FeatureEvaluator::resetEvaluator() {
     m_totalStream0 = m_totalStream1 = 0;
     memset(m_categoriesStream0, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(featureEvalType));
     memset(m_categoriesStream1, 0, pGlobals->settings->main.evaluatorPrecision * sizeof(featureEvalType));
-    
+
     // If buffer is large enough, dump it to the histogram file.
     if (m_histEntries != NULL && (*m_histEntries) >= m_histEntriesFlushLimit){
         dumpHistogramFile();
