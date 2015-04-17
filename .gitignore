@@ -21,6 +21,9 @@
 [Bb]uild*/
 [Rr]un/
 
+# Generated Version.h
+eacirc/Version.h
+
 # backup and system files
 *~
 *.autosave
