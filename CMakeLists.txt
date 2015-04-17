@@ -53,4 +53,4 @@ add_subdirectory(libs/catch)
 
 # === testing ===
 enable_testing()
-add_test(NAME test COMMAND eacirc -log -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
+add_test(NAME test COMMAND eacirc -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
