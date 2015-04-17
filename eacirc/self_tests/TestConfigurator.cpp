@@ -44,11 +44,9 @@ bool TestConfigurator::nextProject() {
     }
     m_currentProject = m_projects.front();
     m_projects.pop();
-    if (mainLogger.getLogging()) {
-        WARN("########");
-        WARN(string("######## Testing project ")+toString(m_currentProject)+" ########");
-        WARN("########");
-    }
+    WARN("########");
+    WARN(string("######## Testing project ")+toString(m_currentProject)+" ########");
+    WARN("########");
     return true;
 }
 
@@ -106,18 +104,14 @@ void TestConfigurator::compareResults() const {
 }
 
 void TestConfigurator::runEACirc() const {
-    if (mainLogger.getLogging()) {
-        WARN("######## Running EACirc ########");
-        mainLogger.out(LOGGER_INFO) << "Configuration file: "  << FILE_CONFIG << endl;
-    }
+    WARN("######## Running EACirc ########");
+    mainLogger.out(LOGGER_INFO) << "Configuration file: "  << FILE_CONFIG << endl;
     EACirc eacirc;
     eacirc.loadConfiguration(FILE_CONFIG);
     eacirc.prepare();
     eacirc.initializeState();
     eacirc.run();
-    if (mainLogger.getLogging()) {
-        WARN("######## Ending EACirc (status: " << statusToString(eacirc.getStatus()) << " ) ########");
-    }
+    WARN("######## Ending EACirc (status: " << statusToString(eacirc.getStatus()) << " ) ########");
     CHECK(eacirc.getStatus() == STAT_OK);
 }
 

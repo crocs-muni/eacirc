@@ -3,36 +3,30 @@
 #include "CommonFnc.h"
 // for documentation on using logger, see EACglobals.h
 
-Logger::Logger() : m_logging(false), m_using_file(false),
-	m_out(new LoggerStream(this,clog)) {}
+Logger::Logger() : m_logfile(FILE_LOGFILE), m_out(NULL) {
+    setOutputFile(FILE_LOGFILE);
+}
 
 Logger::~Logger() {
     out(LOGGER_INFO) << "Exiting logger." << endl;
     delete m_out;
 }
 
-void Logger::setOutputStream(ostream& outStream) {
-    delete m_out;
-    m_out =  new LoggerStream(this,outStream);
-}
-
 void Logger::setOutputFile(const string filePath) {
-    removeFile(filePath.c_str());
     delete m_out;
+    //remove old log
+    removeFile(m_logfile.c_str());
+    m_logfile = filePath;
+    // remove new log
+    removeFile(m_logfile.c_str());
     m_out = new LoggerStream(this,*(new ofstream(filePath, fstream::app)));
+    outputBuildInfo();
 }
 
-void Logger::setlogging(bool state) {
-    if (state == m_logging) return;
-    if (state) {
-        m_logging = state;
-        out(LOGGER_INFO) << "Logging enabled." << endl;
-        out(LOGGER_INFO) << "EACirc framework (build " << GIT_COMMIT_SHORT << ")." << endl;
-        out(LOGGER_INFO) << "current date: " << getDate() << endl;
-    } else {
-        out(LOGGER_INFO) << "Logging disabled" << endl;
-        m_logging = state;
-    }
+void Logger::outputBuildInfo() {
+    out(LOGGER_INFO) << "Logging enabled." << endl;
+    out(LOGGER_INFO) << "EACirc framework (build " << GIT_COMMIT_SHORT << ")." << endl;
+    out(LOGGER_INFO) << "current date: " << getDate() << endl;
 }
 
 string Logger::getTime() const {
@@ -59,21 +53,18 @@ string Logger::getDate() const {
 
 // When we sync the stream with the output.
 // 1) Output time then the buffer
-// 2) Reset the buffer
-// 3) flush the actual output stream we are using.
+// 2) flush the actual output stream we are using.
+// 3) Reset the buffer
 int Logger::LoggerStream::LoggerBuffer::sync() {
-    if (!m_parentLogger->getLogging()) {
-        str("");
-        return 0;
-    }
-    m_out << m_parentLogger->getTime() << str();
+    // console output
+    clog << m_parentLogger->getTime() << str();
+    clog.flush();
+    // file output
+    m_file << m_parentLogger->getTime() << str();
+    m_file.flush();
+    // clear buffer
     str("");
-    m_out.flush();
     return 0;
-}
-
-bool Logger::getLogging() {
-    return m_logging;
 }
 
 ostream& Logger::out() {

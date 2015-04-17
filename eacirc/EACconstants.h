@@ -94,7 +94,6 @@ typedef unsigned __int64 uint64_t;
 #define RANDOM_DATA_FILE_SIZE		10485760
 
 // COMMAND LINE OPTIONS
-#define CMD_OPT_LOGGING             "-log"
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 #define CMD_OPT_SELF_TEST           "-test"
 #define CMD_OPT_CUSTOM_CONFIG       "-c"
