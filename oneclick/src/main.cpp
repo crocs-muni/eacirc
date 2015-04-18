@@ -6,19 +6,18 @@
 #include "FileGenerator.h"
 
 std::string writeUsage();
-bool setProgramOptions(char * argv[] , int args , bool & logToConsole , int & mode , int & pprocNum , std::string & path);
+bool setProgramOptions(char * argv[] , int args , int & mode , int & pprocNum , std::string & path);
 int strtoi(std::string s);
 
 int main(int args , char * argv[]) {
 	bool executed = false;
 	bool validArguments = false;
-	bool logToConsole = false;
 	int mode = 0;
 	int pprocNum = 0;
 	std::string path;
 
-	validArguments = setProgramOptions(argv , args , logToConsole , mode , pprocNum , path);
-	oneclickLogger.setLogToConsole(logToConsole);
+	validArguments = setProgramOptions(argv , args , mode , pprocNum , path);
+	oneclickLogger.setLogToConsole(true);
 
 	//Generation of:
 	//	-configuration files for EACirc
@@ -60,8 +59,7 @@ int main(int args , char * argv[]) {
 
 std::string writeUsage() {
 	std::stringstream ss;
-	ss << "[USAGE] Application takes these arguments: -log2c -mode pproc path\n";
-	ss << "-log2c : use only if you want to see log in console, leave empty otherwise\n";
+	ss << "[USAGE] Application takes these arguments: -mode pproc path\n";
 	ss << " -mode : use \"-g\" (file generation) or \"-p\" (result processing)\n";
 	ss << " pproc : defines post-processor that will be used in result processing mode (-p)\n";
 	ss << "         use integer value (1 or 2). For more information refer to documentation\n";
@@ -69,14 +67,8 @@ std::string writeUsage() {
 	return ss.str();
 }
 
-bool setProgramOptions(char * argv[]  , int args , bool & logToConsole , int & mode , int & pprocNum , std::string & path) {
+bool setProgramOptions(char * argv[]  , int args , int & mode , int & pprocNum , std::string & path) {
 	int next = 1;
-	if(next == args) return false;
-
-	if(strcmp(argv[next] , "-log2c") == 0) {
-		logToConsole = true;
-		next++;
-	}
 	if(next == args) return false;
 
 	//mode = strtoi(argv[next]);
@@ -85,7 +77,7 @@ bool setProgramOptions(char * argv[]  , int args , bool & logToConsole , int & m
 	next++;
 	if(next == args) return false;
 
-	if(mode == MODE_RESULT_PROCESSING && ((logToConsole && args == 5) || (!logToConsole && args == 4))) {
+	if(mode == MODE_RESULT_PROCESSING && args == 4) {
 		pprocNum = strtoi(argv[next]);
 		next++;
 	} else {
