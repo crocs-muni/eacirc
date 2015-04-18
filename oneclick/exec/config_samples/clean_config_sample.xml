@@ -1,8 +1,10 @@
 <?xml version="1.0" ?>
+<!-- Sample Oneclick configuration file -->
+<!-- Generates one job (algorithm 1 with 1 round)-->
 <ONECLICK>
 	<OC_OPTIONS>
-		<ALGORITHMS></ALGORITHMS> 			<!-- Tag can be empty/nonexistent -->
-		<ROUNDS></ROUNDS>					<!-- Tag can be empty/nonexistent -->
+		<ALGORITHMS>1</ALGORITHMS> 			<!-- Tag can be empty/nonexistent -->
+		<ROUNDS>1</ROUNDS>					<!-- Tag can be empty/nonexistent -->
 		<SPECIFIC_ROUNDS>					<!-- Tag can be empty/nonexistent -->
 			<ROUNDS algorithm=""></ROUNDS>	<!-- Tag can be empty/nonexistent, if exists must have algorithm attribute -->
 		</SPECIFIC_ROUNDS>
@@ -10,7 +12,7 @@
 			<VALUES path=""></VALUES>		<!-- Tag can be empty/nonexistent, if exists must have path attribute -->
 		</ADDITIONAL_SETTINGS>
 		<WU_IDENTIFIER></WU_IDENTIFIER>		<!-- Tag can be empty/nonexistent -->
-		<CLONES></CLONES>					<!-- Can NOT be empty, must exist -->
+		<CLONES>1</CLONES>					<!-- Can NOT be empty, must exist -->
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>sample XML document for EACirc Oneclick</NOTES>

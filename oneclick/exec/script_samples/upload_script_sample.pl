@@ -16,7 +16,10 @@ use Term::ReadKey;
 #Script constants
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
 use constant CREATE_WORK_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
-#SETTING PROJECT ID, 11 is default EACirc project, 3 is testing app
+#SETTING PROJECT ID
+#11: Main EACirc application
+#3 : CUDA testing and debug
+#14: EACirc testing and debug
 use constant PROJECT_ID => '11';
 
 sub create_wu ($$$);

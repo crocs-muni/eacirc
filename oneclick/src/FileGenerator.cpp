@@ -21,8 +21,6 @@ void FileGenerator::generateFiles() {
 	TiXmlNode * eacNode = NULL;
 	eacNode = getXMLElement(root , PATH_EACIRC);
 
-	Utils::createDirectory(DIRECTORY_CFGS);
-
 	//Replacing keywords in scripts
 	bool createWuFirstInsert = true;
 	bool downloadRemDirFirstInsert = true;
@@ -53,6 +51,10 @@ void FileGenerator::generateFiles() {
 	std::vector<std::pair<std::string , int>> configSettings;
 	int algorithmConstant = 0;
 	int algorithmRounds = 0;
+
+	if (configs.size() == 0) throw std::runtime_error("no valid configs specified to generate");
+	Utils::createDirectory(DIRECTORY_CFGS);
+
 	oneclickLogger << FileLogger::LOG_INFO << "started generating config files\n";
 
 	//Generating files from configs.
@@ -126,6 +128,7 @@ void FileGenerator::generateFiles() {
 		wuName.clear() ; notes.clear() ; configName.clear() ; algorithmName.clear() ; projectName.clear(); wuID.clear();
 
 	} // End of config generation
+	
 	oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configs.size()) << " configs were generated\n";
 
 	std::string uploadScriptName;

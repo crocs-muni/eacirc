@@ -4,6 +4,7 @@ ConfigParser::ConfigParser(std::string path) {
 	if(loadXMLFile(root , path) == STAT_FILE_OPEN_FAIL) throw std::runtime_error("can't open XML file: " + path);
 	oneclickLogger << FileLogger::LOG_INFO << "started parsing config file\n";
 	wuIdentifier = getXMLElementValue(root , PATH_OC_WU_ID);
+	if (wuIdentifier.length() > 63) throw std::runtime_error("WU_IDENTIFIER too long");
 	clones = getXMLValue(PATH_OC_CLONES);
 	project = getXMLValue(PATH_EAC_PROJECT);
 	setConfigs();
