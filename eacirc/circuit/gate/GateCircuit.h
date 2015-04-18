@@ -17,27 +17,27 @@ public:
 
     /** release arrays for interpreter
       */
-    ~GateCircuit();
+    virtual ~GateCircuit();
 
-    string shortDescription();
+    virtual string shortDescription();
 
     /** allocate arrays for interpreter
      * @return status
      */
-    int initialize();
+    virtual int initialize();
 
-    inline GAGenome::Initializer       getInitializer();
-    inline GAGenome::Evaluator         getEvaluator();
-    inline GAGenome::Mutator           getMutator();
-    inline GAGenome::Comparator        getComparator();
-    inline GAGenome::SexualCrossover   getSexualCrossover();
-    inline GAGenome::AsexualCrossover  getAsexualCrossover();
+    virtual GAGenome::Initializer       getInitializer();
+    virtual GAGenome::Evaluator         getEvaluator();
+    virtual GAGenome::Mutator           getMutator();
+    virtual GAGenome::Comparator        getComparator();
+    virtual GAGenome::SexualCrossover   getSexualCrossover();
+    virtual GAGenome::AsexualCrossover  getAsexualCrossover();
 
-    GAGenome * createGenome(bool setCallbacks = false);
-    GAPopulation * createPopulation();
+    virtual GAGenome * createGenome(bool setCallbacks = false);
+    virtual GAPopulation * createPopulation();
 
-    bool postProcess(GAGenome &original, GAGenome &prunned);
-    int loadCircuitConfiguration(TiXmlNode* pRoot);
+    virtual bool postProcess(GAGenome &original, GAGenome &prunned);
+    virtual int loadCircuitConfiguration(TiXmlNode* pRoot);
 };
 
 #endif	/* GATECIRCUIT_H */
