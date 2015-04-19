@@ -49,6 +49,7 @@ private:
 	std::string wuIdentifier;
 	int clones;
 	int project;
+	int boincProjectID;
 	std::deque<Config> configs;
 
 	//Typedefs for easier orientation. 
@@ -101,6 +102,10 @@ public:
 	  * @return project constant
 	  */
     int getProject() { return project; }
+
+	/** Returns ID of BOINC project.
+	  */
+	int getBoincProjectID() { return boincProjectID; }
 private:
 
 	/** Creates Config objects. First algorithms and rounds are fetched from 

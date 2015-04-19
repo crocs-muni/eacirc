@@ -3,7 +3,7 @@
 
 #IN CASE OF CHANGING ONE OR MORE KEYWORDS, CHANGE CONSTANTS
 #ACCORDINGLY IN FILE ONECLICKCONSTANTS.H. OTHERWISE ONECLICK
-#APPLICATION WONT WORK. KEYWORDS ARE UPPERCASE.
+#APPLICATION WONT WORK. KEYWORDS ARE UPPERCASE AND END WITH _KW.
 
 #Change this script if BOINC web interface or some URL changes.
 
@@ -14,13 +14,15 @@ use WWW::Mechanize;
 use Term::ReadKey;
 
 #Script constants
-use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
-use constant CREATE_WORK_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
 #SETTING PROJECT ID
 #11: Main EACirc application
 #3 : CUDA testing and debug
 #14: EACirc testing and debug
-use constant PROJECT_ID => '11';
+use constant PROJECT_ID => 'PROJECT_ID_KW';
+
+use constant CLONES => 'CLONES_KW';
+use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
+use constant CREATE_WORK_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
 
 sub create_wu ($$$);
 sub login ($$$);
@@ -38,7 +40,7 @@ sub login ($$$);
 	print "\n";
 	login($usr , $pwd , $mech);
 	
-	CREATE_WU('WU_NAME' , 'CONFIG_PATH' , $mech);
+	CREATE_WU_KW('WU_NAME_KW' , 'CONFIG_PATH_KW' , $mech);
 	#There has to be at least one line beginning with \t after method prototype. Leave this comment here.
 	
 	print "Press ENTER to exit.\n";
@@ -86,7 +88,7 @@ sub create_wu ($$$) {
 	$mech->click('next-step');
 	#Step 3/4
 	$mech->form_number(1);
-	$mech->field('wu_batch' , 'CLONE_COUNT');
+	$mech->field('wu_batch' , CLONES);
 	$mech->click('next-step');
 	#Step 4/4
 	#Default values

@@ -15,31 +15,33 @@ void FileGenerator::generateFiles() {
 	std::deque<Config> configs = parser->getConfigs();
 	int project = parser->getProject();
 	int clones = parser->getClones();
+	int boincProjectID = parser->getBoincProjectID();
 	std::string wuIdentifier = parser->getWuIdentifier();
 
 	TiXmlNode * root = parser->getRoot();
 	TiXmlNode * eacNode = NULL;
 	eacNode = getXMLElement(root , PATH_EACIRC);
 
-	//Replacing keywords in scripts
+	//Preparing variables for script handling
 	bool createWuFirstInsert = true;
 	bool downloadRemDirFirstInsert = true;
 	bool extractDeleteArchiveFirstInsert = true;
 
 	std::string uploadScriptSample = Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_UPLOAD_SAMPLE);
 	oneclickLogger << FileLogger::LOG_INFO << "file " << FILE_SCRIPT_UPLOAD_SAMPLE << " was loaded into memory\n";
-
-	std::string createWuMethodPrototype = getMethodPrototype(uploadScriptSample , KEYWORD_METHOD_CREATE_WU);
-	int uploadScriptPosition = uploadScriptSample.find(createWuMethodPrototype);
-	replaceInString(uploadScriptSample , KEYWORD_CLONES , Utils::itostr(clones));
-
 	std::string downloadScriptSample = Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_DOWNLOAD_SAMPLE);
 	oneclickLogger << FileLogger::LOG_INFO << "file " << FILE_SCRIPT_DOWNLOAD_SAMPLE << " was loaded into memory\n";
 
-	std::string downloadRemDirMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_DOWNLOAD_REM_DIR);
-	std::string extractDeleteArchiveMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE);
+	replaceInString(uploadScriptSample, KEYWORD_CLONES, Utils::itostr(clones));
+	replaceInString(uploadScriptSample, KEYWORD_PROJECT_ID, Utils::itostr(boincProjectID));
+	replaceInString(downloadScriptSample, KEYWORD_PROJECT_ID, Utils::itostr(boincProjectID));
 
-	int downloadScriptPosition = min(downloadScriptSample.find(downloadRemDirMethodPrototype) ,
+	std::string createWuMethodPrototype = getMethodPrototype(uploadScriptSample, KEYWORD_METHOD_CREATE_WU);
+	std::string downloadRemDirMethodPrototype = getMethodPrototype(downloadScriptSample, KEYWORD_METHOD_DOWNLOAD_REM_DIR);
+	std::string extractDeleteArchiveMethodPrototype = getMethodPrototype(downloadScriptSample, KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE);
+
+	int uploadScriptPosition = uploadScriptSample.find(createWuMethodPrototype);
+	int downloadScriptPosition = min(downloadScriptSample.find(downloadRemDirMethodPrototype),
 		downloadScriptSample.find(extractDeleteArchiveMethodPrototype));
 
 	//Variables declaration
@@ -71,8 +73,8 @@ void FileGenerator::generateFiles() {
 
 		notes = projectName;
 		notes.append(": " + algorithmName + " - " + Utils::itostr(algorithmRounds) + " rounds");
-		wuName = (wuName + Utils::getDate() + "_EAC_" + projectName + "_a" + Utils::itostr(algorithmConstant , 2) +
-			+"r" + Utils::itostr(algorithmRounds , 2));
+		wuName = (wuName + Utils::getDate() + "_" + OneclickConstants::getBoincProjectShort(boincProjectID) + "_" + projectName + 
+			+ "_a" + Utils::itostr(algorithmConstant , 2) + "r" + Utils::itostr(algorithmRounds , 2));
 
 		//Adding settings to config
         for(unsigned k = 0 ; k < configSettings.size() ; k++) {
@@ -89,6 +91,7 @@ void FileGenerator::generateFiles() {
 		replaceInString(createWuMethod , KEYWORD_METHOD_CREATE_WU , DEFAULT_METHOD_CREATE_WU_NAME);
 		replaceInString(createWuMethod , KEYWORD_WU_NAME , wuName);
 		replaceInString(createWuMethod , KEYWORD_CONFIG_PATH , DIRECTORY_CFGS + configName);
+
 		uploadScriptPosition = insertIntoScript(uploadScriptSample , createWuMethodPrototype ,
 			createWuMethod , uploadScriptPosition , createWuFirstInsert);
 		createWuFirstInsert = false;
@@ -96,6 +99,7 @@ void FileGenerator::generateFiles() {
 		downloadRemDirMethod = downloadRemDirMethodPrototype;
 		replaceInString(downloadRemDirMethod , KEYWORD_METHOD_DOWNLOAD_REM_DIR , DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME);
 		replaceInString(downloadRemDirMethod , KEYWORD_REM_DIR_NAME , wuName);
+
 		downloadScriptPosition = insertIntoScript(downloadScriptSample , downloadRemDirMethodPrototype ,
 			downloadRemDirMethod , downloadScriptPosition , downloadRemDirFirstInsert);
 		downloadRemDirFirstInsert = false;
@@ -104,6 +108,7 @@ void FileGenerator::generateFiles() {
 		extractDeleteArchiveMethod = extractDeleteArchiveMethodPrototype;
 		replaceInString(extractDeleteArchiveMethod , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE , DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME);
 		replaceInString(extractDeleteArchiveMethod , KEYWORD_ARCHIVE_NAME , archiveName);
+
 		downloadScriptPosition = insertIntoScript(downloadScriptSample , extractDeleteArchiveMethodPrototype ,
 			extractDeleteArchiveMethod , downloadScriptPosition , extractDeleteArchiveFirstInsert);
 		extractDeleteArchiveFirstInsert = false;

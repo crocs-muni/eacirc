@@ -22,6 +22,7 @@
 			<ROUNDS algorithm="46">0-9</ROUNDS>				<!--Twister-->
 		</SPECIFIC_ROUNDS>
 		<CLONES>100</CLONES>
+		<BOINC_PROJECT>EACirc</BOINC_PROJECT>
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>Config for recomputing old results from SHA3 project. Settings from Martin Ukrop's bachelor thesis are used.</NOTES>

@@ -1,18 +1,19 @@
 <?xml version="1.0" ?>
 <!-- Sample Oneclick configuration file -->
-<!-- Generates one job (algorithm 1 with 1 round)-->
+<!-- Generates one job (algorithm 1 with 1 round) for main EACirc app-->
 <ONECLICK>
 	<OC_OPTIONS>
-		<ALGORITHMS>1</ALGORITHMS> 			<!-- Tag can be empty/nonexistent -->
-		<ROUNDS>1</ROUNDS>					<!-- Tag can be empty/nonexistent -->
-		<SPECIFIC_ROUNDS>					<!-- Tag can be empty/nonexistent -->
-			<ROUNDS algorithm=""></ROUNDS>	<!-- Tag can be empty/nonexistent, if exists must have algorithm attribute -->
+		<ALGORITHMS>1</ALGORITHMS> 				<!-- Tag can be empty/nonexistent -->
+		<ROUNDS>1</ROUNDS>						<!-- Tag can be empty/nonexistent -->
+		<SPECIFIC_ROUNDS>						<!-- Tag can be empty/nonexistent -->
+			<ROUNDS algorithm=""></ROUNDS>		<!-- Tag can be empty/nonexistent, if exists must have algorithm attribute -->
 		</SPECIFIC_ROUNDS>
-		<ADDITIONAL_SETTINGS>				<!-- Tag can be empty/nonexistent -->
-			<VALUES path=""></VALUES>		<!-- Tag can be empty/nonexistent, if exists must have path attribute -->
+		<ADDITIONAL_SETTINGS>					<!-- Tag can be empty/nonexistent -->
+			<VALUES path=""></VALUES>			<!-- Tag can be empty/nonexistent, if exists must have path attribute -->
 		</ADDITIONAL_SETTINGS>
-		<WU_IDENTIFIER></WU_IDENTIFIER>		<!-- Tag can be empty/nonexistent -->
-		<CLONES>1</CLONES>					<!-- Can NOT be empty, must exist -->
+		<WU_IDENTIFIER></WU_IDENTIFIER>			<!-- Tag can be empty/nonexistent -->
+		<CLONES>1</CLONES>						<!-- Can NOT be empty, must exist -->
+		<BOINC_PROJECT>EACirc</BOINC_PROJECT>	<!-- Can NOT be empty, must exist and contain valid value -->
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>sample XML document for EACirc Oneclick</NOTES>
@@ -133,7 +134,7 @@
 			<BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>
 			<LIMIT_NUM_OF_ROUNDS>1</LIMIT_NUM_OF_ROUNDS>
 			<ROUNDS_ALG_1>0</ROUNDS_ALG_1>
-			<ROUNDS_ALG_2>1</ROUNDS_ALG_2>
+			<ROUNDS_ALG_2>0</ROUNDS_ALG_2>
 			<GENERATE_STREAM>1</GENERATE_STREAM>
 			<STREAM_SIZE>5242880</STREAM_SIZE>
 		</SHA3>

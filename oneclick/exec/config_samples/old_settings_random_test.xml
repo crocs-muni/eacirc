@@ -9,6 +9,7 @@
 			<VALUES path="EACIRC/TEST_VECTORS/SET_SIZE">200 500 1000 2000 5000 10000</VALUES>
 		</ADDITIONAL_SETTINGS>
 		<CLONES>100</CLONES>
+		<BOINC_PROJECT>EACirc</BOINC_PROJECT>
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>Config for recomputing old results. Random against random is used for options testing.</NOTES>

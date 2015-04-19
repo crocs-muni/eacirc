@@ -14,6 +14,7 @@
 			<VALUES path="EACIRC/ESTREAM/CIPHER_INIT_FREQ">0-2</VALUES>
 		</ADDITIONAL_SETTINGS>
 		<CLONES>100</CLONES>
+		<BOINC_PROJECT>EACirc</BOINC_PROJECT>
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>Config for recomputing old results from eStream project. Settings from Martin Ukrop's bachelor thesis are used.</NOTES>

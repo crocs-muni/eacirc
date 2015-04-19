@@ -3,7 +3,7 @@
 
 #IN CASE OF CHANGING ONE OR MORE KEYWORDS, CHANGE CONSTANTS
 #ACCORDINGLY IN FILE ONECLICKCONSTANTS.H. OTHERWISE ONECLICK
-#APPLICATION WONT WORK. KEYWORDS ARE UPPERCASE.
+#APPLICATION WONT WORK. KEYWORDS ARE UPPERCASE AND END WITH _KW.
 
 #Change this script if BOINC web interface or some URL changes.
 
@@ -17,32 +17,43 @@ use File::Path;
 use Term::ReadKey;
 
 #Script default values constants
+#SETTING PROJECT ID
+#11: Main EACirc application
+#3 : CUDA testing and debug
+#14: EACirc testing and debug
+use constant PROJECT_ID => 'PROJECT_ID_KW';
+
+use constant TIMEOUT => 600;
 use constant RESULT_DIR => './results/';
 use constant FILES_COUNT => '2';
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
 use constant DIRZIP_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak/dirZip?dir=';
 
-sub login($$$);
-sub download_rem_dir($$);
+
+sub login();
+sub download_rem_dir($);
 sub create_directory($);
 sub extract_delete_archive($);
 
+my $usr;
+my $pwd;
+my $mech;
 {	
-	my $mech = WWW::Mechanize->new(autocheck => 1);
+	$mech = WWW::Mechanize->new(timeout => TIMEOUT);
 	#Enter login data here
 	print 'Name: ';
-	chomp(my $usr = <STDIN>);
+	chomp($usr = <STDIN>);
 	print 'Pwd : ';
 	ReadMode('noecho');
-	chomp(my $pwd = <STDIN>);
+	chomp($pwd = <STDIN>);
 	ReadMode(0);
 	print "\n";
-	login($usr , $pwd , $mech);
+	login;
 
 	create_directory(RESULT_DIR);
 	
-	DOWNLOAD_REM_DIR      ('REM_DIR_NAME' , $mech);
-	EXTRACT_DELETE_ARCHIVE('ARCHIVE_NAME');
+	DOWNLOAD_REM_DIR_KW      ('REM_DIR_NAME_KW');
+	EXTRACT_DELETE_ARCHIVE_KW('ARCHIVE_NAME_KW');
 	#There has to be at least one line beginning with \t after method prototype. Leave this comment here.
 	
 	print "Press ENTER to exit.\n";
@@ -53,15 +64,15 @@ sub extract_delete_archive($);
 #If files exists locally or dont exist remotely, writes error, doesnt download.
 #Otherwise downloads and stores archive with remote directory.
 #Remote directory have to be in results directory of EACirc project on BOINC server.
-sub download_rem_dir($$) {
-	my ($dir , $mech) = (shift , shift , shift);
+sub download_rem_dir($) {
+	my $dir = shift;
 	my $file = RESULT_DIR . $dir . ".zip";
 	
 	#Download script adress URL + prefix
 	my $prefix = DIRZIP_URL;
-	#Download script suffix, change count argument
-	#in order to download more files. 2 is default.
-	my $suffix = '&count=' . FILES_COUNT;
+	#Download script suffix, additional arguments for dirZip.php are 
+	#set here.
+	my $suffix = '&count=' . FILES_COUNT . '&appid=' . PROJECT_ID;
 	
 	#Check for local file existence
 	if(-e $file) {
@@ -69,7 +80,16 @@ sub download_rem_dir($$) {
 		return;
 	}
 	my $url = $prefix . $dir . $suffix;
-	$mech->get("$url");
+	eval {
+		$mech->get("$url");
+	};
+	if($@) { 
+		#If you get here try to set higher timeout limit
+		print "Timeout recovery, $file wasn't downloaded!\n";
+		$mech = WWW::Mechanize->new(timeout => TIMEOUT);
+		login;
+		return;
+	} 
 	
 	#Check for existence of file on BOINC server.
 	#If error occurs does nothing.
@@ -89,7 +109,7 @@ sub download_rem_dir($$) {
 #In case error occurs, writes error, file is not deleted.
 #UNIX: Default folder permissions are 0777, umask is applied.
 sub extract_delete_archive ($) {
-	my ($name) = (shift);
+	my $name = shift;
 	$name = RESULT_DIR . $name;
 	
 	if (-e $name) {
@@ -118,7 +138,7 @@ sub extract_delete_archive ($) {
 #Creates folder if nonexistent, otherwise does nothing
 #UNIX: Default perrmissions are 0777, umask is applied
 sub create_directory ($) {
-	my ($directory) = (shift);
+	my $directory = shift;
 	if(-e $directory) {
 		return;
 	}
@@ -127,18 +147,17 @@ sub create_directory ($) {
 
 #Logs into BOINC.
 #If login is unsuccesfull, terminates script.
-sub login ($$$) {
-	my($usr , $pwd , $agent) = (shift , shift , shift);
+sub login () {
 	#LOGIN PAGE URL
 	my $url = LOGIN_URL;
-	$agent->get($url);
+	$mech->get($url);
 	#Login to boinc web interface 
-	$agent->form_number(1);
-	$agent->field('login' , $usr);
-	$agent->field('password' , $pwd);
-	$agent->click('submit');
+	$mech->form_number(1);
+	$mech->field('login' , $usr);
+	$mech->field('password' , $pwd);
+	$mech->click('submit');
 	#Successful login check 
-	if($agent->content() =~ /errors/) {
+	if($mech->content() =~ /errors/) {
 		print "Invalid name/password combination.\n";
 		print "Press ENTER to exit.\n";
 		<STDIN>;
