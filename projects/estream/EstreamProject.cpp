@@ -410,8 +410,7 @@ int EstreamProject::generateCipherDataStream() {
         }
         if (algorithm == ESTREAM_RANDOM) {
             mainLogger.out(LOGGER_INFO) << "Algorithm " << (cipherNumber+1);
-            mainLogger.out() << " is set to random, stream data generation skipped." << endl;
-            continue;
+            mainLogger.out() << " is set to random, sampling random stream." << endl;
         } else {
             mainLogger.out(LOGGER_INFO) << "Generating stream for " << EstreamCiphers::estreamToString(algorithm);
             if (numRounds == -1) {
@@ -419,8 +418,8 @@ int EstreamProject::generateCipherDataStream() {
             } else {
                 mainLogger.out() << " (" << numRounds << " rounds)." << endl;
             }
-            mainLogger.out(LOGGER_INFO) << "Output is saved to file \"" << streamFilename << "\"." << endl;
         }
+        mainLogger.out(LOGGER_INFO) << "Output is saved to file \"" << streamFilename << "\"." << endl;
         ostream* vectorStream = NULL;
         if (pEstreamSettings->streamSize == 0) {
             vectorStream = &cout;
@@ -452,19 +451,27 @@ int EstreamProject::generateCipherDataStream() {
                     if (status != STAT_OK) return status;
                 }
 
-                status = setupPlaintext();
-                if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
-                if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
-                if (status != STAT_OK) return status;
+                if (algorithm == ESTREAM_RANDOM) {  // RANDOM
+                    // copied from getTestVector();
+                    for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
+                        rndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+                    }
 
-                // check if plaintext = encrypted-decrypted plaintext
-                for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                    if (m_plaintextOut[input] != m_plaintextIn[input]) {
-                        status = STAT_PROJECT_ERROR;
-                        mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
-                        break;
+                } else {                            // CIPHER
+                    status = setupPlaintext();
+                    if (status != STAT_OK) return status;
+                    status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
+                    if (status != STAT_OK) return status;
+                    status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
+                    if (status != STAT_OK) return status;
+
+                    // check if plaintext = encrypted-decrypted plaintext
+                    for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
+                        if (m_plaintextOut[input] != m_plaintextIn[input]) {
+                            status = STAT_PROJECT_ERROR;
+                            mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
+                            break;
+                        }
                     }
                 }
 
