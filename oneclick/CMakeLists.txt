@@ -14,15 +14,18 @@ set(SOURCES
 
 
 set(HEADERS
+	src/AvgValPostPr.h
     src/ConfigParser.h
+    src/dirent.h
     src/FileGenerator.h
     src/FileLogger.hpp
     src/FileSystem.h
     src/OneclickConstants.h
+    src/PostProcessor.h
+    src/PValuePostPr.h
     src/ResultProcessor.h
     src/Utils.h
     src/XMLproc.h
-    src/dirent.h
     # === project files ===
     ${PROJECTS_DIR}/estream/EstreamCiphers.h
     ${PROJECTS_DIR}/sha3/Sha3Functions.h

@@ -22,7 +22,7 @@ use Term::ReadKey;
 #3 : CUDA testing and debug
 #14: EACirc testing and debug
 use constant PROJECT_ID => 'PROJECT_ID_KW';
-
+#Timeout limit, if you still get timeout error raise this number
 use constant TIMEOUT => 600;
 use constant RESULT_DIR => './results/';
 use constant FILES_COUNT => '2';
@@ -37,9 +37,8 @@ sub extract_delete_archive($);
 
 my $usr;
 my $pwd;
-my $mech;
+my $mech = WWW::Mechanize->new(timeout => TIMEOUT);
 {	
-	$mech = WWW::Mechanize->new(timeout => TIMEOUT);
 	#Enter login data here
 	print 'Name: ';
 	chomp($usr = <STDIN>);

@@ -20,6 +20,7 @@ private:
 	int validLogCount;
 	float avgSum;
 
+	//Stores results of all processed batches. Is dumped to file at the end of processing
 	std::vector<Score> scores;
 	std::string averages;
 
@@ -75,6 +76,7 @@ public:
 
 		if(validLogCount > 0) {
 			batchScore.setVal(avgSum / (float)validLogCount);
+			batchScore.setJobCount(validLogCount);
 		} else {
 			batchScore.setVal(ERROR_NO_VALID_FILES);
 		}

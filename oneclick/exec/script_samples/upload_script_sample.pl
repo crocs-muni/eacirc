@@ -11,6 +11,7 @@
 use warnings;
 use strict;
 use WWW::Mechanize;
+use HTTP::Cookies;
 use Term::ReadKey;
 
 #Script constants
@@ -19,28 +20,35 @@ use Term::ReadKey;
 #3 : CUDA testing and debug
 #14: EACirc testing and debug
 use constant PROJECT_ID => 'PROJECT_ID_KW';
-
+#Timeout limit on batch creation, 1 is minimum
+#Higher number will eliminate overlapping job creation but it will take longer
+use constant TIMEOUT => 1;
 use constant CLONES => 'CLONES_KW';
 use constant LOGIN_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management';
 use constant CREATE_WORK_URL => 'http://centaur.fi.muni.cz:8000/boinc/labak_management/work/create';
 
-sub create_wu ($$$);
-sub login ($$$);
+sub create_wu ($$);
+sub login();
+
+#Global variables declaration
+my $cookie_jar = HTTP::Cookies->new();
+my $mech = WWW::Mechanize->new(cookie_jar => $cookie_jar);
+my $usr;
+my $pwd;
 
 #Main method
 {
-	my $mech = WWW::Mechanize->new(autocheck => 1);
 	#Enter login data here
 	print 'Name: ';
-	chomp(my $usr = <STDIN>);
+	chomp($usr = <STDIN>);
 	print 'Pwd : ';
 	ReadMode('noecho');
-	chomp(my $pwd = <STDIN>);
+	chomp($pwd = <STDIN>);
 	ReadMode(0);
 	print "\n";
-	login($usr , $pwd , $mech);
+	login;
 	
-	CREATE_WU_KW('WU_NAME_KW' , 'CONFIG_PATH_KW' , $mech);
+	CREATE_WU_KW('WU_NAME_KW' , 'CONFIG_PATH_KW');
 	#There has to be at least one line beginning with \t after method prototype. Leave this comment here.
 	
 	print "Press ENTER to exit.\n";
@@ -48,17 +56,16 @@ sub login ($$$);
 }
 
 #This subroutine will log you in
-sub login ($$$) {
-	my($usr , $pwd , $agent) = (shift , shift , shift);
+sub login () {
 	my $url = LOGIN_URL;
-	$agent->get($url);
+	$mech->get($url);
 	#Login to boinc web interface 
-	$agent->form_number(1);
-	$agent->field('login' , $usr);
-	$agent->field('password' , $pwd);
-	$agent->click('submit');
+	$mech->form_number(1);
+	$mech->field('login' , $usr);
+	$mech->field('password' , $pwd);
+	$mech->click('submit');
 	#Successful login check 
-	if($agent->content() =~ /errors/) {
+	if($mech->content() =~ /errors/) {
 		print "Invalid name/password combination.\n";
 		print "Press ENTER to exit.\n";
 		<STDIN>;
@@ -67,8 +74,8 @@ sub login ($$$) {
 }
 
 #This subroutine will create single workunit
-sub create_wu ($$$) {
-	my($wu_name , $config_path , $mech) = (shift , shift , shift);
+sub create_wu ($$) {
+	my($wu_name , $config_path) = (shift , shift);
 	#Creating single workunit
 	my $url = CREATE_WORK_URL;
 	$mech->get($url);
@@ -100,7 +107,17 @@ sub create_wu ($$$) {
 	#$mech->field('min_quorum' , '1');
 	#$mech->field('target_nresults' , '1');
 	#$mech->field('outfiles' , 'config.xml, eacirc.log, scores.log, fitness_progress.txt, [histograms.txt], population_initial.xml, population.xml, state_initial.xml, state.xml, [avgfit_graph.txt], [bestfit_graph.txt], [EAC_circuit.xml], [EAC_circuit.dot], [EAC_circuit.c], [EAC_circuit.txt]');
-	$mech->click('next-step');
+	
+	$mech->timeout(TIMEOUT);
+	eval {
+		$mech->click('next-step');
+	};
+	if ($@) {
+		$cookie_jar->clear;
+		$mech = WWW::Mechanize->new(cookie_jar => $cookie_jar);
+		login;
+		#print "Timeout handled\n";
+	}
 	#Creation done.
 	print "$wu_name created.\n";
 }

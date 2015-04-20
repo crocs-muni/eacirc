@@ -7,6 +7,7 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
+#include <regex>
 
 #include "OneclickConstants.h"
 
@@ -185,6 +186,12 @@ private:
 	  * @return sorted result
 	  */
 	void sort2D(algorithm_rounds_v & a);
+
+	/** Checks wu identifier for length(63 maximum) and illegal characters.
+	  * Illegal character is everything except A-Z a-z 0-9 [ ] ( ) - _
+	  * @throws runtime_error		if length is exceeded or illegal character is found
+	  */
+	void checkWuIdentifier();
 };
 
 #endif //CONFIGPARSER_H

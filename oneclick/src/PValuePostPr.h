@@ -75,6 +75,7 @@ public:
 
 		if(validLogCount > 0) {
 			batchScore.setVal((float)uniformLogCount / (float)validLogCount);
+			batchScore.setJobCount(validLogCount);
 		} else {
 			batchScore.setVal(ERROR_NO_VALID_FILES);
 		}
