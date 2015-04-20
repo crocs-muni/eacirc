@@ -17,7 +17,7 @@ protected:
     int m_type;
     //! IO operations for representation, created and deleted automatically
     ICircuitIO* ioCallbackObject;
-    
+
 public:
     /** constructor, sets type attribute
      * @param circuit type
@@ -32,7 +32,7 @@ public:
      * @return status
      */
     virtual int initialize();
-    
+
     /** short textual description of individual representation
       * implementation in representation required!
       * @return description
@@ -58,22 +58,22 @@ public:
      * @return population
      */
     virtual GAPopulation * createPopulation() = 0;
-    
+
     /** set callbacks to given genome
      * - default sets all callbacks (NULL = not available)
      * - sexual crossover is prefered over asexual
      * @param g     genome
      */
     virtual void setGACallbacks(GAGenome * g);
-    
-     
+
+
     /** individual post-processing, if needed (default does nothing)
      * @param original      genome to post-process
      * @param processed     processed
      * @return did something happen? (i.e. is there valid output in processed?)
      */
     virtual bool postProcess(GAGenome &original, GAGenome &processed);
-    
+
     /** load circuit representation-specific configuration
       * default implementation: load no configuration
       * @param pRoot    parsed XML tree with configuration (root=EACIRC)

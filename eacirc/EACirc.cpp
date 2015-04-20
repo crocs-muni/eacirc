@@ -3,8 +3,9 @@
 #include "generators/BiasRndGen.h"
 #include "generators/QuantumRndGen.h"
 #include "generators/MD5RndGen.h"
-#include <garandom.h>
 #include "XMLProcessor.h"
+#include "Finishers.h"
+#include "garandom.h"
 
 #ifdef _WIN32
     #include <Windows.h>
@@ -29,6 +30,11 @@ EACirc::~EACirc() {
     m_gaData = NULL;
     if (m_project) delete m_project;
     m_project = NULL;
+    if (m_circuit) {
+        delete m_circuit;
+        m_circuit = NULL;
+        pGlobals->circuit = NULL;
+    }
     if (pGlobals->evaluator != NULL &&  m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
         delete pGlobals->evaluator;
         pGlobals->evaluator = NULL;
@@ -87,6 +93,7 @@ void EACirc::loadConfiguration(const string filename) {
         mainLogger.out(LOGGER_ERROR) << "Could not load circuit representation." << endl;
         return;
     }
+    pGlobals->circuit = m_circuit;
     m_status = m_circuit->loadCircuitConfiguration(pRoot);
     if (m_status != STAT_OK) return;
     mainLogger.out(LOGGER_INFO) << "Circuit representation configuration loaded (" << m_circuit->shortDescription() << ")." << endl;
@@ -690,34 +697,10 @@ void EACirc::run() {
         }
     }
 
-    // output AvgAvg, AvgMax, AvgMin to logger
-    mainLogger.out(LOGGER_INFO) << "Cumulative results for this run:" << endl << setprecision(FITNESS_PRECISION_LOG);
-    mainLogger.out(LOGGER_INFO) << "   AvgAvg: " << pGlobals->stats.avgAvgFitSum / (double) pGlobals->stats.avgCount << endl;
-    mainLogger.out(LOGGER_INFO) << "   AvgMax: " << pGlobals->stats.avgMaxFitSum / (double) pGlobals->stats.avgCount << endl;
-    mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
-
-    // Kolmogorov-Smirnov test for the p-values uniformity.
-    const unsigned long pvalsSize = pGlobals->stats.pvaluesBestIndividual->size();
-    if (pvalsSize > 2){
-        mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
-
-        double KS_critical_alpha_5 = CommonFnc::KS_get_critical_value(pvalsSize);
-        double KS_P_value = CommonFnc::KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
-        mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
-        mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
-
-        if(KS_P_value > KS_critical_alpha_5) {
-            mainLogger.out(LOGGER_INFO) << "   KS is in 5% interval -> uniformity hypothesis rejected." << endl;
-        } else {
-            mainLogger.out(LOGGER_INFO) << "   KS is not in 5% interval -> is uniform." << endl;
-        }
-    }
-
-    // print the best circuit into separate file, prune if allowed
-    GAGenome & genomeBest = m_gaData->population().best();
-    m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
-    GAGenome genomeProccessed = genomeBest;
-    if (m_circuit->postProcess(genomeBest, genomeProccessed)) {
-        m_circuit->io()->outputGenomeFiles(genomeProccessed, string(FILE_CIRCUIT_DEFAULT) + FILE_POSTPROCCESSED_SUFFIX);
+    // call post-run finishers if appropriate
+    Finishers::outputCircuitFinisher(m_gaData->population().best());
+    Finishers::avgFitnessFinisher();
+    if (pGlobals->settings->main.evaluatorType == EVALUATOR_CATEGORIES) {
+        Finishers::ksUniformityTestFinisher();
     }
 }

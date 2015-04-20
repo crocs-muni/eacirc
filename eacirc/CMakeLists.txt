@@ -14,6 +14,7 @@ set(SOURCES
     Logger.cpp
     Status.cpp
     EACirc.cpp
+    Finishers.cpp
     EACglobals.cpp
 # === individual representation ===
     circuit/ICircuit.cpp
@@ -63,6 +64,7 @@ set(HEADERS
     Logger.h
     Status.h
     EACirc.h
+    Finishers.h
     Version.h
 # === individual representation ===
     circuit/ICircuit.h

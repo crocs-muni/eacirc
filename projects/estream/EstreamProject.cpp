@@ -360,9 +360,7 @@ int EstreamProject::getTestVector(){
 
     // save human-readable test vector
     if (pGlobals->settings->outputs.saveTestVectors) {
-        int tvg = 0;
-        if (cipherNumber == 0) tvg = pEstreamSettings->algorithm1;
-        else tvg = pEstreamSettings->algorithm2;
+        int tvg = cipherNumber == 0 ? pEstreamSettings->algorithm1 : pEstreamSettings->algorithm2;
         tvFile << setfill('0');
 
         if (memcmp(m_tvInputs,m_plaintextIn,pGlobals->settings->testVectors.inputLength) != 0) {
