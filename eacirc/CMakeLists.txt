@@ -25,6 +25,10 @@ set(SOURCES
     circuit/gate/GateCommonFunctions.cpp
     circuit/gate/GAGateCallbacks.cpp
     circuit/gate/JVMSimulator.cpp
+# === gpu gate circuit ===
+    circuit/gpu_gate/ga_callbacks.cpp
+    circuit/gpu_gate/gpu_task.cpp
+    circuit/gpu_gate/gpu_task.cu
 # === polynomial circuits ===
     circuit/polynomial/PolynomialCircuit.cpp
     circuit/polynomial/PolynomialCircuitIO.cpp
@@ -53,10 +57,6 @@ set(SOURCES
     self_tests/TestConfigurator.cpp
 )
 
-set(CUDA_SOURCES
-# === something ===
-)
-
 set(HEADERS
 # === main project files ===
     Main.h
@@ -78,6 +78,14 @@ set(HEADERS
     circuit/gate/GateCommonFunctions.h
     circuit/gate/GAGateCallbacks.h
     circuit/gate/JVMSimulator.h
+# === gpu gate circuit ===
+    circuit/gpu_gate/byte.h
+    circuit/gpu_gate/ga_callbacks.h
+    circuit/gpu_gate/gate_circuit.h
+    circuit/gpu_gate/gate_helper.h
+    circuit/gpu_gate/gate_interpreter.h
+    circuit/gpu_gate/gpu_gate.h
+    circuit/gpu_gate/gpu_task.h
  # === polynomial circuits ===
     circuit/polynomial/GAPolyCallbacks.h
     circuit/polynomial/Term.h
@@ -131,8 +139,7 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 
 # === eacirc target ===
 if(BUILD_CUDA)
-    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
-    target_compile_definitions(eacirc PRIVATE CUDA)
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} OPTIONS -std=c++11 -relaxed-constexpr -I${CMAKE_CURRENT_SOURCE_DIR})
 else()
     add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
 endif()
