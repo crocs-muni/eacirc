@@ -8,6 +8,7 @@
 #include "gate/GateCircuitIO.h"
 #include "polynomial/PolynomialCircuit.h"
 #include "polynomial/PolynomialCircuitIO.h"
+#include "gpu_gate/gpu_gate.h"
 
 ICircuit::ICircuit(int type) : m_type(type), ioCallbackObject(NULL) {
 }
@@ -53,7 +54,7 @@ ICircuit* ICircuit::getCircuit(int circuitType) {
     ICircuit* circuit = NULL;
     switch (circuitType) {
     case CIRCUIT_GATE:
-        circuit = new GateCircuit();
+        circuit = (pGlobals->settings->cuda.enabled) ? new gpu_gate() : new GateCircuit();
         circuit->ioCallbackObject = new CircuitIO();
         break;
     case CIRCUIT_POLYNOMIAL:
