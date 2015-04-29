@@ -31,6 +31,10 @@ endif()
 find_package(CUDA)
 if(CUDA_FOUND)
     option(BUILD_CUDA "Build CUDA code" ON)
+
+    if(BUILD_CUDA)
+        add_definitions(-DCUDA)
+    endif()
 endif()
 
 
