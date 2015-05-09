@@ -16,7 +16,7 @@ int main(int args , char * argv[]) {
 	int pprocNum = 0;
 	std::string path;
 
-	validArguments = setProgramOptions(argv , args , mode , pprocNum , path);
+	validArguments = setProgramOptions(argv, args, mode, pprocNum, path);
 	oneclickLogger.setLogToConsole(true);
 
 	//Generation of:
@@ -25,13 +25,14 @@ int main(int args , char * argv[]) {
 	//	-script for downloading results from BOINC server
 	//Based on config file given in third argument.
 	//FileGenerator * fg = NULL;
-	if(validArguments && mode == MODE_FILE_GENERATION) {
+	if (validArguments && mode == MODE_FILE_GENERATION) {
 		executed = true;
 		FileGenerator * fg = NULL;
 		try {
 			fg = new FileGenerator(path);
 			delete fg;
-		} catch(std::runtime_error e) {
+		}
+		catch (std::runtime_error e) {
 			oneclickLogger << FileLogger::LOG_ERROR << e.what() << "\n";
 			delete fg;
 		}
@@ -39,17 +40,18 @@ int main(int args , char * argv[]) {
 
 	//Processing of files in result directory given in second argument.
 	//Creates files with results.
-	if(validArguments && mode == MODE_RESULT_PROCESSING) {
+	if (validArguments && mode == MODE_RESULT_PROCESSING) {
 		executed = true;
 		try {
-			ResultProcessor rp = ResultProcessor(path , pprocNum);
-		} catch(std::runtime_error e) {
+			ResultProcessor rp = ResultProcessor(path, pprocNum);
+		}
+		catch (std::runtime_error e) {
 			oneclickLogger << FileLogger::LOG_ERROR << e.what() << "\n";
 		}
 	}
-	
+
 	//Nothing happened
-	if(!executed) {
+	if (!executed) {
 		oneclickLogger << FileLogger::LOG_ERROR << "wrong usage of arguments\n";
 		oneclickLogger << writeUsage();
 	}

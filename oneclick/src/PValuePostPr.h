@@ -2,6 +2,7 @@
 #define PVALUEPOSTPR_H
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <regex>
 
@@ -22,7 +23,7 @@ private:
 	int uniformLogCount;
 
 	std::vector<Score> scores;
-	std::string pValues;
+	std::ostringstream pValues;
 
 	std::regex uniPatt;
 	std::regex nonUniPatt;
@@ -58,9 +59,7 @@ public:
 					if(uniform != endExpr && nonUniform == endExpr) { uniformLogCount++ ; validLogCount++; }
 					if(uniform == endExpr && nonUniform != endExpr) { validLogCount++; }
 				}
-
-				pValues.append(pVal[1]);
-				pValues.append("\n");
+				pValues << pVal[1] << std::endl;
 				pVal = emptyMatch;
 				break;
 			}
@@ -81,7 +80,8 @@ public:
 		}
 		scores.push_back(batchScore);
 
-		Utils::saveStringToFile(batchDirPath + PVALUES_FILE , pValues);
+		Utils::saveStringToFile(batchDirPath + PVALUES_FILE , pValues.str());
+		pValues.str("");
 
 		validLogCount = 0;
 		uniformLogCount = 0;

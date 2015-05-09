@@ -7,7 +7,6 @@ int saveXMLFile(TiXmlNode* pRoot , std::string filename) {
 	doc.LinkEndChild(pRoot);
 	bool result = doc.SaveFile(filename.c_str());
 	if(!result) {
-		//mainLogger.out(LOGGER_ERROR) << "Cannot write XML file (" << filename << ").";
 		return STAT_FILE_OPEN_FAIL;
 	}
 	return STAT_OK;
@@ -16,13 +15,11 @@ int saveXMLFile(TiXmlNode* pRoot , std::string filename) {
 int loadXMLFile(TiXmlNode*& pRoot , std::string filename) {
 	TiXmlDocument doc(filename.c_str());
 	if(!doc.LoadFile()) {
-		//mainLogger.out(LOGGER_ERROR) << "Could not load file (" << filename << ")." << std::endl;
 		return STAT_FILE_OPEN_FAIL;
 	}
 	TiXmlHandle hDoc(&doc);
 	TiXmlElement* pElem = hDoc.FirstChildElement().Element();
 	if(!pElem) {
-		//mainLogger.out(LOGGER_ERROR) << "No root element in XML (" << filename << ")." << std::endl;
 		return STAT_FILE_OPEN_FAIL;
 	}
 	pRoot = pElem->Clone();
@@ -33,7 +30,6 @@ int loadXMLFile(TiXmlNode*& pRoot , std::string filename) {
 std::string getXMLElementValue(TiXmlNode*& pRoot , std::string path) {
 	TiXmlNode* pNode = getXMLElement(pRoot , path);
 	if(pNode == NULL) {
-		//mainLogger.out(LOGGER_WARNING) << "no value at " << path << " in given XML." << std::endl;
 		return "";
 	}
 	if(path.find('@') == path.npos) {
@@ -45,7 +41,6 @@ std::string getXMLElementValue(TiXmlNode*& pRoot , std::string path) {
 		std::string attrName = path.substr(path.find('@') + 1 , path.length() - path.find('@') - 1).c_str();
 		const char* attrValue = pNode->ToElement()->Attribute(attrName.c_str());
 		if(attrValue == NULL) {
-			//mainLogger.out(LOGGER_WARNING) << "there is no attribute named " << attrName << "." << std::endl;
 			return "";
 		}
 		return std::string(attrValue);
@@ -56,14 +51,12 @@ std::string getXMLElementValue(TiXmlNode*& pRoot , std::string path) {
 int setXMLElementValue(TiXmlNode*& pRoot , std::string path , const std::string& value) {
 	TiXmlNode* pNode = getXMLElement(pRoot , path);
 	if(pNode == NULL) {
-		//mainLogger.out(LOGGER_WARNING) << "no value at " << path << " in given XML." << std::endl;
 		return STAT_INVALID_ARGUMETS;
 	}
 	if(path.find('@') == path.npos) {
 		// setting text node
 		TiXmlText* pText = pNode->FirstChild()->ToText();
 		if(pText == NULL) {
-			//mainLogger.out(LOGGER_WARNING) << "node at " << path << " is not a leaf in XML." << std::endl;
 			return STAT_INVALID_ARGUMETS;
 		}
 		pText->SetValue(value.c_str());

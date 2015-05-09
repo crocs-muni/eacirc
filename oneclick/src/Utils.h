@@ -154,10 +154,10 @@ public:
     }
 
 	/** Parses filename and gets index at the beginning.
-	* Index is separated by "_". Returns -1 if no
-	* index is found
-	* @param fileName			name of the file
-	* @return index
+	  * Index is separated by "_". Returns -1 if no
+	  * index is found
+	  * @param fileName			name of the file
+	  * @return index
 	*/
     static int getFileIndex(const std::string & fileName) {
 		int result = 0;

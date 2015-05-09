@@ -12,13 +12,16 @@
 #include "OneclickConstants.h"
 
 /** Class for storing optins in configuration files to be generated.
-* Each object MUST have specified algorithm and algorithmRound attribute.
-* settings can be empty. Each Config object represents one configuration file.
-*/
+  * Each object MUST have specified algorithm and algorithmRound attribute.
+  * settings can be empty. Each Config object represents one configuration file.
+  */
 class Config {
 private:
+	//Algorithm constant
 	int algorithm;
+	//Number of rounds used with algorithm
 	int algorithmRound;
+	//Additional settings
 	std::vector<std::pair<std::string , int>> settings;
 public:
 	Config(int alg , int algRnd) : algorithm(alg) , algorithmRound(algRnd) {}
@@ -87,7 +90,7 @@ public:
 	  */
 	std::deque<Config> getConfigs() { return configs; }
 
-	/** Returns indetifier of workunits. Can be empty. If used
+	/** Returns identifier of workunits. Can be empty. If used
 	  * all generated WU names will end with same suffix.
 	  * Generated scripts will have this prefix.
 	  * @return wuIdentifier

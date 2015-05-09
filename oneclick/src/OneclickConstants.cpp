@@ -54,13 +54,13 @@ std::string OneclickConstants::getBoincProjectShort(int projectID) {
 	switch (projectID) {
 	case BOINC_PROJECT_ID_EACIRC_MAIN:
 		return BOINC_PROJECT_SHORT_EACIRC_MAIN;
-
+		break;
 	case BOINC_PROJECT_ID_EACIRC_DEV:
 		return BOINC_PROJECT_SHORT_EACIRC_DEV;
-
+		break;
 	case BOINC_PROJECT_ID_EACIRC_CUDA:
 		return BOINC_PROJECT_SHORT_EACIRC_CUDA;
-
+		break;
 	default: //This shouldn't happen, argument is always value returned from getBoincProjectID
 		throw std::runtime_error("unknown project ID: " + Utils::itostr(projectID));
 	}

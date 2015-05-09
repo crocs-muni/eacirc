@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <regex>
+
 
 #include "OneclickConstants.h"
 #include "PostProcessor.h"
@@ -22,28 +24,26 @@ private:
 
 	//Stores results of all processed batches. Is dumped to file at the end of processing
 	std::vector<Score> scores;
-	std::string averages;
+	std::ostringstream averages;
 
     std::regex avgPatt;
 
 	std::smatch avg;
 	std::smatch emptyMatch;
 public:
-    AvgValPostPr() : validLogCount(0) , avgSum(0) , avgPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)") {
-        //avgPatt.assign("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)");
-	}
+    AvgValPostPr() : validLogCount(0) , avgSum(0) , avgPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    AvgMax: (.*)") {}
 
 	bool process(std::string path) {
+		static fs::directory_iterator endIter;
 		fs::directory_iterator dirIter(path);
-		fs::directory_iterator endIter;
 		if(dirIter == endIter) std::runtime_error("given argument is not a path to existing directory: " + path);
+		
 		bool hasValidResults = true;
-
+		static std::string logFile;
 
 		for(; dirIter != endIter ; dirIter++) {
 			if(dirIter.is_file() && Utils::getFileIndex(dirIter.name()) == INDEX_EACIRC) {
-				std::string logFile = Utils::readFileToString(dirIter.path());
-
+				logFile = Utils::readFileToString(dirIter.path());
 				std::regex_search(logFile , avg , avgPatt);
 
 				if(avg.size() != 2) {
@@ -54,8 +54,7 @@ public:
 						wuAverage = std::stof(avg[1] , nullptr);
 						avgSum += wuAverage;
 						validLogCount++;
-						averages.append(avg[1]);
-						averages.append("\n");
+						averages << avg[1] << std::endl;
 					} catch(std::invalid_argument e) {
 						hasValidResults = false;
 					} catch(std::out_of_range e) {
@@ -82,7 +81,8 @@ public:
 		}
 		scores.push_back(batchScore);
 
-		Utils::saveStringToFile(batchDirPath + AVERAGES_FILE , averages);
+		Utils::saveStringToFile(batchDirPath + AVERAGES_FILE , averages.str());
+		averages.str("");
 
 		validLogCount = 0;
 		avgSum = 0;

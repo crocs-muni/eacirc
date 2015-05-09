@@ -104,6 +104,10 @@
 #define PATH_EAC_PROJECT			"EACIRC/MAIN/PROJECT"
 #define PATH_EAC_NOTES				"EACIRC/NOTES"
 
+/////////////////////////////////////////////////////
+//*******Project specific constants****************//
+/////////////////////////////////////////////////////
+
 //Paths specific for eStream project + logical name of the project
 #define EACIRC_PROJECT_NAME_ESTREAM	"eStream"
 #define PATH_ESTR_ALG				"EACIRC/ESTREAM/ALGORITHM_1"
@@ -146,10 +150,6 @@
 #define KEYWORD_METHOD_DOWNLOAD_REM_DIR			"DOWNLOAD_REM_DIR_KW"
 #define KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE	"EXTRACT_DELETE_ARCHIVE_KW"
 
-//#define KEYWORD_DIRECTORY_PATH				"DIRECTORY_PATH_KW"
-//#define KEYWORD_WU_DIRECTORY					"WU_DIRECTORY_KW"
-
-
 
 /////////////////////////////////////////////////////
 //*****Default values used in script samples.******//
@@ -167,7 +167,7 @@
 
 /** Constants that will be set to scripts to indicate for which project
   * jobs are generated. It's possible that over time, IDs or project names
-  * will change. Make relevent changes/additions here and in global method
+  * will change. Make relevant changes/additions here and in global method
   * getBoincProjectID!!
   */
 #define BOINC_PROJECT_ID_EACIRC_MAIN				11
@@ -184,6 +184,7 @@
 //****************Error return values**************//
 /////////////////////////////////////////////////////
 
+//Used by post-processors. No valid files was processed.
 #define ERROR_NO_VALID_FILES					2
 
 /////////////////////////////////////////////////////

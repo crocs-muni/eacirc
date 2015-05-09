@@ -10,8 +10,11 @@
   */
 class Score {
 private:
+	//Algorithm name - usually in format Project: Algorithm - N rounds
 	std::string algName;
+	//Number of jobs processed 
 	int jobCount = 0;
+	//Result value
 	float val = 0;
 public:
 	/** Sets attribute algName.
@@ -63,7 +66,8 @@ protected:
 	std::string batchDirPath;
 	std::string batchName;
 public:
-
+	virtual ~PostProcessor() {}
+	
 	/** Sets directory of batch that is being processed.
 	  * @param path				full path to batch directory
 								Have to end with directory separator!
