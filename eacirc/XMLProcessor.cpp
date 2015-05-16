@@ -36,7 +36,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // parsing EACIRC/CUDA
     pSettings->cuda.enabled = (atoi(getXMLElementValue(pRoot,"CUDA/ENABLED").c_str())) ? true : false;
-    pSettings->cuda.something = getXMLElementValue(pRoot,"CUDA/SOMETHING");
+    pSettings->cuda.block_size = atoi(getXMLElementValue(pRoot,"CUDA/BLOCK_SIZE").c_str());
 
     // parsing EACIRC/GA
     pSettings->ga.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;

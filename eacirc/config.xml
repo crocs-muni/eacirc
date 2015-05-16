@@ -30,7 +30,7 @@
     </RANDOM>
     <CUDA>
         <ENABLED>0</ENABLED>
-        <SOMETHING>something</SOMETHING>
+        <BLOCK_SIZE>128</BLOCK_SIZE>
     </CUDA>
     <GA>
         <EVOLUTION_OFF>0</EVOLUTION_OFF>

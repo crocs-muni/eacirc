@@ -105,7 +105,7 @@ struct SETTINGS_RANDOM {
 //! settings corresponding to EACIRC/CUDA
 struct SETTINGS_CUDA {
     bool enabled;                   //! is CUDA support enabled?
-    string something;               //! string setting example
+    size_t block_size;              //! block size of the kernel
     SETTINGS_CUDA();
 };
 
