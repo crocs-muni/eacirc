@@ -5,8 +5,6 @@
 #include "EACglobals.h"
 #include "evaluators/IEvaluator.h"
 
-#include "circuit/gate/GateInterpreter.h"
-
 
 float ga_callbacks::evaluator(GAGenome& genome)
 {
@@ -21,8 +19,9 @@ float ga_callbacks::evaluator(GAGenome& genome)
 
     circuit.genome_width = pGlobals->settings->gateCircuit.genomeWidth;
 
+    const size_t block_size = pGlobals->settings->cuda.block_size;
 
-    static gpu_task task(circuit, vec_count, 128);
+    static gpu_task task(circuit, vec_count, block_size);
     static gate_helper<GENOME_ITEM_TYPE, gpu_task::genome_item_t> helper;
 
 
@@ -31,30 +30,12 @@ float ga_callbacks::evaluator(GAGenome& genome)
         pGlobals->testVectors.newSet = false;
     }
 
-
     helper.transform((const GAGenome*)&genome);
+
     task.update_circuit(helper.get_nodes());
     task.run();
     byte* outs = task.receive_outputs();
 
-
-    GA1DArrayGenome<GENOME_ITEM_TYPE>  &genome2 = (GA1DArrayGenome<GENOME_ITEM_TYPE>&) genome;
-
-    for (size_t testVector = 0; testVector < vec_count; testVector++) {
-        GateInterpreter::executeCircuit(&genome2, pGlobals->testVectors.inputs[testVector], pGlobals->testVectors.circuitOutputs[testVector]);
-    }
-
-
-    for (size_t testVector = 0; testVector < vec_count; testVector++) {
-        byte* out_offset = outs + (testVector * pGlobals->settings->testVectors.outputLength);
-        for ( int i = 0; i < pGlobals->settings->testVectors.outputLength; ++i ) {
-            if ( out_offset[i] !=  pGlobals->testVectors.circuitOutputs[testVector][i] ) {
-                std::cout << std::endl << "mismatch: " << testVector << ": " << std::endl;
-                //printf("%u %u\n", out_offset[i], pGlobals->testVectors.circuitOutputs[testVector][i]);
-                exit(EXIT_FAILURE);
-            }
-        }
-    }
 
 
     pGlobals->evaluator->resetEvaluator();
