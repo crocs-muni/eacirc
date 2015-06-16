@@ -295,7 +295,7 @@ int EstreamProject::getTestVector(){
     switch (pEstreamSettings->usageType) {
         case ESTREAM_DISTINGUISHER:
 
-            //SHALL WE BALANCE TEST VECTORS?
+            // SHALL WE BALANCE TEST VECTORS?
             if (pEstreamSettings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
                 cipherNumber = 1;
             else if (pEstreamSettings->ballancedTestVectors && (m_numVectors[1] >= pGlobals->settings->testVectors.setSize/2))
@@ -303,10 +303,10 @@ int EstreamProject::getTestVector(){
             else
                 rndGen->getRandomFromInterval(1, &cipherNumber);
             m_numVectors[cipherNumber]++;
-            //Signalize the correct value
-            for (int output = 0; output < pGlobals->settings->main.circuitSizeOutput; output++) m_tvOutputs[output] = cipherNumber * 0xff;
+            // Signalize the correct value
+            for (int output = 0; output < pGlobals->settings->testVectors.outputLength; output++) m_tvOutputs[output] = cipherNumber * 0xff;
 
-            //generate the plaintext for stream
+            // generate the plaintext for stream
             if ((cipherNumber == 0 && pEstreamSettings->algorithm1 != ESTREAM_RANDOM) ||
                 (cipherNumber == 1 && pEstreamSettings->algorithm2 != ESTREAM_RANDOM) ) {
                 if (pGlobals->settings->outputs.saveTestVectors == 1)
