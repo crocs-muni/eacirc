@@ -19,20 +19,17 @@ void CommonFnc::removeFile(string filename) {
 
 int CommonFnc::flipBits(unsigned char* data, int numUChars, unsigned int numFlips, IRndGen* random) {
     int status = STAT_OK;
-    if (numUChars * BITS_IN_UCHAR > 1024) {
-        return STAT_DATA_INCORRECT_LENGTH;
-    }
-    bitset<1024> *bits;
+
     set<int> indices;
     int randomNumber;
-    bits = reinterpret_cast<std::bitset<1024>*>(data);
 
     while(indices.size() != numFlips){
         status = random->getRandomFromInterval(numUChars*BITS_IN_UCHAR, &randomNumber);
+        if (status != STAT_OK) return status;
         indices.insert(randomNumber);
     }
     for(std::set<int>::iterator it = indices.begin(); it != indices.end(); it++)
-        bits->flip(*it);
+        data[(*it) / BITS_IN_UCHAR] ^= pGlobals->precompPow[(*it) % BITS_IN_UCHAR];
     return status;
 }
 
