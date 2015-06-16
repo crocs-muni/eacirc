@@ -412,8 +412,6 @@ void EACirc::prepare() {
     CommonFnc::removeFile(FILE_BOINC_FRACTION_DONE);
     if (!m_settings.main.recommenceComputation) {
         CommonFnc::removeFile(FILE_FITNESS_PROGRESS);
-        CommonFnc::removeFile(FILE_BEST_FITNESS);
-        CommonFnc::removeFile(FILE_AVG_FITNESS);
         CommonFnc::removeFile(FILE_GALIB_SCORES);
         CommonFnc::removeFile(FILE_TEST_VECTORS_HR);
         CommonFnc::removeFile(FILE_HISTOGRAMS);
@@ -571,16 +569,6 @@ void EACirc::evaluateStep() {
 
     fitProgressFile << endl;
     fitProgressFile.close();
-
-    // add scores to graph files
-    if (pGlobals->settings->outputs.graphFiles) {
-        ofstream bestFitFile(FILE_BEST_FITNESS, ios_base::app);
-        ofstream avgFitFile(FILE_AVG_FITNESS, ios_base::app);
-        bestFitFile << totalGeneration << ", " << m_gaData->statistics().current(GAStatistics::Maximum) << endl;
-        avgFitFile << totalGeneration << ", " << m_gaData->statistics().current(GAStatistics::Mean) << endl;
-        bestFitFile.close();
-        avgFitFile.close();
-    }
 
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {

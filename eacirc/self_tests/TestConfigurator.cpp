@@ -88,8 +88,6 @@ void TestConfigurator::backupFile(string filename) {
 void TestConfigurator::backupResults() {
     backupFile(FILE_GALIB_SCORES);
     backupFile(FILE_FITNESS_PROGRESS);
-    backupFile(FILE_BEST_FITNESS);
-    backupFile(FILE_AVG_FITNESS);
     backupFile(FILE_STATE);
     backupFile(FILE_POPULATION);
 }
@@ -97,8 +95,6 @@ void TestConfigurator::backupResults() {
 void TestConfigurator::compareResults() const {
     compareFilesByLine(FILE_GALIB_SCORES,string(FILE_GALIB_SCORES)+BACKUP_SUFFIX);
     compareFilesByLine(FILE_FITNESS_PROGRESS,string(FILE_FITNESS_PROGRESS)+BACKUP_SUFFIX);
-    compareFilesByLine(FILE_BEST_FITNESS,string(FILE_BEST_FITNESS)+BACKUP_SUFFIX);
-    compareFilesByLine(FILE_AVG_FITNESS,string(FILE_AVG_FITNESS)+BACKUP_SUFFIX);
     compareFilesByLine(FILE_STATE,string(FILE_STATE)+BACKUP_SUFFIX);
     compareFilesByLine(FILE_POPULATION,string(FILE_POPULATION)+BACKUP_SUFFIX);
 }

@@ -22,7 +22,6 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
 
 SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
     verbosity = 0;
-    graphFiles = true;
     intermediateCircuits = false;
     allowPrunning = false;
     saveTestVectors = false;

@@ -48,12 +48,12 @@ public:
     void backupFile(string filename);
 
     /** backup common result files
-      * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_BEST_FITNESS, FILE_AVG_FITNESS, FILE_STATE, FILE_POPULATION
+      * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_STATE, FILE_POPULATION
       */
     void backupResults();
 
     /** compare common result files (commom filename and backup version ending with BACKUP_SUFFIX)
-      * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_BEST_FITNESS, FILE_AVG_FITNESS, FILE_STATE, FILE_POPULATION
+      * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_STATE, FILE_POPULATION
       */
     void compareResults() const;
 
@@ -64,11 +64,6 @@ public:
       * @param filename2
       */
     void compareFilesByLine(string filename1, string filename2) const;
-
-    /** compare common result files with their backuped versions
-      * FILE_GALIB_SCORES, FILE_FITNESS_PROGRESS, FILE_BEST_FITNESS, FILE_AVG_FITNESS, FILE_STATE, FILE_POPULATION
-      */
-    void compareR4esults() const;
 
     /** run EACirc computation
       * perform all nedded steps (create, load, initialize, prepare, run)

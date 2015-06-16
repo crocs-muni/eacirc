@@ -62,8 +62,6 @@ typedef unsigned __int64 uint64_t;
 #define FILE_POPULATION             "population.xml"
 #define FILE_POPULATION_INITIAL     "population_initial.xml"
 #define FILE_FITNESS_PROGRESS       "fitness_progress.txt"
-#define FILE_BEST_FITNESS           "bestfit_graph.txt"
-#define FILE_AVG_FITNESS            "avgfit_graph.txt"
 #define FILE_GALIB_SCORES           "scores.log"
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "test_vectors.bin"
