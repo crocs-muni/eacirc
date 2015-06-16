@@ -530,7 +530,7 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     //m_gaData->scaling(scaler);
     m_gaData->scoreFilename(FILE_GALIB_SCORES);
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
-    m_gaData->flushFrequency(1);	// specify how often to write the score to disk
+    m_gaData->flushFrequency(100);	// specify how often to write the score to disk
     m_gaData->selectScores(GAStatistics::AllScores);
     mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
 }
