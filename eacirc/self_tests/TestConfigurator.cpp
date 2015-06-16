@@ -149,7 +149,7 @@ string TestConfigurator::mainConfiguration =
         "    <CIRCUIT_SIZE_OUTPUT>2</CIRCUIT_SIZE_OUTPUT>"
         "</MAIN>"
         "<OUTPUTS>"
-        "    <GRAPH_FILES>1</GRAPH_FILES>"
+        "    <VERBOSITY>5</VERBOSITY>"
         "    <INTERMEDIATE_CIRCUITS>1</INTERMEDIATE_CIRCUITS>"
         "    <ALLOW_PRUNNING>0</ALLOW_PRUNNING>"
         "    <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>"

@@ -71,7 +71,6 @@ typedef unsigned __int64 uint64_t;
 #define FILE_PRUNNED_SUFFIX         "_prunned"
 #define FILE_POSTPROCCESSED_SUFFIX  "_final"
 #define FILE_LOGFILE                "eacirc.log"
-
 #define FILE_HISTOGRAMS             "histograms.txt"
 
 // fitness precisions

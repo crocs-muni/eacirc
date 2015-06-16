@@ -55,10 +55,12 @@ void FeatureEvaluator::dumpHistogramFile() const {
     }
 
     // Fitness to histograms.
-    ofstream hist(FILE_HISTOGRAMS, ios_base::app);
-    hist << (m_histBuffer->str());
-    m_histBuffer->flush();
-    hist.close();
+    if (pGlobals->settings->outputs.verbosity >= 9) {
+        ofstream hist(FILE_HISTOGRAMS, ios_base::app);
+        hist << (m_histBuffer->str());
+        m_histBuffer->flush();
+        hist.close();
+    }
 
     // Clear string buffer.
     m_histBuffer->str(std::string());

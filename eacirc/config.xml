@@ -2,7 +2,7 @@
 <EACIRC>
     <NOTES>default config</NOTES>
     <MAIN>
-        <CIRCUIT_REPRESENTATION>2</CIRCUIT_REPRESENTATION>
+        <CIRCUIT_REPRESENTATION>1</CIRCUIT_REPRESENTATION>
         <PROJECT>100</PROJECT>
         <EVALUATOR>26</EVALUATOR>
         <EVALUATOR_PRECISION>8</EVALUATOR_PRECISION>
@@ -24,7 +24,7 @@
         <SEED>145091104</SEED>
         <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>
         <USE_NET_SHARE>0</USE_NET_SHARE>
-        <QRNG_PATH>../../qrng/;../qrng/;C:/RNG/;D:/RandomData/;K:/RandomData/</QRNG_PATH>
+        <QRNG_PATH>../../../qrng/;../qrng/;C:/RNG/;D:/RandomData/;K:/RandomData/</QRNG_PATH>
         <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>
     </RANDOM>
     <CUDA>
