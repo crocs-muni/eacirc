@@ -679,6 +679,7 @@ void EACirc::run() {
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
                 && m_actGener % m_settings.main.saveStateFrequency == 0) {
+            m_gaData->flushScores();
             mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
             saveProgress(FILE_STATE,FILE_POPULATION);
