@@ -81,8 +81,8 @@ public:
 		}
 		scores.push_back(batchScore);
 
-		Utils::saveStringToFile(batchDirPath + AVERAGES_FILE , averages.str());
-		averages.str("");
+        Utils::saveStringToFile(batchDirPath + AVERAGES_FILE , averages);
+        //averages.str("");
 
 		validLogCount = 0;
 		avgSum = 0;

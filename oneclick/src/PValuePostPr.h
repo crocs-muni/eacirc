@@ -80,8 +80,8 @@ public:
 		}
 		scores.push_back(batchScore);
 
-		Utils::saveStringToFile(batchDirPath + PVALUES_FILE , pValues.str());
-		pValues.str("");
+        Utils::saveStringToFile(batchDirPath + PVALUES_FILE , pValues);
+        //pValues.str("");
 
 		validLogCount = 0;
 		uniformLogCount = 0;

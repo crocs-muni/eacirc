@@ -75,6 +75,21 @@ public:
 		source.clear();
     }
 
+    /** Opens file, dumps sstream into it, closes it.
+      * Source is cleared after that.
+      * @param path				path to file
+      * @param source			sstream to be saved
+      * @throws runtime_error	when file can't be opened
+      */
+    static void saveStringToFile(const std::string & path , std::ostringstream & source) {
+        std::ofstream file(path , std::ios::out);
+        if(!file.is_open()) throw std::runtime_error("can't open output file: " + path);
+		file << source.str();
+        file.close();
+        if(file.is_open()) throw std::runtime_error("can't close output file: " + path);
+        source.str("");
+    }
+
 	/** Returns string after last separator in path.
 	  * If no separator is found, whole path is returned.
 	  * ../../example returns example
