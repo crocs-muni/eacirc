@@ -32,6 +32,10 @@ void FileGenerator::generateFiles() {
 	std::string downloadScriptSample = Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_DOWNLOAD_SAMPLE);
 	oneclickLogger << FileLogger::LOG_INFO << "file " << FILE_SCRIPT_DOWNLOAD_SAMPLE << " was loaded into memory\n";
 
+	//Fixing newlines
+	Utils::fixNewlines(uploadScriptSample);
+	Utils::fixNewlines(downloadScriptSample);
+
 	replaceInString(uploadScriptSample, KEYWORD_CLONES, Utils::itostr(clones));
 	replaceInString(uploadScriptSample, KEYWORD_PROJECT_ID, Utils::itostr(boincProjectID));
 	replaceInString(downloadScriptSample, KEYWORD_PROJECT_ID, Utils::itostr(boincProjectID));
@@ -149,8 +153,10 @@ void FileGenerator::generateFiles() {
 	//Saving upload and download script to file
 	Utils::saveStringToFile(uploadScriptName , uploadScriptSample);
 	oneclickLogger << FileLogger::LOG_INFO << "created file " << uploadScriptName << "\n";
+	uploadScriptSample.erase();
 	Utils::saveStringToFile(downloadScriptName , downloadScriptSample);
 	oneclickLogger << FileLogger::LOG_INFO << "created file " << downloadScriptName << "\n";
+	downloadScriptSample.erase();
 }
 
 std::string FileGenerator::getMethodPrototype(const std::string & source , const std::string & methodName) {
@@ -167,6 +173,10 @@ void FileGenerator::replaceInString(std::string & target , const std::string & r
 }
 
 int FileGenerator::insertIntoScript(std::string & target , const std::string & methodPrototype , std::string & toInsert , int position , bool firstInsert) {
+    std::stringstream tmp;
+    tmp << std::endl;
+    std::string endlChar = tmp.str();
+
 	if(firstInsert) {
 		target.replace(position , methodPrototype.length() , toInsert);
 		return (position + toInsert.length() + 2);
@@ -177,4 +187,3 @@ int FileGenerator::insertIntoScript(std::string & target , const std::string & m
 		return (position + toInsert.length());
 	}
 }
-

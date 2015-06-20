@@ -81,8 +81,8 @@ public:
 		}
 		scores.push_back(batchScore);
 
-        Utils::saveStringToFile(batchDirPath + AVERAGES_FILE , averages);
-        //averages.str("");
+        Utils::saveStringToFile(batchDirPath + AVERAGES_FILE , averages.str());
+        averages.str("");
 
 		validLogCount = 0;
 		avgSum = 0;
@@ -91,8 +91,9 @@ public:
 	}
 
 	void saveResults() {
-        std::string results = writeScores();
-        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , results);
+        //std::string results = writeScores();
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , /*results*/ writeScores());
+		
 		validLogCount = 0;
 		avgSum = 0;
 		batchDirPath.erase();

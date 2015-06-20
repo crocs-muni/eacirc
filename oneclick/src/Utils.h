@@ -61,34 +61,34 @@ public:
     }
 
 	/** Opens file, loads string into it, closes it.
-	  * Source's content is erased.
+	  * Source's content is NOT erased.
 	  * @param path				path to file
 	  * @param source			string to be saved
 	  * @throws runtime_error	when file can't be opened
 	  */
-    static void saveStringToFile(const std::string & path , std::string & source) {
+    static void saveStringToFile(const std::string & path , const std::string & source) {
 		std::ofstream file(path , std::ios::out);
 		if(!file.is_open()) throw std::runtime_error("can't open output file: " + path);
 		file << source;
 		file.close();
 		if(file.is_open()) throw std::runtime_error("can't close output file: " + path);
-		source.clear();
+		//source.clear();
     }
 
     /** Opens file, dumps sstream into it, closes it.
-      * Source is cleared after that.
+      * Source is left intact!
       * @param path				path to file
       * @param source			sstream to be saved
       * @throws runtime_error	when file can't be opened
       */
-    static void saveStringToFile(const std::string & path , std::ostringstream & source) {
+    /*static void saveStringToFile(const std::string & path , const std::ostringstream & source) {
         std::ofstream file(path , std::ios::out);
         if(!file.is_open()) throw std::runtime_error("can't open output file: " + path);
 		file << source.str();
         file.close();
         if(file.is_open()) throw std::runtime_error("can't close output file: " + path);
-        source.str("");
-    }
+        //source.str("");
+    }*/
 
 	/** Returns string after last separator in path.
 	  * If no separator is found, whole path is returned.
@@ -185,6 +185,19 @@ public:
 			return -1;
 		} catch(std::out_of_range e) {
 			return -1;
+		}
+	}
+
+	/** Replaces all Windows newlines (\r\n) with Unix newlines (\n).
+	  * Sometimes Unix system will read \r\n instead of \n from file.
+	  * Input text files that will be modified (such as script samples)
+	  * should have \n newline, otherwise strange things will happen.
+	  * @param str				string to be fixed
+	*/
+	static void fixNewlines(std::string & str) {
+		std::string::size_type pos = 0;
+		while ((pos = str.find("\r\n", pos)) != std::string::npos) {
+			str.replace(pos, 2, "\n"); //2 is length of \r\n
 		}
 	}
 

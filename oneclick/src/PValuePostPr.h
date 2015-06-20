@@ -80,8 +80,8 @@ public:
 		}
 		scores.push_back(batchScore);
 
-        Utils::saveStringToFile(batchDirPath + PVALUES_FILE , pValues);
-        //pValues.str("");
+        Utils::saveStringToFile(batchDirPath + PVALUES_FILE , pValues.str());
+        pValues.str("");
 
 		validLogCount = 0;
 		uniformLogCount = 0;
@@ -90,8 +90,8 @@ public:
 	}
 
 	void saveResults() {
-        std::string result = writeScores();
-        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , result);
+        //std::string result = writeScores();
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , /*result*/ writeScores());
 		validLogCount = 0;
 		uniformLogCount = 0;
 		batchDirPath.erase();
