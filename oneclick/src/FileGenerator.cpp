@@ -15,33 +15,37 @@ void FileGenerator::generateFiles() {
 	std::deque<Config> configs = parser->getConfigs();
 	int project = parser->getProject();
 	int clones = parser->getClones();
+	int boincProjectID = parser->getBoincProjectID();
 	std::string wuIdentifier = parser->getWuIdentifier();
 
 	TiXmlNode * root = parser->getRoot();
 	TiXmlNode * eacNode = NULL;
 	eacNode = getXMLElement(root , PATH_EACIRC);
 
-	Utils::createDirectory(DIRECTORY_CFGS);
-
-	//Replacing keywords in scripts
+	//Preparing variables for script handling
 	bool createWuFirstInsert = true;
 	bool downloadRemDirFirstInsert = true;
 	bool extractDeleteArchiveFirstInsert = true;
 
 	std::string uploadScriptSample = Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_UPLOAD_SAMPLE);
 	oneclickLogger << FileLogger::LOG_INFO << "file " << FILE_SCRIPT_UPLOAD_SAMPLE << " was loaded into memory\n";
-
-	std::string createWuMethodPrototype = getMethodPrototype(uploadScriptSample , KEYWORD_METHOD_CREATE_WU);
-	int uploadScriptPosition = uploadScriptSample.find(createWuMethodPrototype);
-	replaceInString(uploadScriptSample , KEYWORD_CLONES , Utils::itostr(clones));
-
 	std::string downloadScriptSample = Utils::readFileToString((std::string)DIRECTORY_SCRIPT_SAMPLES + (std::string)FILE_SCRIPT_DOWNLOAD_SAMPLE);
 	oneclickLogger << FileLogger::LOG_INFO << "file " << FILE_SCRIPT_DOWNLOAD_SAMPLE << " was loaded into memory\n";
 
-	std::string downloadRemDirMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_DOWNLOAD_REM_DIR);
-	std::string extractDeleteArchiveMethodPrototype = getMethodPrototype(downloadScriptSample , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE);
+	//Fixing newlines
+	Utils::fixNewlines(uploadScriptSample);
+	Utils::fixNewlines(downloadScriptSample);
 
-	int downloadScriptPosition = min(downloadScriptSample.find(downloadRemDirMethodPrototype) ,
+	replaceInString(uploadScriptSample, KEYWORD_CLONES, Utils::itostr(clones));
+	replaceInString(uploadScriptSample, KEYWORD_PROJECT_ID, Utils::itostr(boincProjectID));
+	replaceInString(downloadScriptSample, KEYWORD_PROJECT_ID, Utils::itostr(boincProjectID));
+
+	std::string createWuMethodPrototype = getMethodPrototype(uploadScriptSample, KEYWORD_METHOD_CREATE_WU);
+	std::string downloadRemDirMethodPrototype = getMethodPrototype(downloadScriptSample, KEYWORD_METHOD_DOWNLOAD_REM_DIR);
+	std::string extractDeleteArchiveMethodPrototype = getMethodPrototype(downloadScriptSample, KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE);
+
+	int uploadScriptPosition = uploadScriptSample.find(createWuMethodPrototype);
+	int downloadScriptPosition = min(downloadScriptSample.find(downloadRemDirMethodPrototype),
 		downloadScriptSample.find(extractDeleteArchiveMethodPrototype));
 
 	//Variables declaration
@@ -53,6 +57,10 @@ void FileGenerator::generateFiles() {
 	std::vector<std::pair<std::string , int>> configSettings;
 	int algorithmConstant = 0;
 	int algorithmRounds = 0;
+
+	if (configs.size() == 0) throw std::runtime_error("no valid configs specified to generate");
+	Utils::createDirectory(DIRECTORY_CFGS);
+
 	oneclickLogger << FileLogger::LOG_INFO << "started generating config files\n";
 
 	//Generating files from configs.
@@ -69,8 +77,8 @@ void FileGenerator::generateFiles() {
 
 		notes = projectName;
 		notes.append(": " + algorithmName + " - " + Utils::itostr(algorithmRounds) + " rounds");
-		wuName = (wuName + Utils::getDate() + "_EAC_" + projectName + "_a" + Utils::itostr(algorithmConstant , 2) +
-			+"r" + Utils::itostr(algorithmRounds , 2));
+		wuName = (wuName + Utils::getDate() + "_" + OneclickConstants::getBoincProjectShort(boincProjectID) + "_" + projectName + 
+			+ "_a" + Utils::itostr(algorithmConstant , 2) + "r" + Utils::itostr(algorithmRounds , 2));
 
 		//Adding settings to config
         for(unsigned k = 0 ; k < configSettings.size() ; k++) {
@@ -87,6 +95,7 @@ void FileGenerator::generateFiles() {
 		replaceInString(createWuMethod , KEYWORD_METHOD_CREATE_WU , DEFAULT_METHOD_CREATE_WU_NAME);
 		replaceInString(createWuMethod , KEYWORD_WU_NAME , wuName);
 		replaceInString(createWuMethod , KEYWORD_CONFIG_PATH , DIRECTORY_CFGS + configName);
+
 		uploadScriptPosition = insertIntoScript(uploadScriptSample , createWuMethodPrototype ,
 			createWuMethod , uploadScriptPosition , createWuFirstInsert);
 		createWuFirstInsert = false;
@@ -94,6 +103,7 @@ void FileGenerator::generateFiles() {
 		downloadRemDirMethod = downloadRemDirMethodPrototype;
 		replaceInString(downloadRemDirMethod , KEYWORD_METHOD_DOWNLOAD_REM_DIR , DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME);
 		replaceInString(downloadRemDirMethod , KEYWORD_REM_DIR_NAME , wuName);
+
 		downloadScriptPosition = insertIntoScript(downloadScriptSample , downloadRemDirMethodPrototype ,
 			downloadRemDirMethod , downloadScriptPosition , downloadRemDirFirstInsert);
 		downloadRemDirFirstInsert = false;
@@ -102,6 +112,7 @@ void FileGenerator::generateFiles() {
 		extractDeleteArchiveMethod = extractDeleteArchiveMethodPrototype;
 		replaceInString(extractDeleteArchiveMethod , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE , DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME);
 		replaceInString(extractDeleteArchiveMethod , KEYWORD_ARCHIVE_NAME , archiveName);
+
 		downloadScriptPosition = insertIntoScript(downloadScriptSample , extractDeleteArchiveMethodPrototype ,
 			extractDeleteArchiveMethod , downloadScriptPosition , extractDeleteArchiveFirstInsert);
 		extractDeleteArchiveFirstInsert = false;
@@ -126,6 +137,7 @@ void FileGenerator::generateFiles() {
 		wuName.clear() ; notes.clear() ; configName.clear() ; algorithmName.clear() ; projectName.clear(); wuID.clear();
 
 	} // End of config generation
+	
 	oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configs.size()) << " configs were generated\n";
 
 	std::string uploadScriptName;
@@ -141,8 +153,10 @@ void FileGenerator::generateFiles() {
 	//Saving upload and download script to file
 	Utils::saveStringToFile(uploadScriptName , uploadScriptSample);
 	oneclickLogger << FileLogger::LOG_INFO << "created file " << uploadScriptName << "\n";
+	uploadScriptSample.erase();
 	Utils::saveStringToFile(downloadScriptName , downloadScriptSample);
 	oneclickLogger << FileLogger::LOG_INFO << "created file " << downloadScriptName << "\n";
+	downloadScriptSample.erase();
 }
 
 std::string FileGenerator::getMethodPrototype(const std::string & source , const std::string & methodName) {
@@ -159,6 +173,10 @@ void FileGenerator::replaceInString(std::string & target , const std::string & r
 }
 
 int FileGenerator::insertIntoScript(std::string & target , const std::string & methodPrototype , std::string & toInsert , int position , bool firstInsert) {
+    std::stringstream tmp;
+    tmp << std::endl;
+    std::string endlChar = tmp.str();
+
 	if(firstInsert) {
 		target.replace(position , methodPrototype.length() , toInsert);
 		return (position + toInsert.length() + 2);
@@ -169,4 +187,3 @@ int FileGenerator::insertIntoScript(std::string & target , const std::string & m
 		return (position + toInsert.length());
 	}
 }
-

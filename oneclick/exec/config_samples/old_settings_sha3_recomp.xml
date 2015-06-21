@@ -18,10 +18,11 @@
 			<ROUNDS algorithm="28">0-8</ROUNDS>				<!--Luffa-->
 			<ROUNDS algorithm="31">0-10 104</ROUNDS>		<!--MD6-->
 			<ROUNDS algorithm="39">0-2 4</ROUNDS>			<!--SIMD-->
-			<ROUNDS algorithm="44">0-24 80</ROUNDS>			<!--Tangle-->
+			<ROUNDS algorithm="44">0-5 10-24 80</ROUNDS>	<!--Tangle-->
 			<ROUNDS algorithm="46">0-9</ROUNDS>				<!--Twister-->
 		</SPECIFIC_ROUNDS>
 		<CLONES>100</CLONES>
+		<BOINC_PROJECT>EACirc</BOINC_PROJECT>
 	</OC_OPTIONS>
 	<EACIRC>
 		<NOTES>Config for recomputing old results from SHA3 project. Settings from Martin Ukrop's bachelor thesis are used.</NOTES>

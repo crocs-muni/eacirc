@@ -19,7 +19,13 @@
   * in script samples.
   */
 
-//Default file names
+/////////////////////////////////////////////////////
+//**************Default file names*****************//
+/////////////////////////////////////////////////////
+
+/** Effect of changing these values will be newly generated
+  * files with different names. Application will look for new names too.
+  */
 #define FILE_SCRIPT_UPLOAD			"upload_script.pl"
 #define FILE_SCRIPT_UPLOAD_SAMPLE	"upload_script_sample.pl"
 #define FILE_SCRIPT_DOWNLOAD		"download_script.pl"
@@ -54,16 +60,16 @@
 /////////////////////////////////////////////////////
 //*********Constants of program modes**************//
 /////////////////////////////////////////////////////
-//Add new modes at the end, not beginning (next should be 3)
 
+//Add new modes at the end, not beginning (next should be 3)
 #define MODE_FILE_GENERATION		1
 #define MODE_RESULT_PROCESSING		2
 
 /////////////////////////////////////////////////////
 //********Constants of post processors*************//
 /////////////////////////////////////////////////////
-//Add new postprocessors at the end, not beginning (next should be 3)
 
+//Add new postprocessors at the end, not beginning (next should be 3)
 #define PPROCESSOR_PVAL				1
 #define PPROCESSOR_AVG				2
 
@@ -72,7 +78,7 @@
 /////////////////////////////////////////////////////
 
 /** Directory path have to end with a separator!!
-  * Use "/" instead of "\" as a separator
+  * Use "/" instead of "\" as a separator, Windows too
   */
 #define DIRECTORY_CFGS				"./configs/"
 #define DIRECTORY_SCRIPT_SAMPLES	"./script_samples/"
@@ -91,24 +97,32 @@
 #define PATH_OC_CLONES				"OC_OPTIONS/CLONES"
 #define PATH_OC_WU_ID				"OC_OPTIONS/WU_IDENTIFIER"
 #define PATH_OC_NUM_GENS			"OC_OPTIONS/NUM_GENERATIONS"
+#define PATH_OC_BOINC_PROJECT		"OC_OPTIONS/BOINC_PROJECT"
 
 //Paths to tags in EACirc section - same for all projects
 #define PATH_EACIRC					"EACIRC"
-#define PATH_EAC_GENS				"EACIRC/MAIN/NUM_GENERATIONS"
 #define PATH_EAC_PROJECT			"EACIRC/MAIN/PROJECT"
 #define PATH_EAC_NOTES				"EACIRC/NOTES"
 
-//Paths specific for eStream project
+/////////////////////////////////////////////////////
+//*******Project specific constants****************//
+/////////////////////////////////////////////////////
+
+//Paths specific for eStream project + logical name of the project
+#define EACIRC_PROJECT_NAME_ESTREAM	"eStream"
 #define PATH_ESTR_ALG				"EACIRC/ESTREAM/ALGORITHM_1"
 #define PATH_ESTR_RND				"EACIRC/ESTREAM/ROUNDS_ALG_1"
 
-//Paths specific for SHA3 project
+//Paths specific for SHA3 project + logical name of the project
+#define EACIRC_PROJECT_NAME_SHA3	"SHA3"
 #define PATH_SHA3_ALG				"EACIRC/SHA3/ALGORITHM_1"
 #define PATH_SHA3_RND				"EACIRC/SHA3/ROUNDS_ALG_1"
 
 //Add new project's paths below - path to algorithm and round tags have to be specified!!
 
-
+/////////////////////////////////////////////////////
+//****************Scripts constants****************//
+/////////////////////////////////////////////////////
 
 /** Following constants represents keywords used in sript samples.
   * Keywords in generated scripts are replaced by values parsed 
@@ -121,17 +135,21 @@
 //*****Keywords and methods in script samples.*****//
 /////////////////////////////////////////////////////
 
-#define KEYWORD_WU_NAME							"WU_NAME"
-#define KEYWORD_CONFIG_PATH						"CONFIG_PATH"
-#define KEYWORD_CLONES							"CLONE_COUNT"
-#define KEYWORD_DIRECTORY_PATH					"DIRECTORY_PATH"
-#define KEYWORD_WU_NAME							"WU_NAME"
-#define KEYWORD_WU_DIRECTORY					"WU_DIRECTORY"
-#define KEYWORD_REM_DIR_NAME					"REM_DIR_NAME"
-#define KEYWORD_ARCHIVE_NAME					"ARCHIVE_NAME"
-#define KEYWORD_METHOD_DOWNLOAD_REM_DIR			"DOWNLOAD_REM_DIR"
-#define KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE	"EXTRACT_DELETE_ARCHIVE"
-#define KEYWORD_METHOD_CREATE_WU				"CREATE_WU"
+//common keywords
+#define KEYWORD_PROJECT_ID						"PROJECT_ID_KW"
+
+//upload script keywords
+#define KEYWORD_WU_NAME							"WU_NAME_KW"
+#define KEYWORD_CONFIG_PATH						"CONFIG_PATH_KW"
+#define KEYWORD_CLONES							"CLONES_KW"
+#define KEYWORD_METHOD_CREATE_WU				"CREATE_WU_KW"
+
+//download script keywords
+#define KEYWORD_REM_DIR_NAME					"REM_DIR_NAME_KW"
+#define KEYWORD_ARCHIVE_NAME					"ARCHIVE_NAME_KW"
+#define KEYWORD_METHOD_DOWNLOAD_REM_DIR			"DOWNLOAD_REM_DIR_KW"
+#define KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE	"EXTRACT_DELETE_ARCHIVE_KW"
+
 
 /////////////////////////////////////////////////////
 //*****Default values used in script samples.******//
@@ -141,11 +159,32 @@
 #define DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME		"download_rem_dir"			//name of method for downloading remote directory from BOINC server
 #define DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME	"extract_delete_archive"	//name of method for extracting and deleting given archive
 #define DEFAULT_SCRIPT_LINE_SEPARATOR				";"							//separator of line in scripts (should be changed only for good reason)
+																				//used for detecting end of command
+
+/////////////////////////////////////////////////////
+//**************BOINC Project IDs******************//
+/////////////////////////////////////////////////////
+
+/** Constants that will be set to scripts to indicate for which project
+  * jobs are generated. It's possible that over time, IDs or project names
+  * will change. Make relevant changes/additions here and in global method
+  * getBoincProjectID!!
+  */
+#define BOINC_PROJECT_ID_EACIRC_MAIN				11
+#define BOINC_PROJECT_NAME_EACIRC_MAIN				"EACirc"
+#define BOINC_PROJECT_SHORT_EACIRC_MAIN				"EAC"
+#define BOINC_PROJECT_ID_EACIRC_CUDA				3
+#define BOINC_PROJECT_NAME_EACIRC_CUDA				"EACirc_cuda"
+#define BOINC_PROJECT_SHORT_EACIRC_CUDA				"EACcuda"
+#define BOINC_PROJECT_ID_EACIRC_DEV					14
+#define BOINC_PROJECT_NAME_EACIRC_DEV				"EACirc_dev"
+#define BOINC_PROJECT_SHORT_EACIRC_DEV				"EACdev"
 
 /////////////////////////////////////////////////////
 //****************Error return values**************//
 /////////////////////////////////////////////////////
 
+//Used by post-processors. No valid files was processed.
 #define ERROR_NO_VALID_FILES					2
 
 /////////////////////////////////////////////////////
@@ -172,6 +211,20 @@ public:
 	  */
 	static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , 
 		int rounds , std::string & projectName , std::string & algorithmName);
+
+	/** Takes logical project name set in Oneclick config and returns project ID
+	  * belonging to this project. Make changes here should be added new projects 
+	  * or renamed old constants.
+	  * @param logicalProjectName	name of project
+	  *	@throws	runtime_error		when logicalProjectName is no name of known project
+	  */
+	static int getBoincProjectID(const std::string & logicalProjectName);
+
+	/** Returns shorted project name used in workunit name creation.
+	  * @param projectID		id of BOINC project
+	  *	@throws runtime_error	if projectID is not a known project ID
+	  */
+	static std::string getBoincProjectShort(int projectID);
 };
 
 extern FileLogger oneclickLogger;
