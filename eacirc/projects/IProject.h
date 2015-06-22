@@ -52,7 +52,6 @@ private:
     /** create headers in testVectorFile and humanReadableTestVectorFile
       * - write project specific settings to test vector file
       * - called by createTestVectorFilesHeadersMain()
-      * - called only if saving test vectors, no need to doublecheck
       * default implementation: do nothing
       * @return status
       */

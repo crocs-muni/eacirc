@@ -194,7 +194,7 @@ void EACirc::saveState(const string filename) {
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Cannot save state to file " << filename << "." << endl;
-    } else {
+    } else if (m_settings.outputs.verbosity >= 2) {
         mainLogger.out(LOGGER_INFO) << "State successfully saved to file " << filename << "." << endl;
     }
 }
@@ -294,7 +294,7 @@ void EACirc::savePopulation(const string filename) {
     m_status = saveXMLFile(pRoot, filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Cannot save population to file " << filename << "." << endl;
-    } else {
+    } else if (m_settings.outputs.verbosity >= 2) {
         mainLogger.out(LOGGER_INFO) << "Population successfully saved to file " << filename << "." << endl;
     }
 }
@@ -529,10 +529,16 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     //GANoScaling scaler;
     //m_gaData->scaling(scaler);
     m_gaData->scoreFilename(FILE_GALIB_SCORES);
-    m_gaData->scoreFrequency(1);	// keep the scores of every generation
+    if (m_settings.outputs.verbosity >= 2) {
+        m_gaData->scoreFrequency(1);	// keep the scores of every generation
+    } else {
+        m_gaData->scoreFrequency(0);    // keep no scores
+    }
     m_gaData->flushFrequency(100);	// specify how often to write the score to disk
     m_gaData->selectScores(GAStatistics::AllScores);
-    mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
+    if (m_settings.outputs.verbosity >= 2) {
+        mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
+    }
 }
 
 void EACirc::preEvaluate() {
@@ -621,12 +627,12 @@ void EACirc::run() {
             break;
         }
 
-        //FRACTION FILE FOR BOINC
+        // update fraction file for boinc
         fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
         fitfile << ((float)(m_actGener))/((float)(m_settings.main.numGenerations));
         fitfile.close();
 
-        // DO NOT EVOLVE.. (if evolution is off)
+        // do not evolve (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_status = m_project->generateAndSaveTestVectors();
             preEvaluate();
@@ -638,10 +644,10 @@ void EACirc::run() {
             continue;
         }
 
-        // GENERATE TEST VECTORS IF NEEDED
+        // generate test vectors if needed
         if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
             m_status = m_project->generateAndSaveTestVectors();
-            if (m_status == STAT_OK) {
+            if (m_status == STAT_OK && m_settings.outputs.verbosity >= 2) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
         }
@@ -687,7 +693,9 @@ void EACirc::run() {
     }
 
     // call post-run finishers if appropriate
-    Finishers::outputCircuitFinisher(m_gaData->population().best());
+    if (m_settings.outputs.verbosity >= 1) {
+        Finishers::outputCircuitFinisher(m_gaData->population().best());
+    }
     Finishers::avgFitnessFinisher();
     if (pGlobals->settings->main.evaluatorType == EVALUATOR_CATEGORIES) {
         Finishers::ksUniformityTestFinisher();

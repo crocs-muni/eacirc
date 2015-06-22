@@ -170,36 +170,40 @@ int FilesProject::loadProjectState(TiXmlNode *pRoot) {
 }
 
 int FilesProject::createTestVectorFilesHeaders() const {
-    // generate header (project config) to test vector file
     ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    // generate header (project config) to test vector file
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+        tvFile << pFilesSettings->usageType << " \t\t(usage type)" << endl;
+        for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
+            tvFile << pFilesSettings->filenames[i] << " \t\t(filename " << i << ")" << endl;
+            tvFile << pFilesSettings->initialOffsets[i] << " \t\t(initial offset for file " << i << ")" << endl;
+        }
+        tvFile << pFilesSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+        tvFile.close();
     }
-    tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-    tvFile << pFilesSettings->usageType << " \t\t(usage type)" << endl;
-    for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        tvFile << pFilesSettings->filenames[i] << " \t\t(filename " << i << ")" << endl;
-        tvFile << pFilesSettings->initialOffsets[i] << " \t\t(initial offset for file " << i << ")" << endl;
-    }
-    tvFile << pFilesSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
-    tvFile.close();
 
     // generate header to human-readable test-vector file
-    tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.verbosity >= 4) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << "Using file contents (binary form) for test vector generation." << endl;
+        for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
+            tvFile << "  file " << i << ": " << m_filesSettings.filenames[i] << endl;
+            tvFile << "  initial reading offset: " << m_filesSettings.initialOffsets[i] << endl;
+        }
+        tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
+        tvFile << endl;
+        tvFile.close();
     }
-    tvFile << "Using file contents (binary form) for test vector generation." << endl;
-    for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        tvFile << "  file " << i << ": " << m_filesSettings.filenames[i] << endl;
-        tvFile << "  initial reading offset: " << m_filesSettings.initialOffsets[i] << endl;
-    }
-    tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
-    tvFile << endl;
-    tvFile.close();
 
     return STAT_OK;
 }
@@ -247,7 +251,7 @@ int FilesProject::prepareSingleTestVector() {
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
@@ -270,7 +274,7 @@ int FilesProject::generateTestVectors() {
     }
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->outputs.saveTestVectors == 1) {
+        if (pGlobals->settings->outputs.verbosity >= 4) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();

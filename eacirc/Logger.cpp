@@ -26,7 +26,7 @@ void Logger::setOutputFile(const string filePath) {
 void Logger::outputBuildInfo() {
     out(LOGGER_INFO) << "Logging enabled." << endl;
     out(LOGGER_INFO) << "EACirc framework (build " << GIT_COMMIT_SHORT << ")." << endl;
-    out(LOGGER_INFO) << "current date: " << getDate() << endl;
+    out(LOGGER_INFO) << "Current date: " << getDate() << endl;
 }
 
 string Logger::getTime() const {
