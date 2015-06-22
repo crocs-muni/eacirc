@@ -65,7 +65,7 @@ typedef unsigned __int64 uint64_t;
 #define FILE_GALIB_SCORES           "scores.log"
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "test_vectors.bin"
-#define FILE_TEST_VECTORS_HR        "test_vectors_hr.txt"
+#define FILE_TEST_VECTORS_HR        "test_vectors_debug.txt"
 #define FILE_CIRCUIT_PREFIX         "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
 #define FILE_CIRCUIT_DEFAULT        "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_PRUNNED_SUFFIX         "_prunned"
