@@ -1,4 +1,4 @@
-# Code style for EACirc
+# Developer guidelines for EACirc
 
 To maintain codebase consistency, please adhere to these guidelines when contributing to EACirc or any other supporting tools. Most importatntly, **retain style consitency**, i.e. try to use the same conventions as you see in the code.
 
@@ -16,11 +16,11 @@ Some specific notes and guidelines are below.
 ## Documentation
 
 * **Keep developer Wiki up-to-date**
-  After significat changes or feature addition, try to document these in the developer wiki (At least create the TBA sections).
+  After significat changes or feature addition, try to document these in the developer wiki (at least create the TBA sections). In case of significant changes (more/fewer output files, renames CLI options, ...), email core developers after master integration.
 * **Document methods**
   Write a short JavaDoc-style documentation for all methods, mention any restriction on the parameters (maximum supported length, etc.).
 
-## Fromating
+## Formatting
 
 * **Avoid tabs**
   Use spaces for indentation, indent is 4 characters wide. Try not to produce trailing spaces.
