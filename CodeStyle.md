@@ -24,9 +24,15 @@ Some specific notes and guidelines are below.
 
 * **Avoid tabs**
   Use spaces for indentation, indent is 4 characters wide. Try not to produce trailing spaces.
+* **Consistent case**
+  Use lowerCamelCase for variables and methods, UpperCamelCase for classes and CAPS_SNAKE_CASE for #define directives.
+* **Blank lines**
+  Leave 1 blank line to increase readability as desired (e.g. between functions, secrions, ...). Avoid consecutive blank lines.
 
-## Experiments
+## Work flow
 
+* **Git commiting and branching**
+  Work in a separate branch to avoid conflicts with others. When done, integrate to master (tests should pass). Avoid joining multiple significat changes into a single commit -- divide commits appropriately.
 * **Retain data**
   For any notable experiments, try to retain the data allowing for replicating the runs. The most important is the config file and log file (includes date, time and commit).
 * **Note your (non-)discoveries**
