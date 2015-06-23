@@ -53,15 +53,15 @@ public:
             size_t num_slots = (layer != layer_num - 1) ? layer_size : out_size;
 
             for (size_t i = 0; i < num_slots; i++) {
-                D func_mask = src_circuit->gene(offset_funcs + i);
-                D conn_mask = src_circuit->gene(offset_conns + i);
+                D func_mask = src_circuit->gene(static_cast<unsigned int>(offset_funcs + i));
+                D conn_mask = src_circuit->gene(static_cast<unsigned int>(offset_conns + i));
 
                 if (layer == 0) {
-                    conn_mask = relativeToAbsoluteConnectorMask(conn_mask, i, size_input_layer, size_input_layer);
+                    conn_mask = relativeToAbsoluteConnectorMask(conn_mask, static_cast<unsigned int>(i), static_cast<unsigned int>(size_input_layer), static_cast<unsigned int>(size_input_layer));
                 } else if (layer == layer_num - 1) {
-                    conn_mask = relativeToAbsoluteConnectorMask(conn_mask, i % size_layer, size_layer, size_layer);
+                    conn_mask = relativeToAbsoluteConnectorMask(conn_mask, static_cast<unsigned int>(i % size_layer), static_cast<unsigned int>(size_layer), static_cast<unsigned int>(size_layer));
                 } else {
-                    conn_mask = relativeToAbsoluteConnectorMask(conn_mask, i, size_layer, num_connectors);
+                    conn_mask = relativeToAbsoluteConnectorMask(conn_mask, static_cast<unsigned int>(i), static_cast<unsigned int>(size_layer), static_cast<unsigned int>(num_connectors));
                 }
 
                 _host_nodes[(layer * genome_width) + i].set_func(func_mask);

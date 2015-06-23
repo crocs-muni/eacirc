@@ -8,7 +8,7 @@
 
 
 gpu_task::gpu_task(const circuit_type& circuit, const size_t vec_count, const size_t block_size) :
-    _vec_count(std::ceil(float(vec_count) / block_size) * block_size),
+    _vec_count(static_cast<size_t>(std::ceil(float(vec_count) / block_size) * block_size)),
     _bank_size(0),
     _block_size(block_size),
     _dev_ins(nullptr),

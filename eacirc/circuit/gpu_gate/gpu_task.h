@@ -11,7 +11,7 @@ public:
     using genome_item_t = uint32_t;
 
     using circuit_type = gate_circuit<genome_item_t>;
-    using circuit_node = typename circuit_type::node;
+    using circuit_node = circuit_type::node;
 
 public:
     gpu_task(const circuit_type& circuit, const size_t vec_count, const size_t block_size);

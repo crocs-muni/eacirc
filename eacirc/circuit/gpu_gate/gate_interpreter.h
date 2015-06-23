@@ -12,6 +12,9 @@ class gate_interpreter
 public:
     using circuit_t = gate_circuit<T>;
     using circuit_node = typename circuit_t::node;
+
+    // numeric limit of byte, nvcc on windows in vs2013 doesnt know std::numeric_limits, linux is fine
+    static constexpr byte byte_max_limit = 255;
 public:
     __device__ __forceinline__ gate_interpreter(byte* layers, const circuit_t* circuit) :
         _circuit(circuit),
@@ -53,7 +56,7 @@ public:
         switch (func) {
         case FNC_AND:
         case FNC_NAND:
-            return std::numeric_limits< byte >::max();
+            return byte_max_limit;
         default:
             return 0;
         }
@@ -142,27 +145,27 @@ __device__ bool gate_interpreter<T>::execute_node(const circuit_node& node, byte
         break;
     case FNC_EQ:
         if ((conn2 = node.extract_next_connector((conn1 = node.extract_next_connector(-1)))) >= 0) {
-            if (_layer_in[conn1] == _layer_in[conn2]) result = std::numeric_limits< byte >::max();
+            if (_layer_in[conn1] == _layer_in[conn2]) result = byte_max_limit;
         }
         break;
     case FNC_LT:
         if ((conn2 = node.extract_next_connector((conn1 = node.extract_next_connector(-1)))) >= 0) {
-            if (_layer_in[conn1] < _layer_in[conn2]) result = std::numeric_limits< byte >::max();
+            if (_layer_in[conn1] < _layer_in[conn2]) result = byte_max_limit;
         }
         break;
     case FNC_GT:
         if ((conn2 = node.extract_next_connector((conn1 = node.extract_next_connector(-1)))) >= 0) {
-            if (_layer_in[conn1] > _layer_in[conn2]) result = std::numeric_limits< byte >::max();
+            if (_layer_in[conn1] > _layer_in[conn2]) result = byte_max_limit;
         }
         break;
     case FNC_LEQ:
         if ((conn2 = node.extract_next_connector((conn1 = node.extract_next_connector(-1)))) >= 0) {
-            if (_layer_in[conn1] <= _layer_in[conn2]) result = std::numeric_limits< byte >::max();
+            if (_layer_in[conn1] <= _layer_in[conn2]) result = byte_max_limit;
         }
         break;
     case FNC_GEQ:
         if ((conn2 = node.extract_next_connector((conn1 = node.extract_next_connector(-1)))) >= 0) {
-            if (_layer_in[conn1] >= _layer_in[conn2]) result = std::numeric_limits< byte >::max();
+            if (_layer_in[conn1] >= _layer_in[conn2]) result = byte_max_limit;
         }
         break;
     case FNC_BSLC:

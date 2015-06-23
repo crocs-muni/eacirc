@@ -11,7 +11,7 @@ class gate_circuit
 public:
     using value_type = T;
 
-    static const constexpr int max_conn_index = std::numeric_limits<value_type>::digits;
+    static const int max_conn_index = std::numeric_limits<value_type>::digits;
 public:
     class node {
     public:
