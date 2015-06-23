@@ -127,6 +127,7 @@ detect_version(Version.h)
 # === source groups ===
 source_group("circuit"         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
 source_group("circuit\\gate"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
+source_group("circuit\\gpu_gate"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gpu_gate/.*")
 source_group("circuit\\polynomial"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
 source_group("evaluators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
 source_group("generators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
