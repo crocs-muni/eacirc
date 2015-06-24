@@ -56,4 +56,4 @@ enable_testing()
 add_test(NAME self_test COMMAND eacirc -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
 
 # this workaround adds custom target to display all outputs from failed test
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure)
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --build-config $<CONFIG>)
