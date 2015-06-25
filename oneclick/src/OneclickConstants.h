@@ -50,12 +50,10 @@
 #define INDEX_POPULATION			6
 #define INDEX_STATE_INITIAL			7
 #define INDEX_STATE					8
-#define INDEX_AVGFIT_GRAPH			9
-#define INDEX_BESTFIT_GRAPH			10
-#define INDEX_EAC_CIRCUIT_XML		11
-#define INDEX_EAC_CIRCUIT_DOT		12
-#define INDEX_EAC_CIRCUIT_C			13
-#define INDEX_EAC_CIRCUIT_TXT		14
+#define INDEX_EAC_CIRCUIT_XML		9
+#define INDEX_EAC_CIRCUIT_DOT		10
+#define INDEX_EAC_CIRCUIT_C			11
+#define INDEX_EAC_CIRCUIT_TXT		12
 
 /////////////////////////////////////////////////////
 //*********Constants of program modes**************//
