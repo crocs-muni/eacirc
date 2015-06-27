@@ -171,7 +171,7 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
 string Encryptor::shortDescription() {
     string desription =  m_cipher->shortDescription() + ", ";
     if (pCaesarSettings->limitAlgRounds) {
-        desription += toString(pCaesarSettings->algorithmRoundsCount) + " rounds";
+        desription += CommonFnc::toString(pCaesarSettings->algorithmRoundsCount) + " rounds";
     } else {
         desription += "unlimited version";
     }

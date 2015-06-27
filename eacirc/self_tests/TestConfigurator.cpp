@@ -159,7 +159,7 @@ string TestConfigurator::mainConfiguration =
         "    <SEED>123456789</SEED>"
         "    <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>"
         "    <USE_NET_SHARE>0</USE_NET_SHARE>"
-        "    <QRNG_PATH>../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
+        "    <QRNG_PATH>../../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
         "    <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>"
         "</RANDOM>"
         "<CUDA>"
