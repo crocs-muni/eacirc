@@ -4,7 +4,7 @@
 
 **Implementation:** reference
 **Implemetors:** n/a
-**Version:** n/a
+**Version:** v8
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/calicov8
 **Download date:** 2014-12-14
 

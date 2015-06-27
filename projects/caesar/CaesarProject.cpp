@@ -178,7 +178,7 @@ int CaesarProject::prepareSingleTestVector(unsigned char* tvInputs, unsigned cha
         }
         break;
     default:
-        mainLogger.out(LOGGER_ERROR) << "unknown usage type (" << pCaesarSettings->usageType << ") in " << shortDescription() << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unknown usage type (" << pCaesarSettings->usageType << ") in " << shortDescription() << endl;
         return STAT_INVALID_ARGUMETS;
         break;
     }
