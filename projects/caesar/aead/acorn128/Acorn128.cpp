@@ -1,5 +1,5 @@
 #include "Acorn128.h"
-#include "Acorn128_encrypt.h"
+#include "acorn128_encrypt.h"
 #include "../common/api.h"
 #include "EACglobals.h"
 
@@ -32,5 +32,5 @@ int Acorn128::decrypt(bits_t *m, length_t *outputmlen, bits_t *nsec,
 }
 
 std::string Acorn128::shortDescription() const {
-    return "Acorn-128";
+    return "Acorn128";
 }

@@ -7,7 +7,7 @@ CaesarProject::CaesarProject()
 
 CaesarProject::~CaesarProject() {
     if (m_encryptor != NULL) { delete m_encryptor; m_encryptor = NULL; }
-    if (m_ciphertext != NULL) { delete m_ciphertext; m_ciphertext = NULL; }
+    if (m_ciphertext != NULL) { delete[] m_ciphertext; m_ciphertext = NULL; }
 }
 
 string CaesarProject::shortDescription() const {
@@ -56,12 +56,7 @@ int CaesarProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     // bind project settings into global settings
     pGlobals->settings->project = (void*) pCaesarSettings;
 
-    // configuration checks
-    // TODO: do somthing with signed/unsigned comparison
-    if (pGlobals->settings->testVectors.inputLength != m_caesarSettings.plaintextLength) {
-        mainLogger.out(LOGGER_ERROR) << "Test vector input length does not match plaintext length!" << endl;
-        return STAT_PROJECT_ERROR;
-    }
+    // TODO configuration checks
 
     return STAT_OK;
 }
@@ -78,7 +73,13 @@ int CaesarProject::initializeProject() {
 }
 
 int CaesarProject::initializeProjectState() {
-    return m_encryptor->setup();
+    int status = m_encryptor->setup();
+    if (status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "Cipher initialized (" << m_encryptor->shortDescription() << ")." << endl;
+    } else {
+        mainLogger.out(LOGGER_ERROR) << "Cipher could not be initialized (" << statusToString(status) << ")." << endl;
+    }
+    return status;
 }
 
 int CaesarProject::saveProjectState(TiXmlNode* pRoot) const {
@@ -128,39 +129,52 @@ int CaesarProject::generateTestVectors() {
         }
     }
 
+    // generate cipher stream
+    for (int vector = 0; vector < pGlobals->settings->testVectors.setSize/2; vector++) {
+        status = prepareSingleTestVector(pGlobals->testVectors.inputs[vector], pGlobals->testVectors.outputs[vector]);
+        if (status != STAT_OK) { break; }
+    }
+    if (status != STAT_OK) {
+        mainLogger.out(LOGGER_ERROR) << "Cipher data generation failed." << endl;
+        return status;
+    }
+    // generate random vectors
+    for (int vector = pGlobals->settings->testVectors.setSize/2; vector < pGlobals->settings->testVectors.setSize; vector++) {
+        // random stream
+        for (int byte = 0; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+            rndGen->getRandomFromInterval(255, pGlobals->testVectors.inputs[vector] + byte);
+        }
+        // 0xff to denote random stream
+        for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+            pGlobals->testVectors.outputs[vector][byte] = UCHAR_MAX;
+        }
+    }
+
+    return status;
+}
+
+int CaesarProject::prepareSingleTestVector(unsigned char* tvInputs, unsigned char* tvOutputs) {
+    int status = STAT_OK;
     switch (pCaesarSettings->usageType) {
     case CAESAR_DISTINGUISHER:
-        // generate cipher stream
-        for (int vector = 0; vector < pGlobals->settings->testVectors.setSize/2; vector++) {
-            // ciphertext stream
-            status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
-            if (status != STAT_OK) { return status; }
-            // copy authentication tag
-            memcpy(pGlobals->testVectors.inputs[vector], m_ciphertext+m_caesarSettings.plaintextLength, m_realCiphertextLength-m_caesarSettings.plaintextLength);
-            // fill with zeroes
-            if (m_realCiphertextLength-m_caesarSettings.plaintextLength < pGlobals->settings->testVectors.inputLength) {
-                mainLogger.out(LOGGER_WARNING) << "Authentication tag shorter than test vector input -- padded with zeroes." << endl;
-                for (int byte = m_realCiphertextLength-m_caesarSettings.plaintextLength; byte < pGlobals->settings->testVectors.inputLength; byte++) {
-                    pGlobals->testVectors.inputs[vector][byte] = 0;
-                }
-            }
-            status = m_encryptor->update();
-            if (status != STAT_OK) { return status; }
-            // 0x00 to denote ciphertext stream
-            for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
-                pGlobals->testVectors.outputs[vector][byte] = 0;
+        // ciphertext stream
+        status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
+        if (status != STAT_OK) { return status; }
+        // copy authentication tag
+        memcpy(tvInputs, m_ciphertext+m_caesarSettings.plaintextLength,
+                min(m_realCiphertextLength-m_caesarSettings.plaintextLength, (length_t)pGlobals->settings->testVectors.inputLength));
+        // fill with zeroes
+        if ((int) (m_realCiphertextLength-m_caesarSettings.plaintextLength) < pGlobals->settings->testVectors.inputLength) {
+            mainLogger.out(LOGGER_WARNING) << "Authentication tag shorter than test vector input -- padded with zeroes." << endl;
+            for (int byte = m_realCiphertextLength-m_caesarSettings.plaintextLength; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                tvInputs[byte] = 0;
             }
         }
-        // generate random vectors
-        for (int vector = pGlobals->settings->testVectors.setSize/2; vector < pGlobals->settings->testVectors.setSize; vector++) {
-            // random stream
-            for (int byte = 0; byte < pGlobals->settings->testVectors.inputLength; byte++) {
-                rndGen->getRandomFromInterval(255, pGlobals->testVectors.inputs[vector] + byte);
-            }
-            // 0xff to denote random stream
-            for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
-                pGlobals->testVectors.outputs[vector][byte] = UCHAR_MAX;
-            }
+        status = m_encryptor->update();
+        if (status != STAT_OK) { return status; }
+        // 0x00 to denote ciphertext stream
+        for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+            tvOutputs[byte] = 0;
         }
         break;
     default:
@@ -168,15 +182,56 @@ int CaesarProject::generateTestVectors() {
         return STAT_INVALID_ARGUMETS;
         break;
     }
-
     return status;
 }
 
 int CaesarProject::generateCipherDataStream() {
     int status = STAT_OK;
 
-    int st = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
-    mainLogger.out(LOGGER_INFO) << "Encryption status: " << st << endl;
+    unsigned char* tvOutputs = new unsigned char[pGlobals->settings->testVectors.outputLength];
+    memset(tvOutputs,0,pGlobals->settings->testVectors.outputLength);
+    unsigned char* tvInputs = new unsigned char[pGlobals->settings->testVectors.inputLength];
+    memset(tvInputs,0,pGlobals->settings->testVectors.inputLength);
+
+    string streamFilename = CAESAR_FILE_STREAM;
+    mainLogger.out(LOGGER_INFO) << "Generating cipher data stream for " << m_encryptor->shortDescription() << "." << endl;
+
+
+    ostream* vectorStream = NULL;
+    if (pCaesarSettings->streamSize == 0) {
+        vectorStream = &cout;
+        mainLogger.out(LOGGER_INFO) << "Sneding binary stream to standard output." << endl;
+    } else {
+        vectorStream = new ofstream(streamFilename, ios_base::binary | ios_base::trunc);
+        mainLogger.out(LOGGER_INFO) << "Saving binary stream to file '" << streamFilename << "'." << endl;
+    }
+    unsigned long alreadyGenerated = 0;
+    while (pCaesarSettings->streamSize == 0 ? true : alreadyGenerated <= pCaesarSettings->streamSize) {
+        for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
+            if (status != STAT_OK) break;
+
+            // get test vector
+            status = prepareSingleTestVector(tvInputs,tvOutputs);
+
+            for (int index = 0; index < pGlobals->settings->testVectors.inputLength; index++) {
+                (*vectorStream) << tvInputs[index];
+            }
+            alreadyGenerated += pGlobals->settings->testVectors.inputLength;
+        }
+    }
+
+    if (pCaesarSettings->streamSize != 0) {
+        delete vectorStream;
+        vectorStream = NULL;
+    }
+    if (status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "Cipher data generation successful (" << alreadyGenerated << " bytes)." << endl;
+    } else {
+        mainLogger.out(LOGGER_ERROR) << "Cipher data generation failed (" << alreadyGenerated << " bytes generated)." << endl;
+    }
+
+    delete[] tvInputs;
+    delete[] tvOutputs;
 
     return status;
 }
