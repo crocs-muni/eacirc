@@ -1,18 +1,18 @@
 #pragma once
 
-#include "ga_callbacks.h"
+#include "GaCallbacks.h"
 #include "circuit/gate/GateCircuit.h"
 
 
-class gpu_gate :
+class GpuGate :
         public GateCircuit
 {
 public:
-    gpu_gate() = default;
-    ~gpu_gate() = default;
+    GpuGate() = default;
+    ~GpuGate() = default;
 
 public:
     virtual std::string shortDescription() { return "cuda gate circuit emulator"; }
 
-    virtual GAGenome::Evaluator getEvaluator() { return ga_callbacks::evaluator; }
+    virtual GAGenome::Evaluator getEvaluator() { return GaCallbacks::evaluator; }
 };

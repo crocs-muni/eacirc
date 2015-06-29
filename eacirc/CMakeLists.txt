@@ -26,9 +26,9 @@ set(SOURCES
     circuit/gate/GAGateCallbacks.cpp
     circuit/gate/JVMSimulator.cpp
 # === gpu gate circuit ===
-    circuit/gpu_gate/ga_callbacks.cpp
-    circuit/gpu_gate/gpu_task.cpp
-    circuit/gpu_gate/gpu_task.cu
+    circuit/gpu_gate/GaCallbacks.cpp
+    circuit/gpu_gate/GpuTask.cpp
+    circuit/gpu_gate/GpuTask.cu
 # === polynomial circuits ===
     circuit/polynomial/PolynomialCircuit.cpp
     circuit/polynomial/PolynomialCircuitIO.cpp
@@ -79,13 +79,13 @@ set(HEADERS
     circuit/gate/GAGateCallbacks.h
     circuit/gate/JVMSimulator.h
 # === gpu gate circuit ===
-    circuit/gpu_gate/byte.h
-    circuit/gpu_gate/ga_callbacks.h
-    circuit/gpu_gate/gate_circuit.h
-    circuit/gpu_gate/gate_helper.h
-    circuit/gpu_gate/gate_interpreter.h
-    circuit/gpu_gate/gpu_gate.h
-    circuit/gpu_gate/gpu_task.h
+    circuit/gpu_gate/Byte.h
+    circuit/gpu_gate/GaCallbacks.h
+    circuit/gpu_gate/GateCircuit.h
+    circuit/gpu_gate/GateHelper.h
+    circuit/gpu_gate/GateInterpreter.h
+    circuit/gpu_gate/GpuGate.h
+    circuit/gpu_gate/GpuTask.h
  # === polynomial circuits ===
     circuit/polynomial/GAPolyCallbacks.h
     circuit/polynomial/Term.h
