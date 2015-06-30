@@ -27,6 +27,7 @@ set(SOURCES
     circuit/gate/JVMSimulator.cpp
 # === gpu gate circuit ===
     circuit/gpu_gate/GaCallbacks.cpp
+    circuit/gpu_gate/GpuGate.cpp
     circuit/gpu_gate/GpuTask.cpp
     circuit/gpu_gate/GpuTask.cu
 # === polynomial circuits ===
