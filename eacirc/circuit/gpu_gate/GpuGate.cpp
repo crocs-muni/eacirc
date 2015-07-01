@@ -4,8 +4,10 @@
 #include <stdexcept>
 
 
-void GpuGate::check_settings() const
+int GpuGate::loadCircuitConfiguration(TiXmlNode* pRoot)
 {
+    GateCircuit::loadCircuitConfiguration(pRoot);
+
     try {
         if (pGlobals->settings->gateCircuit.useMemory)
             throw std::invalid_argument("Bad settings! Cuda backend cannot have useMemory enabled.");
@@ -14,6 +16,7 @@ void GpuGate::check_settings() const
     }
     catch (std::exception& e) {
         mainLogger.out(LOGGER_ERROR) << e.what() << std::endl;
-        std::exit(1);
+        return STAT_CONFIG_INCORRECT;
     }
+    return STAT_OK;
 }
