@@ -85,6 +85,9 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
 int EstreamProject::initializeProject() {
     // allocate encryptorDecryptor
     m_encryptorDecryptor = new EncryptorDecryptor;
+    if (!m_encryptorDecryptor->initSuccess()) {
+        return STAT_PROJECT_ERROR;
+    }
     // allocate project-specific evaluator, if needed
     // no project specific evaluator available
     return STAT_OK;

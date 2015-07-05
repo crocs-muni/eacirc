@@ -169,6 +169,9 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
 }
 
 string Encryptor::shortDescription() {
+    if (m_cipher == NULL) {
+        return "<no cipher allocated>";
+    }
     string desription =  m_cipher->shortDescription() + ", ";
     if (pCaesarSettings->limitAlgRounds) {
         desription += CommonFnc::toString(pCaesarSettings->algorithmRoundsCount) + " rounds";

@@ -77,6 +77,11 @@ int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
 int Sha3Project::initializeProject() {
     // allocate hasher
     m_hasher = new Hasher;
+    if (!m_hasher->initSuccess()) {
+        return STAT_PROJECT_ERROR;
+    }
+    // project-specific evaluator initialization would be here (not applicable for SHA3)
+
     return STAT_OK;
 }
 

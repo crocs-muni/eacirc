@@ -31,10 +31,17 @@ public:
     bool m_setIV;
     //! was key already set?
     bool m_setKey;
+    //! was encryptor successfully initialized?
+    bool m_initSuccess;
 public:
     /** constructor, allocates ciphers according to loaded settings
       */
     EncryptorDecryptor();
+
+    /** Was initialization successful?
+     * @return success
+     */
+    bool initSuccess() const;
 
     /** destructor, release memory
       */

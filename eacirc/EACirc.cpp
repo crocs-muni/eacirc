@@ -264,8 +264,12 @@ void EACirc::createState() {
     mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
-    m_project->initializeProjectState();
-    mainLogger.out(LOGGER_INFO) << "Project intial state setup successful (" << m_project->shortDescription() << ")." << endl;
+    m_status = m_project->initializeProjectState();
+    if (m_status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "Project intial state setup successful (" << m_project->shortDescription() << ")." << endl;
+    } else {
+        mainLogger.out(LOGGER_ERROR) << "Project inilialization falied (" << m_project->shortDescription() << ")." << endl;
+    }
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -484,6 +488,7 @@ void EACirc::initializeState() {
     } else {
         createState();
     }
+    if (m_status != STAT_OK) return;
     // create headers in test vector files
     m_status = m_project->createTestVectorFilesHeadersMain();
     if (m_status != STAT_OK) return;
