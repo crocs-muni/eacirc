@@ -230,7 +230,9 @@ void EACirc::loadState(const string filename) {
     m_status = m_project->loadProjectStateMain(getXMLElement(pRoot,"project"));
 
     delete pRoot;
-    mainLogger.out(LOGGER_INFO) << "State successfully loaded from file " << filename << "." << endl;
+    if (m_status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "State successfully loaded from file " << filename << "." << endl;
+    }
 }
 
 void EACirc::createState() {

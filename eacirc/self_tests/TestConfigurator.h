@@ -16,6 +16,7 @@ public:
     /** constructor, fill project constants array with all projects
      */
     TestConfigurator();
+
     /** constructor, fill project constants array with given project
      * @param projectType constant
      */

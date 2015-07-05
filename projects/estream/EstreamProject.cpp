@@ -156,11 +156,10 @@ int EstreamProject::setupPlaintext() {
 int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
     TiXmlElement* pRoot2 = pRoot->ToElement();
     TiXmlElement* pNode;
+    ostringstream ss;
     if (m_estreamSettings.cipherInitializationFrequency != ESTREAM_INIT_CIPHERS_ONCE) {
         pRoot2->SetAttribute("loadable",1);
     } else {
-        ostringstream ss;
-
         pNode = new TiXmlElement("key");
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
         ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_key[input]);
@@ -173,22 +172,24 @@ int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
         ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
         pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
         pRoot2->LinkEndChild(pNode);
+    }
+    if (m_estreamSettings.plaintextType == ESTREAM_GENTYPE_COUNTER) {
+        ss.str("");
+        pNode = new TiXmlElement("plaintext-counter");
+        for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
+        ss << setw(2) << setfill('0') << hex << (int)(m_plaintextCounter[input]);
+        pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
+        pRoot2->LinkEndChild(pNode);
 
-        if (m_estreamSettings.plaintextType == ESTREAM_GENTYPE_COUNTER) {
-            ss.str("");
-            pNode = new TiXmlElement("plaintext-counter");
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
-            ss << setw(2) << hex << (int)(m_plaintextCounter[input]);
-            pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
-            pRoot2->LinkEndChild(pNode);
-        }
+        // TO BE REMOVED after implementing the loading of plaintext counter
+        pRoot2->SetAttribute("loadable",0);
     }
     return STAT_OK;
 }
 
 int EstreamProject::loadProjectState(TiXmlNode* pRoot) {
-
-    return STAT_NOT_IMPLEMENTED_YET;
+    return STAT_OK;
+    // TO BE ADDED implement loading plaintext counter if used
 }
 
 int EstreamProject::createTestVectorFilesHeaders() const {

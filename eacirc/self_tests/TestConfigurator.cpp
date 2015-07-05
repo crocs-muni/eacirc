@@ -150,7 +150,7 @@ string TestConfigurator::mainConfiguration =
         "</MAIN>"
         "<OUTPUTS>"
         "    <VERBOSITY>5</VERBOSITY>"
-        "    <INTERMEDIATE_CIRCUITS>1</INTERMEDIATE_CIRCUITS>"
+        "    <INTERMEDIATE_CIRCUITS>0</INTERMEDIATE_CIRCUITS>"
         "    <ALLOW_PRUNNING>0</ALLOW_PRUNNING>"
         "    <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>"
         "</OUTPUTS>"
