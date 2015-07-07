@@ -6,8 +6,15 @@
 
 TestConfigurator::TestConfigurator()
     : m_currentProject(0) {
+#ifdef ESTREAM
     m_projects.push(PROJECT_ESTREAM);
+#endif
+#ifdef SHA3
     m_projects.push(PROJECT_SHA3);
+#endif
+#ifdef CEASAR
+    m_projects.push(PROJECT_CAESAR);
+#endif
     // can we open files set in PROJECT_FILE_DISTINGUISHER?
     string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
     TiXmlDocument doc(string("configuration").c_str());
