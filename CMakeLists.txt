@@ -25,6 +25,17 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
     endif()
 endif()
 
+# === detect CUDA ===
+find_package(CUDA)
+if(CUDA_FOUND)
+    option(BUILD_CUDA "Build CUDA code" ON)
+
+    if(BUILD_CUDA)
+        add_definitions(-DCUDA)
+    endif()
+endif()
+
+
 # === Global variables ===
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
 set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
