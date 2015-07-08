@@ -166,7 +166,7 @@ int CaesarProject::prepareSingleTestVector(unsigned char* tvInputs, unsigned cha
         // fill with zeroes
         if ((int) (m_realCiphertextLength-m_caesarSettings.plaintextLength) < pGlobals->settings->testVectors.inputLength) {
             mainLogger.out(LOGGER_WARNING) << "Authentication tag shorter than test vector input -- padded with zeroes." << endl;
-            for (int byte = m_realCiphertextLength-m_caesarSettings.plaintextLength; byte < pGlobals->settings->testVectors.inputLength; byte++) {
+            for (int byte = static_cast<int>(m_caesarSettings.plaintextLength); byte < pGlobals->settings->testVectors.inputLength; byte++) {
                 tvInputs[byte] = 0;
             }
         }

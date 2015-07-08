@@ -13,24 +13,6 @@ set(SOURCES
     aead/common/crypto_core_aes256encrypt.cpp
     aead/acorn/acorn128/acorn128_encrypt.cpp
     aead/acorn/acorn128/Acorn128.cpp
-    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
-    aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
-    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
-    aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
-    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
-    aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
-    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
-    aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
-    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
-    aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
-    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
-    aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
-    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
-    aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
-    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
-    aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
-    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
-    aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
     aead/aegis/aegis128/aegis128_aes.cpp
     aead/aegis/aegis128/aegis128_encrypt.cpp
     aead/aegis/aegis128/Aegis128.cpp
@@ -159,26 +141,6 @@ set(SOURCES
     aead/calico/calicov8/calicov8_calico.cpp
     aead/calico/calicov8/calicov8_encrypt.cpp
     aead/calico/calicov8/Calicov8.cpp
-    aead/cba/cba1/cba1_encrypt.cpp
-    aead/cba/cba1/Cba1.cpp
-    aead/cba/cba10/cba10_encrypt.cpp
-    aead/cba/cba10/Cba10.cpp
-    aead/cba/cba2/cba2_encrypt.cpp
-    aead/cba/cba2/Cba2.cpp
-    aead/cba/cba3/cba3_encrypt.cpp
-    aead/cba/cba3/Cba3.cpp
-    aead/cba/cba4/cba4_encrypt.cpp
-    aead/cba/cba4/Cba4.cpp
-    aead/cba/cba5/cba5_encrypt.cpp
-    aead/cba/cba5/Cba5.cpp
-    aead/cba/cba6/cba6_encrypt.cpp
-    aead/cba/cba6/Cba6.cpp
-    aead/cba/cba7/cba7_encrypt.cpp
-    aead/cba/cba7/Cba7.cpp
-    aead/cba/cba8/cba8_encrypt.cpp
-    aead/cba/cba8/Cba8.cpp
-    aead/cba/cba9/cba9_encrypt.cpp
-    aead/cba/cba9/Cba9.cpp
     aead/aes-cmcc/cmcc22v1/cmcc22v1_encrypt.cpp
     aead/aes-cmcc/cmcc22v1/Cmcc22v1.cpp
     aead/aes-cmcc/cmcc24v1/cmcc24v1_encrypt.cpp
@@ -205,22 +167,6 @@ set(SOURCES
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_encrypt.cpp
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_tweakableBC.cpp
     aead/deoxys/deoxysneq256128v1/Deoxysneq256128v1.cpp
-    aead/elmd/elmd1000v1/elmd1000v1_encrypt.cpp
-    aead/elmd/elmd1000v1/Elmd1000v1.cpp
-    aead/elmd/elmd1001v1/elmd1001v1_encrypt.cpp
-    aead/elmd/elmd1001v1/Elmd1001v1.cpp
-    aead/elmd/elmd101270v1/elmd101270v1_encrypt.cpp
-    aead/elmd/elmd101270v1/Elmd101270v1.cpp
-    aead/elmd/elmd101271v1/elmd101271v1_encrypt.cpp
-    aead/elmd/elmd101271v1/Elmd101271v1.cpp
-    aead/elmd/elmd500v1/elmd500v1_encrypt.cpp
-    aead/elmd/elmd500v1/Elmd500v1.cpp
-    aead/elmd/elmd501v1/elmd501v1_encrypt.cpp
-    aead/elmd/elmd501v1/Elmd501v1.cpp
-    aead/elmd/elmd51270v1/elmd51270v1_encrypt.cpp
-    aead/elmd/elmd51270v1/Elmd51270v1.cpp
-    aead/elmd/elmd51271v1/elmd51271v1_encrypt.cpp
-    aead/elmd/elmd51271v1/Elmd51271v1.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_aes.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_auth.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_chacha.cpp
@@ -587,6 +533,63 @@ set(SOURCES
 #    aead/yaes/yaes128v2/Yaes128v2.cpp
 )
 
+set(SOURCES_WITH_OPENSSL
+	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
+	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
+	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
+	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
+	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
+	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
+	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
+	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
+	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
+	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
+	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
+	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
+	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
+	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
+	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
+	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
+	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
+	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
+	aead/cba/cba1/cba1_encrypt.cpp
+    aead/cba/cba1/Cba1.cpp
+    aead/cba/cba10/cba10_encrypt.cpp
+    aead/cba/cba10/Cba10.cpp
+    aead/cba/cba2/cba2_encrypt.cpp
+    aead/cba/cba2/Cba2.cpp
+    aead/cba/cba3/cba3_encrypt.cpp
+    aead/cba/cba3/Cba3.cpp
+    aead/cba/cba4/cba4_encrypt.cpp
+    aead/cba/cba4/Cba4.cpp
+    aead/cba/cba5/cba5_encrypt.cpp
+    aead/cba/cba5/Cba5.cpp
+    aead/cba/cba6/cba6_encrypt.cpp
+    aead/cba/cba6/Cba6.cpp
+    aead/cba/cba7/cba7_encrypt.cpp
+    aead/cba/cba7/Cba7.cpp
+    aead/cba/cba8/cba8_encrypt.cpp
+    aead/cba/cba8/Cba8.cpp
+    aead/cba/cba9/cba9_encrypt.cpp
+    aead/cba/cba9/Cba9.cpp
+    aead/elmd/elmd1000v1/elmd1000v1_encrypt.cpp
+    aead/elmd/elmd1000v1/Elmd1000v1.cpp
+    aead/elmd/elmd1001v1/elmd1001v1_encrypt.cpp
+    aead/elmd/elmd1001v1/Elmd1001v1.cpp
+    aead/elmd/elmd101270v1/elmd101270v1_encrypt.cpp
+    aead/elmd/elmd101270v1/Elmd101270v1.cpp
+    aead/elmd/elmd101271v1/elmd101271v1_encrypt.cpp
+    aead/elmd/elmd101271v1/Elmd101271v1.cpp
+    aead/elmd/elmd500v1/elmd500v1_encrypt.cpp
+    aead/elmd/elmd500v1/Elmd500v1.cpp
+    aead/elmd/elmd501v1/elmd501v1_encrypt.cpp
+    aead/elmd/elmd501v1/Elmd501v1.cpp
+    aead/elmd/elmd51270v1/elmd51270v1_encrypt.cpp
+    aead/elmd/elmd51270v1/Elmd51270v1.cpp
+    aead/elmd/elmd51271v1/elmd51271v1_encrypt.cpp
+    aead/elmd/elmd51271v1/Elmd51271v1.cpp
+)
+
 set(HEADERS
     CaesarConstants.h
     CaesarProject.h
@@ -598,33 +601,6 @@ set(HEADERS
     aead/acorn/acorn128/acorn128_api.h
     aead/acorn/acorn128/acorn128_encrypt.h
     aead/acorn/acorn128/Acorn128.h
-    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
-    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
-    aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
-    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
-    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
-    aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
-    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
-    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
-    aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
-    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
-    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
-    aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
-    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
-    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
-    aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
-    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
-    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
-    aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
-    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
-    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
-    aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
-    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
-    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
-    aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
-    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
-    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
-    aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
     aead/aegis/aegis128/aegis128_api.h
     aead/aegis/aegis128/aegis128_encrypt.h
     aead/aegis/aegis128/Aegis128.h
@@ -773,36 +749,6 @@ set(HEADERS
     aead/calico/calicov8/calicov8_calico.h
     aead/calico/calicov8/calicov8_encrypt.h
     aead/calico/calicov8/Calicov8.h
-    aead/cba/cba1/cba1_api.h
-    aead/cba/cba1/cba1_encrypt.h
-    aead/cba/cba1/Cba1.h
-    aead/cba/cba10/cba10_api.h
-    aead/cba/cba10/cba10_encrypt.h
-    aead/cba/cba10/Cba10.h
-    aead/cba/cba2/cba2_api.h
-    aead/cba/cba2/cba2_encrypt.h
-    aead/cba/cba2/Cba2.h
-    aead/cba/cba3/cba3_api.h
-    aead/cba/cba3/cba3_encrypt.h
-    aead/cba/cba3/Cba3.h
-    aead/cba/cba4/cba4_api.h
-    aead/cba/cba4/cba4_encrypt.h
-    aead/cba/cba4/Cba4.h
-    aead/cba/cba5/cba5_api.h
-    aead/cba/cba5/cba5_encrypt.h
-    aead/cba/cba5/Cba5.h
-    aead/cba/cba6/cba6_api.h
-    aead/cba/cba6/cba6_encrypt.h
-    aead/cba/cba6/Cba6.h
-    aead/cba/cba7/cba7_api.h
-    aead/cba/cba7/cba7_encrypt.h
-    aead/cba/cba7/Cba7.h
-    aead/cba/cba8/cba8_api.h
-    aead/cba/cba8/cba8_encrypt.h
-    aead/cba/cba8/Cba8.h
-    aead/cba/cba9/cba9_api.h
-    aead/cba/cba9/cba9_encrypt.h
-    aead/cba/cba9/Cba9.h
     aead/aes-cmcc/cmcc22v1/cmcc22v1_api.h
     aead/aes-cmcc/cmcc22v1/cmcc22v1_encrypt.h
     aead/aes-cmcc/cmcc22v1/Cmcc22v1.h
@@ -838,46 +784,6 @@ set(HEADERS
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_tweakableBC.h
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_encrypt.h
     aead/deoxys/deoxysneq256128v1/Deoxysneq256128v1.h
-    aead/elmd/elmd1000v1/elmd1000v1_aes_round_5.h
-    aead/elmd/elmd1000v1/elmd1000v1_api.h
-    aead/elmd/elmd1000v1/elmd1000v1_module.h
-    aead/elmd/elmd1000v1/elmd1000v1_encrypt.h
-    aead/elmd/elmd1000v1/Elmd1000v1.h
-    aead/elmd/elmd1001v1/elmd1001v1_aes_round_5.h
-    aead/elmd/elmd1001v1/elmd1001v1_api.h
-    aead/elmd/elmd1001v1/elmd1001v1_module.h
-    aead/elmd/elmd1001v1/elmd1001v1_encrypt.h
-    aead/elmd/elmd1001v1/Elmd1001v1.h
-    aead/elmd/elmd101270v1/elmd101270v1_aes_round_5.h
-    aead/elmd/elmd101270v1/elmd101270v1_api.h
-    aead/elmd/elmd101270v1/elmd101270v1_module.h
-    aead/elmd/elmd101270v1/elmd101270v1_encrypt.h
-    aead/elmd/elmd101270v1/Elmd101270v1.h
-    aead/elmd/elmd101271v1/elmd101271v1_aes_round_5.h
-    aead/elmd/elmd101271v1/elmd101271v1_api.h
-    aead/elmd/elmd101271v1/elmd101271v1_module.h
-    aead/elmd/elmd101271v1/elmd101271v1_encrypt.h
-    aead/elmd/elmd101271v1/Elmd101271v1.h
-    aead/elmd/elmd500v1/elmd500v1_aes_round_5.h
-    aead/elmd/elmd500v1/elmd500v1_api.h
-    aead/elmd/elmd500v1/elmd500v1_module.h
-    aead/elmd/elmd500v1/elmd500v1_encrypt.h
-    aead/elmd/elmd500v1/Elmd500v1.h
-    aead/elmd/elmd501v1/elmd501v1_aes_round_5.h
-    aead/elmd/elmd501v1/elmd501v1_api.h
-    aead/elmd/elmd501v1/elmd501v1_module.h
-    aead/elmd/elmd501v1/elmd501v1_encrypt.h
-    aead/elmd/elmd501v1/Elmd501v1.h
-    aead/elmd/elmd51270v1/elmd51270v1_aes_round_5.h
-    aead/elmd/elmd51270v1/elmd51270v1_api.h
-    aead/elmd/elmd51270v1/elmd51270v1_module.h
-    aead/elmd/elmd51270v1/elmd51270v1_encrypt.h
-    aead/elmd/elmd51270v1/Elmd51270v1.h
-    aead/elmd/elmd51271v1/elmd51271v1_aes_round_5.h
-    aead/elmd/elmd51271v1/elmd51271v1_api.h
-    aead/elmd/elmd51271v1/elmd51271v1_module.h
-    aead/elmd/elmd51271v1/elmd51271v1_encrypt.h
-    aead/elmd/elmd51271v1/Elmd51271v1.h
     aead/enchilada/enchilada128v1/enchilada128v1_api.h
     aead/enchilada/enchilada128v1/enchilada128v1_enchilada.h
     aead/enchilada/enchilada128v1/enchilada128v1_encrypt.h
@@ -1455,17 +1361,108 @@ set(HEADERS
 #    aead/yaes/yaes128v2/Yaes128v2.h
 )
 
+set(HEADERS_WITH_OPENSSL
+	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
+	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
+	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
+	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
+	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
+	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
+	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
+	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
+	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
+	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
+	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
+	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
+	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
+	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
+	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
+	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
+	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
+	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
+	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
+	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
+	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
+	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
+	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
+	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
+	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
+	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
+	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
+	aead/cba/cba1/cba1_api.h
+    aead/cba/cba1/cba1_encrypt.h
+    aead/cba/cba1/Cba1.h
+    aead/cba/cba10/cba10_api.h
+    aead/cba/cba10/cba10_encrypt.h
+    aead/cba/cba10/Cba10.h
+    aead/cba/cba2/cba2_api.h
+    aead/cba/cba2/cba2_encrypt.h
+    aead/cba/cba2/Cba2.h
+    aead/cba/cba3/cba3_api.h
+    aead/cba/cba3/cba3_encrypt.h
+    aead/cba/cba3/Cba3.h
+    aead/cba/cba4/cba4_api.h
+    aead/cba/cba4/cba4_encrypt.h
+    aead/cba/cba4/Cba4.h
+    aead/cba/cba5/cba5_api.h
+    aead/cba/cba5/cba5_encrypt.h
+    aead/cba/cba5/Cba5.h
+    aead/cba/cba6/cba6_api.h
+    aead/cba/cba6/cba6_encrypt.h
+    aead/cba/cba6/Cba6.h
+    aead/cba/cba7/cba7_api.h
+    aead/cba/cba7/cba7_encrypt.h
+    aead/cba/cba7/Cba7.h
+    aead/cba/cba8/cba8_api.h
+    aead/cba/cba8/cba8_encrypt.h
+    aead/cba/cba8/Cba8.h
+    aead/cba/cba9/cba9_api.h
+    aead/cba/cba9/cba9_encrypt.h
+    aead/cba/cba9/Cba9.h
+    aead/elmd/elmd1000v1/elmd1000v1_aes_round_5.h
+    aead/elmd/elmd1000v1/elmd1000v1_api.h
+    aead/elmd/elmd1000v1/elmd1000v1_module.h
+    aead/elmd/elmd1000v1/elmd1000v1_encrypt.h
+    aead/elmd/elmd1000v1/Elmd1000v1.h
+    aead/elmd/elmd1001v1/elmd1001v1_aes_round_5.h
+    aead/elmd/elmd1001v1/elmd1001v1_api.h
+    aead/elmd/elmd1001v1/elmd1001v1_module.h
+    aead/elmd/elmd1001v1/elmd1001v1_encrypt.h
+    aead/elmd/elmd1001v1/Elmd1001v1.h
+    aead/elmd/elmd101270v1/elmd101270v1_aes_round_5.h
+    aead/elmd/elmd101270v1/elmd101270v1_api.h
+    aead/elmd/elmd101270v1/elmd101270v1_module.h
+    aead/elmd/elmd101270v1/elmd101270v1_encrypt.h
+    aead/elmd/elmd101270v1/Elmd101270v1.h
+    aead/elmd/elmd101271v1/elmd101271v1_aes_round_5.h
+    aead/elmd/elmd101271v1/elmd101271v1_api.h
+    aead/elmd/elmd101271v1/elmd101271v1_module.h
+    aead/elmd/elmd101271v1/elmd101271v1_encrypt.h
+    aead/elmd/elmd101271v1/Elmd101271v1.h
+    aead/elmd/elmd500v1/elmd500v1_aes_round_5.h
+    aead/elmd/elmd500v1/elmd500v1_api.h
+    aead/elmd/elmd500v1/elmd500v1_module.h
+    aead/elmd/elmd500v1/elmd500v1_encrypt.h
+    aead/elmd/elmd500v1/Elmd500v1.h
+    aead/elmd/elmd501v1/elmd501v1_aes_round_5.h
+    aead/elmd/elmd501v1/elmd501v1_api.h
+    aead/elmd/elmd501v1/elmd501v1_module.h
+    aead/elmd/elmd501v1/elmd501v1_encrypt.h
+    aead/elmd/elmd501v1/Elmd501v1.h
+    aead/elmd/elmd51270v1/elmd51270v1_aes_round_5.h
+    aead/elmd/elmd51270v1/elmd51270v1_api.h
+    aead/elmd/elmd51270v1/elmd51270v1_module.h
+    aead/elmd/elmd51270v1/elmd51270v1_encrypt.h
+    aead/elmd/elmd51270v1/Elmd51270v1.h
+    aead/elmd/elmd51271v1/elmd51271v1_aes_round_5.h
+    aead/elmd/elmd51271v1/elmd51271v1_api.h
+    aead/elmd/elmd51271v1/elmd51271v1_module.h
+    aead/elmd/elmd51271v1/elmd51271v1_encrypt.h
+    aead/elmd/elmd51271v1/Elmd51271v1.h
+)
+
 set(OTHER_FILES
     aead/acorn/acorn128/About.md
-    aead/ae/aeadaes128ocbtaglen128v1/About.md
-    aead/ae/aeadaes128ocbtaglen64v1/About.md
-    aead/ae/aeadaes128ocbtaglen96v1/About.md
-    aead/ae/aeadaes192ocbtaglen128v1/About.md
-    aead/ae/aeadaes192ocbtaglen64v1/About.md
-    aead/ae/aeadaes192ocbtaglen96v1/About.md
-    aead/ae/aeadaes256ocbtaglen128v1/About.md
-    aead/ae/aeadaes256ocbtaglen64v1/About.md
-    aead/ae/aeadaes256ocbtaglen96v1/About.md
     aead/aegis/aegis128/About.md
     aead/aegis/aegis128l/About.md
     aead/aegis/aegis256/About.md
@@ -1499,16 +1496,6 @@ set(OTHER_FILES
     aead/ascon/ascon128v1/About.md
     aead/ascon/ascon96v1/About.md
     aead/calico/calicov8/About.md
-    aead/cba/cba1/About.md
-    aead/cba/cba10/About.md
-    aead/cba/cba2/About.md
-    aead/cba/cba3/About.md
-    aead/cba/cba4/About.md
-    aead/cba/cba5/About.md
-    aead/cba/cba6/About.md
-    aead/cba/cba7/About.md
-    aead/cba/cba8/About.md
-    aead/cba/cba9/About.md
     aead/aes-cmcc/cmcc22v1/About.md
     aead/aes-cmcc/cmcc24v1/About.md
     aead/aes-cmcc/cmcc42v1/About.md
@@ -1518,14 +1505,6 @@ set(OTHER_FILES
     aead/deoxys/deoxyseq256128v1/About.md
     aead/deoxys/deoxysneq128128v1/About.md
     aead/deoxys/deoxysneq256128v1/About.md
-    aead/elmd/elmd1000v1/About.md
-    aead/elmd/elmd1001v1/About.md
-    aead/elmd/elmd101270v1/About.md
-    aead/elmd/elmd101271v1/About.md
-    aead/elmd/elmd500v1/About.md
-    aead/elmd/elmd501v1/About.md
-    aead/elmd/elmd51270v1/About.md
-    aead/elmd/elmd51271v1/About.md
     aead/enchilada/enchilada128v1/About.md
 #    aead/enchilada/enchilada256v1/About.md
     aead/hs1-siv/hs1sivhiv1/About.md
@@ -1632,12 +1611,55 @@ set(OTHER_FILES
 #    aead/yaes/yaes128v2/About.md
 )
 
+set(OTHER_FILES_WITH_OPENSSL
+	aead/ae/aeadaes128ocbtaglen128v1/About.md
+	aead/ae/aeadaes128ocbtaglen64v1/About.md
+	aead/ae/aeadaes128ocbtaglen96v1/About.md
+	aead/ae/aeadaes192ocbtaglen128v1/About.md
+	aead/ae/aeadaes192ocbtaglen64v1/About.md
+	aead/ae/aeadaes192ocbtaglen96v1/About.md
+	aead/ae/aeadaes256ocbtaglen128v1/About.md
+	aead/ae/aeadaes256ocbtaglen64v1/About.md
+	aead/ae/aeadaes256ocbtaglen96v1/About.md
+	aead/cba/cba1/About.md
+    aead/cba/cba10/About.md
+    aead/cba/cba2/About.md
+    aead/cba/cba3/About.md
+    aead/cba/cba4/About.md
+    aead/cba/cba5/About.md
+    aead/cba/cba6/About.md
+    aead/cba/cba7/About.md
+    aead/cba/cba8/About.md
+    aead/cba/cba9/About.md
+    aead/elmd/elmd1000v1/About.md
+    aead/elmd/elmd1001v1/About.md
+    aead/elmd/elmd101270v1/About.md
+    aead/elmd/elmd101271v1/About.md
+    aead/elmd/elmd500v1/About.md
+    aead/elmd/elmd501v1/About.md
+    aead/elmd/elmd51270v1/About.md
+    aead/elmd/elmd51271v1/About.md
+)
+
 # === source groups ===
 source_group(aead     REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/.*")
 
-# === find and link OpenSSL ===
-find_package(OpenSSL REQUIRED)
-include_directories(${OPENSSL_INCLUDE_DIR})
+# === detect OpenSSL ===
+find_package(OpenSSL)
+if(OPENSSL_FOUND)
+	option(WITH_OPENSSL "Link to OpenSSL" ON)
+
+	if(WITH_OPENSSL)
+		list(APPEND SOURCES ${SOURCES_WITH_OPENSSL})
+		list(APPEND HEADERS ${HEADERS_WITH_OPENSSL})
+		list(APPEND OTHER_FILES ${OTHER_FILES_WITH_OPENSSL})
+		add_definitions(-DWITH_OPENSSL)
+		include_directories(${OPENSSL_INCLUDE_DIR})
+		list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
+	endif()
+else()
+	message("OpenSSL not found, not building function requiring it.")
+endif()
 
 add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})
-target_link_libraries(caesar tinyXML ${OPENSSL_LIBRARIES})
+target_link_libraries(caesar tinyXML ${LIBRARIES})
