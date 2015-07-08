@@ -106,9 +106,16 @@ int crypto_aead_encrypt(
   i64 t = mlen / rate + 1;
   i64 l = mlen % rate;
 
+  // EACirc: rewritten to dynamic allocation (allocations)
+  /*
   u8 S[size];
   u8 A[s * rate];
   u8 M[t * rate];
+  */
+  u8* S = new u8[size];
+  u8* A = new u8[s * rate];
+  u8* M = new u8[t * rate];
+
   i64 i, j;
 
   // pad associated data
@@ -178,6 +185,11 @@ int crypto_aead_encrypt(
     c[mlen + i] = S[rate + klen + i];
   *clen = mlen + klen;
 
+  // EACirc: rewritten to dynamic allocation (deallocation)
+  delete[] S;
+  delete[] A;
+  delete[] M;
+
   return 0;
 }
 
@@ -204,9 +216,16 @@ int crypto_aead_decrypt(
   i64 t = (clen - klen) / rate + 1;
   i64 l = (clen - klen) % rate;
 
+  // EACirc: rewritten to dynamic allocation (allocations)
+  /*
   u8 S[size];
   u8 A[s * rate];
   u8 M[t * rate];
+  */
+  u8* S = new u8[size];
+  u8* A = new u8[s * rate];
+  u8* M = new u8[t * rate];
+
   i64 i, j;
 
   // pad associated data
@@ -275,6 +294,11 @@ int crypto_aead_decrypt(
   *mlen = clen - klen;
   for (i = 0; i < *mlen; ++i)
     m[i] = M[i];
+
+  // EACirc: rewritten to dynamic allocation (deallocation)
+  delete[] S;
+  delete[] A;
+  delete[] M;
 
   return 0;
 }

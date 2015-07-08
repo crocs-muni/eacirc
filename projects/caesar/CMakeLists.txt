@@ -1640,4 +1640,4 @@ find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
 
 add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})
-target_link_libraries(caesar tinyXML crypto)
+target_link_libraries(caesar tinyXML ${OPENSSL_LIBRARIES})

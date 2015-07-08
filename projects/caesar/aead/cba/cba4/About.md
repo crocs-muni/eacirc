@@ -14,3 +14,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* VLA (variable length arrays) substituted for dynamic allocation.
