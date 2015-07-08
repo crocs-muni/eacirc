@@ -30,7 +30,9 @@ static void rotate(unsigned char *a, int rot_amount, long long abytes) {
     int rot_bytes = rot_amount / 8;
     int rot_bits = rot_amount - (rot_bytes * 8);
     int i;
-    unsigned char temp[abytes];
+	// EACirc: VLA not supported in MSVC (allocation)
+	//unsigned char temp[abytes];
+	unsigned char* temp = new unsigned char[abytes];
     memcpy(temp, a, abytes);
     for (i = 0; i < abytes; i++) {
         a[(i + rot_bytes) % abytes] = temp[i];
@@ -40,6 +42,8 @@ static void rotate(unsigned char *a, int rot_amount, long long abytes) {
         a[i] = (temp[i - 1] << (8 - rot_bits)) | (temp[i] >> rot_bits);
     }
     a[0] = (temp[abytes - 1] << (8 - rot_bits)) | (temp[0] >> rot_bits);
+	// EACirc: VLA not supported in MSVC (deallocation)
+	delete[] temp;
 }
 
 static void xor_half_block(half_block out, half_block s1, half_block s2) {
@@ -242,7 +246,9 @@ static int enc(unsigned char *c, const unsigned char *key,
     F(delta, temp2, 2, 2);
 
     if ((inbytes * 8) <= l_par) {
-        unsigned char C_0[inbytes];
+		// EACirc: VLA not supported in MSVC (allocation)
+		//unsigned char C_0[inbytes];
+		unsigned char* C_0 = new unsigned char[inbytes];
         int i;
         for (i = 0; i < inbytes; i++, out++, in++) {
             C_0[i] = *in ^ R[16 - inbytes + i];
@@ -262,11 +268,16 @@ static int enc(unsigned char *c, const unsigned char *key,
         AES_encrypt(temp1, temp1, &aes_key);
         memcpy(out, temp1, TAGBYTES);
         out = out + TAGBYTES;
+		// EACirc: VLA not supported in MSVC (deallocation)
+		delete[] C_0;
         return 0;
     }
 
     int l_bytes = l_par / 8;
-    unsigned char temp_l[(l_bytes)], C_0[(l_bytes)];
+	// EACirc: VLA not supported in MSVC (allocation)
+	//unsigned char temp_l[(l_bytes)], C_0[(l_bytes)];
+	unsigned char* temp_l = new unsigned char[(l_bytes)];
+	unsigned char* C_0 = new unsigned char[(l_bytes)];
     memcpy(temp_l, &R[16 - (l_bytes)], (l_bytes));
 
     int i;
@@ -283,6 +294,10 @@ static int enc(unsigned char *c, const unsigned char *key,
         T[i] = T_A[i] ^ temp1[i];
     if (n_par / 8 > 0)
         memset(S, 0, n_par / 8);
+
+	// EACirc: VLA not supported in MSVC (deallocation)
+	delete[] temp_l;
+	delete[] C_0;
 
     long long total_blocks = (inbytes - l_bytes) / 16;
     int remaining_bytes = (inbytes - l_bytes) % 16;
@@ -413,7 +428,9 @@ static int dec(unsigned char *m, const unsigned char *key,
     }
 
     int l_bytes = l_par / 8;
-    unsigned char temp_l[(l_bytes)];
+	// EACirc: VLA not supported in MSVC (allocation)
+	//unsigned char temp_l[(l_bytes)];
+	unsigned char* temp_l = new unsigned char[(l_bytes)];
     memcpy(temp_l, &R[16 - (l_bytes)], (l_bytes));
     int i;
 
@@ -422,6 +439,9 @@ static int dec(unsigned char *m, const unsigned char *key,
         M_0[i] = *in ^ temp_l[i];
         *out = M_0[i];
     }
+
+	// EACirc: VLA not supported in MSVC (deallocation)
+	delete[] temp_l;
 
     // T = T_A xor ((0^(tau-l))||C_0)
     if ((tau_par - l_par) / 8 > 0)

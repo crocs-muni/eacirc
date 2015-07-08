@@ -13,24 +13,6 @@ set(SOURCES
     aead/common/crypto_core_aes256encrypt.cpp
     aead/acorn/acorn128/acorn128_encrypt.cpp
     aead/acorn/acorn128/Acorn128.cpp
-    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
-    aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
-    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
-    aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
-    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
-    aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
-    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
-    aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
-    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
-    aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
-    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
-    aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
-    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
-    aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
-    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
-    aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
-    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
-    aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
     aead/aegis/aegis128/aegis128_aes.cpp
     aead/aegis/aegis128/aegis128_encrypt.cpp
     aead/aegis/aegis128/Aegis128.cpp
@@ -159,26 +141,6 @@ set(SOURCES
     aead/calico/calicov8/calicov8_calico.cpp
     aead/calico/calicov8/calicov8_encrypt.cpp
     aead/calico/calicov8/Calicov8.cpp
-    aead/cba/cba1/cba1_encrypt.cpp
-    aead/cba/cba1/Cba1.cpp
-    aead/cba/cba10/cba10_encrypt.cpp
-    aead/cba/cba10/Cba10.cpp
-    aead/cba/cba2/cba2_encrypt.cpp
-    aead/cba/cba2/Cba2.cpp
-    aead/cba/cba3/cba3_encrypt.cpp
-    aead/cba/cba3/Cba3.cpp
-    aead/cba/cba4/cba4_encrypt.cpp
-    aead/cba/cba4/Cba4.cpp
-    aead/cba/cba5/cba5_encrypt.cpp
-    aead/cba/cba5/Cba5.cpp
-    aead/cba/cba6/cba6_encrypt.cpp
-    aead/cba/cba6/Cba6.cpp
-    aead/cba/cba7/cba7_encrypt.cpp
-    aead/cba/cba7/Cba7.cpp
-    aead/cba/cba8/cba8_encrypt.cpp
-    aead/cba/cba8/Cba8.cpp
-    aead/cba/cba9/cba9_encrypt.cpp
-    aead/cba/cba9/Cba9.cpp
     aead/aes-cmcc/cmcc22v1/cmcc22v1_encrypt.cpp
     aead/aes-cmcc/cmcc22v1/Cmcc22v1.cpp
     aead/aes-cmcc/cmcc24v1/cmcc24v1_encrypt.cpp
@@ -205,22 +167,6 @@ set(SOURCES
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_encrypt.cpp
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_tweakableBC.cpp
     aead/deoxys/deoxysneq256128v1/Deoxysneq256128v1.cpp
-    aead/elmd/elmd1000v1/elmd1000v1_encrypt.cpp
-    aead/elmd/elmd1000v1/Elmd1000v1.cpp
-    aead/elmd/elmd1001v1/elmd1001v1_encrypt.cpp
-    aead/elmd/elmd1001v1/Elmd1001v1.cpp
-    aead/elmd/elmd101270v1/elmd101270v1_encrypt.cpp
-    aead/elmd/elmd101270v1/Elmd101270v1.cpp
-    aead/elmd/elmd101271v1/elmd101271v1_encrypt.cpp
-    aead/elmd/elmd101271v1/Elmd101271v1.cpp
-    aead/elmd/elmd500v1/elmd500v1_encrypt.cpp
-    aead/elmd/elmd500v1/Elmd500v1.cpp
-    aead/elmd/elmd501v1/elmd501v1_encrypt.cpp
-    aead/elmd/elmd501v1/Elmd501v1.cpp
-    aead/elmd/elmd51270v1/elmd51270v1_encrypt.cpp
-    aead/elmd/elmd51270v1/Elmd51270v1.cpp
-    aead/elmd/elmd51271v1/elmd51271v1_encrypt.cpp
-    aead/elmd/elmd51271v1/Elmd51271v1.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_aes.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_auth.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_chacha.cpp
@@ -587,6 +533,63 @@ set(SOURCES
 #    aead/yaes/yaes128v2/Yaes128v2.cpp
 )
 
+set(SOURCES_WITH_OPENSSL
+	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
+	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
+	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
+	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
+	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
+	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
+	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
+	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
+	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
+	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
+	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
+	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
+	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
+	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
+	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
+	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
+	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
+	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
+	aead/cba/cba1/cba1_encrypt.cpp
+    aead/cba/cba1/Cba1.cpp
+    aead/cba/cba10/cba10_encrypt.cpp
+    aead/cba/cba10/Cba10.cpp
+    aead/cba/cba2/cba2_encrypt.cpp
+    aead/cba/cba2/Cba2.cpp
+    aead/cba/cba3/cba3_encrypt.cpp
+    aead/cba/cba3/Cba3.cpp
+    aead/cba/cba4/cba4_encrypt.cpp
+    aead/cba/cba4/Cba4.cpp
+    aead/cba/cba5/cba5_encrypt.cpp
+    aead/cba/cba5/Cba5.cpp
+    aead/cba/cba6/cba6_encrypt.cpp
+    aead/cba/cba6/Cba6.cpp
+    aead/cba/cba7/cba7_encrypt.cpp
+    aead/cba/cba7/Cba7.cpp
+    aead/cba/cba8/cba8_encrypt.cpp
+    aead/cba/cba8/Cba8.cpp
+    aead/cba/cba9/cba9_encrypt.cpp
+    aead/cba/cba9/Cba9.cpp
+    aead/elmd/elmd1000v1/elmd1000v1_encrypt.cpp
+    aead/elmd/elmd1000v1/Elmd1000v1.cpp
+    aead/elmd/elmd1001v1/elmd1001v1_encrypt.cpp
+    aead/elmd/elmd1001v1/Elmd1001v1.cpp
+    aead/elmd/elmd101270v1/elmd101270v1_encrypt.cpp
+    aead/elmd/elmd101270v1/Elmd101270v1.cpp
+    aead/elmd/elmd101271v1/elmd101271v1_encrypt.cpp
+    aead/elmd/elmd101271v1/Elmd101271v1.cpp
+    aead/elmd/elmd500v1/elmd500v1_encrypt.cpp
+    aead/elmd/elmd500v1/Elmd500v1.cpp
+    aead/elmd/elmd501v1/elmd501v1_encrypt.cpp
+    aead/elmd/elmd501v1/Elmd501v1.cpp
+    aead/elmd/elmd51270v1/elmd51270v1_encrypt.cpp
+    aead/elmd/elmd51270v1/Elmd51270v1.cpp
+    aead/elmd/elmd51271v1/elmd51271v1_encrypt.cpp
+    aead/elmd/elmd51271v1/Elmd51271v1.cpp
+)
+
 set(HEADERS
     CaesarConstants.h
     CaesarProject.h
@@ -598,33 +601,6 @@ set(HEADERS
     aead/acorn/acorn128/acorn128_api.h
     aead/acorn/acorn128/acorn128_encrypt.h
     aead/acorn/acorn128/Acorn128.h
-    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
-    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
-    aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
-    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
-    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
-    aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
-    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
-    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
-    aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
-    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
-    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
-    aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
-    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
-    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
-    aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
-    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
-    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
-    aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
-    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
-    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
-    aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
-    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
-    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
-    aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
-    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
-    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
-    aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
     aead/aegis/aegis128/aegis128_api.h
     aead/aegis/aegis128/aegis128_encrypt.h
     aead/aegis/aegis128/Aegis128.h
@@ -773,36 +749,6 @@ set(HEADERS
     aead/calico/calicov8/calicov8_calico.h
     aead/calico/calicov8/calicov8_encrypt.h
     aead/calico/calicov8/Calicov8.h
-    aead/cba/cba1/cba1_api.h
-    aead/cba/cba1/cba1_encrypt.h
-    aead/cba/cba1/Cba1.h
-    aead/cba/cba10/cba10_api.h
-    aead/cba/cba10/cba10_encrypt.h
-    aead/cba/cba10/Cba10.h
-    aead/cba/cba2/cba2_api.h
-    aead/cba/cba2/cba2_encrypt.h
-    aead/cba/cba2/Cba2.h
-    aead/cba/cba3/cba3_api.h
-    aead/cba/cba3/cba3_encrypt.h
-    aead/cba/cba3/Cba3.h
-    aead/cba/cba4/cba4_api.h
-    aead/cba/cba4/cba4_encrypt.h
-    aead/cba/cba4/Cba4.h
-    aead/cba/cba5/cba5_api.h
-    aead/cba/cba5/cba5_encrypt.h
-    aead/cba/cba5/Cba5.h
-    aead/cba/cba6/cba6_api.h
-    aead/cba/cba6/cba6_encrypt.h
-    aead/cba/cba6/Cba6.h
-    aead/cba/cba7/cba7_api.h
-    aead/cba/cba7/cba7_encrypt.h
-    aead/cba/cba7/Cba7.h
-    aead/cba/cba8/cba8_api.h
-    aead/cba/cba8/cba8_encrypt.h
-    aead/cba/cba8/Cba8.h
-    aead/cba/cba9/cba9_api.h
-    aead/cba/cba9/cba9_encrypt.h
-    aead/cba/cba9/Cba9.h
     aead/aes-cmcc/cmcc22v1/cmcc22v1_api.h
     aead/aes-cmcc/cmcc22v1/cmcc22v1_encrypt.h
     aead/aes-cmcc/cmcc22v1/Cmcc22v1.h
@@ -838,46 +784,6 @@ set(HEADERS
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_tweakableBC.h
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_encrypt.h
     aead/deoxys/deoxysneq256128v1/Deoxysneq256128v1.h
-    aead/elmd/elmd1000v1/elmd1000v1_aes_round_5.h
-    aead/elmd/elmd1000v1/elmd1000v1_api.h
-    aead/elmd/elmd1000v1/elmd1000v1_module.h
-    aead/elmd/elmd1000v1/elmd1000v1_encrypt.h
-    aead/elmd/elmd1000v1/Elmd1000v1.h
-    aead/elmd/elmd1001v1/elmd1001v1_aes_round_5.h
-    aead/elmd/elmd1001v1/elmd1001v1_api.h
-    aead/elmd/elmd1001v1/elmd1001v1_module.h
-    aead/elmd/elmd1001v1/elmd1001v1_encrypt.h
-    aead/elmd/elmd1001v1/Elmd1001v1.h
-    aead/elmd/elmd101270v1/elmd101270v1_aes_round_5.h
-    aead/elmd/elmd101270v1/elmd101270v1_api.h
-    aead/elmd/elmd101270v1/elmd101270v1_module.h
-    aead/elmd/elmd101270v1/elmd101270v1_encrypt.h
-    aead/elmd/elmd101270v1/Elmd101270v1.h
-    aead/elmd/elmd101271v1/elmd101271v1_aes_round_5.h
-    aead/elmd/elmd101271v1/elmd101271v1_api.h
-    aead/elmd/elmd101271v1/elmd101271v1_module.h
-    aead/elmd/elmd101271v1/elmd101271v1_encrypt.h
-    aead/elmd/elmd101271v1/Elmd101271v1.h
-    aead/elmd/elmd500v1/elmd500v1_aes_round_5.h
-    aead/elmd/elmd500v1/elmd500v1_api.h
-    aead/elmd/elmd500v1/elmd500v1_module.h
-    aead/elmd/elmd500v1/elmd500v1_encrypt.h
-    aead/elmd/elmd500v1/Elmd500v1.h
-    aead/elmd/elmd501v1/elmd501v1_aes_round_5.h
-    aead/elmd/elmd501v1/elmd501v1_api.h
-    aead/elmd/elmd501v1/elmd501v1_module.h
-    aead/elmd/elmd501v1/elmd501v1_encrypt.h
-    aead/elmd/elmd501v1/Elmd501v1.h
-    aead/elmd/elmd51270v1/elmd51270v1_aes_round_5.h
-    aead/elmd/elmd51270v1/elmd51270v1_api.h
-    aead/elmd/elmd51270v1/elmd51270v1_module.h
-    aead/elmd/elmd51270v1/elmd51270v1_encrypt.h
-    aead/elmd/elmd51270v1/Elmd51270v1.h
-    aead/elmd/elmd51271v1/elmd51271v1_aes_round_5.h
-    aead/elmd/elmd51271v1/elmd51271v1_api.h
-    aead/elmd/elmd51271v1/elmd51271v1_module.h
-    aead/elmd/elmd51271v1/elmd51271v1_encrypt.h
-    aead/elmd/elmd51271v1/Elmd51271v1.h
     aead/enchilada/enchilada128v1/enchilada128v1_api.h
     aead/enchilada/enchilada128v1/enchilada128v1_enchilada.h
     aead/enchilada/enchilada128v1/enchilada128v1_encrypt.h
@@ -1455,17 +1361,108 @@ set(HEADERS
 #    aead/yaes/yaes128v2/Yaes128v2.h
 )
 
+set(HEADERS_WITH_OPENSSL
+	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
+	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
+	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
+	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
+	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
+	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
+	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
+	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
+	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
+	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
+	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
+	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
+	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
+	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
+	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
+	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
+	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
+	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
+	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
+	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
+	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
+	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
+	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
+	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
+	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
+	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
+	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
+	aead/cba/cba1/cba1_api.h
+    aead/cba/cba1/cba1_encrypt.h
+    aead/cba/cba1/Cba1.h
+    aead/cba/cba10/cba10_api.h
+    aead/cba/cba10/cba10_encrypt.h
+    aead/cba/cba10/Cba10.h
+    aead/cba/cba2/cba2_api.h
+    aead/cba/cba2/cba2_encrypt.h
+    aead/cba/cba2/Cba2.h
+    aead/cba/cba3/cba3_api.h
+    aead/cba/cba3/cba3_encrypt.h
+    aead/cba/cba3/Cba3.h
+    aead/cba/cba4/cba4_api.h
+    aead/cba/cba4/cba4_encrypt.h
+    aead/cba/cba4/Cba4.h
+    aead/cba/cba5/cba5_api.h
+    aead/cba/cba5/cba5_encrypt.h
+    aead/cba/cba5/Cba5.h
+    aead/cba/cba6/cba6_api.h
+    aead/cba/cba6/cba6_encrypt.h
+    aead/cba/cba6/Cba6.h
+    aead/cba/cba7/cba7_api.h
+    aead/cba/cba7/cba7_encrypt.h
+    aead/cba/cba7/Cba7.h
+    aead/cba/cba8/cba8_api.h
+    aead/cba/cba8/cba8_encrypt.h
+    aead/cba/cba8/Cba8.h
+    aead/cba/cba9/cba9_api.h
+    aead/cba/cba9/cba9_encrypt.h
+    aead/cba/cba9/Cba9.h
+    aead/elmd/elmd1000v1/elmd1000v1_aes_round_5.h
+    aead/elmd/elmd1000v1/elmd1000v1_api.h
+    aead/elmd/elmd1000v1/elmd1000v1_module.h
+    aead/elmd/elmd1000v1/elmd1000v1_encrypt.h
+    aead/elmd/elmd1000v1/Elmd1000v1.h
+    aead/elmd/elmd1001v1/elmd1001v1_aes_round_5.h
+    aead/elmd/elmd1001v1/elmd1001v1_api.h
+    aead/elmd/elmd1001v1/elmd1001v1_module.h
+    aead/elmd/elmd1001v1/elmd1001v1_encrypt.h
+    aead/elmd/elmd1001v1/Elmd1001v1.h
+    aead/elmd/elmd101270v1/elmd101270v1_aes_round_5.h
+    aead/elmd/elmd101270v1/elmd101270v1_api.h
+    aead/elmd/elmd101270v1/elmd101270v1_module.h
+    aead/elmd/elmd101270v1/elmd101270v1_encrypt.h
+    aead/elmd/elmd101270v1/Elmd101270v1.h
+    aead/elmd/elmd101271v1/elmd101271v1_aes_round_5.h
+    aead/elmd/elmd101271v1/elmd101271v1_api.h
+    aead/elmd/elmd101271v1/elmd101271v1_module.h
+    aead/elmd/elmd101271v1/elmd101271v1_encrypt.h
+    aead/elmd/elmd101271v1/Elmd101271v1.h
+    aead/elmd/elmd500v1/elmd500v1_aes_round_5.h
+    aead/elmd/elmd500v1/elmd500v1_api.h
+    aead/elmd/elmd500v1/elmd500v1_module.h
+    aead/elmd/elmd500v1/elmd500v1_encrypt.h
+    aead/elmd/elmd500v1/Elmd500v1.h
+    aead/elmd/elmd501v1/elmd501v1_aes_round_5.h
+    aead/elmd/elmd501v1/elmd501v1_api.h
+    aead/elmd/elmd501v1/elmd501v1_module.h
+    aead/elmd/elmd501v1/elmd501v1_encrypt.h
+    aead/elmd/elmd501v1/Elmd501v1.h
+    aead/elmd/elmd51270v1/elmd51270v1_aes_round_5.h
+    aead/elmd/elmd51270v1/elmd51270v1_api.h
+    aead/elmd/elmd51270v1/elmd51270v1_module.h
+    aead/elmd/elmd51270v1/elmd51270v1_encrypt.h
+    aead/elmd/elmd51270v1/Elmd51270v1.h
+    aead/elmd/elmd51271v1/elmd51271v1_aes_round_5.h
+    aead/elmd/elmd51271v1/elmd51271v1_api.h
+    aead/elmd/elmd51271v1/elmd51271v1_module.h
+    aead/elmd/elmd51271v1/elmd51271v1_encrypt.h
+    aead/elmd/elmd51271v1/Elmd51271v1.h
+)
+
 set(OTHER_FILES
     aead/acorn/acorn128/About.md
-    aead/ae/aeadaes128ocbtaglen128v1/About.md
-    aead/ae/aeadaes128ocbtaglen64v1/About.md
-    aead/ae/aeadaes128ocbtaglen96v1/About.md
-    aead/ae/aeadaes192ocbtaglen128v1/About.md
-    aead/ae/aeadaes192ocbtaglen64v1/About.md
-    aead/ae/aeadaes192ocbtaglen96v1/About.md
-    aead/ae/aeadaes256ocbtaglen128v1/About.md
-    aead/ae/aeadaes256ocbtaglen64v1/About.md
-    aead/ae/aeadaes256ocbtaglen96v1/About.md
     aead/aegis/aegis128/About.md
     aead/aegis/aegis128l/About.md
     aead/aegis/aegis256/About.md
@@ -1499,16 +1496,6 @@ set(OTHER_FILES
     aead/ascon/ascon128v1/About.md
     aead/ascon/ascon96v1/About.md
     aead/calico/calicov8/About.md
-    aead/cba/cba1/About.md
-    aead/cba/cba10/About.md
-    aead/cba/cba2/About.md
-    aead/cba/cba3/About.md
-    aead/cba/cba4/About.md
-    aead/cba/cba5/About.md
-    aead/cba/cba6/About.md
-    aead/cba/cba7/About.md
-    aead/cba/cba8/About.md
-    aead/cba/cba9/About.md
     aead/aes-cmcc/cmcc22v1/About.md
     aead/aes-cmcc/cmcc24v1/About.md
     aead/aes-cmcc/cmcc42v1/About.md
@@ -1518,14 +1505,6 @@ set(OTHER_FILES
     aead/deoxys/deoxyseq256128v1/About.md
     aead/deoxys/deoxysneq128128v1/About.md
     aead/deoxys/deoxysneq256128v1/About.md
-    aead/elmd/elmd1000v1/About.md
-    aead/elmd/elmd1001v1/About.md
-    aead/elmd/elmd101270v1/About.md
-    aead/elmd/elmd101271v1/About.md
-    aead/elmd/elmd500v1/About.md
-    aead/elmd/elmd501v1/About.md
-    aead/elmd/elmd51270v1/About.md
-    aead/elmd/elmd51271v1/About.md
     aead/enchilada/enchilada128v1/About.md
 #    aead/enchilada/enchilada256v1/About.md
     aead/hs1-siv/hs1sivhiv1/About.md
@@ -1632,12 +1611,230 @@ set(OTHER_FILES
 #    aead/yaes/yaes128v2/About.md
 )
 
-# === source groups ===
-source_group(aead     REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/.*")
+set(OTHER_FILES_WITH_OPENSSL
+	aead/ae/aeadaes128ocbtaglen128v1/About.md
+	aead/ae/aeadaes128ocbtaglen64v1/About.md
+	aead/ae/aeadaes128ocbtaglen96v1/About.md
+	aead/ae/aeadaes192ocbtaglen128v1/About.md
+	aead/ae/aeadaes192ocbtaglen64v1/About.md
+	aead/ae/aeadaes192ocbtaglen96v1/About.md
+	aead/ae/aeadaes256ocbtaglen128v1/About.md
+	aead/ae/aeadaes256ocbtaglen64v1/About.md
+	aead/ae/aeadaes256ocbtaglen96v1/About.md
+	aead/cba/cba1/About.md
+    aead/cba/cba10/About.md
+    aead/cba/cba2/About.md
+    aead/cba/cba3/About.md
+    aead/cba/cba4/About.md
+    aead/cba/cba5/About.md
+    aead/cba/cba6/About.md
+    aead/cba/cba7/About.md
+    aead/cba/cba8/About.md
+    aead/cba/cba9/About.md
+    aead/elmd/elmd1000v1/About.md
+    aead/elmd/elmd1001v1/About.md
+    aead/elmd/elmd101270v1/About.md
+    aead/elmd/elmd101271v1/About.md
+    aead/elmd/elmd500v1/About.md
+    aead/elmd/elmd501v1/About.md
+    aead/elmd/elmd51270v1/About.md
+    aead/elmd/elmd51271v1/About.md
+)
 
-# === find and link OpenSSL ===
-find_package(OpenSSL REQUIRED)
-include_directories(${OPENSSL_INCLUDE_DIR})
+# === source groups ===
+source_group("aead"     REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/.*")
+source_group("aead\\acorn\\acorn128"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/acorn/acorn128/.*")
+source_group("aead\\ae\\aeadaes128ocbtaglen128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes128ocbtaglen128v1/.*")
+source_group("aead\\ae\\aeadaes128ocbtaglen64v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes128ocbtaglen64v1/.*")
+source_group("aead\\ae\\aeadaes128ocbtaglen96v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes128ocbtaglen96v1/.*")
+source_group("aead\\ae\\aeadaes192ocbtaglen128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes192ocbtaglen128v1/.*")
+source_group("aead\\ae\\aeadaes192ocbtaglen64v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes192ocbtaglen64v1/.*")
+source_group("aead\\ae\\aeadaes192ocbtaglen96v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes192ocbtaglen96v1/.*")
+source_group("aead\\ae\\aeadaes256ocbtaglen128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes256ocbtaglen128v1/.*")
+source_group("aead\\ae\\aeadaes256ocbtaglen64v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes256ocbtaglen64v1/.*")
+source_group("aead\\ae\\aeadaes256ocbtaglen96v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ae/aeadaes256ocbtaglen96v1/.*")
+source_group("aead\\aegis\\aegis128"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aegis/aegis128/.*")
+source_group("aead\\aegis\\aegis128l"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aegis/aegis128l/.*")
+source_group("aead\\aegis\\aegis256"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aegis/aegis256/.*")
+source_group("aead\\aes-cmcc\\cmcc22v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cmcc/cmcc22v1/.*")
+source_group("aead\\aes-cmcc\\cmcc24v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cmcc/cmcc24v1/.*")
+source_group("aead\\aes-cmcc\\cmcc42v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cmcc/cmcc42v1/.*")
+source_group("aead\\aes-cmcc\\cmcc44v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cmcc/cmcc44v1/.*")
+source_group("aead\\aes-cmcc\\cmcc84v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cmcc/cmcc84v1/.*")
+source_group("aead\\aes-copa\\aescopav1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-copa/aescopav1/.*")
+source_group("aead\\aes-cpfb\\aes128cpfbv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cpfb/aes128cpfbv1/.*")
+source_group("aead\\aes-cpfb\\aes256cpfbv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-cpfb/aes256cpfbv1/.*")
+source_group("aead\\aes-gcm\\aes128gcmv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-gcm/aes128gcmv1/.*")
+source_group("aead\\aes-gcm\\aes256gcmv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-gcm/aes256gcmv1/.*")
+source_group("aead\\aes-jambu\\aesjambuv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-jambu/aesjambuv1/.*")
+source_group("aead\\aes-otr\\aes128otrpv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-otr/aes128otrpv1/.*")
+source_group("aead\\aes-otr\\aes128otrsv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-otr/aes128otrsv1/.*")
+source_group("aead\\aes-otr\\aes256otrpv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-otr/aes256otrpv1/.*")
+source_group("aead\\aes-otr\\aes256otrsv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aes-otr/aes256otrsv1/.*")
+source_group("aead\\aez\\aezv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aez/aezv1/.*")
+source_group("aead\\aez\\aezv3"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/aez/aezv3/.*")
+source_group("aead\\artemia\\artemia128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/artemia/artemia128v1/.*")
+source_group("aead\\artemia\\artemia256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/artemia/artemia256v1/.*")
+source_group("aead\\ascon\\ascon128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ascon/ascon128v1/.*")
+source_group("aead\\ascon\\ascon96v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ascon/ascon96v1/.*")
+source_group("aead\\avalanche\\aes128avalanchev1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/avalanche/aes128avalanchev1/.*")
+source_group("aead\\avalanche\\aes192avalanchev1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/avalanche/aes192avalanchev1/.*")
+source_group("aead\\avalanche\\aes256avalanchev1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/avalanche/aes256avalanchev1/.*")
+source_group("aead\\calico\\calicov8"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/calico/calicov8/.*")
+source_group("aead\\cba\\cba1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba1/.*")
+source_group("aead\\cba\\cba10"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba10/.*")
+source_group("aead\\cba\\cba2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba2/.*")
+source_group("aead\\cba\\cba3"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba3/.*")
+source_group("aead\\cba\\cba4"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba4/.*")
+source_group("aead\\cba\\cba5"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba5/.*")
+source_group("aead\\cba\\cba6"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba6/.*")
+source_group("aead\\cba\\cba7"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba7/.*")
+source_group("aead\\cba\\cba8"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba8/.*")
+source_group("aead\\cba\\cba9"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cba/cba9/.*")
+source_group("aead\\cloc\\aes128n12clocv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cloc/aes128n12clocv1/.*")
+source_group("aead\\cloc\\aes128n8clocv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cloc/aes128n8clocv1/.*")
+source_group("aead\\cloc\\twine80n6clocv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/cloc/twine80n6clocv1/.*")
+source_group("aead\\common"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/common/.*")
+source_group("aead\\deoxys\\deoxyseq128128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/deoxys/deoxyseq128128v1/.*")
+source_group("aead\\deoxys\\deoxyseq256128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/deoxys/deoxyseq256128v1/.*")
+source_group("aead\\deoxys\\deoxysneq128128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/deoxys/deoxysneq128128v1/.*")
+source_group("aead\\deoxys\\deoxysneq256128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/deoxys/deoxysneq256128v1/.*")
+source_group("aead\\elmd\\elmd1000v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd1000v1/.*")
+source_group("aead\\elmd\\elmd1001v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd1001v1/.*")
+source_group("aead\\elmd\\elmd101270v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd101270v1/.*")
+source_group("aead\\elmd\\elmd101271v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd101271v1/.*")
+source_group("aead\\elmd\\elmd500v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd500v1/.*")
+source_group("aead\\elmd\\elmd501v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd501v1/.*")
+source_group("aead\\elmd\\elmd51270v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd51270v1/.*")
+source_group("aead\\elmd\\elmd51271v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/elmd/elmd51271v1/.*")
+source_group("aead\\enchilada\\enchilada128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/enchilada/enchilada128v1/.*")
+source_group("aead\\enchilada\\enchilada256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/enchilada/enchilada256v1/.*")
+source_group("aead\\hs1-siv\\hs1sivhiv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/hs1-siv/hs1sivhiv1/.*")
+source_group("aead\\hs1-siv\\hs1sivlov1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/hs1-siv/hs1sivlov1/.*")
+source_group("aead\\hs1-siv\\hs1sivv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/hs1-siv/hs1sivv1/.*")
+source_group("aead\\icepole\\icepole128av1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/icepole/icepole128av1/.*")
+source_group("aead\\icepole\\icepole128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/icepole/icepole128v1/.*")
+source_group("aead\\icepole\\icepole256av1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/icepole/icepole256av1/.*")
+source_group("aead\\ifeed-aes\\ifeedaes128n104v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ifeed-aes/ifeedaes128n104v1/.*")
+source_group("aead\\ifeed-aes\\ifeedaes128n96v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ifeed-aes/ifeedaes128n96v1/.*")
+source_group("aead\\joltik\\joltikeq12864v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikeq12864v1/.*")
+source_group("aead\\joltik\\joltikeq6464v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikeq6464v1/.*")
+source_group("aead\\joltik\\joltikeq8048v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikeq8048v1/.*")
+source_group("aead\\joltik\\joltikeq9696v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikeq9696v1/.*")
+source_group("aead\\joltik\\joltikneq12864v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikneq12864v1/.*")
+source_group("aead\\joltik\\joltikneq6464v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikneq6464v1/.*")
+source_group("aead\\joltik\\joltikneq8048v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikneq8048v1/.*")
+source_group("aead\\joltik\\joltikneq9696v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/joltik/joltikneq9696v1/.*")
+source_group("aead\\julius\\juliusv1draft"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/julius/juliusv1draft/.*")
+source_group("aead\\ketje\\ketjejrv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ketje/ketjejrv1/.*")
+source_group("aead\\ketje\\ketjesrv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/ketje/ketjesrv1/.*")
+source_group("aead\\keyak\\lakekeyakv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/keyak/lakekeyakv1/.*")
+source_group("aead\\keyak\\oceankeyakv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/keyak/oceankeyakv1/.*")
+source_group("aead\\keyak\\riverkeyakv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/keyak/riverkeyakv1/.*")
+source_group("aead\\keyak\\seakeyakv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/keyak/seakeyakv1/.*")
+source_group("aead\\kiasu\\kiasueq128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/kiasu/kiasueq128v1/.*")
+source_group("aead\\kiasu\\kiasuneq128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/kiasu/kiasuneq128v1/.*")
+source_group("aead\\lac\\lacv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/lac/lacv1/.*")
+source_group("aead\\marble\\aes128marble4rv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/marble/aes128marble4rv1/.*")
+source_group("aead\\minalpher\\minalpherv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/minalpher/minalpherv1/.*")
+source_group("aead\\morus\\morus1280128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/morus/morus1280128v1/.*")
+source_group("aead\\morus\\morus1280256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/morus/morus1280256v1/.*")
+source_group("aead\\morus\\morus640128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/morus/morus640128v1/.*")
+source_group("aead\\norx\\norx3241v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/norx/norx3241v1/.*")
+source_group("aead\\norx\\norx3261v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/norx/norx3261v1/.*")
+source_group("aead\\norx\\norx6441v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/norx/norx6441v1/.*")
+source_group("aead\\norx\\norx6444v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/norx/norx6444v1/.*")
+source_group("aead\\norx\\norx6461v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/norx/norx6461v1/.*")
+source_group("aead\\omd\\omdsha256k128n96tau128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha256k128n96tau128v1/.*")
+source_group("aead\\omd\\omdsha256k128n96tau64v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha256k128n96tau64v1/.*")
+source_group("aead\\omd\\omdsha256k128n96tau96v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha256k128n96tau96v1/.*")
+source_group("aead\\omd\\omdsha256k192n104tau128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha256k192n104tau128v1/.*")
+source_group("aead\\omd\\omdsha256k256n104tau160v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha256k256n104tau160v1/.*")
+source_group("aead\\omd\\omdsha256k256n248tau256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha256k256n248tau256v1/.*")
+source_group("aead\\omd\\omdsha512k128n128tau128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha512k128n128tau128v1/.*")
+source_group("aead\\omd\\omdsha512k256n256tau256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha512k256n256tau256v1/.*")
+source_group("aead\\omd\\omdsha512k512n256tau256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/omd/omdsha512k512n256tau256v1/.*")
+source_group("aead\\paeq\\paeq128"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paeq/paeq128/.*")
+source_group("aead\\paeq\\paeq128t"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paeq/paeq128t/.*")
+source_group("aead\\paeq\\paeq128tnm"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paeq/paeq128tnm/.*")
+source_group("aead\\paeq\\paeq160"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paeq/paeq160/.*")
+source_group("aead\\paeq\\paeq64"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paeq/paeq64/.*")
+source_group("aead\\paeq\\paeq80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paeq/paeq80/.*")
+source_group("aead\\paes\\ppaev11"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/paes/ppaev11/.*")
+source_group("aead\\pi-cipher\\pi16cipher096v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi16cipher096v1/.*")
+source_group("aead\\pi-cipher\\pi16cipher128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi16cipher128v1/.*")
+source_group("aead\\pi-cipher\\pi32cipher128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi32cipher128v1/.*")
+source_group("aead\\pi-cipher\\pi32cipher256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi32cipher256v1/.*")
+source_group("aead\\pi-cipher\\pi64cipher128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi64cipher128v1/.*")
+source_group("aead\\pi-cipher\\pi64cipher256v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi64cipher256v1/.*")
+source_group("aead\\pi-cipher\\pi64cipher256v1oneround"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi64cipher256v1oneround/.*")
+source_group("aead\\pi-cipher\\pi64cipher256v1tworounds"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/pi-cipher/pi64cipher256v1tworounds/.*")
+source_group("aead\\poet\\aes128poetv1aes128"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/poet/aes128poetv1aes128/.*")
+source_group("aead\\poet\\aes128poetv1aes4"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/poet/aes128poetv1aes4/.*")
+source_group("aead\\polawis\\polawisv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/polawis/polawisv1/.*")
+source_group("aead\\primates\\primatesv1ape120"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/primates/primatesv1ape120/.*")
+source_group("aead\\primates\\primatesv1ape80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/primates/primatesv1ape80/.*")
+source_group("aead\\primates\\primatesv1gibbon120"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/primates/primatesv1gibbon120/.*")
+source_group("aead\\primates\\primatesv1gibbon80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/primates/primatesv1gibbon80/.*")
+source_group("aead\\primates\\primatesv1hanuman120"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/primates/primatesv1hanuman120/.*")
+source_group("aead\\primates\\primatesv1hanuman80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/primates/primatesv1hanuman80/.*")
+source_group("aead\\prost\\proest128apev1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/prost/proest128apev1/.*")
+source_group("aead\\prost\\proest128copav1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/prost/proest128copav1/.*")
+source_group("aead\\prost\\proest128otrv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/prost/proest128otrv1/.*")
+source_group("aead\\prost\\proest256apev1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/prost/proest256apev1/.*")
+source_group("aead\\prost\\proest256copav1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/prost/proest256copav1/.*")
+source_group("aead\\prost\\proest256otrv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/prost/proest256otrv1/.*")
+source_group("aead\\raviyoyla\\raviyoylav1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/raviyoyla/raviyoylav1/.*")
+source_group("aead\\sablier\\sablierv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/sablier/sablierv1/.*")
+source_group("aead\\scream\\iscream12v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/iscream12v1/.*")
+source_group("aead\\scream\\iscream12v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/iscream12v2/.*")
+source_group("aead\\scream\\iscream14v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/iscream14v1/.*")
+source_group("aead\\scream\\iscream14v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/iscream14v2/.*")
+source_group("aead\\scream\\scream10v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/scream10v1/.*")
+source_group("aead\\scream\\scream10v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/scream10v2/.*")
+source_group("aead\\scream\\scream12v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/scream12v1/.*")
+source_group("aead\\scream\\scream12v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/scream/scream12v2/.*")
+source_group("aead\\shell\\shellaes128v1d4n64"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d4n64/.*")
+source_group("aead\\shell\\shellaes128v1d4n80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d4n80/.*")
+source_group("aead\\shell\\shellaes128v1d5n64"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d5n64/.*")
+source_group("aead\\shell\\shellaes128v1d5n80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d5n80/.*")
+source_group("aead\\shell\\shellaes128v1d6n64"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d6n64/.*")
+source_group("aead\\shell\\shellaes128v1d6n80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d6n80/.*")
+source_group("aead\\shell\\shellaes128v1d7n64"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d7n64/.*")
+source_group("aead\\shell\\shellaes128v1d7n80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d7n80/.*")
+source_group("aead\\shell\\shellaes128v1d8n64"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d8n64/.*")
+source_group("aead\\shell\\shellaes128v1d8n80"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/shell/shellaes128v1d8n80/.*")
+source_group("aead\\silc\\aes128n12silcv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/silc/aes128n12silcv1/.*")
+source_group("aead\\silc\\aes128n8silcv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/silc/aes128n8silcv1/.*")
+source_group("aead\\silc\\led80n6silcv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/silc/led80n6silcv1/.*")
+source_group("aead\\silc\\present80n6silcv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/silc/present80n6silcv1/.*")
+source_group("aead\\silver\\silverv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/silver/silverv1/.*")
+source_group("aead\\stribob\\stribob192r1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/stribob/stribob192r1/.*")
+source_group("aead\\tiaoxin\\tiaoxinv1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/tiaoxin/tiaoxinv1/.*")
+source_group("aead\\trivia-ck\\trivia0v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/trivia-ck/trivia0v1/.*")
+source_group("aead\\trivia-ck\\trivia128v1"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/trivia-ck/trivia128v1/.*")
+source_group("aead\\wheesht\\wheeshtv1mr3fr1t128"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/wheesht/wheeshtv1mr3fr1t128/.*")
+source_group("aead\\wheesht\\wheeshtv1mr3fr1t256"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/wheesht/wheeshtv1mr3fr1t256/.*")
+source_group("aead\\wheesht\\wheeshtv1mr3fr3t256"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/wheesht/wheeshtv1mr3fr3t256/.*")
+source_group("aead\\wheesht\\wheeshtv1mr5fr7t256"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/wheesht/wheeshtv1mr5fr7t256/.*")
+source_group("aead\\yaes\\yaes128v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/aead/yaes/yaes128v2/.*")
+
+# === detect OpenSSL ===
+find_package(OpenSSL)
+if(OPENSSL_FOUND)
+	option(WITH_OPENSSL "Link to OpenSSL" ON)
+
+	if(WITH_OPENSSL)
+		list(APPEND SOURCES ${SOURCES_WITH_OPENSSL})
+		list(APPEND HEADERS ${HEADERS_WITH_OPENSSL})
+		list(APPEND OTHER_FILES ${OTHER_FILES_WITH_OPENSSL})
+		add_definitions(-DWITH_OPENSSL)
+		include_directories(${OPENSSL_INCLUDE_DIR})
+		list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
+	endif()
+else()
+	message("OpenSSL not found, not building function requiring it.")
+endif()
 
 add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})
-target_link_libraries(caesar tinyXML crypto)
+target_link_libraries(caesar tinyXML ${LIBRARIES})
