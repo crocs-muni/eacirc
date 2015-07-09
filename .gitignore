@@ -16,8 +16,8 @@
 *.exe
 *.hi
 *.asv
-[Dd]ebug/
-[Rr]elease/
+[Dd]ebug*/
+[Rr]elease*/
 [Bb]uild*/
 [Rr]un/
 

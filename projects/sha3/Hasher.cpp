@@ -2,11 +2,17 @@
 #include "hash_functions/hashFunctions.h"
 #include "generators/IRndGen.h"
 
-Hasher::Hasher() {
+Hasher::Hasher() : m_initSuccess(false) {
     int algorithm = -1;
     int numRounds = -1;
 
-    for (int algorithmNumber=0; algorithmNumber<2; algorithmNumber++) {
+    // initialize hash function arrays
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
+        m_hashFunctions[algorithmNumber] = NULL;
+        m_hashOutputs[algorithmNumber] = NULL;
+    }
+
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         // get correct settings for this hash function
         switch (algorithmNumber) {
         case 0:
@@ -102,6 +108,11 @@ Hasher::Hasher() {
             return;
         }
     }
+    m_initSuccess = true;
+}
+
+bool Hasher::initSuccess() const {
+    return m_initSuccess;
 }
 
 Hasher::~Hasher() {

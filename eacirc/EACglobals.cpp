@@ -38,7 +38,7 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
 
 SETTINGS_CUDA::SETTINGS_CUDA() {
     enabled = false;
-    something = "";
+    block_size = 128;
 }
 
 SETTINGS_GA::SETTINGS_GA() {

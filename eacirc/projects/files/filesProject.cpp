@@ -53,8 +53,8 @@ string FilesProject::testingConfiguration() {
     string config =
             "<FILES>"
             "    <USAGE_TYPE>401</USAGE_TYPE>"
-            "    <FILENAME_1>../../qrng/Random000.bin</FILENAME_1>"
-            "    <FILENAME_2>../../qrng/Random001.bin</FILENAME_2>"
+            "    <FILENAME_1>../../../qrng/Random000.bin</FILENAME_1>"
+            "    <FILENAME_2>../../../qrng/Random001.bin</FILENAME_2>"
             "    <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>"
             "    <USE_FIXED_INITIAL_OFFSET>1</USE_FIXED_INITIAL_OFFSET>"
             "    <INITIAL_OFFSET_1>1048576</INITIAL_OFFSET_1>"

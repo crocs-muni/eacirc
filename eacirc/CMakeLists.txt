@@ -108,6 +108,23 @@ set(OTHER_FILES
     config.xml
 )
 
+set(CUDA_SOURCES    
+# === gpu gate circuit ===
+    circuit/gpu_gate/GaCallbacks.cpp
+    circuit/gpu_gate/GpuGate.cpp
+    circuit/gpu_gate/GpuTask.cpp
+    circuit/gpu_gate/GpuTask.cu
+)
+set(CUDA_HEADERS
+# === gpu gate circuit ===
+    circuit/gpu_gate/Byte.h
+    circuit/gpu_gate/GaCallbacks.h
+    circuit/gpu_gate/GateCircuit.h
+    circuit/gpu_gate/GateHelper.h
+    circuit/gpu_gate/GateInterpreter.h
+    circuit/gpu_gate/GpuGate.h
+    circuit/gpu_gate/GpuTask.h
+)
 
 # === configure files ===
 detect_version(Version.h)
@@ -117,6 +134,7 @@ detect_version(Version.h)
 # === source groups ===
 source_group("circuit"         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
 source_group("circuit\\gate"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
+source_group("circuit\\gpu_gate"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gpu_gate/.*")
 source_group("circuit\\polynomial"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
 source_group("evaluators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
 source_group("generators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
@@ -128,7 +146,12 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 
 
 # === eacirc target ===
-add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
+if(BUILD_CUDA)
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} ${CUDA_SOURCES} ${CUDA_HEADERS} OPTIONS -std=c++11 -relaxed-constexpr -I${CMAKE_CURRENT_SOURCE_DIR})
+    target_compile_definitions(eacirc PUBLIC USE_CUDA)
+else()
+    add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
+endif()
 
 target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS_DIR})
 target_link_libraries(eacirc galib tinyXML catch)

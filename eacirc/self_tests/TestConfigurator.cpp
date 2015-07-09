@@ -6,8 +6,15 @@
 
 TestConfigurator::TestConfigurator()
     : m_currentProject(0) {
+#ifdef ESTREAM
     m_projects.push(PROJECT_ESTREAM);
+#endif
+#ifdef SHA3
     m_projects.push(PROJECT_SHA3);
+#endif
+#ifdef CEASAR
+    m_projects.push(PROJECT_CAESAR);
+#endif
     // can we open files set in PROJECT_FILE_DISTINGUISHER?
     string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
     TiXmlDocument doc(string("configuration").c_str());
@@ -150,7 +157,7 @@ string TestConfigurator::mainConfiguration =
         "</MAIN>"
         "<OUTPUTS>"
         "    <VERBOSITY>5</VERBOSITY>"
-        "    <INTERMEDIATE_CIRCUITS>1</INTERMEDIATE_CIRCUITS>"
+        "    <INTERMEDIATE_CIRCUITS>0</INTERMEDIATE_CIRCUITS>"
         "    <ALLOW_PRUNNING>0</ALLOW_PRUNNING>"
         "    <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>"
         "</OUTPUTS>"
@@ -159,7 +166,7 @@ string TestConfigurator::mainConfiguration =
         "    <SEED>123456789</SEED>"
         "    <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>"
         "    <USE_NET_SHARE>0</USE_NET_SHARE>"
-        "    <QRNG_PATH>../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
+        "    <QRNG_PATH>../../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
         "    <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>"
         "</RANDOM>"
         "<CUDA>"
