@@ -39,17 +39,25 @@ void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue){
 	}
 
 	nodeSetArgument(nodeValue, 1, functionNumber);
-	nodeSetArgument(nodeValue, 2, 0);
+
+	int startLine = 0;
+	if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
+		startLine = GARandomInt(0, UCHAR_MAX);
+	}
+	else {
+		startLine = GARandomInt(0, function->ins_array->filled_elements - 1);
+	}
+	nodeSetArgument(nodeValue, 2, startLine);
 
 	int endLine = 0;
-	if (function->ins_array->filled_elements > UCHAR_MAX) {
-		endLine = GARandomInt(0, UCHAR_MAX);
+	if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
+		endLine = GARandomInt(startLine, UCHAR_MAX);
 	} else {
-		endLine = GARandomInt(0, function->ins_array->filled_elements);
+		endLine = GARandomInt(startLine, function->ins_array->filled_elements - 1);
 	}
 
 	nodeSetArgument(nodeValue, 3, endLine);
-	//mainLogger.out(LOGGER_INFO) << "function chosen: " <<  function->short_name << "(" << functionNumber <<  ") [0," << endLine << "] - " << nodeValue << endl;
+	//mainLogger.out(LOGGER_INFO) << "function chosen: " <<  function->short_name << "(" << functionNumber <<  ") [" << startLine << ", " << endLine << "] - " << nodeValue << endl;
 }
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {
