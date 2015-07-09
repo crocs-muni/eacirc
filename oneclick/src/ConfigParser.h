@@ -7,17 +7,21 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
+#include <regex>
 
 #include "OneclickConstants.h"
 
 /** Class for storing optins in configuration files to be generated.
-* Each object MUST have specified algorithm and algorithmRound attribute.
-* settings can be empty. Each Config object represents one configuration file.
-*/
+  * Each object MUST have specified algorithm and algorithmRound attribute.
+  * settings can be empty. Each Config object represents one configuration file.
+  */
 class Config {
 private:
+	//Algorithm constant
 	int algorithm;
+	//Number of rounds used with algorithm
 	int algorithmRound;
+	//Additional settings
 	std::vector<std::pair<std::string , int>> settings;
 public:
 	Config(int alg , int algRnd) : algorithm(alg) , algorithmRound(algRnd) {}
@@ -49,6 +53,7 @@ private:
 	std::string wuIdentifier;
 	int clones;
 	int project;
+	int boincProjectID;
 	std::deque<Config> configs;
 
 	//Typedefs for easier orientation. 
@@ -85,7 +90,7 @@ public:
 	  */
 	std::deque<Config> getConfigs() { return configs; }
 
-	/** Returns indetifier of workunits. Can be empty. If used
+	/** Returns identifier of workunits. Can be empty. If used
 	  * all generated WU names will end with same suffix.
 	  * Generated scripts will have this prefix.
 	  * @return wuIdentifier
@@ -101,6 +106,10 @@ public:
 	  * @return project constant
 	  */
     int getProject() { return project; }
+
+	/** Returns ID of BOINC project.
+	  */
+	int getBoincProjectID() { return boincProjectID; }
 private:
 
 	/** Creates Config objects. First algorithms and rounds are fetched from 
@@ -180,6 +189,12 @@ private:
 	  * @return sorted result
 	  */
 	void sort2D(algorithm_rounds_v & a);
+
+	/** Checks wu identifier for length(63 maximum) and illegal characters.
+	  * Illegal character is everything except A-Z a-z 0-9 [ ] ( ) - _
+	  * @throws runtime_error		if length is exceeded or illegal character is found
+	  */
+	void checkWuIdentifier();
 };
 
 #endif //CONFIGPARSER_H

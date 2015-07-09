@@ -53,8 +53,8 @@ string FilesProject::testingConfiguration() {
     string config =
             "<FILES>"
             "    <USAGE_TYPE>401</USAGE_TYPE>"
-            "    <FILENAME_1>../../qrng/Random000.bin</FILENAME_1>"
-            "    <FILENAME_2>../../qrng/Random001.bin</FILENAME_2>"
+            "    <FILENAME_1>../../../qrng/Random000.bin</FILENAME_1>"
+            "    <FILENAME_2>../../../qrng/Random001.bin</FILENAME_2>"
             "    <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>"
             "    <USE_FIXED_INITIAL_OFFSET>1</USE_FIXED_INITIAL_OFFSET>"
             "    <INITIAL_OFFSET_1>1048576</INITIAL_OFFSET_1>"
@@ -118,21 +118,21 @@ int FilesProject::saveProjectState(TiXmlNode *pRoot) const {
     TiXmlElement* pElem2 = NULL;
     pRoot2->SetAttribute("loadable",1);
     pElem = new TiXmlElement("usage_type");
-    pElem->LinkEndChild(new TiXmlText(toString(m_filesSettings.usageType).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_filesSettings.usageType).c_str()));
     pRoot2->LinkEndChild(pElem);
     for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
-        pElem = new TiXmlElement((string("file_")+toString(file+1)).c_str());
+        pElem = new TiXmlElement((string("file_")+CommonFnc::toString(file+1)).c_str());
         pElem2 = new TiXmlElement("filename");
         pElem2->LinkEndChild(new TiXmlText(m_filesSettings.filenames[file].c_str()));
         pElem->LinkEndChild(pElem2);
         pElem2 = new TiXmlElement("file_size");
-        pElem2->LinkEndChild(new TiXmlText(toString(m_filesSettings.fileSizes[file]).c_str()));
+        pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_filesSettings.fileSizes[file]).c_str()));
         pElem->LinkEndChild(pElem2);
         pElem2 = new TiXmlElement("initial_read_offset");
-        pElem2->LinkEndChild(new TiXmlText(toString(m_filesSettings.initialOffsets[file]).c_str()));
+        pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_filesSettings.initialOffsets[file]).c_str()));
         pElem->LinkEndChild(pElem2);
         pElem2 = new TiXmlElement("current_read_offset");
-        pElem2->LinkEndChild(new TiXmlText(toString(m_readOffsets[file]).c_str()));
+        pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_readOffsets[file]).c_str()));
         pElem->LinkEndChild(pElem2);
         pRoot2->LinkEndChild(pElem);
     }
@@ -149,7 +149,7 @@ int FilesProject::loadProjectState(TiXmlNode *pRoot) {
     istringstream ss;
     unsigned long value;
     for (int file = 0; file < FILES_NUMBER_OF_FILES; file++) {
-        configPrefix = "file_" + toString(file+1);
+        configPrefix = "file_" + CommonFnc::toString(file+1);
         ss.str(getXMLElementValue(pRoot,configPrefix+"/file_size"));
         ss >> value;
         if (value != m_filesSettings.fileSizes[file]) {
@@ -170,36 +170,40 @@ int FilesProject::loadProjectState(TiXmlNode *pRoot) {
 }
 
 int FilesProject::createTestVectorFilesHeaders() const {
-    // generate header (project config) to test vector file
     ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    // generate header (project config) to test vector file
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+        tvFile << pFilesSettings->usageType << " \t\t(usage type)" << endl;
+        for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
+            tvFile << pFilesSettings->filenames[i] << " \t\t(filename " << i << ")" << endl;
+            tvFile << pFilesSettings->initialOffsets[i] << " \t\t(initial offset for file " << i << ")" << endl;
+        }
+        tvFile << pFilesSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+        tvFile.close();
     }
-    tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-    tvFile << pFilesSettings->usageType << " \t\t(usage type)" << endl;
-    for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        tvFile << pFilesSettings->filenames[i] << " \t\t(filename " << i << ")" << endl;
-        tvFile << pFilesSettings->initialOffsets[i] << " \t\t(initial offset for file " << i << ")" << endl;
-    }
-    tvFile << pFilesSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
-    tvFile.close();
 
     // generate header to human-readable test-vector file
-    tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.verbosity >= 4) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << "Using file contents (binary form) for test vector generation." << endl;
+        for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
+            tvFile << "  file " << i << ": " << m_filesSettings.filenames[i] << endl;
+            tvFile << "  initial reading offset: " << m_filesSettings.initialOffsets[i] << endl;
+        }
+        tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
+        tvFile << endl;
+        tvFile.close();
     }
-    tvFile << "Using file contents (binary form) for test vector generation." << endl;
-    for (int i = 0; i < FILES_NUMBER_OF_FILES; i++) {
-        tvFile << "  file " << i << ": " << m_filesSettings.filenames[i] << endl;
-        tvFile << "  initial reading offset: " << m_filesSettings.initialOffsets[i] << endl;
-    }
-    tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
-    tvFile << endl;
-    tvFile.close();
 
     return STAT_OK;
 }
@@ -237,7 +241,7 @@ int FilesProject::prepareSingleTestVector() {
         // get correct input
         status = getStreamFromFile(fileNumber,pGlobals->settings->testVectors.inputLength,m_tvInputs);
         // set correct output
-        for (int output = 0; output < pGlobals->settings->main.circuitSizeOutput; output++)
+        for (int output = 0; output < pGlobals->settings->testVectors.outputLength; output++)
             m_tvOutputs[output] = fileNumber * 0xff;
         break;
     default:
@@ -247,7 +251,7 @@ int FilesProject::prepareSingleTestVector() {
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
@@ -270,7 +274,7 @@ int FilesProject::generateTestVectors() {
     }
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->outputs.saveTestVectors == 1) {
+        if (pGlobals->settings->outputs.verbosity >= 4) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();

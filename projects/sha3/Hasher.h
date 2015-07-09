@@ -21,6 +21,8 @@ class Hasher {
     unsigned long m_counters[2];
     //! number of bits of computed hashes already used in test vectors
     int m_usedBytes[2];
+    //! initialization successful?
+    bool m_initSuccess;
 
     /** if number of rounds > -1, log info about number of rounds not supported
       */
@@ -32,6 +34,11 @@ public:
       * - create header for human readable test vector file
       */
     Hasher();
+
+    /** Was initialization successful?
+     * @return success
+     */
+    bool initSuccess() const;
 
     /** destructor, release memory
       */

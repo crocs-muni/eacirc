@@ -16,10 +16,13 @@
 *.exe
 *.hi
 *.asv
-[Dd]ebug/
-[Rr]elease/
+[Dd]ebug*/
+[Rr]elease*/
 [Bb]uild*/
 [Rr]un/
+
+# Generated Version.h
+eacirc/Version.h
 
 # backup and system files
 *~
@@ -29,11 +32,12 @@ notes.txt
 *.cd
 *.swp
 
-# Oneclick result files and logs
+# Oneclick result files, logs, XMLs
 Oneclick/exec/processed_results.txt
 Oneclick/exec/*.bat
 Oneclick/exec/configs
 Oneclick/exec/results
 Oneclick/exec/*.log
 Oneclick/exec/*.pl
+Oneclick/exec/*.xml
 

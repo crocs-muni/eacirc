@@ -77,6 +77,11 @@ int Sha3Project::loadProjectConfiguration(TiXmlNode* pRoot) {
 int Sha3Project::initializeProject() {
     // allocate hasher
     m_hasher = new Hasher;
+    if (!m_hasher->initSuccess()) {
+        return STAT_PROJECT_ERROR;
+    }
+    // project-specific evaluator initialization would be here (not applicable for SHA3)
+
     return STAT_OK;
 }
 
@@ -85,51 +90,55 @@ int Sha3Project::initializeProjectState() {
 }
 
 int Sha3Project::createTestVectorFilesHeaders() const {
-    // generate header (project config) to test vector file
     ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    // generate header (project config) to test vector file
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+        tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
+        tvFile << pSha3Settings->plaintextType << " \t\t(plaintext type)" << endl;
+        tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Functions::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
+        tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Functions::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
+        tvFile << pSha3Settings->hashLength1 << " \t\t(hash length for algorithm1)" << endl;
+        tvFile << pSha3Settings->hashLength2 << " \t\t(hash length for algorithm2)" << endl;
+        tvFile << pSha3Settings->seed << " \t\t(initial seed for counters)" << endl;
+        tvFile << pSha3Settings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+        tvFile << pSha3Settings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+        if (pSha3Settings->limitAlgRounds) {
+            tvFile << pSha3Settings->alg1RoundsCount << " \t\t(algorithm1: " << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
+            tvFile << pSha3Settings->alg2RoundsCount << " \t\t(algorithm2: " << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
+        }
+        tvFile.close();
     }
-    tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-    tvFile << pSha3Settings->usageType << " \t\t(usage type)" << endl;
-    tvFile << pSha3Settings->plaintextType << " \t\t(plaintext type)" << endl;
-    tvFile << pSha3Settings->algorithm1 << " \t\t(algorithm1: " << Sha3Functions::sha3ToString(pSha3Settings->algorithm1) << ")" << endl;
-    tvFile << pSha3Settings->algorithm2 << " \t\t(algorithm2: " << Sha3Functions::sha3ToString(pSha3Settings->algorithm2) << ")" << endl;
-    tvFile << pSha3Settings->hashLength1 << " \t\t(hash length for algorithm1)" << endl;
-    tvFile << pSha3Settings->hashLength2 << " \t\t(hash length for algorithm2)" << endl;
-    tvFile << pSha3Settings->seed << " \t\t(initial seed for counters)" << endl;
-    tvFile << pSha3Settings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
-    tvFile << pSha3Settings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
-    if (pSha3Settings->limitAlgRounds) {
-        tvFile << pSha3Settings->alg1RoundsCount << " \t\t(algorithm1: " << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
-        tvFile << pSha3Settings->alg2RoundsCount << " \t\t(algorithm2: " << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
-    }
-    tvFile.close();
 
     // generate header to human-readable test-vector file
-    tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.verbosity >= 4) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << "Using SHA-3 hash functions and random generator to generate test vectors." << endl;
+        tvFile << "  stream1: using " << Sha3Functions::sha3ToString(pSha3Settings->algorithm1);
+        if (pSha3Settings->limitAlgRounds) {
+            tvFile << " (" << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "  stream2: using " << Sha3Functions::sha3ToString(pSha3Settings->algorithm2);
+        if (pSha3Settings->limitAlgRounds) {
+            tvFile << " (" << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
+        tvFile << endl;
+        tvFile.close();
     }
-    tvFile << "Using SHA-3 hash functions and random generator to generate test vectors." << endl;
-    tvFile << "  stream1: using " << Sha3Functions::sha3ToString(pSha3Settings->algorithm1);
-    if (pSha3Settings->limitAlgRounds) {
-        tvFile << " (" << pSha3Settings->alg1RoundsCount << " rounds)" << endl;
-    } else {
-        tvFile << " (unlimited version)" << endl;
-    }
-    tvFile << "  stream2: using " << Sha3Functions::sha3ToString(pSha3Settings->algorithm2);
-    if (pSha3Settings->limitAlgRounds) {
-        tvFile << " (" << pSha3Settings->alg2RoundsCount << " rounds)" << endl;
-    } else {
-        tvFile << " (unlimited version)" << endl;
-    }
-    tvFile << "Test vectors formatted as INPUT::OUTPUT" << endl;
-    tvFile << endl;
-    tvFile.close();
 
     return STAT_OK;
 }
@@ -152,7 +161,7 @@ int Sha3Project::generateTestVectors() {
     this->m_numVectors[1] = 0;
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->outputs.saveTestVectors == 1) {
+        if (pGlobals->settings->outputs.verbosity >= 4) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();
@@ -195,7 +204,7 @@ int Sha3Project::prepareSingleTestVector() {
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)

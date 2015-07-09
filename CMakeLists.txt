@@ -3,11 +3,12 @@ project(EACirc)
 
 include(cmake/eacirc_project.cmake)
 
-
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
+    # === general flags ===
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
-
+    # === force coloured output (for Ninja and such) ===
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
     # === Supress warnings when building 3rd party libs on Linux ===
     set(SUPRESS_LIBS_WARNINGS "-Wall -Wextra -Weffc++" CACHE STRING "Supress warnings when building 3rd party libs")
 elseif (MSVC AND (MSVC_VERSION GREATER 1700))
@@ -15,7 +16,6 @@ elseif (MSVC AND (MSVC_VERSION GREATER 1700))
 else()
     message(FATAL_ERROR "unsuported compiler: ${CMAKE_CXX_COMPILER}")
 endif()
-
 
 # === Enable profiling when using gcc ===
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
@@ -25,13 +25,20 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
     endif()
 endif()
 
+# === detect CUDA ===
+find_package(CUDA)
+if(CUDA_FOUND)
+    option(BUILD_CUDA "Build CUDA code" ON)
+
+    if(BUILD_CUDA)
+        add_definitions(-DCUDA)
+    endif()
+endif()
 
 
 # === Global variables ===
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
 set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
-
-
 
 # === projects ===
 include_eacirc_project(caesar)
@@ -49,8 +56,9 @@ add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
 
-
-
 # === testing ===
 enable_testing()
-add_test(NAME test COMMAND eacirc -log -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
+add_test(NAME self_test COMMAND eacirc -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
+
+# this workaround adds custom target to display all outputs from failed test
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --build-config $<CONFIG>)

@@ -1,6 +1,5 @@
 //Simple File Logger by mateandmetal
-//Source:
-//https://github.com/LaurentGomila/SFML/wiki/Source:-Simple-File-Logger-(by-mateandmetal)
+//Source: https://github.com/LaurentGomila/SFML/wiki/Source:-Simple-File-Logger-(by-mateandmetal)
 //Modified
 
 #ifndef FILELOGGER_HPP

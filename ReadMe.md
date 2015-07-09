@@ -15,6 +15,7 @@ The learning stage incorporates genetic programming principles:
 
 The EACirc framework consists of main application and several supporting tools and scripts. The modular design allows for easy addition of new problem modules ('projects') and output interpretation modules ('evaluators'). Currently, the project has following main parts:
 * **EACirc** - the main application, constructs circuits using evolutionary principles.
+* **OneClick** - an automatic work generator for extensive computations in BOINC infrastructure
 * **utils** - set of scripts and small programs used for results processing.
 
 For more information and details see [project wiki pages](http://github.com/petrs/EACirc/wiki/Home).
@@ -22,8 +23,11 @@ For more information and details see [project wiki pages](http://github.com/petr
 ## Authors
 The framework is developed at the [Centre for Research on Cryptography and Security (formerly Laboratory of Security and Applied Cryptography)](https://www.fi.muni.cz/research/crocs/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.
 
-* **Karel Kubíček** 2014-now (TEA, CAESAR)
-* **Zdenek Říha** 2013-now (bytecode emulato)
+* **Michal Hajas** 2015-now (Java bytecode emulator)
+* **Karel Kubíček** 2014-now (TEA)
+* **Jiří Novotný** 2014-now (build system, CUDA core implementation)
+* **Ľubomír Obrátil** 2014-now (automation tools)
+* **Zdenek Říha** 2013-now (Java bytecode emulator)
 * **Marek Sýs** 2013-now (project concept, results interpretation)
 * **Petr Švenda** 2008-now (project lead, initial implementation)
 * **Martin Ukrop** 2012-now (framework model, refactoring, SHA-3 candidates testing, supporting tools)

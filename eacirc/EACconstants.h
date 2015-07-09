@@ -62,18 +62,15 @@ typedef unsigned __int64 uint64_t;
 #define FILE_POPULATION             "population.xml"
 #define FILE_POPULATION_INITIAL     "population_initial.xml"
 #define FILE_FITNESS_PROGRESS       "fitness_progress.txt"
-#define FILE_BEST_FITNESS           "bestfit_graph.txt"
-#define FILE_AVG_FITNESS            "avgfit_graph.txt"
 #define FILE_GALIB_SCORES           "scores.log"
 #define FILE_BOINC_FRACTION_DONE    "fraction_done.txt"
 #define FILE_TEST_VECTORS           "test_vectors.bin"
-#define FILE_TEST_VECTORS_HR        "test_vectors_hr.txt"
+#define FILE_TEST_VECTORS_HR        "test_vectors_debug.txt"
 #define FILE_CIRCUIT_PREFIX         "circuit_"          // folloved by fitness (.bin, .txt, .dot, .c)
 #define FILE_CIRCUIT_DEFAULT        "EAC_circuit"       // .bin, .txt, .dot, .c
 #define FILE_PRUNNED_SUFFIX         "_prunned"
 #define FILE_POSTPROCCESSED_SUFFIX  "_final"
 #define FILE_LOGFILE                "eacirc.log"
-
 #define FILE_HISTOGRAMS             "histograms.txt"
 
 // fitness precisions
@@ -94,7 +91,6 @@ typedef unsigned __int64 uint64_t;
 #define RANDOM_DATA_FILE_SIZE		10485760
 
 // COMMAND LINE OPTIONS
-#define CMD_OPT_LOGGING             "-log"
 #define CMD_OPT_LOGGING_TO_FILE     "-log2file"
 #define CMD_OPT_SELF_TEST           "-test"
 #define CMD_OPT_CUSTOM_CONFIG       "-c"

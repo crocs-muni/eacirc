@@ -40,7 +40,7 @@ int IProject::initializeProjectState() {
 
 TiXmlNode* IProject::saveProjectStateMain() const {
     TiXmlElement* pNode = new TiXmlElement("project");
-    pNode->SetAttribute("type",toString(m_type).c_str());
+    pNode->SetAttribute("type",CommonFnc::toString(m_type).c_str());
     pNode->SetAttribute("description",shortDescription().c_str());
     pNode->SetAttribute("loadable",0);
     if (saveProjectState(pNode) != STAT_OK) {
@@ -86,48 +86,50 @@ int IProject::createTestVectorFilesHeaders() const {
 
 int IProject::createTestVectorFilesHeadersMain() const {
     int status = STAT_OK;
-    if (!pGlobals->settings->outputs.saveTestVectors || pGlobals->settings->main.projectType == PROJECT_PREGENERATED_TV) {
-        return STAT_OK;
-    }
     ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << dec << left;
+        tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator: " << pGlobals->evaluator->shortDescription() << ")" << endl;
+        tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
+        tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
+        tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
+        tvFile << pGlobals->settings->testVectors.outputLength << " \t\t(number of tv output bytes)" << endl;
+        tvFile.close();
     }
-    tvFile << dec << left;
-    tvFile << pGlobals->settings->main.evaluatorType << " \t\t(evaluator: " << pGlobals->evaluator->shortDescription() << ")" << endl;
-    tvFile << pGlobals->settings->testVectors.numTestSets + 1 << " \t\t(number of test vector sets)" << endl;
-    tvFile << pGlobals->settings->testVectors.setSize << " \t\t(number of test vectors in a set)" << endl;
-    tvFile << pGlobals->settings->testVectors.inputLength << " \t\t(number of tv input bytes)" << endl;
-    tvFile << pGlobals->settings->testVectors.outputLength << " \t\t(number of tv output bytes)" << endl;
-    tvFile.close();
 
     status = createTestVectorFilesHeaders();
     if (status != STAT_OK) return status;
 
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << endl; // separator between header and test vector values
+        tvFile.close();
     }
-    tvFile << endl; // separator between header and test vector values
-    tvFile.close();
 
     return status;
 }
 
 int IProject::generateAndSaveTestVectors() {
     int status = STAT_OK;
-    mainLogger.out(LOGGER_INFO) << "Generating test vectors." << endl;
+    if (pGlobals->settings->outputs.verbosity >= 2) {
+        mainLogger.out(LOGGER_INFO) << "Generating test vectors." << endl;
+    }
     if ((status = generateTestVectors()) != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Test vector generation failed." << endl;
         return status;
     }
     pGlobals->testVectors.newSet = true;
-    if (pGlobals->settings->outputs.saveTestVectors && pGlobals->settings->main.projectType != PROJECT_PREGENERATED_TV) {
-        status = saveTestVectors();
-    }
+    status = saveTestVectors();
+
     return status;
 }
 
@@ -135,23 +137,25 @@ int IProject::saveTestVectors() const {
     ofstream tvFile;
 
     // save binary form
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
+            tvFile.write((char*)(pGlobals->testVectors.inputs[testVector]), pGlobals->settings->testVectors.inputLength);
+            tvFile.write((char*)(pGlobals->testVectors.outputs[testVector]), pGlobals->settings->testVectors.outputLength);
+        }
+        if (tvFile.fail()) {
+            mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile.close();
     }
-    for (int testVector = 0; testVector < pGlobals->settings->testVectors.setSize; testVector++) {
-        tvFile.write((char*)(pGlobals->testVectors.inputs[testVector]), pGlobals->settings->testVectors.inputLength);
-        tvFile.write((char*)(pGlobals->testVectors.outputs[testVector]), pGlobals->settings->testVectors.outputLength);
-    }
-    if (tvFile.fail()) {
-        mainLogger.out(LOGGER_ERROR) << "Problem when saving test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
-    }
-    tvFile.close();
 
     // save human-readable form
-    if (pGlobals->settings->outputs.verbosity > 0) {
+    if (pGlobals->settings->outputs.verbosity >= 3) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;

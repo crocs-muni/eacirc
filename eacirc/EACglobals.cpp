@@ -22,7 +22,6 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
 
 SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
     verbosity = 0;
-    graphFiles = true;
     intermediateCircuits = false;
     allowPrunning = false;
     saveTestVectors = false;
@@ -39,7 +38,7 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
 
 SETTINGS_CUDA::SETTINGS_CUDA() {
     enabled = false;
-    something = "";
+    block_size = 128;
 }
 
 SETTINGS_GA::SETTINGS_GA() {
@@ -64,7 +63,7 @@ SETTINGS_GATE_CIRCUIT::SETTINGS_GATE_CIRCUIT() {
     sizeInputLayer = -1;
     genomeSize = -1;
     genomeWidth = -1;
-	jvmSim = NULL;
+    jvmSim = NULL;
 }
 
 SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
@@ -168,6 +167,7 @@ void STATISTICS::release() {
 GLOBALS::GLOBALS() {
     settings = NULL;
     evaluator = NULL;
+    circuit = NULL;
     // precompute powers for reasonable values (2^0-2^31)
     for (int bit = 0; bit < MAX_LAYER_SIZE; bit++) {
         precompPow[bit] = (unsigned long) pow(2, (float) bit);

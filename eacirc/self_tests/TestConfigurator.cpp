@@ -6,8 +6,15 @@
 
 TestConfigurator::TestConfigurator()
     : m_currentProject(0) {
+#ifdef ESTREAM
     m_projects.push(PROJECT_ESTREAM);
+#endif
+#ifdef SHA3
     m_projects.push(PROJECT_SHA3);
+#endif
+#ifdef CEASAR
+    m_projects.push(PROJECT_CAESAR);
+#endif
     // can we open files set in PROJECT_FILE_DISTINGUISHER?
     string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
     TiXmlDocument doc(string("configuration").c_str());
@@ -25,7 +32,7 @@ TestConfigurator::TestConfigurator()
             file1.close();
             file2.close();
         } else {
-            WARN(string("######## Project ")+toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
+            WARN(string("######## Project ")+CommonFnc::toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
             WARN(string("######## Could not open files ")+filename1+", "+filename2+" ########");
         }
     }
@@ -44,11 +51,9 @@ bool TestConfigurator::nextProject() {
     }
     m_currentProject = m_projects.front();
     m_projects.pop();
-    if (mainLogger.getLogging()) {
-        WARN("########");
-        WARN(string("######## Testing project ")+toString(m_currentProject)+" ########");
-        WARN("########");
-    }
+    WARN("########");
+    WARN(string("######## Testing project ")+CommonFnc::toString(m_currentProject)+" ########");
+    WARN("########");
     return true;
 }
 
@@ -83,15 +88,13 @@ void TestConfigurator::compareFilesByLine(string filename1, string filename2) co
 
 void TestConfigurator::backupFile(string filename) {
     string backupFilename = filename + BACKUP_SUFFIX;
-    removeFile(backupFilename.c_str());
+    CommonFnc::removeFile(backupFilename.c_str());
     CHECK(rename(filename.c_str(),backupFilename.c_str()) == 0);
 }
 
 void TestConfigurator::backupResults() {
     backupFile(FILE_GALIB_SCORES);
     backupFile(FILE_FITNESS_PROGRESS);
-    backupFile(FILE_BEST_FITNESS);
-    backupFile(FILE_AVG_FITNESS);
     backupFile(FILE_STATE);
     backupFile(FILE_POPULATION);
 }
@@ -99,25 +102,19 @@ void TestConfigurator::backupResults() {
 void TestConfigurator::compareResults() const {
     compareFilesByLine(FILE_GALIB_SCORES,string(FILE_GALIB_SCORES)+BACKUP_SUFFIX);
     compareFilesByLine(FILE_FITNESS_PROGRESS,string(FILE_FITNESS_PROGRESS)+BACKUP_SUFFIX);
-    compareFilesByLine(FILE_BEST_FITNESS,string(FILE_BEST_FITNESS)+BACKUP_SUFFIX);
-    compareFilesByLine(FILE_AVG_FITNESS,string(FILE_AVG_FITNESS)+BACKUP_SUFFIX);
     compareFilesByLine(FILE_STATE,string(FILE_STATE)+BACKUP_SUFFIX);
     compareFilesByLine(FILE_POPULATION,string(FILE_POPULATION)+BACKUP_SUFFIX);
 }
 
 void TestConfigurator::runEACirc() const {
-    if (mainLogger.getLogging()) {
-        WARN("######## Running EACirc ########");
-        mainLogger.out(LOGGER_INFO) << "Configuration file: "  << FILE_CONFIG << endl;
-    }
+    WARN("######## Running EACirc ########");
+    mainLogger.out(LOGGER_INFO) << "Configuration file: "  << FILE_CONFIG << endl;
     EACirc eacirc;
     eacirc.loadConfiguration(FILE_CONFIG);
     eacirc.prepare();
     eacirc.initializeState();
     eacirc.run();
-    if (mainLogger.getLogging()) {
-        WARN("######## Ending EACirc (status: " << statusToString(eacirc.getStatus()) << " ) ########");
-    }
+    WARN("######## Ending EACirc (status: " << statusToString(eacirc.getStatus()) << " ) ########");
     CHECK(eacirc.getStatus() == STAT_OK);
 }
 
@@ -135,7 +132,7 @@ void TestConfigurator::prepareConfiguration(int projectType) const {
     // set correct project constant
     TiXmlNode* pRootConfig = NULL;
     REQUIRE(loadXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
-    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT",toString(projectType)) == STAT_OK);
+    REQUIRE(setXMLElementValue(pRootConfig,"MAIN/PROJECT",CommonFnc::toString(projectType)) == STAT_OK);
     REQUIRE(saveXMLFile(pRootConfig,FILE_CONFIG) == STAT_OK);
     pRootConfig = NULL;
 }
@@ -159,8 +156,8 @@ string TestConfigurator::mainConfiguration =
         "    <CIRCUIT_SIZE_OUTPUT>2</CIRCUIT_SIZE_OUTPUT>"
         "</MAIN>"
         "<OUTPUTS>"
-        "    <GRAPH_FILES>1</GRAPH_FILES>"
-        "    <INTERMEDIATE_CIRCUITS>1</INTERMEDIATE_CIRCUITS>"
+        "    <VERBOSITY>5</VERBOSITY>"
+        "    <INTERMEDIATE_CIRCUITS>0</INTERMEDIATE_CIRCUITS>"
         "    <ALLOW_PRUNNING>0</ALLOW_PRUNNING>"
         "    <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>"
         "</OUTPUTS>"
@@ -169,7 +166,7 @@ string TestConfigurator::mainConfiguration =
         "    <SEED>123456789</SEED>"
         "    <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>"
         "    <USE_NET_SHARE>0</USE_NET_SHARE>"
-        "    <QRNG_PATH>../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
+        "    <QRNG_PATH>../../../qrng/;/mnt/centaur/home/eacirc/qrng/;C:/RNG/;D:/RandomData/</QRNG_PATH>"
         "    <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>"
         "</RANDOM>"
         "<CUDA>"

@@ -23,7 +23,9 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
 
 		//Getting paths to all logs and configs in subdirectories
 		getFilePaths(dirPaths[i], configPaths, INDEX_CONFIG);
+		sortStrings(configPaths);
 		getFilePaths(dirPaths[i], logPaths, INDEX_EACIRC);
+		sortStrings(logPaths);
 
 		oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
 		*dirLogger << FileLogger::LOG_INFO << Utils::itostr(configPaths.size()) << " configs and " << Utils::itostr(logPaths.size()) << " logs in batch\n";
@@ -56,6 +58,7 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
 		delete dirLogger;
 	}
 	pprocessor->saveResults();
+	delete pprocessor;
 	oneclickLogger << FileLogger::LOG_INFO << "finished processing results\n";
 }
 
@@ -168,7 +171,7 @@ void ResultProcessor::getFilePaths(const std::string & directory , std::vector<s
 			paths.push_back(dirIter.path());
 		}
 	}
-    sortStrings(paths);
+    //sortStrings(paths);
 }
 
 void ResultProcessor::getDirectoryPaths(const std::string & directory, std::vector<std::string> & dirPaths) {

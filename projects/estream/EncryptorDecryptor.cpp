@@ -4,11 +4,19 @@
 #include <garandom.h>
 #include <string>
 
-EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
+EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false), m_initSuccess(false) {
     int algorithm = -1;
     int numRounds = -1;
 
-    for (int cipherNumber=0; cipherNumber<2; cipherNumber++) {
+    // initialize array fields
+    for (int cipherNumber = 0; cipherNumber < 2; cipherNumber++) {
+         for (int streamNumber = 0; streamNumber < 2; streamNumber++) {
+             m_ciphers[cipherNumber][streamNumber] = NULL;
+             m_internalStates[cipherNumber][streamNumber] = NULL;
+         }
+    }
+
+    for (int cipherNumber = 0; cipherNumber < 2; cipherNumber++) {
         // get correct settings for this cipher
         switch (cipherNumber) {
         case 0:
@@ -191,6 +199,11 @@ EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false) {
             m_ciphers[cipherNumber][streamNumber]->ECRYPT_init();
         }
     }
+    m_initSuccess = true;
+}
+
+bool EncryptorDecryptor::initSuccess() const {
+    return m_initSuccess;
 }
 
 EncryptorDecryptor::~EncryptorDecryptor() {
@@ -228,7 +241,7 @@ int EncryptorDecryptor::setupIV() {
     }
 
     // human-readable test vector logging
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         tvFile << "setting IV: ";
@@ -272,7 +285,7 @@ int EncryptorDecryptor::setupKey() {
     }
 
     // human-readable test vector logging
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         tvFile << "setting key: ";

@@ -213,23 +213,23 @@ TiXmlElement* CircuitIO::populationHeaderSt(int populationSize) {
     TiXmlElement* pElem2 = NULL;
 
     pElem = new TiXmlElement("population_size");
-    pElem->LinkEndChild(new TiXmlText(toString(populationSize).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(populationSize).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("circuit_dimensions");
     pElem2 = new TiXmlElement("num_layers");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.numLayers).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(pGlobals->settings->gateCircuit.numLayers).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeLayer).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(pGlobals->settings->gateCircuit.sizeLayer).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_input_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeInput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(pGlobals->settings->main.circuitSizeInput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_output_layer");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->main.circuitSizeOutput).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(pGlobals->settings->main.circuitSizeOutput).c_str()));
     pElem->LinkEndChild(pElem2);
     pElem2 = new TiXmlElement("size_memory");
-    pElem2->LinkEndChild(new TiXmlText(toString(pGlobals->settings->gateCircuit.sizeMemory).c_str()));
+    pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(pGlobals->settings->gateCircuit.sizeMemory).c_str()));
     pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
 

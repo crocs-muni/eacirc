@@ -3,8 +3,9 @@
 #include "generators/BiasRndGen.h"
 #include "generators/QuantumRndGen.h"
 #include "generators/MD5RndGen.h"
-#include <garandom.h>
 #include "XMLProcessor.h"
+#include "Finishers.h"
+#include "garandom.h"
 
 #ifdef _WIN32
     #include <Windows.h>
@@ -29,14 +30,19 @@ EACirc::~EACirc() {
     m_gaData = NULL;
     if (m_project) delete m_project;
     m_project = NULL;
+    if (m_circuit) {
+        delete m_circuit;
+        m_circuit = NULL;
+        pGlobals->circuit = NULL;
+    }
     if (pGlobals->evaluator != NULL &&  m_settings.main.evaluatorType < EVALUATOR_PROJECT_SPECIFIC_MINIMUM) {
         delete pGlobals->evaluator;
         pGlobals->evaluator = NULL;
     }
-	if (pGlobals->settings && pGlobals->settings->gateCircuit.jvmSim != NULL) {
-		delete pGlobals->settings->gateCircuit.jvmSim;
-		pGlobals->settings->gateCircuit.jvmSim = NULL;
-	}
+    if (pGlobals->settings && pGlobals->settings->gateCircuit.jvmSim != NULL) {
+        delete pGlobals->settings->gateCircuit.jvmSim;
+        pGlobals->settings->gateCircuit.jvmSim = NULL;
+    }
     if (pGlobals) {
         pGlobals->testVectors.release();
         pGlobals->stats.release();
@@ -87,6 +93,7 @@ void EACirc::loadConfiguration(const string filename) {
         mainLogger.out(LOGGER_ERROR) << "Could not load circuit representation." << endl;
         return;
     }
+    pGlobals->circuit = m_circuit;
     m_status = m_circuit->loadCircuitConfiguration(pRoot);
     if (m_status != STAT_OK) return;
     mainLogger.out(LOGGER_INFO) << "Circuit representation configuration loaded (" << m_circuit->shortDescription() << ")." << endl;
@@ -149,16 +156,16 @@ void EACirc::saveState(const string filename) {
     TiXmlElement* pElem2;
 
     pElem = new TiXmlElement("generations_required");
-    pElem->LinkEndChild(new TiXmlText(toString(m_settings.main.numGenerations + m_oldGenerations).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_settings.main.numGenerations + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("generations_finished");
-    pElem->LinkEndChild(new TiXmlText(toString(m_actGener + m_oldGenerations).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_actGener + m_oldGenerations).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("main_seed");
-    pElem->LinkEndChild(new TiXmlText(toString(m_originalSeed).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_originalSeed).c_str()));
     pRoot->LinkEndChild(pElem);
     pElem = new TiXmlElement("current_galib_seed");
-    pElem->LinkEndChild(new TiXmlText(toString(m_currentGalibSeed).c_str()));
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(m_currentGalibSeed).c_str()));
     pRoot->LinkEndChild(pElem);
 
     pElem = new TiXmlElement("pvalues_best_individual");
@@ -187,7 +194,7 @@ void EACirc::saveState(const string filename) {
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Cannot save state to file " << filename << "." << endl;
-    } else {
+    } else if (m_settings.outputs.verbosity >= 2) {
         mainLogger.out(LOGGER_INFO) << "State successfully saved to file " << filename << "." << endl;
     }
 }
@@ -223,7 +230,9 @@ void EACirc::loadState(const string filename) {
     m_status = m_project->loadProjectStateMain(getXMLElement(pRoot,"project"));
 
     delete pRoot;
-    mainLogger.out(LOGGER_INFO) << "State successfully loaded from file " << filename << "." << endl;
+    if (m_status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "State successfully loaded from file " << filename << "." << endl;
+    }
 }
 
 void EACirc::createState() {
@@ -257,8 +266,12 @@ void EACirc::createState() {
     mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
     // INIT PROJECT STATE
-    m_project->initializeProjectState();
-    mainLogger.out(LOGGER_INFO) << "Project intial state setup successful (" << m_project->shortDescription() << ")." << endl;
+    m_status = m_project->initializeProjectState();
+    if (m_status == STAT_OK) {
+        mainLogger.out(LOGGER_INFO) << "Project intial state setup successful (" << m_project->shortDescription() << ")." << endl;
+    } else {
+        mainLogger.out(LOGGER_ERROR) << "Project inilialization falied (" << m_project->shortDescription() << ")." << endl;
+    }
 }
 
 void EACirc::savePopulation(const string filename) {
@@ -287,7 +300,7 @@ void EACirc::savePopulation(const string filename) {
     m_status = saveXMLFile(pRoot, filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Cannot save population to file " << filename << "." << endl;
-    } else {
+    } else if (m_settings.outputs.verbosity >= 2) {
         mainLogger.out(LOGGER_INFO) << "Population successfully saved to file " << filename << "." << endl;
     }
 }
@@ -402,14 +415,12 @@ void EACirc::prepare() {
     }
 
     // prepare files for logging
-    removeFile(FILE_BOINC_FRACTION_DONE);
+    CommonFnc::removeFile(FILE_BOINC_FRACTION_DONE);
     if (!m_settings.main.recommenceComputation) {
-        removeFile(FILE_FITNESS_PROGRESS);
-        removeFile(FILE_BEST_FITNESS);
-        removeFile(FILE_AVG_FITNESS);
-        removeFile(FILE_GALIB_SCORES);
-        removeFile(FILE_TEST_VECTORS_HR);
-        removeFile(FILE_HISTOGRAMS);
+        CommonFnc::removeFile(FILE_FITNESS_PROGRESS);
+        CommonFnc::removeFile(FILE_GALIB_SCORES);
+        CommonFnc::removeFile(FILE_TEST_VECTORS_HR);
+        CommonFnc::removeFile(FILE_HISTOGRAMS);
         ofstream fitnessProgressFile(FILE_FITNESS_PROGRESS, ios_base::trunc);
         fitnessProgressFile << "Fitness statistics for selected generations" << endl;
         for (int i = 0; i < log(pGlobals->settings->main.numGenerations)/log(10) - 3; i++) fitnessProgressFile << " ";
@@ -456,10 +467,10 @@ void EACirc::prepare() {
         m_status = STAT_CONFIG_INCORRECT;
     }
 
-	// initialize JVM simulator if required
-	if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM] == 1) {
-		pGlobals->settings->gateCircuit.jvmSim = new JVMSimulator();
-	}
+    // initialize JVM simulator if required
+    if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM] == 1) {
+        pGlobals->settings->gateCircuit.jvmSim = new JVMSimulator();
+    }
 
     if (m_status == STAT_OK) {
         m_readyToRun |= EACIRC_PREPARED;
@@ -479,6 +490,7 @@ void EACirc::initializeState() {
     } else {
         createState();
     }
+    if (m_status != STAT_OK) return;
     // create headers in test vector files
     m_status = m_project->createTestVectorFilesHeadersMain();
     if (m_status != STAT_OK) return;
@@ -523,11 +535,18 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     // cannot disable scaling, some evaluators produce fitness values that are not usable directly
     //GANoScaling scaler;
     //m_gaData->scaling(scaler);
-    m_gaData->scoreFilename(FILE_GALIB_SCORES);
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
-    m_gaData->flushFrequency(1);	// specify how often to write the score to disk
+    m_gaData->scoreFilename(FILE_GALIB_SCORES);
+    // specify how often to write the score to disk
+    if (m_settings.outputs.verbosity >= 2) {
+        m_gaData->flushFrequency(100);
+    } else {
+        m_gaData->flushFrequency(0);
+    }
     m_gaData->selectScores(GAStatistics::AllScores);
-    mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
+    if (m_settings.outputs.verbosity >= 2) {
+        mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
+    }
 }
 
 void EACirc::preEvaluate() {
@@ -565,16 +584,6 @@ void EACirc::evaluateStep() {
     fitProgressFile << endl;
     fitProgressFile.close();
 
-    // add scores to graph files
-    if (pGlobals->settings->outputs.graphFiles) {
-        ofstream bestFitFile(FILE_BEST_FITNESS, ios_base::app);
-        ofstream avgFitFile(FILE_AVG_FITNESS, ios_base::app);
-        bestFitFile << totalGeneration << ", " << m_gaData->statistics().current(GAStatistics::Maximum) << endl;
-        avgFitFile << totalGeneration << ", " << m_gaData->statistics().current(GAStatistics::Mean) << endl;
-        bestFitFile.close();
-        avgFitFile.close();
-    }
-
     // print currently best circuit
     if (pGlobals->settings->outputs.intermediateCircuits) {
         GAGenome & bestGenome = m_gaData->population().best();
@@ -610,7 +619,7 @@ void EACirc::run() {
 
     // clear galib score file
     if (!pGlobals->settings->main.recommenceComputation) {
-        removeFile(FILE_GALIB_SCORES);
+        CommonFnc::removeFile(FILE_GALIB_SCORES);
     }
 
     bool evaluateNow = false;
@@ -626,12 +635,12 @@ void EACirc::run() {
             break;
         }
 
-        //FRACTION FILE FOR BOINC
+        // update fraction file for boinc
         fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
         fitfile << ((float)(m_actGener))/((float)(m_settings.main.numGenerations));
         fitfile.close();
 
-        // DO NOT EVOLVE.. (if evolution is off)
+        // do not evolve (if evolution is off)
         if (m_settings.ga.evolutionOff) {
             m_status = m_project->generateAndSaveTestVectors();
             preEvaluate();
@@ -643,10 +652,10 @@ void EACirc::run() {
             continue;
         }
 
-        // GENERATE TEST VECTORS IF NEEDED
+        // generate test vectors if needed
         if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
             m_status = m_project->generateAndSaveTestVectors();
-            if (m_status == STAT_OK) {
+            if (m_status == STAT_OK && m_settings.outputs.verbosity >= 2) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
         }
@@ -684,40 +693,19 @@ void EACirc::run() {
         // if needed, reseed GAlib and save state and population
         if (m_settings.main.saveStateFrequency != 0
                 && m_actGener % m_settings.main.saveStateFrequency == 0) {
+            m_gaData->flushScores();
             mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
             seedAndResetGAlib(m_gaData->population());
             saveProgress(FILE_STATE,FILE_POPULATION);
         }
     }
 
-    // output AvgAvg, AvgMax, AvgMin to logger
-    mainLogger.out(LOGGER_INFO) << "Cumulative results for this run:" << endl << setprecision(FITNESS_PRECISION_LOG);
-    mainLogger.out(LOGGER_INFO) << "   AvgAvg: " << pGlobals->stats.avgAvgFitSum / (double) pGlobals->stats.avgCount << endl;
-    mainLogger.out(LOGGER_INFO) << "   AvgMax: " << pGlobals->stats.avgMaxFitSum / (double) pGlobals->stats.avgCount << endl;
-    mainLogger.out(LOGGER_INFO) << "   AvgMin: " << pGlobals->stats.avgMinFitSum / (double) pGlobals->stats.avgCount << endl;
-
-    // Kolmogorov-Smirnov test for the p-values uniformity.
-    const unsigned long pvalsSize = pGlobals->stats.pvaluesBestIndividual->size();
-    if (pvalsSize > 2){
-        mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
-
-        double KS_critical_alpha_5 = KS_get_critical_value(pvalsSize);
-        double KS_P_value = KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
-        mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
-        mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
-
-        if(KS_P_value > KS_critical_alpha_5) {
-            mainLogger.out(LOGGER_INFO) << "   KS is in 5% interval -> uniformity hypothesis rejected." << endl;
-        } else {
-            mainLogger.out(LOGGER_INFO) << "   KS is not in 5% interval -> is uniform." << endl;
-        }
+    // call post-run finishers if appropriate
+    if (m_settings.outputs.verbosity >= 1) {
+        Finishers::outputCircuitFinisher(m_gaData->population().best());
     }
-
-    // print the best circuit into separate file, prune if allowed
-    GAGenome & genomeBest = m_gaData->population().best();
-    m_circuit->io()->outputGenomeFiles(genomeBest, FILE_CIRCUIT_DEFAULT);
-    GAGenome genomeProccessed = genomeBest;
-    if (m_circuit->postProcess(genomeBest, genomeProccessed)) {
-        m_circuit->io()->outputGenomeFiles(genomeProccessed, string(FILE_CIRCUIT_DEFAULT) + FILE_POSTPROCCESSED_SUFFIX);
+    Finishers::avgFitnessFinisher();
+    if (pGlobals->settings->main.evaluatorType == EVALUATOR_CATEGORIES) {
+        Finishers::ksUniformityTestFinisher();
     }
 }

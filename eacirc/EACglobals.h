@@ -8,6 +8,8 @@ class IEvaluator;
 //#include "evaluators/IEvaluator.h"
 class IRndGen;
 //#include "generators/IRndGen.h"
+class ICircuit;
+//#include "circuit/ICircuit.h"
 #include "circuit/gate/JVMSimulator.h"
 #include <cmath>
 #include <cstring>
@@ -84,7 +86,6 @@ struct SETTINGS_MAIN {
 //! settings corresponding to EACIRC/OUTPUTS
 struct SETTINGS_OUTPUTS {
     int verbosity;                  //! log verposity level
-    bool graphFiles;                //! should graph files be created?
     bool intermediateCircuits;      //! should intermediate circuits be saved?
     bool allowPrunning;             //! save prunned versions as well?
     bool saveTestVectors;           //! should test vectors be saved?
@@ -105,7 +106,7 @@ struct SETTINGS_RANDOM {
 //! settings corresponding to EACIRC/CUDA
 struct SETTINGS_CUDA {
     bool enabled;                   //! is CUDA support enabled?
-    string something;               //! string setting example
+    size_t block_size;              //! block size of the kernel
     SETTINGS_CUDA();
 };
 
@@ -134,8 +135,8 @@ struct SETTINGS_GATE_CIRCUIT {
     int genomeWidth;                //! number of function slots in single circuit row (beware: can be higher than sizeLayer!)
     int sizeOutputLayer;            //! number of outputs (including possible memory outputs)
     int sizeInputLayer;             //! number of inputs (including possible memory inputs)
-	JVMSimulator* jvmSim;			//! object responsible for simulation of JVM bytecode (FNC_JVM)
-	SETTINGS_GATE_CIRCUIT();
+    JVMSimulator* jvmSim;			//! object responsible for simulation of JVM bytecode (FNC_JVM)
+    SETTINGS_GATE_CIRCUIT();
 };
 
 //! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
@@ -213,6 +214,7 @@ struct GLOBALS {
     STATISTICS stats;                           //! current run statistics
     TEST_VECTORS testVectors;                   //! current test vector set
     IEvaluator* evaluator;                      //! evaluator (compares expected output with actual circuit output)
+    ICircuit* circuit;                          //! circuit backend pointer
     unsigned long precompPow[MAX_LAYER_SIZE];   //! precomputed values up to 2^32
     GLOBALS();
 };

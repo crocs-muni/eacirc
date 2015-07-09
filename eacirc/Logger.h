@@ -25,10 +25,10 @@ private:
     class LoggerStream : public ostream {
         //! helper class: buffer that prefixes each line with current time
         class LoggerBuffer : public stringbuf {
-            ostream& m_out;
+            ostream& m_file;
             Logger* m_parentLogger;
         public:
-            LoggerBuffer(Logger* parentLogger, ostream& out) : m_out(out), m_parentLogger(parentLogger) {}
+            LoggerBuffer(Logger* parentLogger, ostream& file) : m_file(file), m_parentLogger(parentLogger) {}
             virtual int sync ();
         };
         LoggerBuffer buffer;
@@ -36,10 +36,8 @@ private:
         LoggerStream(Logger* parentLogger, ostream& stream) : ostream(&buffer), buffer(parentLogger, stream) {}
     };
 
-    //! is logging enabled?
-    bool m_logging;
-    //! is logging to fileset via logger interface?
-    bool m_using_file;
+    //! log file
+    string m_logfile;
     //! stream to send logs to
     LoggerStream* m_out;
 
@@ -53,6 +51,10 @@ private:
      * @return date
      */
     string getDate() const;
+
+    /** output build info to log
+      */
+    void outputBuildInfo();
 
 public:
     Logger();
@@ -69,25 +71,10 @@ public:
       */
     ostream& out(int prefix);
 
-    /** set stream for logs
-      * @param outStream    new stream for logging
-      */
-    void setOutputStream(ostream& outStream = clog);
-
     /** set logging into file (if existing, new logs are appended)
       * @param filePath     file for logs
       */
     void setOutputFile(const string filePath = FILE_LOGFILE);
-
-    /** is logging enabled?
-      * @return logging enabled?
-      */
-    bool getLogging();
-
-    /** enable/disable logging
-      * @param state
-      */
-    void setlogging(bool state);
 };
 
 #endif // LOGGER_H

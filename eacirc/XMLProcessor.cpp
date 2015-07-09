@@ -21,7 +21,6 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // parsing EACIRC/OUTPUTS
     pSettings->outputs.verbosity = atoi(getXMLElementValue(pRoot,"OUTPUTS/VERBOSITY").c_str());
-    pSettings->outputs.graphFiles = (atoi(getXMLElementValue(pRoot,"OUTPUTS/GRAPH_FILES").c_str())) ? true : false;
     pSettings->outputs.intermediateCircuits = (atoi(getXMLElementValue(pRoot,"OUTPUTS/INTERMEDIATE_CIRCUITS").c_str())) ? true : false;
     pSettings->outputs.allowPrunning = (atoi(getXMLElementValue(pRoot,"OUTPUTS/ALLOW_PRUNNING").c_str())) ? true : false;
     pSettings->outputs.saveTestVectors = (atoi(getXMLElementValue(pRoot,"OUTPUTS/SAVE_TEST_VECTORS").c_str())) ? true : false;
@@ -36,7 +35,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
 
     // parsing EACIRC/CUDA
     pSettings->cuda.enabled = (atoi(getXMLElementValue(pRoot,"CUDA/ENABLED").c_str())) ? true : false;
-    pSettings->cuda.something = getXMLElementValue(pRoot,"CUDA/SOMETHING");
+    pSettings->cuda.block_size = atoi(getXMLElementValue(pRoot,"CUDA/BLOCK_SIZE").c_str());
 
     // parsing EACIRC/GA
     pSettings->ga.evolutionOff = atoi(getXMLElementValue(pRoot,"GA/EVOLUTION_OFF").c_str()) ? true : false;

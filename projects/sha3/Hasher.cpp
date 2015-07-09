@@ -2,11 +2,17 @@
 #include "hash_functions/hashFunctions.h"
 #include "generators/IRndGen.h"
 
-Hasher::Hasher() {
+Hasher::Hasher() : m_initSuccess(false) {
     int algorithm = -1;
     int numRounds = -1;
 
-    for (int algorithmNumber=0; algorithmNumber<2; algorithmNumber++) {
+    // initialize hash function arrays
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
+        m_hashFunctions[algorithmNumber] = NULL;
+        m_hashOutputs[algorithmNumber] = NULL;
+    }
+
+    for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         // get correct settings for this hash function
         switch (algorithmNumber) {
         case 0:
@@ -102,6 +108,11 @@ Hasher::Hasher() {
             return;
         }
     }
+    m_initSuccess = true;
+}
+
+bool Hasher::initSuccess() const {
+    return m_initSuccess;
 }
 
 Hasher::~Hasher() {
@@ -130,18 +141,18 @@ int Hasher::saveHasherState(TiXmlNode* pRoot) const {
     TiXmlElement* pElem2 = NULL;
     for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
-        pElem = new TiXmlElement((string("algorithm")+toString(algorithmNumber+1)).c_str());
+        pElem = new TiXmlElement((string("algorithm")+CommonFnc::toString(algorithmNumber+1)).c_str());
         pElem->SetAttribute("type",algorithm);
         pElem->SetAttribute("description",Sha3Functions::sha3ToString(algorithm));
         if (algorithm != SHA3_RANDOM) {
             pElem2 = new TiXmlElement("hash_output_length");
-            pElem2->LinkEndChild(new TiXmlText(toString(m_hashOutputLengths[algorithmNumber]).c_str()));
+            pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_hashOutputLengths[algorithmNumber]).c_str()));
             pElem->LinkEndChild(pElem2);
             pElem2 = new TiXmlElement("counter");
-            pElem2->LinkEndChild(new TiXmlText(toString(m_counters[algorithmNumber]).c_str()));
+            pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_counters[algorithmNumber]).c_str()));
             pElem->LinkEndChild(pElem2);
             pElem2 = new TiXmlElement("used_bytes");
-            pElem2->LinkEndChild(new TiXmlText(toString(m_usedBytes[algorithmNumber]).c_str()));
+            pElem2->LinkEndChild(new TiXmlText(CommonFnc::toString(m_usedBytes[algorithmNumber]).c_str()));
             pElem->LinkEndChild(pElem2);
             ostringstream hash;
             for (int byte = 0; byte < m_hashOutputLengths[algorithmNumber]; byte++) {
@@ -162,7 +173,7 @@ int Hasher::loadHasherState(TiXmlNode* pRoot) {
     int algorithm;
     for (int algorithmNumber = 0; algorithmNumber < 2; algorithmNumber++) {
         algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
-        pElem = getXMLElement(pRoot,string("algorithm")+toString(algorithmNumber+1));
+        pElem = getXMLElement(pRoot,string("algorithm")+CommonFnc::toString(algorithmNumber+1));
         if (atoi(getXMLElementValue(pElem,"@type").c_str()) != algorithm) {
             mainLogger.out(LOGGER_ERROR) << "Incompatible algorithm types." << endl;
             return STAT_CONFIG_INCORRECT;
@@ -192,7 +203,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     }
     int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
     ofstream tvFile;
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app | ios_base::binary);
         if (!tvFile.is_open())
             mainLogger.out(LOGGER_WARNING) << "Cannot write to human-readable test vector file." << endl;
@@ -239,7 +250,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
             }
             m_usedBytes[algorithmNumber] += pGlobals->settings->testVectors.inputLength;
         } else { // random data stream
-            if (pGlobals->settings->outputs.saveTestVectors == 1)
+            if (pGlobals->settings->outputs.verbosity >= 4)
                 tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):" << endl;
             for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                 rndGen->getRandomFromInterval(UCHAR_MAX, &(tvInputs[input]));
@@ -247,7 +258,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
         }
 
         // set correct output
-        for (int output = 0; output < pGlobals->settings->main.circuitSizeOutput; output++)
+        for (int output = 0; output < pGlobals->settings->testVectors.outputLength; output++)
             tvOutputs[output] = algorithmNumber * 0xff;
         break;
     default:
@@ -257,7 +268,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     }
 
     // save test vector to human readable test vector file
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         tvFile.close();
     }
     return status;

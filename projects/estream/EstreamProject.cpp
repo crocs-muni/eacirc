@@ -85,6 +85,9 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
 int EstreamProject::initializeProject() {
     // allocate encryptorDecryptor
     m_encryptorDecryptor = new EncryptorDecryptor;
+    if (!m_encryptorDecryptor->initSuccess()) {
+        return STAT_PROJECT_ERROR;
+    }
     // allocate project-specific evaluator, if needed
     // no project specific evaluator available
     return STAT_OK;
@@ -130,7 +133,7 @@ int EstreamProject::setupPlaintext() {
         break;
     case ESTREAM_GENTYPE_FLIP5BITS:
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) m_plaintextIn[input] = 0xff;
-        flipBits(m_plaintextIn, pGlobals->settings->testVectors.inputLength, 5, rndGen);
+        CommonFnc::flipBits(m_plaintextIn, pGlobals->settings->testVectors.inputLength, 5, rndGen);
         break;
     case ESTREAM_GENTYPE_HALFBLOCKSAC:
         if (pGlobals->settings->testVectors.inputLength % 2 == 1) {
@@ -153,11 +156,10 @@ int EstreamProject::setupPlaintext() {
 int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
     TiXmlElement* pRoot2 = pRoot->ToElement();
     TiXmlElement* pNode;
+    ostringstream ss;
     if (m_estreamSettings.cipherInitializationFrequency != ESTREAM_INIT_CIPHERS_ONCE) {
         pRoot2->SetAttribute("loadable",1);
     } else {
-        ostringstream ss;
-
         pNode = new TiXmlElement("key");
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
         ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_key[input]);
@@ -170,69 +172,75 @@ int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
         ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
         pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
         pRoot2->LinkEndChild(pNode);
+    }
+    if (m_estreamSettings.plaintextType == ESTREAM_GENTYPE_COUNTER) {
+        ss.str("");
+        pNode = new TiXmlElement("plaintext-counter");
+        for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
+        ss << setw(2) << setfill('0') << hex << (int)(m_plaintextCounter[input]);
+        pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
+        pRoot2->LinkEndChild(pNode);
 
-        if (m_estreamSettings.plaintextType == ESTREAM_GENTYPE_COUNTER) {
-            ss.str("");
-            pNode = new TiXmlElement("plaintext-counter");
-            for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
-            ss << setw(2) << hex << (int)(m_plaintextCounter[input]);
-            pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
-            pRoot2->LinkEndChild(pNode);
-        }
+        // TO BE REMOVED after implementing the loading of plaintext counter
+        pRoot2->SetAttribute("loadable",0);
     }
     return STAT_OK;
 }
 
 int EstreamProject::loadProjectState(TiXmlNode* pRoot) {
-
-    return STAT_NOT_IMPLEMENTED_YET;
+    return STAT_OK;
+    // TO BE ADDED implement loading plaintext counter if used
 }
 
 int EstreamProject::createTestVectorFilesHeaders() const {
-    // generate header (project config) to test vector file
     ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    // generate header (project config) to test vector file
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        tvFile.open(FILE_TEST_VECTORS, ios_base::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
+        tvFile << pEstreamSettings->usageType << " \t\t(usage type)" << endl;
+        tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
+        tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
+        tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
+        tvFile << pEstreamSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
+        tvFile << pEstreamSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+        if (pEstreamSettings->limitAlgRounds) {
+            tvFile << pEstreamSettings->alg1RoundsCount << " \t\t(algorithm1: " << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
+            tvFile << pEstreamSettings->alg2RoundsCount << " \t\t(algorithm2: " << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
+        }
+        tvFile << pEstreamSettings->plaintextType << " \t\t(plaintext type)" << endl;
+        tvFile << pEstreamSettings->keyType << " \t\t(key type)" << endl;
+        tvFile << pEstreamSettings->ivType << " \t\t(IV type)" << endl;
+        tvFile.close();
     }
-    tvFile << pGlobals->settings->main.projectType << " \t\t(project: " << shortDescription() << ")" << endl;
-    tvFile << pEstreamSettings->usageType << " \t\t(usage type)" << endl;
-    tvFile << pEstreamSettings->cipherInitializationFrequency << " \t\t(cipher initialization frequency)" << endl;
-    tvFile << pEstreamSettings->algorithm1 << " \t\t(algorithm1: " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm1) << ")" << endl;
-    tvFile << pEstreamSettings->algorithm2 << " \t\t(algorithm2: " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm2) << ")" << endl;
-    tvFile << pEstreamSettings->ballancedTestVectors << " \t\t(ballanced test vectors?)" << endl;
-    tvFile << pEstreamSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
-    if (pEstreamSettings->limitAlgRounds) {
-        tvFile << pEstreamSettings->alg1RoundsCount << " \t\t(algorithm1: " << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
-        tvFile << pEstreamSettings->alg2RoundsCount << " \t\t(algorithm2: " << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
-    }
-    tvFile << pEstreamSettings->plaintextType << " \t\t(plaintext type)" << endl;
-    tvFile << pEstreamSettings->keyType << " \t\t(key type)" << endl;
-    tvFile << pEstreamSettings->ivType << " \t\t(IV type)" << endl;
-    tvFile.close();
 
     // generate header to human-readable test-vector file
-    tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.verbosity >= 4) {
+        tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
+        tvFile << "  stream1: using " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm1);
+        if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM && pEstreamSettings->limitAlgRounds) {
+            tvFile << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "  stream2: using " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm2);
+        if (pEstreamSettings->algorithm1 != ESTREAM_RANDOM && pEstreamSettings->limitAlgRounds) {
+            tvFile << " (" << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
+        } else {
+            tvFile << " (unlimited version)" << endl;
+        }
+        tvFile << "Test vectors formatted as PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
+        tvFile.close();
     }
-    tvFile << "Using eStream ciphers and random generator to generate test vectors." << endl;
-    tvFile << "  stream1: using " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm1);
-    if (pEstreamSettings->limitAlgRounds) {
-        tvFile << " (" << pEstreamSettings->alg1RoundsCount << " rounds)" << endl;
-    } else {
-        tvFile << " (unlimited version)" << endl;
-    }
-    tvFile << "  stream2: using " << EstreamCiphers::estreamToString(pEstreamSettings->algorithm2);
-    if (pEstreamSettings->limitAlgRounds) {
-        tvFile << " (" << pEstreamSettings->alg2RoundsCount << " rounds)" << endl;
-    } else {
-        tvFile << " (unlimited version)" << endl;
-    }
-    tvFile << "Test vectors formatted as PLAINTEXT::CIPHERTEXT::DECRYPTED" << endl;
-    tvFile.close();
 
     return STAT_OK;
 }
@@ -260,7 +268,7 @@ int EstreamProject::generateTestVectors() {
     this->m_numVectors[1] = 0;
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->outputs.saveTestVectors == 1) {
+        if (pGlobals->settings->outputs.verbosity >= 4) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();
@@ -287,7 +295,7 @@ int EstreamProject::generateTestVectors() {
 int EstreamProject::getTestVector(){
     int status = STAT_OK;
     ofstream tvFile;
-    if (pGlobals->settings->outputs.saveTestVectors) {
+    if (pGlobals->settings->outputs.verbosity >= 4) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios::app);
     }
     //! are we using algorithm1 (0) or algorithm2 (1) ?
@@ -295,7 +303,7 @@ int EstreamProject::getTestVector(){
     switch (pEstreamSettings->usageType) {
         case ESTREAM_DISTINGUISHER:
 
-            //SHALL WE BALANCE TEST VECTORS?
+            // SHALL WE BALANCE TEST VECTORS?
             if (pEstreamSettings->ballancedTestVectors && (m_numVectors[0] >= pGlobals->settings->testVectors.setSize/2))
                 cipherNumber = 1;
             else if (pEstreamSettings->ballancedTestVectors && (m_numVectors[1] >= pGlobals->settings->testVectors.setSize/2))
@@ -303,13 +311,13 @@ int EstreamProject::getTestVector(){
             else
                 rndGen->getRandomFromInterval(1, &cipherNumber);
             m_numVectors[cipherNumber]++;
-            //Signalize the correct value
-            for (int output = 0; output < pGlobals->settings->main.circuitSizeOutput; output++) m_tvOutputs[output] = cipherNumber * 0xff;
+            // Signalize the correct value
+            for (int output = 0; output < pGlobals->settings->testVectors.outputLength; output++) m_tvOutputs[output] = cipherNumber * 0xff;
 
-            //generate the plaintext for stream
+            // generate the plaintext for stream
             if ((cipherNumber == 0 && pEstreamSettings->algorithm1 != ESTREAM_RANDOM) ||
                 (cipherNumber == 1 && pEstreamSettings->algorithm2 != ESTREAM_RANDOM) ) {
-                if (pGlobals->settings->outputs.saveTestVectors == 1)
+                if (pGlobals->settings->outputs.verbosity >= 4)
                     tvFile  << "(alg n." << ((cipherNumber==0)?pEstreamSettings->algorithm1:pEstreamSettings->algorithm2) << " - " << ((cipherNumber==0)?pEstreamSettings->alg1RoundsCount:pEstreamSettings->alg2RoundsCount) << " rounds): ";
 
                 status = setupPlaintext();
@@ -323,7 +331,7 @@ int EstreamProject::getTestVector(){
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                     if (m_plaintextOut[input] != m_plaintextIn[input]) {
                         mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
-                        if (pGlobals->settings->outputs.saveTestVectors) {
+                        if (pGlobals->settings->outputs.verbosity >= 4) {
                             tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
                         }
                         status = STAT_PROJECT_ERROR;
@@ -332,7 +340,7 @@ int EstreamProject::getTestVector(){
                 }
             }
             else { // RANDOM
-                if (pGlobals->settings->outputs.saveTestVectors == 1)
+                if (pGlobals->settings->outputs.verbosity >= 4)
                     tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                     rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
@@ -359,10 +367,8 @@ int EstreamProject::getTestVector(){
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->outputs.saveTestVectors) {
-        int tvg = 0;
-        if (cipherNumber == 0) tvg = pEstreamSettings->algorithm1;
-        else tvg = pEstreamSettings->algorithm2;
+    if (pGlobals->settings->outputs.verbosity >= 4) {
+        int tvg = cipherNumber == 0 ? pEstreamSettings->algorithm1 : pEstreamSettings->algorithm2;
         tvFile << setfill('0');
 
         if (memcmp(m_tvInputs,m_plaintextIn,pGlobals->settings->testVectors.inputLength) != 0) {
@@ -410,8 +416,7 @@ int EstreamProject::generateCipherDataStream() {
         }
         if (algorithm == ESTREAM_RANDOM) {
             mainLogger.out(LOGGER_INFO) << "Algorithm " << (cipherNumber+1);
-            mainLogger.out() << " is set to random, stream data generation skipped." << endl;
-            continue;
+            mainLogger.out() << " is set to random, sampling random stream." << endl;
         } else {
             mainLogger.out(LOGGER_INFO) << "Generating stream for " << EstreamCiphers::estreamToString(algorithm);
             if (numRounds == -1) {
@@ -419,8 +424,8 @@ int EstreamProject::generateCipherDataStream() {
             } else {
                 mainLogger.out() << " (" << numRounds << " rounds)." << endl;
             }
-            mainLogger.out(LOGGER_INFO) << "Output is saved to file \"" << streamFilename << "\"." << endl;
         }
+        mainLogger.out(LOGGER_INFO) << "Output is saved to file \"" << streamFilename << "\"." << endl;
         ostream* vectorStream = NULL;
         if (pEstreamSettings->streamSize == 0) {
             vectorStream = &cout;
@@ -452,19 +457,27 @@ int EstreamProject::generateCipherDataStream() {
                     if (status != STAT_OK) return status;
                 }
 
-                status = setupPlaintext();
-                if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
-                if (status != STAT_OK) return status;
-                status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
-                if (status != STAT_OK) return status;
+                if (algorithm == ESTREAM_RANDOM) {  // RANDOM
+                    // copied from getTestVector();
+                    for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
+                        rndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+                    }
 
-                // check if plaintext = encrypted-decrypted plaintext
-                for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                    if (m_plaintextOut[input] != m_plaintextIn[input]) {
-                        status = STAT_PROJECT_ERROR;
-                        mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
-                        break;
+                } else {                            // CIPHER
+                    status = setupPlaintext();
+                    if (status != STAT_OK) return status;
+                    status = m_encryptorDecryptor->encrypt(m_plaintextIn,m_tvInputs,cipherNumber,0);
+                    if (status != STAT_OK) return status;
+                    status = m_encryptorDecryptor->decrypt(m_tvInputs,m_plaintextOut,cipherNumber,1);
+                    if (status != STAT_OK) return status;
+
+                    // check if plaintext = encrypted-decrypted plaintext
+                    for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
+                        if (m_plaintextOut[input] != m_plaintextIn[input]) {
+                            status = STAT_PROJECT_ERROR;
+                            mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input." << endl;
+                            break;
+                        }
                     }
                 }
 

@@ -104,7 +104,7 @@ using namespace std;
 #define	PUTSTATIC		0xb3
 #define	RETURN			0xb1
 #define	SIPUSH			0x11
-#define	POP				0x57 
+#define	POP				0x57
 
 
 // Stack types
@@ -119,64 +119,64 @@ using namespace std;
 
 // Structures
 struct Ins {
-	int line_number;
-	int instruction_code;
-	char *instruction;
-	char *param1, *param2;
-	char *full_line;
+    int line_number;
+    int instruction_code;
+    char *instruction;
+    char *param1, *param2;
+    char *full_line;
 };
 
 struct I {
-	struct Ins **array;
-	int filled_elements;
-	int maximum_elements;
+    struct Ins **array;
+    int filled_elements;
+    int maximum_elements;
 };
 
 struct F {
-	char *full_name;
-	char *short_name;
-	struct I *ins_array;
-	struct F *next;
+    char *full_name;
+    char *short_name;
+    struct I *ins_array;
+    struct F *next;
 };
 
 struct element {
-	int data_type;
-	//unsigned char data;
-	int32_t integer;
-	struct element *next;
+    int data_type;
+    //unsigned char data;
+    int32_t integer;
+    struct element *next;
 };
 
 struct call_element {
-	char *function;
-	int next_line;
-	struct call_element *next;
+    char *function;
+    int next_line;
+    struct call_element *next;
 };
 
 
 struct Pc {
-	char fn[MAX_LINE_LENGTH];
-	int ln;
-	struct Ins *current_ins;
+    char fn[MAX_LINE_LENGTH];
+    int ln;
+    struct Ins *current_ins;
 };
 
 struct Ga {
-	int32_t *ia;
-	signed char *ba;
-	int type;
-	int number_of_elements;
+    int32_t *ia;
+    signed char *ba;
+    int type;
+    int number_of_elements;
 };
 
 
 class JVMSimulator {
-	struct F *Functions = NULL;
-	int	numFunctions = 0;
-	struct element *Stack = NULL;
-	struct call_element *Call_stack = NULL;
+    struct F *Functions = NULL;
+    int	numFunctions = 0;
+    struct element *Stack = NULL;
+    struct call_element *Call_stack = NULL;
 
-	int32_t locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
-	int max_local_used = 0;
-	int globalarrays_count = 0;
-	struct Ga globalarrays[1000];
+    int32_t locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
+    int max_local_used = 0;
+    int globalarrays_count = 0;
+    struct Ga globalarrays[1000];
 
 public:
     JVMSimulator();
