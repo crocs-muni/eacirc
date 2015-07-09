@@ -59,6 +59,7 @@ using namespace std;
 #define	I2B	0x91
 #define	IADD	0x60
 #define	IAND	0x7e
+#define IOR		0x80
 #define IALOAD	0x2e
 #define	IASTORE	0x4f
 #define	ICONST_M1	0x2
@@ -74,6 +75,9 @@ using namespace std;
 #define	IF_ICMPGE	0xa2
 #define	IF_ICMPLE	0xa4
 #define	IF_ICMPNE	0xa0
+#define IF_ICMPEQ	0x9f
+#define IF_ICMPLT	0xa1
+#define IF_ICMPGT	0xa3
 #define IINC		0x84
 #define ILOAD		0x15
 #define	ILOAD_0		0x1a
@@ -87,6 +91,7 @@ using namespace std;
 #define IRETURN			0xac
 #define ISHL			0x78
 #define ISHR			0x7a
+#define IUSHR			0x7c
 #define	ISTORE			0x36
 #define	ISTORE_0		0x3b
 #define	ISTORE_1		0x3c

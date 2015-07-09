@@ -147,10 +147,9 @@ int32_t JVMSimulator::pop_int()
 	if (Stack == NULL)
 	{
 		//exit(ERR_STACK_EMPTY);
-		mainLogger.out(LOGGER_WARNING) << "Stack empty during POP. Returning 0." << endl;
+		//mainLogger.out(LOGGER_WARNING) << "Stack empty during POP. Returning 0." << endl;
 		return 0;
 	}
-		
 	if(Stack->data_type!=STACKTYPE_INTEGER) {
 		//exit(ERR_STACK_DATAMISMATCH);
 		mainLogger.out(LOGGER_WARNING) << "Data mismatch during POP. Returning 0." << endl;
@@ -167,7 +166,7 @@ int32_t JVMSimulator::pop_arrayref()
 {
 	if (Stack == NULL) {
 		//exit(ERR_STACK_EMPTY);
-		mainLogger.out(LOGGER_WARNING) << "Stack empty during POP ARRAYREF. Returning 0." << endl;
+		//mainLogger.out(LOGGER_WARNING) << "Stack empty during POP ARRAYREF. Returning 0." << endl;
 		return 0;
 	}
 	if (Stack->data_type != STACKTYPE_ARRAYREF) {
@@ -235,6 +234,9 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 	//printl();
 	//printf("Emulating: %s\n",PC->current_ins->full_line);
 	int jump = 0;
+
+	//mainLogger.out(LOGGER_INFO) << "Emulating instruction: " << PC->current_ins->full_line << endl;
+
 	switch (PC->current_ins->instruction_code)
 	{
 	case NOP: {
@@ -262,6 +264,14 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 				 int32_t b = pop_int();
 				 int32_t c = a&b;
 				 push_int(c);
+	}
+		break;
+	case IOR:
+	{
+				int32_t a = pop_int();
+				int32_t b = pop_int();
+				int32_t c = a|b;
+				push_int(c);
 	}
 		break;
 	case IXOR:
@@ -336,8 +346,16 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 	{
 				 int32_t a = pop_int();
 				 int32_t b = pop_int();
-				 int32_t c = b >> (a & 0x1f);
+				 int32_t c = a >> (b & 0x1f);
 				 push_int(c);
+	}
+		break;
+	case IUSHR:
+	{
+				  int32_t a = pop_int();
+				  int32_t b = pop_int();
+				  int32_t c = (int32_t)((uint32_t)a >> (b & 0x1f));
+				  push_int(c);
 	}
 		break;
 	case BIPUSH:
@@ -406,6 +424,74 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 					  }
 	}
 		break;
+	case IF_ICMPLE:
+	{
+					  int32_t value2 = pop_int();
+					  int32_t value1 = pop_int();
+					  if (value1 <= value2)
+					  {
+						  PC->ln = atoi(PC->current_ins->param1);
+						  PC->current_ins = find_ins(PC->fn, PC->ln);
+						  if (PC->current_ins == NULL){
+							  mainLogger.out(LOGGER_WARNING) << "Wrong IF_ICMPLE jump. Interrupting execution." << endl;
+							  //exit(ERR_DATA_MISMATCH);
+							  return -1;
+						  }
+						  jump = 1;
+					  }
+	}
+		break;
+	case IF_ICMPEQ:
+	{
+					  int32_t value2 = pop_int();
+					  int32_t value1 = pop_int();
+					  if (value1 == value2)
+					  {
+						  PC->ln = atoi(PC->current_ins->param1);
+						  PC->current_ins = find_ins(PC->fn, PC->ln);
+						  if (PC->current_ins == NULL){
+							  mainLogger.out(LOGGER_WARNING) << "Wrong IF_ICMPEQ jump. Interrupting execution." << endl;
+							  //exit(ERR_DATA_MISMATCH);
+							  return -1;
+						  }
+						  jump = 1;
+					  }
+	}
+		break;
+	case IF_ICMPGT:
+	{
+					  int32_t value2 = pop_int();
+					  int32_t value1 = pop_int();
+					  if (value1 > value2)
+					  {
+						  PC->ln = atoi(PC->current_ins->param1);
+						  PC->current_ins = find_ins(PC->fn, PC->ln);
+						  if (PC->current_ins == NULL){
+							  mainLogger.out(LOGGER_WARNING) << "Wrong IF_ICMPGT jump. Interrupting execution." << endl;
+							  //exit(ERR_DATA_MISMATCH);
+							  return -1;
+						  }
+						  jump = 1;
+					  }
+	}
+		break;
+	case IF_ICMPLT:
+	{
+					  int32_t value2 = pop_int();
+					  int32_t value1 = pop_int();
+					  if (value1 < value2)
+					  {
+						  PC->ln = atoi(PC->current_ins->param1);
+						  PC->current_ins = find_ins(PC->fn, PC->ln);
+						  if (PC->current_ins == NULL){
+							  mainLogger.out(LOGGER_WARNING) << "Wrong IF_ICMPLT jump. Interrupting execution." << endl;
+							  //exit(ERR_DATA_MISMATCH);
+							  return -1;
+						  }
+						  jump = 1;
+					  }
+	}
+		break;
 	case INVOKESTATIC:
 	{
 		{
@@ -466,13 +552,17 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 	}
 		break;
 	case RETURN:
+	{
+				   return -1;
+	}
+		break;
 	case ARETURN:
 	{
 					if (call_pop(PC) == 1){
 						//exit(ERR_FUNCTION_RETURNED);
 						return 1;
 					}
-					jump = 1;
+					return -1;
 	}
 		break;
 	case IRETURN:
@@ -486,7 +576,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 						return 1;
 					}
 
-					jump = 1;
+					return -1;
 	}
 		break;
 	case ILOAD_0:
@@ -572,7 +662,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 					 }
 	}
 		break;
-	/*case ASTORE_0:
+	case ASTORE_0:
 	{
 					 int32_t ref = pop_arrayref();
 					 locals[0] = ref;
@@ -629,13 +719,13 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
 				   }
 				   else 
 				   { 
-				   /*TODO: handle also other data types */ /*
+				   /*TODO: handle also other data types */
 					   mainLogger.out(LOGGER_WARNING) << "This data type is not implemented for AALOAD. Interrupting execution." << endl;
 					   //exit(ERR_NOT_IMPLEMENTED); 
 					   return 1;
 				   }
 	}
-		break;*/
+		break;
 	default:
 		break;
 	}
@@ -686,6 +776,7 @@ int JVMSimulator::white(char c)
 
 int JVMSimulator::code(char* i)
 {
+	if (!strcmp(i, "nop"))return NOP;
 	if(!strcmp(i,"aaload"))return AALOAD;
 	if(!strcmp(i,"aastore"))return AASTORE;
 	if(!strcmp(i,"aload"))return ALOAD;
@@ -709,6 +800,7 @@ int JVMSimulator::code(char* i)
 	if(!strcmp(i,"i2b"))return I2B;
 	if(!strcmp(i,"iadd"))return IADD;
 	if(!strcmp(i,"iand"))return IAND;
+	if (!strcmp(i, "ior"))return IOR;
 	if(!strcmp(i,"iaload"))return IALOAD;
 	if(!strcmp(i,"iastore"))return IASTORE;
 	if(!strcmp(i,"iconst_m1"))return ICONST_M1;
@@ -724,6 +816,9 @@ int JVMSimulator::code(char* i)
 	if(!strcmp(i,"if_icmpge"))return IF_ICMPGE;
 	if(!strcmp(i,"if_icmple"))return IF_ICMPLE;
 	if(!strcmp(i,"if_icmpne"))return IF_ICMPNE;
+	if(!strcmp(i,"if_icmpeq"))return IF_ICMPEQ;
+	if(!strcmp(i,"if_icmplt"))return IF_ICMPLT;
+	if(!strcmp(i,"if_icmpgt"))return IF_ICMPGT;
 	if(!strcmp(i,"iinc"))return IINC;
 	if(!strcmp(i,"iload"))return ILOAD;
 	if(!strcmp(i,"iload_0"))return ILOAD_0;
@@ -737,6 +832,7 @@ int JVMSimulator::code(char* i)
 	if(!strcmp(i,"ireturn"))return IRETURN;
 	if(!strcmp(i,"ishl"))return ISHL;
 	if(!strcmp(i,"ishr"))return ISHR;
+	if(!strcmp(i, "iushr"))return IUSHR;
 	if(!strcmp(i,"istore"))return ISTORE;
 	if(!strcmp(i,"istore_0"))return ISTORE_0;
 	if(!strcmp(i,"istore_1"))return ISTORE_1;
@@ -751,6 +847,7 @@ int JVMSimulator::code(char* i)
 	if(!strcmp(i,"return"))return RETURN;
 	if(!strcmp(i,"sipush"))return SIPUSH;
 
+	mainLogger.out(LOGGER_ERROR) << "Instruction not found: '" << i <<  "'." <<  endl;
 	assert(false); 
 	exit(ERR_DATA_MISMATCH);
 }
@@ -850,7 +947,9 @@ void JVMSimulator::write_output()
 
 int JVMSimulator::jvmsim_init()
 {
-	FILE *f = fopen("AES.dis", "rt");
+	//FILE *f = fopen("AES.dis", "rt");
+	FILE *f = fopen("oldNodesSimulator.dis", "rt");
+
 	if (f == NULL) return(ERR_CANNOT_OPEN_FILE);
 	char line[MAX_LINE_LENGTH], lastline[MAX_LINE_LENGTH];
 
@@ -1015,6 +1114,8 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
 		return (ERR_NO_SUCH_FUNCTION);
 	}
 
+	//mainLogger.out(LOGGER_INFO) << "Running function: " << function->short_name << "[" << line_from << ", " << line_to  << "]" << endl;
+
 	max_local_used = 0;
 	memset(locals,0,sizeof(int32_t)*MAX_NUMBER_OF_LOCAL_VARIABLES);
 
@@ -1031,11 +1132,12 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
 	int insc = EMULATE_MAX_INSTRUCTIONS;
 	do
 	{
-		int result=emulate_ins(&PC);
-		if (!result) break;
+		int result = emulate_ins(&PC);
+		if (result == -1) break;
 		//printf(".");
 		insc--;
-	} while ((strcmp(PC.fn, function->short_name) || PC.ln<line_to) && insc);
+	} while ((strcmp(PC.fn, function->short_name) || PC.ln<=line_to) && insc);
+
 	if(use_files)
 		write_output();
 	if (!insc)
