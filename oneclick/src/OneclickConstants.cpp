@@ -36,6 +36,20 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
         if(setXMLElementValue(root , PATH_SHA3_RND , Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
             throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_RND);
         break;
+
+    case PROJECT_CAESAR:
+        projectName.append(EACIRC_PROJECT_NAME_CAESAR);
+        algorithmName.append("unknown algorithm");
+        if (setXMLElementValue(root, PATH_CAESAR_ALG, Utils::itostr(algorithmConstant)) == STAT_INVALID_ARGUMETS)
+            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_ALG);
+        if (setXMLElementValue(root, PATH_CAESAR_RND, Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
+            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_RND);
+        break;
+
+    case PROJECT_FILE_DISTINGUISHER:
+        projectName.append(EACIRC_PROJECT_NAME_FILES);
+        break;
+
     default:
         throw std::runtime_error("invalid project constant set at: " + (std::string)PATH_EAC_PROJECT);
     }

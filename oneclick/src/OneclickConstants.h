@@ -116,6 +116,14 @@
 #define PATH_SHA3_ALG                "EACIRC/SHA3/ALGORITHM_1"
 #define PATH_SHA3_RND                "EACIRC/SHA3/ROUNDS_ALG_1"
 
+//Paths specific for CAESAR project + logical name of the project
+#define EACIRC_PROJECT_NAME_CAESAR   "CAESAR"
+#define PATH_CAESAR_ALG              "EACIRC/CAESAR/ALGORITHM"
+#define PATH_CAESAR_RND              "EACIRC/CAESAR/ALGORITHM_ROUNDS"
+
+//Paths specific for CAESAR project + logical name of the project
+#define EACIRC_PROJECT_NAME_FILES    "file distinguisher"
+
 //Add new project's paths below - path to algorithm and round tags have to be specified!!
 
 /////////////////////////////////////////////////////
