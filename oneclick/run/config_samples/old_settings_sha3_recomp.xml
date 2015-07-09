@@ -39,8 +39,7 @@
             <CIRCUIT_SIZE_OUTPUT>2</CIRCUIT_SIZE_OUTPUT>
         </MAIN>
         <OUTPUTS>
-            <VERBOSITY>10</VERBOSITY>
-            <GRAPH_FILES>0</GRAPH_FILES>
+            <VERBOSITY>2</VERBOSITY>
             <INTERMEDIATE_CIRCUITS>0</INTERMEDIATE_CIRCUITS>
             <ALLOW_PRUNNING>0</ALLOW_PRUNNING>
             <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>
@@ -50,12 +49,12 @@
             <SEED>145091104</SEED>
             <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>
             <USE_NET_SHARE>1</USE_NET_SHARE>
-            <QRNG_PATH>../../qrng/;C:/qrng/;D:/RandomData/;K:/RandomData/</QRNG_PATH>
+            <QRNG_PATH>../../../qrng/;../../../../qrng/;C:/qrng/</QRNG_PATH>
             <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>
         </RANDOM>
         <CUDA>
             <ENABLED>0</ENABLED>
-            <SOMETHING>something</SOMETHING>
+            <BLOCK_SIZE>512</BLOCK_SIZE>
         </CUDA>
         <GA>
             <EVOLUTION_OFF>0</EVOLUTION_OFF>

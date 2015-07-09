@@ -16,22 +16,21 @@
         <BOINC_PROJECT>EACirc</BOINC_PROJECT>      <!-- Can NOT be empty, must exist and contain valid value -->
     </OC_OPTIONS>
     <EACIRC>
-        <NOTES>sample XML document for EACirc Oneclick</NOTES>
+        <NOTES>Sample config, reference experiment</NOTES>
         <MAIN>
             <CIRCUIT_REPRESENTATION>1</CIRCUIT_REPRESENTATION>
             <PROJECT>100</PROJECT>
             <EVALUATOR>26</EVALUATOR>
-            <EVALUATOR_PRECISION>10</EVALUATOR_PRECISION>
+            <EVALUATOR_PRECISION>8</EVALUATOR_PRECISION>
             <RECOMMENCE_COMPUTATION>0</RECOMMENCE_COMPUTATION>
             <LOAD_INITIAL_POPULATION>0</LOAD_INITIAL_POPULATION>
-            <NUM_GENERATIONS>30000</NUM_GENERATIONS>
-            <SAVE_STATE_FREQ>1000</SAVE_STATE_FREQ>
+            <NUM_GENERATIONS>1000</NUM_GENERATIONS>
+            <SAVE_STATE_FREQ>100</SAVE_STATE_FREQ>
             <CIRCUIT_SIZE_INPUT>16</CIRCUIT_SIZE_INPUT>
             <CIRCUIT_SIZE_OUTPUT>1</CIRCUIT_SIZE_OUTPUT>
         </MAIN>
         <OUTPUTS>
-            <VERBOSITY>10</VERBOSITY>
-            <GRAPH_FILES>1</GRAPH_FILES>
+            <VERBOSITY>2</VERBOSITY>
             <INTERMEDIATE_CIRCUITS>0</INTERMEDIATE_CIRCUITS>
             <ALLOW_PRUNNING>0</ALLOW_PRUNNING>
             <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>
@@ -40,18 +39,18 @@
             <USE_FIXED_SEED>0</USE_FIXED_SEED>
             <SEED>145091104</SEED>
             <BIAS_RNDGEN_FACTOR>95</BIAS_RNDGEN_FACTOR>
-            <USE_NET_SHARE>1</USE_NET_SHARE>
-            <QRNG_PATH>../../qrng/;C:/qrng/;D:/RandomData/;K:/RandomData/</QRNG_PATH>
+            <USE_NET_SHARE>0</USE_NET_SHARE>
+            <QRNG_PATH>../../../qrng/;../../../../qrng/;C:/qrng/</QRNG_PATH>
             <QRNG_MAX_INDEX>192</QRNG_MAX_INDEX>
         </RANDOM>
         <CUDA>
             <ENABLED>0</ENABLED>
-            <SOMETHING>something</SOMETHING>
+            <BLOCK_SIZE>512</BLOCK_SIZE>
         </CUDA>
         <GA>
             <EVOLUTION_OFF>0</EVOLUTION_OFF>
-            <POPULATION_SIZE>20</POPULATION_SIZE>
-            <REPLACEMENT_SIZE>13</REPLACEMENT_SIZE>
+            <POPULATION_SIZE>1</POPULATION_SIZE>
+            <REPLACEMENT_SIZE>1</REPLACEMENT_SIZE>
             <PROB_CROSSING>0.0</PROB_CROSSING>
             <PROB_MUTATION>0.05</PROB_MUTATION>
             <MUTATE_FUNCTIONS>1</MUTATE_FUNCTIONS>
@@ -72,32 +71,32 @@
                 <FNC_XOR>1</FNC_XOR>
                 <FNC_NOR>1</FNC_NOR>
                 <FNC_NOT>1</FNC_NOT>
-                <FNC_SHIL>0</FNC_SHIL>
-                <FNC_SHIR>0</FNC_SHIR>
-                <FNC_ROTL>0</FNC_ROTL>
-                <FNC_ROTR>0</FNC_ROTR>
-                <FNC_EQ>0</FNC_EQ>
-                <FNC_LT>0</FNC_LT>
-                <FNC_GT>0</FNC_GT>
-                <FNC_LEQ>0</FNC_LEQ>
-                <FNC_GEQ>0</FNC_GEQ>
+                <FNC_SHIL>1</FNC_SHIL>
+                <FNC_SHIR>1</FNC_SHIR>
+                <FNC_ROTL>1</FNC_ROTL>
+                <FNC_ROTR>1</FNC_ROTR>
+                <FNC_EQ>1</FNC_EQ>
+                <FNC_LT>1</FNC_LT>
+                <FNC_GT>1</FNC_GT>
+                <FNC_LEQ>1</FNC_LEQ>
+                <FNC_GEQ>1</FNC_GEQ>
                 <FNC_BSLC>1</FNC_BSLC>
                 <FNC_READ>0</FNC_READ>
-                <FNC_EXT>0</FNC_EXT>
+                <FNC_JVM>0</FNC_JVM>
             </ALLOWED_FUNCTIONS>
         </GATE_CIRCUIT>
         <POLYNOMIAL_CIRCUIT>
             <NUM_POLYNOMIALS>1</NUM_POLYNOMIALS>
-            <MAX_TERMS>50</MAX_TERMS>
+            <MAX_NUM_TERMS>50</MAX_NUM_TERMS>
             <MUTATE_TERM_STRATEGY>1</MUTATE_TERM_STRATEGY>
-            <TERM_COUNT_P>1.00</TERM_COUNT_P>
-            <TERM_VAR_P>0.60</TERM_VAR_P>
-            <ADD_TERM_P>0.05</ADD_TERM_P>
+            <TERM_COUNT_PROB>1.00</TERM_COUNT_PROB>
+            <TERM_VAR_PROB>0.60</TERM_VAR_PROB>
+            <ADD_TERM_PROB>0.05</ADD_TERM_PROB>
             <ADD_TERM_STRATEGY>0</ADD_TERM_STRATEGY>
-            <RM_TERM_P>0.05</RM_TERM_P>
+            <RM_TERM_PROB>0.05</RM_TERM_PROB>
             <RM_TERM_STRATEGY>0</RM_TERM_STRATEGY>
             <CROSSOVER_RANDOMIZE_POLY>1</CROSSOVER_RANDOMIZE_POLY>
-            <CROSSOVER_TERM_P>0.05</CROSSOVER_TERM_P>
+            <CROSSOVER_TERM_PROB>0.05</CROSSOVER_TERM_PROB>
         </POLYNOMIAL_CIRCUIT>
         <TEST_VECTORS>
             <INPUT_LENGTH>16</INPUT_LENGTH>
@@ -110,17 +109,17 @@
         <ESTREAM>
             <USAGE_TYPE>101</USAGE_TYPE>
             <CIPHER_INIT_FREQ>0</CIPHER_INIT_FREQ>
-            <ALGORITHM_1>23</ALGORITHM_1>
+            <ALGORITHM_1>99</ALGORITHM_1>
             <ALGORITHM_2>99</ALGORITHM_2>
             <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>
             <LIMIT_NUM_OF_ROUNDS>1</LIMIT_NUM_OF_ROUNDS>
-            <ROUNDS_ALG_1>0</ROUNDS_ALG_1>
-            <ROUNDS_ALG_2>0</ROUNDS_ALG_2>
-            <PLAINTEXT_TYPE>3</PLAINTEXT_TYPE>
+            <ROUNDS_ALG_1>3</ROUNDS_ALG_1>
+            <ROUNDS_ALG_2>2</ROUNDS_ALG_2>
+            <PLAINTEXT_TYPE>0</PLAINTEXT_TYPE>
             <KEY_TYPE>2</KEY_TYPE>
             <IV_TYPE>0</IV_TYPE>
             <GENERATE_STREAM>0</GENERATE_STREAM>
-            <STREAM_SIZE>1024</STREAM_SIZE>
+            <STREAM_SIZE>5242880</STREAM_SIZE>
         </ESTREAM>
         <SHA3>
             <USAGE_TYPE>201</USAGE_TYPE>
@@ -132,20 +131,35 @@
             <HASHLENGTH_ALG_1>256</HASHLENGTH_ALG_1>
             <HASHLENGTH_ALG_2>256</HASHLENGTH_ALG_2>
             <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>
-            <LIMIT_NUM_OF_ROUNDS>1</LIMIT_NUM_OF_ROUNDS>
-            <ROUNDS_ALG_1>0</ROUNDS_ALG_1>
+            <LIMIT_NUM_OF_ROUNDS>0</LIMIT_NUM_OF_ROUNDS>
+            <ROUNDS_ALG_1>3</ROUNDS_ALG_1>
             <ROUNDS_ALG_2>0</ROUNDS_ALG_2>
-            <GENERATE_STREAM>1</GENERATE_STREAM>
+            <GENERATE_STREAM>0</GENERATE_STREAM>
             <STREAM_SIZE>5242880</STREAM_SIZE>
         </SHA3>
+        <CAESAR>
+            <USAGE_TYPE>301</USAGE_TYPE>
+            <ALGORITHM>1</ALGORITHM>
+            <LIMIT_NUM_OF_ROUNDS>0</LIMIT_NUM_OF_ROUNDS>
+            <ALGORITHM_ROUNDS>0</ALGORITHM_ROUNDS>
+            <PLAINTEXT_LENGTH>16</PLAINTEXT_LENGTH>
+            <AD_LENGTH>2</AD_LENGTH>
+            <PLAINTEXT_TYPE>2</PLAINTEXT_TYPE>
+            <KEY_TYPE>1</KEY_TYPE>
+            <AD_TYPE>0</AD_TYPE>
+            <SMN_TYPE>0</SMN_TYPE>
+            <PMN_TYPE>0</PMN_TYPE>
+            <GENERATE_STREAM>0</GENERATE_STREAM>
+            <STREAM_SIZE>5242880</STREAM_SIZE>
+        </CAESAR>
         <FILES>
             <USAGE_TYPE>401</USAGE_TYPE>
-            <FILENAME_1>../../qrng/Random00.bin</FILENAME_1>
-            <FILENAME_2>../../qrng/Random01.bin</FILENAME_2>
+            <FILENAME_1>../../../qrng/Random000.bin</FILENAME_1>
+            <FILENAME_2>../../../qrng/Random001.bin</FILENAME_2>
             <BALLANCED_TEST_VECTORS>1</BALLANCED_TEST_VECTORS>
             <USE_FIXED_INITIAL_OFFSET>1</USE_FIXED_INITIAL_OFFSET>
-            <INITIAL_OFFSET_1>1048576</INITIAL_OFFSET_1>
-            <INITIAL_OFFSET_2>1048000</INITIAL_OFFSET_2>
+            <INITIAL_OFFSET_1>0</INITIAL_OFFSET_1>
+            <INITIAL_OFFSET_2>0</INITIAL_OFFSET_2>
         </FILES>
     </EACIRC>
 </ONECLICK>
