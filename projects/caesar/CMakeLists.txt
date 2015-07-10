@@ -6,6 +6,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 set(SOURCES
     CaesarProject.cpp
     CaesarInterface.cpp
+    CaesarCiphers.cpp
     Encryptor.cpp
 # === CAESAR algorithms ===
     aead/common/crypto_verify_16.cpp
@@ -594,6 +595,7 @@ set(HEADERS
     CaesarConstants.h
     CaesarProject.h
     CaesarInterface.h
+    CaesarCiphers.h
     Encryptor.h
 # === CAESAR algorithms ===
     aead/common/api.h
