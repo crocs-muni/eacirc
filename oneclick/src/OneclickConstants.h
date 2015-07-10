@@ -7,6 +7,7 @@
 #include "EACconstants.h"
 #include "estream/EstreamCiphers.h"
 #include "sha3/Sha3Functions.h"
+#include "caesar/CaesarCiphers.h"
 
 #include "XMLproc.h"
 #include "FileLogger.hpp"

@@ -11,6 +11,7 @@ set(SOURCES
     # === project files ===
     ${PROJECTS_DIR}/estream/EstreamCiphers.cpp
     ${PROJECTS_DIR}/sha3/Sha3Functions.cpp
+    ${PROJECTS_DIR}/caesar/CaesarCiphers.cpp
 )
 
 # === header files ===
@@ -30,6 +31,7 @@ set(HEADERS
     # === project files ===
     ${PROJECTS_DIR}/estream/EstreamCiphers.h
     ${PROJECTS_DIR}/sha3/Sha3Functions.h
+    ${PROJECTS_DIR}/caesar/CaesarCiphers.h
 )
 
 set(OTHER_FILES

@@ -39,7 +39,10 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
 
     case PROJECT_CAESAR:
         projectName.append(EACIRC_PROJECT_NAME_CAESAR);
-        algorithmName.append("unknown algorithm");
+        algorithmName.append(CaesarCiphers::caesarToString(algorithmConstant));
+        if (algorithmName.compare("(unknown cipher)") == 0) {
+            throw std::runtime_error("unknown algorithm constant: " + Utils::itostr(algorithmConstant));
+        }
         if (setXMLElementValue(root, PATH_CAESAR_ALG, Utils::itostr(algorithmConstant)) == STAT_INVALID_ARGUMETS)
             throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_ALG);
         if (setXMLElementValue(root, PATH_CAESAR_RND, Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
