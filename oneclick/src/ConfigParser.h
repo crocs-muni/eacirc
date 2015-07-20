@@ -59,13 +59,13 @@ private:
     //Typedefs for easier orientation. 
     //algorithm_rounds store 
     //    -first: algorithm constant
-    //  -second: rounds that will be used with this constant
+    //    -second: rounds that will be used with this constant
     //attribute_values store
     //    -first: attribute of the tag the values was taken from
     //    -second: integral representation of values from tag
     //_v are vectors with values described above
-    typedef std::pair<int , std::vector<int>>                        algorithm_rounds;
-    typedef std::pair<std::string , std::vector<int>>                attribute_values;
+    typedef std::pair<int , std::vector<int>>                         algorithm_rounds;
+    typedef std::pair<std::string , std::vector<int>>                 attribute_values;
     typedef std::vector<std::pair<int , std::vector<int>>>            algorithm_rounds_v;
     typedef std::vector<std::pair<std::string , std::vector<int>>>    attribute_values_v;
 public:

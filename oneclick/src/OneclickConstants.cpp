@@ -58,6 +58,26 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
     }
 }
 
+std::string OneclickConstants::getProjectAlgorithmPath(int projectConstant) {
+    switch (projectConstant) {
+    case PROJECT_ESTREAM:   return PATH_ESTR_ALG;
+    case PROJECT_SHA3:      return PATH_SHA3_ALG;
+    case PROJECT_CAESAR:    return PATH_CAESAR_ALG;
+    default:
+        throw std::runtime_error("invalid project constant set at: " + (std::string)PATH_EAC_PROJECT);
+    }
+}
+
+std::string OneclickConstants::getProjectRoundPath(int projectConstant) {
+    switch (projectConstant) {
+    case PROJECT_ESTREAM:   return PATH_ESTR_RND;
+    case PROJECT_SHA3:      return PATH_SHA3_RND;
+    case PROJECT_CAESAR:    return PATH_CAESAR_RND;
+    default:
+        throw std::runtime_error("invalid project constant set at: " + (std::string)PATH_EAC_PROJECT);
+    }
+}
+
 int OneclickConstants::getBoincProjectID(const std::string & logicalProjectName) {
     if (logicalProjectName.compare(BOINC_PROJECT_NAME_EACIRC_MAIN) == 0) return BOINC_PROJECT_ID_EACIRC_MAIN;
     if (logicalProjectName.compare(BOINC_PROJECT_NAME_EACIRC_DEV) == 0) return BOINC_PROJECT_ID_EACIRC_DEV;

@@ -73,6 +73,16 @@ ConfigParser::algorithm_rounds_v ConfigParser::createAlgorithmsRounds() {
         } catch(std::out_of_range) {     throw std::runtime_error("attribute algorithm constant in SPECIFIC_ROUNDS is out of range"); }
     }
 
+    //Checking if ALGORITHMS and ROUNDS options were set
+    //Needed only when specific rounds weren't set
+    //If not, use values from main EACIRC config
+    //If correct values are not set in EAC config this will fail!
+    if (algorithms.size() == 0 && specificRounds.size() == 0)
+        algorithms.push_back(getXMLValue(OneclickConstants::getProjectAlgorithmPath(project)));
+    if (rounds.size() == 0 && specificRounds.size() == 0)
+        rounds.push_back(getXMLValue(OneclickConstants::getProjectRoundPath(project)));
+
+
     //Saving algorithms into algorithm_rounds_v structure
     for(unsigned i = 0 ; i < algorithms.size() ; i++) {
         singleAlg.first = algorithms[i];

@@ -219,6 +219,22 @@ public:
     static void setAlgorithmSpecifics(TiXmlNode * root , int projectConstant , int algorithmConstant , 
         int rounds , std::string & projectName , std::string & algorithmName);
 
+    /** Returns XML path to project algorithm setting.
+      * UPDATE THIS FUNCTION WHEN ADDING NEW PROJECT!!!
+      * @param projectConstant          constant of the project
+      * @return                         path to algorithm setting
+      * @throws                         std::runtime_error if project constant is invalid
+      */
+    static std::string getProjectAlgorithmPath(int projectConstant);
+
+    /** Returns XML path to project rounds setting.
+      * UPDATE THIS FUNCTION WHEN ADDING NEW PROJECT!!!
+      * @param projectConstant          constant of the project
+      * @return                         path to rounds setting
+      * @throws                         std::runtime_error if project constant is invalid
+      */
+    static std::string getProjectRoundPath(int projetConstant);
+
     /** Takes logical project name set in Oneclick config and returns project ID
       * belonging to this project. Make changes here should be added new projects 
       * or renamed old constants.
