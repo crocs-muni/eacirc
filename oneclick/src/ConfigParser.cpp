@@ -5,9 +5,9 @@ ConfigParser::ConfigParser(std::string path) {
     oneclickLogger << FileLogger::LOG_INFO << "started parsing config file\n";
 
     wuIdentifier = getXMLElementValue(root , PATH_OC_WU_ID);
-    checkWuIdentifier();
+    checkWUIdentifier();
 
-    //Get BOINC project contant => logical string from tag have to be converted to BOINC project constant
+    //Get BOINC project constant => logical string from tag have to be converted to BOINC project constant
     //in method getBoincProjectID
     boincProjectID = OneclickConstants::getBoincProjectID(getXMLElementValue(root, PATH_OC_BOINC_PROJECT));
 
@@ -255,9 +255,10 @@ void ConfigParser::sort2D(ConfigParser::algorithm_rounds_v & a) {
     }
 }
 
-void ConfigParser::checkWuIdentifier() {
-    if (wuIdentifier.length() > 63) throw std::runtime_error("wu identifier is too long");
+void ConfigParser::checkWUIdentifier() {
+    if (wuIdentifier.length() > BOINC_MAX_WU_NAME_LENGTH)
+        throw std::runtime_error("workunit identifier is too long");
     std::regex valid("^[A-Za-z0-9\\[\\]\\-_()]*$");
-    if(!std::regex_match(wuIdentifier, valid))
-        throw std::runtime_error("illegal characters in wu identifier");
+    if (!std::regex_match(wuIdentifier, valid))
+        throw std::runtime_error("workunit identifier contains illegal characters");
 }

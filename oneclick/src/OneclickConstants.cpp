@@ -16,13 +16,6 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
         if(algorithmName.compare("(unknown stream cipher)") == 0) {
             throw std::runtime_error("unknown algorithm constant: " + Utils::itostr(algorithmConstant));
         }
-
-        //Setting values into new config.xml file, paths to corresponding tags
-        //should be defined as constants.
-        if(setXMLElementValue(root , PATH_ESTR_ALG , Utils::itostr(algorithmConstant)) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_ESTR_ALG);
-        if(setXMLElementValue(root , PATH_ESTR_RND , Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_ESTR_RND);
         break;
 
     case PROJECT_SHA3:
@@ -31,10 +24,6 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
         if(algorithmName.compare("(unknown hash function)") == 0) {
             throw std::runtime_error("unknown algorithm constant: " + Utils::itostr(algorithmConstant));
         }
-        if(setXMLElementValue(root , PATH_SHA3_ALG , Utils::itostr(algorithmConstant)) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_ALG);
-        if(setXMLElementValue(root , PATH_SHA3_RND , Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_RND);
         break;
 
     case PROJECT_CAESAR:
@@ -43,10 +32,6 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
         if (algorithmName.compare("(unknown cipher)") == 0) {
             throw std::runtime_error("unknown algorithm constant: " + Utils::itostr(algorithmConstant));
         }
-        if (setXMLElementValue(root, PATH_CAESAR_ALG, Utils::itostr(algorithmConstant)) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_ALG);
-        if (setXMLElementValue(root, PATH_CAESAR_RND, Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_SHA3_RND);
         break;
 
     case PROJECT_FILE_DISTINGUISHER:
@@ -56,6 +41,13 @@ void OneclickConstants::setAlgorithmSpecifics(TiXmlNode * root , int projectCons
     default:
         throw std::runtime_error("invalid project constant set at: " + (std::string)PATH_EAC_PROJECT);
     }
+
+    //Setting algoritm constant and rounds into config file on project specific paths
+    //Every project should have case in methods getProjectAlgorithmPath and getProjectRoundPath
+    if (setXMLElementValue(root, getProjectAlgorithmPath(projectConstant), Utils::itostr(algorithmConstant)) == STAT_INVALID_ARGUMETS)
+        throw std::runtime_error("invalid requested path in config: " + getProjectAlgorithmPath(projectConstant));
+    if (setXMLElementValue(root, getProjectRoundPath(projectConstant), Utils::itostr(rounds)) == STAT_INVALID_ARGUMETS)
+        throw std::runtime_error("invalid requested path in config: " + getProjectRoundPath(projectConstant));
 }
 
 std::string OneclickConstants::getProjectAlgorithmPath(int projectConstant) {
@@ -63,6 +55,7 @@ std::string OneclickConstants::getProjectAlgorithmPath(int projectConstant) {
     case PROJECT_ESTREAM:   return PATH_ESTR_ALG;
     case PROJECT_SHA3:      return PATH_SHA3_ALG;
     case PROJECT_CAESAR:    return PATH_CAESAR_ALG;
+    //Add new project case below. All values should be defined as constants.
     default:
         throw std::runtime_error("invalid project constant set at: " + (std::string)PATH_EAC_PROJECT);
     }
@@ -73,6 +66,7 @@ std::string OneclickConstants::getProjectRoundPath(int projectConstant) {
     case PROJECT_ESTREAM:   return PATH_ESTR_RND;
     case PROJECT_SHA3:      return PATH_SHA3_RND;
     case PROJECT_CAESAR:    return PATH_CAESAR_RND;
+    //Add new project case below. All values should be defined as constants.
     default:
         throw std::runtime_error("invalid project constant set at: " + (std::string)PATH_EAC_PROJECT);
     }

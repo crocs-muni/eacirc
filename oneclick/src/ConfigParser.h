@@ -190,11 +190,11 @@ private:
       */
     void sort2D(algorithm_rounds_v & a);
 
-    /** Checks wu identifier for length(63 maximum) and illegal characters.
-      * Illegal character is everything except A-Z a-z 0-9 [ ] ( ) - _
-      * @throws runtime_error        if length is exceeded or illegal character is found
+    /** Checks workunit identifier for illegal characters and length.
+      * Illegal character is everything except A-Z a-z 0-9 () [] - _
+      * @throws std::runtime_error          when wu identifier is not valid
       */
-    void checkWuIdentifier();
+    void checkWUIdentifier();
 };
 
 #endif //CONFIGPARSER_H

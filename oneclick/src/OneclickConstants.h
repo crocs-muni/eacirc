@@ -188,6 +188,12 @@
 #define BOINC_PROJECT_SHORT_EACIRC_DEV                 "EACdev"
 
 /////////////////////////////////////////////////////
+//**************Values for BOINC*******************//
+/////////////////////////////////////////////////////
+
+#define BOINC_MAX_WU_NAME_LENGTH    45
+
+/////////////////////////////////////////////////////
 //****************Error return values**************//
 /////////////////////////////////////////////////////
 
@@ -205,8 +211,8 @@ public:
       * Also sets algorithm and number of rounds into given config file.
       * When new project is added to EACirc framework, new "case" have to be added for project in this method!!!
       * Case sets projectName and algorithmName to human-readable destription of project and algorithm.
-      * Case also sets values of ALGORITHM and ROUND in project specific settings. Paths to these
-      * tags should be added into Oneclick constants.
+      * Function uses functions getProjectAlgorithmPath and getProjectRoundPath to set algorithm constant
+      * and rounds to project specific paths. When adding new project, add cases to these functions.
       * @param root                    root of DOM structure of XML config
       * @param projectConstant         constant of project
       * @param algorithmConstant       constant of algorithm

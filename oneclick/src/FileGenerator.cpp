@@ -50,6 +50,7 @@ void FileGenerator::generateFiles() {
 
     //Variables declaration
     TiXmlNode * n = NULL;
+    int invalidConfigs = 0;
     std::string configName , wuName , notes , projectName , wuID;
     std::string algorithmName , archiveName , createWuMethod;
     std::string downloadRemDirMethod , extractDeleteArchiveMethod;
@@ -58,7 +59,6 @@ void FileGenerator::generateFiles() {
     int algorithmConstant = 0;
     int algorithmRounds = 0;
 
-    if (configs.size() == 0) throw std::runtime_error("no valid configs specified to generate");
     Utils::createDirectory(DIRECTORY_CFGS);
 
     oneclickLogger << FileLogger::LOG_INFO << "started generating config files\n";
@@ -90,55 +90,66 @@ void FileGenerator::generateFiles() {
         if(wuID.length() > 0) wuName.append("_" + wuID);
         configName = wuName + ".xml";
 
-        //Adding lines to upload and download script
-        createWuMethod = createWuMethodPrototype;
-        replaceInString(createWuMethod , KEYWORD_METHOD_CREATE_WU , DEFAULT_METHOD_CREATE_WU_NAME);
-        replaceInString(createWuMethod , KEYWORD_WU_NAME , wuName);
-        replaceInString(createWuMethod , KEYWORD_CONFIG_PATH , DIRECTORY_CFGS + configName);
+        //Check for workunit name length
+        if (wuName.length() <= BOINC_MAX_WU_NAME_LENGTH) {
+            //Adding lines to upload and download script
+            createWuMethod = createWuMethodPrototype;
+            replaceInString(createWuMethod, KEYWORD_METHOD_CREATE_WU, DEFAULT_METHOD_CREATE_WU_NAME);
+            replaceInString(createWuMethod, KEYWORD_WU_NAME, wuName);
+            replaceInString(createWuMethod, KEYWORD_CONFIG_PATH, DIRECTORY_CFGS + configName);
 
-        uploadScriptPosition = insertIntoScript(uploadScriptSample , createWuMethodPrototype ,
-            createWuMethod , uploadScriptPosition , createWuFirstInsert);
-        createWuFirstInsert = false;
+            uploadScriptPosition = insertIntoScript(uploadScriptSample, createWuMethodPrototype,
+                createWuMethod, uploadScriptPosition, createWuFirstInsert);
+            createWuFirstInsert = false;
 
-        downloadRemDirMethod = downloadRemDirMethodPrototype;
-        replaceInString(downloadRemDirMethod , KEYWORD_METHOD_DOWNLOAD_REM_DIR , DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME);
-        replaceInString(downloadRemDirMethod , KEYWORD_REM_DIR_NAME , wuName);
+            downloadRemDirMethod = downloadRemDirMethodPrototype;
+            replaceInString(downloadRemDirMethod, KEYWORD_METHOD_DOWNLOAD_REM_DIR, DEFAULT_METHOD_DOWNLOAD_REM_DIR_NAME);
+            replaceInString(downloadRemDirMethod, KEYWORD_REM_DIR_NAME, wuName);
 
-        downloadScriptPosition = insertIntoScript(downloadScriptSample , downloadRemDirMethodPrototype ,
-            downloadRemDirMethod , downloadScriptPosition , downloadRemDirFirstInsert);
-        downloadRemDirFirstInsert = false;
+            downloadScriptPosition = insertIntoScript(downloadScriptSample, downloadRemDirMethodPrototype,
+                downloadRemDirMethod, downloadScriptPosition, downloadRemDirFirstInsert);
+            downloadRemDirFirstInsert = false;
 
-        archiveName = wuName + ".zip";
-        extractDeleteArchiveMethod = extractDeleteArchiveMethodPrototype;
-        replaceInString(extractDeleteArchiveMethod , KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE , DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME);
-        replaceInString(extractDeleteArchiveMethod , KEYWORD_ARCHIVE_NAME , archiveName);
+            archiveName = wuName + ".zip";
+            extractDeleteArchiveMethod = extractDeleteArchiveMethodPrototype;
+            replaceInString(extractDeleteArchiveMethod, KEYWORD_METHOD_EXTRACT_DELETE_ARCHIVE, DEFAULT_METHOD_EXTRACT_DELETE_ARCHIVE_NAME);
+            replaceInString(extractDeleteArchiveMethod, KEYWORD_ARCHIVE_NAME, archiveName);
 
-        downloadScriptPosition = insertIntoScript(downloadScriptSample , extractDeleteArchiveMethodPrototype ,
-            extractDeleteArchiveMethod , downloadScriptPosition , extractDeleteArchiveFirstInsert);
-        extractDeleteArchiveFirstInsert = false;
+            downloadScriptPosition = insertIntoScript(downloadScriptSample, extractDeleteArchiveMethodPrototype,
+                extractDeleteArchiveMethod, downloadScriptPosition, extractDeleteArchiveFirstInsert);
+            extractDeleteArchiveFirstInsert = false;
 
-        if(wuID.length() > 0) {
-            notes.append(" [");
-            notes.append(wuID);
-            notes.append("]");
+            if (wuID.length() > 0) {
+                notes.append(" [");
+                notes.append(wuID);
+                notes.append("]");
+            }
+
+            //Setting notes in config
+            if (setXMLElementValue(root, PATH_EAC_NOTES, notes) == STAT_INVALID_ARGUMETS)
+                throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_EAC_NOTES);
+            n = eacNode->Clone();
+
+            //Saving config to file
+            if (saveXMLFile(n, DIRECTORY_CFGS + configName) != STAT_OK)
+                throw std::runtime_error("can't save file: " + (std::string)DIRECTORY_CFGS + configName);
+
+            n = NULL;
+        }
+        else {
+            oneclickLogger << FileLogger::LOG_WARNING << "job " << wuName << " wasn't generated: name is too long\n";
+            invalidConfigs++;
         }
 
-        //Setting notes in config
-        if(setXMLElementValue(root , PATH_EAC_NOTES , notes) == STAT_INVALID_ARGUMETS)
-            throw std::runtime_error("invalid requested path in config: " + (std::string)PATH_EAC_NOTES);
-        n = eacNode->Clone();
-
-        //Saving config to file
-        if(saveXMLFile(n , DIRECTORY_CFGS + configName) != STAT_OK)
-            throw std::runtime_error("can't save file: " + (std::string)DIRECTORY_CFGS + configName);
-
-        n = NULL;
+        //Cleanup
         downloadRemDirMethod.clear() ; archiveName.clear() ; createWuMethod.clear() ; extractDeleteArchiveMethod.clear();
         wuName.clear() ; notes.clear() ; configName.clear() ; algorithmName.clear() ; projectName.clear(); wuID.clear();
 
     } // End of config generation
-    
-    oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configs.size()) << " configs were generated\n";
+
+    if ((configs.size() - invalidConfigs) == 0) throw std::runtime_error("no valid configs could be generated");
+
+    oneclickLogger << FileLogger::LOG_INFO << Utils::itostr(configs.size() - invalidConfigs) << " configs were generated\n";
 
     std::string uploadScriptName;
     std::string downloadScriptName;
