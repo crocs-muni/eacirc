@@ -1,6 +1,3 @@
-namespace Joltikeq12864v1_raw {
-int numRounds = -1;
-
 /*
  * Joltik=-128-64 Reference C Implementation
  *
@@ -28,8 +25,11 @@ int numRounds = -1;
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "joltik.h"
-#include "tweakableBC.h"
+#include "joltikeq12864v1_joltik.h"
+#include "joltikeq12864v1_tweakableBC.h"
+
+// CHANGE namespace moved due to includes
+namespace Joltikeq12864v1_raw {
 
 /* Define the three MSB of the tweak (that depend on the stage) */
 #define MSB_AD               (0x2<<4)
