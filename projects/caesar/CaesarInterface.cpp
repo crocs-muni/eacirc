@@ -68,10 +68,10 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_ISCREAM12V2: { return new Iscream12v2(numRounds); };
         case CAESAR_ISCREAM14V1: { return new Iscream14v1(numRounds); };
         case CAESAR_ISCREAM14V2: { return new Iscream14v2(numRounds); };
-//        case CAESAR_SCREAM10V1: { return new Scream10v1(numRounds); };
-//        case CAESAR_SCREAM10V2: { return new Scream10v2(numRounds); };
-//        case CAESAR_SCREAM12V1: { return new Scream12v1(numRounds); };
-//        case CAESAR_SCREAM12V2: { return new Scream12v2(numRounds); };
+        case CAESAR_SCREAM10V1: { return new Scream10v1(numRounds); };
+        case CAESAR_SCREAM10V2: { return new Scream10v2(numRounds); };
+        case CAESAR_SCREAM12V1: { return new Scream12v1(numRounds); };
+        case CAESAR_SCREAM12V2: { return new Scream12v2(numRounds); };
 //        case CAESAR_JOLTIKEQ12864V1: { return new Joltikeq12864v1(numRounds); };
 //        case CAESAR_JOLTIKEQ6464V1: { return new Joltikeq6464v1(numRounds); };
 //        case CAESAR_JOLTIKEQ8048V1: { return new Joltikeq8048v1(numRounds); };

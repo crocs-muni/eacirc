@@ -59,10 +59,10 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_ISCREAM12V2:        return "SCREAM - iscream12v2";
     case CAESAR_ISCREAM14V1:        return "SCREAM - iscream14v1";
     case CAESAR_ISCREAM14V2:        return "SCREAM - iscream14v2";
-        //    case CAESAR_SCREAM10V1:        return "SCREAM - scream10v1";
-        //    case CAESAR_SCREAM10V2:        return "SCREAM - scream10v2";
-        //    case CAESAR_SCREAM12V1:        return "SCREAM - scream12v1";
-        //    case CAESAR_SCREAM12V2:        return "SCREAM - scream12v2";
+    case CAESAR_SCREAM10V1:        return "SCREAM - scream10v1";
+    case CAESAR_SCREAM10V2:        return "SCREAM - scream10v2";
+    case CAESAR_SCREAM12V1:        return "SCREAM - scream12v1";
+    case CAESAR_SCREAM12V2:        return "SCREAM - scream12v2";
         //    case CAESAR_JOLTIKEQ12864V1:        return "Joltik - joltikeq12864v1";
         //    case CAESAR_JOLTIKEQ6464V1:        return "Joltik - joltikeq6464v1";
         //    case CAESAR_JOLTIKEQ8048V1:        return "Joltik - joltikeq8048v1";

@@ -210,18 +210,18 @@ set(SOURCES
     aead/scream/iscream14v2/iscream14v2_iscream_cipher.cpp
     aead/scream/iscream14v2/iscream14v2_tae.cpp
     aead/scream/iscream14v2/Iscream14v2.cpp
-#    aead/scream/scream10v1/scream10v1_scream_cipher.cpp
-#    aead/scream/scream10v1/scream10v1_tae.cpp
-#    aead/scream/scream10v1/Scream10v1.cpp
-#    aead/scream/scream10v2/scream10v2_scream_cipher.cpp
-#    aead/scream/scream10v2/scream10v2_tae.cpp
-#    aead/scream/scream10v2/Scream10v2.cpp
-#    aead/scream/scream12v1/scream12v1_scream_cipher.cpp
-#    aead/scream/scream12v1/scream12v1_tae.cpp
-#    aead/scream/scream12v1/Scream12v1.cpp
-#    aead/scream/scream12v2/scream12v2_scream_cipher.cpp
-#    aead/scream/scream12v2/scream12v2_tae.cpp
-#    aead/scream/scream12v2/Scream12v2.cpp
+    aead/scream/scream10v1/scream10v1_scream_cipher.cpp
+    aead/scream/scream10v1/scream10v1_tae.cpp
+    aead/scream/scream10v1/Scream10v1.cpp
+    aead/scream/scream10v2/scream10v2_scream_cipher.cpp
+    aead/scream/scream10v2/scream10v2_tae.cpp
+    aead/scream/scream10v2/Scream10v2.cpp
+    aead/scream/scream12v1/scream12v1_scream_cipher.cpp
+    aead/scream/scream12v1/scream12v1_tae.cpp
+    aead/scream/scream12v1/Scream12v1.cpp
+    aead/scream/scream12v2/scream12v2_scream_cipher.cpp
+    aead/scream/scream12v2/scream12v2_tae.cpp
+    aead/scream/scream12v2/Scream12v2.cpp
 #    aead/joltik/joltikeq12864v1/joltikeq12864v1_encrypt.cpp
 #    aead/joltik/joltikeq12864v1/joltikeq12864v1_joltik.cpp
 #    aead/joltik/joltikeq12864v1/joltikeq12864v1_tweakableBC.cpp
@@ -847,30 +847,30 @@ set(HEADERS
     aead/scream/iscream14v2/iscream14v2_sbox.h
     aead/scream/iscream14v2/iscream14v2_encrypt.h
     aead/scream/iscream14v2/Iscream14v2.h
-#    aead/scream/scream10v1/scream10v1_api.h
-#    aead/scream/scream10v1/scream10v1_lbox.h
-#    aead/scream/scream10v1/scream10v1_params.h
-#    aead/scream/scream10v1/scream10v1_sbox.h
-#    aead/scream/scream10v1/scream10v1_encrypt.h
-#    aead/scream/scream10v1/Scream10v1.h
-#    aead/scream/scream10v2/scream10v2_api.h
-#    aead/scream/scream10v2/scream10v2_lbox.h
-#    aead/scream/scream10v2/scream10v2_params.h
-#    aead/scream/scream10v2/scream10v2_sbox.h
-#    aead/scream/scream10v2/scream10v2_encrypt.h
-#    aead/scream/scream10v2/Scream10v2.h
-#    aead/scream/scream12v1/scream12v1_api.h
-#    aead/scream/scream12v1/scream12v1_lbox.h
-#    aead/scream/scream12v1/scream12v1_params.h
-#    aead/scream/scream12v1/scream12v1_sbox.h
-#    aead/scream/scream12v1/scream12v1_encrypt.h
-#    aead/scream/scream12v1/Scream12v1.h
-#    aead/scream/scream12v2/scream12v2_api.h
-#    aead/scream/scream12v2/scream12v2_lbox.h
-#    aead/scream/scream12v2/scream12v2_params.h
-#    aead/scream/scream12v2/scream12v2_sbox.h
-#    aead/scream/scream12v2/scream12v2_encrypt.h
-#    aead/scream/scream12v2/Scream12v2.h
+    aead/scream/scream10v1/scream10v1_api.h
+    aead/scream/scream10v1/scream10v1_lbox.h
+    aead/scream/scream10v1/scream10v1_params.h
+    aead/scream/scream10v1/scream10v1_sbox.h
+    aead/scream/scream10v1/scream10v1_encrypt.h
+    aead/scream/scream10v1/Scream10v1.h
+    aead/scream/scream10v2/scream10v2_api.h
+    aead/scream/scream10v2/scream10v2_lbox.h
+    aead/scream/scream10v2/scream10v2_params.h
+    aead/scream/scream10v2/scream10v2_sbox.h
+    aead/scream/scream10v2/scream10v2_encrypt.h
+    aead/scream/scream10v2/Scream10v2.h
+    aead/scream/scream12v1/scream12v1_api.h
+    aead/scream/scream12v1/scream12v1_lbox.h
+    aead/scream/scream12v1/scream12v1_params.h
+    aead/scream/scream12v1/scream12v1_sbox.h
+    aead/scream/scream12v1/scream12v1_encrypt.h
+    aead/scream/scream12v1/Scream12v1.h
+    aead/scream/scream12v2/scream12v2_api.h
+    aead/scream/scream12v2/scream12v2_lbox.h
+    aead/scream/scream12v2/scream12v2_params.h
+    aead/scream/scream12v2/scream12v2_sbox.h
+    aead/scream/scream12v2/scream12v2_encrypt.h
+    aead/scream/scream12v2/Scream12v2.h
 #    aead/joltik/joltikeq12864v1/joltikeq12864v1_api.h
 #    aead/joltik/joltikeq12864v1/joltikeq12864v1_crypto_aead.h
 #    aead/joltik/joltikeq12864v1/joltikeq12864v1_joltik.h
@@ -1521,10 +1521,10 @@ set(OTHER_FILES
     aead/scream/iscream12v2/About.md
     aead/scream/iscream14v1/About.md
     aead/scream/iscream14v2/About.md
-#    aead/scream/scream10v1/About.md
-#    aead/scream/scream10v2/About.md
-#    aead/scream/scream12v1/About.md
-#    aead/scream/scream12v2/About.md
+    aead/scream/scream10v1/About.md
+    aead/scream/scream10v2/About.md
+    aead/scream/scream12v1/About.md
+    aead/scream/scream12v2/About.md
 #    aead/joltik/joltikeq12864v1/About.md
 #    aead/joltik/joltikeq6464v1/About.md
 #    aead/joltik/joltikeq8048v1/About.md
