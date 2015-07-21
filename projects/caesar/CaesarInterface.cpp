@@ -81,8 +81,8 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_JOLTIKNEQ8048V1: { return new Joltikneq8048v1(numRounds); };
         case CAESAR_JOLTIKNEQ9696V1: { return new Joltikneq9696v1(numRounds); };
 //        case CAESAR_JULIUSV1DRAFT: { return new Juliusv1draft(numRounds); };
-//        case CAESAR_KETJEJRV1: { return new Ketjejrv1(numRounds); };
-//        case CAESAR_KETJESRV1: { return new Ketjesrv1(numRounds); };
+        case CAESAR_KETJEJRV1: { return new Ketjejrv1(numRounds); };
+        case CAESAR_KETJESRV1: { return new Ketjesrv1(numRounds); };
 //        case CAESAR_KIASUEQ128V1: { return new Kiasueq128v1(numRounds); };
 //        case CAESAR_KIASUNEQ128V1: { return new Kiasuneq128v1(numRounds); };
 //        case CAESAR_LACV1: { return new Lacv1(numRounds); };

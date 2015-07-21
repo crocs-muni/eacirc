@@ -1,5 +1,3 @@
-namespace Ketjesrv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,7 +14,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakP_Interface_h_
 #define _KeccakP_Interface_h_
 
-#include "KeccakP-400-interface.h"
+#include "ketjesrv1_KeccakP-400-interface.h"
 
 
 /** Macro to map KeccakP_StatePermute() to KeccakP400_StatePermute().
@@ -24,5 +22,3 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #define KeccakP_StatePermute KeccakP400_StatePermute
 
 #endif
-
-} // namespace Ketjesrv1_raw

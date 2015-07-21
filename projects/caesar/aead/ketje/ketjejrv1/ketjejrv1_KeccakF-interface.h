@@ -1,5 +1,3 @@
-namespace Ketjejrv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,7 +14,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakF_Interface_h_
 #define _KeccakF_Interface_h_
 
-#include "KeccakF-200-interface.h"
+#include "ketjejrv1_KeccakF-200-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjejrv1_raw {
 
 /** Macro to map KeccakF_Initialize() to KeccakF200_Initialize().
  */
@@ -74,6 +75,5 @@ http://creativecommons.org/publicdomain/zero/1.0/
  */
 #define KeccakF_StateXORPermuteExtract KeccakF200_StateXORPermuteExtract
 
-#endif
-
 } // namespace Ketjejrv1_raw
+#endif

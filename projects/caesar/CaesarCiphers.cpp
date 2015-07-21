@@ -72,8 +72,8 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_JOLTIKNEQ8048V1:        return "Joltik - joltikneq8048v1";
     case CAESAR_JOLTIKNEQ9696V1:        return "Joltik - joltikneq9696v1";
         //    case CAESAR_JULIUSV1DRAFT:        return "Julius - juliusv1draft";
-        //    case CAESAR_KETJEJRV1:        return "Ketje - ketjejrv1";
-        //    case CAESAR_KETJESRV1:        return "Ketje - ketjesrv1";
+    case CAESAR_KETJEJRV1:        return "Ketje - ketjejrv1";
+    case CAESAR_KETJESRV1:        return "Ketje - ketjesrv1";
         //    case CAESAR_KIASUEQ128V1:        return "KIASU - kiasueq128v1";
         //    case CAESAR_KIASUNEQ128V1:        return "KIASU - kiasuneq128v1";
         //    case CAESAR_LACV1:        return "LAC - lacv1";

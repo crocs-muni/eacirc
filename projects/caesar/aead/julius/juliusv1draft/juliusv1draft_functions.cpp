@@ -1,9 +1,7 @@
-namespace Juliusv1draft_raw {
-int numRounds = -1;
-
-
 #include "AES/aes.c"
 
+// CHANGE namespace moved due to includes
+namespace Juliusv1draft_raw {
 
 void add_to_first(unsigned char blk1[BLK_SIZE], unsigned char blk2[BLK_SIZE]){
 	int i;

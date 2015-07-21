@@ -1,6 +1,3 @@
-namespace Ketjejrv1_raw {
-int numRounds = -1;
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -17,8 +14,11 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "displayIntermediateValues.h"
-#include "KeccakF-200-reference.h"
+#include "ketjejrv1_displayIntermediateValues.h"
+#include "ketjejrv1_KeccakF-200-reference.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjejrv1_raw {
 
 typedef unsigned char UINT8;
 typedef unsigned long UINT32;

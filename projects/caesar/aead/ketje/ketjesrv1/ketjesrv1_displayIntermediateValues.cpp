@@ -1,6 +1,3 @@
-namespace Ketjesrv1_raw {
-int numRounds = -1;
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -15,8 +12,11 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <stdio.h>
-#include "displayIntermediateValues.h"
-#include "KeccakF-interface.h"
+#include "ketjesrv1_displayIntermediateValues.h"
+#include "ketjesrv1_KeccakF-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjesrv1_raw {
 
 FILE *intermediateValueFile = 0;
 int displayLevel = 0;
@@ -94,7 +94,8 @@ void displayStateAsLanes(int level, const char *text, void *statePointer)
     unsigned int *state = statePointer;
 #endif
 #if (KeccakF_width == 400)
-    unsigned short *state = statePointer;
+    // CHANGE static cast added
+    unsigned short *state = static_cast<unsigned short *>(statePointer);
 #endif
 #if (KeccakF_width == 200)
     unsigned char *state = statePointer;

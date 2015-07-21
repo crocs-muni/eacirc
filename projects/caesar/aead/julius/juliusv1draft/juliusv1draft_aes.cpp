@@ -1,6 +1,4 @@
 namespace Juliusv1draft_raw {
-int numRounds = -1;
-
 
 #define uchar unsigned char // 8-bit byte
 #define uint unsigned long // 32-bit word
