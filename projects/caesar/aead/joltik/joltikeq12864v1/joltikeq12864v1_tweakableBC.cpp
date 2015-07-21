@@ -464,8 +464,10 @@ int joltikKeySetupDec128(uint64_t* rtweakey,
 ** Tweakable block cipher encryption function
 */
 void aesTweakEncrypt(uint32_t tweakey_size,
-                     uint8_t pt[8],
-                     uint8_t key[],
+                     // CHANGE const added
+                     const uint8_t pt[8],
+                     // CHANGE const added
+                     const uint8_t key[],
                      uint8_t ct[8]) {
 
 
