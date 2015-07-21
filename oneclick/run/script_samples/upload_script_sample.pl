@@ -39,6 +39,7 @@ my $pwd;
 #Main method
 {
     #Enter login data here
+    print "Signing in to url " . LOGIN_URL . "\n";
     print 'Name: ';
     chomp($usr = <STDIN>);
     print 'Pwd : ';

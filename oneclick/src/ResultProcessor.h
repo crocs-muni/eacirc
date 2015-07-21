@@ -71,6 +71,9 @@ private:
       */
     void getDirectoryPaths(const std::string & directory, std::vector<std::string> & paths);
 
+    /** Sorts strings.
+      * @param strings      strings to be sorted
+      */
     void sortStrings(std::vector<std::string> & strings);
 
     /** Retrieve tag <NOTES> from config file.

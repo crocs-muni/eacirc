@@ -1,9 +1,6 @@
 #include "ResultProcessor.h"
 
 ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
-    //fs::directory_iterator end;
-    //fs::directory_iterator dirIter(path);
-    //if(dirIter == end) throw std::runtime_error("given argument is not a path to existing directory: " + path);
     oneclickLogger << FileLogger::LOG_INFO << "started processing results\n\n";
 
     initPProcessor(pprocNum);
@@ -33,8 +30,8 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
         //Check for config consistency, won't procceed otherwise
         oneclickLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
         *dirLogger << FileLogger::LOG_INFO << "checking differences in configuration files\n";
-        if(checkConfigs(configPaths , algName , dirLogger)) {
 
+        if(checkConfigs(configPaths , algName , dirLogger)) {
             //Checks errors and warnings, if okay run PostProcessor
             oneclickLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
             *dirLogger << FileLogger::LOG_INFO << "processing results, checking errors/warnings in logs\n";
@@ -45,6 +42,8 @@ ResultProcessor::ResultProcessor(std::string path , int pprocNum) {
             checkErrorsProcess(logPaths , dirLogger);
             pprocessor->calculateBatchResults();
 
+            oneclickLogger << FileLogger::LOG_INFO << "batch result: " << pprocessor->getLastScore().valToString() << "\n";
+            *dirLogger << FileLogger::LOG_INFO << "batch result: " << pprocessor->getLastScore().valToString() << "\n";
             oneclickLogger << FileLogger::LOG_INFO << "batch processed\n\n";
             *dirLogger << FileLogger::LOG_INFO << "batch processed\n\n";
         } else {
@@ -171,7 +170,6 @@ void ResultProcessor::getFilePaths(const std::string & directory , std::vector<s
             paths.push_back(dirIter.path());
         }
     }
-    //sortStrings(paths);
 }
 
 void ResultProcessor::getDirectoryPaths(const std::string & directory, std::vector<std::string> & dirPaths) {

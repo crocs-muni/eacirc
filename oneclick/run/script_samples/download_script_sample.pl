@@ -40,6 +40,7 @@ my $pwd;
 my $mech = WWW::Mechanize->new(timeout => TIMEOUT);
 {
     #Enter login data here
+    print "Signing in to url " . LOGIN_URL . "\n";
     print 'Name: ';
     chomp($usr = <STDIN>);
     print 'Pwd : ';

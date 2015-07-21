@@ -32,12 +32,24 @@ public:
       */
     void setJobCount(int jc) { jobCount = jc; }
 
+    /** Returns val in string format. Fixed 6 decimal points.
+      * @return val in string
+      */
+    std::string valToString() {
+        if (val == ERROR_NO_VALID_FILES) return "no valid results";
+        std::stringstream valSStr;
+        valSStr << std::setprecision(6);
+        valSStr << std::fixed;
+        valSStr << val;
+        return valSStr.str();
+    }
+
     /** Returns formatted string, contains algname  jobCount  val.
       * @return formatted result
       */
     std::string toString() {
         std::stringstream result;
-        result << std::setw(40);
+        result << std::setw(60);
         result << std::left;
         result << algName;
         result << std::setw(5);
@@ -65,6 +77,9 @@ class PostProcessor {
 protected:
     std::string batchDirPath;
     std::string batchName;
+    
+    //Stores results of all processed batches. Is dumped to file at the end of processing
+    std::vector<Score> scores;
 public:
     virtual ~PostProcessor() {}
     
@@ -79,6 +94,10 @@ public:
       * @param name                name of the batch
       */
     void setBatchName(std::string name) { batchName = name; }
+
+    /** Returns last added batch score. Used for saving batch results into batch logs.
+      */
+    Score getLastScore() { return scores.back(); }
 
     /** Add directory to process in current batch. Argument is
       * path to directory with results of single workunit. In there

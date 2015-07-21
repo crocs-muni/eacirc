@@ -12,6 +12,8 @@
 #include <stdexcept>
 #include <sstream>
 
+#include "Version.h"
+
 class FileLogger {
 
 private:
@@ -45,9 +47,9 @@ public:
         myFile.open(fname);
         // Write the first lines
         if(myFile.is_open()) {
-            myFile << "EACirc Oneclick application log." << std::endl;
-            myFile << "Date: " << getDate() << std::endl;
-            myFile << getTime() << "Logging started." << std::endl << std::endl;
+            myFile << "EACirc Oneclick application log (build " << GIT_COMMIT_SHORT << ")." << std::endl;
+            myFile << "Date: " << getDate() << "\n\n";
+            myFile << getTime() << "Logging started.\n";
         } else {
             throw std::runtime_error("can't open logger file: " + fname);
         }
@@ -73,9 +75,9 @@ public:
     void setLogToConsole(bool c) {
         toConsole = c;
         if(toConsole) {
-            std::cout << "EACirc Oneclick logger." << std::endl << std::endl;
-            std::cout << "Date: " << getDate() << std::endl;
-            std::cout << getTime() << "Logging started." << std::endl << std::endl;
+            std::cout << "EACirc Oneclick application log (build " << GIT_COMMIT_SHORT << ")." << std::endl;
+            std::cout << "Date: " << getDate() << "\n\n";
+            std::cout << getTime() << "Logging started.\n";
         }
     }
 
@@ -113,7 +115,7 @@ public:
 
     // Overload << operator using C style strings
     // No need for std::string objects here
-    friend FileLogger &operator << (FileLogger &logger , /*const char *text*/ std::string text) {
+    friend FileLogger &operator << (FileLogger &logger , const std::string & text) {
         logger.myFile << text;
         if(logger.toConsole) {
             std::cout << text;

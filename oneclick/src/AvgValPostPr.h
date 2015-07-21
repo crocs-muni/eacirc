@@ -22,8 +22,7 @@ private:
     int validLogCount;
     float avgSum;
 
-    //Stores results of all processed batches. Is dumped to file at the end of processing
-    std::vector<Score> scores;
+    //Stores averages from log files of batch. Dumped to file after every single batch processing
     std::ostringstream averages;
 
     std::regex avgPatt;
@@ -91,8 +90,7 @@ public:
     }
 
     void saveResults() {
-        //std::string results = writeScores();
-        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , /*results*/ writeScores());
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , writeScores());
         
         validLogCount = 0;
         avgSum = 0;

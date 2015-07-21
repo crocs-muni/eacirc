@@ -20,9 +20,9 @@
 class PValuePostPr : public PostProcessor {
 private:
     int validLogCount;
-    int uniformLogCount;
+    int nonUniformLogCount;
 
-    std::vector<Score> scores;
+    //Stores p values from log files of batch. Dumped to file after every single batch processing
     std::ostringstream pValues;
 
     std::regex uniPatt;
@@ -33,7 +33,7 @@ private:
     std::smatch emptyMatch;
     std::sregex_token_iterator endExpr;
 public:
-    PValuePostPr() : validLogCount(0) , uniformLogCount(0) ,
+    PValuePostPr() : validLogCount(0) , nonUniformLogCount(0) ,
         uniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.") ,
         nonUniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.") ,
         pValPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)") {}
@@ -56,8 +56,8 @@ public:
                 if((uniform != endExpr && nonUniform != endExpr) || (uniform == endExpr && nonUniform == endExpr)) hasValidResults = false;
 
                 if(hasValidResults) {
-                    if(uniform != endExpr && nonUniform == endExpr) { uniformLogCount++ ; validLogCount++; }
-                    if(uniform == endExpr && nonUniform != endExpr) { validLogCount++; }
+                    if (uniform != endExpr && nonUniform == endExpr) { validLogCount++; }
+                    if (uniform == endExpr && nonUniform != endExpr) { nonUniformLogCount++; validLogCount++; }
                 }
                 pValues << pVal[1] << std::endl;
                 pVal = emptyMatch;
@@ -73,7 +73,7 @@ public:
         batchScore.setAlgName(batchName);
 
         if(validLogCount > 0) {
-            batchScore.setVal((float)uniformLogCount / (float)validLogCount);
+            batchScore.setVal((float)nonUniformLogCount / (float)validLogCount);
             batchScore.setJobCount(validLogCount);
         } else {
             batchScore.setVal(ERROR_NO_VALID_FILES);
@@ -84,16 +84,15 @@ public:
         pValues.str("");
 
         validLogCount = 0;
-        uniformLogCount = 0;
+        nonUniformLogCount = 0;
         batchDirPath.erase();
         batchName.erase();
     }
 
     void saveResults() {
-        //std::string result = writeScores();
-        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , /*result*/ writeScores());
+        Utils::saveStringToFile(FILE_PROCESSED_RESULTS , writeScores());
         validLogCount = 0;
-        uniformLogCount = 0;
+        nonUniformLogCount = 0;
         batchDirPath.erase();
         batchName.erase();
     }
