@@ -149,7 +149,8 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
         //    case CAESAR_WHEESHTV1MR3FR3T256:        return "Wheesht - wheeshtv1mr3fr3t256";
         //    case CAESAR_WHEESHTV1MR5FR7T256:        return "Wheesht - wheeshtv1mr5fr7t256";
         //    case CAESAR_YAES128V2:        return "YAES - yaes128v2";
-#ifdef WITH_OPENSSL
+        
+        // Ciphers requiring OpenSSL
     case CAESAR_AEADAES128OCBTAGLEN128V1:        return "++AE - aeadaes128ocbtaglen128v1";
     case CAESAR_AEADAES128OCBTAGLEN64V1:        return "++AE - aeadaes128ocbtaglen64v1";
     case CAESAR_AEADAES128OCBTAGLEN96V1:        return "++AE - aeadaes128ocbtaglen96v1";
@@ -177,7 +178,7 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_ELMD501V1:        return "ELmD - elmd501v1";
     case CAESAR_ELMD51270V1:        return "ELmD - elmd51270v1";
     case CAESAR_ELMD51271V1:        return "ELmD - elmd51271v1";
-#endif
+        // end ciphers requiring OpenSSL
     default:                    return "(unknown cipher)";
     }
 }
