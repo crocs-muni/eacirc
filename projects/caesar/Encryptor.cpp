@@ -180,3 +180,70 @@ string Encryptor::shortDescription() {
     }
     return desription;
 }
+
+int Encryptor::saveState(TiXmlNode* pRoot) const {
+    TiXmlElement* pElem = NULL;
+    ostringstream ss;
+    // save algorithm details
+    pElem = new TiXmlElement("algorithm");
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::toString(pCaesarSettings->algorithm).c_str()));
+    pElem->SetAttribute("description", m_cipher->shortDescription().c_str());
+    if (pCaesarSettings->limitAlgRounds) {
+        pElem->SetAttribute("rounds", CommonFnc::toString(pCaesarSettings->algorithmRoundsCount).c_str());
+    }
+    pRoot->LinkEndChild(pElem);
+    // save plaintext
+    pElem = new TiXmlElement("plaintext");
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::arrayToHexa(m_plaintext,
+        static_cast<unsigned int>(pCaesarSettings->plaintextLength)).c_str()));
+    pRoot->LinkEndChild(pElem);
+    // save key
+    pElem = new TiXmlElement("key");
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::arrayToHexa(m_key,
+        static_cast<unsigned int>(pCaesarSettings->keyLength)).c_str()));
+    pRoot->LinkEndChild(pElem);
+    // save associated data (ad)
+    pElem = new TiXmlElement("ad");
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::arrayToHexa(m_ad,
+        static_cast<unsigned int>(pCaesarSettings->adLength)).c_str()));
+    pRoot->LinkEndChild(pElem);
+    // save secret message number (smn)
+    pElem = new TiXmlElement("smn");
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::arrayToHexa(m_smn,
+        static_cast<unsigned int>(pCaesarSettings->smnLength)).c_str()));
+    pRoot->LinkEndChild(pElem);
+    // save public message number (pmn)
+    pElem = new TiXmlElement("pmn");
+    pElem->LinkEndChild(new TiXmlText(CommonFnc::arrayToHexa(m_pmn,
+        static_cast<unsigned int>(pCaesarSettings->pmnLength)).c_str()));
+    pRoot->LinkEndChild(pElem);
+
+    return STAT_OK;
+}
+
+int Encryptor::loadState(TiXmlNode* pRoot) {
+    if (m_cipher == NULL) { return STAT_PROJECT_ERROR; }
+    int status = STAT_OK;
+    if (atoi(getXMLElementValue(pRoot, "algorithm").c_str()) != pCaesarSettings->algorithm) {
+        mainLogger.out(LOGGER_ERROR) << "Incompatible algorithm types." << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
+    status = CommonFnc::hexaToArray(getXMLElementValue(pRoot, "plaintext"), 
+        static_cast<unsigned int>(pCaesarSettings->plaintextLength), m_plaintext);
+    if (status != STAT_OK) return status;
+    status = CommonFnc::hexaToArray(getXMLElementValue(pRoot, "key"), 
+        static_cast<unsigned int>(pCaesarSettings->keyLength), m_key);
+    if (status != STAT_OK) return status;
+    status = CommonFnc::hexaToArray(getXMLElementValue(pRoot, "ad"), 
+        static_cast<unsigned int>(pCaesarSettings->adLength), m_ad);
+    if (status != STAT_OK) return status;
+    status = CommonFnc::hexaToArray(getXMLElementValue(pRoot, "smn"), 
+        static_cast<unsigned int>(pCaesarSettings->smnLength), m_smn);
+    if (status != STAT_OK) return status;
+    status = CommonFnc::hexaToArray(getXMLElementValue(pRoot, "pmn"), 
+        static_cast<unsigned int>(pCaesarSettings->pmnLength), m_pmn);
+    if (status != STAT_OK) return status;
+
+    m_setup = true;
+    return status;
+}

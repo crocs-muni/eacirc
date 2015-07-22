@@ -14,6 +14,19 @@ using namespace std;
 
 namespace CommonFnc {
 
+    /** convert given binary array to hexa
+     * @param data          array to convert
+     * @param dataLength    number of uchars in data
+     */
+    string arrayToHexa(unsigned char* data, unsigned int dataLength);
+
+    /** convert given binary array to hexa
+    * @param hexa          string with hexadecimal aray value
+    * @param dataLength    number of uchars in data
+    * @param data          array to return (must be pre-allocated)
+    */
+    int hexaToArray(string hexa, unsigned int dataLength, unsigned char* data);
+
     /** remove file
       * - remove file from system according to parameter
       * - errors are output to logger as warnings

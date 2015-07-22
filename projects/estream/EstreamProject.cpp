@@ -169,7 +169,7 @@ int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
         ss.str("");
         pNode = new TiXmlElement("iv");
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-        ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
+        ss << setw(2) << setfill('0') << hex << (int)(m_encryptorDecryptor->m_iv[input]);
         pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
         pRoot2->LinkEndChild(pNode);
     }

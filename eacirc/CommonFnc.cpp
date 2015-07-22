@@ -10,6 +10,27 @@
 
 using namespace std;
 
+string CommonFnc::arrayToHexa(unsigned char* data, unsigned int dataLength) {
+    ostringstream ss("");
+    for (unsigned int byte = 0; byte < dataLength; byte++)
+        ss << setw(2) << hex << setfill('0') << static_cast<int>(data[byte]) << " ";
+    return ss.str();
+}
+
+int CommonFnc::hexaToArray(string hexa, unsigned int dataLength, unsigned char* data) {
+    unsigned int tmp;
+    istringstream hexaStream(hexa);
+    for (unsigned int byte = 0; byte < dataLength; byte++) {
+        hexaStream >> hex >> tmp;
+        if (hexaStream.fail()) {
+            mainLogger.out(LOGGER_ERROR) << "Problem parsing hexa data." << endl;
+            return STAT_CONFIG_INCORRECT;
+        }
+        data[byte] = tmp & 0xff;
+    }
+    return STAT_OK;
+}
+
 void CommonFnc::removeFile(string filename) {
     int returnValue = std::remove(filename.c_str());
     if (returnValue > 0) {

@@ -223,7 +223,7 @@ int Sha3Project::saveProjectState(TiXmlNode* pRoot) const {
     TiXmlElement* pRoot2 = pRoot->ToElement();
     pRoot2->SetAttribute("loadable",1);
     TiXmlElement* pElem = new TiXmlElement("hasher");
-    status =  m_hasher->saveHasherState(pElem);
+    status = m_hasher->saveHasherState(pElem);
     pRoot2->LinkEndChild(pElem);
     return status;
 }
