@@ -13,7 +13,7 @@ TestConfigurator::TestConfigurator()
     m_projects.push(PROJECT_SHA3);
 #endif
 #ifdef CEASAR
-    m_projects.push(PROJECT_CAESAR);
+    m_projects.push(PROJECT_CEASAR);
 #endif
     // can we open files set in PROJECT_FILE_DISTINGUISHER?
     string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
