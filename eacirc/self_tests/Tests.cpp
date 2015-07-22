@@ -10,6 +10,7 @@
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
     // general preparations
     TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         configurator.prepareConfiguration();
         TiXmlNode* pRootConfig = NULL;
@@ -46,7 +47,8 @@ TEST_CASE("determinism/seed","testing whether run with random seed and second ru
 }
 
 TEST_CASE("determinism/load-state","running and running from loaded state") {
-    TestConfigurator configurator(PROJECT_ESTREAM);
+    TestConfigurator configurator;
+    configurator.addProject(PROJECT_ESTREAM);
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();
@@ -88,6 +90,7 @@ TEST_CASE("determinism/load-state","running and running from loaded state") {
 
 TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 generations") {
     TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();
@@ -129,6 +132,7 @@ TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 g
 
 TEST_CASE("determinism/tv-pregeneration","general run vs. run with the same pre-generated test vectors") {
     TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();

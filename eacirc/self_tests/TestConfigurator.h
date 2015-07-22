@@ -17,17 +17,21 @@ public:
      */
     TestConfigurator();
 
-    /** constructor, fill project constants array with given project
-     * @param projectType constant
-     */
-    TestConfigurator(int projectType);
-
     ~TestConfigurator();
 
     /** set new project as current
      * @return is project set?
      */
     bool nextProject();
+
+    /** add all projects for testing
+     */
+    void addAllProjects();
+
+    /** add additional project to testing
+     * @param projectType project to add 
+     */
+    void addProject(int projectType);
 
     /**
      * @return currently tested project
