@@ -32,6 +32,8 @@ set(HEADERS
     ${PROJECTS_DIR}/estream/EstreamCiphers.h
     ${PROJECTS_DIR}/sha3/Sha3Functions.h
     ${PROJECTS_DIR}/caesar/CaesarCiphers.h
+    # === version file ===
+    ${EACIRC_DIR}/Version.h
 )
 
 set(OTHER_FILES
@@ -51,7 +53,7 @@ source_group(configs REGULAR_EXPRESSION "run/config_samples/.*")
 # === oneclick target ===
 add_executable(oneclick ${SOURCES} ${HEADERS} ${OTHER_FILES})
 target_include_directories(oneclick
-    PRIVATE ${PROJECT_SOURCE_DIR}/eacirc
+    PRIVATE ${EACIRC_DIR}
     PRIVATE ${PROJECTS_DIR}
 )
 target_link_libraries(oneclick tinyXML)

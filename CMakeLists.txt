@@ -37,6 +37,7 @@ endif()
 
 
 # === Global variables ===
+set(EACIRC_DIR   ${CMAKE_SOURCE_DIR}/eacirc)
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
 set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 
