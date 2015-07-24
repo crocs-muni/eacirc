@@ -1,4 +1,5 @@
 #include <Catch.h>
+#include "CommonFnc.h"
 #include "TestConfigurator.h"
 #include "XMLProcessor.h"
 #include "circuit/gate/GateCommonFunctions.h"
@@ -282,6 +283,23 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     }
     if (pGlobals != NULL) delete pGlobals;
     pGlobals = NULL;
+}
+
+TEST_CASE("sanity/floating-point-equality", "Floating point comparison sanity testing") {
+    TestConfigurator::floatingPointEqual(0.1,0.1);
+    TestConfigurator::floatingPointEqual(1, 10 * 0.1f);
+}
+
+// Chi^2 sanity test, reference values taken from WolframAlpha, e.g. 1-CDF[ChiSquareDistrbution[1],3.9]
+TEST_CASE("sanity/chi-square-test", "Chi^2 distribution sanity test") {
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(1, 3.9), 0.0482861);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(1, 0.00005), 0.994358);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(7, 30), 0.00009495972508134183759741828742325666627324216894472052766221569708930068590721461932866143044174);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(7, 3), 0.885002231643150641273266220962340596719670495215043159881425978116885745122995842726570642056612440);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(7, 0.5), 0.999446);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 300), 0.027727522053904829888992725742535981614753778789868604837431301491523914120345987183486623322619);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 250), 0.5766352636499276155128321878596437742748132183501493235263329367246867889129729514290260512191173);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 200), 0.995425444541951895268653400299156801014685563033877494690047697443726397137181431060955533820526675);
 }
 
 // TODO: write Kolmogorov-Smirnov test for uniformity of P-values during

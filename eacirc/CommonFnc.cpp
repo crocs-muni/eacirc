@@ -3,6 +3,7 @@
 #include "generators/IRndGen.h"
 #include <bitset>
 #include <set>
+#include <limits>
 
 #ifndef M_PI    // to resolve cmath constants problems
 #define M_PI 3.141592653589793238462

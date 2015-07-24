@@ -163,6 +163,11 @@ void TestConfigurator::prepareConfiguration() const {
     prepareConfiguration(m_currentProject);
 }
 
+// See documentation in header file.
+bool TestConfigurator::floatingPointEqual(double x, double y) {
+    CHECK(fabs(x - y) <= 0.000001);
+}
+
 string TestConfigurator::mainConfiguration =
         "<NOTES>self-test configuration</NOTES>"
         "<MAIN>"
