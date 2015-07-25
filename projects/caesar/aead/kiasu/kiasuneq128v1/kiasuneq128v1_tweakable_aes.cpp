@@ -1,6 +1,3 @@
-namespace Kiasuneq128v1_raw {
-int numRounds = -1;
-
 /*
  * Kiasu=/=-128 Reference C Implementation
  * 
@@ -28,6 +25,9 @@ int numRounds = -1;
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+// CHANGE namespace moved due to includes
+namespace Kiasuneq128v1_raw {
 
 static const uint32_t Te0[256] = {
     0xc66363a5U, 0xf87c7c84U, 0xee777799U, 0xf67b7b8dU,

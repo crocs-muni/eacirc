@@ -272,16 +272,16 @@ set(SOURCES
     aead/ketje/ketjesrv1/ketjesrv1_Ket.cpp
     aead/ketje/ketjesrv1/ketjesrv1_Ketje.cpp
     aead/ketje/ketjesrv1/Ketjesrv1.cpp
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_encrypt.cpp
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_kiasu.cpp
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_tweakable_aes.cpp
-#    aead/kiasu/kiasueq128v1/Kiasueq128v1.cpp
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_encrypt.cpp
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_kiasu.cpp
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_tweakable_aes.cpp
-#    aead/kiasu/kiasuneq128v1/Kiasuneq128v1.cpp
-#    aead/lac/lacv1/lacv1_encrypt.cpp
-#    aead/lac/lacv1/Lacv1.cpp
+    aead/kiasu/kiasueq128v1/kiasueq128v1_encrypt.cpp
+    aead/kiasu/kiasueq128v1/kiasueq128v1_kiasu.cpp
+    aead/kiasu/kiasueq128v1/kiasueq128v1_tweakable_aes.cpp
+    aead/kiasu/kiasueq128v1/Kiasueq128v1.cpp
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_encrypt.cpp
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_kiasu.cpp
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_tweakable_aes.cpp
+    aead/kiasu/kiasuneq128v1/Kiasuneq128v1.cpp
+    aead/lac/lacv1/lacv1_encrypt.cpp
+    aead/lac/lacv1/Lacv1.cpp
 #    aead/keyak/lakekeyakv1/lakekeyakv1_displayIntermediateValues.cpp
 #    aead/keyak/lakekeyakv1/lakekeyakv1_encrypt.cpp
 #    aead/keyak/lakekeyakv1/lakekeyakv1_KeccakDuplex.cpp
@@ -940,20 +940,20 @@ set(HEADERS
     aead/ketje/ketjesrv1/ketjesrv1_Ketje.h
     aead/ketje/ketjesrv1/ketjesrv1_encrypt.h
     aead/ketje/ketjesrv1/Ketjesrv1.h
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_api.h
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_crypto_aead.h
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_kiasu.h
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_tweakable_aes.h
-#    aead/kiasu/kiasueq128v1/kiasueq128v1_encrypt.h
-#    aead/kiasu/kiasueq128v1/Kiasueq128v1.h
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_api.h
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_kiasu.h
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_tweakable_aes.h
-#    aead/kiasu/kiasuneq128v1/kiasuneq128v1_encrypt.h
-#    aead/kiasu/kiasuneq128v1/Kiasuneq128v1.h
-#    aead/lac/lacv1/lacv1_api.h
-#    aead/lac/lacv1/lacv1_encrypt.h
-#    aead/lac/lacv1/Lacv1.h
+    aead/kiasu/kiasueq128v1/kiasueq128v1_api.h
+    aead/kiasu/kiasueq128v1/kiasueq128v1_crypto_aead.h
+    aead/kiasu/kiasueq128v1/kiasueq128v1_kiasu.h
+    aead/kiasu/kiasueq128v1/kiasueq128v1_tweakable_aes.h
+    aead/kiasu/kiasueq128v1/kiasueq128v1_encrypt.h
+    aead/kiasu/kiasueq128v1/Kiasueq128v1.h
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_api.h
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_kiasu.h
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_tweakable_aes.h
+    aead/kiasu/kiasuneq128v1/kiasuneq128v1_encrypt.h
+    aead/kiasu/kiasuneq128v1/Kiasuneq128v1.h
+    aead/lac/lacv1/lacv1_api.h
+    aead/lac/lacv1/lacv1_encrypt.h
+    aead/lac/lacv1/Lacv1.h
 #    aead/keyak/lakekeyakv1/lakekeyakv1_api.h
 #    aead/keyak/lakekeyakv1/lakekeyakv1_brg_endian.h
 #    aead/keyak/lakekeyakv1/lakekeyakv1_displayIntermediateValues.h
@@ -1528,9 +1528,9 @@ set(OTHER_FILES
 #    aead/julius/juliusv1draft/About.md
     aead/ketje/ketjejrv1/About.md
     aead/ketje/ketjesrv1/About.md
-#    aead/kiasu/kiasueq128v1/About.md
-#    aead/kiasu/kiasuneq128v1/About.md
-#    aead/lac/lacv1/About.md
+    aead/kiasu/kiasueq128v1/About.md
+    aead/kiasu/kiasuneq128v1/About.md
+    aead/lac/lacv1/About.md
 #    aead/keyak/lakekeyakv1/About.md
 #    aead/keyak/oceankeyakv1/About.md
 #    aead/keyak/riverkeyakv1/About.md

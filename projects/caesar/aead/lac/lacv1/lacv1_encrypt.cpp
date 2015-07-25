@@ -1,10 +1,10 @@
-namespace Lacv1_raw {
-int numRounds = -1;
-
-
 #include "lacv1_encrypt.h"
 #include <stdio.h>
 #include <malloc.h>
+
+// CHANGE namespace moved due to includes
+namespace Lacv1_raw {
+int numRounds = -1;
 
 //contents of the 4-bit sbox used in LBlock-s
 unsigned char S[16] = {14,9,15,0,13,4,10,11,1,2,8,3,7,6,12,5};	
