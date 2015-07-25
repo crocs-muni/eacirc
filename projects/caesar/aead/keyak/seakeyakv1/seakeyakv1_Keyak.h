@@ -1,5 +1,3 @@
-namespace Seakeyakv1_raw {
-
 /*
 The Keyak authenticated encryption scheme, designed by Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
@@ -17,11 +15,14 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _Keyak_h_
 #define _Keyak_h_
 
-#include "NumberOfParallelInstances.h"
+#include "seakeyakv1_NumberOfParallelInstances.h"
 
 #if ((!defined(NumberOfParallelInstances)) || (NumberOfParallelInstances == 1))
 
-#include "KeccakDuplex.h"
+#include "seakeyakv1_KeccakDuplex.h"
+
+// CHANGE namespace moved due to includes
+namespace Seakeyakv1_raw {
 
 /**
   * Structure that contains the Keyak instance for use with the
@@ -73,7 +74,10 @@ int LakeKeyak_Initialize(Keyak_Instance *instance, const unsigned char *key, uns
 
 #else
 
-#include "KeccakParallelDuplex.h"
+#include "seakeyakv1_KeccakParallelDuplex.h"
+
+// CHANGE namespace moved due to includes
+namespace Seakeyakv1_raw {
 
 /**
   * Structure that contains the Keyak instance for use with the
@@ -197,6 +201,6 @@ int Keyak_GetTag(Keyak_Instance *instance, unsigned char *tag, unsigned int tagS
   */
 int Keyak_Forget(Keyak_Instance *instance);
 
-#endif
-
 } // namespace Seakeyakv1_raw
+
+#endif

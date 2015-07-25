@@ -1,5 +1,3 @@
-namespace Oceankeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -17,7 +15,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #define _displayIntermediateValues_h_
 
 #include <stdio.h>
-#include "KeccakF-interface.h"
+#include "oceankeyakv1_KeccakF-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
 
 void displaySetIntermediateValueFile(FILE *f);
 void displaySetLevel(int level);
@@ -31,6 +32,6 @@ void displayStateAsLanes(int level, const char *text, void *statePointer);
 void displayRoundNumber(int level, unsigned int i);
 void displayText(int level, const char *text);
 
-#endif
-
 } // namespace Oceankeyakv1_raw
+
+#endif

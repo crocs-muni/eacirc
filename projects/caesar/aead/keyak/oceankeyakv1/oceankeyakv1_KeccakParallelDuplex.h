@@ -1,5 +1,3 @@
-namespace Oceankeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,8 +14,11 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakParallelDuplex_h_
 #define _KeccakParallelDuplex_h_
 
-#include "KeccakF-interface.h"
-#include "NumberOfParallelInstances.h"
+#include "oceankeyakv1_KeccakF-interface.h"
+#include "oceankeyakv1_NumberOfParallelInstances.h"
+
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
 
 #ifdef ALIGN
 #undef ALIGN
@@ -307,6 +308,6 @@ unsigned int Keccak_ParallelDuplexGetInputIndex(Keccak_ParallelDuplexInstances *
   */
 unsigned int Keccak_ParallelDuplexGetOutputIndex(Keccak_ParallelDuplexInstances *instances, unsigned int instanceIndex);
 
-#endif
-
 } // namespace Oceankeyakv1_raw
+
+#endif

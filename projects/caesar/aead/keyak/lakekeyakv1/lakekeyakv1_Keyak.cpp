@@ -1,6 +1,3 @@
-namespace Lakekeyakv1_raw {
-int numRounds = -1;
-
 /*
 The Keyak authenticated encryption scheme, designed by Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
@@ -16,12 +13,15 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <string.h>
-#include "KeccakDuplex.h"
-#include "Keyak.h"
+#include "lakekeyakv1_KeccakDuplex.h"
+#include "lakekeyakv1_Keyak.h"
 
 #ifdef NumberOfParallelInstances
 #include "KeccakParallelDuplex.h"
 #endif
+
+// CHANGE namespace moved due to includes
+namespace Lakekeyakv1_raw {
 
 #define Keyak_Phase_FeedingAssociatedData   0x01
 #define Keyak_Phase_Wrapping                0x02

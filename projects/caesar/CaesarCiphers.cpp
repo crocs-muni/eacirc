@@ -77,10 +77,10 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_KIASUEQ128V1:        return "KIASU - kiasueq128v1";
     case CAESAR_KIASUNEQ128V1:        return "KIASU - kiasuneq128v1";
     case CAESAR_LACV1:        return "LAC - lacv1";
-        //    case CAESAR_LAKEKEYAKV1:        return "Keyak - lakekeyakv1";
-        //    case CAESAR_OCEANKEYAKV1:        return "Keyak - oceankeyakv1";
-        //    case CAESAR_RIVERKEYAKV1:        return "Keyak - riverkeyakv1";
-        //    case CAESAR_SEAKEYAKV1:        return "Keyak - seakeyakv1";
+    case CAESAR_LAKEKEYAKV1:        return "Keyak - lakekeyakv1";
+    case CAESAR_OCEANKEYAKV1:        return "Keyak - oceankeyakv1";
+    case CAESAR_RIVERKEYAKV1:        return "Keyak - riverkeyakv1";
+    case CAESAR_SEAKEYAKV1:        return "Keyak - seakeyakv1";
         //    case CAESAR_MINALPHERV1:        return "Minalpher - minalpherv1";
         //    case CAESAR_MORUS1280128V1:        return "MORUS - morus1280128v1";
         //    case CAESAR_MORUS1280256V1:        return "MORUS - morus1280256v1";

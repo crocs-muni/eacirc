@@ -1,10 +1,11 @@
-namespace Riverkeyakv1_raw {
-int numRounds = -1;
-
 #include "riverkeyakv1_encrypt.h"
 
 #include <string.h>
-#include "Keyak.h"
+#include "riverkeyakv1_Keyak.h"
+
+// CHANGE namespace moved due to includes
+namespace Riverkeyakv1_raw {
+int numRounds = -1;
 
 int crypto_aead_encrypt(
     unsigned char *c,unsigned long long *clen,

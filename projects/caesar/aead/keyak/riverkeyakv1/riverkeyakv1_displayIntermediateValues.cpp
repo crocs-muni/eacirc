@@ -1,6 +1,3 @@
-namespace Riverkeyakv1_raw {
-int numRounds = -1;
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -15,8 +12,11 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <stdio.h>
-#include "displayIntermediateValues.h"
-#include "KeccakF-interface.h"
+#include "riverkeyakv1_displayIntermediateValues.h"
+#include "riverkeyakv1_KeccakF-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Riverkeyakv1_raw {
 
 FILE *intermediateValueFile = 0;
 int displayLevel = 0;
@@ -91,7 +91,7 @@ void displayStateAsLanes(int level, const char *text, void *statePointer)
     unsigned long long int *state = statePointer;
 #endif
 #if (KeccakF_width == 800)
-    unsigned int *state = statePointer;
+    unsigned int *state = static_cast<unsigned int *>(statePointer);
 #endif
 #if (KeccakF_width == 400)
     unsigned short *state = statePointer;

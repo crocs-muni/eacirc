@@ -1,5 +1,3 @@
-namespace Riverkeyakv1_raw {
-
 /*
  ---------------------------------------------------------------------------
  Copyright (c) 1998-2008, Brian Gladman, Worcester, UK. All rights reserved.
@@ -142,5 +140,3 @@ namespace Riverkeyakv1_raw {
 #endif
 
 #endif
-
-} // namespace Riverkeyakv1_raw

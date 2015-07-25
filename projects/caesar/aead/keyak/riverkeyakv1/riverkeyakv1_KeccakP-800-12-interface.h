@@ -1,5 +1,3 @@
-namespace Riverkeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,7 +14,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakP_800_12_Interface_h_
 #define _KeccakP_800_12_Interface_h_
 
-#include "KeccakF-800-interface.h"
+#include "riverkeyakv1_KeccakF-800-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Riverkeyakv1_raw {
 
 /** Function to apply Keccak-p[800, 12] on the state.
   * @param  state   Pointer to the state.
@@ -29,6 +30,6 @@ void KeccakP800_12_StatePermute(void *state);
   */
 void KeccakP800_12_StateXORPermuteExtract(void *state, const unsigned char *inData, unsigned int inLaneCount, unsigned char *outData, unsigned int outLaneCount);
 
-#endif
-
 } // namespace Riverkeyakv1_raw
+
+#endif

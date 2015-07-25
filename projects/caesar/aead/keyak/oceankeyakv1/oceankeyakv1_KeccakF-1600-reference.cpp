@@ -1,6 +1,3 @@
-namespace Oceankeyakv1_raw {
-int numRounds = -1;
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -17,9 +14,12 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "brg_endian.h"
-#include "displayIntermediateValues.h"
-#include "KeccakF-1600-reference.h"
+#include "oceankeyakv1_brg_endian.h"
+#include "oceankeyakv1_displayIntermediateValues.h"
+#include "oceankeyakv1_KeccakF-1600-reference.h"
+
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
 
 typedef unsigned char UINT8;
 typedef unsigned long long UINT64;

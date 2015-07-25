@@ -1,5 +1,3 @@
-namespace Lakekeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -15,8 +13,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #ifndef _KeccakP_1600_12_Reference_h_
 #define _KeccakP_1600_12_Reference_h_
-#include "KeccakP-1600-12-interface.h"
-#include "KeccakF-1600-reference.h"
+#include "lakekeyakv1_KeccakP-1600-12-interface.h"
+#include "lakekeyakv1_KeccakF-1600-reference.h"
 #endif
-
-} // namespace Lakekeyakv1_raw

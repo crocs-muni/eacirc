@@ -16,9 +16,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #include "ketjejrv1_KeccakF-200-interface.h"
 
-// CHANGE namespace moved due to includes
-namespace Ketjejrv1_raw {
-
 /** Macro to map KeccakF_Initialize() to KeccakF200_Initialize().
  */
 #define KeccakF_Initialize KeccakF200_Initialize
@@ -75,5 +72,4 @@ namespace Ketjejrv1_raw {
  */
 #define KeccakF_StateXORPermuteExtract KeccakF200_StateXORPermuteExtract
 
-} // namespace Ketjejrv1_raw
 #endif

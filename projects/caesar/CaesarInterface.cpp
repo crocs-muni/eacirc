@@ -86,10 +86,10 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_KIASUEQ128V1: { return new Kiasueq128v1(numRounds); };
         case CAESAR_KIASUNEQ128V1: { return new Kiasuneq128v1(numRounds); };
         case CAESAR_LACV1: { return new Lacv1(numRounds); };
-//        case CAESAR_LAKEKEYAKV1: { return new Lakekeyakv1(numRounds); };
-//        case CAESAR_OCEANKEYAKV1: { return new Oceankeyakv1(numRounds); };
-//        case CAESAR_RIVERKEYAKV1: { return new Riverkeyakv1(numRounds); };
-//        case CAESAR_SEAKEYAKV1: { return new Seakeyakv1(numRounds); };
+        case CAESAR_LAKEKEYAKV1: { return new Lakekeyakv1(numRounds); };
+        case CAESAR_OCEANKEYAKV1: { return new Oceankeyakv1(numRounds); };
+        case CAESAR_RIVERKEYAKV1: { return new Riverkeyakv1(numRounds); };
+        case CAESAR_SEAKEYAKV1: { return new Seakeyakv1(numRounds); };
 //        case CAESAR_LED80N6SILCV1: { return new Led80n6silcv1(numRounds); };
 //        case CAESAR_MINALPHERV1: { return new Minalpherv1(numRounds); };
 //        case CAESAR_MORUS1280128V1: { return new Morus1280128v1(numRounds); };
