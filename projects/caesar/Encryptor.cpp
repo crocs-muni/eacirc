@@ -102,7 +102,7 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
     }
 
     // save debug information if required
-    if (pGlobals->settings->outputs.verbosity > 1) {
+    if (pGlobals->settings->outputs.verbosity > 3) {
         ofstream tvFile;
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
         if (!tvFile.is_open()) {
