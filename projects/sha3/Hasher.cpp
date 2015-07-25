@@ -203,7 +203,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     }
     int algorithm = algorithmNumber==0 ? pSha3Settings->algorithm1 : pSha3Settings->algorithm2;
     ofstream tvFile;
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app | ios_base::binary);
         if (!tvFile.is_open())
             mainLogger.out(LOGGER_WARNING) << "Cannot write to human-readable test vector file." << endl;
@@ -250,7 +250,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
             }
             m_usedBytes[algorithmNumber] += pGlobals->settings->testVectors.inputLength;
         } else { // random data stream
-            if (pGlobals->settings->outputs.verbosity >= 4)
+            if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG)
                 tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):" << endl;
             for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                 rndGen->getRandomFromInterval(UCHAR_MAX, &(tvInputs[input]));
@@ -268,7 +268,7 @@ int Hasher::getTestVector(int algorithmNumber, unsigned char* tvInputs, unsigned
     }
 
     // save test vector to human readable test vector file
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         tvFile.close();
     }
     return status;

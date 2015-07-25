@@ -120,7 +120,7 @@ int IProject::createTestVectorFilesHeadersMain() const {
 
 int IProject::generateAndSaveTestVectors() {
     int status = STAT_OK;
-    if (pGlobals->settings->outputs.verbosity >= 2) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEVELOPMENT) {
         mainLogger.out(LOGGER_INFO) << "Generating test vectors." << endl;
     }
     if ((status = generateTestVectors()) != STAT_OK) {
@@ -155,7 +155,7 @@ int IProject::saveTestVectors() const {
     }
 
     // save human-readable form
-    if (pGlobals->settings->outputs.verbosity >= 3) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEBUG) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS_HR << ")." << endl;

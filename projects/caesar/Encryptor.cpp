@@ -102,7 +102,7 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
     }
 
     // save debug information if required
-    if (pGlobals->settings->outputs.verbosity > 3) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         ofstream tvFile;
         tvFile.open(FILE_TEST_VECTORS_HR, ios_base::app);
         if (!tvFile.is_open()) {
@@ -133,15 +133,13 @@ int Encryptor::encrypt(bits_t *c, length_t *clen) {
         for (length_t byte = 0; byte < *clen; byte++) {
             tvFile << hex << setfill('0') << setw(2) << (int) c[byte];
         }
-        if (pGlobals->settings->outputs.verbosity > 2) {
-            tvFile << endl << "decrypted: ";
-            for (length_t byte = 0; byte < m_decryptedPlaintextLength; byte++) {
-                tvFile << hex << setfill('0') << setw(2) << (int) m_decryptedPlaintext[byte];
-            }
-            tvFile << endl << "dec-smn:   ";
-            for (length_t byte = 0; byte < pCaesarSettings->smnLength; byte++) {
-                tvFile << hex << setfill('0') << setw(2) << (int) m_decryptedSmn[byte];
-            }
+        tvFile << endl << "decrypted: ";
+        for (length_t byte = 0; byte < m_decryptedPlaintextLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int)m_decryptedPlaintext[byte];
+        }
+        tvFile << endl << "dec-smn:   ";
+        for (length_t byte = 0; byte < pCaesarSettings->smnLength; byte++) {
+            tvFile << hex << setfill('0') << setw(2) << (int)m_decryptedSmn[byte];
         }
         tvFile << endl << "---" << endl;
         if (tvFile.fail()) {

@@ -19,6 +19,18 @@ using namespace std;
 //! ERROR: operation error, unrecoverable - program should end without finishing computation
 #define LOGGER_ERROR 2
 
+//! constants for different verbosity levels
+//! MINIMAL: as few outputs as possible
+#define LOGGER_VERBOSITY_MINIMAL 0
+//! PRODUCTION: files stored from experiemnts
+#define LOGGER_VERBOSITY_PRODUCTION 1
+//! DEVELOPMENT: common development files
+#define LOGGER_VERBOSITY_DEVELOPMENT 2
+//! DEBUG: test vector debugging
+#define LOGGER_VERBOSITY_DEBUG 3
+//! DEEP_DEBUG: detailed info about test vector creation
+#define LOGGER_VERBOSITY_DEEP_DEBUG 4
+
 class Logger {
 private:
     //! helper class: LoggerStream just uses a LoggerBuffer

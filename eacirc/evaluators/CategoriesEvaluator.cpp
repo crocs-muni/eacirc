@@ -51,7 +51,7 @@ float CategoriesEvaluator::getFitness() const {
     float fitness = (1.0 - CommonFnc::chisqr(dof,chiSquareValue));
 
     // write histogram data in necessary
-    if (pGlobals->settings->outputs.verbosity >= 3) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEBUG) {
         ofstream hist(FILE_HISTOGRAMS, ios_base::app);
         hist << "Current generation: " << pGlobals->stats.actGener << endl;
         hist << "Stream 0 data: ";

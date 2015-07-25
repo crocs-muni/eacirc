@@ -189,7 +189,7 @@ int FilesProject::createTestVectorFilesHeaders() const {
     }
 
     // generate header to human-readable test-vector file
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
@@ -251,7 +251,7 @@ int FilesProject::prepareSingleTestVector() {
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++)
@@ -274,7 +274,7 @@ int FilesProject::generateTestVectors() {
     }
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->outputs.verbosity >= 4) {
+        if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();

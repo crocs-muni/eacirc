@@ -194,7 +194,7 @@ void EACirc::saveState(const string filename) {
     m_status = saveXMLFile(pRoot,filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Cannot save state to file " << filename << "." << endl;
-    } else if (m_settings.outputs.verbosity >= 2) {
+    } else if (m_settings.outputs.verbosity >= LOGGER_VERBOSITY_DEVELOPMENT) {
         mainLogger.out(LOGGER_INFO) << "State successfully saved to file " << filename << "." << endl;
     }
 }
@@ -300,7 +300,7 @@ void EACirc::savePopulation(const string filename) {
     m_status = saveXMLFile(pRoot, filename);
     if (m_status != STAT_OK) {
         mainLogger.out(LOGGER_ERROR) << "Cannot save population to file " << filename << "." << endl;
-    } else if (m_settings.outputs.verbosity >= 2) {
+    } else if (m_settings.outputs.verbosity >= LOGGER_VERBOSITY_DEVELOPMENT) {
         mainLogger.out(LOGGER_INFO) << "Population successfully saved to file " << filename << "." << endl;
     }
 }
@@ -538,13 +538,13 @@ void EACirc::seedAndResetGAlib(const GAPopulation &population) {
     m_gaData->scoreFrequency(1);	// keep the scores of every generation
     m_gaData->scoreFilename(FILE_GALIB_SCORES);
     // specify how often to write the score to disk
-    if (m_settings.outputs.verbosity >= 2) {
+    if (m_settings.outputs.verbosity >= LOGGER_VERBOSITY_DEVELOPMENT) {
         m_gaData->flushFrequency(100);
     } else {
         m_gaData->flushFrequency(0);
     }
     m_gaData->selectScores(GAStatistics::AllScores);
-    if (m_settings.outputs.verbosity >= 2) {
+    if (m_settings.outputs.verbosity >= LOGGER_VERBOSITY_DEVELOPMENT) {
         mainLogger.out(LOGGER_INFO) << "GAlib seeded and reset." << endl;
     }
 }
@@ -655,7 +655,7 @@ void EACirc::run() {
         // generate test vectors if needed
         if (m_actGener %(m_settings.testVectors.setChangeFrequency) == 1) {
             m_status = m_project->generateAndSaveTestVectors();
-            if (m_status == STAT_OK && m_settings.outputs.verbosity >= 2) {
+            if (m_status == STAT_OK && m_settings.outputs.verbosity >= LOGGER_VERBOSITY_DEVELOPMENT) {
                 mainLogger.out(LOGGER_INFO) << "Test vectors regenerated." << endl;
             }
         }
@@ -701,7 +701,7 @@ void EACirc::run() {
     }
 
     // call post-run finishers if appropriate
-    if (m_settings.outputs.verbosity >= 1) {
+    if (m_settings.outputs.verbosity >= LOGGER_VERBOSITY_PRODUCTION) {
         Finishers::outputCircuitFinisher(m_gaData->population().best());
     }
     Finishers::avgFitnessFinisher();

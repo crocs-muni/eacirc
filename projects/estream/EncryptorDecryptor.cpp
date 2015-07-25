@@ -241,7 +241,7 @@ int EncryptorDecryptor::setupIV() {
     }
 
     // human-readable test vector logging
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         tvFile << "setting IV: ";
@@ -285,7 +285,7 @@ int EncryptorDecryptor::setupKey() {
     }
 
     // human-readable test vector logging
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         ofstream tvFile(FILE_TEST_VECTORS_HR, ios::app);
         tvFile << setfill('0');
         tvFile << "setting key: ";
