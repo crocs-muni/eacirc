@@ -4,17 +4,18 @@
 #include "EACconstants.h"
 #include "Status.h"
 #include "Logger.h"
-class IEvaluator;
-//#include "evaluators/IEvaluator.h"
-class IRndGen;
-//#include "generators/IRndGen.h"
-class ICircuit;
-//#include "circuit/ICircuit.h"
-#include "circuit/gate/JVMSimulator.h"
+
 #include <cmath>
 #include <cstring>
 #include <vector>
 using namespace std;
+
+
+// forward declarations
+class IEvaluator;
+class IRndGen;
+class ICircuit;
+class JVMSimulator;
 
 // forward declarations
 struct SETTINGS_INFO;
