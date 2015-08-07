@@ -39,6 +39,12 @@ set(SOURCES
     evaluators/CategoriesEvaluator.cpp
     evaluators/HammingWeightEvaluator.cpp
     evaluators/FeatureEvaluator.cpp
+# === gate2 ===
+    circuit/gate2/Converter.cpp
+    circuit/gate2/CpuGate.cpp
+    circuit/gate2/Gate2.cpp
+    circuit/gate2/GpuGate.cu
+    circuit/gate2/GaGate.cpp
 # === random generators ===
     generators/BiasRndGen.cpp
     generators/IRndGen.cpp
@@ -95,6 +101,15 @@ set(HEADERS
     evaluators/CategoriesEvaluator.h
     evaluators/HammingWeightEvaluator.h
     evaluators/FeatureEvaluator.h
+# === gate2 ===
+    circuit/gate2/Circuit.h
+    circuit/gate2/Converter.h
+    circuit/gate2/Gate2.h
+    circuit/gate2/CpuGate.h
+    circuit/gate2/GaGate.h
+    circuit/gate2/GenomeItem_t.h
+    circuit/gate2/GpuGate.h
+    circuit/gate2/Interpreter.h
 # === random generators ===
     generators/BiasRndGen.h
     generators/IRndGen.h
