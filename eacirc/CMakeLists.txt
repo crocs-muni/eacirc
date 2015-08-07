@@ -149,7 +149,8 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 
 # === eacirc target ===
 if(BUILD_CUDA)
-    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} ${CUDA_SOURCES} ${CUDA_HEADERS} OPTIONS -std=c++11 -relaxed-constexpr -I${CMAKE_CURRENT_SOURCE_DIR})
+    cuda_include_dirs(${CMAKE_CURRENT_SOURCE_DIR})
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} ${CUDA_SOURCES} ${CUDA_HEADERS} OPTIONS -std=c++11 -relaxed-constexpr)
     target_compile_definitions(eacirc PUBLIC USE_CUDA)
 else()
     add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
