@@ -142,6 +142,7 @@ source_group("circuit"         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/c
 source_group("circuit\\gate"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
 source_group("circuit\\gpu_gate"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gpu_gate/.*")
 source_group("circuit\\polynomial"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
+source_group("cuda"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/cuda/.*")
 source_group("evaluators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
 source_group("generators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
 source_group("projects"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/.*")
