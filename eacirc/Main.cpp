@@ -60,17 +60,25 @@ int main(int argc, char **argv) {
 
     testEnvironment();
 
-    EACirc eacirc;
-    eacirc.loadConfiguration(configFilename);
-    eacirc.prepare();
-    eacirc.initializeState();
-    eacirc.run();
-
-    if (eacirc.getStatus() != STAT_OK) {
-        mainLogger.out(LOGGER_ERROR) << "EACirc run failed." << endl;
-        mainLogger.out() << "       status: " << statusToString(eacirc.getStatus()) << endl;
-    } else {
-        mainLogger.out(LOGGER_INFO) << "EACirc run succeeded." << endl;
+    try {
+        EACirc eacirc;
+        eacirc.loadConfiguration( configFilename );
+        eacirc.prepare();
+        eacirc.initializeState();
+        eacirc.run();
+        
+        // TODO: remove this, when we start using exceptions
+        if (eacirc.getStatus() != STAT_OK) {
+            mainLogger.out(LOGGER_ERROR) << "EACirc run failed." << endl;
+            mainLogger.out() << "       status: " << statusToString(eacirc.getStatus()) << endl;
+        } else {
+            mainLogger.out(LOGGER_INFO) << "EACirc run succeeded." << endl;
+        }
+    }
+    catch (std::exception& e) {
+        mainLogger.out( LOGGER_ERROR ) << "Fatal failure: " << e.what() << std::endl;
+        mainLogger.out() << "exiting..." << std::endl;
+        return 1;
     }
 }
 
