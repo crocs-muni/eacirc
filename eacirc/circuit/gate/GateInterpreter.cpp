@@ -1,4 +1,5 @@
 #include "GateInterpreter.h"
+#include "JVMSimulator.h"
 
 unsigned char* executionInputLayer = NULL;
 unsigned char* executionMiddleLayerIn = NULL;
