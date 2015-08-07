@@ -129,24 +129,6 @@ set(OTHER_FILES
     config.xml
 )
 
-set(CUDA_SOURCES    
-# === gpu gate circuit ===
-    circuit/gpu_gate/GaCallbacks.cpp
-    circuit/gpu_gate/GpuGate.cpp
-    circuit/gpu_gate/GpuTask.cpp
-    circuit/gpu_gate/GpuTask.cu
-)
-set(CUDA_HEADERS
-# === gpu gate circuit ===
-    circuit/gpu_gate/Byte.h
-    circuit/gpu_gate/GaCallbacks.h
-    circuit/gpu_gate/GateCircuit.h
-    circuit/gpu_gate/GateHelper.h
-    circuit/gpu_gate/GateInterpreter.h
-    circuit/gpu_gate/GpuGate.h
-    circuit/gpu_gate/GpuTask.h
-)
-
 # === configure files ===
 detect_version(Version.h)
 
@@ -171,7 +153,7 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 # === eacirc target ===
 if(BUILD_CUDA)
     cuda_include_dirs(${CMAKE_CURRENT_SOURCE_DIR})
-    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} ${CUDA_SOURCES} ${CUDA_HEADERS} OPTIONS -std=c++11 -relaxed-constexpr)
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} OPTIONS -std=c++11 -relaxed-constexpr)
     target_compile_definitions(eacirc PUBLIC USE_CUDA)
 else()
     add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
