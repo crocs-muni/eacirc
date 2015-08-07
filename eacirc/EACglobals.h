@@ -4,6 +4,7 @@
 #include "EACconstants.h"
 #include "Status.h"
 #include "Logger.h"
+#include "TestVectors.h"
 
 #include <cmath>
 #include <cstring>
@@ -107,7 +108,7 @@ struct SETTINGS_RANDOM {
 //! settings corresponding to EACIRC/CUDA
 struct SETTINGS_CUDA {
     bool enabled;                   //! is CUDA support enabled?
-    size_t block_size;              //! block size of the kernel
+    int block_size;                 //! block size of the kernel
     SETTINGS_CUDA();
 };
 
@@ -200,13 +201,12 @@ struct STATISTICS {
 
 //! test vectors and their outputs
 struct TEST_VECTORS {
-    unsigned char** inputs;                 //! test vector inputs for current set
-    unsigned char** outputs;                //! (correct) test vector outputs for current set
-    unsigned char** circuitOutputs;         //! circuit outputs for current set (to ease memory allocation)
-    bool newSet;                            //! has new set been generated? (for CUDA usage)
-    TEST_VECTORS();
+    TestVectors inputs;                 //! test vector inputs for current set
+    TestVectors outputs;                //! (correct) test vector outputs for current set
+    TestVectors circuitOutputs;         //! circuit outputs for current set (to ease memory allocation)
+    bool newSet = false;                //! has new set been generated? (for CUDA usage)
+
     void allocate();
-    void release();
 };
 
 //! globally accessible data (settings, stats, test vectors)

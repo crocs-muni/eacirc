@@ -6,6 +6,7 @@
 #include "XMLProcessor.h"
 #include "Finishers.h"
 #include "garandom.h"
+#include "circuit/gate/JVMSimulator.h"
 
 #ifdef _WIN32
     #include <Windows.h>
@@ -44,7 +45,6 @@ EACirc::~EACirc() {
         pGlobals->settings->gateCircuit.jvmSim = NULL;
     }
     if (pGlobals) {
-        pGlobals->testVectors.release();
         pGlobals->stats.release();
         delete pGlobals;
     }

@@ -56,6 +56,7 @@ set(SOURCES
 
 set(HEADERS
 # === main project files ===
+    Byte.h
     Main.h
     CommonFnc.h
     XMLProcessor.h
@@ -66,6 +67,7 @@ set(HEADERS
     EACirc.h
     Finishers.h
     Version.h
+    TestVectors.h
 # === individual representation ===
     circuit/ICircuit.h
     circuit/ICircuitIO.h
