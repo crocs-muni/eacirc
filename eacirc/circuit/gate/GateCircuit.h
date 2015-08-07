@@ -38,6 +38,8 @@ public:
 
     virtual bool postProcess(GAGenome &original, GAGenome &prunned);
     virtual int loadCircuitConfiguration(TiXmlNode* pRoot);
+protected:
+    GateCircuit( const int type ) : ICircuit( type ) {}
 };
 
 #endif	/* GATECIRCUIT_H */
