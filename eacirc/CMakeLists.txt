@@ -85,6 +85,10 @@ set(HEADERS
     circuit/polynomial/PolynomialCircuitIO.h
     circuit/polynomial/PolyCommonFunctions.h
     circuit/polynomial/PolynomialInterpreter.h
+# === cuda ===
+    cuda/base.h
+    cuda/cudaSafeCall.h
+    cuda/Host.h
 # === evaluators ===
     evaluators/IEvaluator.h
     evaluators/TopBitEvaluator.h
