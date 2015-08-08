@@ -11,7 +11,7 @@
 #define TRUE 1
 #endif
 
-#ifdef _MSC_VER
+#if (_MSC_VER <= 1800)
 // constexpr not supported in VS2013
 #define constexpr const
 #endif
