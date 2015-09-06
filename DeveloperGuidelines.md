@@ -12,13 +12,26 @@ Some specific notes and guidelines are below.
   Choose the appropriate C++ casting method: static_cast, dynamic_cast, const_cast or reinterpret_cast. Try to avoid reinterpret_cast.
 * **Inspect status codes**
   If you call a method returning status code, inspect it. In case of failure, propagate above. If your method can fail, return the status code.
+* **H/CPP split**
+  Try to keep definitions (code) out of the header files. These should contain only the declarations and documentation (for comprehensible reference).
+  
+## Naming conventions
+
+* **General name rule**
+  Objects with the same name should have the same semantics, object with different names should have different semantics. That is, keep names of existing variables (do not rename them locally) and don't use common names for unrelated objects.
+* **Files, classes, variables**
+  Always use full names, not abbreviations.
+* **Class definitions order**
+  In class declaration/definition the attributes should preced the methods. Public methods should precede the private ones.
+* **Attributes**
+  Class attributes should be prefixed by "m_".
 
 ## Documentation
 
+* **Document methods**
+  Write a short JavaDoc-style documentation for all methods, mention any restriction on the parameters (maximum supported length, etc.). Ideally, write JavaDocs immediately (wiki documentation can wait a little for code stabilization).
 * **Keep developer Wiki up-to-date**
   After significat changes or feature addition, try to document these in the developer wiki (at least create the TBA sections). In case of significant changes (more/fewer output files, renames CLI options, ...), email core developers after master integration.
-* **Document methods**
-  Write a short JavaDoc-style documentation for all methods, mention any restriction on the parameters (maximum supported length, etc.).
 
 ## Formatting
 
