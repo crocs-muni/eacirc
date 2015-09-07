@@ -14,3 +14,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Static casts added where necessary.

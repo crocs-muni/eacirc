@@ -1,6 +1,3 @@
-namespace Omdsha512k128n128tau128v1_raw {
-int numRounds = -1;
-
 /** Implementation of sha512 compression function, originally from openssl  */
 
 /**The original file was modified so that it implements
@@ -50,8 +47,10 @@ int numRounds = -1;
 #include <stdlib.h>
 #include <string.h>
 
-#include <sha512.h>
+#include "omdsha512k128n128tau128v1_sha512.h"
 
+// CHANGE namespace moved due to includes
+namespace Omdsha512k128n128tau128v1_raw {
 
 /** sha512 round constants*/
 static const uint64_t K512[80] = {
@@ -206,7 +205,8 @@ void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
  */
 void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
 	{
-	const uint64_t *W=in;
+    // CHANGE type casting added due to c++
+	const uint64_t *W=reinterpret_cast<const Omdsha512k128n128tau128v1_raw::uint64_t*>(in);
 	uint64_t	a,b,c,d,e,f,g,h,s0,s1,T1,T2;
 	uint64_t	X[16];
 	uint64_t  H[8];

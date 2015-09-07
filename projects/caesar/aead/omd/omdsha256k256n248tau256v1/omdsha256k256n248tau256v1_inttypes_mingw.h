@@ -1,5 +1,3 @@
-namespace Omdsha256k256n248tau256v1_raw {
-
 /**
  * @file inttypes.h
  * Copyright 2012, 2013 MinGW.org project
@@ -33,6 +31,9 @@ namespace Omdsha256k256n248tau256v1_raw {
 #include <stdint.h>
 #define __need_wchar_t
 #include <stddef.h>
+
+// CHANGE namespace moved due to includes
+namespace Omdsha256k256n248tau256v1_raw {
 
 #ifdef	__cplusplus
 extern	"C"	{
@@ -321,6 +322,5 @@ uintmax_t __cdecl __MINGW_NOTHROW wcstoumax (const wchar_t* __restrict__ nptr,
 }
 #endif
 
-#endif /* ndef _INTTYPES_H */
-
 } // namespace Omdsha256k256n248tau256v1_raw
+#endif /* ndef _INTTYPES_H */

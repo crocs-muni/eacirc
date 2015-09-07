@@ -1,5 +1,3 @@
-namespace Omdsha256k256n248tau256v1_raw {
-
 /** modified md32_common.h, originally from openssl*/
 
 /**The original file was modified so that it implements
@@ -129,5 +127,3 @@ namespace Omdsha256k256n248tau256v1_raw {
 #define MD32_REG_T int
 #endif
 #endif
-
-} // namespace Omdsha256k256n248tau256v1_raw

@@ -1,5 +1,3 @@
-namespace Omdsha512k256n256tau256v1_raw {
-
 // ISO C9x  compliant stdint.h for Microsoft Visual Studio
 // Based on ISO/IEC 9899:TC2 Committee draft (May 6, 2005) WG14/N1124 
 // 
@@ -55,6 +53,9 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+// CHANGE namespace moved due to includes
+namespace Omdsha512k256n256tau256v1_raw {
 
 // Define _W64 macros to mark types changing their size, like intptr_t.
 #ifndef _W64
@@ -245,7 +246,5 @@ typedef uint64_t  uintmax_t;
 
 #endif // __STDC_CONSTANT_MACROS ]
 
-
-#endif // _MSC_STDINT_H_ ]
-
 } // namespace Omdsha512k256n256tau256v1_raw
+#endif // _MSC_STDINT_H_ ]
