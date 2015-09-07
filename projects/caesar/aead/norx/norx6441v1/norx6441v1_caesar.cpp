@@ -1,6 +1,3 @@
-namespace Norx6441v1_raw {
-int numRounds = -1;
-
 /*
    NORX reference source code package - reference C implementations
 
@@ -20,7 +17,10 @@ int numRounds = -1;
 #endif
 
 #include "norx6441v1_api.h"
-#include "norx.h"
+#include "norx6441v1_norx.h"
+
+// CHANGE namespace moved due to includes
+namespace Norx6441v1_raw {
 
 /*
 the code for the cipher implementation goes here,

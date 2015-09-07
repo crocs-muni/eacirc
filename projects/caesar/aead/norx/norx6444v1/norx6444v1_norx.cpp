@@ -1,6 +1,3 @@
-namespace Norx6444v1_raw {
-int numRounds = -1;
-
 /*
    NORX reference source code package - reference C implementations
 
@@ -22,8 +19,12 @@ int numRounds = -1;
 #include <inttypes.h>
 #endif
 
-#include "norx_util.h"
-#include "norx.h"
+#include "norx6444v1_norx_util.h"
+#include "norx6444v1_norx.h"
+
+// CHANGE namespace moved due to includes
+namespace Norx6444v1_raw {
+int numRounds = -1;
 
 #define NORX_N (NORX_W *  2)   /* Nonce size */
 #define NORX_K (NORX_W *  4)   /* Key size */

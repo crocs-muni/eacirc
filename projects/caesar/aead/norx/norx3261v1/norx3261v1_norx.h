@@ -1,5 +1,3 @@
-namespace Norx3261v1_raw {
-
 /*
    NORX reference source code package - reference C implementations
 
@@ -18,7 +16,10 @@ namespace Norx3261v1_raw {
 
 #include <stddef.h>
 #include <stdint.h>
-#include "norx_config.h"
+#include "norx3261v1_norx_config.h"
+
+// CHANGE namespace moved due to includes
+namespace Norx3261v1_raw {
 
 #if   NORX_W == 64
 	typedef uint64_t norx_word_t;
@@ -53,7 +54,5 @@ int norx_aead_decrypt(unsigned char *p, size_t *plen, const unsigned char *h,
                       const unsigned char *t, size_t tlen,
                       const unsigned char *nonce, const unsigned char *key);
 
-#endif
-
-
 } // namespace Norx3261v1_raw
+#endif
