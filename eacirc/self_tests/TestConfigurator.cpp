@@ -165,7 +165,7 @@ void TestConfigurator::prepareConfiguration() const {
 
 // See documentation in header file.
 bool TestConfigurator::floatingPointEqual(double x, double y) {
-    CHECK(fabs(x - y) <= 0.000001);
+    CHECK(fabs(x - y) <= 0.000001 * fabs(x));
 }
 
 string TestConfigurator::mainConfiguration =
