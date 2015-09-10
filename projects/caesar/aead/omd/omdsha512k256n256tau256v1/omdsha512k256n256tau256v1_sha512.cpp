@@ -206,7 +206,7 @@ void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
 void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
 	{
     // CHANGE type casting added due to c++
-	const uint64_t *W=reinterpret_cast<const Omdsha512k256n256tau256v1_raw::uint64_t*>(in);
+	const uint64_t *W=reinterpret_cast<const uint64_t*>(in);
 	uint64_t	a,b,c,d,e,f,g,h,s0,s1,T1,T2;
 	uint64_t	X[16];
 	uint64_t  H[8];
