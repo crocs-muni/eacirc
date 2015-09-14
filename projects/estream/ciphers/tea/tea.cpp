@@ -20,7 +20,7 @@ void ECRYPT_TEA::ECRYPT_encrypt_bytes(void *ctx, const u8 *plaintext, u8 *cipher
 {
     TEA_ctx* teaCtx = (TEA_ctx*) ctx;
     if(!msglen) return;
-    for(unsigned int i = 0; i < msglen + 8; i += 8) {
+    for(unsigned int i = 0; i < msglen; i += 8) {
         //copy plaintext of u8 to array of u32
         for(int j = 0; j < 2; j++) teaCtx->input[j] = U8TO32_LITTLE(plaintext + i + 4*j);
 
@@ -35,10 +35,8 @@ void ECRYPT_TEA::ECRYPT_encrypt_bytes(void *ctx, const u8 *plaintext, u8 *cipher
                     ^ (teaCtx->input[0] + sum)
                     ^ ((teaCtx->input[0]>>5) + teaCtx->key[3]);
         }
-        //debug
-        u32 tmp0 = teaCtx->input[0];
-        u32 tmp1 = teaCtx->input[1];
-        for(int j = 0; j < 2; j++) U32TO8_LITTLE(ciphertext + i + 4*j, teaCtx->input[j]);
+        for (int j = 0; j < 2; j++)
+            U32TO8_LITTLE(ciphertext + i + 4*j, teaCtx->input[j]);
     }
 }
 
@@ -46,7 +44,7 @@ void ECRYPT_TEA::ECRYPT_decrypt_bytes(void *ctx, const u8 *ciphertext, u8 *plain
 {
     TEA_ctx* teaCtx = (TEA_ctx*) ctx;
     if(!msglen) return;
-    for(unsigned int i = 0; i < msglen + 8; i += 8) {
+    for(unsigned int i = 0; i < msglen; i += 8) {
         //copy plaintext of u8 to array of u32
         for(int j = 0; j < 2; j++) teaCtx->input[j] = U8TO32_LITTLE(ciphertext + i + 4*j);
 
@@ -62,9 +60,7 @@ void ECRYPT_TEA::ECRYPT_decrypt_bytes(void *ctx, const u8 *ciphertext, u8 *plain
                     ^ ((teaCtx->input[1]>>5) + teaCtx->key[1]);
             sum -= delta;
         }
-        //debug
-        u32 tmp0 = teaCtx->input[0];
-        u32 tmp1 = teaCtx->input[1];
-        for(int j = 0; j < 2; j++) U32TO8_LITTLE(plaintext + i + 4*j, teaCtx->input[j]);
+        for(int j = 0; j < 2; j++) 
+            U32TO8_LITTLE(plaintext + i + 4*j, teaCtx->input[j]);
     }
 }
