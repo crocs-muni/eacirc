@@ -302,7 +302,10 @@ TEST_CASE("sanity/chi-square-test", "Chi^2 distribution sanity test") {
     TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 200), 0.995425444541951895268653400299156801014685563033877494690047697443726397137181431060955533820526675);
 }
 
-// TODO: write Kolmogorov-Smirnov test for uniformity of P-values during
-// random vs. random test to validate computation.
-// Use EACirc visitor in evaluateStep to collect p-values to some vector and
-// then perform KS test.
+// Kolmogorov-Smirnov sanity test, reference values taken from online calculators (https://home.ubalt.edu/ntsbarsh/business-stat/otherapplets/Uniform.htm)
+TEST_CASE("sanity/ks-uniformity-test", "Kolmogorov-Smirnov sanity test") {
+    std::vector<double> samples1 = { 0.10, 0.36, 0.22, 0.9, 0.6 };
+    std::vector<double> samples2 = { 0.10, 0.10, 0.22, 0.24, 0.42, 0.37, 0.77, 0.99, 0.96, 0.89, 0.85, 0.28, 0.63, 0.09 };
+    TestConfigurator::floatingPointEqual(CommonFnc::KS_uniformity_test(samples1), 0.24);
+    TestConfigurator::floatingPointEqual(CommonFnc::KS_uniformity_test(samples2), 0.1514286);
+}

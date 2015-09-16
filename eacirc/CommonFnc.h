@@ -86,11 +86,15 @@ namespace CommonFnc {
      */
     inline double KS_get_critical_value(unsigned long sampleSize) { return 1.36/sqrt((double)sampleSize); }
 
-    /** Kolmogorov-Smirnov uniformity test.
-     * @param sample
+    /** Kolmogorov-Smirnov uniformity test
+     * - tests uniformity distribution on [0,1]
+     * - works only for number from range [0,1]
+     * - idea taken from http://www.jstatsoft.org/v08/i18/paper
+     * (Evaluating Kolmogorov’s Distribution by George Masaglia et alii)
+     * @param samples       vector of observer values -- will be sorted!
      * @return KS test statistic value
      */
-    double KS_uniformity_test(std::vector<double> * sample);
+    double KS_uniformity_test(std::vector<double> &samples);
 
 } // namespace CommonFnc
 
