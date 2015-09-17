@@ -1,5 +1,3 @@
-namespace Norx3241v1_raw {
-
 /*
    NORX reference source code package - reference C implementations
 
@@ -33,6 +31,9 @@ namespace Norx3241v1_raw {
 #include <stddef.h>
 #include <string.h>
 #include <stdint.h>
+
+// CHANGE namespace moved due to includes
+namespace Norx3241v1_raw {
 
 #define STR_(x) #x
 #define STR(x) STR_(x)
@@ -115,7 +116,5 @@ static NORX_INLINE void store64(void * out, const uint64_t v)
 
 static void* (* const volatile burn)(void*, int, size_t) = memset;
 
-#endif
-
-
 } // namespace Norx3241v1_raw
+#endif

@@ -1,6 +1,3 @@
-namespace Kiasueq128v1_raw {
-int numRounds = -1;
-
 /*
  * Kiasu=-128 Reference C Implementation
  * 
@@ -27,9 +24,12 @@ int numRounds = -1;
 
 #include <stdlib.h>
 #include "kiasueq128v1_api.h"
-#include "kiasu.h"
+#include "kiasueq128v1_kiasu.h"
 #include "kiasueq128v1_encrypt.h"
 
+// CHANGE namespace moved due to includes
+namespace Kiasueq128v1_raw {
+int numRounds = -1;
 
 /*
  the code for the cipher implementation goes here,

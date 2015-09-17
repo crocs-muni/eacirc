@@ -22,9 +22,9 @@ string CaesarProject::testingConfiguration() {
             "    <LIMIT_NUM_OF_ROUNDS>0</LIMIT_NUM_OF_ROUNDS>"
             "    <ALGORITHM_ROUNDS>3</ALGORITHM_ROUNDS>"
             "    <PLAINTEXT_LENGTH>16</PLAINTEXT_LENGTH>"
-            "    <AD_LENGTH>0</AD_LENGTH>"
-            "    <PLAINTEXT_TYPE>0</PLAINTEXT_TYPE>"
-            "    <KEY_TYPE>2</KEY_TYPE>"
+            "    <AD_LENGTH>2</AD_LENGTH>"
+            "    <PLAINTEXT_TYPE>2</PLAINTEXT_TYPE>"
+            "    <KEY_TYPE>1</KEY_TYPE>"
             "    <AD_TYPE>0</AD_TYPE>"
             "    <SMN_TYPE>0</SMN_TYPE>"
             "    <PMN_TYPE>0</PMN_TYPE>"
@@ -85,33 +85,38 @@ int CaesarProject::initializeProjectState() {
 int CaesarProject::saveProjectState(TiXmlNode* pRoot) const {
     int status = STAT_OK;
     TiXmlElement* pRoot2 = pRoot->ToElement();
-    pRoot2->SetAttribute("loadable",0);
-    return STAT_OK;
+    pRoot2->SetAttribute("loadable",1);
+    TiXmlElement* pElem = new TiXmlElement("encryptor");
+    status = m_encryptor->saveState(pElem);
+    pRoot2->LinkEndChild(pElem);
+    return status;
 }
 
 int CaesarProject::loadProjectState(TiXmlNode* pRoot) {
-    return STAT_OK;
+    return m_encryptor->loadState(getXMLElement(pRoot, "encryptor"));
 }
 
 int CaesarProject::createTestVectorFilesHeaders() const {
-    ofstream tvFile;
-    tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
-    if (!tvFile.is_open()) {
-        mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
-        return STAT_FILE_WRITE_FAIL;
+    if (pGlobals->settings->outputs.saveTestVectors) {
+        ofstream tvFile;
+        tvFile.open(FILE_TEST_VECTORS, ios_base::trunc | ios_base::binary);
+        if (!tvFile.is_open()) {
+            mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
+            return STAT_FILE_WRITE_FAIL;
+        }
+        tvFile << dec << left;
+        tvFile << pCaesarSettings->algorithm << " \t\t(algorithm:" << m_encryptor->shortDescription() << ")" << endl;
+        tvFile << pCaesarSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
+        tvFile << pCaesarSettings->algorithmRoundsCount << " \t\t(algorithm rounds - if limited)" << endl;
+        tvFile << pCaesarSettings->plaintextLength << " \t\t(plaintext length)" << endl;
+        tvFile << pCaesarSettings->adLength << " \t\t(associated data length)" << endl;
+        tvFile << pCaesarSettings->plaintextType << " \t\t(plaintext type)" << endl;
+        tvFile << pCaesarSettings->keyType << " \t\t(key type)" << endl;
+        tvFile << pCaesarSettings->adType << " \t\t(associated data type)" << endl;
+        tvFile << pCaesarSettings->smnType << " \t\t(secret message number type)" << endl;
+        tvFile << pCaesarSettings->pmnType << " \t\t(public message number type)" << endl;
+        tvFile.close();
     }
-    tvFile << dec << left;
-    tvFile << pCaesarSettings->algorithm << " \t\t(algorithm:" << m_encryptor->shortDescription() << ")" << endl;
-    tvFile << pCaesarSettings->limitAlgRounds << " \t\t(limit algorithm rounds?)" << endl;
-    tvFile << pCaesarSettings->algorithmRoundsCount << " \t\t(algorithm rounds - if limited)" << endl;
-    tvFile << pCaesarSettings->plaintextLength << " \t\t(plaintext length)" << endl;
-    tvFile << pCaesarSettings->adLength << " \t\t(associated data length)" << endl;
-    tvFile << pCaesarSettings->plaintextType << " \t\t(plaintext type)" << endl;
-    tvFile << pCaesarSettings->keyType << " \t\t(key type)" << endl;
-    tvFile << pCaesarSettings->adType << " \t\t(associated data type)" << endl;
-    tvFile << pCaesarSettings->smnType << " \t\t(secret message number type)" << endl;
-    tvFile << pCaesarSettings->pmnType << " \t\t(public message number type)" << endl;
-    tvFile.close();
 
     return STAT_OK;
 }

@@ -1,10 +1,11 @@
-namespace Oceankeyakv1_raw {
-int numRounds = -1;
-
 #include "oceankeyakv1_encrypt.h"
 
 #include <string.h>
-#include "Keyak.h"
+#include "oceankeyakv1_Keyak.h"
+
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
+int numRounds = -1;
 
 int crypto_aead_encrypt(
     unsigned char *c,unsigned long long *clen,

@@ -1,5 +1,3 @@
-namespace Riverkeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -15,8 +13,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #ifndef _KeccakP_800_12_Reference_h_
 #define _KeccakP_800_12_Reference_h_
-#include "KeccakP-800-12-interface.h"
-#include "KeccakF-800-reference.h"
+#include "riverkeyakv1_KeccakP-800-12-interface.h"
+#include "riverkeyakv1_KeccakF-800-reference.h"
 #endif
-
-} // namespace Riverkeyakv1_raw

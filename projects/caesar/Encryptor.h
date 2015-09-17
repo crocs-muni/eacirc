@@ -3,6 +3,7 @@
 
 #include "CaesarConstants.h"
 #include "CaesarInterface.h"
+#include "XMLProcessor.h"
 
 class Encryptor {
 private:
@@ -74,6 +75,19 @@ public:
      */
     std::string shortDescription();
 
+    /** save state of encryptor
+    * - current cipher keys and counter states
+    * @param pRoot    allocated XML element 'encryptor' to be filled with state
+    * @return status
+    */
+    int saveState(TiXmlNode* pRoot) const;
+
+    /** load state of encryptor
+    * - current cipher keys and counter states
+    * @param pRoot    XML element 'encryptor'
+    * @return status
+    */
+    int loadState(TiXmlNode* pRoot);
 };
 
 #endif // ENCRYPTOR_H

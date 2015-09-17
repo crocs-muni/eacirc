@@ -1,5 +1,3 @@
-namespace Omdsha256k192n104tau128v1_raw {
-
 /** Implementation of sha256 compression function, originally from openssl  */
 
 /**The original file was modified so that it implements
@@ -72,9 +70,9 @@ namespace Omdsha256k192n104tau128v1_raw {
       || defined (__WIN32__) || defined (__TOS_WIN__) \
       || defined (__WINDOWS__) || defined (_WIN32_WCE) )
  #ifdef _MSC_VER
-   #include <inttypes_win.h>
+   #include "omdsha256k192n104tau128v1_inttypes_win.h"
  #else   /* _MSC_VER */
-	#include <inttypes_mingw.h>
+	#include "omdsha256k192n104tau128v1_inttypes_mingw.h"
  #endif  /* _MSC_VER */
 #else  /* defined windows */
    #include <inttypes.h>
@@ -87,6 +85,9 @@ namespace Omdsha256k192n104tau128v1_raw {
  */
 #define SHA256_DIGEST_LENGTH 32
 
+// CHANGE namespace moved due to includes
+namespace Omdsha256k192n104tau128v1_raw {
+
 typedef unsigned char hashblock[SHA256_DIGEST_LENGTH];
 typedef unsigned char messageblock[2*SHA256_DIGEST_LENGTH];
 
@@ -98,6 +99,5 @@ typedef unsigned char messageblock[2*SHA256_DIGEST_LENGTH];
  */
 void sha256_comp (hashblock res, const hashblock hash, const void *in);
 
-#endif
-
 } // namespace Omdsha256k192n104tau128v1_raw
+#endif

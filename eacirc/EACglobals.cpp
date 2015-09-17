@@ -38,7 +38,7 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
 
 SETTINGS_CUDA::SETTINGS_CUDA() {
     enabled = false;
-    block_size = 128;
+    block_size = 512;
 }
 
 SETTINGS_GA::SETTINGS_GA() {
@@ -104,51 +104,16 @@ STATISTICS::STATISTICS() {
     pvaluesBestIndividual = NULL;
 }
 
-TEST_VECTORS::TEST_VECTORS() {
-    inputs = NULL;
-    outputs = NULL;
-    circuitOutputs = NULL;
-    newSet = false;
-}
-
 void TEST_VECTORS::allocate() {
     if (pGlobals->settings->testVectors.inputLength == -1 || pGlobals->settings->testVectors.outputLength == -1
             || pGlobals->settings->main.circuitSizeOutput == -1) {
         mainLogger.out(LOGGER_ERROR) << "Test vector input/output size or circuit output size not set." << endl;
         return;
     }
-    // if memory is allocated, release
-    if (inputs != NULL || outputs != NULL || circuitOutputs != NULL) release();
-    // allocate memory for inputs, outputs, citcuitOutputs
-    inputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
-    outputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
-    circuitOutputs = new unsigned char*[pGlobals->settings->testVectors.setSize];
-    for (int i = 0; i < pGlobals->settings->testVectors.setSize; i++) {
-        inputs[i] = new unsigned char[pGlobals->settings->testVectors.inputLength];
-        memset(inputs[i],0,pGlobals->settings->testVectors.inputLength);
-        outputs[i] = new unsigned char[pGlobals->settings->testVectors.outputLength];
-        memset(outputs[i],0,pGlobals->settings->testVectors.outputLength);
-        circuitOutputs[i] = new unsigned char[pGlobals->settings->main.circuitSizeOutput];
-        memset(circuitOutputs[i],0,pGlobals->settings->main.circuitSizeOutput);
-    }
-}
 
-void TEST_VECTORS::release() {
-    if (inputs != NULL) {
-        for (int i = 0; i < pGlobals->settings->testVectors.setSize; i++) delete[] inputs[i];
-        delete[] inputs;
-        inputs = NULL;
-    }
-    if (outputs != NULL) {
-        for (int i = 0; i < pGlobals->settings->testVectors.setSize; i++) delete[] outputs[i];
-        delete[] outputs;
-        outputs = NULL;
-    }
-    if (circuitOutputs != NULL) {
-        for (int i = 0; i < pGlobals->settings->testVectors.setSize; i++) delete[] (circuitOutputs[i]);
-        delete[] circuitOutputs;
-        circuitOutputs = NULL;
-    }
+    inputs = TestVectors( pGlobals->settings->testVectors.inputLength, pGlobals->settings->testVectors.setSize );
+    outputs = TestVectors( pGlobals->settings->testVectors.outputLength, pGlobals->settings->testVectors.setSize );
+    circuitOutputs = TestVectors( pGlobals->settings->testVectors.outputLength, pGlobals->settings->testVectors.setSize );
 }
 
 void STATISTICS::allocate() {

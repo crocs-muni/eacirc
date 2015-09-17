@@ -1,13 +1,17 @@
-namespace Scream10v2_raw {
-int numRounds = -1;
-
-#include "crypto_uint16.h"
-#include "crypto_uint8.h"
+// CHANGE crypto_uintXX typedefs
+// #include "crypto_uint16.h"
+// #include "crypto_uint8.h"
+#include <cstdint>
+typedef uint8_t crypto_uint8;
+typedef uint16_t crypto_uint16;
 #include <string.h>
 #include <assert.h>
 
 #include "scream10v2_api.h"
 #include "scream10v2_encrypt.h"
+
+// CHANGE namespace moved due to includes
+namespace Scream10v2_raw {
 
 #define blocklen 16
 void LS_encrypt(const crypto_uint8 input[blocklen],

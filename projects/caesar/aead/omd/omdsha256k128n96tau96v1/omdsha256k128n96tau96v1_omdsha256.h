@@ -1,5 +1,3 @@
-namespace Omdsha256k128n96tau96v1_raw {
-
 /**
  * The implementation of the omdsha256 mode
  *
@@ -103,12 +101,11 @@ namespace Omdsha256k128n96tau96v1_raw {
 #ifndef __SHA256OMD_H__
 #define __SHA256OMD_H__
 
-#include <sha256.h>
-#include <omd_omdsha256k128n96tau96v1_api.h>
+#include "omdsha256k128n96tau96v1_sha256.h"
+#include "omdsha256k128n96tau96v1_api.h"
 
-
-
-
+// CHANGE namespace moved due to includes
+namespace Omdsha256k128n96tau96v1_raw {
 
 #define OMD_n SHA256_DIGEST_LENGTH /**< Byte-length of the chaining block */
 #define OMD_m SHA256_DIGEST_LENGTH /**< Byte-length of the message block  */
@@ -281,6 +278,5 @@ omdsha256_process(unsigned char *data, const unsigned char* key,
 		  const unsigned char *nonce,
 		  const enum mode encrypting);
 
-#endif /* not __SHA256OMD_H__ */
-
 } // namespace Omdsha256k128n96tau96v1_raw
+#endif /* not __SHA256OMD_H__ */

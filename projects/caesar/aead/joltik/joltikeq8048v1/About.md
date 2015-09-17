@@ -14,3 +14,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* 'const' added to aesTweakEncrypt to resolve linker errors.

@@ -1,5 +1,3 @@
-namespace Seakeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,8 +14,11 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _ParallelKeccakFs_h_
 #define _ParallelKeccakFs_h_
 
-#include "KeccakF-interface.h"
-#include "NumberOfParallelInstances.h"
+#include "seakeyakv1_KeccakF-interface.h"
+#include "seakeyakv1_NumberOfParallelInstances.h"
+
+// CHANGE namespace moved due to includes
+namespace Seakeyakv1_raw {
 
 /** Function called at least once before any use of the other KeccakF_*
   * functions, possibly to initialize global variables.
@@ -264,6 +265,6 @@ void KeccakF_ParallelStateExtractAndXORLanes(const void *states, unsigned int in
   */
 void KeccakF_ParallelStateExtractAndXORLanesAll(const void *states, unsigned char *data, unsigned int laneCount);
 
-#endif
-
 } // namespace Seakeyakv1_raw
+
+#endif

@@ -1,5 +1,3 @@
-namespace Oceankeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,7 +14,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakP_1600_12_Interface_h_
 #define _KeccakP_1600_12_Interface_h_
 
-#include "KeccakF-1600-interface.h"
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
+
+#include "oceankeyakv1_KeccakF-1600-interface.h"
 
 /** Function to apply Keccak-p[1600, 12] on the state.
   * @param  state   Pointer to the state.
@@ -29,6 +30,6 @@ void KeccakP1600_12_StatePermute(void *state);
   */
 void KeccakP1600_12_StateXORPermuteExtract(void *state, const unsigned char *inData, unsigned int inLaneCount, unsigned char *outData, unsigned int outLaneCount);
 
-#endif
-
 } // namespace Oceankeyakv1_raw
+
+#endif

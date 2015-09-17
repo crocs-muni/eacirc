@@ -39,6 +39,12 @@ set(SOURCES
     evaluators/CategoriesEvaluator.cpp
     evaluators/HammingWeightEvaluator.cpp
     evaluators/FeatureEvaluator.cpp
+# === gate2 ===
+    circuit/gate2/Converter.cpp
+    circuit/gate2/CpuGate.cpp
+    circuit/gate2/Gate2.cpp
+    circuit/gate2/GpuGate.cu
+    circuit/gate2/GaGate.cpp
 # === random generators ===
     generators/BiasRndGen.cpp
     generators/IRndGen.cpp
@@ -56,6 +62,7 @@ set(SOURCES
 
 set(HEADERS
 # === main project files ===
+    Byte.h
     Main.h
     CommonFnc.h
     XMLProcessor.h
@@ -66,6 +73,7 @@ set(HEADERS
     EACirc.h
     Finishers.h
     Version.h
+    TestVectors.h
 # === individual representation ===
     circuit/ICircuit.h
     circuit/ICircuitIO.h
@@ -83,12 +91,25 @@ set(HEADERS
     circuit/polynomial/PolynomialCircuitIO.h
     circuit/polynomial/PolyCommonFunctions.h
     circuit/polynomial/PolynomialInterpreter.h
+# === cuda ===
+    cuda/base.h
+    cuda/cudaSafeCall.h
+    cuda/Host.h
 # === evaluators ===
     evaluators/IEvaluator.h
     evaluators/TopBitEvaluator.h
     evaluators/CategoriesEvaluator.h
     evaluators/HammingWeightEvaluator.h
     evaluators/FeatureEvaluator.h
+# === gate2 ===
+    circuit/gate2/Circuit.h
+    circuit/gate2/Converter.h
+    circuit/gate2/Gate2.h
+    circuit/gate2/CpuGate.h
+    circuit/gate2/GaGate.h
+    circuit/gate2/GenomeItem_t.h
+    circuit/gate2/GpuGate.h
+    circuit/gate2/Interpreter.h
 # === random generators ===
     generators/BiasRndGen.h
     generators/IRndGen.h
@@ -108,24 +129,6 @@ set(OTHER_FILES
     config.xml
 )
 
-set(CUDA_SOURCES    
-# === gpu gate circuit ===
-    circuit/gpu_gate/GaCallbacks.cpp
-    circuit/gpu_gate/GpuGate.cpp
-    circuit/gpu_gate/GpuTask.cpp
-    circuit/gpu_gate/GpuTask.cu
-)
-set(CUDA_HEADERS
-# === gpu gate circuit ===
-    circuit/gpu_gate/Byte.h
-    circuit/gpu_gate/GaCallbacks.h
-    circuit/gpu_gate/GateCircuit.h
-    circuit/gpu_gate/GateHelper.h
-    circuit/gpu_gate/GateInterpreter.h
-    circuit/gpu_gate/GpuGate.h
-    circuit/gpu_gate/GpuTask.h
-)
-
 # === configure files ===
 detect_version(Version.h)
 
@@ -134,8 +137,10 @@ detect_version(Version.h)
 # === source groups ===
 source_group("circuit"         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
 source_group("circuit\\gate"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
+source_group("circuit\\gate2"           REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate2/.*")
 source_group("circuit\\gpu_gate"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gpu_gate/.*")
 source_group("circuit\\polynomial"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
+source_group("cuda"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/cuda/.*")
 source_group("evaluators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
 source_group("generators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
 source_group("projects"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/projects/.*")
@@ -147,7 +152,8 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 
 # === eacirc target ===
 if(BUILD_CUDA)
-    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} ${CUDA_SOURCES} ${CUDA_HEADERS} OPTIONS -std=c++11 -relaxed-constexpr -I${CMAKE_CURRENT_SOURCE_DIR})
+    cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} OPTIONS -std=c++11 -relaxed-constexpr)
     target_compile_definitions(eacirc PUBLIC USE_CUDA)
 else()
     add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})

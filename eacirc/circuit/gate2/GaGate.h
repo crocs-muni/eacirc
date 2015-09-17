@@ -3,7 +3,7 @@
 #include <GAGenome.h>
 
 
-class GaCallbacks {
+class GaGate {
 public:
     static float evaluator(GAGenome& genome);
 };

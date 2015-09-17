@@ -1,6 +1,3 @@
-namespace Juliusv1draft_raw {
-int numRounds = -1;
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +7,11 @@ int numRounds = -1;
 #define KEY_SIZE 16
 #define EXPANDED_KEY_SIZE 44
 
-#include "functions.c"
+#include "Juliusv1draft_functions.cpp"
+
+// CHANGE namespace moved due to includes
+namespace Juliusv1draft_raw {
+int numRounds = -1;
 
 void julius_regular_involution(unsigned char *pad, unsigned long long padlen, 
 		unsigned long long reg_index, unsigned long expanded_key[EXPANDED_KEY_SIZE]){

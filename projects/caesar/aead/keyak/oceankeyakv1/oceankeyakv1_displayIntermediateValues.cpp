@@ -1,6 +1,3 @@
-namespace Oceankeyakv1_raw {
-int numRounds = -1;
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -15,8 +12,11 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <stdio.h>
-#include "displayIntermediateValues.h"
-#include "KeccakF-interface.h"
+#include "oceankeyakv1_displayIntermediateValues.h"
+#include "oceankeyakv1_KeccakF-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
 
 FILE *intermediateValueFile = 0;
 int displayLevel = 0;
@@ -88,7 +88,7 @@ void displayStateAsLanes(int level, const char *text, void *statePointer)
 {
     unsigned int i;
 #if (KeccakF_width == 1600)
-    unsigned long long int *state = statePointer;
+    unsigned long long int *state = static_cast<unsigned long long int *>(statePointer);
 #endif
 #if (KeccakF_width == 800)
     unsigned int *state = statePointer;

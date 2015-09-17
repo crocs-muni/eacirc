@@ -18,7 +18,7 @@ void Finishers::ksUniformityTestFinisher() {
     mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
 
     double KS_critical_alpha_5 = CommonFnc::KS_get_critical_value(pvalsSize);
-    double KS_P_value = CommonFnc::KS_uniformity_test(pGlobals->stats.pvaluesBestIndividual);
+    double KS_P_value = CommonFnc::KS_uniformity_test(*(pGlobals->stats.pvaluesBestIndividual));
     mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
     mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
 

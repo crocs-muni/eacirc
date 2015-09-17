@@ -1,10 +1,11 @@
-namespace Ketjesrv1_raw {
-int numRounds = -1;
-
 #include "ketjesrv1_encrypt.h"
 
 #include <string.h>
-#include "Ketje.h"
+#include "ketjesrv1_Ketje.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjesrv1_raw {
+int numRounds = -1;
 
 int crypto_aead_encrypt(
     unsigned char *c,unsigned long long *clen,

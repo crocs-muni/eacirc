@@ -1,6 +1,3 @@
-namespace Oceankeyakv1_raw {
-int numRounds = -1;
-
 /*
 The Keyak authenticated encryption scheme, designed by Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
@@ -16,12 +13,15 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <string.h>
-#include "KeccakDuplex.h"
-#include "Keyak.h"
+#include "oceankeyakv1_KeccakDuplex.h"
+#include "oceankeyakv1_Keyak.h"
 
 #ifdef NumberOfParallelInstances
-#include "KeccakParallelDuplex.h"
+#include "oceankeyakv1_KeccakParallelDuplex.h"
 #endif
+
+// CHANGE namespace moved due to includes
+namespace Oceankeyakv1_raw {
 
 #define Keyak_Phase_FeedingAssociatedData   0x01
 #define Keyak_Phase_Wrapping                0x02
@@ -111,7 +111,9 @@ int LakeKeyak_Initialize(Keyak_Instance *instance, const unsigned char *key, uns
     return Keyak_Initialize(&(instance->duplex), key, keySizeInBits, nonce);
 }
 #else
-int ParallelKeyak_Initialize(Keyak_Instance *instance, const unsigned char *key, unsigned int keySizeInBits, const unsigned char *nonce)
+
+// CHANGE namespace added
+int ParallelKeyak_Initialize(Oceankeyakv1_raw::Keyak_Instance *instance, const unsigned char *key, unsigned int keySizeInBits, const unsigned char *nonce)
 {
     int result = Keccak_ParallelDuplexInitializeAll(&(instance->duplex), 1348, 252);
     if (result != 0)
@@ -149,7 +151,9 @@ void Keyak_ProcessAssociatedData(Keccak_DuplexInstance* duplex, const unsigned c
     }
 }
 #else
-void Keyak_ProcessAssociatedData(Keccak_ParallelDuplexInstances* duplex, const unsigned char *data, unsigned int dataSizeInBytes, int last, int bodyFollows)
+
+// CHANGE namespace added
+void Keyak_ProcessAssociatedData(Oceankeyakv1_raw::Keccak_ParallelDuplexInstances* duplex, const unsigned char *data, unsigned int dataSizeInBytes, int last, int bodyFollows)
 {
     unsigned int rhoInBytes = (duplex->rate-4)/8;
     unsigned int totalByteInputIndex = Keccak_ParallelDuplexGetTotalInputIndex(duplex);
@@ -181,7 +185,8 @@ void Keyak_ProcessAssociatedData(Keccak_ParallelDuplexInstances* duplex, const u
 }
 #endif
 
-int Keyak_FeedAssociatedData(Keyak_Instance *instance, const unsigned char *data, unsigned int dataSizeInBytes)
+// CHANGE namespace added
+int Keyak_FeedAssociatedData(Oceankeyakv1_raw::Keyak_Instance *instance, const unsigned char *data, unsigned int dataSizeInBytes)
 {
     if ((instance->phase & Keyak_Phase_FeedingAssociatedData) == 0)
         return 1;
@@ -216,7 +221,9 @@ void Keyak_ProcessPlaintext(Keccak_DuplexInstance* duplex, unsigned char *data, 
         Keccak_Duplexing(duplex, 0, 0, 0, 0, 0x05); // 10
 }
 #else
-void Keyak_ProcessPlaintext(Keccak_ParallelDuplexInstances* duplex, unsigned char *data, unsigned int dataSizeInBytes, int last)
+
+// CHANGE namespace added
+void Keyak_ProcessPlaintext(Oceankeyakv1_raw::Keccak_ParallelDuplexInstances* duplex, unsigned char *data, unsigned int dataSizeInBytes, int last)
 {
     unsigned int rhoInBytes = (duplex->rate-4)/8;
     unsigned int totalByteInputIndex = Keccak_ParallelDuplexGetTotalInputIndex(duplex);
@@ -245,7 +252,8 @@ void Keyak_ProcessPlaintext(Keccak_ParallelDuplexInstances* duplex, unsigned cha
 }
 #endif
 
-int Keyak_WrapPlaintext(Keyak_Instance *instance, const unsigned char *plaintext, unsigned char *ciphertext, unsigned int dataSizeInBytes)
+// CHANGE namespace added
+int Keyak_WrapPlaintext(Oceankeyakv1_raw::Keyak_Instance *instance, const unsigned char *plaintext, unsigned char *ciphertext, unsigned int dataSizeInBytes)
 {
     if (dataSizeInBytes > 0) {
         if ((instance->phase & Keyak_Phase_FeedingAssociatedData) != 0) {
@@ -288,7 +296,9 @@ void Keyak_ProcessCiphertext(Keccak_DuplexInstance* duplex, unsigned char *data,
         Keccak_Duplexing(duplex, 0, 0, 0, 0, 0x05); // 10
 }
 #else
-void Keyak_ProcessCiphertext(Keccak_ParallelDuplexInstances* duplex, unsigned char *data, unsigned int dataSizeInBytes, int last)
+
+// CHANGE namespace added
+void Keyak_ProcessCiphertext(Oceankeyakv1_raw::Keccak_ParallelDuplexInstances* duplex, unsigned char *data, unsigned int dataSizeInBytes, int last)
 {
     unsigned int rhoInBytes = (duplex->rate-4)/8;
     unsigned int totalByteInputIndex = Keccak_ParallelDuplexGetTotalInputIndex(duplex);
@@ -317,7 +327,8 @@ void Keyak_ProcessCiphertext(Keccak_ParallelDuplexInstances* duplex, unsigned ch
 }
 #endif
 
-int Keyak_UnwrapCiphertext(Keyak_Instance *instance, const unsigned char *ciphertext, unsigned char *plaintext, unsigned int dataSizeInBytes)
+// CHANGE namespace added
+int Keyak_UnwrapCiphertext(Oceankeyakv1_raw::Keyak_Instance *instance, const unsigned char *ciphertext, unsigned char *plaintext, unsigned int dataSizeInBytes)
 {
     if (dataSizeInBytes > 0) {
         if ((instance->phase & Keyak_Phase_FeedingAssociatedData) != 0) {
@@ -356,7 +367,9 @@ void Keyak_ProcessTag(Keccak_DuplexInstance* duplex, unsigned char *tag, unsigne
     }
 }
 #else
-void Keyak_ProcessTag(Keccak_ParallelDuplexInstances* duplex, unsigned char *tag, unsigned int tagSizeInBytes)
+
+// CHANGE namespace added
+void Keyak_ProcessTag(Oceankeyakv1_raw::Keccak_ParallelDuplexInstances* duplex, unsigned char *tag, unsigned int tagSizeInBytes)
 {
     unsigned int rhoInBytes = (duplex->rate-4)/8;
     unsigned char buffer[32];
@@ -386,7 +399,8 @@ void Keyak_ProcessTag(Keccak_ParallelDuplexInstances* duplex, unsigned char *tag
 }
 #endif
 
-int Keyak_GetTag(Keyak_Instance *instance, unsigned char *tag, unsigned int tagSizeInBytes)
+// CHANGE namespace added
+int Keyak_GetTag(Oceankeyakv1_raw::Keyak_Instance *instance, unsigned char *tag, unsigned int tagSizeInBytes)
 {
     if ((instance->phase & Keyak_Phase_FeedingAssociatedData) != 0)
         Keyak_ProcessAssociatedData(&(instance->duplex), 0, 0, 1, 0);
@@ -410,7 +424,9 @@ void Keyak_ProcessForget(Keccak_DuplexInstance* duplex)
     Keccak_Duplexing(duplex, 0, 0, 0, 0, 0x01);
 }
 #else
-void Keyak_ProcessForget(Keccak_ParallelDuplexInstances* duplex)
+
+// CHANGE namespace added
+void Keyak_ProcessForget(Oceankeyakv1_raw::Keccak_ParallelDuplexInstances* duplex)
 {
     unsigned int rhoInBytes = (duplex->rate-4)/8;
     unsigned int i;
@@ -422,7 +438,8 @@ void Keyak_ProcessForget(Keccak_ParallelDuplexInstances* duplex)
 }
 #endif
 
-int Keyak_Forget(Keyak_Instance *instance)
+// CHANGE namespace added
+int Keyak_Forget(Oceankeyakv1_raw::Keyak_Instance *instance)
 {
     Keyak_ProcessForget(&(instance->duplex));
     instance->phase = Keyak_Phase_FeedingAssociatedData;

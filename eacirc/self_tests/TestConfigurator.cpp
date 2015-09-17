@@ -5,43 +5,7 @@
 #include <tinyxml.h>
 
 TestConfigurator::TestConfigurator()
-    : m_currentProject(0) {
-#ifdef ESTREAM
-    m_projects.push(PROJECT_ESTREAM);
-#endif
-#ifdef SHA3
-    m_projects.push(PROJECT_SHA3);
-#endif
-#ifdef CEASAR
-    m_projects.push(PROJECT_CAESAR);
-#endif
-    // can we open files set in PROJECT_FILE_DISTINGUISHER?
-    string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
-    TiXmlDocument doc(string("configuration").c_str());
-    doc.Parse(conf.c_str());
-    TiXmlHandle hDoc(&doc);
-    TiXmlElement* pElem=hDoc.FirstChildElement().Element();
-    if (pElem != NULL) {
-        TiXmlNode* pRoot = pElem->Clone();
-        string filename1 = getXMLElementValue(pRoot,"FILENAME_1");
-        string filename2 = getXMLElementValue(pRoot,"FILENAME_2");
-        ifstream file1(filename1);
-        ifstream file2(filename2);
-        if (file1.is_open() && file2.is_open()) {
-            m_projects.push(PROJECT_FILE_DISTINGUISHER);
-            file1.close();
-            file2.close();
-        } else {
-            WARN(string("######## Project ")+CommonFnc::toString(PROJECT_FILE_DISTINGUISHER)+"cannot be tested ########");
-            WARN(string("######## Could not open files ")+filename1+", "+filename2+" ########");
-        }
-    }
-}
-
-TestConfigurator::TestConfigurator(int projectType)
-    : m_currentProject(0) {
-    m_projects.push(projectType);
-}
+    : m_currentProject(0) { }
 
 TestConfigurator::~TestConfigurator() {}
 
@@ -55,6 +19,64 @@ bool TestConfigurator::nextProject() {
     WARN(string("######## Testing project ")+CommonFnc::toString(m_currentProject)+" ########");
     WARN("########");
     return true;
+}
+
+void TestConfigurator::addAllProjects() {
+    addProject(PROJECT_ESTREAM);
+    addProject(PROJECT_SHA3);
+    addProject(PROJECT_CAESAR);
+    addProject(PROJECT_FILE_DISTINGUISHER);
+}
+
+void TestConfigurator::addProject(int projectType) {
+    // moved before switch for language reasons
+    
+    switch (projectType) {
+#ifdef ESTREAM
+    case PROJECT_ESTREAM:
+        m_projects.push(PROJECT_ESTREAM);
+        break;
+#endif
+#ifdef SHA3
+    case PROJECT_SHA3:
+        m_projects.push(PROJECT_SHA3);
+        break;
+#endif
+#ifdef CAESAR
+    case PROJECT_CAESAR:
+        m_projects.push(PROJECT_CAESAR);
+        break;
+#endif
+    case PROJECT_FILE_DISTINGUISHER: {
+        string conf = IProject::getTestingConfiguration(PROJECT_FILE_DISTINGUISHER);
+        TiXmlDocument doc(string("configuration").c_str());
+        doc.Parse(conf.c_str());
+        TiXmlHandle hDoc(&doc);
+        TiXmlElement* pElem = hDoc.FirstChildElement().Element();
+        if (pElem != NULL) {
+            TiXmlNode* pRoot = pElem->Clone();
+            string filename1 = getXMLElementValue(pRoot, "FILENAME_1");
+            string filename2 = getXMLElementValue(pRoot, "FILENAME_2");
+            ifstream file1(filename1);
+            ifstream file2(filename2);
+            if (file1.is_open() && file2.is_open()) {
+                m_projects.push(PROJECT_FILE_DISTINGUISHER);
+                file1.close();
+                file2.close();
+            }
+            else {
+                WARN(string("######## Project ") + CommonFnc::toString(PROJECT_FILE_DISTINGUISHER) + "cannot be tested ########");
+                WARN(string("######## Could not open files ") + filename1 + ", " + filename2 + " ########");
+            }
+        }
+        break;
+    }
+    default:
+        WARN("########");
+        WARN(string("######## Unsupported project type (") + CommonFnc::toString(projectType) + ") ########");
+        WARN("########");
+        break;
+    }
 }
 
 int TestConfigurator::getCurrentProject() {
@@ -141,6 +163,11 @@ void TestConfigurator::prepareConfiguration() const {
     prepareConfiguration(m_currentProject);
 }
 
+// See documentation in header file.
+bool TestConfigurator::floatingPointEqual(double x, double y) {
+    CHECK(fabs(x - y) <= 0.000001 * fabs(x));
+}
+
 string TestConfigurator::mainConfiguration =
         "<NOTES>self-test configuration</NOTES>"
         "<MAIN>"
@@ -156,7 +183,7 @@ string TestConfigurator::mainConfiguration =
         "    <CIRCUIT_SIZE_OUTPUT>2</CIRCUIT_SIZE_OUTPUT>"
         "</MAIN>"
         "<OUTPUTS>"
-        "    <VERBOSITY>5</VERBOSITY>"
+        "    <VERBOSITY>2</VERBOSITY>"
         "    <INTERMEDIATE_CIRCUITS>0</INTERMEDIATE_CIRCUITS>"
         "    <ALLOW_PRUNNING>0</ALLOW_PRUNNING>"
         "    <SAVE_TEST_VECTORS>0</SAVE_TEST_VECTORS>"
@@ -171,7 +198,7 @@ string TestConfigurator::mainConfiguration =
         "</RANDOM>"
         "<CUDA>"
         "    <ENABLED>0</ENABLED>"
-        "    <SOMETHING>something</SOMETHING>"
+        "    <BLOCK_SIZE>512</BLOCK_SIZE>"
         "</CUDA>"
         "<GA>"
         "    <EVOLUTION_OFF>0</EVOLUTION_OFF>"
@@ -201,13 +228,13 @@ string TestConfigurator::mainConfiguration =
         "        <FNC_SHIR>1</FNC_SHIR>"
         "        <FNC_ROTL>1</FNC_ROTL>"
         "        <FNC_ROTR>1</FNC_ROTR>"
-        "        <FNC_EQ>1</FNC_EQ>"
-        "        <FNC_LT>1</FNC_LT>"
-        "        <FNC_GT>1</FNC_GT>"
-        "        <FNC_LEQ>1</FNC_LEQ>"
-        "        <FNC_GEQ>1</FNC_GEQ>"
+        "        <FNC_EQ>0</FNC_EQ>"
+        "        <FNC_LT>0</FNC_LT>"
+        "        <FNC_GT>0</FNC_GT>"
+        "        <FNC_LEQ>0</FNC_LEQ>"
+        "        <FNC_GEQ>0</FNC_GEQ>"
         "        <FNC_BSLC>1</FNC_BSLC>"
-        "        <FNC_READ>1</FNC_READ>"
+        "        <FNC_READ>0</FNC_READ>"
         "        <FNC_JVM>0</FNC_JVM>"
         "    </ALLOWED_FUNCTIONS>"
         "</GATE_CIRCUIT>"

@@ -1,5 +1,3 @@
-namespace Omdsha256k128n96tau128v1_raw {
-
 // ISO C9x  compliant inttypes.h for Microsoft Visual Studio
 // Based on ISO/IEC 9899:TC2 Committee draft (May 6, 2005) WG14/N1124 
 // 
@@ -42,7 +40,10 @@ namespace Omdsha256k128n96tau128v1_raw {
 #pragma once
 #endif
 
-#include <stdint_win.h>
+#include "omdsha256k128n96tau128v1_stdint_win.h"
+
+// CHANGE namespace moved due to includes
+namespace Omdsha256k128n96tau128v1_raw {
 
 // 7.8 Format conversion of integer types
 
@@ -304,6 +305,5 @@ imaxdiv_t __cdecl imaxdiv(intmax_t numer, intmax_t denom)
 #define wcstoumax _wcstoui64
 
 
-#endif // _MSC_INTTYPES_H_ ]
-
 } // namespace Omdsha256k128n96tau128v1_raw
+#endif // _MSC_INTTYPES_H_ ]

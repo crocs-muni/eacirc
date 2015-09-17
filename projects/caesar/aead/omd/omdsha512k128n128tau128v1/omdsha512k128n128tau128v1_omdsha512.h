@@ -1,5 +1,3 @@
-namespace Omdsha512k128n128tau128v1_raw {
-
 /**
  * The implementation of the omdsha512 mode
  *
@@ -103,8 +101,11 @@ namespace Omdsha512k128n128tau128v1_raw {
 #ifndef __SHA512OMD_H__
 #define __SHA512OMD_H__
 
-#include <sha512.h>
-#include <omd_omdsha512k128n128tau128v1_api.h>
+#include "omdsha512k128n128tau128v1_sha512.h"
+#include "omdsha512k128n128tau128v1_api.h"
+
+// CHANGE namespace moved due to includes
+namespace Omdsha512k128n128tau128v1_raw {
 
 #define OMD_n SHA512_DIGEST_LENGTH /**< Byte-length of the chaining block */
 #define OMD_m SHA512_DIGEST_LENGTH /**< Byte-length of the message block  */
@@ -279,6 +280,5 @@ omdsha512_process(unsigned char *data, const unsigned char* key,
 		  const unsigned char *nonce,
 		  const enum mode encrypting);
 
-#endif /* not __SHA512OMD_H__ */
-
 } // namespace Omdsha512k128n128tau128v1_raw
+#endif /* not __SHA512OMD_H__ */

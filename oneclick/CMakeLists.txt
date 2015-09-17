@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
 
-
 # === source files ===
 set(SOURCES
     src/ConfigParser.cpp
@@ -12,6 +11,7 @@ set(SOURCES
     # === project files ===
     ${PROJECTS_DIR}/estream/EstreamCiphers.cpp
     ${PROJECTS_DIR}/sha3/Sha3Functions.cpp
+    ${PROJECTS_DIR}/caesar/CaesarCiphers.cpp
 )
 
 # === header files ===
@@ -31,20 +31,32 @@ set(HEADERS
     # === project files ===
     ${PROJECTS_DIR}/estream/EstreamCiphers.h
     ${PROJECTS_DIR}/sha3/Sha3Functions.h
+    ${PROJECTS_DIR}/caesar/CaesarCiphers.h
+    # === version file ===
+    ${EACIRC_DIR}/Version.h
+)
+
+set(OTHER_FILES
+    run/config_samples/clean_config_sample.xml
+    run/config_samples/old_settings_random_test.xml
+    run/config_samples/old_settings_estream_recomp.xml
+    run/config_samples/old_settings_sha3_recomp.xml
+    run/script_samples/download_script_sample.pl
+    run/script_samples/upload_script_sample.pl
 )
 
 # === source groups ===
 source_group(projects REGULAR_EXPRESSION "${PROJECTS_DIR}/.*")
-
+source_group(scripts REGULAR_EXPRESSION "run/script_samples/.*")
+source_group(configs REGULAR_EXPRESSION "run/config_samples/.*")
 
 # === oneclick target ===
-add_executable(oneclick ${SOURCES} ${HEADERS})
+add_executable(oneclick ${SOURCES} ${HEADERS} ${OTHER_FILES})
 target_include_directories(oneclick
-    PRIVATE ${PROJECT_SOURCE_DIR}/eacirc
+    PRIVATE ${EACIRC_DIR}
     PRIVATE ${PROJECTS_DIR}
 )
 target_link_libraries(oneclick tinyXML)
-
 
 # === build target to oneclick run directory ===
 set_target_properties(oneclick PROPERTIES RUNTIME_OUTPUT_DIRECTORY run)

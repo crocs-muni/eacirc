@@ -1,6 +1,3 @@
-namespace Kiasueq128v1_raw {
-int numRounds = -1;
-
 /*
  * Kiasu=-128 Reference C Implementation
  * 
@@ -28,8 +25,11 @@ int numRounds = -1;
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "kiasu.h"
-#include "tweakable_aes.h"
+#include "kiasueq128v1_kiasu.h"
+#include "kiasueq128v1_tweakable_aes.h"
+
+// CHANGE namespace moved due to includes
+namespace Kiasueq128v1_raw {
 
 /* Define the three MSB of the tweak (that depend on the stage) */
 #define MSB_AD               (0x2<<4)

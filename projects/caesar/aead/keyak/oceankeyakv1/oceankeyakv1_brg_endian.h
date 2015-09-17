@@ -1,5 +1,3 @@
-namespace Oceankeyakv1_raw {
-
 /*
  ---------------------------------------------------------------------------
  Copyright (c) 1998-2008, Brian Gladman, Worcester, UK. All rights reserved.
@@ -142,5 +140,3 @@ namespace Oceankeyakv1_raw {
 #endif
 
 #endif
-
-} // namespace Oceankeyakv1_raw

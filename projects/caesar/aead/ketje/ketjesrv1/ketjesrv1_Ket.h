@@ -1,5 +1,3 @@
-namespace Ketjesrv1_raw {
-
 /*
 The Ketje authenticated encryption scheme, designed by Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
@@ -17,7 +15,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _Ket_h_
 #define _Ket_h_
 
-#include "KeccakP-interface.h"
+#include "ketjesrv1_KeccakP-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjesrv1_raw {
 
 #define FRAMEBITSEMPTY	0x01
 #define FRAMEBITS0		0x02
@@ -102,6 +103,5 @@ void Ket_UnwrapBlocks( void *state, const unsigned char *ciphertext, unsigned ch
   */
 void Ket_WrapBlocks( void *state, const unsigned char *plaintext, unsigned char *ciphertext, unsigned int nBlocks );
 
-#endif
-
 } // namespace Ketjesrv1_raw
+#endif

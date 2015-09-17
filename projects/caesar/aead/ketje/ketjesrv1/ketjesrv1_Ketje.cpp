@@ -1,6 +1,3 @@
-namespace Ketjesrv1_raw {
-int numRounds = -1;
-
 /*
 The Ketje authenticated encryption scheme, designed by Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
@@ -15,8 +12,11 @@ and related or neighboring rights to the source code in this file.
 http://creativecommons.org/publicdomain/zero/1.0/
 */
 
-#include "Ketje.h"
-#include "Ket.h"
+#include "ketjesrv1_Ketje.h"
+#include "ketjesrv1_Ket.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjesrv1_raw {
 
 int Ketje_Initialize(Ketje_Instance *instance, const unsigned char *key, unsigned int keySizeInBits, const unsigned char *nonce, unsigned int nonceSizeInBits)
 {

@@ -1,12 +1,12 @@
-namespace Omdsha512k128n128tau128v1_raw {
-int numRounds = -1;
-
 /**
  * The implementation of the omdsha512 mode
  */
 
-#include <omdsha512.h>
+#include "omdsha512k128n128tau128v1_omdsha512.h"
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Omdsha512k128n128tau128v1_raw {
 
 void
 xor_block (hashblock res, const hashblock in1, const hashblock in2)

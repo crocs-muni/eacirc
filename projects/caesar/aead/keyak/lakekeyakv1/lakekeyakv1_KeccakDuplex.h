@@ -1,5 +1,3 @@
-namespace Lakekeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,7 +14,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakDuplex_h_
 #define _KeccakDuplex_h_
 
-#include "KeccakF-interface.h"
+#include "lakekeyakv1_KeccakF-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Lakekeyakv1_raw {
 
 #ifdef ALIGN
 #undef ALIGN
@@ -200,6 +201,6 @@ unsigned int Keccak_DuplexGetInputIndex(Keccak_DuplexInstance *duplexInstance);
   */
 unsigned int Keccak_DuplexGetOutputIndex(Keccak_DuplexInstance *duplexInstance);
 
-#endif
-
 } // namespace Lakekeyakv1_raw
+
+#endif

@@ -3,12 +3,34 @@
 #include "generators/IRndGen.h"
 #include <bitset>
 #include <set>
+#include <limits>
 
 #ifndef M_PI    // to resolve cmath constants problems
 #define M_PI 3.141592653589793238462
 #endif
 
 using namespace std;
+
+string CommonFnc::arrayToHexa(unsigned char* data, unsigned int dataLength) {
+    ostringstream ss("");
+    for (unsigned int byte = 0; byte < dataLength; byte++)
+        ss << setw(2) << hex << setfill('0') << static_cast<int>(data[byte]) << " ";
+    return ss.str();
+}
+
+int CommonFnc::hexaToArray(string hexa, unsigned int dataLength, unsigned char* data) {
+    unsigned int tmp;
+    istringstream hexaStream(hexa);
+    for (unsigned int byte = 0; byte < dataLength; byte++) {
+        hexaStream >> hex >> tmp;
+        if (hexaStream.fail()) {
+            mainLogger.out(LOGGER_ERROR) << "Problem parsing hexa data." << endl;
+            return STAT_CONFIG_INCORRECT;
+        }
+        data[byte] = tmp & 0xff;
+    }
+    return STAT_OK;
+}
 
 void CommonFnc::removeFile(string filename) {
     int returnValue = std::remove(filename.c_str());
@@ -153,21 +175,20 @@ double CommonFnc::gamma0(double x) {
     return ga;
 }
 
-double CommonFnc::KS_uniformity_test(std::vector<double> * sample){
-    std::sort(sample->begin(), sample->end());
+double CommonFnc::KS_uniformity_test(std::vector<double> &samples){
+    std::sort(samples.begin(), samples.end());
+    // sanity check
+    if (samples[samples.size()-1] > 1 || samples[0] < 0) {
+        mainLogger.out(LOGGER_ERROR) << "Cannot run K-S test, data out of range." << endl;
+    }
+
     double test_statistic = 0;
     double temp = 0;
-    float N = sample->size();
-    int index;
+    double N = samples.size();
 
-    for(int i = 1; i < N; i++){
-        double cur = (sample->at(i));
-
-        temp = max(abs(i/N - cur),abs((i-1)/N - cur));
-        if(temp > test_statistic) {
-            test_statistic = temp;
-            index = i;
-        }
+    for(int i = 0; i < N; i++){
+        temp = max( samples[i] - i/N, (i+1)/N - samples[i] );
+        test_statistic = max(test_statistic, temp);
     }
 
     return test_statistic;

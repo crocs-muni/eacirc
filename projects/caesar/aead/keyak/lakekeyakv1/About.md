@@ -12,5 +12,7 @@
 
 * File renamed to cpp, name prefixed.
 * Includes sorted out.
-* Namespace added.
+* Namespace added. (Beware: Tricky situation due to conditional compilation!)
 * Variable numRounds added.
+* Static casts added where necessary.
+* New header include added.

@@ -1,5 +1,3 @@
-namespace Seakeyakv1_raw {
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -16,8 +14,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _KeccakParallelDuplex_h_
 #define _KeccakParallelDuplex_h_
 
-#include "KeccakF-interface.h"
-#include "NumberOfParallelInstances.h"
+#include "seakeyakv1_KeccakF-interface.h"
+#include "seakeyakv1_NumberOfParallelInstances.h"
+
+namespace Seakeyakv1_raw {
 
 #ifdef ALIGN
 #undef ALIGN
@@ -307,6 +307,6 @@ unsigned int Keccak_ParallelDuplexGetInputIndex(Keccak_ParallelDuplexInstances *
   */
 unsigned int Keccak_ParallelDuplexGetOutputIndex(Keccak_ParallelDuplexInstances *instances, unsigned int instanceIndex);
 
-#endif
-
 } // namespace Seakeyakv1_raw
+
+#endif

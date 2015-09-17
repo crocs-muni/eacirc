@@ -1,6 +1,3 @@
-namespace Minalpherv1_raw {
-int numRounds = -1;
-
 /*
   Minalpher v1 reference code version 1.0.0
 
@@ -36,6 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "minalpherv1_encrypt.h"
 #include "minalpherv1_api.h"
 
+// CHANGE namespace moved due to includes
+namespace Minalpherv1_raw {
+int numRounds = -1;
 
 /*==== Macros ====*/
 #define Copy(p1,p2,n) do{int u; for( u=0; u<n; u++ ) p1[u]  = p2[u];}while(0)

@@ -1,5 +1,3 @@
-namespace Ketjesrv1_raw {
-
 /*
 The Ketje authenticated encryption scheme, designed by Guido Bertoni,
 Joan Daemen, Michaël Peeters, Gilles Van Assche and Ronny Van Keer.
@@ -17,7 +15,10 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #ifndef _Ketje_h_
 #define _Ketje_h_
 
-#include "KeccakF-interface.h"
+#include "ketjesrv1_KeccakF-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Ketjesrv1_raw {
 
 #ifdef ALIGN
 #undef ALIGN
@@ -169,6 +170,5 @@ int Ketje_GetTag(Ketje_Instance *instance, unsigned char *tag, unsigned int tagS
 	#define KetjeJr_GetTag				Ketje_GetTag
 #endif
 
-#endif
-
 } // namespace Ketjesrv1_raw
+#endif

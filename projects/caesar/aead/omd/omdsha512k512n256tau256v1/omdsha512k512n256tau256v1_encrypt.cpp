@@ -1,12 +1,14 @@
-namespace Omdsha512k512n256tau256v1_raw {
-int numRounds = -1;
-
 /**
  * The implementation of the CAESAR encrypt/decrypt interface
  */
 #include "omdsha512k512n256tau256v1_encrypt.h"
-#include <omd_omdsha512k512n256tau256v1_api.h>
-#include <omdsha512.h>
+#include "omdsha512k512n256tau256v1_api.h"
+#include "omdsha512k512n256tau256v1_omdsha512.h"
+
+// CHANGE namespace moved due to includes
+namespace Omdsha512k512n256tau256v1_raw {
+int numRounds = -1;
+
 /**
  * The CAESAR encrypt interface
  * @param c A pointer to buffer for CT

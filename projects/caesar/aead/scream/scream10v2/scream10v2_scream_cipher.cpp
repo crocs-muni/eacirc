@@ -1,14 +1,19 @@
-namespace Scream10v2_raw {
-int numRounds = -1;
-
 /* LS-cipher implementation */
 
-#include "crypto_uint16.h"
-#include "crypto_uint8.h"
+// CHANGE crypto_uintXX typedefs
+// #include "crypto_uint16.h"
+// #include "crypto_uint8.h"
+#include <cstdint>
+typedef uint8_t crypto_uint8;
+typedef uint16_t crypto_uint16;
 
-#include "sbox.h"
-#include "lbox.h"
-#include "params.h"
+#include "scream10v2_sbox.h"
+#include "scream10v2_lbox.h"
+#include "scream10v2_params.h"
+
+// CHANGE namespace moved due to includes
+namespace Scream10v2_raw {
+int numRounds = -1;
 
 void LS_encrypt(const crypto_uint8 input[16], const crypto_uint8 key[16], const crypto_uint8 tweak[16],
 		crypto_uint8 output[16]) {

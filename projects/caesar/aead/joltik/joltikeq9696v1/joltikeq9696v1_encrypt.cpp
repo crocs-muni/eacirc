@@ -1,6 +1,3 @@
-namespace Joltikeq9696v1_raw {
-int numRounds = -1;
-
 /*
  * Joltik=-96-96 Reference C Implementation
  * 
@@ -27,9 +24,12 @@ int numRounds = -1;
 
 #include <stdlib.h>
 #include "joltikeq9696v1_api.h"
-#include "joltik.h"
+#include "joltikeq9696v1_joltik.h"
 #include "joltikeq9696v1_encrypt.h"
 
+// CHANGE namespace moved due to includes
+namespace Joltikeq9696v1_raw {
+int numRounds = -1;
 
 /*
  the code for the cipher implementation goes here,

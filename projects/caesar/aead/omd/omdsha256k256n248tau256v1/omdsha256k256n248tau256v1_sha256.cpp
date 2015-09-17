@@ -1,6 +1,3 @@
-namespace Omdsha256k256n248tau256v1_raw {
-int numRounds = -1;
-
 /** Implementation of sha256 compression function, originally from openssl  */
 
 /**The original file was modified so that it implements
@@ -16,11 +13,12 @@ int numRounds = -1;
 #include <stdlib.h>
 #include <string.h>
 
-#include <sha256.h>
+#include "omdsha256k256n248tau256v1_sha256.h"
 #define	DATA_ORDER_IS_BIG_ENDIAN
-#include <md32_common.h>
+#include "omdsha256k256n248tau256v1_md32_common.h"
 
-
+// CHANGE namespace moved due to includes
+namespace Omdsha256k256n248tau256v1_raw {
 
 /** sha256 round constants*/
 static const uint32_t K256[64] = {
@@ -63,7 +61,8 @@ void sha256_comp (hashblock res, const hashblock hash, const void *in)
 	uint32_t    H[8];
 	uint32_t	X[16],l;
 	int i;
-	const unsigned char *data=in;
+    // CHANGE type casting added due to c++
+    const unsigned char *data=static_cast<const unsigned char*>(in);
 
 	for (i = 0; i < SHA256_DIGEST_LENGTH/4; i++) {
 	   HOST_c2l(hash, H[i]);

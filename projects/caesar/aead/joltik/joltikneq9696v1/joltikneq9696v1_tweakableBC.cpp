@@ -1,6 +1,3 @@
-namespace Joltikneq9696v1_raw {
-int numRounds = -1;
-
 /*
  * Joltik=/=-96-96 Reference C Implementation
  *
@@ -29,6 +26,9 @@ int numRounds = -1;
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Joltikneq9696v1_raw {
 
 #define GETU64(pt) ((((uint64_t)(pt)[0])<<56ULL)^(((uint64_t)(pt)[1])<<48ULL)^(((uint64_t)(pt)[2])<<40ULL)^(((uint64_t)(pt)[3])<<32ULL)^(((uint64_t)(pt)[4])<<24ULL)^(((uint64_t)(pt)[5])<<16ULL)^(((uint64_t)(pt)[6])<<8ULL)^((uint64_t)(pt)[7]))
 
@@ -464,8 +464,10 @@ int joltikKeySetupDec128(uint64_t* rtweakey,
 ** Tweakable block cipher encryption function
 */
 void aesTweakEncrypt(uint32_t tweakey_size,
-                     uint8_t pt[8],
-                     uint8_t key[],
+                     // CHANGE const added
+                     const uint8_t pt[8],
+                     // CHANGE const added
+                     const uint8_t key[],
                      uint8_t ct[8]) {
 
 

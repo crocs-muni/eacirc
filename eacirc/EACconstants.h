@@ -11,7 +11,7 @@
 #define TRUE 1
 #endif
 
-#ifdef _MSC_VER
+#if (defined(_MSC_VER) && _MSC_VER <= 1800)
 // constexpr not supported in VS2013
 #define constexpr const
 #endif
@@ -47,6 +47,7 @@ typedef unsigned __int64 uint64_t;
 // CIRCUIT REPRESENTATIONS (BACKENDS)
 #define CIRCUIT_GATE                1
 #define CIRCUIT_POLYNOMIAL          2
+#define CIRCUIT_GATE2               3
 
 // PROJECTS
 #define PROJECT_PREGENERATED_TV     0

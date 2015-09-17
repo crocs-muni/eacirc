@@ -14,6 +14,19 @@ using namespace std;
 
 namespace CommonFnc {
 
+    /** convert given binary array to hexa
+     * @param data          array to convert
+     * @param dataLength    number of uchars in data
+     */
+    string arrayToHexa(unsigned char* data, unsigned int dataLength);
+
+    /** convert given binary array to hexa
+    * @param hexa          string with hexadecimal aray value
+    * @param dataLength    number of uchars in data
+    * @param data          array to return (must be pre-allocated)
+    */
+    int hexaToArray(string hexa, unsigned int dataLength, unsigned char* data);
+
     /** remove file
       * - remove file from system according to parameter
       * - errors are output to logger as warnings
@@ -73,11 +86,15 @@ namespace CommonFnc {
      */
     inline double KS_get_critical_value(unsigned long sampleSize) { return 1.36/sqrt((double)sampleSize); }
 
-    /** Kolmogorov-Smirnov uniformity test.
-     * @param sample
+    /** Kolmogorov-Smirnov uniformity test
+     * - tests uniformity distribution on [0,1]
+     * - works only for number from range [0,1]
+     * - idea taken from http://www.jstatsoft.org/v08/i18/paper
+     * (Evaluating Kolmogorov’s Distribution by George Masaglia et alii)
+     * @param samples       vector of observer values -- will be sorted!
      * @return KS test statistic value
      */
-    double KS_uniformity_test(std::vector<double> * sample);
+    double KS_uniformity_test(std::vector<double> &samples);
 
 } // namespace CommonFnc
 

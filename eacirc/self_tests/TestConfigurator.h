@@ -17,17 +17,21 @@ public:
      */
     TestConfigurator();
 
-    /** constructor, fill project constants array with given project
-     * @param projectType constant
-     */
-    TestConfigurator(int projectType);
-
     ~TestConfigurator();
 
     /** set new project as current
      * @return is project set?
      */
     bool nextProject();
+
+    /** add all projects for testing
+     */
+    void addAllProjects();
+
+    /** add additional project to testing
+     * @param projectType project to add 
+     */
+    void addProject(int projectType);
 
     /**
      * @return currently tested project
@@ -76,6 +80,16 @@ public:
      * without xml header, without root EACIRC element
      */
     static string mainConfiguration;
+
+    /** Tests the equality of double precision floating point numbers.
+    * Comparing floating point numbers is rather involved.
+    * See for example https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
+    * For simplicity, we use relative epsilon.
+    * @param x
+    * @param y
+    * @return true for x ~= y
+    */
+    static bool floatingPointEqual(double x, double y);
 };
 
 #endif // TESTCONFIGURATOR_H

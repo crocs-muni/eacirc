@@ -38,88 +38,90 @@ my $pwd;
 
 #Main method
 {
-	#Enter login data here
-	print 'Name: ';
-	chomp($usr = <STDIN>);
-	print 'Pwd : ';
-	ReadMode('noecho');
-	chomp($pwd = <STDIN>);
-	ReadMode(0);
-	print "\n";
-	login;
-	
-	CREATE_WU_KW('WU_NAME_KW' , 'CONFIG_PATH_KW');
-	#There has to be at least one line beginning with \t after method prototype. Leave this comment here.
-	
-	print "Press ENTER to exit.\n";
-	<STDIN>;
+    #Enter login data here
+    print "Signing in to url " . LOGIN_URL . "\n";
+    print 'Name: ';
+    chomp($usr = <STDIN>);
+    print 'Pwd : ';
+    ReadMode('noecho');
+    chomp($pwd = <STDIN>);
+    ReadMode(0);
+    print "\n";
+    login;
+
+    CREATE_WU_KW('WU_NAME_KW' , 'CONFIG_PATH_KW');
+    #Leave this comment here.
+    #There has to be at least one line beginning with four spaces (that's pretty specific) after method prototype.
+
+    print "Press ENTER to exit.\n";
+    <STDIN>;
 }
 
 #This subroutine will log you in
 sub login () {
-	my $url = LOGIN_URL;
-	$mech->get($url);
-	#Login to boinc web interface 
-	$mech->form_number(1);
-	$mech->field('login' , $usr);
-	$mech->field('password' , $pwd);
-	$mech->click('submit');
-	#Successful login check 
-	if($mech->content() =~ /errors/) {
-		print "Invalid name/password combination.\n";
-		print "Press ENTER to exit.\n";
-		<STDIN>;
-		exit;
-	}
+    my $url = LOGIN_URL;
+    $mech->get($url);
+    #Login to boinc web interface 
+    $mech->form_number(1);
+    $mech->field('login' , $usr);
+    $mech->field('password' , $pwd);
+    $mech->click('submit');
+    #Successful login check 
+    if($mech->content() =~ /errors/) {
+        print "Invalid name/password combination.\n";
+        print "Press ENTER to exit.\n";
+        <STDIN>;
+        exit;
+    }
 }
 
 #This subroutine will create single workunit
 sub create_wu ($$) {
-	my($wu_name , $config_path) = (shift , shift);
-	#Creating single workunit
-	my $url = CREATE_WORK_URL;
-	$mech->get($url);
-	#Step 1/4
-	$mech->form_number(1);
-	$mech->select('step0[appid]' , PROJECT_ID);
-	$mech->field('step0[name]' , $wu_name);
-	$mech->click('next-step');
-	#Unique WU name check
-	if($mech->content =~ /errors/) { 
-		print "WU name already in use. Try manual renaming or deleting old WU.\n";
-		return;
-	}
-	#Step 2/4
-	$mech->form_number(1);
-	$mech->field('infiles_upload[]' , $config_path , 1);
-	$mech->click('next-step');
-	#Step 3/4
-	$mech->form_number(1);
-	$mech->field('wu_batch' , CLONES);
-	$mech->click('next-step');
-	#Step 4/4
-	#Default values
-	#If you wish to change some values, uncomment and proceed!
-	$mech->form_number(1);
-	#$mech->field('command_line' , '-log2file -c FILE_0');
-	#$mech->field('clone_limit' , '0');
-	#$mech->field('delay_bound' , '288000');
-	#$mech->field('min_quorum' , '1');
-	#$mech->field('target_nresults' , '1');
-	#$mech->field('outfiles' , 'config.xml, eacirc.log, scores.log, fitness_progress.txt, [histograms.txt], population_initial.xml, population.xml, state_initial.xml, state.xml, [avgfit_graph.txt], [bestfit_graph.txt], [EAC_circuit.xml], [EAC_circuit.dot], [EAC_circuit.c], [EAC_circuit.txt]');
-	
-	$mech->timeout(TIMEOUT);
-	eval {
-		$mech->click('next-step');
-	};
-	if ($@) {
-		$cookie_jar->clear;
-		$mech = WWW::Mechanize->new(cookie_jar => $cookie_jar);
-		login;
-		#print "Timeout handled\n";
-	}
-	#Creation done.
-	print "$wu_name created.\n";
+    my($wu_name , $config_path) = (shift , shift);
+    #Creating single workunit
+    my $url = CREATE_WORK_URL;
+    $mech->get($url);
+    #Step 1/4
+    $mech->form_number(1);
+    $mech->select('step0[appid]' , PROJECT_ID);
+    $mech->field('step0[name]' , $wu_name);
+    $mech->click('next-step');
+    #Unique WU name check
+    if($mech->content =~ /errors/) { 
+        print "WU name already in use. Try manual renaming or deleting old WU.\n";
+        return;
+    }
+    #Step 2/4
+    $mech->form_number(1);
+    $mech->field('infiles_upload[]' , $config_path , 1);
+    $mech->click('next-step');
+    #Step 3/4
+    $mech->form_number(1);
+    $mech->field('wu_batch' , CLONES);
+    $mech->click('next-step');
+    #Step 4/4
+    #Default values
+    #If you wish to change some values, uncomment and proceed!
+    $mech->form_number(1);
+    #$mech->field('command_line' , '-c FILE_0');
+    #$mech->field('clone_limit' , '0');
+    #$mech->field('delay_bound' , '288000');
+    #$mech->field('min_quorum' , '1');
+    #$mech->field('target_nresults' , '1');
+    #$mech->field('outfiles' , 'config.xml, eacirc.log, [scores.log], [fitness_progress.txt], [histograms.txt], [population_initial.xml], [population.xml], [state_initial.xml], [state.xml], [EAC_circuit.xml], [EAC_circuit.dot], [EAC_circuit.c], [EAC_circuit.txt]');
+    
+    $mech->timeout(TIMEOUT);
+    eval {
+        $mech->click('next-step');
+    };
+    if ($@) {
+        $cookie_jar->clear;
+        $mech = WWW::Mechanize->new(cookie_jar => $cookie_jar);
+        login;
+        #print "Timeout handled\n";
+    }
+    #Creation done.
+    print "$wu_name created.\n";
 }
 
 

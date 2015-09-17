@@ -1,6 +1,3 @@
-namespace Seakeyakv1_raw {
-int numRounds = -1;
-
 /*
 The Keccak sponge function, designed by Guido Bertoni, Joan Daemen,
 Michaël Peeters and Gilles Van Assche. For more information, feedback or
@@ -15,11 +12,17 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <string.h>
-#include "KeccakDuplex.h"
-#include "KeccakF-interface.h"
+#include "seakeyakv1_KeccakDuplex.h"
+#include "seakeyakv1_KeccakF-interface.h"
 #ifdef KeccakReference
-#include "displayIntermediateValues.h"
+#include "seakeyakv1_displayIntermediateValues.h"
 #endif
+
+// CHANGE new header include added
+#include "seakeyakv1_KeccakP-1600-12-interface.h"
+
+// CHANGE namespace moved due to includes
+namespace Seakeyakv1_raw {
 
 int Keccak_DuplexInitialize(Keccak_DuplexInstance *instance, unsigned int rate, unsigned int capacity)
 {

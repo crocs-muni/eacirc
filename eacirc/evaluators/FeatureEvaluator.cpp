@@ -55,7 +55,7 @@ void FeatureEvaluator::dumpHistogramFile() const {
     }
 
     // Fitness to histograms.
-    if (pGlobals->settings->outputs.verbosity >= 9) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEBUG) {
         ofstream hist(FILE_HISTOGRAMS, ios_base::app);
         hist << (m_histBuffer->str());
         m_histBuffer->flush();

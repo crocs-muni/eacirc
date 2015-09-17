@@ -1,4 +1,5 @@
 #include <Catch.h>
+#include "CommonFnc.h"
 #include "TestConfigurator.h"
 #include "XMLProcessor.h"
 #include "circuit/gate/GateCommonFunctions.h"
@@ -10,6 +11,7 @@
 TEST_CASE("determinism/seed","testing whether run with random seed and second run with the same seed are same") {
     // general preparations
     TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         configurator.prepareConfiguration();
         TiXmlNode* pRootConfig = NULL;
@@ -46,7 +48,8 @@ TEST_CASE("determinism/seed","testing whether run with random seed and second ru
 }
 
 TEST_CASE("determinism/load-state","running and running from loaded state") {
-    TestConfigurator configurator(PROJECT_ESTREAM);
+    TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();
@@ -88,6 +91,7 @@ TEST_CASE("determinism/load-state","running and running from loaded state") {
 
 TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 generations") {
     TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();
@@ -129,6 +133,7 @@ TEST_CASE("determinism/recommencing","compute 40 generations vs. compute 20+20 g
 
 TEST_CASE("determinism/tv-pregeneration","general run vs. run with the same pre-generated test vectors") {
     TestConfigurator configurator;
+    configurator.addAllProjects();
     while (configurator.nextProject()) {
         // general preparations
         configurator.prepareConfiguration();
@@ -280,7 +285,27 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     pGlobals = NULL;
 }
 
-// TODO: write Kolmogorov-Smirnov test for uniformity of P-values during
-// random vs. random test to validate computation.
-// Use EACirc visitor in evaluateStep to collect p-values to some vector and
-// then perform KS test.
+TEST_CASE("sanity/floating-point-equality", "Floating point comparison sanity testing") {
+    TestConfigurator::floatingPointEqual(0.1,0.1);
+    TestConfigurator::floatingPointEqual(1, 10 * 0.1f);
+}
+
+// Chi^2 sanity test, reference values taken from WolframAlpha, e.g. 1-CDF[ChiSquareDistrbution[1],3.9]
+TEST_CASE("sanity/chi-square-test", "Chi^2 distribution sanity test") {
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(1, 3.9), 0.0482861);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(1, 0.00005), 0.994358);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(7, 30), 0.00009495972508134183759741828742325666627324216894472052766221569708930068590721461932866143044174);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(7, 3), 0.885002231643150641273266220962340596719670495215043159881425978116885745122995842726570642056612440);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(7, 0.5), 0.999446);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 300), 0.027727522053904829888992725742535981614753778789868604837431301491523914120345987183486623322619);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 250), 0.5766352636499276155128321878596437742748132183501493235263329367246867889129729514290260512191173);
+    TestConfigurator::floatingPointEqual(CommonFnc::chisqr(255, 200), 0.995425444541951895268653400299156801014685563033877494690047697443726397137181431060955533820526675);
+}
+
+// Kolmogorov-Smirnov sanity test, reference values taken from online calculators (https://home.ubalt.edu/ntsbarsh/business-stat/otherapplets/Uniform.htm)
+TEST_CASE("sanity/ks-uniformity-test", "Kolmogorov-Smirnov sanity test") {
+    std::vector<double> samples1 = { 0.10, 0.36, 0.22, 0.9, 0.6 };
+    std::vector<double> samples2 = { 0.10, 0.10, 0.22, 0.24, 0.42, 0.37, 0.77, 0.99, 0.96, 0.89, 0.85, 0.28, 0.63, 0.09 };
+    TestConfigurator::floatingPointEqual(CommonFnc::KS_uniformity_test(samples1), 0.24);
+    TestConfigurator::floatingPointEqual(CommonFnc::KS_uniformity_test(samples2), 0.1514286);
+}

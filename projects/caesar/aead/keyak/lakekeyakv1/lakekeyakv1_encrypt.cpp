@@ -1,10 +1,11 @@
-namespace Lakekeyakv1_raw {
-int numRounds = -1;
-
 #include "lakekeyakv1_encrypt.h"
 
 #include <string.h>
-#include "Keyak.h"
+#include "lakekeyakv1_Keyak.h"
+
+// CHANGE namespace moved due to includes
+namespace Lakekeyakv1_raw {
+int numRounds = -1;
 
 int crypto_aead_encrypt(
     unsigned char *c,unsigned long long *clen,

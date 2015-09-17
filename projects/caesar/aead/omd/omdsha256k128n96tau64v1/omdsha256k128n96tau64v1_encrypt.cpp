@@ -1,13 +1,14 @@
-namespace Omdsha256k128n96tau64v1_raw {
-int numRounds = -1;
-
 /**
  * The implementation of the CAESAR encrypt/decrypt interface
  */
 
 #include "omdsha256k128n96tau64v1_encrypt.h"
-#include <omd_omdsha256k128n96tau64v1_api.h>
-#include <omdsha256.h>
+#include "omdsha256k128n96tau64v1_api.h"
+#include "omdsha256k128n96tau64v1_omdsha256.h"
+
+// CHANGE namespace moved due to includes
+namespace Omdsha256k128n96tau64v1_raw {
+int numRounds = -1;
 
 /**
  * The CAESAR encrypt interface

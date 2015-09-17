@@ -169,7 +169,7 @@ int EstreamProject::saveProjectState(TiXmlNode* pRoot) const {
         ss.str("");
         pNode = new TiXmlElement("iv");
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++)
-        ss << setw(2) << hex << (int)(m_encryptorDecryptor->m_iv[input]);
+        ss << setw(2) << setfill('0') << hex << (int)(m_encryptorDecryptor->m_iv[input]);
         pNode->LinkEndChild(new TiXmlText(ss.str().c_str()));
         pRoot2->LinkEndChild(pNode);
     }
@@ -219,7 +219,7 @@ int EstreamProject::createTestVectorFilesHeaders() const {
     }
 
     // generate header to human-readable test-vector file
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios::app | ios_base::binary);
         if (!tvFile.is_open()) {
             mainLogger.out(LOGGER_ERROR) << "Cannot write file for test vectors (" << FILE_TEST_VECTORS << ")." << endl;
@@ -268,7 +268,7 @@ int EstreamProject::generateTestVectors() {
     this->m_numVectors[1] = 0;
 
     for (int testVectorNumber = 0; testVectorNumber < pGlobals->settings->testVectors.setSize; testVectorNumber++) {
-        if (pGlobals->settings->outputs.verbosity >= 4) {
+        if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
             ofstream tvfile(FILE_TEST_VECTORS_HR, ios::app);
             tvfile << "Test vector n." << dec << testVectorNumber << endl;
             tvfile.close();
@@ -295,7 +295,7 @@ int EstreamProject::generateTestVectors() {
 int EstreamProject::getTestVector(){
     int status = STAT_OK;
     ofstream tvFile;
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         tvFile.open(FILE_TEST_VECTORS_HR, ios::app);
     }
     //! are we using algorithm1 (0) or algorithm2 (1) ?
@@ -317,7 +317,7 @@ int EstreamProject::getTestVector(){
             // generate the plaintext for stream
             if ((cipherNumber == 0 && pEstreamSettings->algorithm1 != ESTREAM_RANDOM) ||
                 (cipherNumber == 1 && pEstreamSettings->algorithm2 != ESTREAM_RANDOM) ) {
-                if (pGlobals->settings->outputs.verbosity >= 4)
+                if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG)
                     tvFile  << "(alg n." << ((cipherNumber==0)?pEstreamSettings->algorithm1:pEstreamSettings->algorithm2) << " - " << ((cipherNumber==0)?pEstreamSettings->alg1RoundsCount:pEstreamSettings->alg2RoundsCount) << " rounds): ";
 
                 status = setupPlaintext();
@@ -331,7 +331,7 @@ int EstreamProject::getTestVector(){
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                     if (m_plaintextOut[input] != m_plaintextIn[input]) {
                         mainLogger.out(LOGGER_ERROR) << "Decrypted text doesn't match the input. See " << FILE_TEST_VECTORS_HR << " for details." << endl;
-                        if (pGlobals->settings->outputs.verbosity >= 4) {
+                        if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
                             tvFile << "### ERROR: PLAINTEXT-ENCDECTEXT MISMATCH!" << endl;
                         }
                         status = STAT_PROJECT_ERROR;
@@ -340,7 +340,7 @@ int EstreamProject::getTestVector(){
                 }
             }
             else { // RANDOM
-                if (pGlobals->settings->outputs.verbosity >= 4)
+                if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG)
                     tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
                     rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
@@ -367,7 +367,7 @@ int EstreamProject::getTestVector(){
     }
 
     // save human-readable test vector
-    if (pGlobals->settings->outputs.verbosity >= 4) {
+    if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG) {
         int tvg = cipherNumber == 0 ? pEstreamSettings->algorithm1 : pEstreamSettings->algorithm2;
         tvFile << setfill('0');
 

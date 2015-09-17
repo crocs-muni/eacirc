@@ -1,9 +1,10 @@
-namespace Morus1280128v1_raw {
-int numRounds = -1;
-
 #include <string.h>
 #include <stdint.h>
 #include "morus1280128v1_encrypt.h"
+
+// CHANGE namespace moved due to includes
+namespace Morus1280128v1_raw {
+int numRounds = -1;
 
 #ifdef _MSC_VER
 #define inline __inline
