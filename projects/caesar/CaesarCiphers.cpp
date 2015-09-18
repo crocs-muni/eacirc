@@ -99,12 +99,12 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_OMDSHA512K128N128TAU128V1:        return "OMD - omdsha512k128n128tau128v1";
     case CAESAR_OMDSHA512K256N256TAU256V1:        return "OMD - omdsha512k256n256tau256v1";
     case CAESAR_OMDSHA512K512N256TAU256V1:        return "OMD - omdsha512k512n256tau256v1";
-        //    case CAESAR_PAEQ128:        return "PAEQ - paeq128";
-        //    case CAESAR_PAEQ128T:        return "PAEQ - paeq128t";
-        //    case CAESAR_PAEQ128TNM:        return "PAEQ - paeq128tnm";
-        //    case CAESAR_PAEQ160:        return "PAEQ - paeq160";
-        //    case CAESAR_PAEQ64:        return "PAEQ - paeq64";
-        //    case CAESAR_PAEQ80:        return "PAEQ - paeq80";
+    case CAESAR_PAEQ128:        return "PAEQ - paeq128";
+    case CAESAR_PAEQ128T:        return "PAEQ - paeq128t";
+    case CAESAR_PAEQ128TNM:        return "PAEQ - paeq128tnm";
+    case CAESAR_PAEQ160:        return "PAEQ - paeq160";
+    case CAESAR_PAEQ64:        return "PAEQ - paeq64";
+    case CAESAR_PAEQ80:        return "PAEQ - paeq80";
         //    case CAESAR_PI16CIPHER096V1:        return "Pi-Cipher - pi16cipher096v1";
         //    case CAESAR_PI16CIPHER128V1:        return "Pi-Cipher - pi16cipher128v1";
         //    case CAESAR_PI32CIPHER128V1:        return "Pi-Cipher - pi32cipher128v1";

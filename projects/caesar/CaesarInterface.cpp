@@ -109,12 +109,12 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_OMDSHA512K128N128TAU128V1: { return new Omdsha512k128n128tau128v1(numRounds); };
         case CAESAR_OMDSHA512K256N256TAU256V1: { return new Omdsha512k256n256tau256v1(numRounds); };
         case CAESAR_OMDSHA512K512N256TAU256V1: { return new Omdsha512k512n256tau256v1(numRounds); };
-//        case CAESAR_PAEQ128: { return new Paeq128(numRounds); };
-//        case CAESAR_PAEQ128T: { return new Paeq128t(numRounds); };
-//        case CAESAR_PAEQ128TNM: { return new Paeq128tnm(numRounds); };
-//        case CAESAR_PAEQ160: { return new Paeq160(numRounds); };
-//        case CAESAR_PAEQ64: { return new Paeq64(numRounds); };
-//        case CAESAR_PAEQ80: { return new Paeq80(numRounds); };
+        case CAESAR_PAEQ128: { return new Paeq128(numRounds); };
+        case CAESAR_PAEQ128T: { return new Paeq128t(numRounds); };
+        case CAESAR_PAEQ128TNM: { return new Paeq128tnm(numRounds); };
+        case CAESAR_PAEQ160: { return new Paeq160(numRounds); };
+        case CAESAR_PAEQ64: { return new Paeq64(numRounds); };
+        case CAESAR_PAEQ80: { return new Paeq80(numRounds); };
 //        case CAESAR_PI16CIPHER096V1: { return new Pi16cipher096v1(numRounds); };
 //        case CAESAR_PI16CIPHER128V1: { return new Pi16cipher128v1(numRounds); };
 //        case CAESAR_PI32CIPHER128V1: { return new Pi32cipher128v1(numRounds); };

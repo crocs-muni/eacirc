@@ -375,18 +375,18 @@ set(SOURCES
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_omdsha512.cpp
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_sha512.cpp
     aead/omd/omdsha512k512n256tau256v1/Omdsha512k512n256tau256v1.cpp
-#    aead/paeq/paeq128/paeq128_encrypt.cpp
-#    aead/paeq/paeq128/Paeq128.cpp
-#    aead/paeq/paeq128t/paeq128t_encrypt.cpp
-#    aead/paeq/paeq128t/Paeq128t.cpp
-#    aead/paeq/paeq128tnm/paeq128tnm_encrypt.cpp
-#    aead/paeq/paeq128tnm/Paeq128tnm.cpp
-#    aead/paeq/paeq160/paeq160_encrypt.cpp
-#    aead/paeq/paeq160/Paeq160.cpp
-#    aead/paeq/paeq64/paeq64_encrypt.cpp
-#    aead/paeq/paeq64/Paeq64.cpp
-#    aead/paeq/paeq80/paeq80_encrypt.cpp
-#    aead/paeq/paeq80/Paeq80.cpp
+    aead/paeq/paeq128/paeq128_encrypt.cpp
+    aead/paeq/paeq128/Paeq128.cpp
+    aead/paeq/paeq128t/paeq128t_encrypt.cpp
+    aead/paeq/paeq128t/Paeq128t.cpp
+    aead/paeq/paeq128tnm/paeq128tnm_encrypt.cpp
+    aead/paeq/paeq128tnm/Paeq128tnm.cpp
+    aead/paeq/paeq160/paeq160_encrypt.cpp
+    aead/paeq/paeq160/Paeq160.cpp
+    aead/paeq/paeq64/paeq64_encrypt.cpp
+    aead/paeq/paeq64/Paeq64.cpp
+    aead/paeq/paeq80/paeq80_encrypt.cpp
+    aead/paeq/paeq80/Paeq80.cpp
 #    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.cpp
 #    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.cpp
 #    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.cpp
@@ -1141,24 +1141,24 @@ set(HEADERS
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_stdint_win.h
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_encrypt.h
     aead/omd/omdsha512k512n256tau256v1/Omdsha512k512n256tau256v1.h
-#    aead/paeq/paeq128/paeq128_api.h
-#    aead/paeq/paeq128/paeq128_encrypt.h
-#    aead/paeq/paeq128/Paeq128.h
-#    aead/paeq/paeq128t/paeq128t_api.h
-#    aead/paeq/paeq128t/paeq128t_encrypt.h
-#    aead/paeq/paeq128t/Paeq128t.h
-#    aead/paeq/paeq128tnm/paeq128tnm_api.h
-#    aead/paeq/paeq128tnm/paeq128tnm_encrypt.h
-#    aead/paeq/paeq128tnm/Paeq128tnm.h
-#    aead/paeq/paeq160/paeq160_api.h
-#    aead/paeq/paeq160/paeq160_encrypt.h
-#    aead/paeq/paeq160/Paeq160.h
-#    aead/paeq/paeq64/paeq64_api.h
-#    aead/paeq/paeq64/paeq64_encrypt.h
-#    aead/paeq/paeq64/Paeq64.h
-#    aead/paeq/paeq80/paeq80_api.h
-#    aead/paeq/paeq80/paeq80_encrypt.h
-#    aead/paeq/paeq80/Paeq80.h
+    aead/paeq/paeq128/paeq128_api.h
+    aead/paeq/paeq128/paeq128_encrypt.h
+    aead/paeq/paeq128/Paeq128.h
+    aead/paeq/paeq128t/paeq128t_api.h
+    aead/paeq/paeq128t/paeq128t_encrypt.h
+    aead/paeq/paeq128t/Paeq128t.h
+    aead/paeq/paeq128tnm/paeq128tnm_api.h
+    aead/paeq/paeq128tnm/paeq128tnm_encrypt.h
+    aead/paeq/paeq128tnm/Paeq128tnm.h
+    aead/paeq/paeq160/paeq160_api.h
+    aead/paeq/paeq160/paeq160_encrypt.h
+    aead/paeq/paeq160/Paeq160.h
+    aead/paeq/paeq64/paeq64_api.h
+    aead/paeq/paeq64/paeq64_encrypt.h
+    aead/paeq/paeq64/Paeq64.h
+    aead/paeq/paeq80/paeq80_api.h
+    aead/paeq/paeq80/paeq80_encrypt.h
+    aead/paeq/paeq80/Paeq80.h
 #    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_api.h
 #    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.h
 #    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.h
@@ -1553,12 +1553,12 @@ set(OTHER_FILES
     aead/omd/omdsha512k128n128tau128v1/About.md
     aead/omd/omdsha512k256n256tau256v1/About.md
     aead/omd/omdsha512k512n256tau256v1/About.md
-#    aead/paeq/paeq128/About.md
-#    aead/paeq/paeq128t/About.md
-#    aead/paeq/paeq128tnm/About.md
-#    aead/paeq/paeq160/About.md
-#    aead/paeq/paeq64/About.md
-#    aead/paeq/paeq80/About.md
+    aead/paeq/paeq128/About.md
+    aead/paeq/paeq128t/About.md
+    aead/paeq/paeq128tnm/About.md
+    aead/paeq/paeq160/About.md
+    aead/paeq/paeq64/About.md
+    aead/paeq/paeq80/About.md
 #    aead/pi-cipher/pi16cipher096v1/About.md
 #    aead/pi-cipher/pi16cipher128v1/About.md
 #    aead/pi-cipher/pi32cipher128v1/About.md
