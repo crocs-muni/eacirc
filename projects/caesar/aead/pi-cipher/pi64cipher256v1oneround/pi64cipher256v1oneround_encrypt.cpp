@@ -1,6 +1,3 @@
-namespace Pi64cipher256v1oneround_raw {
-int numRounds = -1;
-
 // 64-bit version of Pi64Cipher256 with one round
 // implementation of the algorithm with 64-bit registers and security of 256-bits
 // bitrate is 512-bits, capacity is 512-bits -> state of the permutation function is 1024 bits long
@@ -14,6 +11,10 @@ int numRounds = -1;
 #include "pi64cipher256v1oneround_encrypt.h"
 #include <stdio.h>
 #include "pi64cipher256v1oneround_api.h"
+
+// CHANGE namespace moved due to includes
+namespace Pi64cipher256v1oneround_raw {
+int numRounds = -1;
 
 // defining width of variables
 typedef unsigned char         u_int8_t;

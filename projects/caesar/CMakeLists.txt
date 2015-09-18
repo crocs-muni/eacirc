@@ -387,22 +387,22 @@ set(SOURCES
     aead/paeq/paeq64/Paeq64.cpp
     aead/paeq/paeq80/paeq80_encrypt.cpp
     aead/paeq/paeq80/Paeq80.cpp
-#    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.cpp
-#    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.cpp
-#    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.cpp
-#    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.cpp
-#    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.cpp
-#    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.cpp
-#    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.cpp
-#    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.cpp
-#    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.cpp
-#    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.cpp
-#    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.cpp
-#    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.cpp
-#    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.cpp
-#    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.cpp
-#    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.cpp
-#    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.cpp
+    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.cpp
+    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.cpp
+    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.cpp
+    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.cpp
+    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.cpp
+    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.cpp
+    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.cpp
+    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.cpp
+    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.cpp
+    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.cpp
+    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.cpp
+    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.cpp
+    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.cpp
+    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.cpp
+    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.cpp
+    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.cpp
 #    aead/polawis/polawisv1/polawisv1_decode_POLAWIS.cpp
 #    aead/polawis/polawisv1/polawisv1_encode_POLAWIS.cpp
 #    aead/polawis/polawisv1/polawisv1_key_gen_POLAWIS.cpp
@@ -1159,30 +1159,30 @@ set(HEADERS
     aead/paeq/paeq80/paeq80_api.h
     aead/paeq/paeq80/paeq80_encrypt.h
     aead/paeq/paeq80/Paeq80.h
-#    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_api.h
-#    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.h
-#    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.h
-#    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_api.h
-#    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.h
-#    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.h
-#    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_api.h
-#    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.h
-#    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.h
-#    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_api.h
-#    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.h
-#    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.h
-#    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_api.h
-#    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.h
-#    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.h
-#    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_api.h
-#    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.h
-#    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.h
-#    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_api.h
-#    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.h
-#    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.h
-#    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_api.h
-#    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.h
-#    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.h
+    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_api.h
+    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.h
+    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.h
+    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_api.h
+    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.h
+    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.h
+    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_api.h
+    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.h
+    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.h
+    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_api.h
+    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.h
+    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.h
+    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_api.h
+    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.h
+    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.h
+    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_api.h
+    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.h
+    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.h
+    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_api.h
+    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.h
+    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.h
+    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_api.h
+    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.h
+    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.h
 #    aead/polawis/polawisv1/polawisv1_encrypt.h
 #    aead/polawis/polawisv1/Polawisv1.h
 #    aead/paes/ppaev11/ppaev11_api.h
@@ -1559,14 +1559,14 @@ set(OTHER_FILES
     aead/paeq/paeq160/About.md
     aead/paeq/paeq64/About.md
     aead/paeq/paeq80/About.md
-#    aead/pi-cipher/pi16cipher096v1/About.md
-#    aead/pi-cipher/pi16cipher128v1/About.md
-#    aead/pi-cipher/pi32cipher128v1/About.md
-#    aead/pi-cipher/pi32cipher256v1/About.md
-#    aead/pi-cipher/pi64cipher128v1/About.md
-#    aead/pi-cipher/pi64cipher256v1/About.md
-#    aead/pi-cipher/pi64cipher256v1oneround/About.md
-#    aead/pi-cipher/pi64cipher256v1tworounds/About.md
+    aead/pi-cipher/pi16cipher096v1/About.md
+    aead/pi-cipher/pi16cipher128v1/About.md
+    aead/pi-cipher/pi32cipher128v1/About.md
+    aead/pi-cipher/pi32cipher256v1/About.md
+    aead/pi-cipher/pi64cipher128v1/About.md
+    aead/pi-cipher/pi64cipher256v1/About.md
+    aead/pi-cipher/pi64cipher256v1oneround/About.md
+    aead/pi-cipher/pi64cipher256v1tworounds/About.md
 #    aead/polawis/polawisv1/About.md
 #    aead/paes/ppaev11/About.md
 #    aead/primates/primatesv1ape120/About.md

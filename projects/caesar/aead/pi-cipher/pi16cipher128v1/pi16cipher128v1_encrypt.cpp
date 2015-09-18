@@ -1,6 +1,3 @@
-namespace Pi16cipher128v1_raw {
-int numRounds = -1;
-
 // 16-bit version of Pi16Cipher128
 // implementation of the algorithm with 16-bit registers and security of 128-bits
 // bitrate is 128-bits, capacity is 128-bits -> state of the permutation function is 256 bits long
@@ -14,6 +11,10 @@ int numRounds = -1;
 #include "pi16cipher128v1_encrypt.h"
 #include <stdio.h>
 #include "pi16cipher128v1_api.h"
+
+// CHANGE namespace moved due to includes
+namespace Pi16cipher128v1_raw {
+int numRounds = -1;
 
 // defining width of variables
 typedef unsigned char         u_int8_t;
