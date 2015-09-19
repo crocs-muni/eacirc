@@ -1,4 +1,5 @@
 #include "GateCommonFunctions.h"
+#include "JVMSimulator.h"
 
 #define BOTTOM_BYTE 0xff
 

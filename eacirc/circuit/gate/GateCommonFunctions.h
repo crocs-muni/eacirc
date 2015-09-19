@@ -3,7 +3,6 @@
 
 #include "EACglobals.h"
 #include <GA1DArrayGenome.h>
-#include "JVMSimulator.h"
 
 /** get function type from node value
  * @param nodeValue
