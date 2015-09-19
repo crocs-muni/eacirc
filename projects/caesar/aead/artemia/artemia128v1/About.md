@@ -3,7 +3,6 @@
 **Designers:** Javad Alizadeh, Mohammad Reza Aref, Nasour Bagheri
 
 **Implementation:** reference
-**Implemetors:** n/a
 **Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/artemia128v1
 **Download date:** 2014-12-14
