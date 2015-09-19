@@ -1,9 +1,9 @@
 # Cba5
 
-**Designers:** n/a
+**Designers:** Hossein Hosseini, Shahram Khazaei
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/cba5
 **Download date:** 2014-12-14
 

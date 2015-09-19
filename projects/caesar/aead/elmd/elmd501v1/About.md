@@ -1,9 +1,9 @@
 # Elmd501v1
 
-**Designers:** n/a
+**Designers:** Nilanjan Datta, Mridul Nandi
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/elmd501v1
 **Download date:** 2014-12-14
 

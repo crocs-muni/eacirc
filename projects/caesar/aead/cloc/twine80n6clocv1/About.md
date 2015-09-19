@@ -1,9 +1,9 @@
 # Twine80n6clocv1
 
-**Designers:** n/a
+**Designers:** Tetsu Iwata, Kazuhiko Minematsu, Jian Guo, Sumio Morioka, Eita Kobayashi
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/twine80n6clocv1
 **Download date:** 2014-12-14
 

@@ -1,6 +1,6 @@
 # Calicov8
 
-**Designers:** n/a
+**Designers:** Christopher Taylor
 
 **Implementation:** reference
 **Version:** v8

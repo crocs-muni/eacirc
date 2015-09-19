@@ -1,9 +1,9 @@
 # Elmd101271v1
 
-**Designers:** n/a
+**Designers:** Nilanjan Datta, Mridul Nandi
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/elmd101271v1
 **Download date:** 2014-12-14
 

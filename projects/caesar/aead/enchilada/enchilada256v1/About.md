@@ -1,9 +1,9 @@
 # Enchilada256v1
 
-**Designers:** n/a
+**Designers:** Sandy Harris
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/enchilada256v1
 **Download date:** 2014-12-14
 
