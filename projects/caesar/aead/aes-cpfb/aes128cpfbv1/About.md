@@ -1,10 +1,10 @@
 # Aes128cpfbv1
 
-**Designers:** n/a
+**Designers:** Miguel Montes, Daniel Penazzi
 
 **Implementation:** reference
 **Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes128cpfbv1
 **Download date:** 2014-12-14
 
