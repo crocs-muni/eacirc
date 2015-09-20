@@ -183,29 +183,29 @@ public:
     ~JVMSimulator();
     string shortDescription();
 
-	int jvmsim_init();
-	int jvmsim_run(int function_number, int line_from, int line_to, int use_files);
-	int jvmsim_main(int argc, char* argv[]);
-	
-	int get_num_of_functions();
-	F* get_function_by_number(unsigned char num);
-	
-	inline struct Ins *find_ins(char *fn, int in);
-	inline void call_push(char *fn, int nl);
-	inline int call_pop(struct Pc *PC);
-	inline void list_stack();
-	bool stack_empty();
-	inline void push_int(int ii);
-	inline void push_arrayref(int32_t ii);
-	inline int32_t pop_int();
-	inline int32_t pop_arrayref();
-	inline int emulate_ins(struct Pc *PC);
+    int jvmsim_init();
+    int jvmsim_run(int function_number, int line_from, int line_to, int use_files);
+    int jvmsim_main(int argc, char* argv[]);
 
-	int white(char c);
-	int code(char* i);
-	void printl();
-	void read_input();
-	void write_output();
+    int get_num_of_functions();
+    F* get_function_by_number(unsigned char num);
+
+    inline struct Ins *find_ins(char *fn, int in);
+    inline void call_push(char *fn, int nl);
+    inline int call_pop(struct Pc *PC);
+    inline void list_stack();
+    bool stack_empty();
+    void push_int(int ii);
+    inline void push_arrayref(int32_t ii);
+    int32_t pop_int();
+    inline int32_t pop_arrayref();
+    inline int emulate_ins(struct Pc *PC);
+
+    int white(char c);
+    int code(char* i);
+    void printl();
+    void read_input();
+    void write_output();
 };
 
 #endif
