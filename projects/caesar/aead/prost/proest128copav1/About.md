@@ -1,9 +1,9 @@
 # Proest128copav1
 
-**Designers:** n/a
+**Designers:** Elif Bilge Kavun, Martin M. Lauridsen, Gregor Leander, Christian Rechberger, Peter Schwabe, Tolga Yalçın
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/proest128copav1
 **Download date:** 2014-12-14
 

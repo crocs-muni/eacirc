@@ -1,9 +1,9 @@
 # Aes128poetv1aes4
 
-**Designers:** n/a
+**Designers:** Farzaneh Abed, Scott Fluhrer, John Foley, Christian Forler, Eik List, Stefan Lucks, David McGrew, Jakob Wenzel
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes128poetv1aes4
 **Download date:** 2014-12-14
 

@@ -1,9 +1,9 @@
 # Ppaev11
 
-**Designers:** n/a
+**Designers:** Dingfeng Ye, Peng Wang, Lei Hu, Liping Wang, Yonghong Xie, Siwei Sun, Ping Wang
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/ppaev11
 **Download date:** 2014-12-14
 

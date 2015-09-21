@@ -1,9 +1,9 @@
 # Paeq128t
 
-**Designers:** n/a
+**Designers:** Alex Biryukov, Dmitry Khovratovich
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/paeq128t
 **Download date:** 2014-12-14
 

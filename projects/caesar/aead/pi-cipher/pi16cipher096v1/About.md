@@ -1,9 +1,9 @@
 # Pi16cipher096v1
 
-**Designers:** n/a
+**Designers:** Danilo Gligoroski, Hristina Mihajloska, Simona Samardjiska, Håkon Jacobsen, Mohamed El-Hadedy, Rune Erlend Jensen, Daniel Otte
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/pi16cipher096v1
 **Download date:** 2014-12-14
 

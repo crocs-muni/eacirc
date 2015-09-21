@@ -1,9 +1,9 @@
 # Wheeshtv1mr3fr1t256
 
-**Designers:** n/a
+**Designers:** Peter Maxwell
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/wheeshtv1mr3fr1t256
 **Download date:** 2014-12-14
 

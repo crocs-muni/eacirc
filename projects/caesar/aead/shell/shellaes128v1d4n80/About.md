@@ -1,9 +1,9 @@
 # Shellaes128v1d4n80
 
-**Designers:** n/a
+**Designers:** Lei Wang
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/shellaes128v1d4n80
 **Download date:** 2014-12-14
 
