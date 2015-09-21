@@ -169,7 +169,7 @@ struct Ga {
 
 class JVMSimulator {
     struct F *Functions = NULL;
-    int	numFunctions = 0;
+    int numFunctions = 0;
     struct element *Stack = NULL;
     struct call_element *Call_stack = NULL;
 
@@ -190,16 +190,16 @@ public:
     int get_num_of_functions();
     F* get_function_by_number(unsigned char num);
 
-    inline struct Ins *find_ins(char *fn, int in);
-    inline void call_push(char *fn, int nl);
-    inline int call_pop(struct Pc *PC);
-    inline void list_stack();
+    struct Ins *find_ins(char *fn, int in);
+    void call_push(char *fn, int nl);
+    int call_pop(struct Pc *PC);
+    void list_stack();
     bool stack_empty();
     void push_int(int ii);
-    inline void push_arrayref(int32_t ii);
+    void push_arrayref(int32_t ii);
     int32_t pop_int();
-    inline int32_t pop_arrayref();
-    inline int emulate_ins(struct Pc *PC);
+    int32_t pop_arrayref();
+    int emulate_ins(struct Pc *PC);
 
     int white(char c);
     int code(char* i);

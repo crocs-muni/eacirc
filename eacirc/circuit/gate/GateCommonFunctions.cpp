@@ -8,7 +8,7 @@ unsigned char nodeGetFunction(GENOME_ITEM_TYPE nodeValue) {
 }
 
 unsigned char nodeGetArgument(GENOME_ITEM_TYPE nodeValue, int argumentNumber) {
-	if (argumentNumber < 1 || argumentNumber > NUM_FNC_ARGUMENTS) {
+    if (argumentNumber < 1 || argumentNumber > NUM_FNC_ARGUMENTS) {
         mainLogger.out(LOGGER_ERROR) << "Getting invalid argument: " << argumentNumber << "." << endl;
         return 0;
     }
@@ -22,7 +22,7 @@ void nodeSetFunction(GENOME_ITEM_TYPE& nodeValue, unsigned char function) {
 }
 
 void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned char argumentValue) {
-	if (argumentNumber < 1 || argumentNumber > NUM_FNC_ARGUMENTS) {
+    if (argumentNumber < 1 || argumentNumber > NUM_FNC_ARGUMENTS) {
         mainLogger.out(LOGGER_ERROR) << "Setting invalid argument: " << argumentNumber << "." << endl;
     }
     int shift = (4 - argumentNumber) * BITS_IN_UCHAR;
@@ -31,34 +31,34 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
 }
 
 void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue){
-	int functionNumber = GARandomInt(0, pGlobals->settings->gateCircuit.jvmSim->get_num_of_functions() - 1);
-	F* function = pGlobals->settings->gateCircuit.jvmSim->get_function_by_number(functionNumber);
+    int functionNumber = GARandomInt(0, pGlobals->settings->gateCircuit.jvmSim->get_num_of_functions() - 1);
+    F* function = pGlobals->settings->gateCircuit.jvmSim->get_function_by_number(functionNumber);
 
-	if (function == NULL) {
-		mainLogger.out(LOGGER_ERROR) << "Function is NULL" << endl;
-		exit(ERR_NO_SUCH_FUNCTION);
-	}
+    if (function == NULL) {
+        mainLogger.out(LOGGER_ERROR) << "Function is NULL" << endl;
+        exit(ERR_NO_SUCH_FUNCTION);
+    }
 
-	nodeSetArgument(nodeValue, 1, functionNumber);
+    nodeSetArgument(nodeValue, 1, functionNumber);
 
-	int startLine = 0;
-	if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
-		startLine = GARandomInt(0, UCHAR_MAX);
-	}
-	else {
-		startLine = GARandomInt(0, function->ins_array->filled_elements - 1);
-	}
-	nodeSetArgument(nodeValue, 2, startLine);
+    int startLine = 0;
+    if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
+        startLine = GARandomInt(0, UCHAR_MAX);
+    }
+    else {
+        startLine = GARandomInt(0, function->ins_array->filled_elements - 1);
+    }
+    nodeSetArgument(nodeValue, 2, startLine);
 
-	int endLine = 0;
-	if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
-		endLine = GARandomInt(startLine, UCHAR_MAX);
-	} else {
-		endLine = GARandomInt(startLine, function->ins_array->filled_elements - 1);
-	}
+    int endLine = 0;
+    if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
+        endLine = GARandomInt(startLine, UCHAR_MAX);
+    } else {
+        endLine = GARandomInt(startLine, function->ins_array->filled_elements - 1);
+    }
 
-	nodeSetArgument(nodeValue, 3, endLine);
-	//mainLogger.out(LOGGER_INFO) << "function chosen: " <<  function->short_name << "(" << functionNumber <<  ") [" << startLine << ", " << endLine << "] - " << nodeValue << endl;
+    nodeSetArgument(nodeValue, 3, endLine);
+    //mainLogger.out(LOGGER_INFO) << "function chosen: " <<  function->short_name << "(" << functionNumber <<  ") [" << startLine << ", " << endLine << "] - " << nodeValue << endl;
 }
 
 bool connectorsDiscartFirst(GENOME_ITEM_TYPE& connectorMask, int& connection) {

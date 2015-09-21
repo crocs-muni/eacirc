@@ -185,29 +185,29 @@ int GateInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE abs
 
 int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
 
-	int connection = 0;
-	// Prepare all inputs values to JVM stack
-	while (connectorsDiscartFirst(absoluteConnectors, connection))
-		pGlobals->settings->gateCircuit.jvmSim->push_int((int32_t)layerInputValues[connection]);
+    int connection = 0;
+    // Prepare all inputs values to JVM stack
+    while (connectorsDiscartFirst(absoluteConnectors, connection))
+        pGlobals->settings->gateCircuit.jvmSim->push_int((int32_t)layerInputValues[connection]);
 
-	// Obtain arguments of JVM function
-	unsigned char argument1 = nodeGetArgument(node, 1); // function ID	
-	unsigned char argument2 = nodeGetArgument(node, 2);	// instruction from
-	unsigned char argument3 = nodeGetArgument(node, 3); // instruction to
+    // Obtain arguments of JVM function
+    unsigned char argument1 = nodeGetArgument(node, 1); // function ID
+    unsigned char argument2 = nodeGetArgument(node, 2); // instruction from
+    unsigned char argument3 = nodeGetArgument(node, 3); // instruction to
 
-	// Execute given subpart of bytecode 
-	//int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run("FFMul", 1, 10, false);
-	int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, argument3, false);
+    // Execute given subpart of bytecode 
+    //int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run("FFMul", 1, 10, false);
+    int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, argument3, false);
 
-	if (runval != 0) { 
-		//assert(runval == 0);
-		//mainLogger.out(LOGGER_ERROR) << "jvmsim_run failed to execute with value " << runval << ")." << endl; 
-	}
-	// Combine output of function as xor of values left on stack
-	while (!(pGlobals->settings->gateCircuit.jvmSim->stack_empty()))
-	{
-		unsigned char stack = (unsigned char)pGlobals->settings->gateCircuit.jvmSim->pop_int();
-		result ^= stack;
-	}
-	return STAT_OK;
+    if (runval != 0) { 
+        //assert(runval == 0);
+        //mainLogger.out(LOGGER_ERROR) << "jvmsim_run failed to execute with value " << runval << ")." << endl; 
+    }
+    // Combine output of function as xor of values left on stack
+    while (!(pGlobals->settings->gateCircuit.jvmSim->stack_empty()))
+    {
+        unsigned char stack = (unsigned char)pGlobals->settings->gateCircuit.jvmSim->pop_int();
+        result ^= stack;
+    }
+    return STAT_OK;
 }
