@@ -1,9 +1,9 @@
 # Minalpherv1
 
-**Designers:** n/a
+**Designers:** Yu Sasaki, Yosuke Todo, Kazumaro Aoki, Yusuke Naito, Takeshi Sugawara, Yumiko Murakami, Mitsuru Matsui, Shoichi Hirose
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/minalpherv1
 **Download date:** 2014-12-14
 

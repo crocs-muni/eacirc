@@ -1,9 +1,9 @@
 # Morus640128v1
 
-**Designers:** n/a
+**Designers:** Hongjun Wu, Tao Huang
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/morus640128v1
 **Download date:** 2014-12-14
 

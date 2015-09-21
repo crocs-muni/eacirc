@@ -1,9 +1,9 @@
 # Lacv1
 
-**Designers:** n/a
+**Designers:** Lei Zhang, Wenling Wu, Yanfeng Wang, Shengbao Wu, Jian Zhang
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/lacv1
 **Download date:** 2014-12-14
 

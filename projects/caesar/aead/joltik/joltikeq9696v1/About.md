@@ -1,9 +1,9 @@
 # Joltikeq9696v1
 
-**Designers:** n/a
+**Designers:** Jérémy Jean, Ivica Nikolić, Thomas Peyrin
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/joltikeq9696v1
 **Download date:** 2014-12-14
 

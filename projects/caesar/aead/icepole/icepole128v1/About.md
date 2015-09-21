@@ -1,9 +1,9 @@
 # Icepole128v1
 
-**Designers:** n/a
+**Designers:** Paweł Morawiecki, Kris Gaj, Ekawat Homsirikamol, Krystian Matusiewicz, Josef Pieprzyk, Marcin Rogawski, Marian Srebrny, Marcin Wójcik
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/icepole128v1
 **Download date:** 2014-12-14
 

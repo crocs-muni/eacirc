@@ -1,9 +1,9 @@
 # Lakekeyakv1
 
-**Designers:** n/a
+**Designers:** Guido Bertoni, Joan Daemen, Michaël Peeters, Gilles Van Assche, Ronny Van Keer
 
 **Implementation:** reference
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/lakekeyakv1
 **Download date:** 2014-12-14
 
