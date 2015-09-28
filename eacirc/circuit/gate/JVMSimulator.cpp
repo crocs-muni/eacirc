@@ -44,13 +44,13 @@ struct Ins *JVMSimulator::find_ins(char *fn, int instructionLineNumber)
 
 void JVMSimulator::call_push(char *fn, int nl)
 {
-    struct call_element *n=(struct call_element*)malloc(sizeof(struct call_element));
+    struct call_element *n = static_cast<struct call_element*>(malloc(sizeof(struct call_element)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
     }
     n->next=m_call_stack;
-    n->function=(char*)malloc(strlen(fn)+1);
+    n->function=static_cast<char*>(malloc(strlen(fn)+1));
     if (n->function == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
@@ -84,7 +84,7 @@ void JVMSimulator::list_stack()
     struct element *n=m_stack;
     while(n)
     {
-        printf("-> %i",(int)n->integer);
+        printf("-> %i",static_cast<int>(n->integer));
         n=n->next;
     }
     printf("\n");
@@ -97,7 +97,7 @@ bool JVMSimulator::stack_empty()
 
 void JVMSimulator::push_int(int32_t ii)
 {
-    struct element *n=(struct element*)malloc(sizeof(struct element));
+    struct element *n=static_cast<struct element*>(malloc(sizeof(struct element)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
@@ -110,7 +110,7 @@ void JVMSimulator::push_int(int32_t ii)
 
 void JVMSimulator::push_arrayref(int32_t ii)
 {
-    struct element *n=(struct element*)malloc(sizeof(struct element));
+    struct element *n=static_cast<struct element*>(malloc(sizeof(struct element)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
@@ -124,7 +124,7 @@ void JVMSimulator::push_arrayref(int32_t ii)
 /*
 void push(unsigned char c)
 {
-    struct element *n=(struct element*)malloc(sizeof(struct element));
+    struct element *n=static_cast<struct element*>(malloc(sizeof(struct element)));
     if(n==NULL) 
     {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
@@ -194,7 +194,7 @@ unsigned char pop()
 
 signed char pop_byte()
 {
-    return (signed char) pop();
+    return static_cast<signed char>( pop();
 }
 */
 
@@ -283,31 +283,31 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     }
         break;
     case ICONST_M1:
-        push_int((int32_t)-1);
+        push_int(static_cast<int32_t>(-1));
         break;
     case ICONST_0:
-        push_int((int32_t)0);
+        push_int(static_cast<int32_t>(0));
         break;
     case ICONST_1:
-        push_int((int32_t)1);
+        push_int(static_cast<int32_t>(1));
         break;
     case ICONST_2:
-        push_int((int32_t)2);
+        push_int(static_cast<int32_t>(2));
         break;
     case ICONST_3:
-        push_int((int32_t)3);
+        push_int(static_cast<int32_t>(3));
         break;
     case ICONST_4:
-        push_int((int32_t)4);
+        push_int(static_cast<int32_t>(4));
         break;
     case ICONST_5:
-        push_int((int32_t)5);
+        push_int(static_cast<int32_t>(5));
         break;
     case I2B:
     {
                 int32_t a = pop_int();
-                signed char c = (signed char)a;
-                push_int((int)c);
+                signed char c = static_cast<signed char>(a);
+                push_int(static_cast<int>(c));
     }
         break;
     case IDIV:
@@ -354,22 +354,22 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     {
                 int32_t a = pop_int();
                 int32_t b = pop_int();
-                int32_t c = (int32_t)((uint32_t)a >> (b & 0x1f));
+                int32_t c = static_cast<int32_t>(static_cast<uint32_t>(a) >> (b & 0x1f));
                 push_int(c);
     }
         break;
     case BIPUSH:
     {
                 int j = atoi(PC->current_ins->param1);
-                signed char c = (signed char)j;
-                push_int((int32_t)c);
+                signed char c = static_cast<signed char>(j);
+                push_int(static_cast<int32_t>(c));
     }
         break;
     case SIPUSH:
     {
                 int j = atoi(PC->current_ins->param1);
-                int16_t s = (int16_t)j;
-                push_int((int32_t)s);
+                int16_t s = static_cast<int16_t>(j);
+                push_int(static_cast<int32_t>(s));
     }
         break;
     case DUP:
@@ -570,7 +570,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
                     if (call_pop(PC) == 1)
                     {
                         // int32_t r=pop_int();
-                        // printf("Returning result: %i\n",(int)r);
+                        // printf("Returning result: %i\n",static_cast<int>(r);
                         write_output();
                         //exit(ERR_FUNCTION_RETURNED);
                         return 1;
@@ -606,7 +606,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     case ILOAD:
     {
                 // todo: verify index...
-                push_int((int32_t)m_locals[atoi(PC->current_ins->param1)]);
+                push_int(static_cast<int32_t>(m_locals[atoi(PC->current_ins->param1)]));
                 if (m_max_local_used<atoi(PC->current_ins->param1))m_max_local_used = atoi(PC->current_ins->param1);
     }
         break;
@@ -650,7 +650,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
                     int count = pop_int();
                     if (!strcmp(PC->current_ins->param1, "integer"))
                     {
-                        m_globalarrays[m_globalarrays_count].ia = (int32_t*)malloc(count*sizeof(int32_t));
+                        m_globalarrays[m_globalarrays_count].ia = static_cast<int32_t*>(malloc(count*sizeof(int32_t)));
                         if (m_globalarrays[m_globalarrays_count].ia == NULL) {
                             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
                             exit(ERR_NO_MEMORY);
@@ -889,7 +889,7 @@ void JVMSimulator::read_input()
         }while(!next_word&&to_continue);
         if (to_continue)
         {
-            m_locals[local_index] = (int32_t)strtol(number, NULL, 16);
+            m_locals[local_index] = static_cast<int32_t>(strtol(number, NULL, 16));
             local_index++;
         }
     }while(to_continue);
@@ -909,7 +909,7 @@ void JVMSimulator::read_input()
         }while(!next_word&&to_continue);
         if (to_continue)
         {
-            push_int((int32_t)strtol(number, NULL, 16));
+            push_int(static_cast<int32_t>(strtol(number, NULL, 16)));
         }
     }while(to_continue);
     
@@ -931,10 +931,10 @@ void JVMSimulator::write_output()
         switch(n->data_type)
         {
         case STACKTYPE_INTEGER:
-            fprintf(f,"%x ",(int)n->integer);
+            fprintf(f, "%x ", static_cast<int>(n->integer));
             break;
         case STACKTYPE_ARRAYREF:
-            fprintf(f,"%x(ARRAYREF) ",(int)n->integer);
+            fprintf(f, "%x(ARRAYREF) ", static_cast<int>(n->integer));
             break;
         }
         n=n->next;
@@ -980,14 +980,14 @@ int JVMSimulator::jvmsim_init()
             }
             fnew->next = m_functions;
             m_functions = fnew;
-            fnew->full_name = (char*)malloc(strlen(lastline) + 1);
+            fnew->full_name = static_cast<char*>(malloc(strlen(lastline) + 1));
             if (fnew->full_name == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
                 return(ERR_NO_MEMORY);
             }
             strcpy(fnew->full_name, lastline);
-            fnew->short_name = (char*)malloc(strlen(lastline) + 1);
+            fnew->short_name = static_cast<char*>(malloc(strlen(lastline) + 1));
             if (fnew->short_name == NULL) return(ERR_NO_MEMORY);
             strcpy(fnew->short_name, "");
             char copyline[MAX_LINE_LENGTH], *p1, *p2;
@@ -1000,13 +1000,13 @@ int JVMSimulator::jvmsim_init()
                 while (p2 != copyline && *p2 != ' ')p2--;
                 if (*p2 == ' ') strcpy(fnew->short_name, p2 + 1);
             }
-            fnew->ins_array = (struct I*)malloc(sizeof(struct I));
+            fnew->ins_array = static_cast<struct I*>(malloc(sizeof(struct I)));
             if (fnew->ins_array == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
                 return(ERR_NO_MEMORY);
             }
-            fnew->ins_array->array = (struct Ins**)malloc(ALLOC_STEP*sizeof(struct Ins*));
+            fnew->ins_array->array = static_cast<struct Ins**>(malloc(ALLOC_STEP*sizeof(struct Ins*)));
             fnew->ins_array->filled_elements = 0;
             fnew->ins_array->maximum_elements = ALLOC_STEP;
 
@@ -1018,7 +1018,7 @@ int JVMSimulator::jvmsim_init()
             return(ERR_DATA_MISMATCH);
         if (m_functions->ins_array->filled_elements >= m_functions->ins_array->maximum_elements)
         {
-            m_functions->ins_array->array = (struct Ins**)realloc(m_functions->ins_array->array, (m_functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Ins*));
+            m_functions->ins_array->array = static_cast<struct Ins**>(realloc(m_functions->ins_array->array, (m_functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Ins*)));
             if (m_functions->ins_array->array == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
@@ -1026,13 +1026,13 @@ int JVMSimulator::jvmsim_init()
             }
             m_functions->ins_array->maximum_elements += ALLOC_STEP;
         }
-        m_functions->ins_array->array[m_functions->ins_array->filled_elements] = (struct Ins*)malloc(sizeof(struct Ins));
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements] = static_cast<struct Ins*>(malloc(sizeof(struct Ins)));
         if (m_functions->ins_array->array[m_functions->ins_array->filled_elements] == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
         }
-        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line = (char*)malloc(strlen(line) + 1);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line = static_cast<char*>(malloc(strlen(line) + 1));
         if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
@@ -1040,7 +1040,7 @@ int JVMSimulator::jvmsim_init()
         }
         strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line, line);
         m_functions->ins_array->array[m_functions->ins_array->filled_elements]->line_number = atoi(line);
-        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction = (char*)malloc(strlen(line) + 1);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction = static_cast<char*>(malloc(strlen(line) + 1));
         if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
@@ -1058,14 +1058,14 @@ int JVMSimulator::jvmsim_init()
         char s = *p2; *p2 = 0;
         strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction, p1);
         m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction_code = code(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction);
-        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1 = (char*)malloc(strlen(line) + 1);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1 = static_cast<char*>(malloc(strlen(line) + 1));
         if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1 == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
         }
         strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1, "");
-        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2 = (char*)malloc(strlen(line) + 1);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2 = static_cast<char*>(malloc(strlen(line) + 1));
         if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2 == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
