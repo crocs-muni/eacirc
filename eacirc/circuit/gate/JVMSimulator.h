@@ -118,6 +118,8 @@ using namespace std;
 #define MAX_NUMBER_OF_LOCAL_VARIABLES 1000
 
 // Structures
+
+//represents one instruction
 struct Ins {
     int line_number;
     int instruction_code;
@@ -126,12 +128,14 @@ struct Ins {
     char *full_line;
 };
 
+//container for instructions
 struct I {
     struct Ins **array;
     int filled_elements;
     int maximum_elements;
 };
 
+//represents one function with all instructions in list
 struct F {
     char *full_name;
     char *short_name;
@@ -139,6 +143,7 @@ struct F {
     struct F *next;
 };
 
+//stack node
 struct element {
     int data_type;
     //unsigned char data;
@@ -146,19 +151,21 @@ struct element {
     struct element *next;
 };
 
+//call element stack node
 struct call_element {
     char *function;
     int next_line;
     struct call_element *next;
 };
 
-
+//represents current state (which function is used, on which line)
 struct Pc {
     char fn[MAX_LINE_LENGTH];
     int ln;
     struct Ins *current_ins;
 };
 
+//reprasants global array
 struct Ga {
     int32_t *ia;
     signed char *ba;
@@ -168,44 +175,137 @@ struct Ga {
 
 
 class JVMSimulator {
-    struct F *Functions = NULL;
-    int numFunctions = 0;
-    struct element *Stack = NULL;
-    struct call_element *Call_stack = NULL;
-
-    int32_t locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
-    int max_local_used = 0;
-    int globalarrays_count = 0;
-    struct Ga globalarrays[1000];
 
 public:
+
+    //initialize JVMSimulator
     JVMSimulator();
+
     ~JVMSimulator();
+
     string shortDescription();
 
+    // initialize JVMSimulator, load dis file, and save all instructions
     int jvmsim_init();
+
+    /**
+     * run part of loaded bytecode
+     * @param function_number number of function which will be evaluated
+     * @param line_from number instruction where evaluation starts
+     * @param line_to number of instruction where evaluation ends 
+     */
     int jvmsim_run(int function_number, int line_from, int line_to, int use_files);
+
+    //old, won't be used, will be refactored soon
     int jvmsim_main(int argc, char* argv[]);
 
+    /**
+     * @return number of functions loaded
+     */
     int get_num_of_functions();
-    F* get_function_by_number(unsigned char num);
 
+    /**
+     * @param number_of_function 
+     * @return pointer to function
+     */
+    F* get_function_by_number(unsigned char number_of_function);
+
+    /**
+     * Find instruction with instruction number
+     * @param fn name of function
+     * @param in instruction number
+     * @return pointer of instruction
+     */
     struct Ins *find_ins(char *fn, int in);
+
     void call_push(char *fn, int nl);
+
     int call_pop(struct Pc *PC);
+
+    /**
+     * Write all stack values to stdout
+     */
     void list_stack();
+
+    /**
+     * @return true if stack is empty, false otherwise
+     */
     bool stack_empty();
-    void push_int(int ii);
-    void push_arrayref(int32_t ii);
+
+    /**
+     * push integer to stack
+     * @param value
+     */
+    void push_int(int32_t value);
+
+    /**
+     * push index of referenced array to stack
+     * @param value
+     */
+    void push_arrayref(int32_t value);
+
+    /**
+     * pop integer from stack
+     * @return value from stack
+     */
     int32_t pop_int();
+
+    /**
+     * pop index of referenced array
+     * @return index
+     */
     int32_t pop_arrayref();
+
+    /**
+     * emulate specific instruction
+     * @param PC current state
+     * @return error code - will be refactored soon
+     */
     int emulate_ins(struct Pc *PC);
 
+    /**
+     * @param c
+     * @return 1 if c is white place, 0 otherwise
+     */
     int white(char c);
+
+    /**
+     * @param i 
+     * @return indentificator of specific instruction
+     */
     int code(char* i);
+
     void printl();
+
     void read_input();
+
     void write_output();
+
+private:
+
+    //list of all functions
+    struct F* Functions = NULL;
+
+    //number of functions in list
+    int	numFunctions = 0;
+
+    //stack
+    struct element* Stack = NULL;
+
+    //stack of call elements
+    struct call_element* Call_stack = NULL;
+
+    //array of local variables
+    int32_t locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
+
+    //meant to be number of local variables stored, but I am not sure if it is correct
+    int max_local_used = 0;
+
+    //number of stored array
+    int globalarrays_count = 0;
+
+    //global arrays
+    struct Ga globalarrays[1000];
 };
 
 #endif
