@@ -20,7 +20,7 @@ JVMSimulator::~JVMSimulator() {
 // Utilities
 struct Ins *JVMSimulator::find_ins(char *fn, int instructionLineNumber)
 {
-    struct F *fnct= Functions;
+    struct F *fnct= m_functions;
     int found=0;
     while(fnct)
     {
@@ -49,7 +49,7 @@ void JVMSimulator::call_push(char *fn, int nl)
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
     }
-    n->next=Call_stack;
+    n->next=m_call_stack;
     n->function=(char*)malloc(strlen(fn)+1);
     if (n->function == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
@@ -57,22 +57,22 @@ void JVMSimulator::call_push(char *fn, int nl)
     }
     strcpy(n->function,fn);
     n->next_line=nl;
-    Call_stack=n;
+    m_call_stack=n;
 }
 
 int JVMSimulator::call_pop(struct Pc *PC)
 {
-    if(Call_stack==NULL) return 1;
-    strcpy(PC->fn,Call_stack->function);
-    PC->ln=Call_stack->next_line;
+    if(m_call_stack==NULL) return 1;
+    strcpy(PC->fn,m_call_stack->function);
+    PC->ln=m_call_stack->next_line;
     PC->current_ins=find_ins(PC->fn,PC->ln);
     if (PC->current_ins == NULL) {
         mainLogger.out(LOGGER_WARNING) << "Cannot find instruction during POP operation. Returning 1 (call stack empty)." << endl;
         //exit(ERR_DATA_MISMATCH);
         return 1;
     }
-    struct call_element *d=Call_stack;
-    Call_stack=Call_stack->next;
+    struct call_element *d=m_call_stack;
+    m_call_stack=m_call_stack->next;
     delete d;
     return 0;
 }
@@ -81,7 +81,7 @@ int JVMSimulator::call_pop(struct Pc *PC)
 void JVMSimulator::list_stack()
 {
     printf("S: ");
-    struct element *n=Stack;
+    struct element *n=m_stack;
     while(n)
     {
         printf("-> %i",(int)n->integer);
@@ -92,7 +92,7 @@ void JVMSimulator::list_stack()
 
 bool JVMSimulator::stack_empty()
 {
-    return Stack == NULL;
+    return m_stack == NULL;
 }
 
 void JVMSimulator::push_int(int32_t ii)
@@ -102,10 +102,10 @@ void JVMSimulator::push_int(int32_t ii)
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
     }
-    n->next=Stack;
+    n->next=m_stack;
     n->integer=ii;
     n->data_type=STACKTYPE_INTEGER;
-    Stack=n;
+    m_stack=n;
 }
 
 void JVMSimulator::push_arrayref(int32_t ii)
@@ -115,10 +115,10 @@ void JVMSimulator::push_arrayref(int32_t ii)
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
     }
-    n->next=Stack;
+    n->next=m_stack;
     n->integer=ii;
     n->data_type=STACKTYPE_ARRAYREF;
-    Stack=n;
+    m_stack=n;
 }
 
 /*
@@ -130,9 +130,9 @@ void push(unsigned char c)
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
     }
-    n->next=Stack;
+    n->next=m_stack;
     n->data=c;
-    Stack=n;
+    m_stack=n;
 }
 
 
@@ -144,39 +144,39 @@ void push_byte(signed char c)
 
 int32_t JVMSimulator::pop_int()
 {
-    if (Stack == NULL)
+    if (m_stack == NULL)
     {
         //exit(ERR_STACK_EMPTY);
         //mainLogger.out(LOGGER_WARNING) << "Stack empty during POP. Returning 0." << endl;
         return 0;
     }
-    if(Stack->data_type!=STACKTYPE_INTEGER) {
+    if(m_stack->data_type!=STACKTYPE_INTEGER) {
         //exit(ERR_STACK_DATAMISMATCH);
         mainLogger.out(LOGGER_WARNING) << "Data mismatch during POP. Returning 0." << endl;
         return 0;
     }
-    int32_t res = Stack->integer;
-    struct element *d = Stack;
-    Stack=Stack->next;
+    int32_t res = m_stack->integer;
+    struct element *d = m_stack;
+    m_stack=m_stack->next;
     delete d;
     return res;
 }
 
 int32_t JVMSimulator::pop_arrayref()
 {
-    if (Stack == NULL) {
+    if (m_stack == NULL) {
         //exit(ERR_STACK_EMPTY);
         //mainLogger.out(LOGGER_WARNING) << "Stack empty during POP ARRAYREF. Returning 0." << endl;
         return 0;
     }
-    if (Stack->data_type != STACKTYPE_ARRAYREF) {
+    if (m_stack->data_type != STACKTYPE_ARRAYREF) {
         //exit(ERR_STACK_DATAMISMATCH);
         mainLogger.out(LOGGER_WARNING) << "Data mismatch during POP ARRAYREF. Returning 0." << endl;
         return 0;
     }
-    int32_t res = Stack->integer;
-    struct element *d = Stack;
-    Stack=Stack->next;
+    int32_t res = m_stack->integer;
+    struct element *d = m_stack;
+    m_stack=m_stack->next;
     delete d;
     return res;
 }
@@ -184,10 +184,10 @@ int32_t JVMSimulator::pop_arrayref()
 /*
 unsigned char pop()
 {
-    if(Stack==NULL) exit(ERR_STACK_EMPTY);
-    unsigned char res = Stack->data;
-    struct element *d = Stack;
-    Stack=Stack->next;
+    if(m_stack==NULL) exit(ERR_STACK_EMPTY);
+    unsigned char res = m_stack->data;
+    struct element *d = m_stack;
+    m_stack=m_stack->next;
     delete d;
     return res;
 }
@@ -495,7 +495,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     case INVOKESTATIC:
     {
         {
-            struct F *fnct = Functions;
+            struct F *fnct = m_functions;
             int found = 0;
             while (fnct)
             {
@@ -581,68 +581,68 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
         break;
     case ILOAD_0:
     {
-                    push_int(locals[0]);
-                    if (max_local_used<0)max_local_used = 0;
+                    push_int(m_locals[0]);
+                    if (m_max_local_used<0)m_max_local_used = 0;
     }
         break;
     case ILOAD_1:
     {
-                    push_int(locals[1]);
-                    if (max_local_used<1)max_local_used = 1;
+                    push_int(m_locals[1]);
+                    if (m_max_local_used<1)m_max_local_used = 1;
     }
         break;
     case ILOAD_2:
     {
-                    push_int(locals[2]);
-                    if (max_local_used<2)max_local_used = 2;
+                    push_int(m_locals[2]);
+                    if (m_max_local_used<2)m_max_local_used = 2;
     }
         break;
     case ILOAD_3:
     {
-                    push_int(locals[3]);
-                    if (max_local_used<3)max_local_used = 3;
+                    push_int(m_locals[3]);
+                    if (m_max_local_used<3)m_max_local_used = 3;
     }
         break;
     case ILOAD:
     {
                 // todo: verify index...
-                push_int((int32_t)locals[atoi(PC->current_ins->param1)]);
-                if (max_local_used<atoi(PC->current_ins->param1))max_local_used = atoi(PC->current_ins->param1);
+                push_int((int32_t)m_locals[atoi(PC->current_ins->param1)]);
+                if (m_max_local_used<atoi(PC->current_ins->param1))m_max_local_used = atoi(PC->current_ins->param1);
     }
         break;
     case ISTORE:
     {
                 int32_t i = pop_int();
-                locals[atoi(PC->current_ins->param1)] = i;
-                if (max_local_used<atoi(PC->current_ins->param1))max_local_used = atoi(PC->current_ins->param1);
+                m_locals[atoi(PC->current_ins->param1)] = i;
+                if (m_max_local_used<atoi(PC->current_ins->param1))m_max_local_used = atoi(PC->current_ins->param1);
     }
         break;
     case ISTORE_0:
     {
                     int32_t i = pop_int();
-                    locals[0] = i;
-                    if (max_local_used<0)max_local_used = 0;
+                    m_locals[0] = i;
+                    if (m_max_local_used<0)m_max_local_used = 0;
     }
         break;
     case ISTORE_1:
     {
                     int32_t i = pop_int();
-                    locals[1] = i;
-                    if (max_local_used<1)max_local_used = 1;
+                    m_locals[1] = i;
+                    if (m_max_local_used<1)m_max_local_used = 1;
     }
         break;
     case ISTORE_2:
     {
                     int32_t i = pop_int();
-                    locals[2] = i;
-                    if (max_local_used<2)max_local_used = 2;
+                    m_locals[2] = i;
+                    if (m_max_local_used<2)m_max_local_used = 2;
     }
         break;
     case ISTORE_3:
     {
                     int32_t i = pop_int();
-                    locals[3] = i;
-                    if (max_local_used<3)max_local_used = 3;
+                    m_locals[3] = i;
+                    if (m_max_local_used<3)m_max_local_used = 3;
     }
         break;
     case NEWARRAY:
@@ -650,71 +650,71 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
                     int count = pop_int();
                     if (!strcmp(PC->current_ins->param1, "integer"))
                     {
-                        globalarrays[globalarrays_count].ia = (int32_t*)malloc(count*sizeof(int32_t));
-                        if (globalarrays[globalarrays_count].ia == NULL) {
+                        m_globalarrays[m_globalarrays_count].ia = (int32_t*)malloc(count*sizeof(int32_t));
+                        if (m_globalarrays[m_globalarrays_count].ia == NULL) {
                             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
                             exit(ERR_NO_MEMORY);
                         }
-                        globalarrays[globalarrays_count].type = T_INT;
-                        globalarrays[globalarrays_count].number_of_elements = count;
-                        push_arrayref(globalarrays_count);
-                        globalarrays_count++;
+                        m_globalarrays[m_globalarrays_count].type = T_INT;
+                        m_globalarrays[m_globalarrays_count].number_of_elements = count;
+                        push_arrayref(m_globalarrays_count);
+                        m_globalarrays_count++;
                     }
     }
         break;
     case ASTORE_0:
     {
                     int32_t ref = pop_arrayref();
-                    locals[0] = ref;
-                    if (max_local_used<0)max_local_used = 0;
+                    m_locals[0] = ref;
+                    if (m_max_local_used<0)m_max_local_used = 0;
     }
         break;
     case ASTORE_1:
     {
                     int32_t ref = pop_arrayref();
-                    locals[1] = ref;
-                    if (max_local_used<1)max_local_used = 1;
+                    m_locals[1] = ref;
+                    if (m_max_local_used<1)m_max_local_used = 1;
     }
         break;
     case ASTORE_2:
     {
                     int32_t ref = pop_arrayref();
-                    locals[2] = ref;
-                    if (max_local_used<2)max_local_used = 2;
+                    m_locals[2] = ref;
+                    if (m_max_local_used<2)m_max_local_used = 2;
     }
         break;
     case ASTORE_3:
     {
                     int32_t ref = pop_arrayref();
-                    locals[3] = ref;
-                    if (max_local_used<3)max_local_used = 3;
+                    m_locals[3] = ref;
+                    if (m_max_local_used<3)m_max_local_used = 3;
     }
         break;
     case ASTORE:
     {
                 int32_t ref = pop_arrayref();
                 // verify index
-                locals[atoi(PC->current_ins->param1)] = ref;
-                if (max_local_used<atoi(PC->current_ins->param1))max_local_used = atoi(PC->current_ins->param1);
+                m_locals[atoi(PC->current_ins->param1)] = ref;
+                if (m_max_local_used<atoi(PC->current_ins->param1))m_max_local_used = atoi(PC->current_ins->param1);
     }
         break;
     case AALOAD:
     {
                 int index = pop_int();
                 int32_t ref = pop_arrayref();
-                if (ref >= globalarrays_count) {
+                if (ref >= m_globalarrays_count) {
                     mainLogger.out(LOGGER_WARNING) << "Array reference is not valid in AALOAD. Interrupting execution." << endl;
                     //exit(ERR_ARRAYREF_NOT_VALID);
                     return -1;
                 }
-                if (index >= globalarrays[ref].number_of_elements) {
+                if (index >= m_globalarrays[ref].number_of_elements) {
                     mainLogger.out(LOGGER_WARNING) << "Array index is out of range in AALOAD. Interrupting execution." << endl;
                     //exit(ERR_ARRAYINDEX_OUT_OF_RANGE);
                     return -1;
                 }
-                if (globalarrays[ref].type == T_INT)
+                if (m_globalarrays[ref].type == T_INT)
                 {
-                    push_int(globalarrays[ref].ia[index]);
+                    push_int(m_globalarrays[ref].ia[index]);
 
                 }
                 else 
@@ -733,7 +733,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     // prepare pointer to the next instruction
     if (!jump)
     {
-        struct F *fnct = Functions;
+        struct F *fnct = m_functions;
         int found = 0;
         while (fnct)
         {
@@ -854,7 +854,7 @@ int JVMSimulator::code(char* i)
 /*
 void printl()
 {
-printf("Locals - aa: %i, bb: %i, r: %i, t: %i\n", locals[2], locals[3], locals[4], locals[5]);
+printf("Locals - aa: %i, bb: %i, r: %i, t: %i\n", m_locals[2], m_locals[3], m_locals[4], m_locals[5]);
 }
 */
 
@@ -889,7 +889,7 @@ void JVMSimulator::read_input()
         }while(!next_word&&to_continue);
         if (to_continue)
         {
-            locals[local_index] = (int32_t)strtol(number, NULL, 16);
+            m_locals[local_index] = (int32_t)strtol(number, NULL, 16);
             local_index++;
         }
     }while(to_continue);
@@ -925,7 +925,7 @@ void JVMSimulator::write_output()
         exit(ERR_WRITING_OUTPUT);
     }
 
-    struct element *n=Stack;
+    struct element *n=m_stack;
     while(n)
     {
         switch(n->data_type)
@@ -940,8 +940,8 @@ void JVMSimulator::write_output()
         n=n->next;
     }
     fprintf(f,"\n");
-    for(int i=0;i<=max_local_used;i++)
-        fprintf(f,"%x ", locals[i]);
+    for(int i=0;i<=m_max_local_used;i++)
+        fprintf(f,"%x ", m_locals[i]);
     fclose(f);
 }
 
@@ -978,8 +978,8 @@ int JVMSimulator::jvmsim_init()
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
                 return(ERR_NO_MEMORY);
             }
-            fnew->next = Functions;
-            Functions = fnew;
+            fnew->next = m_functions;
+            m_functions = fnew;
             fnew->full_name = (char*)malloc(strlen(lastline) + 1);
             if (fnew->full_name == NULL)
             {
@@ -1010,38 +1010,38 @@ int JVMSimulator::jvmsim_init()
             fnew->ins_array->filled_elements = 0;
             fnew->ins_array->maximum_elements = ALLOC_STEP;
 
-            numFunctions++;
+            m_numFunctions++;
             continue;
         }
         // instructions
-        if (Functions == NULL)
+        if (m_functions == NULL)
             return(ERR_DATA_MISMATCH);
-        if (Functions->ins_array->filled_elements >= Functions->ins_array->maximum_elements)
+        if (m_functions->ins_array->filled_elements >= m_functions->ins_array->maximum_elements)
         {
-            Functions->ins_array->array = (struct Ins**)realloc(Functions->ins_array->array, (Functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Ins*));
-            if (Functions->ins_array->array == NULL)
+            m_functions->ins_array->array = (struct Ins**)realloc(m_functions->ins_array->array, (m_functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Ins*));
+            if (m_functions->ins_array->array == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
                 return(ERR_NO_MEMORY);
             }
-            Functions->ins_array->maximum_elements += ALLOC_STEP;
+            m_functions->ins_array->maximum_elements += ALLOC_STEP;
         }
-        Functions->ins_array->array[Functions->ins_array->filled_elements] = (struct Ins*)malloc(sizeof(struct Ins));
-        if (Functions->ins_array->array[Functions->ins_array->filled_elements] == NULL)
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements] = (struct Ins*)malloc(sizeof(struct Ins));
+        if (m_functions->ins_array->array[m_functions->ins_array->filled_elements] == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
         }
-        Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line = (char*)malloc(strlen(line) + 1);
-        if (Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line == NULL)
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line = (char*)malloc(strlen(line) + 1);
+        if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
         }
-        strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->full_line, line);
-        Functions->ins_array->array[Functions->ins_array->filled_elements]->line_number = atoi(line);
-        Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction = (char*)malloc(strlen(line) + 1);
-        if (Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction == NULL)
+        strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->full_line, line);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->line_number = atoi(line);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction = (char*)malloc(strlen(line) + 1);
+        if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
@@ -1056,22 +1056,22 @@ int JVMSimulator::jvmsim_init()
         p2 = p1;
         while (*p2&&!white(*p2))p2++;
         char s = *p2; *p2 = 0;
-        strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction, p1);
-        Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction_code = code(Functions->ins_array->array[Functions->ins_array->filled_elements]->instruction);
-        Functions->ins_array->array[Functions->ins_array->filled_elements]->param1 = (char*)malloc(strlen(line) + 1);
-        if (Functions->ins_array->array[Functions->ins_array->filled_elements]->param1 == NULL)
+        strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction, p1);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction_code = code(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->instruction);
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1 = (char*)malloc(strlen(line) + 1);
+        if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1 == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
         }
-        strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->param1, "");
-        Functions->ins_array->array[Functions->ins_array->filled_elements]->param2 = (char*)malloc(strlen(line) + 1);
-        if (Functions->ins_array->array[Functions->ins_array->filled_elements]->param2 == NULL)
+        strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1, "");
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2 = (char*)malloc(strlen(line) + 1);
+        if (m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2 == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
             return(ERR_NO_MEMORY);
         }
-        strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->param2, "");
+        strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2, "");
         *p2 = s;
         if (*p2)
         {
@@ -1081,7 +1081,7 @@ int JVMSimulator::jvmsim_init()
                 char *p3 = p2;
                 while (*p3 && (!white(*p3) && *p3 != ','&&*p3 != ';'))p3++;
                 s = *p3; *p3 = 0;
-                strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->param1, p2);
+                strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param1, p2);
                 *p3 = s;
                 if (*p3 == ',')
                 {
@@ -1092,12 +1092,12 @@ int JVMSimulator::jvmsim_init()
                         char *p4 = p3;
                         while (*p4 && (!white(*p4) && *p4 != ','&&*p4 != ';'))p4++;
                         s = *p4; *p4 = 0;
-                        strcpy(Functions->ins_array->array[Functions->ins_array->filled_elements]->param2, p3);
+                        strcpy(m_functions->ins_array->array[m_functions->ins_array->filled_elements]->param2, p3);
                     }
                 }
             }
         }
-        Functions->ins_array->filled_elements++;
+        m_functions->ins_array->filled_elements++;
     }
     return ERR_NO_ERROR;
 }
@@ -1106,7 +1106,7 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
 {
     if(use_files)
         read_input();
-    //locals[0]=101; locals[1]=102;
+    //m_locals[0]=101; m_locals[1]=102;
 
     F* function = get_function_by_number(function_number);
     if (function == NULL){
@@ -1116,8 +1116,8 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
 
     //mainLogger.out(LOGGER_INFO) << "Running function: " << function->short_name << "[" << line_from << ", " << line_to  << "]" << endl;
 
-    max_local_used = 0;
-    memset(locals,0,sizeof(int32_t)*MAX_NUMBER_OF_LOCAL_VARIABLES);
+    m_max_local_used = 0;
+    memset(m_locals,0,sizeof(int32_t)*MAX_NUMBER_OF_LOCAL_VARIABLES);
 
     struct Pc PC = { "", 0, NULL };
     strcpy(PC.fn, function->short_name); PC.ln = line_from;
@@ -1148,7 +1148,7 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
 
 int JVMSimulator::get_num_of_functions(){
     int ret = 0;
-    F* current = Functions;
+    F* current = m_functions;
 
     while (current != NULL){
         ret++;
@@ -1159,7 +1159,7 @@ int JVMSimulator::get_num_of_functions(){
 }
 
 F* JVMSimulator::get_function_by_number(unsigned char num){
-    F* current = Functions;
+    F* current = m_functions;
 
     for (unsigned char i = 0; i < num; i++){
         current = current->next;
@@ -1180,7 +1180,7 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
     {
         // printf("FFMul 62\n");
         
-        struct F *fn = Functions;
+        struct F *fn = m_functions;
         while(fn)
         {
             printf("%s ",fn->short_name);
@@ -1205,7 +1205,7 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
 }*/
 
 /*string JVMSimulator::getFunctionNameByID(int functionID) {
-    struct F *fnct = Functions;
+    struct F *fnct = m_functions;
 
     // If bigger functionID is supplied, scale by modulo
     functionID = functionID % numFunctions;

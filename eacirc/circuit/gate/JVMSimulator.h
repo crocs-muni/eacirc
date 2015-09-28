@@ -284,28 +284,28 @@ public:
 private:
 
     //list of all functions
-    struct F* Functions = NULL;
+    struct F* m_functions = NULL;
 
     //number of functions in list
-    int	numFunctions = 0;
+    int	m_numFunctions = 0;
 
     //stack
-    struct element* Stack = NULL;
+    struct element* m_stack = NULL;
 
     //stack of call elements
-    struct call_element* Call_stack = NULL;
+    struct call_element* m_call_stack = NULL;
 
     //array of local variables
-    int32_t locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
+    int32_t m_locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
 
     //meant to be number of local variables stored, but I am not sure if it is correct
-    int max_local_used = 0;
+    int m_max_local_used = 0;
 
     //number of stored array
-    int globalarrays_count = 0;
+    int m_globalarrays_count = 0;
 
     //global arrays
-    struct Ga globalarrays[1000];
+    struct Ga m_globalarrays[1000];
 };
 
 #endif
