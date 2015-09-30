@@ -135,26 +135,26 @@ struct Instructions{
 };
 
 //represents one function with all instructions in list
-struct Function_node {
+struct FunctionNode {
     char *full_name;
     char *short_name;
     struct Instructions* ins_array;
-    struct Function_node *next;
+    struct FunctionNode *next;
 };
 
 //stack node
-struct Stack_node {
+struct StackNode {
     int data_type;
     //unsigned char data;
     int32_t integer;
-    struct Stack_node *next;
+    struct StackNode *next;
 };
 
 //call element stack node
-struct Call_stack_node{
+struct CallStackNode{
     char *function;
     int next_line;
-    struct Call_stack_node *next;
+    struct CallStackNode *next;
 };
 
 //represents current state (which function is used, on which line)
@@ -165,7 +165,7 @@ struct Pc {
 };
 
 //reprasants global array
-struct Global_array {
+struct GlobalArray {
     int32_t *int_array;
     signed char *ba;
     int type;
@@ -188,33 +188,33 @@ public:
     int jvmsim_init();
 
     /**
-     * run part of loaded bytecode
-     * @param function_number number of function which will be evaluated
-     * @param line_from number instruction where evaluation starts
-     * @param line_to number of instruction where evaluation ends 
-     */
+    * run part of loaded bytecode
+    * @param function_number number of function which will be evaluated
+    * @param line_from number instruction where evaluation starts
+    * @param line_to number of instruction where evaluation ends
+    */
     int jvmsim_run(int function_number, int line_from, int line_to, int use_files);
 
     //old, won't be used, will be refactored soon
     int jvmsim_main(int argc, char* argv[]);
 
     /**
-     * @return number of functions loaded
-     */
+    * @return number of functions loaded
+    */
     int get_num_of_functions();
 
     /**
-     * @param number_of_function 
-     * @return pointer to function
-     */
-    struct Function_node* get_function_by_number(unsigned char number_of_function);
+    * @param number_of_function
+    * @return pointer to function
+    */
+    struct FunctionNode* get_function_by_number(unsigned char number_of_function);
 
     /**
-     * Find instruction with instruction number
-     * @param fn name of function
-     * @param in instruction number
-     * @return pointer of instruction
-     */
+    * Find instruction with instruction number
+    * @param fn name of function
+    * @param in instruction number
+    * @return pointer of instruction
+    */
     struct Instruction *find_ins(char *fn, int in);
 
     void call_push(char *fn, int nl);
@@ -222,56 +222,56 @@ public:
     int call_pop(struct Pc *PC);
 
     /**
-     * Write all stack values to stdout
-     */
+    * Write all stack values to stdout
+    */
     void list_stack();
 
     /**
-     * @return true if stack is empty, false otherwise
-     */
+    * @return true if stack is empty, false otherwise
+    */
     bool stack_empty();
 
     /**
-     * push integer to stack
-     * @param value
-     */
+    * push integer to stack
+    * @param value
+    */
     void push_int(int32_t value);
 
     /**
-     * push index of referenced array to stack
-     * @param value
-     */
+    * push index of referenced array to stack
+    * @param value
+    */
     void push_arrayref(int32_t value);
 
     /**
-     * pop integer from stack
-     * @return value from stack
-     */
+    * pop integer from stack
+    * @return value from stack
+    */
     int32_t pop_int();
 
     /**
-     * pop index of referenced array
-     * @return index
-     */
+    * pop index of referenced array
+    * @return index
+    */
     int32_t pop_arrayref();
 
     /**
-     * emulate specific instruction
-     * @param PC current state
-     * @return error code - will be refactored soon
-     */
+    * emulate specific instruction
+    * @param PC current state
+    * @return error code - will be refactored soon
+    */
     int emulate_ins(struct Pc *PC);
 
     /**
-     * @param c
-     * @return 1 if c is white place, 0 otherwise
-     */
+    * @param c
+    * @return 1 if c is white place, 0 otherwise
+    */
     int white(char c);
 
     /**
-     * @param i 
-     * @return indentificator of specific instruction
-     */
+    * @param i
+    * @return indentificator of specific instruction
+    */
     int code(char* i);
 
     void printl();
@@ -283,28 +283,28 @@ public:
 private:
 
     //list of all functions
-    struct Function_node* m_functions = NULL;
+    struct FunctionNode* m_functions = NULL;
 
     //number of functions in list
-    int	m_numFunctions = 0;
+    int m_numFunctions = 0;
 
     //stack
-    struct Stack_node* m_stack = NULL;
+    struct StackNode* m_stack = NULL;
 
     //stack of call elements
-    struct Call_stack_node* m_call_stack = NULL;
+    struct CallStackNode* m_callStack = NULL;
 
     //array of local variables
     int32_t m_locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
 
     //meant to be number of local variables stored, but I am not sure if it is correct
-    int m_max_local_used = 0;
+    int m_maxLocalUsed = 0;
 
     //number of stored array
-    int m_globalarrays_count = 0;
+    int m_globalArraysCount = 0;
 
     //global arrays
-    struct Global_array m_globalarrays[1000];
+    struct GlobalArray m_globalArrays[1000];
 };
 
 #endif
