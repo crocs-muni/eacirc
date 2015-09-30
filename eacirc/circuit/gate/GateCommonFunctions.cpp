@@ -32,7 +32,7 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
 
 void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue){
     int functionNumber = GARandomInt(0, pGlobals->settings->gateCircuit.jvmSim->get_num_of_functions() - 1);
-    F* function = pGlobals->settings->gateCircuit.jvmSim->get_function_by_number(functionNumber);
+    struct Function_node* function = pGlobals->settings->gateCircuit.jvmSim->get_function_by_number(functionNumber);
 
     if (function == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Function is NULL" << endl;

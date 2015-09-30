@@ -118,9 +118,8 @@ using namespace std;
 #define MAX_NUMBER_OF_LOCAL_VARIABLES 1000
 
 // Structures
-
 //represents one instruction
-struct Ins {
+struct Instruction {
     int line_number;
     int instruction_code;
     char *instruction;
@@ -129,45 +128,45 @@ struct Ins {
 };
 
 //container for instructions
-struct I {
-    struct Ins **array;
+struct Instructions{
+    struct Instruction** array;
     int filled_elements;
     int maximum_elements;
 };
 
 //represents one function with all instructions in list
-struct F {
+struct Function_node {
     char *full_name;
     char *short_name;
-    struct I *ins_array;
-    struct F *next;
+    struct Instructions* ins_array;
+    struct Function_node *next;
 };
 
 //stack node
-struct element {
+struct Stack_node {
     int data_type;
     //unsigned char data;
     int32_t integer;
-    struct element *next;
+    struct Stack_node *next;
 };
 
 //call element stack node
-struct call_element {
+struct Call_stack_node{
     char *function;
     int next_line;
-    struct call_element *next;
+    struct Call_stack_node *next;
 };
 
 //represents current state (which function is used, on which line)
 struct Pc {
     char fn[MAX_LINE_LENGTH];
     int ln;
-    struct Ins *current_ins;
+    struct Instruction *current_ins;
 };
 
 //reprasants global array
-struct Ga {
-    int32_t *ia;
+struct Global_array {
+    int32_t *int_array;
     signed char *ba;
     int type;
     int number_of_elements;
@@ -208,7 +207,7 @@ public:
      * @param number_of_function 
      * @return pointer to function
      */
-    F* get_function_by_number(unsigned char number_of_function);
+    struct Function_node* get_function_by_number(unsigned char number_of_function);
 
     /**
      * Find instruction with instruction number
@@ -216,7 +215,7 @@ public:
      * @param in instruction number
      * @return pointer of instruction
      */
-    struct Ins *find_ins(char *fn, int in);
+    struct Instruction *find_ins(char *fn, int in);
 
     void call_push(char *fn, int nl);
 
@@ -284,16 +283,16 @@ public:
 private:
 
     //list of all functions
-    struct F* m_functions = NULL;
+    struct Function_node* m_functions = NULL;
 
     //number of functions in list
     int	m_numFunctions = 0;
 
     //stack
-    struct element* m_stack = NULL;
+    struct Stack_node* m_stack = NULL;
 
     //stack of call elements
-    struct call_element* m_call_stack = NULL;
+    struct Call_stack_node* m_call_stack = NULL;
 
     //array of local variables
     int32_t m_locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
@@ -305,7 +304,7 @@ private:
     int m_globalarrays_count = 0;
 
     //global arrays
-    struct Ga m_globalarrays[1000];
+    struct Global_array m_globalarrays[1000];
 };
 
 #endif

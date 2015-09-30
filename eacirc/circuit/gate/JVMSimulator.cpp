@@ -18,9 +18,9 @@ JVMSimulator::~JVMSimulator() {
 }
 
 // Utilities
-struct Ins *JVMSimulator::find_ins(char *fn, int instructionLineNumber)
+struct Instruction *JVMSimulator::find_ins(char *fn, int instructionLineNumber)
 {
-    struct F *fnct= m_functions;
+    struct Function_node *fnct= m_functions;
     int found=0;
     while(fnct)
     {
@@ -44,7 +44,7 @@ struct Ins *JVMSimulator::find_ins(char *fn, int instructionLineNumber)
 
 void JVMSimulator::call_push(char *fn, int nl)
 {
-    struct call_element *n = static_cast<struct call_element*>(malloc(sizeof(struct call_element)));
+    struct Call_stack_node *n = static_cast<struct Call_stack_node*>(malloc(sizeof(struct Call_stack_node)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
@@ -71,7 +71,7 @@ int JVMSimulator::call_pop(struct Pc *PC)
         //exit(ERR_DATA_MISMATCH);
         return 1;
     }
-    struct call_element *d=m_call_stack;
+    struct Call_stack_node *d=m_call_stack;
     m_call_stack=m_call_stack->next;
     delete d;
     return 0;
@@ -81,7 +81,7 @@ int JVMSimulator::call_pop(struct Pc *PC)
 void JVMSimulator::list_stack()
 {
     printf("S: ");
-    struct element *n=m_stack;
+    struct Stack_node *n=m_stack;
     while(n)
     {
         printf("-> %i",static_cast<int>(n->integer));
@@ -97,7 +97,7 @@ bool JVMSimulator::stack_empty()
 
 void JVMSimulator::push_int(int32_t ii)
 {
-    struct element *n=static_cast<struct element*>(malloc(sizeof(struct element)));
+    struct Stack_node *n=static_cast<struct Stack_node*>(malloc(sizeof(struct Stack_node)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
@@ -110,7 +110,7 @@ void JVMSimulator::push_int(int32_t ii)
 
 void JVMSimulator::push_arrayref(int32_t ii)
 {
-    struct element *n=static_cast<struct element*>(malloc(sizeof(struct element)));
+    struct Stack_node *n=static_cast<struct Stack_node*>(malloc(sizeof(struct Stack_node)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
         exit(ERR_NO_MEMORY);
@@ -124,7 +124,7 @@ void JVMSimulator::push_arrayref(int32_t ii)
 /*
 void push(unsigned char c)
 {
-    struct element *n=static_cast<struct element*>(malloc(sizeof(struct element)));
+    struct Stack_node *n=static_cast<struct Stack_node*>(malloc(sizeof(struct Stack_node)));
     if(n==NULL) 
     {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
@@ -156,7 +156,7 @@ int32_t JVMSimulator::pop_int()
         return 0;
     }
     int32_t res = m_stack->integer;
-    struct element *d = m_stack;
+    struct Stack_node *d = m_stack;
     m_stack=m_stack->next;
     delete d;
     return res;
@@ -175,7 +175,7 @@ int32_t JVMSimulator::pop_arrayref()
         return 0;
     }
     int32_t res = m_stack->integer;
-    struct element *d = m_stack;
+    struct Stack_node *d = m_stack;
     m_stack=m_stack->next;
     delete d;
     return res;
@@ -186,7 +186,7 @@ unsigned char pop()
 {
     if(m_stack==NULL) exit(ERR_STACK_EMPTY);
     unsigned char res = m_stack->data;
-    struct element *d = m_stack;
+    struct Stack_node *d = m_stack;
     m_stack=m_stack->next;
     delete d;
     return res;
@@ -495,7 +495,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     case INVOKESTATIC:
     {
         {
-            struct F *fnct = m_functions;
+            struct Function_node *fnct = m_functions;
             int found = 0;
             while (fnct)
             {
@@ -650,8 +650,8 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
                     int count = pop_int();
                     if (!strcmp(PC->current_ins->param1, "integer"))
                     {
-                        m_globalarrays[m_globalarrays_count].ia = static_cast<int32_t*>(malloc(count*sizeof(int32_t)));
-                        if (m_globalarrays[m_globalarrays_count].ia == NULL) {
+                        m_globalarrays[m_globalarrays_count].int_array = static_cast<int32_t*>(malloc(count*sizeof(int32_t)));
+                        if (m_globalarrays[m_globalarrays_count].int_array == NULL) {
                             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
                             exit(ERR_NO_MEMORY);
                         }
@@ -714,7 +714,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
                 }
                 if (m_globalarrays[ref].type == T_INT)
                 {
-                    push_int(m_globalarrays[ref].ia[index]);
+                    push_int(m_globalarrays[ref].int_array[index]);
 
                 }
                 else 
@@ -733,7 +733,7 @@ int JVMSimulator::emulate_ins(struct Pc *PC)
     // prepare pointer to the next instruction
     if (!jump)
     {
-        struct F *fnct = m_functions;
+        struct Function_node *fnct = m_functions;
         int found = 0;
         while (fnct)
         {
@@ -925,7 +925,7 @@ void JVMSimulator::write_output()
         exit(ERR_WRITING_OUTPUT);
     }
 
-    struct element *n=m_stack;
+    struct Stack_node *n=m_stack;
     while(n)
     {
         switch(n->data_type)
@@ -948,7 +948,8 @@ void JVMSimulator::write_output()
 int JVMSimulator::jvmsim_init()
 {
     //FILE *f = fopen("AES.dis", "rt");
-    FILE *f = fopen("oldNodesSimulator.dis", "rt");
+    //FILE *f = fopen("oldNodesSimulator.dis", "rt");
+    FILE *f = fopen("old_nodes_without_relational_op.dis", "rt");
 
     if (f == NULL) return(ERR_CANNOT_OPEN_FILE);
     char line[MAX_LINE_LENGTH], lastline[MAX_LINE_LENGTH];
@@ -972,7 +973,7 @@ int JVMSimulator::jvmsim_init()
         if (!strncmp(line, "  Code:", strlen("Code:")))
         {
             // new function
-            struct F *fnew = (struct F*)malloc(sizeof(struct F));
+            struct Function_node *fnew = (struct Function_node*)malloc(sizeof(struct Function_node));
             if (fnew == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
@@ -1000,13 +1001,14 @@ int JVMSimulator::jvmsim_init()
                 while (p2 != copyline && *p2 != ' ')p2--;
                 if (*p2 == ' ') strcpy(fnew->short_name, p2 + 1);
             }
-            fnew->ins_array = static_cast<struct I*>(malloc(sizeof(struct I)));
+
+            fnew->ins_array = static_cast<struct Instructions*>(malloc(sizeof(struct Instruction)));
             if (fnew->ins_array == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
                 return(ERR_NO_MEMORY);
             }
-            fnew->ins_array->array = static_cast<struct Ins**>(malloc(ALLOC_STEP*sizeof(struct Ins*)));
+            fnew->ins_array->array = static_cast<struct Instruction**>(malloc(ALLOC_STEP*sizeof(struct Instruction*)));
             fnew->ins_array->filled_elements = 0;
             fnew->ins_array->maximum_elements = ALLOC_STEP;
 
@@ -1018,7 +1020,7 @@ int JVMSimulator::jvmsim_init()
             return(ERR_DATA_MISMATCH);
         if (m_functions->ins_array->filled_elements >= m_functions->ins_array->maximum_elements)
         {
-            m_functions->ins_array->array = static_cast<struct Ins**>(realloc(m_functions->ins_array->array, (m_functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Ins*)));
+            m_functions->ins_array->array = static_cast<struct Instruction**>(realloc(m_functions->ins_array->array, (m_functions->ins_array->maximum_elements + ALLOC_STEP)*sizeof(struct Instruction*)));
             if (m_functions->ins_array->array == NULL)
             {
                 mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
@@ -1026,7 +1028,7 @@ int JVMSimulator::jvmsim_init()
             }
             m_functions->ins_array->maximum_elements += ALLOC_STEP;
         }
-        m_functions->ins_array->array[m_functions->ins_array->filled_elements] = static_cast<struct Ins*>(malloc(sizeof(struct Ins)));
+        m_functions->ins_array->array[m_functions->ins_array->filled_elements] = static_cast<struct Instruction*>(malloc(sizeof(struct Instruction)));
         if (m_functions->ins_array->array[m_functions->ins_array->filled_elements] == NULL)
         {
             mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory." << endl;
@@ -1108,7 +1110,7 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
         read_input();
     //m_locals[0]=101; m_locals[1]=102;
 
-    F* function = get_function_by_number(function_number);
+    struct Function_node* function = get_function_by_number(function_number);
     if (function == NULL){
         mainLogger.out(LOGGER_ERROR) << "Cannot find function with nubmer: " << function_number << endl;
         return (ERR_NO_SUCH_FUNCTION);
@@ -1148,7 +1150,7 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to, in
 
 int JVMSimulator::get_num_of_functions(){
     int ret = 0;
-    F* current = m_functions;
+    struct Function_node* current = m_functions;
 
     while (current != NULL){
         ret++;
@@ -1158,8 +1160,8 @@ int JVMSimulator::get_num_of_functions(){
     return ret;
 }
 
-F* JVMSimulator::get_function_by_number(unsigned char num){
-    F* current = m_functions;
+struct Function_node* JVMSimulator::get_function_by_number(unsigned char num){
+    struct Function_node* current = m_functions;
 
     for (unsigned char i = 0; i < num; i++){
         current = current->next;
@@ -1180,7 +1182,7 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
     {
         // printf("FFMul 62\n");
         
-        struct F *fn = m_functions;
+        struct Function_node *fn = m_functions;
         while(fn)
         {
             printf("%s ",fn->short_name);
@@ -1205,7 +1207,7 @@ int JVMSimulator::jvmsim_main(int argc, char* argv[])
 }*/
 
 /*string JVMSimulator::getFunctionNameByID(int functionID) {
-    struct F *fnct = m_functions;
+    struct Function_node *fnct = m_functions;
 
     // If bigger functionID is supplied, scale by modulo
     functionID = functionID % numFunctions;
