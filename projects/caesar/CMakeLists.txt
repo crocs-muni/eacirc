@@ -453,10 +453,10 @@ set(SOURCES
     aead/prost/proest256otrv1/proest256otrv1_proest256.cpp
     aead/prost/proest256otrv1/proest256otrv1_zerobytes.cpp
     aead/prost/proest256otrv1/Proest256otrv1.cpp
-#    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.cpp
-#    aead/raviyoyla/raviyoylav1/Raviyoylav1.cpp
-#    aead/sablier/sablierv1/sablierv1_encrypt.cpp
-#    aead/sablier/sablierv1/Sablierv1.cpp
+    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.cpp
+    aead/raviyoyla/raviyoylav1/Raviyoylav1.cpp
+    aead/sablier/sablierv1/sablierv1_encrypt.cpp
+    aead/sablier/sablierv1/Sablierv1.cpp
 #    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aes.cpp
 #    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aesReduced.cpp
 #    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_encrypt.cpp
@@ -1256,14 +1256,14 @@ set(HEADERS
     aead/prost/proest256otrv1/proest256otrv1_zerobytes.h
     aead/prost/proest256otrv1/proest256otrv1_encrypt.h
     aead/prost/proest256otrv1/Proest256otrv1.h
-#    aead/raviyoyla/raviyoylav1/raviyoylav1_api.h
-#    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.h
-#    aead/raviyoyla/raviyoylav1/Raviyoylav1.h
-#    aead/sablier/sablierv1/sablierv1_api.h
-#    aead/sablier/sablierv1/sablierv1_authenticate_1.h
-#    aead/sablier/sablierv1/sablierv1_cipher_1.h
-#    aead/sablier/sablierv1/sablierv1_encrypt.h
-#    aead/sablier/sablierv1/Sablierv1.h
+    aead/raviyoyla/raviyoylav1/raviyoylav1_api.h
+    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.h
+    aead/raviyoyla/raviyoylav1/Raviyoylav1.h
+    aead/sablier/sablierv1/sablierv1_api.h
+    aead/sablier/sablierv1/sablierv1_authenticate_1.h
+    aead/sablier/sablierv1/sablierv1_cipher_1.h
+    aead/sablier/sablierv1/sablierv1_encrypt.h
+    aead/sablier/sablierv1/Sablierv1.h
 #    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aes.h
 #    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_api.h
 #    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_shellaes.h
@@ -1584,8 +1584,8 @@ set(OTHER_FILES
     aead/prost/proest256apev1/About.md
     aead/prost/proest256copav1/About.md
     aead/prost/proest256otrv1/About.md
-#    aead/raviyoyla/raviyoylav1/About.md
-#    aead/sablier/sablierv1/About.md
+    aead/raviyoyla/raviyoylav1/About.md
+    aead/sablier/sablierv1/About.md
 #    aead/shell/shellaes128v1d4n64/About.md
 #    aead/shell/shellaes128v1d4n80/About.md
 #    aead/shell/shellaes128v1d5n64/About.md

@@ -127,8 +127,8 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_PROEST256APEV1:        return "Prost - proest256apev1";
     case CAESAR_PROEST256COPAV1:        return "Prost - proest256copav1";
     case CAESAR_PROEST256OTRV1:        return "Prost - proest256otrv1";
-        //    case CAESAR_RAVIYOYLAV1:        return "Raviyoyla - raviyoylav1";
-        //    case CAESAR_SABLIERV1:        return "Sablier - sablierv1";
+    case CAESAR_RAVIYOYLAV1:        return "Raviyoyla - raviyoylav1";
+    case CAESAR_SABLIERV1:        return "Sablier - sablierv1";
         //    case CAESAR_SHELLAES128V1D4N64:        return "SHELL - shellaes128v1d4n64";
         //    case CAESAR_SHELLAES128V1D4N80:        return "SHELL - shellaes128v1d4n80";
         //    case CAESAR_SHELLAES128V1D5N64:        return "SHELL - shellaes128v1d5n64";

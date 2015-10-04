@@ -138,8 +138,8 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_PROEST256APEV1: { return new Proest256apev1(numRounds); };
         case CAESAR_PROEST256COPAV1: { return new Proest256copav1(numRounds); };
         case CAESAR_PROEST256OTRV1: { return new Proest256otrv1(numRounds); };
-//        case CAESAR_RAVIYOYLAV1: { return new Raviyoylav1(numRounds); };
-//        case CAESAR_SABLIERV1: { return new Sablierv1(numRounds); };
+        case CAESAR_RAVIYOYLAV1: { return new Raviyoylav1(numRounds); };
+        case CAESAR_SABLIERV1: { return new Sablierv1(numRounds); };
 //        case CAESAR_SHELLAES128V1D4N64: { return new Shellaes128v1d4n64(numRounds); };
 //        case CAESAR_SHELLAES128V1D4N80: { return new Shellaes128v1d4n80(numRounds); };
 //        case CAESAR_SHELLAES128V1D5N64: { return new Shellaes128v1d5n64(numRounds); };
