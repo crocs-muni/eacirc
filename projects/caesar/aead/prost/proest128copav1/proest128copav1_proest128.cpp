@@ -1,7 +1,7 @@
-namespace Proest128copav1_raw {
-int numRounds = -1;
+#include "proest128copav1_proest128.h"
 
-#include "proest128.h"
+// CHANGE namespace moved due to includes
+namespace Proest128copav1_raw {
 
 #define RORLANE(x,d) (((x >> (d&0xf)) | (x << (8*PROEST_LANEBYTES-(d&0xf)))) & 0xffff)
 #define ROLLANE(x,d) (((x << (d&0xf)) | (x >> (8*PROEST_LANEBYTES-(d&0xf)))) & 0xffff)
@@ -160,12 +160,12 @@ void ShiftRegistersInverse(proest_ctx *x, int round)
     x->a[1][1] = ROLLANE(x->a[1][1],1);
     x->a[1][2] = ROLLANE(x->a[1][2],1);
     x->a[1][3] = ROLLANE(x->a[1][3],1);
-                 
+
     x->a[2][0] = ROLLANE(x->a[2][0],8);
     x->a[2][1] = ROLLANE(x->a[2][1],8);
     x->a[2][2] = ROLLANE(x->a[2][2],8);
     x->a[2][3] = ROLLANE(x->a[2][3],8);
-                 
+
     x->a[3][0] = ROLLANE(x->a[3][0],9);
     x->a[3][1] = ROLLANE(x->a[3][1],9);
     x->a[3][2] = ROLLANE(x->a[3][2],9);
@@ -266,14 +266,14 @@ void proest_permute(proest_ctx *x)
 }
 
 void proest_inverse_permute(proest_ctx *x) {
-	int round;
-	
-	for (round = PROEST_NROUNDS-1; round >= 0; --round) {
-		AddConstant(x, round);
-		ShiftRegistersInverse(x, round);
-		MixColumns(x);
-		SubBits(x);
-	}
+    int round;
+
+    for (round = PROEST_NROUNDS-1; round >= 0; --round) {
+        AddConstant(x, round);
+        ShiftRegistersInverse(x, round);
+        MixColumns(x);
+        SubBits(x);
+    }
 }
 
 

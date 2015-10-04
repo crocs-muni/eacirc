@@ -10,6 +10,7 @@ set(SOURCES
     Encryptor.cpp
 # === CAESAR algorithms ===
     aead/common/crypto_verify_16.cpp
+    aead/common/crypto_verify_32.cpp
     aead/common/crypto_core_aes128encrypt.cpp
     aead/common/crypto_core_aes128decrypt.cpp
     aead/common/crypto_core_aes256encrypt.cpp
@@ -428,30 +429,30 @@ set(SOURCES
     aead/primates/primatesv1hanuman80/primatesv1hanuman80_encrypt.cpp
     aead/primates/primatesv1hanuman80/primatesv1hanuman80_primate.cpp
     aead/primates/primatesv1hanuman80/Primatesv1hanuman80.cpp
-#    aead/prost/proest128apev1/proest128apev1_encrypt.cpp
-#    aead/prost/proest128apev1/proest128apev1_proest128.cpp
-#    aead/prost/proest128apev1/proest128apev1_zerobytes.cpp
-#    aead/prost/proest128apev1/Proest128apev1.cpp
-#    aead/prost/proest128copav1/proest128copav1_encrypt.cpp
-#    aead/prost/proest128copav1/proest128copav1_proest128.cpp
-#    aead/prost/proest128copav1/proest128copav1_zerobytes.cpp
-#    aead/prost/proest128copav1/Proest128copav1.cpp
-#    aead/prost/proest128otrv1/proest128otrv1_encrypt.cpp
-#    aead/prost/proest128otrv1/proest128otrv1_proest128.cpp
-#    aead/prost/proest128otrv1/proest128otrv1_zerobytes.cpp
-#    aead/prost/proest128otrv1/Proest128otrv1.cpp
-#    aead/prost/proest256apev1/proest256apev1_encrypt.cpp
-#    aead/prost/proest256apev1/proest256apev1_proest256.cpp
-#    aead/prost/proest256apev1/proest256apev1_zerobytes.cpp
-#    aead/prost/proest256apev1/Proest256apev1.cpp
-#    aead/prost/proest256copav1/proest256copav1_encrypt.cpp
-#    aead/prost/proest256copav1/proest256copav1_proest256.cpp
-#    aead/prost/proest256copav1/proest256copav1_zerobytes.cpp
-#    aead/prost/proest256copav1/Proest256copav1.cpp
-#    aead/prost/proest256otrv1/proest256otrv1_encrypt.cpp
-#    aead/prost/proest256otrv1/proest256otrv1_proest256.cpp
-#    aead/prost/proest256otrv1/proest256otrv1_zerobytes.cpp
-#    aead/prost/proest256otrv1/Proest256otrv1.cpp
+    aead/prost/proest128apev1/proest128apev1_encrypt.cpp
+    aead/prost/proest128apev1/proest128apev1_proest128.cpp
+    aead/prost/proest128apev1/proest128apev1_zerobytes.cpp
+    aead/prost/proest128apev1/Proest128apev1.cpp
+    aead/prost/proest128copav1/proest128copav1_encrypt.cpp
+    aead/prost/proest128copav1/proest128copav1_proest128.cpp
+    aead/prost/proest128copav1/proest128copav1_zerobytes.cpp
+    aead/prost/proest128copav1/Proest128copav1.cpp
+    aead/prost/proest128otrv1/proest128otrv1_encrypt.cpp
+    aead/prost/proest128otrv1/proest128otrv1_proest128.cpp
+    aead/prost/proest128otrv1/proest128otrv1_zerobytes.cpp
+    aead/prost/proest128otrv1/Proest128otrv1.cpp
+    aead/prost/proest256apev1/proest256apev1_encrypt.cpp
+    aead/prost/proest256apev1/proest256apev1_proest256.cpp
+    aead/prost/proest256apev1/proest256apev1_zerobytes.cpp
+    aead/prost/proest256apev1/Proest256apev1.cpp
+    aead/prost/proest256copav1/proest256copav1_encrypt.cpp
+    aead/prost/proest256copav1/proest256copav1_proest256.cpp
+    aead/prost/proest256copav1/proest256copav1_zerobytes.cpp
+    aead/prost/proest256copav1/Proest256copav1.cpp
+    aead/prost/proest256otrv1/proest256otrv1_encrypt.cpp
+    aead/prost/proest256otrv1/proest256otrv1_proest256.cpp
+    aead/prost/proest256otrv1/proest256otrv1_zerobytes.cpp
+    aead/prost/proest256otrv1/Proest256otrv1.cpp
 #    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.cpp
 #    aead/raviyoyla/raviyoylav1/Raviyoylav1.cpp
 #    aead/sablier/sablierv1/sablierv1_encrypt.cpp
@@ -1219,42 +1220,42 @@ set(HEADERS
     aead/primates/primatesv1hanuman80/primatesv1hanuman80_primate.h
     aead/primates/primatesv1hanuman80/primatesv1hanuman80_encrypt.h
     aead/primates/primatesv1hanuman80/Primatesv1hanuman80.h
-#    aead/prost/proest128apev1/proest128apev1_ape.h
-#    aead/prost/proest128apev1/proest128apev1_api.h
-#    aead/prost/proest128apev1/proest128apev1_proest128.h
-#    aead/prost/proest128apev1/proest128apev1_zerobytes.h
-#    aead/prost/proest128apev1/proest128apev1_encrypt.h
-#    aead/prost/proest128apev1/Proest128apev1.h
-#    aead/prost/proest128copav1/proest128copav1_api.h
-#    aead/prost/proest128copav1/proest128copav1_copa.h
-#    aead/prost/proest128copav1/proest128copav1_proest128.h
-#    aead/prost/proest128copav1/proest128copav1_zerobytes.h
-#    aead/prost/proest128copav1/proest128copav1_encrypt.h
-#    aead/prost/proest128copav1/Proest128copav1.h
-#    aead/prost/proest128otrv1/proest128otrv1_api.h
-#    aead/prost/proest128otrv1/proest128otrv1_otr.h
-#    aead/prost/proest128otrv1/proest128otrv1_proest128.h
-#    aead/prost/proest128otrv1/proest128otrv1_zerobytes.h
-#    aead/prost/proest128otrv1/proest128otrv1_encrypt.h
-#    aead/prost/proest128otrv1/Proest128otrv1.h
-#    aead/prost/proest256apev1/proest256apev1_ape.h
-#    aead/prost/proest256apev1/proest256apev1_api.h
-#    aead/prost/proest256apev1/proest256apev1_proest256.h
-#    aead/prost/proest256apev1/proest256apev1_zerobytes.h
-#    aead/prost/proest256apev1/proest256apev1_encrypt.h
-#    aead/prost/proest256apev1/Proest256apev1.h
-#    aead/prost/proest256copav1/proest256copav1_api.h
-#    aead/prost/proest256copav1/proest256copav1_copa.h
-#    aead/prost/proest256copav1/proest256copav1_proest256.h
-#    aead/prost/proest256copav1/proest256copav1_zerobytes.h
-#    aead/prost/proest256copav1/proest256copav1_encrypt.h
-#    aead/prost/proest256copav1/Proest256copav1.h
-#    aead/prost/proest256otrv1/proest256otrv1_api.h
-#    aead/prost/proest256otrv1/proest256otrv1_otr.h
-#    aead/prost/proest256otrv1/proest256otrv1_proest256.h
-#    aead/prost/proest256otrv1/proest256otrv1_zerobytes.h
-#    aead/prost/proest256otrv1/proest256otrv1_encrypt.h
-#    aead/prost/proest256otrv1/Proest256otrv1.h
+    aead/prost/proest128apev1/proest128apev1_ape.h
+    aead/prost/proest128apev1/proest128apev1_api.h
+    aead/prost/proest128apev1/proest128apev1_proest128.h
+    aead/prost/proest128apev1/proest128apev1_zerobytes.h
+    aead/prost/proest128apev1/proest128apev1_encrypt.h
+    aead/prost/proest128apev1/Proest128apev1.h
+    aead/prost/proest128copav1/proest128copav1_api.h
+    aead/prost/proest128copav1/proest128copav1_copa.h
+    aead/prost/proest128copav1/proest128copav1_proest128.h
+    aead/prost/proest128copav1/proest128copav1_zerobytes.h
+    aead/prost/proest128copav1/proest128copav1_encrypt.h
+    aead/prost/proest128copav1/Proest128copav1.h
+    aead/prost/proest128otrv1/proest128otrv1_api.h
+    aead/prost/proest128otrv1/proest128otrv1_otr.h
+    aead/prost/proest128otrv1/proest128otrv1_proest128.h
+    aead/prost/proest128otrv1/proest128otrv1_zerobytes.h
+    aead/prost/proest128otrv1/proest128otrv1_encrypt.h
+    aead/prost/proest128otrv1/Proest128otrv1.h
+    aead/prost/proest256apev1/proest256apev1_ape.h
+    aead/prost/proest256apev1/proest256apev1_api.h
+    aead/prost/proest256apev1/proest256apev1_proest256.h
+    aead/prost/proest256apev1/proest256apev1_zerobytes.h
+    aead/prost/proest256apev1/proest256apev1_encrypt.h
+    aead/prost/proest256apev1/Proest256apev1.h
+    aead/prost/proest256copav1/proest256copav1_api.h
+    aead/prost/proest256copav1/proest256copav1_copa.h
+    aead/prost/proest256copav1/proest256copav1_proest256.h
+    aead/prost/proest256copav1/proest256copav1_zerobytes.h
+    aead/prost/proest256copav1/proest256copav1_encrypt.h
+    aead/prost/proest256copav1/Proest256copav1.h
+    aead/prost/proest256otrv1/proest256otrv1_api.h
+    aead/prost/proest256otrv1/proest256otrv1_otr.h
+    aead/prost/proest256otrv1/proest256otrv1_proest256.h
+    aead/prost/proest256otrv1/proest256otrv1_zerobytes.h
+    aead/prost/proest256otrv1/proest256otrv1_encrypt.h
+    aead/prost/proest256otrv1/Proest256otrv1.h
 #    aead/raviyoyla/raviyoylav1/raviyoylav1_api.h
 #    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.h
 #    aead/raviyoyla/raviyoylav1/Raviyoylav1.h
@@ -1577,12 +1578,12 @@ set(OTHER_FILES
     aead/primates/primatesv1gibbon80/About.md
     aead/primates/primatesv1hanuman120/About.md
     aead/primates/primatesv1hanuman80/About.md
-#    aead/prost/proest128apev1/About.md
-#    aead/prost/proest128copav1/About.md
-#    aead/prost/proest128otrv1/About.md
-#    aead/prost/proest256apev1/About.md
-#    aead/prost/proest256copav1/About.md
-#    aead/prost/proest256otrv1/About.md
+    aead/prost/proest128apev1/About.md
+    aead/prost/proest128copav1/About.md
+    aead/prost/proest128otrv1/About.md
+    aead/prost/proest256apev1/About.md
+    aead/prost/proest256copav1/About.md
+    aead/prost/proest256otrv1/About.md
 #    aead/raviyoyla/raviyoylav1/About.md
 #    aead/sablier/sablierv1/About.md
 #    aead/shell/shellaes128v1d4n64/About.md

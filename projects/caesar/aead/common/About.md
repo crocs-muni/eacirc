@@ -26,6 +26,11 @@
 **Source:** https://github.com/floodyberry/supercop/blob/master/crypto_verify/16/ref/verify.c
 **Download date:** 2014-12-14
 
+## crypto_verify_32.cpp
+
+**Source:** https://github.com/floodyberry/supercop/blob/master/crypto_verify/32/ref/verify.c
+**Download date:** 2015-10-04
+
 ## Changes to the code
 
 * Header 'api.h' created and included in source.
