@@ -115,12 +115,12 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_PI64CIPHER256V1TWOROUNDS:        return "Pi-Cipher - pi64cipher256v1tworounds";
 //    case CAESAR_POLAWISV1:        return "POLAWIS - polawisv1";
     case CAESAR_PPAEV11:        return "PAES - ppaev11";
-        //    case CAESAR_PRIMATESV1APE120:        return "PRIMATEs - primatesv1ape120";
-        //    case CAESAR_PRIMATESV1APE80:        return "PRIMATEs - primatesv1ape80";
-        //    case CAESAR_PRIMATESV1GIBBON120:        return "PRIMATEs - primatesv1gibbon120";
-        //    case CAESAR_PRIMATESV1GIBBON80:        return "PRIMATEs - primatesv1gibbon80";
-        //    case CAESAR_PRIMATESV1HANUMAN120:        return "PRIMATEs - primatesv1hanuman120";
-        //    case CAESAR_PRIMATESV1HANUMAN80:        return "PRIMATEs - primatesv1hanuman80";
+    case CAESAR_PRIMATESV1APE120:        return "PRIMATEs - primatesv1ape120";
+    case CAESAR_PRIMATESV1APE80:        return "PRIMATEs - primatesv1ape80";
+    case CAESAR_PRIMATESV1GIBBON120:        return "PRIMATEs - primatesv1gibbon120";
+    case CAESAR_PRIMATESV1GIBBON80:        return "PRIMATEs - primatesv1gibbon80";
+    case CAESAR_PRIMATESV1HANUMAN120:        return "PRIMATEs - primatesv1hanuman120";
+    case CAESAR_PRIMATESV1HANUMAN80:        return "PRIMATEs - primatesv1hanuman80";
         //    case CAESAR_PROEST128APEV1:        return "Prost - proest128apev1";
         //    case CAESAR_PROEST128COPAV1:        return "Prost - proest128copav1";
         //    case CAESAR_PROEST128OTRV1:        return "Prost - proest128otrv1";

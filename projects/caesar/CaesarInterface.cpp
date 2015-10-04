@@ -126,12 +126,12 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_PI64CIPHER256V1TWOROUNDS: { return new Pi64cipher256v1tworounds(numRounds); };
 //        case CAESAR_POLAWISV1: { return new Polawisv1(numRounds); };
         case CAESAR_PPAEV11: { return new Ppaev11(numRounds); };
-//        case CAESAR_PRIMATESV1APE120: { return new Primatesv1ape120(numRounds); };
-//        case CAESAR_PRIMATESV1APE80: { return new Primatesv1ape80(numRounds); };
-//        case CAESAR_PRIMATESV1GIBBON120: { return new Primatesv1gibbon120(numRounds); };
-//        case CAESAR_PRIMATESV1GIBBON80: { return new Primatesv1gibbon80(numRounds); };
-//        case CAESAR_PRIMATESV1HANUMAN120: { return new Primatesv1hanuman120(numRounds); };
-//        case CAESAR_PRIMATESV1HANUMAN80: { return new Primatesv1hanuman80(numRounds); };
+        case CAESAR_PRIMATESV1APE120: { return new Primatesv1ape120(numRounds); };
+        case CAESAR_PRIMATESV1APE80: { return new Primatesv1ape80(numRounds); };
+        case CAESAR_PRIMATESV1GIBBON120: { return new Primatesv1gibbon120(numRounds); };
+        case CAESAR_PRIMATESV1GIBBON80: { return new Primatesv1gibbon80(numRounds); };
+        case CAESAR_PRIMATESV1HANUMAN120: { return new Primatesv1hanuman120(numRounds); };
+        case CAESAR_PRIMATESV1HANUMAN80: { return new Primatesv1hanuman80(numRounds); };
 //        case CAESAR_PROEST128APEV1: { return new Proest128apev1(numRounds); };
 //        case CAESAR_PROEST128COPAV1: { return new Proest128copav1(numRounds); };
 //        case CAESAR_PROEST128OTRV1: { return new Proest128otrv1(numRounds); };
