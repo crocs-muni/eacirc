@@ -113,8 +113,8 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_PI64CIPHER256V1:        return "Pi-Cipher - pi64cipher256v1";
     case CAESAR_PI64CIPHER256V1ONEROUND:        return "Pi-Cipher - pi64cipher256v1oneround";
     case CAESAR_PI64CIPHER256V1TWOROUNDS:        return "Pi-Cipher - pi64cipher256v1tworounds";
-        //    case CAESAR_POLAWISV1:        return "POLAWIS - polawisv1";
-        //    case CAESAR_PPAEV11:        return "PAES - ppaev11";
+//    case CAESAR_POLAWISV1:        return "POLAWIS - polawisv1";
+    case CAESAR_PPAEV11:        return "PAES - ppaev11";
         //    case CAESAR_PRIMATESV1APE120:        return "PRIMATEs - primatesv1ape120";
         //    case CAESAR_PRIMATESV1APE80:        return "PRIMATEs - primatesv1ape80";
         //    case CAESAR_PRIMATESV1GIBBON120:        return "PRIMATEs - primatesv1gibbon120";
@@ -149,7 +149,7 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
         //    case CAESAR_WHEESHTV1MR3FR3T256:        return "Wheesht - wheeshtv1mr3fr3t256";
         //    case CAESAR_WHEESHTV1MR5FR7T256:        return "Wheesht - wheeshtv1mr5fr7t256";
         //    case CAESAR_YAES128V2:        return "YAES - yaes128v2";
-        
+
         // Ciphers requiring OpenSSL
     case CAESAR_AEADAES128OCBTAGLEN128V1:        return "++AE - aeadaes128ocbtaglen128v1";
     case CAESAR_AEADAES128OCBTAGLEN64V1:        return "++AE - aeadaes128ocbtaglen64v1";

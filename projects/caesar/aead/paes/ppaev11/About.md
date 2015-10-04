@@ -13,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Selected function declarations changed (const added) due to constant arguments problems.

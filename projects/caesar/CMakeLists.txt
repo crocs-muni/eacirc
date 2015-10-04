@@ -11,6 +11,7 @@ set(SOURCES
 # === CAESAR algorithms ===
     aead/common/crypto_verify_16.cpp
     aead/common/crypto_core_aes128encrypt.cpp
+    aead/common/crypto_core_aes128decrypt.cpp
     aead/common/crypto_core_aes256encrypt.cpp
     aead/acorn/acorn128/acorn128_encrypt.cpp
     aead/acorn/acorn128/Acorn128.cpp
@@ -407,8 +408,8 @@ set(SOURCES
 #    aead/polawis/polawisv1/polawisv1_encode_POLAWIS.cpp
 #    aead/polawis/polawisv1/polawisv1_key_gen_POLAWIS.cpp
 #    aead/polawis/polawisv1/Polawisv1.cpp
-#    aead/paes/ppaev11/ppaev11_encrypt.cpp
-#    aead/paes/ppaev11/Ppaev11.cpp
+    aead/paes/ppaev11/ppaev11_encrypt.cpp
+    aead/paes/ppaev11/Ppaev11.cpp
 #    aead/primates/primatesv1ape120/primatesv1ape120_encrypt.cpp
 #    aead/primates/primatesv1ape120/primatesv1ape120_primate.cpp
 #    aead/primates/primatesv1ape120/Primatesv1ape120.cpp
@@ -535,25 +536,25 @@ set(SOURCES
 )
 
 set(SOURCES_WITH_OPENSSL
-	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
-	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
-	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
-	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
-	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
-	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
-	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
-	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
-	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
-	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
-	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
-	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
-	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
-	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
-	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
-	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
-	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
-	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
-	aead/cba/cba1/cba1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
+        aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
+        aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
+        aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
+        aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
+        aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
+        aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
+        aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
+        aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
+        aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
+        aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
+        aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
+        aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
+        aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
+        aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
+        aead/cba/cba1/cba1_encrypt.cpp
     aead/cba/cba1/Cba1.cpp
     aead/cba/cba10/cba10_encrypt.cpp
     aead/cba/cba10/Cba10.cpp
@@ -1185,9 +1186,9 @@ set(HEADERS
     aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.h
 #    aead/polawis/polawisv1/polawisv1_encrypt.h
 #    aead/polawis/polawisv1/Polawisv1.h
-#    aead/paes/ppaev11/ppaev11_api.h
-#    aead/paes/ppaev11/ppaev11_encrypt.h
-#    aead/paes/ppaev11/Ppaev11.h
+    aead/paes/ppaev11/ppaev11_api.h
+    aead/paes/ppaev11/ppaev11_encrypt.h
+    aead/paes/ppaev11/Ppaev11.h
 #    aead/primates/primatesv1ape120/primatesv1ape120_api.h
 #    aead/primates/primatesv1ape120/primatesv1ape120_parameters.h
 #    aead/primates/primatesv1ape120/primatesv1ape120_primate.h
@@ -1356,34 +1357,34 @@ set(HEADERS
 )
 
 set(HEADERS_WITH_OPENSSL
-	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
-	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
-	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
-	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
-	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
-	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
-	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
-	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
-	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
-	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
-	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
-	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
-	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
-	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
-	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
-	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
-	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
-	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
-	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
-	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
-	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
-	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
-	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
-	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
-	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
-	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
-	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
-	aead/cba/cba1/cba1_api.h
+        aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
+        aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
+        aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
+        aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
+        aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
+        aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
+        aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
+        aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
+        aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
+        aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
+        aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
+        aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
+        aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
+        aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
+        aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
+        aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
+        aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
+        aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
+        aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
+        aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
+        aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
+        aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
+        aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
+        aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
+        aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
+        aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
+        aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
+        aead/cba/cba1/cba1_api.h
     aead/cba/cba1/cba1_encrypt.h
     aead/cba/cba1/Cba1.h
     aead/cba/cba10/cba10_api.h
@@ -1456,6 +1457,7 @@ set(HEADERS_WITH_OPENSSL
 )
 
 set(OTHER_FILES
+    aead/common/About.md
     aead/acorn/acorn128/About.md
     aead/aegis/aegis128/About.md
     aead/aegis/aegis128l/About.md
@@ -1568,7 +1570,7 @@ set(OTHER_FILES
     aead/pi-cipher/pi64cipher256v1oneround/About.md
     aead/pi-cipher/pi64cipher256v1tworounds/About.md
 #    aead/polawis/polawisv1/About.md
-#    aead/paes/ppaev11/About.md
+    aead/paes/ppaev11/About.md
 #    aead/primates/primatesv1ape120/About.md
 #    aead/primates/primatesv1ape80/About.md
 #    aead/primates/primatesv1gibbon120/About.md
@@ -1606,16 +1608,16 @@ set(OTHER_FILES
 )
 
 set(OTHER_FILES_WITH_OPENSSL
-	aead/ae/aeadaes128ocbtaglen128v1/About.md
-	aead/ae/aeadaes128ocbtaglen64v1/About.md
-	aead/ae/aeadaes128ocbtaglen96v1/About.md
-	aead/ae/aeadaes192ocbtaglen128v1/About.md
-	aead/ae/aeadaes192ocbtaglen64v1/About.md
-	aead/ae/aeadaes192ocbtaglen96v1/About.md
-	aead/ae/aeadaes256ocbtaglen128v1/About.md
-	aead/ae/aeadaes256ocbtaglen64v1/About.md
-	aead/ae/aeadaes256ocbtaglen96v1/About.md
-	aead/cba/cba1/About.md
+    aead/ae/aeadaes128ocbtaglen128v1/About.md
+    aead/ae/aeadaes128ocbtaglen64v1/About.md
+    aead/ae/aeadaes128ocbtaglen96v1/About.md
+    aead/ae/aeadaes192ocbtaglen128v1/About.md
+    aead/ae/aeadaes192ocbtaglen64v1/About.md
+    aead/ae/aeadaes192ocbtaglen96v1/About.md
+    aead/ae/aeadaes256ocbtaglen128v1/About.md
+    aead/ae/aeadaes256ocbtaglen64v1/About.md
+    aead/ae/aeadaes256ocbtaglen96v1/About.md
+    aead/cba/cba1/About.md
     aead/cba/cba10/About.md
     aead/cba/cba2/About.md
     aead/cba/cba3/About.md
@@ -1816,18 +1818,18 @@ source_group("aead\\yaes\\yaes128v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOUR
 # === detect OpenSSL ===
 find_package(OpenSSL)
 if(OPENSSL_FOUND)
-	option(BUILD_CAESAR_WITH_OPENSSL "Link to OpenSSL" ON)
+        option(BUILD_CAESAR_WITH_OPENSSL "Link to OpenSSL" ON)
 
-	if(BUILD_CAESAR_WITH_OPENSSL)
-		list(APPEND SOURCES ${SOURCES_WITH_OPENSSL})
-		list(APPEND HEADERS ${HEADERS_WITH_OPENSSL})
-		list(APPEND OTHER_FILES ${OTHER_FILES_WITH_OPENSSL})
-		add_definitions(-DWITH_OPENSSL)
-		include_directories(${OPENSSL_INCLUDE_DIR})
-		list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
-	endif()
+        if(BUILD_CAESAR_WITH_OPENSSL)
+                list(APPEND SOURCES ${SOURCES_WITH_OPENSSL})
+                list(APPEND HEADERS ${HEADERS_WITH_OPENSSL})
+                list(APPEND OTHER_FILES ${OTHER_FILES_WITH_OPENSSL})
+                add_definitions(-DWITH_OPENSSL)
+                include_directories(${OPENSSL_INCLUDE_DIR})
+                list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
+        endif()
 else()
-	message("OpenSSL not found, not building function requiring it.")
+        message("OpenSSL not found, not building function requiring it.")
 endif()
 
 add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})
