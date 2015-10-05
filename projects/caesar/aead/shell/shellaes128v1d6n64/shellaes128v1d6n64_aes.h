@@ -1,5 +1,3 @@
-namespace Shellaes128v1d6n64_raw {
-
 /**
  * rijndael-alg-fst.h
  *
@@ -27,6 +25,9 @@ namespace Shellaes128v1d6n64_raw {
  */
 
 #include<stdint.h>
+
+// CHANGE namespace moved due to includes
+namespace Shellaes128v1d6n64_raw {
 
 typedef uint8_t	    u8;
 typedef uint16_t	u16;
@@ -707,9 +708,9 @@ static const u32 Td4[256] = {
     0x55555555U, 0x21212121U, 0x0c0c0c0cU, 0x7d7d7d7dU,
 };
 static const u32 rcon[] = {
-	0x01000000, 0x02000000, 0x04000000, 0x08000000,
-	0x10000000, 0x20000000, 0x40000000, 0x80000000,
-	0x1B000000, 0x36000000, /* for 128-bit blocks, Rijndael never uses more than 10 rcon values */
+    0x01000000, 0x02000000, 0x04000000, 0x08000000,
+    0x10000000, 0x20000000, 0x40000000, 0x80000000,
+    0x1B000000, 0x36000000, /* for 128-bit blocks, Rijndael never uses more than 10 rcon values */
 };
 
 
