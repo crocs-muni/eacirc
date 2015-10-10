@@ -507,22 +507,22 @@ set(SOURCES
     aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_encrypt.cpp
     aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_shellaes.cpp
     aead/shell/shellaes128v1d8n80/Shellaes128v1d8n80.cpp
-#    aead/silver/silverv1/silverv1_encrypt.cpp
-#    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.cpp
-#    aead/silver/silverv1/Silverv1.cpp
-#    aead/stribob/stribob192r1/stribob192r1_encrypt.cpp
-#    aead/stribob/stribob192r1/stribob192r1_sbob_pi64.cpp
-#    aead/stribob/stribob192r1/stribob192r1_sbob_tab64.cpp
-#    aead/stribob/stribob192r1/stribob192r1_stribob.cpp
-#    aead/stribob/stribob192r1/Stribob192r1.cpp
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.cpp
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.cpp
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.cpp
-#    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.cpp
-#    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.cpp
-#    aead/trivia-ck/trivia0v1/Trivia0v1.cpp
-#    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.cpp
-#    aead/trivia-ck/trivia128v1/Trivia128v1.cpp
+    aead/silver/silverv1/silverv1_encrypt.cpp
+    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.cpp
+    aead/silver/silverv1/Silverv1.cpp
+    aead/stribob/stribob192r1/stribob192r1_sbob_tab64.cpp
+    aead/stribob/stribob192r1/stribob192r1_encrypt.cpp
+    aead/stribob/stribob192r1/stribob192r1_sbob_pi64.cpp
+    aead/stribob/stribob192r1/stribob192r1_stribob.cpp
+    aead/stribob/stribob192r1/Stribob192r1.cpp
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.cpp
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.cpp
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.cpp
+    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.cpp
+    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.cpp
+    aead/trivia-ck/trivia0v1/Trivia0v1.cpp
+    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.cpp
+    aead/trivia-ck/trivia128v1/Trivia128v1.cpp
 #    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.cpp
 #    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.cpp
 #    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.cpp
@@ -1314,26 +1314,25 @@ set(HEADERS
     aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_shellaes.h
     aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_encrypt.h
     aead/shell/shellaes128v1d8n80/Shellaes128v1d8n80.h
-#    aead/silver/silverv1/silverv1_api.h
-#    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.h
-#    aead/silver/silverv1/silverv1_encrypt.h
-#    aead/silver/silverv1/Silverv1.h
-#    aead/stribob/stribob192r1/stribob192r1_api.h
-#    aead/stribob/stribob192r1/stribob192r1_crypto_aead.h
-#    aead/stribob/stribob192r1/stribob192r1_stribob.h
-#    aead/stribob/stribob192r1/stribob192r1_encrypt.h
-#    aead/stribob/stribob192r1/Stribob192r1.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_api.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.h
-#    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.h
-#    aead/trivia-ck/trivia0v1/trivia0v1_api.h
-#    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.h
-#    aead/trivia-ck/trivia0v1/Trivia0v1.h
-#    aead/trivia-ck/trivia128v1/trivia128v1_api.h
-#    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.h
-#    aead/trivia-ck/trivia128v1/Trivia128v1.h
+    aead/silver/silverv1/silverv1_api.h
+    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.h
+    aead/silver/silverv1/silverv1_encrypt.h
+    aead/silver/silverv1/Silverv1.h
+    aead/stribob/stribob192r1/stribob192r1_api.h
+    aead/stribob/stribob192r1/stribob192r1_stribob.h
+    aead/stribob/stribob192r1/stribob192r1_encrypt.h
+    aead/stribob/stribob192r1/Stribob192r1.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_api.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.h
+    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.h
+    aead/trivia-ck/trivia0v1/trivia0v1_api.h
+    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.h
+    aead/trivia-ck/trivia0v1/Trivia0v1.h
+    aead/trivia-ck/trivia128v1/trivia128v1_api.h
+    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.h
+    aead/trivia-ck/trivia128v1/Trivia128v1.h
 #    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_api.h
 #    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
 #    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
@@ -1596,11 +1595,11 @@ set(OTHER_FILES
     aead/shell/shellaes128v1d7n80/About.md
     aead/shell/shellaes128v1d8n64/About.md
     aead/shell/shellaes128v1d8n80/About.md
-#    aead/silver/silverv1/About.md
-#    aead/stribob/stribob192r1/About.md
-#    aead/tiaoxin/tiaoxinv1/About.md
-#    aead/trivia-ck/trivia0v1/About.md
-#    aead/trivia-ck/trivia128v1/About.md
+    aead/silver/silverv1/About.md
+    aead/stribob/stribob192r1/About.md
+    aead/tiaoxin/tiaoxinv1/About.md
+    aead/trivia-ck/trivia0v1/About.md
+    aead/trivia-ck/trivia128v1/About.md
 #    aead/wheesht/wheeshtv1mr3fr1t128/About.md
 #    aead/wheesht/wheeshtv1mr3fr1t256/About.md
 #    aead/wheesht/wheeshtv1mr3fr3t256/About.md

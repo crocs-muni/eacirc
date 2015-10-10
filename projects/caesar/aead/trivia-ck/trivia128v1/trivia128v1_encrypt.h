@@ -1,7 +1,7 @@
 #ifndef TRIVIA128V1_ENCRYPT_H
 #define TRIVIA128V1_ENCRYPT_H
 
-#include "%%NAMESMALL%%_api.h"
+#include "trivia128v1_api.h"
 
 namespace Trivia128v1_raw {
 extern int numRounds;

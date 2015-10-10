@@ -139,11 +139,11 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_SHELLAES128V1D7N80:        return "SHELL - shellaes128v1d7n80";
     case CAESAR_SHELLAES128V1D8N64:        return "SHELL - shellaes128v1d8n64";
     case CAESAR_SHELLAES128V1D8N80:        return "SHELL - shellaes128v1d8n80";
-        //    case CAESAR_SILVERV1:        return "Silver - silverv1";
-        //    case CAESAR_STRIBOB192R1:        return "STRIBOB - stribob192r1";
-        //    case CAESAR_TIAOXINV1:        return "Tiaoxin - tiaoxinv1";
-        //    case CAESAR_TRIVIA0V1:        return "TriviA-ck - trivia0v1";
-        //    case CAESAR_TRIVIA128V1:        return "TriviA-ck - trivia128v1";
+    case CAESAR_SILVERV1:        return "Silver - silverv1";
+    case CAESAR_STRIBOB192R1:        return "STRIBOB - stribob192r1";
+    case CAESAR_TIAOXINV1:        return "Tiaoxin - tiaoxinv1";
+    case CAESAR_TRIVIA0V1:        return "TriviA-ck - trivia0v1";
+    case CAESAR_TRIVIA128V1:        return "TriviA-ck - trivia128v1";
         //    case CAESAR_WHEESHTV1MR3FR1T128:        return "Wheesht - wheeshtv1mr3fr1t128";
         //    case CAESAR_WHEESHTV1MR3FR1T256:        return "Wheesht - wheeshtv1mr3fr1t256";
         //    case CAESAR_WHEESHTV1MR3FR3T256:        return "Wheesht - wheeshtv1mr3fr3t256";

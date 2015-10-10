@@ -27,6 +27,7 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_AES128MARBLE4RV1: { return new Aes128marble4rv1(numRounds); };
         case CAESAR_AES128N12CLOCV1: { return new Aes128n12clocv1(numRounds); };
         case CAESAR_AES128N8CLOCV1: { return new Aes128n8clocv1(numRounds); };
+//        case CAESAR_TWINE80N6CLOCV1: { return new Twine80n6clocv1(numRounds); };
 //        case CAESAR_AES128N12SILCV1: { return new Aes128n12silcv1(numRounds); };
 //        case CAESAR_AES128N8SILCV1: { return new Aes128n8silcv1(numRounds); };
 //        case CAESAR_LED80N6SILCV1: { return new Led80n6silcv1(numRounds); };
@@ -150,12 +151,11 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_SHELLAES128V1D7N80: { return new Shellaes128v1d7n80(numRounds); };
         case CAESAR_SHELLAES128V1D8N64: { return new Shellaes128v1d8n64(numRounds); };
         case CAESAR_SHELLAES128V1D8N80: { return new Shellaes128v1d8n80(numRounds); };
-//        case CAESAR_SILVERV1: { return new Silverv1(numRounds); };
-//        case CAESAR_STRIBOB192R1: { return new Stribob192r1(numRounds); };
-//        case CAESAR_TIAOXINV1: { return new Tiaoxinv1(numRounds); };
-//        case CAESAR_TRIVIA0V1: { return new Trivia0v1(numRounds); };
-//        case CAESAR_TRIVIA128V1: { return new Trivia128v1(numRounds); };
-//        case CAESAR_TWINE80N6CLOCV1: { return new Twine80n6clocv1(numRounds); };
+        case CAESAR_SILVERV1: { return new Silverv1(numRounds); };
+        case CAESAR_STRIBOB192R1: { return new Stribob192r1(numRounds); };
+        case CAESAR_TIAOXINV1: { return new Tiaoxinv1(numRounds); };
+        case CAESAR_TRIVIA0V1: { return new Trivia0v1(numRounds); };
+        case CAESAR_TRIVIA128V1: { return new Trivia128v1(numRounds); };
 //        case CAESAR_WHEESHTV1MR3FR1T128: { return new Wheeshtv1mr3fr1t128(numRounds); };
 //        case CAESAR_WHEESHTV1MR3FR1T256: { return new Wheeshtv1mr3fr1t256(numRounds); };
 //        case CAESAR_WHEESHTV1MR3FR3T256: { return new Wheeshtv1mr3fr3t256(numRounds); };

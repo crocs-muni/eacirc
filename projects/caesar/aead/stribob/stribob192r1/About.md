@@ -13,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* 'static' added to constatnt arrays

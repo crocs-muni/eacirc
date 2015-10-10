@@ -1,11 +1,11 @@
-namespace Stribob192r1_raw {
-int numRounds = -1;
-
 // stribob.c
 // 06-Feb-14    Markku-Juhani O. Saarinen <mjos@iki.fi>
 //              See LICENSE for Licensing and Warranty information.
 
-#include "stribob.h"
+#include "stribob192r1_stribob.h"
+
+// CHANGE namespace moved due to includes
+namespace Stribob192r1_raw {
 
 // initialization
 
