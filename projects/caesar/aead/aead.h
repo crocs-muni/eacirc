@@ -17,7 +17,7 @@
 #include "silc/present80n6silcv1/Present80n6silcv1.h"
 #include "cloc/aes128n12clocv1/Aes128n12clocv1.h"
 #include "cloc/aes128n8clocv1/Aes128n8clocv1.h"
-// #include "cloc/twine80n6clocv1/Twine80n6clocv1.h"
+#include "cloc/twine80n6clocv1/Twine80n6clocv1.h"
 #include "aes-otr/aes128otrpv1/Aes128otrpv1.h"
 #include "aes-otr/aes128otrsv1/Aes128otrsv1.h"
 #include "poet/aes128poetv1aes128/Aes128poetv1aes128.h"

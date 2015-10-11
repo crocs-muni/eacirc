@@ -49,11 +49,11 @@ set(SOURCES
     aead/marble/aes128marble4rv1/aes128marble4rv1_marble.cpp
     aead/marble/aes128marble4rv1/aes128marble4rv1_utils.cpp
     aead/marble/aes128marble4rv1/Aes128marble4rv1.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_utils.cpp
-#    aead/cloc/twine80n6clocv1/Twine80n6clocv1.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_utils.cpp
+    aead/cloc/twine80n6clocv1/Twine80n6clocv1.cpp
     aead/cloc/aes128n12clocv1/aes128n12clocv1_aes_core.cpp
     aead/cloc/aes128n12clocv1/aes128n12clocv1_cloc.cpp
     aead/cloc/aes128n12clocv1/aes128n12clocv1_encrypt.cpp
@@ -644,11 +644,11 @@ set(HEADERS
     aead/marble/aes128marble4rv1/aes128marble4rv1_marble.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_encrypt.h
     aead/marble/aes128marble4rv1/Aes128marble4rv1.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_api.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.h
-#    aead/cloc/twine80n6clocv1/Twine80n6clocv1.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_api.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.h
+    aead/cloc/twine80n6clocv1/Twine80n6clocv1.h
     aead/cloc/aes128n12clocv1/aes128n12clocv1_aes.h
     aead/cloc/aes128n12clocv1/aes128n12clocv1_aes_locl.h
     aead/cloc/aes128n12clocv1/aes128n12clocv1_api.h
@@ -1470,7 +1470,7 @@ set(OTHER_FILES
     aead/aes-gcm/aes128gcmv1/About.md
     aead/aes-gcm/aes256gcmv1/About.md
     aead/marble/aes128marble4rv1/About.md
-#    aead/cloc/twine80n6clocv1/About.md
+    aead/cloc/twine80n6clocv1/About.md
     aead/cloc/aes128n12clocv1/About.md
     aead/cloc/aes128n8clocv1/About.md
     aead/silc/aes128n12silcv1/About.md

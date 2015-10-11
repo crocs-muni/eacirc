@@ -27,7 +27,7 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_AES128MARBLE4RV1: { return new Aes128marble4rv1(numRounds); };
         case CAESAR_AES128N12CLOCV1: { return new Aes128n12clocv1(numRounds); };
         case CAESAR_AES128N8CLOCV1: { return new Aes128n8clocv1(numRounds); };
-//        case CAESAR_TWINE80N6CLOCV1: { return new Twine80n6clocv1(numRounds); };
+        case CAESAR_TWINE80N6CLOCV1: { return new Twine80n6clocv1(numRounds); };
         case CAESAR_AES128N12SILCV1: { return new Aes128n12silcv1(numRounds); };
         case CAESAR_AES128N8SILCV1: { return new Aes128n8silcv1(numRounds); };
         case CAESAR_LED80N6SILCV1: { return new Led80n6silcv1(numRounds); };
