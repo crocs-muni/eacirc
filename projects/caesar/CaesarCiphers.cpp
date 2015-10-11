@@ -12,10 +12,10 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_AES128GCMV1:        return "AES-GCM - aes128gcmv1";
     case CAESAR_AES256GCMV1:        return "AES-GCM - aes256gcmv1";
     case CAESAR_AES128MARBLE4RV1:        return "Marble - aes128marble4rv1";
-        //    case CAESAR_AES128N12SILCV1:        return "SILC - aes128n12silcv1";
-        //    case CAESAR_AES128N8SILCV1:        return "SILC - aes128n8silcv1";
-        //    case CAESAR_LED80N6SILCV1:        return "SILC - led80n6silcv1";
-        //    case CAESAR_PRESENT80N6SILCV1:        return "SILC - present80n6silcv1";
+    case CAESAR_AES128N12SILCV1:        return "SILC - aes128n12silcv1";
+    case CAESAR_AES128N8SILCV1:        return "SILC - aes128n8silcv1";
+    case CAESAR_LED80N6SILCV1:        return "SILC - led80n6silcv1";
+    case CAESAR_PRESENT80N6SILCV1:        return "SILC - present80n6silcv1";
     case CAESAR_AES128N12CLOCV1:        return "CLOC - aes128n12clocv1";
     case CAESAR_AES128N8CLOCV1:        return "CLOC - aes128n8clocv1";
         //    case CAESAR_TWINE80N6CLOCV1:        return "CLOC - twine80n6clocv1";

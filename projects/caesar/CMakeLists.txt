@@ -64,26 +64,26 @@ set(SOURCES
     aead/cloc/aes128n8clocv1/aes128n8clocv1_encrypt.cpp
     aead/cloc/aes128n8clocv1/aes128n8clocv1_utils.cpp
     aead/cloc/aes128n8clocv1/Aes128n8clocv1.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_core.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_utils.cpp
-#    aead/silc/aes128n12silcv1/Aes128n12silcv1.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_core.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_utils.cpp
-#    aead/silc/aes128n8silcv1/Aes128n8silcv1.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_led.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_silc.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_utils.cpp
-#    aead/silc/led80n6silcv1/Led80n6silcv1.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_present.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_silc.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_utils.cpp
-#    aead/silc/present80n6silcv1/Present80n6silcv1.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_core.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_utils.cpp
+    aead/silc/aes128n12silcv1/Aes128n12silcv1.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_core.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_utils.cpp
+    aead/silc/aes128n8silcv1/Aes128n8silcv1.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_led.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_silc.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_utils.cpp
+    aead/silc/led80n6silcv1/Led80n6silcv1.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_present.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_silc.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_utils.cpp
+    aead/silc/present80n6silcv1/Present80n6silcv1.cpp
     aead/aes-otr/aes128otrpv1/aes128otrpv1_encrypt.cpp
     aead/aes-otr/aes128otrpv1/aes128otrpv1_OTR.cpp
     aead/aes-otr/aes128otrpv1/aes128otrpv1_t-aes_enc_only.cpp
@@ -661,28 +661,28 @@ set(HEADERS
     aead/cloc/aes128n8clocv1/aes128n8clocv1_cloc.h
     aead/cloc/aes128n8clocv1/aes128n8clocv1_encrypt.h
     aead/cloc/aes128n8clocv1/Aes128n8clocv1.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_aes.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_locl.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_api.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.h
-#    aead/silc/aes128n12silcv1/Aes128n12silcv1.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_aes.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_locl.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_api.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.h
-#    aead/silc/aes128n8silcv1/Aes128n8silcv1.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_api.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_led.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_silc.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.h
-#    aead/silc/led80n6silcv1/Led80n6silcv1.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_api.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_present.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_silc.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.h
-#    aead/silc/present80n6silcv1/Present80n6silcv1.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_aes.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_locl.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_api.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.h
+    aead/silc/aes128n12silcv1/Aes128n12silcv1.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_aes.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_locl.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_api.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.h
+    aead/silc/aes128n8silcv1/Aes128n8silcv1.h
+    aead/silc/led80n6silcv1/led80n6silcv1_api.h
+    aead/silc/led80n6silcv1/led80n6silcv1_led.h
+    aead/silc/led80n6silcv1/led80n6silcv1_silc.h
+    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.h
+    aead/silc/led80n6silcv1/Led80n6silcv1.h
+    aead/silc/present80n6silcv1/present80n6silcv1_api.h
+    aead/silc/present80n6silcv1/present80n6silcv1_present.h
+    aead/silc/present80n6silcv1/present80n6silcv1_silc.h
+    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.h
+    aead/silc/present80n6silcv1/Present80n6silcv1.h
     aead/aes-otr/aes128otrpv1/aes128otrpv1_api.h
     aead/aes-otr/aes128otrpv1/aes128otrpv1_OTR.h
     aead/aes-otr/aes128otrpv1/aes128otrpv1_t-aes_define.h
@@ -1473,10 +1473,10 @@ set(OTHER_FILES
 #    aead/cloc/twine80n6clocv1/About.md
     aead/cloc/aes128n12clocv1/About.md
     aead/cloc/aes128n8clocv1/About.md
-#    aead/silc/aes128n12silcv1/About.md
-#    aead/silc/aes128n8silcv1/About.md
-#    aead/silc/led80n6silcv1/About.md
-#    aead/silc/present80n6silcv1/About.md
+    aead/silc/aes128n12silcv1/About.md
+    aead/silc/aes128n8silcv1/About.md
+    aead/silc/led80n6silcv1/About.md
+    aead/silc/present80n6silcv1/About.md
     aead/aes-otr/aes128otrpv1/About.md
     aead/aes-otr/aes128otrsv1/About.md
     aead/aes-otr/aes256otrpv1/About.md

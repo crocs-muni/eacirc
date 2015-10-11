@@ -1,7 +1,8 @@
-namespace Aes128n8silcv1_raw {
-
 #include <stdint.h>
-#include "aes.h"
+#include "aes128n8silcv1_aes.h"
+
+// CHANGE namespace moved due to includes
+namespace Aes128n8silcv1_raw {
 
 #ifndef __SILC_H_
 #define __SILC_H_
@@ -30,30 +31,30 @@ typedef u16 word;
 #endif
 
 #define g(st) do{ \
-	int gi;                                \
-	byte gtemp = st[0] ^ st[1];            \
-	for(gi = 0; gi < STATE_LEN-1; gi++)    \
-	st[gi] = st[gi+1];                  \
-	st[gi] = gtemp;                        \
+    int gi;                                \
+    byte gtemp = st[0] ^ st[1];            \
+    for(gi = 0; gi < STATE_LEN-1; gi++)    \
+    st[gi] = st[gi+1];                  \
+    st[gi] = gtemp;                        \
 }while(0);
 
 typedef struct _ae_cxt {
-	byte es[STATE_LEN];               // encryption state
-	byte ts[STATE_LEN];               // tag processing state
-	AES_KEY ekey;                     // expanded keys
-	AES_KEY* pt_ekey;
-	byte* userkey;
-	int klen;
-	byte* ad;
-	unsigned long long adlen;
-	byte* nonce;
-	unsigned long long nlen;
-	byte* pt;
-	unsigned long long ptlen;
-	byte* ct;
-	unsigned long long ctlen;
-	byte* tag;
-	int tlen;
+    byte es[STATE_LEN];               // encryption state
+    byte ts[STATE_LEN];               // tag processing state
+    AES_KEY ekey;                     // expanded keys
+    AES_KEY* pt_ekey;
+    byte* userkey;
+    int klen;
+    byte* ad;
+    unsigned long long adlen;
+    byte* nonce;
+    unsigned long long nlen;
+    byte* pt;
+    unsigned long long ptlen;
+    byte* ct;
+    unsigned long long ctlen;
+    byte* tag;
+    int tlen;
 } ae_cxt;
 
 ae_cxt* ae_allocate();
@@ -61,6 +62,10 @@ int ae_init(ae_cxt* cxt, const byte* userkey, int keylen);
 int process_ad(ae_cxt* cxt, const byte* ad, unsigned long long adlen, const byte* nonce, unsigned long long nlen);
 int ae_encrypt(ae_cxt* cxt, byte* pt, unsigned long long mlen, byte* ct, byte* tag, unsigned long long tlen, int enc_dec);
 void pstate(const unsigned char* st, int len);
+
+// CHANGE pstate2 declaration added
+void pstate2(const char *str, const byte* state);
+
 void print_cxt(const ae_cxt* cxt);
 
 void xor_bytes(byte*x, const byte*y, int nb);
