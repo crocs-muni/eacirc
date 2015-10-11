@@ -25,11 +25,12 @@ set(SOURCES
     aead/aegis/aegis256/aegis256_aes.cpp
     aead/aegis/aegis256/aegis256_encrypt.cpp
     aead/aegis/aegis256/Aegis256.cpp
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_largenumbers.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_pcmac.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_rmac.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.cpp \ # compilaation ok, sigsegv while running
+# Avalanche: compilaation ok, sigsegv while running (fedora64, both debug/release)
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.cpp
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_largenumbers.cpp
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_pcmac.cpp
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_rmac.cpp
+#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.cpp
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_avalanche.cpp
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_largenumbers.cpp
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_pcmac.cpp
@@ -614,10 +615,11 @@ set(HEADERS
     aead/aegis/aegis256/aegis256_api.h
     aead/aegis/aegis256/aegis256_encrypt.h
     aead/aegis/aegis256/Aegis256.h
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_api.h \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.h \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_encrypt.h \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.h \ # compilaation ok, sigsegv while running
+# Avalanche: compilaation ok, sigsegv while running (fedora64, both debug/release)
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_api.h # compilaation ok, sigsegv while running
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.h # compilaation ok, sigsegv while running
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_encrypt.h # compilaation ok, sigsegv while running
+#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.h # compilaation ok, sigsegv while running
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_api.h
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_avalanche.h
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_encrypt.h
@@ -626,18 +628,18 @@ set(HEADERS
 #    aead/avalanche/aes256avalanchev1/aes256avalanchev1_avalanche.h
 #    aead/avalanche/aes256avalanchev1/aes256avalanchev1_encrypt.h
 #    aead/avalanche/aes256avalanchev1/Aes256avalanchev1.h
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_api.h
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.h
-#    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.h
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_api.h
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.h
-#    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.h
     aead/aes-gcm/aes128gcmv1/aes128gcmv1_api.h
     aead/aes-gcm/aes128gcmv1/aes128gcmv1_encrypt.h
     aead/aes-gcm/aes128gcmv1/Aes128gcmv1.h
     aead/aes-gcm/aes256gcmv1/aes256gcmv1_api.h
     aead/aes-gcm/aes256gcmv1/aes256gcmv1_encrypt.h
     aead/aes-gcm/aes256gcmv1/Aes256gcmv1.h
+#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_api.h
+#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.h
+#    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.h
+#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_api.h
+#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.h
+#    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_aes.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_aes_locl.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_api.h
@@ -1357,34 +1359,34 @@ set(HEADERS
 )
 
 set(HEADERS_WITH_OPENSSL
-        aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
-        aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
-        aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
-        aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
-        aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
-        aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
-        aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
-        aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
-        aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
-        aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
-        aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
-        aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
-        aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
-        aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
-        aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
-        aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
-        aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
-        aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
-        aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
-        aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
-        aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
-        aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
-        aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
-        aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
-        aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
-        aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
-        aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
-        aead/cba/cba1/cba1_api.h
+    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
+    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
+    aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
+    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
+    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
+    aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
+    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
+    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
+    aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
+    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
+    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
+    aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
+    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
+    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
+    aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
+    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
+    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
+    aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
+    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
+    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
+    aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
+    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
+    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
+    aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
+    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
+    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
+    aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
+    aead/cba/cba1/cba1_api.h
     aead/cba/cba1/cba1_encrypt.h
     aead/cba/cba1/Cba1.h
     aead/cba/cba10/cba10_api.h
@@ -1462,13 +1464,14 @@ set(OTHER_FILES
     aead/aegis/aegis128/About.md
     aead/aegis/aegis128l/About.md
     aead/aegis/aegis256/About.md
-#    aead/avalanche/aes128avalanchev1/About.md \ # compilaation ok, sigsegv while running
-    aead/avalanche/aes192avalanchev1/About.md
-    aead/avalanche/aes256avalanchev1/About.md
-#    aead/aes-cpfb/aes128cpfbv1/About.md
-#    aead/aes-cpfb/aes256cpfbv1/About.md
+# Avalanche: compilaation ok, sigsegv while running (fedora64, both debug/release)
+#    aead/avalanche/aes128avalanchev1/About.md # compilaation ok, sigsegv while running
+#    aead/avalanche/aes192avalanchev1/About.md
+#    aead/avalanche/aes256avalanchev1/About.md
     aead/aes-gcm/aes128gcmv1/About.md
     aead/aes-gcm/aes256gcmv1/About.md
+#    aead/aes-cpfb/aes128cpfbv1/About.md
+#    aead/aes-cpfb/aes256cpfbv1/About.md
     aead/marble/aes128marble4rv1/About.md
     aead/cloc/twine80n6clocv1/About.md
     aead/cloc/aes128n12clocv1/About.md
