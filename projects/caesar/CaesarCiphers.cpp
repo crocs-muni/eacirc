@@ -23,8 +23,8 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_AES128OTRSV1:               return "AES-OTR - aes128otrsv1";
     case CAESAR_AES128POETV1AES128:         return "POET - aes128poetv1aes128";
     case CAESAR_AES128POETV1AES4:           return "POET - aes128poetv1aes4";
-//    case CAESAR_AES128CPFBV1:               return "AES-CPFB - aes128cpfbv1";
-//    case CAESAR_AES256CPFBV1:               return "AES-CPFB - aes256cpfbv1";
+    case CAESAR_AES128CPFBV1:               return "AES-CPFB - aes128cpfbv1";
+    case CAESAR_AES256CPFBV1:               return "AES-CPFB - aes256cpfbv1";
     case CAESAR_AES256OTRPV1:               return "AES-OTR - aes256otrpv1";
     case CAESAR_AES256OTRSV1:               return "AES-OTR - aes256otrsv1";
     case CAESAR_AESCOPAV1:                  return "AES-COPA - aescopav1";

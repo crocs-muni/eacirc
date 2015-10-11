@@ -13,3 +13,5 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Name changes in using CaesarCommon functions.
+* 'crypto_unint32' substituted for cinttypes, typedef added.

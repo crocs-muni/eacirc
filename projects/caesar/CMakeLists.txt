@@ -109,10 +109,10 @@ set(SOURCES
     aead/poet/aes128poetv1aes4/aes128poetv1aes4_encrypt.cpp
     aead/poet/aes128poetv1aes4/aes128poetv1aes4_poet.cpp
     aead/poet/aes128poetv1aes4/Aes128poetv1aes4.cpp
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.cpp
-#    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.cpp
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.cpp
-#    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.cpp
+    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.cpp
+    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.cpp
+    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.cpp
+    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.cpp
     aead/aes-copa/aescopav1/aescopav1_aes-core.cpp
     aead/aes-copa/aescopav1/aescopav1_encrypt.cpp
     aead/aes-copa/aescopav1/Aescopav1.cpp
@@ -634,12 +634,12 @@ set(HEADERS
     aead/aes-gcm/aes256gcmv1/aes256gcmv1_api.h
     aead/aes-gcm/aes256gcmv1/aes256gcmv1_encrypt.h
     aead/aes-gcm/aes256gcmv1/Aes256gcmv1.h
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_api.h
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.h
-#    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.h
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_api.h
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.h
-#    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.h
+    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_api.h
+    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.h
+    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.h
+    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_api.h
+    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.h
+    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_aes.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_aes_locl.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_api.h
@@ -1470,8 +1470,8 @@ set(OTHER_FILES
 #    aead/avalanche/aes256avalanchev1/About.md
     aead/aes-gcm/aes128gcmv1/About.md
     aead/aes-gcm/aes256gcmv1/About.md
-#    aead/aes-cpfb/aes128cpfbv1/About.md
-#    aead/aes-cpfb/aes256cpfbv1/About.md
+    aead/aes-cpfb/aes128cpfbv1/About.md
+    aead/aes-cpfb/aes256cpfbv1/About.md
     aead/marble/aes128marble4rv1/About.md
     aead/cloc/twine80n6clocv1/About.md
     aead/cloc/aes128n12clocv1/About.md

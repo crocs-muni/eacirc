@@ -37,8 +37,8 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_AES256OTRSV1: { return new Aes256otrsv1(numRounds); };
         case CAESAR_AES128POETV1AES128: { return new Aes128poetv1aes128(numRounds); };
         case CAESAR_AES128POETV1AES4: { return new Aes128poetv1aes4(numRounds); };
-//        case CAESAR_AES128CPFBV1: { return new Aes128cpfbv1(numRounds); };
-//        case CAESAR_AES256CPFBV1: { return new Aes256cpfbv1(numRounds); };
+        case CAESAR_AES128CPFBV1: { return new Aes128cpfbv1(numRounds); };
+        case CAESAR_AES256CPFBV1: { return new Aes256cpfbv1(numRounds); };
         case CAESAR_AESCOPAV1: { return new Aescopav1(numRounds); };
         case CAESAR_AESJAMBUV1: { return new Aesjambuv1(numRounds); };
         case CAESAR_AEZV1: { return new Aezv1(numRounds); };
