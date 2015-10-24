@@ -524,14 +524,14 @@ set(SOURCES
     aead/trivia-ck/trivia0v1/Trivia0v1.cpp
     aead/trivia-ck/trivia128v1/trivia128v1_encrypt.cpp
     aead/trivia-ck/trivia128v1/Trivia128v1.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.cpp
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.cpp
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.cpp
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.cpp
+    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.cpp
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.cpp
+    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.cpp
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.cpp
+    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.cpp
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.cpp
+    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.cpp
     aead/yaes/yaes128v2/yaes128v2_aes-128.cpp
     aead/yaes/yaes128v2/yaes128v2_encrypt.cpp
     aead/yaes/yaes128v2/Yaes128v2.cpp
@@ -1335,22 +1335,22 @@ set(HEADERS
     aead/trivia-ck/trivia128v1/trivia128v1_api.h
     aead/trivia-ck/trivia128v1/trivia128v1_encrypt.h
     aead/trivia-ck/trivia128v1/Trivia128v1.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_api.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_api.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_api.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_api.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_api.h
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt-original.h
+    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.h
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_api.h
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.h
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt-original.h
+    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_api.h
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.h
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt-original.h
+    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_api.h
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt-original.h
+    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h
     aead/yaes/yaes128v2/yaes128v2_aes-128.h
     aead/yaes/yaes128v2/yaes128v2_api.h
     aead/yaes/yaes128v2/yaes128v2_encrypt.h
@@ -1603,10 +1603,10 @@ set(OTHER_FILES
     aead/tiaoxin/tiaoxinv1/About.md
     aead/trivia-ck/trivia0v1/About.md
     aead/trivia-ck/trivia128v1/About.md
-#    aead/wheesht/wheeshtv1mr3fr1t128/About.md
-#    aead/wheesht/wheeshtv1mr3fr1t256/About.md
-#    aead/wheesht/wheeshtv1mr3fr3t256/About.md
-#    aead/wheesht/wheeshtv1mr5fr7t256/About.md
+    aead/wheesht/wheeshtv1mr3fr1t128/About.md
+    aead/wheesht/wheeshtv1mr3fr1t256/About.md
+    aead/wheesht/wheeshtv1mr3fr3t256/About.md
+    aead/wheesht/wheeshtv1mr5fr7t256/About.md
     aead/yaes/yaes128v2/About.md
 )
 

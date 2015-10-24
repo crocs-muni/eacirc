@@ -143,10 +143,10 @@
 #include "tiaoxin/tiaoxinv1/Tiaoxinv1.h"
 #include "trivia-ck/trivia0v1/Trivia0v1.h"
 #include "trivia-ck/trivia128v1/Trivia128v1.h"
-// #include "wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.h"
-// #include "wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h"
-// #include "wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h"
-// #include "wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h"
+#include "wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.h"
+#include "wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h"
+#include "wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h"
+#include "wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h"
 #include "yaes/yaes128v2/Yaes128v2.h"
 
 #ifdef WITH_OPENSSL

@@ -156,10 +156,10 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_TIAOXINV1: { return new Tiaoxinv1(numRounds); };
         case CAESAR_TRIVIA0V1: { return new Trivia0v1(numRounds); };
         case CAESAR_TRIVIA128V1: { return new Trivia128v1(numRounds); };
-//        case CAESAR_WHEESHTV1MR3FR1T128: { return new Wheeshtv1mr3fr1t128(numRounds); };
-//        case CAESAR_WHEESHTV1MR3FR1T256: { return new Wheeshtv1mr3fr1t256(numRounds); };
-//        case CAESAR_WHEESHTV1MR3FR3T256: { return new Wheeshtv1mr3fr3t256(numRounds); };
-//        case CAESAR_WHEESHTV1MR5FR7T256: { return new Wheeshtv1mr5fr7t256(numRounds); };
+        case CAESAR_WHEESHTV1MR3FR1T128: { return new Wheeshtv1mr3fr1t128(numRounds); };
+        case CAESAR_WHEESHTV1MR3FR1T256: { return new Wheeshtv1mr3fr1t256(numRounds); };
+        case CAESAR_WHEESHTV1MR3FR3T256: { return new Wheeshtv1mr3fr3t256(numRounds); };
+        case CAESAR_WHEESHTV1MR5FR7T256: { return new Wheeshtv1mr5fr7t256(numRounds); };
         case CAESAR_YAES128V2: { return new Yaes128v2(numRounds); };
 #ifdef WITH_OPENSSL
         case CAESAR_AEADAES128OCBTAGLEN128V1: { return new Aeadaes128ocbtaglen128v1(numRounds); };

@@ -13,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Wheeshtv1mr3fr1t256_encrypt-original.h downloaded on 2015-10-24.
