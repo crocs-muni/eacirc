@@ -72,10 +72,11 @@ namespace Enchilada256v1_raw {
 #define KS_LENGTH   4 * BLOCK_SIZE
 #endif
 
-#if defined(__cplusplus)
-extern "C"
-{
-#endif
+// CHANGE extern C declaration commented out, compiling as C++
+//#if defined(__cplusplus)
+//extern "C"
+//{
+//#endif
 
 typedef unsigned int aes_fret;   /* type for function return value       */
 #define aes_bad      0           /* bad function return value            */
@@ -102,9 +103,10 @@ aes_rval aes_enc_blk(const unsigned char in_blk[], unsigned char out_blk[], cons
 aes_rval aes_dec_key(const unsigned char in_key[], unsigned int klen, aes_ctx cx[1]);
 aes_rval aes_dec_blk(const unsigned char in_blk[], unsigned char out_blk[], const aes_ctx cx[1]);
 
-#if defined(__cplusplus)
-}
-#endif
+// CHANGE extern C declaration commented out, compiling as C++
+//#if defined(__cplusplus)
+//}
+//#endif
 
 #endif
 } // namespace Enchilada256v1_raw

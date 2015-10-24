@@ -46,7 +46,7 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_DEOXYSNEQ128128V1:          return "Deoxys - deoxysneq128128v1";
     case CAESAR_DEOXYSNEQ256128V1:          return "Deoxys - deoxysneq256128v1";
     case CAESAR_ENCHILADA128V1:             return "Enchilada - enchilada128v1";
-//    case CAESAR_ENCHILADA256V1:             return "Enchilada - enchilada256v1";
+    case CAESAR_ENCHILADA256V1:             return "Enchilada - enchilada256v1";
     case CAESAR_HS1SIVHIV1:                 return "HS1-SIV - hs1sivhiv1";
     case CAESAR_HS1SIVLOV1:                 return "HS1-SIV - hs1sivlov1";
     case CAESAR_HS1SIVV1:                   return "HS1-SIV - hs1sivv1";
