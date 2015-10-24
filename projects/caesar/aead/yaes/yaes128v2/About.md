@@ -13,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Single typedef moved from the original encrypt.h to encrypt.cpp

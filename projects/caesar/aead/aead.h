@@ -147,7 +147,7 @@
 // #include "wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h"
 // #include "wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h"
 // #include "wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h"
-// #include "yaes/yaes128v2/Yaes128v2.h"
+#include "yaes/yaes128v2/Yaes128v2.h"
 
 #ifdef WITH_OPENSSL
     #include "ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h"

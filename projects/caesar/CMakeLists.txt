@@ -532,9 +532,9 @@ set(SOURCES
 #    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.cpp
 #    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.cpp
 #    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.cpp
-#    aead/yaes/yaes128v2/yaes128v2_aes-128.cpp
-#    aead/yaes/yaes128v2/yaes128v2_encrypt.cpp
-#    aead/yaes/yaes128v2/Yaes128v2.cpp
+    aead/yaes/yaes128v2/yaes128v2_aes-128.cpp
+    aead/yaes/yaes128v2/yaes128v2_encrypt.cpp
+    aead/yaes/yaes128v2/Yaes128v2.cpp
 )
 
 set(SOURCES_WITH_OPENSSL
@@ -1351,11 +1351,11 @@ set(HEADERS
 #    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
 #    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
 #    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h
-#    aead/yaes/yaes128v2/yaes128v2_aes-128.h
-#    aead/yaes/yaes128v2/yaes128v2_api.h
-#    aead/yaes/yaes128v2/yaes128v2_encrypt.h
-#    aead/yaes/yaes128v2/yaes128v2_encrypt.h
-#    aead/yaes/yaes128v2/Yaes128v2.h
+    aead/yaes/yaes128v2/yaes128v2_aes-128.h
+    aead/yaes/yaes128v2/yaes128v2_api.h
+    aead/yaes/yaes128v2/yaes128v2_encrypt.h
+    aead/yaes/yaes128v2/yaes128v2_encrypt.h
+    aead/yaes/yaes128v2/Yaes128v2.h
 )
 
 set(HEADERS_WITH_OPENSSL
@@ -1607,7 +1607,7 @@ set(OTHER_FILES
 #    aead/wheesht/wheeshtv1mr3fr1t256/About.md
 #    aead/wheesht/wheeshtv1mr3fr3t256/About.md
 #    aead/wheesht/wheeshtv1mr5fr7t256/About.md
-#    aead/yaes/yaes128v2/About.md
+    aead/yaes/yaes128v2/About.md
 )
 
 set(OTHER_FILES_WITH_OPENSSL

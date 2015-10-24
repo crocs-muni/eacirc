@@ -148,7 +148,7 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
 //    case CAESAR_WHEESHTV1MR3FR1T256:        return "Wheesht - wheeshtv1mr3fr1t256";
 //    case CAESAR_WHEESHTV1MR3FR3T256:        return "Wheesht - wheeshtv1mr3fr3t256";
 //    case CAESAR_WHEESHTV1MR5FR7T256:        return "Wheesht - wheeshtv1mr5fr7t256";
-//    case CAESAR_YAES128V2:                  return "YAES - yaes128v2";
+    case CAESAR_YAES128V2:                  return "YAES - yaes128v2";
 
         // Ciphers requiring OpenSSL
     case CAESAR_AEADAES128OCBTAGLEN128V1:   return "++AE - aeadaes128ocbtaglen128v1";
