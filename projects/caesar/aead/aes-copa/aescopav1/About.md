@@ -1,10 +1,9 @@
 # Aescopav1
 
-**Designers:** n/a
+**Designers:** Elena Andreeva, Andrey Bogdanov, Atul Luykx, Bart Mennink, Elmar Tischhauser, Kan Yasuda
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aescopav1
 **Download date:** 2014-12-14
 

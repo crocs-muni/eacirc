@@ -1,10 +1,9 @@
 # Cba7
 
-**Designers:** n/a
+**Designers:** Hossein Hosseini, Shahram Khazaei
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/cba7
 **Download date:** 2014-12-14
 

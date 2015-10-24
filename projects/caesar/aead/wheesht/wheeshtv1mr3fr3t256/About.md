@@ -1,10 +1,9 @@
 # Wheeshtv1mr3fr3t256
 
-**Designers:** n/a
+**Designers:** Peter Maxwell
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/wheeshtv1mr3fr3t256
 **Download date:** 2014-12-14
 
@@ -14,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Wheeshtv1mr3fr3t256_encrypt-original.h downloaded on 2015-10-24.

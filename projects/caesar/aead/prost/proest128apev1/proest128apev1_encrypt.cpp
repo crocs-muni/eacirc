@@ -1,11 +1,12 @@
-namespace Proest128apev1_raw {
-int numRounds = -1;
-
 #include "proest128apev1_encrypt.h"
 
-#include "zerobytes.h"
-#include "proest128.h"
-#include "ape.h"
+#include "proest128apev1_zerobytes.h"
+#include "proest128apev1_proest128.h"
+#include "proest128apev1_ape.h"
+
+// CHANGE namespace moved due to includes
+namespace Proest128apev1_raw {
+int numRounds = -1;
 
 static void ape_rxor(unsigned char v[APE_RBYTES], const unsigned char x[APE_RBYTES])
 {
@@ -32,15 +33,15 @@ static void ape_cxor(unsigned char v[APE_CBYTES], const unsigned char x[APE_CBYT
 
 
 int crypto_aead_encrypt(
-	unsigned char *c, 			  unsigned long long *clen,
-	const unsigned char *m, 	unsigned long long mlen,
-	const unsigned char *ad, 	unsigned long long adlen,
-	const unsigned char *nsec,
-	const unsigned char *npub,
-	const unsigned char *k
+    unsigned char *c, 			  unsigned long long *clen,
+    const unsigned char *m, 	unsigned long long mlen,
+    const unsigned char *ad, 	unsigned long long adlen,
+    const unsigned char *nsec,
+    const unsigned char *npub,
+    const unsigned char *k
 )
 {
-  proest_ctx x; 
+  proest_ctx x;
   unsigned char v[PROEST_STATEBYTES];
   unsigned char buf[APE_RBYTES];
   unsigned char key[CRYPTO_KEYBYTES];
@@ -83,13 +84,13 @@ int crypto_aead_encrypt(
   for(i=0;i<adlen;i++)
     buf[i] = ad[i];
   buf[adlen] = 0x80;
-  for(i=adlen+1;i<APE_RBYTES;i++) 
+  for(i=adlen+1;i<APE_RBYTES;i++)
     buf[i] = 0;
   ape_rxor(v, buf);
   proest_readstate(&x, v);
   proest_permute(&x);
   proest_writestate(v, &x);
-  
+
   v[PROEST_STATEBYTES-1] ^= 1;
 
   /*
@@ -118,7 +119,7 @@ int crypto_aead_encrypt(
   for(i=0;i<mlen;i++)
     buf[i] = m[i];
   buf[mlen] = 0x80;
-  for(i=mlen+1;i<APE_RBYTES;i++) 
+  for(i=mlen+1;i<APE_RBYTES;i++)
     buf[i] = 0;
   ape_rxor(v, buf);
 
@@ -161,7 +162,7 @@ int crypto_aead_decrypt(
     )
 
 {
-  proest_ctx x; 
+  proest_ctx x;
   unsigned char v[PROEST_STATEBYTES];
   unsigned char iv[PROEST_STATEBYTES];
   unsigned char buf[APE_RBYTES];
@@ -199,13 +200,13 @@ int crypto_aead_decrypt(
   for(i=0;i<adlen;i++)
     buf[i] = ad[i];
   buf[adlen] = 0x80;
-  for(i=adlen+1;i<APE_RBYTES;i++) 
+  for(i=adlen+1;i<APE_RBYTES;i++)
     buf[i] = 0;
   ape_rxor(v, buf);
   proest_readstate(&x, v);
   proest_permute(&x);
   proest_writestate(iv, &x);
-  
+
   iv[PROEST_STATEBYTES-1] ^= 1;
 
   // Now go backwards through the message
@@ -224,7 +225,7 @@ int crypto_aead_decrypt(
   proest_readstate(&x, v);
   proest_inverse_permute(&x);
   proest_writestate(v, &x);
- 
+
   while(clen>=APE_RBYTES)
   {
     c     -= APE_RBYTES;
@@ -232,10 +233,10 @@ int crypto_aead_decrypt(
 
     for(i=0;i<APE_RBYTES;i++)
       m[i] = v[i] ^ c[i];
-    
+
     m     -= APE_RBYTES;
     *mlen += APE_RBYTES;
-    
+
     ape_rset(v,c);
 
     proest_readstate(&x, v);
@@ -246,7 +247,7 @@ int crypto_aead_decrypt(
   for(i=0;i<APE_RBYTES;i++)
     m[i] = v[i] ^ iv[i];
   *mlen += APE_RBYTES;
-    
+
   r = 0;
   // Check padding
   for(i=(*mlen)-1; ;i--)
@@ -255,7 +256,7 @@ int crypto_aead_decrypt(
     if((m[i] == 0x80) || (i == 0)) break;
     r |= m[i];
   }
-    
+
   for(i=0;i<APE_CBYTES;i++)
     r |= (v[i+APE_RBYTES] ^ iv[i+APE_RBYTES]);
 

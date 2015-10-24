@@ -1,12 +1,8 @@
-namespace Silverv1_raw {
-int numRounds = -1;
-
-
 /**rijndael byte oriented. Does not attempt to be efficient,
 only endian neutral by being byte oriented.
  Author Daniel Penazzi, april 2014
- 
- 
+
+
 * This code is hereby placed in the public domain.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ''AS IS'' AND ANY EXPRESS
@@ -23,9 +19,10 @@ only endian neutral by being byte oriented.
  */
 
 
-#include "rijndaelEndianNeutral.h"
+#include "silverv1_rijndaelEndianNeutral.h"
 
-
+// CHANGE namespace moved due to includes
+namespace Silverv1_raw {
 
 const u8 SBOX[256] = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
@@ -98,7 +95,7 @@ const u8 INVSBOX[256] = {
 
 
 static const u8 rcon[10] = {
-    0x1U, 0x2U, 0x4U, 0x8U, 0x10U, 
+    0x1U, 0x2U, 0x4U, 0x8U, 0x10U,
     0x20U, 0x40U, 0x80U, 0x1bU, 0x36U};
 
 
@@ -179,7 +176,7 @@ static const u8 GFx11[256] ={
 0x7a,0x71,0x6c,0x67,0x56,0x5d,0x40,0x4b,0x22,0x29,0x34,0x3f,0x0e,0x05,0x18,0x13,
 0xca,0xc1,0xdc,0xd7,0xe6,0xed,0xf0,0xfb,0x92,0x99,0x84,0x8f,0xbe,0xb5,0xa8,0xa3
 };
-	
+
 static const u8 GFx13[256] ={
 0x00,0x0d,0x1a,0x17,0x34,0x39,0x2e,0x23,0x68,0x65,0x72,0x7f,0x5c,0x51,0x46,0x4b,
 0xd0,0xdd,0xca,0xc7,0xe4,0xe9,0xfe,0xf3,0xb8,0xb5,0xa2,0xaf,0x8c,0x81,0x96,0x9b,
@@ -218,80 +215,80 @@ static const u8 GFx14[256] ={
 0xd7,0xd9,0xcb,0xc5,0xef,0xe1,0xf3,0xfd,0xa7,0xa9,0xbb,0xb5,0x9f,0x91,0x83,0x8d
 };
 
-	
-	
+
+
 
 /*sa,sb etc are the sources, A,B, etc the new
 matrix is 2 3 1 1 rotated right
 */
 
 #define MIXCOLUMN(sa,sb,sc,sd,A,B,C,D)\
-	A=GFx2[sa]^GFx3[sb]^sc^sd;\
-	B=GFx2[sb]^GFx3[sc]^sd^sa;\
-	C=GFx2[sc]^GFx3[sd]^sa^sb;\
-	D=GFx2[sd]^GFx3[sa]^sb^sc;
+    A=GFx2[sa]^GFx3[sb]^sc^sd;\
+    B=GFx2[sb]^GFx3[sc]^sd^sa;\
+    C=GFx2[sc]^GFx3[sd]^sa^sb;\
+    D=GFx2[sd]^GFx3[sa]^sb^sc;
 
 
 /*ABCD      048(12)
   EFGH  is  159(13)
   IJKL      26(10)(14)
-  MNOP      37(11)(15)*/ 
+  MNOP      37(11)(15)*/
 void ShiftRowandMixColumn(u8 *s,u8* t){
-	MIXCOLUMN(s[0],s[5],s[10],s[15],t[0],t[1],t[2],t[3])/*A,F,K,P*/
+    MIXCOLUMN(s[0],s[5],s[10],s[15],t[0],t[1],t[2],t[3])/*A,F,K,P*/
     MIXCOLUMN(s[4],s[9],s[14],s[3],t[4],t[5],t[6],t[7])/*B,G,L,M*/
-	MIXCOLUMN(s[8],s[13],s[2],s[7],t[8],t[9],t[10],t[11])/*C,H,I,N*/
-	MIXCOLUMN(s[12],s[1],s[6],s[11],t[12],t[13],t[14],t[15])/*D,E,J,O*/
-} 
+    MIXCOLUMN(s[8],s[13],s[2],s[7],t[8],t[9],t[10],t[11])/*C,H,I,N*/
+    MIXCOLUMN(s[12],s[1],s[6],s[11],t[12],t[13],t[14],t[15])/*D,E,J,O*/
+}
 
 #define SIMPLE(sa,sb,sc,sd,A,B,C,D)\
-	A=sa;\
-	B=sb;\
-	C=sc;\
-	D=sd;
+    A=sa;\
+    B=sb;\
+    C=sc;\
+    D=sd;
 
 void ShiftRowOnly(u8 *s,u8* t){
-	SIMPLE(s[0],s[5],s[10],s[15],t[0],t[1],t[2],t[3])/*A,F,K,P*/
+    SIMPLE(s[0],s[5],s[10],s[15],t[0],t[1],t[2],t[3])/*A,F,K,P*/
     SIMPLE(s[4],s[9],s[14],s[3],t[4],t[5],t[6],t[7])/*B,G,L,M*/
-	SIMPLE(s[8],s[13],s[2],s[7],t[8],t[9],t[10],t[11])/*C,H,I,N*/
-	SIMPLE(s[12],s[1],s[6],s[11],t[12],t[13],t[14],t[15])/*D,E,J,O*/
-} 
+    SIMPLE(s[8],s[13],s[2],s[7],t[8],t[9],t[10],t[11])/*C,H,I,N*/
+    SIMPLE(s[12],s[1],s[6],s[11],t[12],t[13],t[14],t[15])/*D,E,J,O*/
+}
 
 /*for dec now*/
 
 
 /* 14 11 13 9 rotated right*/
- 
+
 #define INVMIXCOLUMN(sa,sb,sc,sd,A,B,C,D)\
-	A=GFx14[sa]^GFx11[sb]^GFx13[sc]^GFx9[sd];\
-	B=GFx14[sb]^GFx11[sc]^GFx13[sd]^GFx9[sa];\
-	C=GFx14[sc]^GFx11[sd]^GFx13[sa]^GFx9[sb];\
-	D=GFx14[sd]^GFx11[sa]^GFx13[sb]^GFx9[sc];
+    A=GFx14[sa]^GFx11[sb]^GFx13[sc]^GFx9[sd];\
+    B=GFx14[sb]^GFx11[sc]^GFx13[sd]^GFx9[sa];\
+    C=GFx14[sc]^GFx11[sd]^GFx13[sa]^GFx9[sb];\
+    D=GFx14[sd]^GFx11[sa]^GFx13[sb]^GFx9[sc];
 
-	
 
-	
+
+
 
 /*ABCD      048(12)
   EFGH  is  159(13)
   IJKL      26(10)(14)
-  MNOP      37(11)(15)*/ 
+  MNOP      37(11)(15)*/
 void InvMixColumn(u8* s,u8* t){
-	INVMIXCOLUMN(s[0],s[1],s[2],s[3],t[0],t[1],t[2],t[3])
+    INVMIXCOLUMN(s[0],s[1],s[2],s[3],t[0],t[1],t[2],t[3])
     INVMIXCOLUMN(s[4],s[5],s[6],s[7],t[4],t[5],t[6],t[7])
-	INVMIXCOLUMN(s[8],s[9],s[10],s[11],t[8],t[9],t[10],t[11])
-	INVMIXCOLUMN(s[12],s[13],s[14],s[15],t[12],t[13],t[14],t[15])
-} 
+    INVMIXCOLUMN(s[8],s[9],s[10],s[11],t[8],t[9],t[10],t[11])
+    INVMIXCOLUMN(s[12],s[13],s[14],s[15],t[12],t[13],t[14],t[15])
+}
 
 
 
 
 
 void InvShiftRowOnly(u8 *s,u8* t){
-	SIMPLE(s[0],s[13],s[10],s[7],t[0],t[1],t[2],t[3])/*A,H,K,N*/
+    SIMPLE(s[0],s[13],s[10],s[7],t[0],t[1],t[2],t[3])/*A,H,K,N*/
     SIMPLE(s[4],s[1],s[14],s[11],t[4],t[5],t[6],t[7])/*B,E,L,O*/
-	SIMPLE(s[8],s[5],s[2],s[15],t[8],t[9],t[10],t[11])/*C,F,I,P*/
-	SIMPLE(s[12],s[9],s[6],s[3],t[12],t[13],t[14],t[15])/*D,G,J,M*/
-} 
+    SIMPLE(s[8],s[5],s[2],s[15],t[8],t[9],t[10],t[11])/*C,F,I,P*/
+    SIMPLE(s[12],s[9],s[6],s[3],t[12],t[13],t[14],t[15])/*D,G,J,M*/
+}
 
 
 
@@ -300,18 +297,18 @@ void InvShiftRowOnly(u8 *s,u8* t){
 
 void rijndaelexpandKey(const u8 *k,u8* rk) {
     register u8 i,j;
-	for(i=0;i<16;i++) rk[i]=k[i];
-	
-	for(j=0;j<10;j++){
+    for(i=0;i<16;i++) rk[i]=k[i];
+
+    for(j=0;j<10;j++){
 
     rk[16] =rk[0]^ SBOX[rk[13]] ^ (rcon[j]);
     rk[17] =rk[1]^ SBOX[rk[14]];
     rk[18] =rk[2]^ SBOX[rk[15]];
     rk[19] =rk[3]^ SBOX[rk[12]];
-	for(i=20;i<32;i++) rk[i]=rk[i-16]^rk[i-4];
-	
-	rk+=16;
-	}/*end for j*/
+    for(i=20;i<32;i++) rk[i]=rk[i-16]^rk[i-4];
+
+    rk+=16;
+    }/*end for j*/
 
 } /*end keygen*/
 
@@ -320,21 +317,21 @@ void rijndaelEncrypt(u8* rk,const u8* pt,u8* ct){
  register u8 i,j;
   u8 s[16];
   u8 t[16];
-	for(i=0;i<16;i++) t[i]=SBOX[pt[i]^rk[i]];
-	ShiftRowandMixColumn(t,s);/*end first round*/
-	for(j=0;j<4;j++){/*double rounds (2,3),(4,5),(6,7),(8,9)*/
-		rk+=16;
-		for(i=0;i<16;i++) s[i]=SBOX[s[i]^rk[i]];
-		ShiftRowandMixColumn(s,t);
-		rk+=16;
-		for(i=0;i<16;i++) t[i]=SBOX[t[i]^rk[i]];
-		ShiftRowandMixColumn(t,s);
-	}/*end for j, now last round*/
-	rk+=16;
-	for(i=0;i<16;i++) s[i]=SBOX[s[i]^rk[i]];
-	ShiftRowOnly(s,t);
-	rk+=16;
-	for(i=0;i<16;i++) ct[i]=t[i]^rk[i];/*final whitening*/
+    for(i=0;i<16;i++) t[i]=SBOX[pt[i]^rk[i]];
+    ShiftRowandMixColumn(t,s);/*end first round*/
+    for(j=0;j<4;j++){/*double rounds (2,3),(4,5),(6,7),(8,9)*/
+        rk+=16;
+        for(i=0;i<16;i++) s[i]=SBOX[s[i]^rk[i]];
+        ShiftRowandMixColumn(s,t);
+        rk+=16;
+        for(i=0;i<16;i++) t[i]=SBOX[t[i]^rk[i]];
+        ShiftRowandMixColumn(t,s);
+    }/*end for j, now last round*/
+    rk+=16;
+    for(i=0;i<16;i++) s[i]=SBOX[s[i]^rk[i]];
+    ShiftRowOnly(s,t);
+    rk+=16;
+    for(i=0;i<16;i++) ct[i]=t[i]^rk[i];/*final whitening*/
 
 
 }/*end enc*/
@@ -343,22 +340,22 @@ void rijndaelDecrypt(u8* rk,const u8* ct,u8* pt){
  register u8 i,j;
   u8 s[16];
   u8 t[16];
-	rk+=160;
-	for(i=0;i<16;i++) t[i]=ct[i]^rk[i];/*inv encwhitening final*/
-	rk-=16;
-	InvShiftRowOnly(t,s);
-	for(i=0;i<16;i++) s[i]=INVSBOX[s[i]]^rk[i];
-	rk-=16;
-	for(j=0;j<8;j++){/* rounds 9,87,6,5,4,3,2*/
-		InvMixColumn(s,t);
-		InvShiftRowOnly(t,s);
-		for(i=0;i<16;i++) s[i]=INVSBOX[s[i]]^rk[i];
-		rk-=16;
-	}/*end for j, now last round*/
-	InvMixColumn(s,t);
-	InvShiftRowOnly(t,s);
-	for(i=0;i<16;i++) pt[i]=INVSBOX[s[i]]^rk[i];
-	
+    rk+=160;
+    for(i=0;i<16;i++) t[i]=ct[i]^rk[i];/*inv encwhitening final*/
+    rk-=16;
+    InvShiftRowOnly(t,s);
+    for(i=0;i<16;i++) s[i]=INVSBOX[s[i]]^rk[i];
+    rk-=16;
+    for(j=0;j<8;j++){/* rounds 9,87,6,5,4,3,2*/
+        InvMixColumn(s,t);
+        InvShiftRowOnly(t,s);
+        for(i=0;i<16;i++) s[i]=INVSBOX[s[i]]^rk[i];
+        rk-=16;
+    }/*end for j, now last round*/
+    InvMixColumn(s,t);
+    InvShiftRowOnly(t,s);
+    for(i=0;i<16;i++) pt[i]=INVSBOX[s[i]]^rk[i];
+
 
 
 }/*end dec*/

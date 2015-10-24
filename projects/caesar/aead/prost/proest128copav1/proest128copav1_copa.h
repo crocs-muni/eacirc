@@ -1,5 +1,3 @@
-namespace Proest128copav1_raw {
-
 #ifndef COPA_H
 #define COPA_H
 
@@ -7,5 +5,3 @@ namespace Proest128copav1_raw {
 #define COPA_BLOCKBYTES 32
 
 #endif
-
-} // namespace Proest128copav1_raw

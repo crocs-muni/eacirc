@@ -24,7 +24,9 @@ void xor_bytes2(byte* result, const byte* x, const byte* y, int nb)
 
 
 /* print state with a prefix string */
-void pstate2(const unsigned char *str, const byte* state)
+// CHANGE unsigned quantifier dropped (strings are incompatible with 'unsigned')
+//void pstate2(const unsigned char *str, const byte* state)
+void pstate2(const char *str, const byte* state)
 {
 #ifdef _PRINT
     printf("%s\n", str);

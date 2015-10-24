@@ -1,9 +1,10 @@
-namespace Proest128apev1_raw {
-
 #ifndef PROEST128_H
 #define PROEST128_H
 
 #include <stdint.h>
+
+// CHANGE namespace moved due to includes
+namespace Proest128apev1_raw {
 
 #define PROEST_LANEBYTES  2
 #define PROEST_ROWS       4
@@ -23,6 +24,6 @@ void proest_writestate(unsigned char out[PROEST_STATEBYTES], const proest_ctx *x
 void proest_permute(proest_ctx *r);
 void proest_inverse_permute(proest_ctx *r);
 
-#endif
-
 } // namespace Proest128apev1_raw
+
+#endif

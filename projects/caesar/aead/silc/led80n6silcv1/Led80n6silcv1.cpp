@@ -1,5 +1,5 @@
 #include "Led80n6silcv1.h"
-#include "%%NAMESMALL%%_encrypt.h"
+#include "led80n6silcv1_encrypt.h"
 #include "../../common/api.h"
 #include "EACglobals.h"
 

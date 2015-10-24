@@ -1,7 +1,8 @@
-namespace Present80n6silcv1_raw {
-
 #include <stdint.h>
-#include "present.h"
+#include "present80n6silcv1_present.h"
+
+// CHANGE namespace moved due to includes
+namespace Present80n6silcv1_raw {
 
 #ifndef __SILC_H_
 #define __SILC_H_
@@ -30,28 +31,28 @@ typedef u16 word;
 #endif
 
 #define g(st) do{ \
-	      int gi;                                \
-	      byte gtemp = st[0] ^ st[1];            \
-	      for(gi = 0; gi < STATE_LEN-1; gi++)    \
-	         st[gi] = st[gi+1];                  \
-	      st[gi] = gtemp;                        \
+          int gi;                                \
+          byte gtemp = st[0] ^ st[1];            \
+          for(gi = 0; gi < STATE_LEN-1; gi++)    \
+             st[gi] = st[gi+1];                  \
+          st[gi] = gtemp;                        \
 }while(0);
 
 typedef struct _ae_cxt {
-	byte es[STATE_LEN];               // encryption state
-	byte ts[STATE_LEN];               // tag processing state
-	byte *userkey;
-	int klen;
-	byte* ad;
-	unsigned long long adlen;
-	byte* nonce;
-	unsigned long long nlen;
-	byte* pt;
-	unsigned long long ptlen;
-	byte* ct;
-	unsigned long long ctlen;
-	byte* tag;
-	int tlen;
+    byte es[STATE_LEN];               // encryption state
+    byte ts[STATE_LEN];               // tag processing state
+    byte *userkey;
+    int klen;
+    byte* ad;
+    unsigned long long adlen;
+    byte* nonce;
+    unsigned long long nlen;
+    byte* pt;
+    unsigned long long ptlen;
+    byte* ct;
+    unsigned long long ctlen;
+    byte* tag;
+    int tlen;
 } ae_cxt;
 
 ae_cxt* ae_allocate();

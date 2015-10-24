@@ -1,10 +1,9 @@
 # Aes128marble4rv1
 
-**Designers:** n/a
+**Designers:** Jian Guo
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes128marble4rv1
 **Download date:** 2014-12-14
 

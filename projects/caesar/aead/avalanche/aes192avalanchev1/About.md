@@ -1,10 +1,9 @@
 # Aes192avalanchev1
 
-**Designers:** n/a
+**Designers:** Basel Alomair
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes192avalanchev1
 **Download date:** 2014-12-14
 

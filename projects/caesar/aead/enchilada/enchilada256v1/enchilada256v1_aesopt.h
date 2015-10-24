@@ -159,7 +159,7 @@
 #if defined( __CRYPTLIB__ ) && !defined( INC_ALL ) && !defined( INC_CHILD )
 #include "crypt/aes.h"
 #else
-  #include "aes.h"
+  #include "enchilada256v1_aes.h"
 #endif
 
 #if defined(__GNUC__) || defined(__GNU_LIBRARY__)

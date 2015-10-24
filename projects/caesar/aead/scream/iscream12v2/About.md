@@ -1,10 +1,9 @@
 # Iscream12v2
 
-**Designers:** n/a
+**Designers:** Vincent Grosso, Gaëtan Leurent, François-Xavier Standaert, Kerem Varici, Anthony Journault, François Durvaux, Lubos Gaspar, Stéphanie Kerckhof
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/iscream12v2
 **Download date:** 2014-12-14
 

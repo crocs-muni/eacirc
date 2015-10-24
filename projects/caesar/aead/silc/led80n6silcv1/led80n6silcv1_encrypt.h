@@ -1,7 +1,7 @@
 #ifndef LED80N6SILCV1_ENCRYPT_H
 #define LED80N6SILCV1_ENCRYPT_H
 
-#include "%%NAMESMALL%%_api.h"
+#include "led80n6silcv1_api.h"
 
 namespace Led80n6silcv1_raw {
 extern int numRounds;

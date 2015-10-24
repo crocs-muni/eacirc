@@ -1,7 +1,7 @@
-namespace Proest256otrv1_raw {
-int numRounds = -1;
+#include "proest256otrv1_proest256.h"
 
-#include "proest256.h"
+// CHANGE namespace moved due to includes
+namespace Proest256otrv1_raw {
 
 #define RORLANE(x,d) (((x >> (d&0x1f)) | (x << (8*PROEST_LANEBYTES-(d&0x1f)))) & 0xffffffff)
 #define ROLLANE(x,d) (((x << (d&0x1f)) | (x >> (8*PROEST_LANEBYTES-(d&0x1f)))) & 0xffffffff)
@@ -98,7 +98,7 @@ void MixColumns(proest_ctx *x)
 }
 
 void ShiftRegisters(proest_ctx *x, int round)
-{	
+{
   if(!(round & 1)) // even rounds
   {
     x->a[1][0] = RORLANE(x->a[1][0],4);
@@ -118,11 +118,11 @@ void ShiftRegisters(proest_ctx *x, int round)
   }
   else
   {
-	x->a[0][0] = RORLANE(x->a[0][0],1);
+    x->a[0][0] = RORLANE(x->a[0][0],1);
     x->a[0][1] = RORLANE(x->a[0][1],1);
     x->a[0][2] = RORLANE(x->a[0][2],1);
     x->a[0][3] = RORLANE(x->a[0][3],1);
-    
+
     x->a[1][0] = RORLANE(x->a[1][0],24);
     x->a[1][1] = RORLANE(x->a[1][1],24);
     x->a[1][2] = RORLANE(x->a[1][2],24);
@@ -141,7 +141,7 @@ void ShiftRegisters(proest_ctx *x, int round)
 }
 
 void ShiftRegistersInverse(proest_ctx *x, int round)
-{	
+{
   if(!(round & 1)) // even rounds
   {
     x->a[1][0] = ROLLANE(x->a[1][0],4);
@@ -161,11 +161,11 @@ void ShiftRegistersInverse(proest_ctx *x, int round)
   }
   else
   {
-	x->a[0][0] = ROLLANE(x->a[0][0],1);
+    x->a[0][0] = ROLLANE(x->a[0][0],1);
     x->a[0][1] = ROLLANE(x->a[0][1],1);
     x->a[0][2] = ROLLANE(x->a[0][2],1);
     x->a[0][3] = ROLLANE(x->a[0][3],1);
-    
+
     x->a[1][0] = ROLLANE(x->a[1][0],24);
     x->a[1][1] = ROLLANE(x->a[1][1],24);
     x->a[1][2] = ROLLANE(x->a[1][2],24);
@@ -207,7 +207,7 @@ void AddConstant(proest_ctx *x, int round)
 }
 
 void proest_readstate(proest_ctx *r, const unsigned char in[PROEST_ROWS*PROEST_COLUMNS*PROEST_LANEBYTES])
-{  
+{
   r->a[0][0] = in[ 0] | ((uint32_t)in[ 1] << 8) | ((uint32_t)in[ 2] << 16) | ((uint32_t)in[ 3] << 24);
   r->a[0][1] = in[ 4] | ((uint32_t)in[ 5] << 8) | ((uint32_t)in[ 6] << 16) | ((uint32_t)in[ 7] << 24);
   r->a[0][2] = in[ 8] | ((uint32_t)in[ 9] << 8) | ((uint32_t)in[10] << 16) | ((uint32_t)in[11] << 24);
@@ -308,14 +308,14 @@ void proest_permute(proest_ctx *x)
 }
 
 void proest_inverse_permute(proest_ctx *x) {
-	int round;
-	
-	for (round = PROEST_NROUNDS-1; round >= 0; --round) {
-		AddConstant(x, round);
-		ShiftRegistersInverse(x, round);
-		MixColumns(x);
-		SubBits(x);
-	}
+    int round;
+
+    for (round = PROEST_NROUNDS-1; round >= 0; --round) {
+        AddConstant(x, round);
+        ShiftRegistersInverse(x, round);
+        MixColumns(x);
+        SubBits(x);
+    }
 }
 
 

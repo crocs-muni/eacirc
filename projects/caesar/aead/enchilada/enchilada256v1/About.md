@@ -1,10 +1,9 @@
 # Enchilada256v1
 
-**Designers:** n/a
+**Designers:** Sandy Harris
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/enchilada256v1
 **Download date:** 2014-12-14
 
@@ -14,3 +13,5 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Some constant arrays prologned to include tra trailing zero character.
+* "extern C" declaration commented out, since we are using C++.

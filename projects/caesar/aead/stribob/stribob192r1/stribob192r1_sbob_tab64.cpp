@@ -1,12 +1,12 @@
-namespace Stribob192r1_raw {
-int numRounds = -1;
-
 // sbob_tab64.c
 // 06-Feb-14  Markku-Juhani O. Saarinen <mjos@iki.fi>
 
 // Tables for 64-bit implementation of StriBob.
 
-#include "stribob.h"
+#include "stribob192r1_stribob.h"
+
+// CHANGE namespace moved due to includes
+namespace Stribob192r1_raw {
 
 // A macro to handle 64-bit constants in network (big endian) byte order
 
@@ -24,7 +24,9 @@ int numRounds = -1;
 #define xT64(x) (x##llu)
 #endif
 
-SBOB_ALIGN const uint64_t sbob_sl64[8][256] =
+// CHANGE extern added (free variable in namespace)
+//SBOB_ALIGN const uint64_t sbob_sl64[8][256] =
+extern SBOB_ALIGN const uint64_t sbob_sl64[8][256] =
 {
     {   xT64(0xE63F55CE97C331D0), xT64(0x25B506B0015BBA16),     // 0:00
         xT64(0xC8706E29E6AD9BA8), xT64(0x5B43D3775D521F6A),     // 0:02
@@ -1061,7 +1063,9 @@ SBOB_ALIGN const uint64_t sbob_sl64[8][256] =
 
 // round constants
 
-SBOB_ALIGN const uint64_t sbob_rc64[12][8] =
+// CHANGE extern added (free variable in namespace)
+// SBOB_ALIGN const uint64_t sbob_rc64[12][8] =
+extern SBOB_ALIGN const uint64_t sbob_rc64[12][8] =
 {
     {   xT64(0xB1085BDA1ECADAE9), xT64(0xEBCB2F81C0657C1F),     // 0:00
         xT64(0x2F6A76432E45D016), xT64(0x714EB88D7585C4FC),     // 0:02

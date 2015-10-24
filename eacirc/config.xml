@@ -59,11 +59,11 @@
             <FNC_SHIR>1</FNC_SHIR>
             <FNC_ROTL>1</FNC_ROTL>
             <FNC_ROTR>1</FNC_ROTR>
-            <FNC_EQ>1</FNC_EQ>
-            <FNC_LT>1</FNC_LT>
-            <FNC_GT>1</FNC_GT>
-            <FNC_LEQ>1</FNC_LEQ>
-            <FNC_GEQ>1</FNC_GEQ>
+            <FNC_EQ>0</FNC_EQ>
+            <FNC_LT>0</FNC_LT>
+            <FNC_GT>0</FNC_GT>
+            <FNC_LEQ>0</FNC_LEQ>
+            <FNC_GEQ>0</FNC_GEQ>
             <FNC_BSLC>1</FNC_BSLC>
             <FNC_READ>0</FNC_READ>
             <FNC_JVM>0</FNC_JVM>
