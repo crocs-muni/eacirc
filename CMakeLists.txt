@@ -41,25 +41,35 @@ set(EACIRC_DIR   ${CMAKE_SOURCE_DIR}/eacirc)
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
 set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 
-# === projects ===
-include_eacirc_project(caesar)
-include_eacirc_project(estream)
-include_eacirc_project(sha3)
-# === executables ===
-add_subdirectory(eacirc)
-
+# === options ===
+option(BUILD_EACIRC "Include eacirc in build" ON)
 option(BUILD_ONECLICK "Include oneclick in build" ON)
+
+# === projects ===
+if(BUILD_EACIRC)
+    include_eacirc_project(caesar)
+    include_eacirc_project(estream)
+    include_eacirc_project(sha3)
+endif()
+# === executables ===
+if(BUILD_EACIRC)
+    add_subdirectory(eacirc)
+endif()
+
 if(BUILD_ONECLICK)
     add_subdirectory(oneclick)
 endif()
 # === 3rd party dependencies ===
-add_subdirectory(libs/galib)
+if(BUILD_EACIRC)
+    add_subdirectory(libs/galib)
+endif()
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
 
 # === testing ===
 enable_testing()
-add_test(NAME self_test COMMAND eacirc -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
-
-# this workaround adds custom target to display all outputs from failed test
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --build-config $<CONFIG>)
+if(BUILD_EACIRC)
+    add_test(NAME self_test COMMAND eacirc -test WORKING_DIRECTORY $<TARGET_FILE_DIR:eacirc>)
+    # this workaround adds custom target to display all outputs from failed test
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --build-config $<CONFIG>)
+endif()
