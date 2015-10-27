@@ -17,14 +17,6 @@ else()
     message(FATAL_ERROR "unsuported compiler: ${CMAKE_CXX_COMPILER}")
 endif()
 
-# === Enable profiling when using gcc ===
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC)
-     option(ENABLE_PROFILING "Enable profiling" OFF)
-    if(ENABLE_PROFILING)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -p")
-    endif()
-endif()
-
 # === detect CUDA ===
 find_package(CUDA)
 if(CUDA_FOUND)
