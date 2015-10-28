@@ -11,6 +11,8 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
     # === Supress warnings when building 3rd party libs on Linux ===
     set(SUPRESS_LIBS_WARNINGS "-Wall -Wextra -Weffc++" CACHE STRING "Supress warnings when building 3rd party libs")
+    # static build option is currently available only for linux
+    option(STATIC_BUILD "Produce static buils" OFF)
 elseif (MSVC AND (MSVC_VERSION GREATER 1700))
     # === nothing special yet ===
 else()
@@ -36,6 +38,13 @@ set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 # === options ===
 option(BUILD_EACIRC "Include eacirc in build" ON)
 option(BUILD_ONECLICK "Include oneclick in build" ON)
+
+# === static build? (applicable only on linux compilers) ===
+if(STATIC_BUILD)
+    SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    SET(BUILD_SHARED_LIBRARIES OFF)
+    SET(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()
 
 # === projects ===
 if(BUILD_EACIRC)

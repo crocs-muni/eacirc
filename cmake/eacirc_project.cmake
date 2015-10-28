@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
 
-
 function(add_eacirc_project NAME)
     string(TOUPPER ${NAME} UPPERCASE_NAME)
 
@@ -9,8 +8,6 @@ function(add_eacirc_project NAME)
     target_include_directories(${NAME} PRIVATE ${PROJECT_SOURCE_DIR}/eacirc)
 endfunction()
 
-
-
 function(link_eacirc_project NAME)
     string(TOUPPER ${NAME} UPPERCASE_NAME)
 
@@ -18,8 +15,6 @@ function(link_eacirc_project NAME)
         target_link_libraries(eacirc ${NAME})
     endif()
 endfunction()
-
-
 
 function(include_eacirc_project NAME)
     string(TOUPPER ${NAME} UPPERCASE_NAME)
