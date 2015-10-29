@@ -90,6 +90,10 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
         mainLogger.out(LOGGER_ERROR) << "Crossover terms probability is out of bounds." << endl;
         return STAT_CONFIG_INCORRECT;
     }
+    if (pGlobals->settings->ga.replacementSize % 2 == 1) {
+        mainLogger.out(LOGGER_ERROR) << "GA/REPLACEMENT_SIZE is odd, polynomials have to use even size of replacement population." << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
 
     return STAT_OK;
 }
