@@ -5,6 +5,8 @@
 #ifdef CUDA
     #include "GpuGate.h"
     #include "cuda/Host.h"
+#else
+    #include "cxx_utils.h"
 #endif
 #include "evaluators/IEvaluator.h"
 
