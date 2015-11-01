@@ -34,7 +34,7 @@ float GaGate::evaluator( GAGenome& genome )
 
     IEvaluator* evaluator = pGlobals->evaluator;
     evaluator->resetEvaluator();
-    for (size_t i = 0; i < vecNum; ++i) {
+    for (int i = 0; i < vecNum; ++i) {
         evaluator->evaluateCircuit( pGlobals->testVectors.circuitOutputs[i], pGlobals->testVectors.outputs[i] );
     }
     return evaluator->getFitness();
