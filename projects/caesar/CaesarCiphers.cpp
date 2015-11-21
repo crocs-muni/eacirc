@@ -179,6 +179,9 @@ const char* CaesarCiphers::caesarToString(int algorithm) {
     case CAESAR_ELMD51270V1:                return "ELmD - elmd51270v1";
     case CAESAR_ELMD51271V1:                return "ELmD - elmd51271v1";
         // end ciphers requiring OpenSSL
+
+    case CAESAR_RANDOM:                     return "Random stream - reference case";
+
     default:                                return "(unknown cipher)";
     }
 }

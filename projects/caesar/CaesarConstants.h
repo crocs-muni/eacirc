@@ -2,7 +2,8 @@
 #define CAESARCONSTANTS_H
 
 // CAESAR test vector generation method
-#define CAESAR_DISTINGUISHER          301
+#define CAESAR_DISTINGUISHER_TAG            301
+#define CAESAR_DISTINGUISHER_CIPHERTEXT     302
 
 // CAESAR data types (for key, plaintext, ad, smn, pmn)
 #define CAESAR_TYPE_ZEROS       0

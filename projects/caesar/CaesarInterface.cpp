@@ -190,6 +190,7 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_ELMD51270V1: { return new Elmd51270v1(numRounds); };
         case CAESAR_ELMD51271V1: { return new Elmd51271v1(numRounds); };
 #endif
+        case CAESAR_RANDOM: { return new RandomCipher; };
      default:
          mainLogger.out(LOGGER_ERROR) << "Unknown CAESAR algorithm (" << algorithm << ")." << endl;
          return NULL;
