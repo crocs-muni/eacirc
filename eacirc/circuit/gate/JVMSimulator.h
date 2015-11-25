@@ -1,6 +1,7 @@
 /**
   * @file JVMSimulator.h
   * @author Zdenek Riha
+  * @author Michal Hajas
   */
 
 #ifndef JVMSIMULATOR_H
@@ -8,6 +9,7 @@
 
 #include <string>
 #include <stdint.h>
+#include <ctime>
 
 #include <EACconstants.h>
 using namespace std;
@@ -15,7 +17,7 @@ using namespace std;
 // Compile-time parameters
 #define MAX_LINE_LENGTH 1024
 #define ALLOC_STEP 100
-#define EMULATE_MAX_INSTRUCTIONS 1000
+#define EMULATE_MAX_INSTRUCTIONS 300
 
 // Return values:
 #define ERR_NO_ERROR				0
@@ -33,6 +35,12 @@ using namespace std;
 #define ERR_WRITING_OUTPUT			12
 #define ERR_MAX_NUMBER_OF_INSTRUCTIONS_EXHAUSTED 13
 #define ERR_NO_SUCH_FUNCTION		14
+#define ERR_NO_SUCH_LINE            15
+
+//evalution controll
+#define CONTINUE            100
+#define END                 101
+#define GOTO_VALUE          102
 
 // Instructions
 #define NOP		0x00
@@ -115,7 +123,8 @@ using namespace std;
 #define T_INT	10
 
 // Size limitations
-#define MAX_NUMBER_OF_LOCAL_VARIABLES 1000
+#define MAX_NUMBER_OF_VARIABLES  10
+
 
 // Structures
 //represents one instruction
@@ -152,26 +161,24 @@ struct StackNode {
 
 //call element stack node
 struct CallStackNode{
-    char *function;
+    struct FunctionNode* function;
     int next_line;
     struct CallStackNode *next;
 };
 
 //represents current state (which function is used, on which line)
 struct Pc {
-    char fn[MAX_LINE_LENGTH];
+    struct FunctionNode* currentFunction;
     int ln;
-    struct Instruction *current_ins;
 };
 
-//reprasants global array
+//represents global array
 struct GlobalArray {
     int32_t *int_array;
     signed char *ba;
     int type;
     int number_of_elements;
 };
-
 
 class JVMSimulator {
 
@@ -193,7 +200,7 @@ public:
     * @param line_from number instruction where evaluation starts
     * @param line_to number of instruction where evaluation ends
     */
-    int jvmsim_run(int function_number, int line_from, int line_to, int use_files);
+    int jvmsim_run(int function_number, int line_from, int line_to);
 
     //old, won't be used, will be refactored soon
     int jvmsim_main(int argc, char* argv[]);
@@ -210,15 +217,27 @@ public:
     struct FunctionNode* get_function_by_number(unsigned char number_of_function);
 
     /**
-    * Find instruction with instruction number
-    * @param fn name of function
-    * @param in instruction number
-    * @return pointer of instruction
+    * @param name
+    * @return pointer to function
     */
-    struct Instruction *find_ins(char *fn, int in);
+    struct FunctionNode* get_function_by_name(char* name);
 
-    void call_push(char *fn, int nl);
+    /**
+    * @param function within which is find instruction
+    * @param instructionNumber is number assigned by compilator
+    * @return line number within function
+    */
+    int find_instruction_by_number(FunctionNode* function, int instructionNumber);
 
+    /**
+    * Saves current state to call stack
+    * @param PC current state
+    */
+    void call_push(struct Pc* PC);
+
+    /**
+    * Loads state from call stack and save it to PC param
+    */
     int call_pop(struct Pc *PC);
 
     /**
@@ -230,6 +249,11 @@ public:
     * @return true if stack is empty, false otherwise
     */
     bool stack_empty();
+
+    /**
+    * @return true if call stack is empty, false otherwise
+    */
+    bool callStackEmpty();
 
     /**
     * push integer to stack
@@ -247,20 +271,20 @@ public:
     * pop integer from stack
     * @return value from stack
     */
-    int32_t pop_int();
+    void pop_int(int32_t& returnValue);
 
     /**
     * pop index of referenced array
     * @return index
     */
-    int32_t pop_arrayref();
+    void pop_arrayref(int32_t& returnValue);
 
     /**
     * emulate specific instruction
     * @param PC current state
     * @return error code - will be refactored soon
     */
-    int emulate_ins(struct Pc *PC);
+    int emulate_ins(struct Pc* PC, int& returnValue);
 
     /**
     * @param c
@@ -274,13 +298,32 @@ public:
     */
     int code(char* i);
 
-    void printl();
+    /**
+    * Find out if top of stack is of type array reference
+    */
+    bool hasArrayRefOnStack();
 
-    void read_input();
+    /**
+    * Find out if there are two integers on top of stack
+    */
+    bool hasTwoIntegersOnStack();
 
-    void write_output();
+    /**
+    * Find out if there is integer on top of stack
+    */
+    bool hasIntegerOnStack();
 
 private:
+
+    /**
+    * @return index of first non-used element of globalArray
+    */
+    int get_next_global_index();
+
+    /**
+    * Remove state from last run global arrays and local variables
+    */
+    void destroy_state();
 
     //list of all functions
     struct FunctionNode* m_functions = NULL;
@@ -295,16 +338,14 @@ private:
     struct CallStackNode* m_callStack = NULL;
 
     //array of local variables
-    int32_t m_locals[MAX_NUMBER_OF_LOCAL_VARIABLES];
+    int32_t m_locals[MAX_NUMBER_OF_VARIABLES];
 
     //meant to be number of local variables stored, but I am not sure if it is correct
-    int m_maxLocalUsed = 0;
-
-    //number of stored array
-    int m_globalArraysCount = 0;
+    bool m_localsUsed[MAX_NUMBER_OF_VARIABLES];
 
     //global arrays
-    struct GlobalArray m_globalArrays[1000];
+    struct GlobalArray m_globalArrays[MAX_NUMBER_OF_VARIABLES];
+    bool m_globalArraysUsed[MAX_NUMBER_OF_VARIABLES];
 };
 
 #endif

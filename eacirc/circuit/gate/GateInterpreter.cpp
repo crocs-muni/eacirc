@@ -184,8 +184,8 @@ int GateInterpreter::executeFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE abs
 }
 
 int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_TYPE absoluteConnectors, unsigned char* layerInputValues, unsigned char &result) {
-
     int connection = 0;
+
     // Prepare all inputs values to JVM stack
     while (connectorsDiscartFirst(absoluteConnectors, connection))
         pGlobals->settings->gateCircuit.jvmSim->push_int((int32_t)layerInputValues[connection]);
@@ -196,18 +196,25 @@ int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_
     unsigned char argument3 = nodeGetArgument(node, 3); // instruction to
 
     // Execute given subpart of bytecode 
-    //int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run("FFMul", 1, 10, false);
-    int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, argument3, false);
+    int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, argument3);
 
     if (runval != 0) { 
         //assert(runval == 0);
         //mainLogger.out(LOGGER_ERROR) << "jvmsim_run failed to execute with value " << runval << ")." << endl; 
     }
+
     // Combine output of function as xor of values left on stack
-    while (!(pGlobals->settings->gateCircuit.jvmSim->stack_empty()))
-    {
-        unsigned char stack = (unsigned char)pGlobals->settings->gateCircuit.jvmSim->pop_int();
-        result ^= stack;
+    int32_t stack;
+    while (!(pGlobals->settings->gateCircuit.jvmSim->stack_empty())) {
+        
+        if (pGlobals->settings->gateCircuit.jvmSim->hasArrayRefOnStack()) {
+            pGlobals->settings->gateCircuit.jvmSim->pop_arrayref(stack);
+            //drop array reference value
+            continue;
+        }
+        pGlobals->settings->gateCircuit.jvmSim->pop_int(stack);
+        result ^= (unsigned char) stack;
     }
+
     return STAT_OK;
 }
