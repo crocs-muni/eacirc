@@ -90,6 +90,13 @@ public:
       * @return pointer to root element "eacirc_population"
       */
     static TiXmlElement* populationHeaderSt(int populationSize);
+
+private:
+    static void pruneGenomeSimple(GAGenome& g, vector<vector<bool> > &hasNodeEffect);
+    static size_t parentsEffectCount(const unsigned char function);
+    static void setParentsToUse(GENOME_ITEM_TYPE gene, const size_t layer, vector< vector < bool > > &hasNodeEffect);
+
+    vector< vector < bool > > hasNodeEffect;
 };
 
 #endif // GATECIRCUITIO_H
