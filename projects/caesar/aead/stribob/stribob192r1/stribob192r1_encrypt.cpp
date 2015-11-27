@@ -1,13 +1,14 @@
-namespace Stribob192r1_raw {
-int numRounds = -1;
-
 // encrypt.c
 // 07-Feb-14  Markku-Juhani O. Saarinen <mjos@iki.fi>
 // CAESAR Round 1 API Interface for STRIBOBr1
 
-#include "stribob.h"
+#include "stribob192r1_stribob.h"
 #include "stribob192r1_api.h"
 #include "stribob192r1_encrypt.h"
+
+// CHANGE namespace moved due to includes
+namespace Stribob192r1_raw {
+int numRounds = -1;
 
 // MAC Size is determined by how many extra bytes are left..
 #if (CRYPTO_ABYTES < CRYPTO_NSECBYTES)

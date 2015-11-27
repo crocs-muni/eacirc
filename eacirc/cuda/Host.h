@@ -37,10 +37,14 @@ namespace cuda {
         
         // NOTE: only allocates memmory, no constructor is called
         template <class T>
-        static std::enable_if_t<std::is_array<T>::value && std::extent<T>::value == 0, unique_ptr<T>>
+        static typename std::enable_if
+        <
+            std::is_array<T>::value && std::extent<T>::value == 0,
+            unique_ptr<T>
+        >::type
             make_unique( size_t size )
         {
-            using E = std::remove_extent_t<T>;
+            using E = typename std::remove_extent<T>::type;
             return unique_ptr<T>( reinterpret_cast<E*>(Host::malloc( size * sizeof( E ) )) );
         }
     };

@@ -1,6 +1,3 @@
-namespace Paeq80_raw {
-int numRounds = -1;
-
 /* PAEQ-80: reference version*/
 
 #ifndef NO_SUPERCOP
@@ -13,6 +10,10 @@ int numRounds = -1;
 #include "string.h"
 //#include "wmmintrin.h"
 //#include <immintrin.h> 
+
+// CHANGE namespace moved due to includes
+namespace Paeq80_raw {
+int numRounds = -1;
 
 #define D_BYTES 2
 

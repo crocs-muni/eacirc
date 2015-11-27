@@ -1,10 +1,9 @@
 # Sablierv1
 
-**Designers:** n/a
+**Designers:** Bin Zhang, Zhenqing Shi, Chao Xu, Yuan Yao, Zhenqi Li
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/sablierv1
 **Download date:** 2014-12-14
 

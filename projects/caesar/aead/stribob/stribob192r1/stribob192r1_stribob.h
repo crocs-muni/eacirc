@@ -1,5 +1,3 @@
-namespace Stribob192r1_raw {
-
 // stribob.h
 // 05-Feb-14    Markku-Juhani O. Saarinen <mjos@iki.fi>
 //              See LICENSE for Licensing and Warranty information.
@@ -9,6 +7,9 @@ namespace Stribob192r1_raw {
 
 #include <stdint.h>
 #include <string.h>
+
+// CHANGE namespace moved due to includes
+namespace Stribob192r1_raw {
 
 // make 32-byte aligned if possible
 

@@ -1,10 +1,9 @@
 # Omdsha512k128n128tau128v1
 
-**Designers:** n/a
+**Designers:** Simon Cogliani, Diana-Ştefania Maimuţ, David Naccache, Rodrigo Portella do Canto, Reza Reyhanitabar, Serge Vaudenay, Damian Vizár
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/omdsha512k128n128tau128v1
 **Download date:** 2014-12-14
 

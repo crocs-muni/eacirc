@@ -1,10 +1,9 @@
-# Try.c
+# Trivia128v1
 
-**Designers:** n/a
+**Designers:** Avik Chakraborti, Mridul Nandi
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/try.c
 **Download date:** 2014-12-14
 

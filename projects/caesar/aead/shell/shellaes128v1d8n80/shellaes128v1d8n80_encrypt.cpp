@@ -1,6 +1,3 @@
-namespace Shellaes128v1d8n80_raw {
-int numRounds = -1;
-
 /*
  * SHELL Reference C Implementation
  *
@@ -29,12 +26,15 @@ int numRounds = -1;
 #include<string.h>
 #include<stdint.h>
 
-#include "aes.h"
-#include "shellaes.h"
+#include "shellaes128v1d8n80_aes.h"
+#include "shellaes128v1d8n80_shellaes.h"
 #include "shellaes128v1d8n80_api.h"
 
 #include "shellaes128v1d8n80_encrypt.h"
 
+// CHANGE namespace moved due to includes
+namespace Shellaes128v1d8n80_raw {
+int numRounds = -1;
 
 /*
  the code for the cipher implementation goes here,

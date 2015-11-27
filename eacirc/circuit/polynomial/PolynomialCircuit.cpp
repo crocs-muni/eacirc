@@ -66,8 +66,13 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
 
     // Sanity checks
     if (pGlobals->settings->polyCircuit.numPolynomials <= 0
-            || pGlobals->settings->polyCircuit.numPolynomials > pGlobals->settings->main.circuitSizeOutput*BITS_IN_UCHAR){
-        mainLogger.out(LOGGER_ERROR) << "Number of polynomials not set properly." << endl;
+            || pGlobals->settings->polyCircuit.numPolynomials > pGlobals->settings->main.circuitSizeOutput*BITS_IN_UCHAR) {
+        mainLogger.out(LOGGER_ERROR) << "Number of polynomials <= 0 or > 8 * MAIN/CIRCUIT_SIZE_OUTPUT." << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
+    if (pGlobals->settings->main.evaluatorType != 25
+            && pGlobals->settings->polyCircuit.numPolynomials != pGlobals->settings->main.circuitSizeOutput*BITS_IN_UCHAR) {
+        mainLogger.out(LOGGER_ERROR) << "Number of polynomials is not 8 * MAIN/CIRCUIT_SIZE_OUTPUT (using evaluator 26 with this polynomials count causes undefined behaviour)." << endl;
         return STAT_CONFIG_INCORRECT;
     }
     if (pGlobals->settings->polyCircuit.genomeInitTermCountProbability < 0 || pGlobals->settings->polyCircuit.genomeInitTermCountProbability > 1) {
@@ -88,6 +93,10 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     }
     if (pGlobals->settings->polyCircuit.crossoverTermsProbability < 0 || pGlobals->settings->polyCircuit.crossoverTermsProbability > 1) {
         mainLogger.out(LOGGER_ERROR) << "Crossover terms probability is out of bounds." << endl;
+        return STAT_CONFIG_INCORRECT;
+    }
+    if (pGlobals->settings->ga.replacementSize % 2 == 1) {
+        mainLogger.out(LOGGER_ERROR) << "GA/REPLACEMENT_SIZE is odd, polynomials have to use even size of replacement population." << endl;
         return STAT_CONFIG_INCORRECT;
     }
 

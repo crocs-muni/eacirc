@@ -36,7 +36,7 @@ int PolynomialInterpreter::executePolynomial(GA2DArrayGenome<POLY_GENOME_ITEM_TY
             bool ret = 1;
             for(unsigned int i=0; i<termSize; i++){
                 POLY_GENOME_ITEM_TYPE cTermEx = pGenome->gene(cPoly, 1 + termSize * cTerm + i);
-                ret &= TERM_ITEM_EVAL_GENOME(cTermEx, inputs+i*sizeof(POLY_GENOME_ITEM_TYPE));
+                ret &= term_item_eval(cTermEx, inputs+i*sizeof(POLY_GENOME_ITEM_TYPE));
             }
 
             // Polynomial is t1 XOR t2 XOR ... XOR t_{numVariables}

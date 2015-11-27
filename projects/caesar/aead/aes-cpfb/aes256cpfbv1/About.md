@@ -1,10 +1,9 @@
 # Aes256cpfbv1
 
-**Designers:** n/a
+**Designers:** Miguel Montes, Daniel Penazzi
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes256cpfbv1
 **Download date:** 2014-12-14
 
@@ -14,3 +13,5 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Name changes in using CaesarCommon functions.
+* 'crypto_unint32' substituted for cinttypes, typedef added.

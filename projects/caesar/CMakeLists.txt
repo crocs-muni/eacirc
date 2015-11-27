@@ -10,7 +10,9 @@ set(SOURCES
     Encryptor.cpp
 # === CAESAR algorithms ===
     aead/common/crypto_verify_16.cpp
+    aead/common/crypto_verify_32.cpp
     aead/common/crypto_core_aes128encrypt.cpp
+    aead/common/crypto_core_aes128decrypt.cpp
     aead/common/crypto_core_aes256encrypt.cpp
     aead/acorn/acorn128/acorn128_encrypt.cpp
     aead/acorn/acorn128/Acorn128.cpp
@@ -23,11 +25,12 @@ set(SOURCES
     aead/aegis/aegis256/aegis256_aes.cpp
     aead/aegis/aegis256/aegis256_encrypt.cpp
     aead/aegis/aegis256/Aegis256.cpp
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_largenumbers.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_pcmac.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_rmac.cpp \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.cpp \ # compilaation ok, sigsegv while running
+# Avalanche: compilaation ok, sigsegv while running (fedora64, both debug/release)
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.cpp
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_largenumbers.cpp
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_pcmac.cpp
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_rmac.cpp
+#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.cpp
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_avalanche.cpp
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_largenumbers.cpp
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_pcmac.cpp
@@ -47,11 +50,11 @@ set(SOURCES
     aead/marble/aes128marble4rv1/aes128marble4rv1_marble.cpp
     aead/marble/aes128marble4rv1/aes128marble4rv1_utils.cpp
     aead/marble/aes128marble4rv1/Aes128marble4rv1.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.cpp
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_utils.cpp
-#    aead/cloc/twine80n6clocv1/Twine80n6clocv1.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.cpp
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_utils.cpp
+    aead/cloc/twine80n6clocv1/Twine80n6clocv1.cpp
     aead/cloc/aes128n12clocv1/aes128n12clocv1_aes_core.cpp
     aead/cloc/aes128n12clocv1/aes128n12clocv1_cloc.cpp
     aead/cloc/aes128n12clocv1/aes128n12clocv1_encrypt.cpp
@@ -62,26 +65,26 @@ set(SOURCES
     aead/cloc/aes128n8clocv1/aes128n8clocv1_encrypt.cpp
     aead/cloc/aes128n8clocv1/aes128n8clocv1_utils.cpp
     aead/cloc/aes128n8clocv1/Aes128n8clocv1.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_core.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.cpp
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_utils.cpp
-#    aead/silc/aes128n12silcv1/Aes128n12silcv1.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_core.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.cpp
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_utils.cpp
-#    aead/silc/aes128n8silcv1/Aes128n8silcv1.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_led.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_silc.cpp
-#    aead/silc/led80n6silcv1/led80n6silcv1_utils.cpp
-#    aead/silc/led80n6silcv1/Led80n6silcv1.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_present.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_silc.cpp
-#    aead/silc/present80n6silcv1/present80n6silcv1_utils.cpp
-#    aead/silc/present80n6silcv1/Present80n6silcv1.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_core.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.cpp
+    aead/silc/aes128n12silcv1/aes128n12silcv1_utils.cpp
+    aead/silc/aes128n12silcv1/Aes128n12silcv1.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_core.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.cpp
+    aead/silc/aes128n8silcv1/aes128n8silcv1_utils.cpp
+    aead/silc/aes128n8silcv1/Aes128n8silcv1.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_led.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_silc.cpp
+    aead/silc/led80n6silcv1/led80n6silcv1_utils.cpp
+    aead/silc/led80n6silcv1/Led80n6silcv1.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_present.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_silc.cpp
+    aead/silc/present80n6silcv1/present80n6silcv1_utils.cpp
+    aead/silc/present80n6silcv1/Present80n6silcv1.cpp
     aead/aes-otr/aes128otrpv1/aes128otrpv1_encrypt.cpp
     aead/aes-otr/aes128otrpv1/aes128otrpv1_OTR.cpp
     aead/aes-otr/aes128otrpv1/aes128otrpv1_t-aes_enc_only.cpp
@@ -106,10 +109,10 @@ set(SOURCES
     aead/poet/aes128poetv1aes4/aes128poetv1aes4_encrypt.cpp
     aead/poet/aes128poetv1aes4/aes128poetv1aes4_poet.cpp
     aead/poet/aes128poetv1aes4/Aes128poetv1aes4.cpp
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.cpp
-#    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.cpp
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.cpp
-#    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.cpp
+    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.cpp
+    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.cpp
+    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.cpp
+    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.cpp
     aead/aes-copa/aescopav1/aescopav1_aes-core.cpp
     aead/aes-copa/aescopav1/aescopav1_encrypt.cpp
     aead/aes-copa/aescopav1/Aescopav1.cpp
@@ -173,12 +176,12 @@ set(SOURCES
     aead/enchilada/enchilada128v1/enchilada128v1_chacha.cpp
     aead/enchilada/enchilada128v1/enchilada128v1_enchilada.cpp
     aead/enchilada/enchilada128v1/Enchilada128v1.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_aescrypt.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_aestab.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_auth.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_chacha.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_enchilada256.cpp
-#    aead/enchilada/enchilada256v1/Enchilada256v1.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_aescrypt.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_aestab.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_auth.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_chacha.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_enchilada256.cpp
+    aead/enchilada/enchilada256v1/Enchilada256v1.cpp
     aead/hs1-siv/hs1sivhiv1/hs1sivhiv1_encrypt.cpp
     aead/hs1-siv/hs1sivhiv1/Hs1sivhiv1.cpp
     aead/hs1-siv/hs1sivlov1/hs1sivlov1_encrypt.cpp
@@ -375,185 +378,185 @@ set(SOURCES
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_omdsha512.cpp
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_sha512.cpp
     aead/omd/omdsha512k512n256tau256v1/Omdsha512k512n256tau256v1.cpp
-#    aead/paeq/paeq128/paeq128_encrypt.cpp
-#    aead/paeq/paeq128/Paeq128.cpp
-#    aead/paeq/paeq128t/paeq128t_encrypt.cpp
-#    aead/paeq/paeq128t/Paeq128t.cpp
-#    aead/paeq/paeq128tnm/paeq128tnm_encrypt.cpp
-#    aead/paeq/paeq128tnm/Paeq128tnm.cpp
-#    aead/paeq/paeq160/paeq160_encrypt.cpp
-#    aead/paeq/paeq160/Paeq160.cpp
-#    aead/paeq/paeq64/paeq64_encrypt.cpp
-#    aead/paeq/paeq64/Paeq64.cpp
-#    aead/paeq/paeq80/paeq80_encrypt.cpp
-#    aead/paeq/paeq80/Paeq80.cpp
-#    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.cpp
-#    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.cpp
-#    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.cpp
-#    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.cpp
-#    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.cpp
-#    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.cpp
-#    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.cpp
-#    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.cpp
-#    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.cpp
-#    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.cpp
-#    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.cpp
-#    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.cpp
-#    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.cpp
-#    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.cpp
-#    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.cpp
-#    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.cpp
+    aead/paeq/paeq128/paeq128_encrypt.cpp
+    aead/paeq/paeq128/Paeq128.cpp
+    aead/paeq/paeq128t/paeq128t_encrypt.cpp
+    aead/paeq/paeq128t/Paeq128t.cpp
+    aead/paeq/paeq128tnm/paeq128tnm_encrypt.cpp
+    aead/paeq/paeq128tnm/Paeq128tnm.cpp
+    aead/paeq/paeq160/paeq160_encrypt.cpp
+    aead/paeq/paeq160/Paeq160.cpp
+    aead/paeq/paeq64/paeq64_encrypt.cpp
+    aead/paeq/paeq64/Paeq64.cpp
+    aead/paeq/paeq80/paeq80_encrypt.cpp
+    aead/paeq/paeq80/Paeq80.cpp
+    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.cpp
+    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.cpp
+    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.cpp
+    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.cpp
+    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.cpp
+    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.cpp
+    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.cpp
+    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.cpp
+    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.cpp
+    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.cpp
+    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.cpp
+    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.cpp
+    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.cpp
+    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.cpp
+    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.cpp
+    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.cpp
 #    aead/polawis/polawisv1/polawisv1_decode_POLAWIS.cpp
 #    aead/polawis/polawisv1/polawisv1_encode_POLAWIS.cpp
 #    aead/polawis/polawisv1/polawisv1_key_gen_POLAWIS.cpp
 #    aead/polawis/polawisv1/Polawisv1.cpp
-#    aead/paes/ppaev11/ppaev11_encrypt.cpp
-#    aead/paes/ppaev11/Ppaev11.cpp
-#    aead/primates/primatesv1ape120/primatesv1ape120_encrypt.cpp
-#    aead/primates/primatesv1ape120/primatesv1ape120_primate.cpp
-#    aead/primates/primatesv1ape120/Primatesv1ape120.cpp
-#    aead/primates/primatesv1ape80/primatesv1ape80_encrypt.cpp
-#    aead/primates/primatesv1ape80/primatesv1ape80_primate.cpp
-#    aead/primates/primatesv1ape80/Primatesv1ape80.cpp
-#    aead/primates/primatesv1gibbon120/primatesv1gibbon120_encrypt.cpp
-#    aead/primates/primatesv1gibbon120/primatesv1gibbon120_primate.cpp
-#    aead/primates/primatesv1gibbon120/Primatesv1gibbon120.cpp
-#    aead/primates/primatesv1gibbon80/primatesv1gibbon80_encrypt.cpp
-#    aead/primates/primatesv1gibbon80/primatesv1gibbon80_primate.cpp
-#    aead/primates/primatesv1gibbon80/Primatesv1gibbon80.cpp
-#    aead/primates/primatesv1hanuman120/primatesv1hanuman120_encrypt.cpp
-#    aead/primates/primatesv1hanuman120/primatesv1hanuman120_primate.cpp
-#    aead/primates/primatesv1hanuman120/Primatesv1hanuman120.cpp
-#    aead/primates/primatesv1hanuman80/primatesv1hanuman80_encrypt.cpp
-#    aead/primates/primatesv1hanuman80/primatesv1hanuman80_primate.cpp
-#    aead/primates/primatesv1hanuman80/Primatesv1hanuman80.cpp
-#    aead/prost/proest128apev1/proest128apev1_encrypt.cpp
-#    aead/prost/proest128apev1/proest128apev1_proest128.cpp
-#    aead/prost/proest128apev1/proest128apev1_zerobytes.cpp
-#    aead/prost/proest128apev1/Proest128apev1.cpp
-#    aead/prost/proest128copav1/proest128copav1_encrypt.cpp
-#    aead/prost/proest128copav1/proest128copav1_proest128.cpp
-#    aead/prost/proest128copav1/proest128copav1_zerobytes.cpp
-#    aead/prost/proest128copav1/Proest128copav1.cpp
-#    aead/prost/proest128otrv1/proest128otrv1_encrypt.cpp
-#    aead/prost/proest128otrv1/proest128otrv1_proest128.cpp
-#    aead/prost/proest128otrv1/proest128otrv1_zerobytes.cpp
-#    aead/prost/proest128otrv1/Proest128otrv1.cpp
-#    aead/prost/proest256apev1/proest256apev1_encrypt.cpp
-#    aead/prost/proest256apev1/proest256apev1_proest256.cpp
-#    aead/prost/proest256apev1/proest256apev1_zerobytes.cpp
-#    aead/prost/proest256apev1/Proest256apev1.cpp
-#    aead/prost/proest256copav1/proest256copav1_encrypt.cpp
-#    aead/prost/proest256copav1/proest256copav1_proest256.cpp
-#    aead/prost/proest256copav1/proest256copav1_zerobytes.cpp
-#    aead/prost/proest256copav1/Proest256copav1.cpp
-#    aead/prost/proest256otrv1/proest256otrv1_encrypt.cpp
-#    aead/prost/proest256otrv1/proest256otrv1_proest256.cpp
-#    aead/prost/proest256otrv1/proest256otrv1_zerobytes.cpp
-#    aead/prost/proest256otrv1/Proest256otrv1.cpp
-#    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.cpp
-#    aead/raviyoyla/raviyoylav1/Raviyoylav1.cpp
-#    aead/sablier/sablierv1/sablierv1_encrypt.cpp
-#    aead/sablier/sablierv1/Sablierv1.cpp
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aes.cpp
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aesReduced.cpp
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_encrypt.cpp
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_shellaes.cpp
-#    aead/shell/shellaes128v1d4n64/Shellaes128v1d4n64.cpp
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_aes.cpp
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_aesReduced.cpp
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_encrypt.cpp
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_shellaes.cpp
-#    aead/shell/shellaes128v1d4n80/Shellaes128v1d4n80.cpp
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_aes.cpp
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_aesReduced.cpp
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_encrypt.cpp
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_shellaes.cpp
-#    aead/shell/shellaes128v1d5n64/Shellaes128v1d5n64.cpp
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_aes.cpp
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_aesReduced.cpp
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_encrypt.cpp
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_shellaes.cpp
-#    aead/shell/shellaes128v1d5n80/Shellaes128v1d5n80.cpp
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_aes.cpp
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_aesReduced.cpp
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_encrypt.cpp
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_shellaes.cpp
-#    aead/shell/shellaes128v1d6n64/Shellaes128v1d6n64.cpp
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_aes.cpp
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_aesReduced.cpp
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_encrypt.cpp
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_shellaes.cpp
-#    aead/shell/shellaes128v1d6n80/Shellaes128v1d6n80.cpp
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_aes.cpp
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_aesReduced.cpp
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_encrypt.cpp
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_shellaes.cpp
-#    aead/shell/shellaes128v1d7n64/Shellaes128v1d7n64.cpp
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_aes.cpp
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_aesReduced.cpp
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_encrypt.cpp
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_shellaes.cpp
-#    aead/shell/shellaes128v1d7n80/Shellaes128v1d7n80.cpp
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_aes.cpp
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_aesReduced.cpp
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_encrypt.cpp
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_shellaes.cpp
-#    aead/shell/shellaes128v1d8n64/Shellaes128v1d8n64.cpp
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_aes.cpp
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_aesReduced.cpp
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_encrypt.cpp
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_shellaes.cpp
-#    aead/shell/shellaes128v1d8n80/Shellaes128v1d8n80.cpp
-#    aead/silver/silverv1/silverv1_encrypt.cpp
-#    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.cpp
-#    aead/silver/silverv1/Silverv1.cpp
-#    aead/stribob/stribob192r1/stribob192r1_encrypt.cpp
-#    aead/stribob/stribob192r1/stribob192r1_sbob_pi64.cpp
-#    aead/stribob/stribob192r1/stribob192r1_sbob_tab64.cpp
-#    aead/stribob/stribob192r1/stribob192r1_stribob.cpp
-#    aead/stribob/stribob192r1/Stribob192r1.cpp
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.cpp
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.cpp
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.cpp
-#    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.cpp
-#    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.cpp
-#    aead/trivia-ck/trivia0v1/Trivia0v1.cpp
-#    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.cpp
-#    aead/trivia-ck/trivia128v1/Trivia128v1.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.cpp
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.cpp
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.cpp
-#    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.cpp
-#    aead/yaes/yaes128v2/yaes128v2_aes-128.cpp
-#    aead/yaes/yaes128v2/yaes128v2_encrypt.cpp
-#    aead/yaes/yaes128v2/Yaes128v2.cpp
+    aead/paes/ppaev11/ppaev11_encrypt.cpp
+    aead/paes/ppaev11/Ppaev11.cpp
+    aead/primates/primatesv1ape120/primatesv1ape120_encrypt.cpp
+    aead/primates/primatesv1ape120/primatesv1ape120_primate.cpp
+    aead/primates/primatesv1ape120/Primatesv1ape120.cpp
+    aead/primates/primatesv1ape80/primatesv1ape80_encrypt.cpp
+    aead/primates/primatesv1ape80/primatesv1ape80_primate.cpp
+    aead/primates/primatesv1ape80/Primatesv1ape80.cpp
+    aead/primates/primatesv1gibbon120/primatesv1gibbon120_encrypt.cpp
+    aead/primates/primatesv1gibbon120/primatesv1gibbon120_primate.cpp
+    aead/primates/primatesv1gibbon120/Primatesv1gibbon120.cpp
+    aead/primates/primatesv1gibbon80/primatesv1gibbon80_encrypt.cpp
+    aead/primates/primatesv1gibbon80/primatesv1gibbon80_primate.cpp
+    aead/primates/primatesv1gibbon80/Primatesv1gibbon80.cpp
+    aead/primates/primatesv1hanuman120/primatesv1hanuman120_encrypt.cpp
+    aead/primates/primatesv1hanuman120/primatesv1hanuman120_primate.cpp
+    aead/primates/primatesv1hanuman120/Primatesv1hanuman120.cpp
+    aead/primates/primatesv1hanuman80/primatesv1hanuman80_encrypt.cpp
+    aead/primates/primatesv1hanuman80/primatesv1hanuman80_primate.cpp
+    aead/primates/primatesv1hanuman80/Primatesv1hanuman80.cpp
+    aead/prost/proest128apev1/proest128apev1_encrypt.cpp
+    aead/prost/proest128apev1/proest128apev1_proest128.cpp
+    aead/prost/proest128apev1/proest128apev1_zerobytes.cpp
+    aead/prost/proest128apev1/Proest128apev1.cpp
+    aead/prost/proest128copav1/proest128copav1_encrypt.cpp
+    aead/prost/proest128copav1/proest128copav1_proest128.cpp
+    aead/prost/proest128copav1/proest128copav1_zerobytes.cpp
+    aead/prost/proest128copav1/Proest128copav1.cpp
+    aead/prost/proest128otrv1/proest128otrv1_encrypt.cpp
+    aead/prost/proest128otrv1/proest128otrv1_proest128.cpp
+    aead/prost/proest128otrv1/proest128otrv1_zerobytes.cpp
+    aead/prost/proest128otrv1/Proest128otrv1.cpp
+    aead/prost/proest256apev1/proest256apev1_encrypt.cpp
+    aead/prost/proest256apev1/proest256apev1_proest256.cpp
+    aead/prost/proest256apev1/proest256apev1_zerobytes.cpp
+    aead/prost/proest256apev1/Proest256apev1.cpp
+    aead/prost/proest256copav1/proest256copav1_encrypt.cpp
+    aead/prost/proest256copav1/proest256copav1_proest256.cpp
+    aead/prost/proest256copav1/proest256copav1_zerobytes.cpp
+    aead/prost/proest256copav1/Proest256copav1.cpp
+    aead/prost/proest256otrv1/proest256otrv1_encrypt.cpp
+    aead/prost/proest256otrv1/proest256otrv1_proest256.cpp
+    aead/prost/proest256otrv1/proest256otrv1_zerobytes.cpp
+    aead/prost/proest256otrv1/Proest256otrv1.cpp
+    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.cpp
+    aead/raviyoyla/raviyoylav1/Raviyoylav1.cpp
+    aead/sablier/sablierv1/sablierv1_encrypt.cpp
+    aead/sablier/sablierv1/Sablierv1.cpp
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aes.cpp
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aesReduced.cpp
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_encrypt.cpp
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_shellaes.cpp
+    aead/shell/shellaes128v1d4n64/Shellaes128v1d4n64.cpp
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_aes.cpp
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_aesReduced.cpp
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_encrypt.cpp
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_shellaes.cpp
+    aead/shell/shellaes128v1d4n80/Shellaes128v1d4n80.cpp
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_aes.cpp
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_aesReduced.cpp
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_encrypt.cpp
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_shellaes.cpp
+    aead/shell/shellaes128v1d5n64/Shellaes128v1d5n64.cpp
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_aes.cpp
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_aesReduced.cpp
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_encrypt.cpp
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_shellaes.cpp
+    aead/shell/shellaes128v1d5n80/Shellaes128v1d5n80.cpp
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_aes.cpp
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_aesReduced.cpp
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_encrypt.cpp
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_shellaes.cpp
+    aead/shell/shellaes128v1d6n64/Shellaes128v1d6n64.cpp
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_aes.cpp
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_aesReduced.cpp
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_encrypt.cpp
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_shellaes.cpp
+    aead/shell/shellaes128v1d6n80/Shellaes128v1d6n80.cpp
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_aes.cpp
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_aesReduced.cpp
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_encrypt.cpp
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_shellaes.cpp
+    aead/shell/shellaes128v1d7n64/Shellaes128v1d7n64.cpp
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_aes.cpp
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_aesReduced.cpp
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_encrypt.cpp
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_shellaes.cpp
+    aead/shell/shellaes128v1d7n80/Shellaes128v1d7n80.cpp
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_aes.cpp
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_aesReduced.cpp
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_encrypt.cpp
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_shellaes.cpp
+    aead/shell/shellaes128v1d8n64/Shellaes128v1d8n64.cpp
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_aes.cpp
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_aesReduced.cpp
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_encrypt.cpp
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_shellaes.cpp
+    aead/shell/shellaes128v1d8n80/Shellaes128v1d8n80.cpp
+    aead/silver/silverv1/silverv1_encrypt.cpp
+    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.cpp
+    aead/silver/silverv1/Silverv1.cpp
+    aead/stribob/stribob192r1/stribob192r1_sbob_tab64.cpp
+    aead/stribob/stribob192r1/stribob192r1_encrypt.cpp
+    aead/stribob/stribob192r1/stribob192r1_sbob_pi64.cpp
+    aead/stribob/stribob192r1/stribob192r1_stribob.cpp
+    aead/stribob/stribob192r1/Stribob192r1.cpp
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.cpp
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.cpp
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.cpp
+    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.cpp
+    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.cpp
+    aead/trivia-ck/trivia0v1/Trivia0v1.cpp
+    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.cpp
+    aead/trivia-ck/trivia128v1/Trivia128v1.cpp
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.cpp
+    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.cpp
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.cpp
+    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.cpp
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.cpp
+    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.cpp
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.cpp
+    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.cpp
+    aead/yaes/yaes128v2/yaes128v2_aes-128.cpp
+    aead/yaes/yaes128v2/yaes128v2_encrypt.cpp
+    aead/yaes/yaes128v2/Yaes128v2.cpp
 )
 
 set(SOURCES_WITH_OPENSSL
-	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
-	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
-	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
-	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
-	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
-	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
-	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
-	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
-	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
-	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
-	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
-	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
-	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
-	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
-	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
-	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
-	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
-	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
-	aead/cba/cba1/cba1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.cpp
+        aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.cpp
+        aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.cpp
+        aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.cpp
+        aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.cpp
+        aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.cpp
+        aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.cpp
+        aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.cpp
+        aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.cpp
+        aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.cpp
+        aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.cpp
+        aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.cpp
+        aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.cpp
+        aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.cpp
+        aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.cpp
+        aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.cpp
+        aead/cba/cba1/cba1_encrypt.cpp
     aead/cba/cba1/Cba1.cpp
     aead/cba/cba10/cba10_encrypt.cpp
     aead/cba/cba10/Cba10.cpp
@@ -612,10 +615,11 @@ set(HEADERS
     aead/aegis/aegis256/aegis256_api.h
     aead/aegis/aegis256/aegis256_encrypt.h
     aead/aegis/aegis256/Aegis256.h
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_api.h \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.h \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_encrypt.h \ # compilaation ok, sigsegv while running
-#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.h \ # compilaation ok, sigsegv while running
+# Avalanche: compilaation ok, sigsegv while running (fedora64, both debug/release)
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_api.h # compilaation ok, sigsegv while running
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_avalanche.h # compilaation ok, sigsegv while running
+#    aead/avalanche/aes128avalanchev1/aes128avalanchev1_encrypt.h # compilaation ok, sigsegv while running
+#    aead/avalanche/aes128avalanchev1/Aes128avalanchev1.h # compilaation ok, sigsegv while running
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_api.h
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_avalanche.h
 #    aead/avalanche/aes192avalanchev1/aes192avalanchev1_encrypt.h
@@ -624,29 +628,29 @@ set(HEADERS
 #    aead/avalanche/aes256avalanchev1/aes256avalanchev1_avalanche.h
 #    aead/avalanche/aes256avalanchev1/aes256avalanchev1_encrypt.h
 #    aead/avalanche/aes256avalanchev1/Aes256avalanchev1.h
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_api.h
-#    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.h
-#    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.h
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_api.h
-#    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.h
-#    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.h
     aead/aes-gcm/aes128gcmv1/aes128gcmv1_api.h
     aead/aes-gcm/aes128gcmv1/aes128gcmv1_encrypt.h
     aead/aes-gcm/aes128gcmv1/Aes128gcmv1.h
     aead/aes-gcm/aes256gcmv1/aes256gcmv1_api.h
     aead/aes-gcm/aes256gcmv1/aes256gcmv1_encrypt.h
     aead/aes-gcm/aes256gcmv1/Aes256gcmv1.h
+    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_api.h
+    aead/aes-cpfb/aes128cpfbv1/aes128cpfbv1_encrypt.h
+    aead/aes-cpfb/aes128cpfbv1/Aes128cpfbv1.h
+    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_api.h
+    aead/aes-cpfb/aes256cpfbv1/aes256cpfbv1_encrypt.h
+    aead/aes-cpfb/aes256cpfbv1/Aes256cpfbv1.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_aes.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_aes_locl.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_api.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_marble.h
     aead/marble/aes128marble4rv1/aes128marble4rv1_encrypt.h
     aead/marble/aes128marble4rv1/Aes128marble4rv1.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_api.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.h
-#    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.h
-#    aead/cloc/twine80n6clocv1/Twine80n6clocv1.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_api.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_cloc.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_twine.h
+    aead/cloc/twine80n6clocv1/twine80n6clocv1_encrypt.h
+    aead/cloc/twine80n6clocv1/Twine80n6clocv1.h
     aead/cloc/aes128n12clocv1/aes128n12clocv1_aes.h
     aead/cloc/aes128n12clocv1/aes128n12clocv1_aes_locl.h
     aead/cloc/aes128n12clocv1/aes128n12clocv1_api.h
@@ -659,28 +663,28 @@ set(HEADERS
     aead/cloc/aes128n8clocv1/aes128n8clocv1_cloc.h
     aead/cloc/aes128n8clocv1/aes128n8clocv1_encrypt.h
     aead/cloc/aes128n8clocv1/Aes128n8clocv1.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_aes.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_locl.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_api.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.h
-#    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.h
-#    aead/silc/aes128n12silcv1/Aes128n12silcv1.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_aes.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_locl.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_api.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.h
-#    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.h
-#    aead/silc/aes128n8silcv1/Aes128n8silcv1.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_api.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_led.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_silc.h
-#    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.h
-#    aead/silc/led80n6silcv1/Led80n6silcv1.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_api.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_present.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_silc.h
-#    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.h
-#    aead/silc/present80n6silcv1/Present80n6silcv1.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_aes.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_aes_locl.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_api.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_silc.h
+    aead/silc/aes128n12silcv1/aes128n12silcv1_encrypt.h
+    aead/silc/aes128n12silcv1/Aes128n12silcv1.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_aes.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_aes_locl.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_api.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_silc.h
+    aead/silc/aes128n8silcv1/aes128n8silcv1_encrypt.h
+    aead/silc/aes128n8silcv1/Aes128n8silcv1.h
+    aead/silc/led80n6silcv1/led80n6silcv1_api.h
+    aead/silc/led80n6silcv1/led80n6silcv1_led.h
+    aead/silc/led80n6silcv1/led80n6silcv1_silc.h
+    aead/silc/led80n6silcv1/led80n6silcv1_encrypt.h
+    aead/silc/led80n6silcv1/Led80n6silcv1.h
+    aead/silc/present80n6silcv1/present80n6silcv1_api.h
+    aead/silc/present80n6silcv1/present80n6silcv1_present.h
+    aead/silc/present80n6silcv1/present80n6silcv1_silc.h
+    aead/silc/present80n6silcv1/present80n6silcv1_encrypt.h
+    aead/silc/present80n6silcv1/Present80n6silcv1.h
     aead/aes-otr/aes128otrpv1/aes128otrpv1_api.h
     aead/aes-otr/aes128otrpv1/aes128otrpv1_OTR.h
     aead/aes-otr/aes128otrpv1/aes128otrpv1_t-aes_define.h
@@ -790,12 +794,12 @@ set(HEADERS
     aead/enchilada/enchilada128v1/enchilada128v1_enchilada.h
     aead/enchilada/enchilada128v1/enchilada128v1_encrypt.h
     aead/enchilada/enchilada128v1/Enchilada128v1.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_aes.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_aesopt.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_api.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_enchilada.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_encrypt.h
-#    aead/enchilada/enchilada256v1/Enchilada256v1.h
+    aead/enchilada/enchilada256v1/enchilada256v1_aes.h
+    aead/enchilada/enchilada256v1/enchilada256v1_aesopt.h
+    aead/enchilada/enchilada256v1/enchilada256v1_api.h
+    aead/enchilada/enchilada256v1/enchilada256v1_enchilada.h
+    aead/enchilada/enchilada256v1/enchilada256v1_encrypt.h
+    aead/enchilada/enchilada256v1/Enchilada256v1.h
     aead/hs1-siv/hs1sivhiv1/hs1sivhiv1_api.h
     aead/hs1-siv/hs1sivhiv1/hs1sivhiv1_encrypt.h
     aead/hs1-siv/hs1sivhiv1/Hs1sivhiv1.h
@@ -1141,249 +1145,248 @@ set(HEADERS
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_stdint_win.h
     aead/omd/omdsha512k512n256tau256v1/omdsha512k512n256tau256v1_encrypt.h
     aead/omd/omdsha512k512n256tau256v1/Omdsha512k512n256tau256v1.h
-#    aead/paeq/paeq128/paeq128_api.h
-#    aead/paeq/paeq128/paeq128_encrypt.h
-#    aead/paeq/paeq128/Paeq128.h
-#    aead/paeq/paeq128t/paeq128t_api.h
-#    aead/paeq/paeq128t/paeq128t_encrypt.h
-#    aead/paeq/paeq128t/Paeq128t.h
-#    aead/paeq/paeq128tnm/paeq128tnm_api.h
-#    aead/paeq/paeq128tnm/paeq128tnm_encrypt.h
-#    aead/paeq/paeq128tnm/Paeq128tnm.h
-#    aead/paeq/paeq160/paeq160_api.h
-#    aead/paeq/paeq160/paeq160_encrypt.h
-#    aead/paeq/paeq160/Paeq160.h
-#    aead/paeq/paeq64/paeq64_api.h
-#    aead/paeq/paeq64/paeq64_encrypt.h
-#    aead/paeq/paeq64/Paeq64.h
-#    aead/paeq/paeq80/paeq80_api.h
-#    aead/paeq/paeq80/paeq80_encrypt.h
-#    aead/paeq/paeq80/Paeq80.h
-#    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_api.h
-#    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.h
-#    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.h
-#    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_api.h
-#    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.h
-#    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.h
-#    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_api.h
-#    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.h
-#    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.h
-#    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_api.h
-#    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.h
-#    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.h
-#    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_api.h
-#    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.h
-#    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.h
-#    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_api.h
-#    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.h
-#    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.h
-#    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_api.h
-#    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.h
-#    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.h
-#    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_api.h
-#    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.h
-#    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.h
+    aead/paeq/paeq128/paeq128_api.h
+    aead/paeq/paeq128/paeq128_encrypt.h
+    aead/paeq/paeq128/Paeq128.h
+    aead/paeq/paeq128t/paeq128t_api.h
+    aead/paeq/paeq128t/paeq128t_encrypt.h
+    aead/paeq/paeq128t/Paeq128t.h
+    aead/paeq/paeq128tnm/paeq128tnm_api.h
+    aead/paeq/paeq128tnm/paeq128tnm_encrypt.h
+    aead/paeq/paeq128tnm/Paeq128tnm.h
+    aead/paeq/paeq160/paeq160_api.h
+    aead/paeq/paeq160/paeq160_encrypt.h
+    aead/paeq/paeq160/Paeq160.h
+    aead/paeq/paeq64/paeq64_api.h
+    aead/paeq/paeq64/paeq64_encrypt.h
+    aead/paeq/paeq64/Paeq64.h
+    aead/paeq/paeq80/paeq80_api.h
+    aead/paeq/paeq80/paeq80_encrypt.h
+    aead/paeq/paeq80/Paeq80.h
+    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_api.h
+    aead/pi-cipher/pi16cipher096v1/pi16cipher096v1_encrypt.h
+    aead/pi-cipher/pi16cipher096v1/Pi16cipher096v1.h
+    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_api.h
+    aead/pi-cipher/pi16cipher128v1/pi16cipher128v1_encrypt.h
+    aead/pi-cipher/pi16cipher128v1/Pi16cipher128v1.h
+    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_api.h
+    aead/pi-cipher/pi32cipher128v1/pi32cipher128v1_encrypt.h
+    aead/pi-cipher/pi32cipher128v1/Pi32cipher128v1.h
+    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_api.h
+    aead/pi-cipher/pi32cipher256v1/pi32cipher256v1_encrypt.h
+    aead/pi-cipher/pi32cipher256v1/Pi32cipher256v1.h
+    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_api.h
+    aead/pi-cipher/pi64cipher128v1/pi64cipher128v1_encrypt.h
+    aead/pi-cipher/pi64cipher128v1/Pi64cipher128v1.h
+    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_api.h
+    aead/pi-cipher/pi64cipher256v1/pi64cipher256v1_encrypt.h
+    aead/pi-cipher/pi64cipher256v1/Pi64cipher256v1.h
+    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_api.h
+    aead/pi-cipher/pi64cipher256v1oneround/pi64cipher256v1oneround_encrypt.h
+    aead/pi-cipher/pi64cipher256v1oneround/Pi64cipher256v1oneround.h
+    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_api.h
+    aead/pi-cipher/pi64cipher256v1tworounds/pi64cipher256v1tworounds_encrypt.h
+    aead/pi-cipher/pi64cipher256v1tworounds/Pi64cipher256v1tworounds.h
 #    aead/polawis/polawisv1/polawisv1_encrypt.h
 #    aead/polawis/polawisv1/Polawisv1.h
-#    aead/paes/ppaev11/ppaev11_api.h
-#    aead/paes/ppaev11/ppaev11_encrypt.h
-#    aead/paes/ppaev11/Ppaev11.h
-#    aead/primates/primatesv1ape120/primatesv1ape120_api.h
-#    aead/primates/primatesv1ape120/primatesv1ape120_parameters.h
-#    aead/primates/primatesv1ape120/primatesv1ape120_primate.h
-#    aead/primates/primatesv1ape120/primatesv1ape120_encrypt.h
-#    aead/primates/primatesv1ape120/Primatesv1ape120.h
-#    aead/primates/primatesv1ape80/primatesv1ape80_api.h
-#    aead/primates/primatesv1ape80/primatesv1ape80_parameters.h
-#    aead/primates/primatesv1ape80/primatesv1ape80_primate.h
-#    aead/primates/primatesv1ape80/primatesv1ape80_encrypt.h
-#    aead/primates/primatesv1ape80/Primatesv1ape80.h
-#    aead/primates/primatesv1gibbon120/primatesv1gibbon120_api.h
-#    aead/primates/primatesv1gibbon120/primatesv1gibbon120_parameters.h
-#    aead/primates/primatesv1gibbon120/primatesv1gibbon120_primate.h
-#    aead/primates/primatesv1gibbon120/primatesv1gibbon120_encrypt.h
-#    aead/primates/primatesv1gibbon120/Primatesv1gibbon120.h
-#    aead/primates/primatesv1gibbon80/primatesv1gibbon80_api.h
-#    aead/primates/primatesv1gibbon80/primatesv1gibbon80_parameters.h
-#    aead/primates/primatesv1gibbon80/primatesv1gibbon80_primate.h
-#    aead/primates/primatesv1gibbon80/primatesv1gibbon80_encrypt.h
-#    aead/primates/primatesv1gibbon80/Primatesv1gibbon80.h
-#    aead/primates/primatesv1hanuman120/primatesv1hanuman120_api.h
-#    aead/primates/primatesv1hanuman120/primatesv1hanuman120_parameters.h
-#    aead/primates/primatesv1hanuman120/primatesv1hanuman120_primate.h
-#    aead/primates/primatesv1hanuman120/primatesv1hanuman120_encrypt.h
-#    aead/primates/primatesv1hanuman120/Primatesv1hanuman120.h
-#    aead/primates/primatesv1hanuman80/primatesv1hanuman80_api.h
-#    aead/primates/primatesv1hanuman80/primatesv1hanuman80_parameters.h
-#    aead/primates/primatesv1hanuman80/primatesv1hanuman80_primate.h
-#    aead/primates/primatesv1hanuman80/primatesv1hanuman80_encrypt.h
-#    aead/primates/primatesv1hanuman80/Primatesv1hanuman80.h
-#    aead/prost/proest128apev1/proest128apev1_ape.h
-#    aead/prost/proest128apev1/proest128apev1_api.h
-#    aead/prost/proest128apev1/proest128apev1_proest128.h
-#    aead/prost/proest128apev1/proest128apev1_zerobytes.h
-#    aead/prost/proest128apev1/proest128apev1_encrypt.h
-#    aead/prost/proest128apev1/Proest128apev1.h
-#    aead/prost/proest128copav1/proest128copav1_api.h
-#    aead/prost/proest128copav1/proest128copav1_copa.h
-#    aead/prost/proest128copav1/proest128copav1_proest128.h
-#    aead/prost/proest128copav1/proest128copav1_zerobytes.h
-#    aead/prost/proest128copav1/proest128copav1_encrypt.h
-#    aead/prost/proest128copav1/Proest128copav1.h
-#    aead/prost/proest128otrv1/proest128otrv1_api.h
-#    aead/prost/proest128otrv1/proest128otrv1_otr.h
-#    aead/prost/proest128otrv1/proest128otrv1_proest128.h
-#    aead/prost/proest128otrv1/proest128otrv1_zerobytes.h
-#    aead/prost/proest128otrv1/proest128otrv1_encrypt.h
-#    aead/prost/proest128otrv1/Proest128otrv1.h
-#    aead/prost/proest256apev1/proest256apev1_ape.h
-#    aead/prost/proest256apev1/proest256apev1_api.h
-#    aead/prost/proest256apev1/proest256apev1_proest256.h
-#    aead/prost/proest256apev1/proest256apev1_zerobytes.h
-#    aead/prost/proest256apev1/proest256apev1_encrypt.h
-#    aead/prost/proest256apev1/Proest256apev1.h
-#    aead/prost/proest256copav1/proest256copav1_api.h
-#    aead/prost/proest256copav1/proest256copav1_copa.h
-#    aead/prost/proest256copav1/proest256copav1_proest256.h
-#    aead/prost/proest256copav1/proest256copav1_zerobytes.h
-#    aead/prost/proest256copav1/proest256copav1_encrypt.h
-#    aead/prost/proest256copav1/Proest256copav1.h
-#    aead/prost/proest256otrv1/proest256otrv1_api.h
-#    aead/prost/proest256otrv1/proest256otrv1_otr.h
-#    aead/prost/proest256otrv1/proest256otrv1_proest256.h
-#    aead/prost/proest256otrv1/proest256otrv1_zerobytes.h
-#    aead/prost/proest256otrv1/proest256otrv1_encrypt.h
-#    aead/prost/proest256otrv1/Proest256otrv1.h
-#    aead/raviyoyla/raviyoylav1/raviyoylav1_api.h
-#    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.h
-#    aead/raviyoyla/raviyoylav1/Raviyoylav1.h
-#    aead/sablier/sablierv1/sablierv1_api.h
-#    aead/sablier/sablierv1/sablierv1_authenticate_1.h
-#    aead/sablier/sablierv1/sablierv1_cipher_1.h
-#    aead/sablier/sablierv1/sablierv1_encrypt.h
-#    aead/sablier/sablierv1/Sablierv1.h
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aes.h
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_api.h
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_shellaes.h
-#    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_encrypt.h
-#    aead/shell/shellaes128v1d4n64/Shellaes128v1d4n64.h
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_aes.h
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_api.h
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_shellaes.h
-#    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_encrypt.h
-#    aead/shell/shellaes128v1d4n80/Shellaes128v1d4n80.h
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_aes.h
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_api.h
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_shellaes.h
-#    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_encrypt.h
-#    aead/shell/shellaes128v1d5n64/Shellaes128v1d5n64.h
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_aes.h
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_api.h
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_shellaes.h
-#    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_encrypt.h
-#    aead/shell/shellaes128v1d5n80/Shellaes128v1d5n80.h
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_aes.h
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_api.h
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_shellaes.h
-#    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_encrypt.h
-#    aead/shell/shellaes128v1d6n64/Shellaes128v1d6n64.h
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_aes.h
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_api.h
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_shellaes.h
-#    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_encrypt.h
-#    aead/shell/shellaes128v1d6n80/Shellaes128v1d6n80.h
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_aes.h
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_api.h
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_shellaes.h
-#    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_encrypt.h
-#    aead/shell/shellaes128v1d7n64/Shellaes128v1d7n64.h
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_aes.h
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_api.h
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_shellaes.h
-#    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_encrypt.h
-#    aead/shell/shellaes128v1d7n80/Shellaes128v1d7n80.h
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_aes.h
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_api.h
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_shellaes.h
-#    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_encrypt.h
-#    aead/shell/shellaes128v1d8n64/Shellaes128v1d8n64.h
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_aes.h
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_api.h
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_shellaes.h
-#    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_encrypt.h
-#    aead/shell/shellaes128v1d8n80/Shellaes128v1d8n80.h
-#    aead/silver/silverv1/silverv1_api.h
-#    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.h
-#    aead/silver/silverv1/silverv1_encrypt.h
-#    aead/silver/silverv1/Silverv1.h
-#    aead/stribob/stribob192r1/stribob192r1_api.h
-#    aead/stribob/stribob192r1/stribob192r1_crypto_aead.h
-#    aead/stribob/stribob192r1/stribob192r1_stribob.h
-#    aead/stribob/stribob192r1/stribob192r1_encrypt.h
-#    aead/stribob/stribob192r1/Stribob192r1.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_api.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.h
-#    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.h
-#    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.h
-#    aead/trivia-ck/trivia0v1/trivia0v1_api.h
-#    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.h
-#    aead/trivia-ck/trivia0v1/Trivia0v1.h
-#    aead/trivia-ck/trivia128v1/trivia128v1_api.h
-#    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.h
-#    aead/trivia-ck/trivia128v1/Trivia128v1.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_api.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_api.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_api.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_api.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
-#    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h
-#    aead/yaes/yaes128v2/yaes128v2_aes-128.h
-#    aead/yaes/yaes128v2/yaes128v2_api.h
-#    aead/yaes/yaes128v2/yaes128v2_encrypt.h
-#    aead/yaes/yaes128v2/yaes128v2_encrypt.h
-#    aead/yaes/yaes128v2/Yaes128v2.h
+    aead/paes/ppaev11/ppaev11_api.h
+    aead/paes/ppaev11/ppaev11_encrypt.h
+    aead/paes/ppaev11/Ppaev11.h
+    aead/primates/primatesv1ape120/primatesv1ape120_api.h
+    aead/primates/primatesv1ape120/primatesv1ape120_parameters.h
+    aead/primates/primatesv1ape120/primatesv1ape120_primate.h
+    aead/primates/primatesv1ape120/primatesv1ape120_encrypt.h
+    aead/primates/primatesv1ape120/Primatesv1ape120.h
+    aead/primates/primatesv1ape80/primatesv1ape80_api.h
+    aead/primates/primatesv1ape80/primatesv1ape80_parameters.h
+    aead/primates/primatesv1ape80/primatesv1ape80_primate.h
+    aead/primates/primatesv1ape80/primatesv1ape80_encrypt.h
+    aead/primates/primatesv1ape80/Primatesv1ape80.h
+    aead/primates/primatesv1gibbon120/primatesv1gibbon120_api.h
+    aead/primates/primatesv1gibbon120/primatesv1gibbon120_parameters.h
+    aead/primates/primatesv1gibbon120/primatesv1gibbon120_primate.h
+    aead/primates/primatesv1gibbon120/primatesv1gibbon120_encrypt.h
+    aead/primates/primatesv1gibbon120/Primatesv1gibbon120.h
+    aead/primates/primatesv1gibbon80/primatesv1gibbon80_api.h
+    aead/primates/primatesv1gibbon80/primatesv1gibbon80_parameters.h
+    aead/primates/primatesv1gibbon80/primatesv1gibbon80_primate.h
+    aead/primates/primatesv1gibbon80/primatesv1gibbon80_encrypt.h
+    aead/primates/primatesv1gibbon80/Primatesv1gibbon80.h
+    aead/primates/primatesv1hanuman120/primatesv1hanuman120_api.h
+    aead/primates/primatesv1hanuman120/primatesv1hanuman120_parameters.h
+    aead/primates/primatesv1hanuman120/primatesv1hanuman120_primate.h
+    aead/primates/primatesv1hanuman120/primatesv1hanuman120_encrypt.h
+    aead/primates/primatesv1hanuman120/Primatesv1hanuman120.h
+    aead/primates/primatesv1hanuman80/primatesv1hanuman80_api.h
+    aead/primates/primatesv1hanuman80/primatesv1hanuman80_parameters.h
+    aead/primates/primatesv1hanuman80/primatesv1hanuman80_primate.h
+    aead/primates/primatesv1hanuman80/primatesv1hanuman80_encrypt.h
+    aead/primates/primatesv1hanuman80/Primatesv1hanuman80.h
+    aead/prost/proest128apev1/proest128apev1_ape.h
+    aead/prost/proest128apev1/proest128apev1_api.h
+    aead/prost/proest128apev1/proest128apev1_proest128.h
+    aead/prost/proest128apev1/proest128apev1_zerobytes.h
+    aead/prost/proest128apev1/proest128apev1_encrypt.h
+    aead/prost/proest128apev1/Proest128apev1.h
+    aead/prost/proest128copav1/proest128copav1_api.h
+    aead/prost/proest128copav1/proest128copav1_copa.h
+    aead/prost/proest128copav1/proest128copav1_proest128.h
+    aead/prost/proest128copav1/proest128copav1_zerobytes.h
+    aead/prost/proest128copav1/proest128copav1_encrypt.h
+    aead/prost/proest128copav1/Proest128copav1.h
+    aead/prost/proest128otrv1/proest128otrv1_api.h
+    aead/prost/proest128otrv1/proest128otrv1_otr.h
+    aead/prost/proest128otrv1/proest128otrv1_proest128.h
+    aead/prost/proest128otrv1/proest128otrv1_zerobytes.h
+    aead/prost/proest128otrv1/proest128otrv1_encrypt.h
+    aead/prost/proest128otrv1/Proest128otrv1.h
+    aead/prost/proest256apev1/proest256apev1_ape.h
+    aead/prost/proest256apev1/proest256apev1_api.h
+    aead/prost/proest256apev1/proest256apev1_proest256.h
+    aead/prost/proest256apev1/proest256apev1_zerobytes.h
+    aead/prost/proest256apev1/proest256apev1_encrypt.h
+    aead/prost/proest256apev1/Proest256apev1.h
+    aead/prost/proest256copav1/proest256copav1_api.h
+    aead/prost/proest256copav1/proest256copav1_copa.h
+    aead/prost/proest256copav1/proest256copav1_proest256.h
+    aead/prost/proest256copav1/proest256copav1_zerobytes.h
+    aead/prost/proest256copav1/proest256copav1_encrypt.h
+    aead/prost/proest256copav1/Proest256copav1.h
+    aead/prost/proest256otrv1/proest256otrv1_api.h
+    aead/prost/proest256otrv1/proest256otrv1_otr.h
+    aead/prost/proest256otrv1/proest256otrv1_proest256.h
+    aead/prost/proest256otrv1/proest256otrv1_zerobytes.h
+    aead/prost/proest256otrv1/proest256otrv1_encrypt.h
+    aead/prost/proest256otrv1/Proest256otrv1.h
+    aead/raviyoyla/raviyoylav1/raviyoylav1_api.h
+    aead/raviyoyla/raviyoylav1/raviyoylav1_encrypt.h
+    aead/raviyoyla/raviyoylav1/Raviyoylav1.h
+    aead/sablier/sablierv1/sablierv1_api.h
+    aead/sablier/sablierv1/sablierv1_authenticate_1.h
+    aead/sablier/sablierv1/sablierv1_cipher_1.h
+    aead/sablier/sablierv1/sablierv1_encrypt.h
+    aead/sablier/sablierv1/Sablierv1.h
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_aes.h
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_api.h
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_shellaes.h
+    aead/shell/shellaes128v1d4n64/shellaes128v1d4n64_encrypt.h
+    aead/shell/shellaes128v1d4n64/Shellaes128v1d4n64.h
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_aes.h
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_api.h
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_shellaes.h
+    aead/shell/shellaes128v1d4n80/shellaes128v1d4n80_encrypt.h
+    aead/shell/shellaes128v1d4n80/Shellaes128v1d4n80.h
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_aes.h
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_api.h
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_shellaes.h
+    aead/shell/shellaes128v1d5n64/shellaes128v1d5n64_encrypt.h
+    aead/shell/shellaes128v1d5n64/Shellaes128v1d5n64.h
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_aes.h
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_api.h
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_shellaes.h
+    aead/shell/shellaes128v1d5n80/shellaes128v1d5n80_encrypt.h
+    aead/shell/shellaes128v1d5n80/Shellaes128v1d5n80.h
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_aes.h
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_api.h
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_shellaes.h
+    aead/shell/shellaes128v1d6n64/shellaes128v1d6n64_encrypt.h
+    aead/shell/shellaes128v1d6n64/Shellaes128v1d6n64.h
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_aes.h
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_api.h
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_shellaes.h
+    aead/shell/shellaes128v1d6n80/shellaes128v1d6n80_encrypt.h
+    aead/shell/shellaes128v1d6n80/Shellaes128v1d6n80.h
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_aes.h
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_api.h
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_shellaes.h
+    aead/shell/shellaes128v1d7n64/shellaes128v1d7n64_encrypt.h
+    aead/shell/shellaes128v1d7n64/Shellaes128v1d7n64.h
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_aes.h
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_api.h
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_shellaes.h
+    aead/shell/shellaes128v1d7n80/shellaes128v1d7n80_encrypt.h
+    aead/shell/shellaes128v1d7n80/Shellaes128v1d7n80.h
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_aes.h
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_api.h
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_shellaes.h
+    aead/shell/shellaes128v1d8n64/shellaes128v1d8n64_encrypt.h
+    aead/shell/shellaes128v1d8n64/Shellaes128v1d8n64.h
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_aes.h
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_api.h
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_shellaes.h
+    aead/shell/shellaes128v1d8n80/shellaes128v1d8n80_encrypt.h
+    aead/shell/shellaes128v1d8n80/Shellaes128v1d8n80.h
+    aead/silver/silverv1/silverv1_api.h
+    aead/silver/silverv1/silverv1_rijndaelEndianNeutral.h
+    aead/silver/silverv1/silverv1_encrypt.h
+    aead/silver/silverv1/Silverv1.h
+    aead/stribob/stribob192r1/stribob192r1_api.h
+    aead/stribob/stribob192r1/stribob192r1_stribob.h
+    aead/stribob/stribob192r1/stribob192r1_encrypt.h
+    aead/stribob/stribob192r1/Stribob192r1.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_aes_round.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_api.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_tiaoxin-reference.h
+    aead/tiaoxin/tiaoxinv1/tiaoxinv1_encrypt.h
+    aead/tiaoxin/tiaoxinv1/Tiaoxinv1.h
+    aead/trivia-ck/trivia0v1/trivia0v1_api.h
+    aead/trivia-ck/trivia0v1/trivia0v1_encrypt.h
+    aead/trivia-ck/trivia0v1/Trivia0v1.h
+    aead/trivia-ck/trivia128v1/trivia128v1_api.h
+    aead/trivia-ck/trivia128v1/trivia128v1_encrypt.h
+    aead/trivia-ck/trivia128v1/Trivia128v1.h
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_api.h
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt.h
+    aead/wheesht/wheeshtv1mr3fr1t128/wheeshtv1mr3fr1t128_encrypt-original.h
+    aead/wheesht/wheeshtv1mr3fr1t128/Wheeshtv1mr3fr1t128.h
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_api.h
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt.h
+    aead/wheesht/wheeshtv1mr3fr1t256/wheeshtv1mr3fr1t256_encrypt-original.h
+    aead/wheesht/wheeshtv1mr3fr1t256/Wheeshtv1mr3fr1t256.h
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_api.h
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt.h
+    aead/wheesht/wheeshtv1mr3fr3t256/wheeshtv1mr3fr3t256_encrypt-original.h
+    aead/wheesht/wheeshtv1mr3fr3t256/Wheeshtv1mr3fr3t256.h
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_api.h
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt.h
+    aead/wheesht/wheeshtv1mr5fr7t256/wheeshtv1mr5fr7t256_encrypt-original.h
+    aead/wheesht/wheeshtv1mr5fr7t256/Wheeshtv1mr5fr7t256.h
+    aead/yaes/yaes128v2/yaes128v2_aes-128.h
+    aead/yaes/yaes128v2/yaes128v2_api.h
+    aead/yaes/yaes128v2/yaes128v2_encrypt.h
+    aead/yaes/yaes128v2/yaes128v2_encrypt.h
+    aead/yaes/yaes128v2/Yaes128v2.h
 )
 
 set(HEADERS_WITH_OPENSSL
-	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
-	aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
-	aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
-	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
-	aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
-	aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
-	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
-	aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
-	aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
-	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
-	aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
-	aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
-	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
-	aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
-	aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
-	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
-	aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
-	aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
-	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
-	aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
-	aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
-	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
-	aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
-	aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
-	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
-	aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
-	aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
-	aead/cba/cba1/cba1_api.h
+    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_api.h
+    aead/ae/aeadaes128ocbtaglen128v1/aeadaes128ocbtaglen128v1_encrypt.h
+    aead/ae/aeadaes128ocbtaglen128v1/Aeadaes128ocbtaglen128v1.h
+    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_api.h
+    aead/ae/aeadaes128ocbtaglen64v1/aeadaes128ocbtaglen64v1_encrypt.h
+    aead/ae/aeadaes128ocbtaglen64v1/Aeadaes128ocbtaglen64v1.h
+    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_api.h
+    aead/ae/aeadaes128ocbtaglen96v1/aeadaes128ocbtaglen96v1_encrypt.h
+    aead/ae/aeadaes128ocbtaglen96v1/Aeadaes128ocbtaglen96v1.h
+    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_api.h
+    aead/ae/aeadaes192ocbtaglen128v1/aeadaes192ocbtaglen128v1_encrypt.h
+    aead/ae/aeadaes192ocbtaglen128v1/Aeadaes192ocbtaglen128v1.h
+    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_api.h
+    aead/ae/aeadaes192ocbtaglen64v1/aeadaes192ocbtaglen64v1_encrypt.h
+    aead/ae/aeadaes192ocbtaglen64v1/Aeadaes192ocbtaglen64v1.h
+    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_api.h
+    aead/ae/aeadaes192ocbtaglen96v1/aeadaes192ocbtaglen96v1_encrypt.h
+    aead/ae/aeadaes192ocbtaglen96v1/Aeadaes192ocbtaglen96v1.h
+    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_api.h
+    aead/ae/aeadaes256ocbtaglen128v1/aeadaes256ocbtaglen128v1_encrypt.h
+    aead/ae/aeadaes256ocbtaglen128v1/Aeadaes256ocbtaglen128v1.h
+    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_api.h
+    aead/ae/aeadaes256ocbtaglen64v1/aeadaes256ocbtaglen64v1_encrypt.h
+    aead/ae/aeadaes256ocbtaglen64v1/Aeadaes256ocbtaglen64v1.h
+    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_api.h
+    aead/ae/aeadaes256ocbtaglen96v1/aeadaes256ocbtaglen96v1_encrypt.h
+    aead/ae/aeadaes256ocbtaglen96v1/Aeadaes256ocbtaglen96v1.h
+    aead/cba/cba1/cba1_api.h
     aead/cba/cba1/cba1_encrypt.h
     aead/cba/cba1/Cba1.h
     aead/cba/cba10/cba10_api.h
@@ -1456,25 +1459,27 @@ set(HEADERS_WITH_OPENSSL
 )
 
 set(OTHER_FILES
+    aead/common/About.md
     aead/acorn/acorn128/About.md
     aead/aegis/aegis128/About.md
     aead/aegis/aegis128l/About.md
     aead/aegis/aegis256/About.md
-#    aead/avalanche/aes128avalanchev1/About.md \ # compilaation ok, sigsegv while running
-    aead/avalanche/aes192avalanchev1/About.md
-    aead/avalanche/aes256avalanchev1/About.md
-#    aead/aes-cpfb/aes128cpfbv1/About.md
-#    aead/aes-cpfb/aes256cpfbv1/About.md
+# Avalanche: compilaation ok, sigsegv while running (fedora64, both debug/release)
+#    aead/avalanche/aes128avalanchev1/About.md # compilaation ok, sigsegv while running
+#    aead/avalanche/aes192avalanchev1/About.md
+#    aead/avalanche/aes256avalanchev1/About.md
     aead/aes-gcm/aes128gcmv1/About.md
     aead/aes-gcm/aes256gcmv1/About.md
+    aead/aes-cpfb/aes128cpfbv1/About.md
+    aead/aes-cpfb/aes256cpfbv1/About.md
     aead/marble/aes128marble4rv1/About.md
-#    aead/cloc/twine80n6clocv1/About.md
+    aead/cloc/twine80n6clocv1/About.md
     aead/cloc/aes128n12clocv1/About.md
     aead/cloc/aes128n8clocv1/About.md
-#    aead/silc/aes128n12silcv1/About.md
-#    aead/silc/aes128n8silcv1/About.md
-#    aead/silc/led80n6silcv1/About.md
-#    aead/silc/present80n6silcv1/About.md
+    aead/silc/aes128n12silcv1/About.md
+    aead/silc/aes128n8silcv1/About.md
+    aead/silc/led80n6silcv1/About.md
+    aead/silc/present80n6silcv1/About.md
     aead/aes-otr/aes128otrpv1/About.md
     aead/aes-otr/aes128otrsv1/About.md
     aead/aes-otr/aes256otrpv1/About.md
@@ -1500,7 +1505,7 @@ set(OTHER_FILES
     aead/deoxys/deoxysneq128128v1/About.md
     aead/deoxys/deoxysneq256128v1/About.md
     aead/enchilada/enchilada128v1/About.md
-#    aead/enchilada/enchilada256v1/About.md
+    aead/enchilada/enchilada256v1/About.md
     aead/hs1-siv/hs1sivhiv1/About.md
     aead/hs1-siv/hs1sivlov1/About.md
     aead/hs1-siv/hs1sivv1/About.md
@@ -1553,69 +1558,69 @@ set(OTHER_FILES
     aead/omd/omdsha512k128n128tau128v1/About.md
     aead/omd/omdsha512k256n256tau256v1/About.md
     aead/omd/omdsha512k512n256tau256v1/About.md
-#    aead/paeq/paeq128/About.md
-#    aead/paeq/paeq128t/About.md
-#    aead/paeq/paeq128tnm/About.md
-#    aead/paeq/paeq160/About.md
-#    aead/paeq/paeq64/About.md
-#    aead/paeq/paeq80/About.md
-#    aead/pi-cipher/pi16cipher096v1/About.md
-#    aead/pi-cipher/pi16cipher128v1/About.md
-#    aead/pi-cipher/pi32cipher128v1/About.md
-#    aead/pi-cipher/pi32cipher256v1/About.md
-#    aead/pi-cipher/pi64cipher128v1/About.md
-#    aead/pi-cipher/pi64cipher256v1/About.md
-#    aead/pi-cipher/pi64cipher256v1oneround/About.md
-#    aead/pi-cipher/pi64cipher256v1tworounds/About.md
+    aead/paeq/paeq128/About.md
+    aead/paeq/paeq128t/About.md
+    aead/paeq/paeq128tnm/About.md
+    aead/paeq/paeq160/About.md
+    aead/paeq/paeq64/About.md
+    aead/paeq/paeq80/About.md
+    aead/pi-cipher/pi16cipher096v1/About.md
+    aead/pi-cipher/pi16cipher128v1/About.md
+    aead/pi-cipher/pi32cipher128v1/About.md
+    aead/pi-cipher/pi32cipher256v1/About.md
+    aead/pi-cipher/pi64cipher128v1/About.md
+    aead/pi-cipher/pi64cipher256v1/About.md
+    aead/pi-cipher/pi64cipher256v1oneround/About.md
+    aead/pi-cipher/pi64cipher256v1tworounds/About.md
 #    aead/polawis/polawisv1/About.md
-#    aead/paes/ppaev11/About.md
-#    aead/primates/primatesv1ape120/About.md
-#    aead/primates/primatesv1ape80/About.md
-#    aead/primates/primatesv1gibbon120/About.md
-#    aead/primates/primatesv1gibbon80/About.md
-#    aead/primates/primatesv1hanuman120/About.md
-#    aead/primates/primatesv1hanuman80/About.md
-#    aead/prost/proest128apev1/About.md
-#    aead/prost/proest128copav1/About.md
-#    aead/prost/proest128otrv1/About.md
-#    aead/prost/proest256apev1/About.md
-#    aead/prost/proest256copav1/About.md
-#    aead/prost/proest256otrv1/About.md
-#    aead/raviyoyla/raviyoylav1/About.md
-#    aead/sablier/sablierv1/About.md
-#    aead/shell/shellaes128v1d4n64/About.md
-#    aead/shell/shellaes128v1d4n80/About.md
-#    aead/shell/shellaes128v1d5n64/About.md
-#    aead/shell/shellaes128v1d5n80/About.md
-#    aead/shell/shellaes128v1d6n64/About.md
-#    aead/shell/shellaes128v1d6n80/About.md
-#    aead/shell/shellaes128v1d7n64/About.md
-#    aead/shell/shellaes128v1d7n80/About.md
-#    aead/shell/shellaes128v1d8n64/About.md
-#    aead/shell/shellaes128v1d8n80/About.md
-#    aead/silver/silverv1/About.md
-#    aead/stribob/stribob192r1/About.md
-#    aead/tiaoxin/tiaoxinv1/About.md
-#    aead/trivia-ck/trivia0v1/About.md
-#    aead/trivia-ck/trivia128v1/About.md
-#    aead/wheesht/wheeshtv1mr3fr1t128/About.md
-#    aead/wheesht/wheeshtv1mr3fr1t256/About.md
-#    aead/wheesht/wheeshtv1mr3fr3t256/About.md
-#    aead/wheesht/wheeshtv1mr5fr7t256/About.md
-#    aead/yaes/yaes128v2/About.md
+    aead/paes/ppaev11/About.md
+    aead/primates/primatesv1ape120/About.md
+    aead/primates/primatesv1ape80/About.md
+    aead/primates/primatesv1gibbon120/About.md
+    aead/primates/primatesv1gibbon80/About.md
+    aead/primates/primatesv1hanuman120/About.md
+    aead/primates/primatesv1hanuman80/About.md
+    aead/prost/proest128apev1/About.md
+    aead/prost/proest128copav1/About.md
+    aead/prost/proest128otrv1/About.md
+    aead/prost/proest256apev1/About.md
+    aead/prost/proest256copav1/About.md
+    aead/prost/proest256otrv1/About.md
+    aead/raviyoyla/raviyoylav1/About.md
+    aead/sablier/sablierv1/About.md
+    aead/shell/shellaes128v1d4n64/About.md
+    aead/shell/shellaes128v1d4n80/About.md
+    aead/shell/shellaes128v1d5n64/About.md
+    aead/shell/shellaes128v1d5n80/About.md
+    aead/shell/shellaes128v1d6n64/About.md
+    aead/shell/shellaes128v1d6n80/About.md
+    aead/shell/shellaes128v1d7n64/About.md
+    aead/shell/shellaes128v1d7n80/About.md
+    aead/shell/shellaes128v1d8n64/About.md
+    aead/shell/shellaes128v1d8n80/About.md
+    aead/silver/silverv1/About.md
+    aead/stribob/stribob192r1/About.md
+    aead/tiaoxin/tiaoxinv1/About.md
+    aead/trivia-ck/trivia0v1/About.md
+    aead/trivia-ck/trivia128v1/About.md
+    aead/wheesht/wheeshtv1mr3fr1t128/About.md
+    aead/wheesht/wheeshtv1mr3fr1t256/About.md
+    aead/wheesht/wheeshtv1mr3fr3t256/About.md
+    aead/wheesht/wheeshtv1mr5fr7t256/About.md
+    aead/yaes/yaes128v2/About.md
 )
 
 set(OTHER_FILES_WITH_OPENSSL
-	aead/ae/aeadaes128ocbtaglen128v1/About.md
-	aead/ae/aeadaes128ocbtaglen64v1/About.md
-	aead/ae/aeadaes128ocbtaglen96v1/About.md
-	aead/ae/aeadaes192ocbtaglen128v1/About.md
-	aead/ae/aeadaes192ocbtaglen64v1/About.md
-	aead/ae/aeadaes192ocbtaglen96v1/About.md
-	aead/ae/aeadaes256ocbtaglen128v1/About.md
-	aead/ae/aeadaes256ocbtaglen64v1/About.md
-	aead/ae/aeadaes256ocbtaglen96v1/About.md
-	aead/cba/cba1/About.md
+    aead/ae/aeadaes128ocbtaglen128v1/About.md
+    aead/ae/aeadaes128ocbtaglen64v1/About.md
+    aead/ae/aeadaes128ocbtaglen96v1/About.md
+    aead/ae/aeadaes192ocbtaglen128v1/About.md
+    aead/ae/aeadaes192ocbtaglen64v1/About.md
+    aead/ae/aeadaes192ocbtaglen96v1/About.md
+    aead/ae/aeadaes256ocbtaglen128v1/About.md
+    aead/ae/aeadaes256ocbtaglen64v1/About.md
+    aead/ae/aeadaes256ocbtaglen96v1/About.md
+    aead/cba/cba1/About.md
     aead/cba/cba10/About.md
     aead/cba/cba2/About.md
     aead/cba/cba3/About.md
@@ -1816,18 +1821,22 @@ source_group("aead\\yaes\\yaes128v2"    REGULAR_EXPRESSION "${CMAKE_CURRENT_SOUR
 # === detect OpenSSL ===
 find_package(OpenSSL)
 if(OPENSSL_FOUND)
-	option(BUILD_CAESAR_WITH_OPENSSL "Link to OpenSSL" ON)
+    option(BUILD_CAESAR_WITH_OPENSSL "Link to OpenSSL" ON)
 
-	if(BUILD_CAESAR_WITH_OPENSSL)
-		list(APPEND SOURCES ${SOURCES_WITH_OPENSSL})
-		list(APPEND HEADERS ${HEADERS_WITH_OPENSSL})
-		list(APPEND OTHER_FILES ${OTHER_FILES_WITH_OPENSSL})
-		add_definitions(-DWITH_OPENSSL)
-		include_directories(${OPENSSL_INCLUDE_DIR})
-		list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
-	endif()
+    if(BUILD_CAESAR_WITH_OPENSSL)
+        list(APPEND SOURCES ${SOURCES_WITH_OPENSSL})
+        list(APPEND HEADERS ${HEADERS_WITH_OPENSSL})
+        list(APPEND OTHER_FILES ${OTHER_FILES_WITH_OPENSSL})
+        add_definitions(-DWITH_OPENSSL)
+        include_directories(${OPENSSL_INCLUDE_DIR})
+        list(APPEND LIBRARIES ${OPENSSL_LIBRARIES})
+	# minor engineering hack, static OpenSSL requires ldl and lz in linux
+        if(STATIC_BUILD)
+            list(APPEND LIBRARIES dl z)
+        endif()
+    endif()
 else()
-	message("OpenSSL not found, not building function requiring it.")
+        message("OpenSSL not found, not building function requiring it.")
 endif()
 
 add_eacirc_project(caesar ${SOURCES} ${HEADERS} ${OTHER_FILES})

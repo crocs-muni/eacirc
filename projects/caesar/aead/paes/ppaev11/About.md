@@ -1,10 +1,9 @@
 # Ppaev11
 
-**Designers:** n/a
+**Designers:** Dingfeng Ye, Peng Wang, Lei Hu, Liping Wang, Yonghong Xie, Siwei Sun, Ping Wang
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/ppaev11
 **Download date:** 2014-12-14
 
@@ -14,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Selected function declarations changed (const added) due to constant arguments problems.

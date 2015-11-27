@@ -1,10 +1,9 @@
 # Aes128n8clocv1
 
-**Designers:** n/a
+**Designers:** Tetsu Iwata, Kazuhiko Minematsu, Jian Guo, Sumio Morioka, Eita Kobayashi
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/aes128n8clocv1
 **Download date:** 2014-12-14
 

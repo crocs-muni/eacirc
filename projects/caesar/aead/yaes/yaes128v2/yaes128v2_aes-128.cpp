@@ -1,6 +1,3 @@
-namespace Yaes128v2_raw {
-int numRounds = -1;
-
 /**
  * aes-128.c
  *
@@ -34,7 +31,10 @@ int numRounds = -1;
 #include <stdlib.h>
 #include <string.h>
 
-#include "aes-128.h"
+#include "yaes128v2_aes-128.h"
+
+// CHANGE namespace moved due to includes
+namespace Yaes128v2_raw {
 
 /*
 Te0[x] = S [x].[02, 01, 01, 03];
@@ -383,9 +383,9 @@ static const u32 Te4[256] = {
 };
 
 static const u32 rcon[] = {
-	0x01000000, 0x02000000, 0x04000000, 0x08000000,
-	0x10000000, 0x20000000, 0x40000000, 0x80000000,
-	0x1B000000, 0x36000000, /* for 128-bit blocks, aes never uses more than 10 rcon values */
+    0x01000000, 0x02000000, 0x04000000, 0x08000000,
+    0x10000000, 0x20000000, 0x40000000, 0x80000000,
+    0x1B000000, 0x36000000, /* for 128-bit blocks, aes never uses more than 10 rcon values */
 };
 
 #define GETU32(pt) (((u32)(pt)[0] << 24) ^ ((u32)(pt)[1] << 16) ^ ((u32)(pt)[2] <<  8) ^ ((u32)(pt)[3]))
@@ -398,46 +398,46 @@ static const u32 rcon[] = {
  */
 int aes128KeySetupEnc(u32 rk[/*44*/], const u8 cipherKey[]) {
    int i = 0;
-	u32 temp;
+    u32 temp;
 
-	rk[0] = GETU32(cipherKey     );
-	rk[1] = GETU32(cipherKey +  4);
-	rk[2] = GETU32(cipherKey +  8);
-	rk[3] = GETU32(cipherKey + 12);
-		for (;;) {
-			temp  = rk[3];
-			rk[4] = rk[0] ^
-				(Te4[(temp >> 16) & 0xff] & 0xff000000) ^
-				(Te4[(temp >>  8) & 0xff] & 0x00ff0000) ^
-				(Te4[(temp      ) & 0xff] & 0x0000ff00) ^
-				(Te4[(temp >> 24)       ] & 0x000000ff) ^
-				rcon[i];
-			rk[5] = rk[1] ^ rk[4];
-			rk[6] = rk[2] ^ rk[5];
-			rk[7] = rk[3] ^ rk[6];
-			if (++i == 10) {
-				return 10;
-			}
-			rk += 4;
-		}
-	return 0;
+    rk[0] = GETU32(cipherKey     );
+    rk[1] = GETU32(cipherKey +  4);
+    rk[2] = GETU32(cipherKey +  8);
+    rk[3] = GETU32(cipherKey + 12);
+        for (;;) {
+            temp  = rk[3];
+            rk[4] = rk[0] ^
+                (Te4[(temp >> 16) & 0xff] & 0xff000000) ^
+                (Te4[(temp >>  8) & 0xff] & 0x00ff0000) ^
+                (Te4[(temp      ) & 0xff] & 0x0000ff00) ^
+                (Te4[(temp >> 24)       ] & 0x000000ff) ^
+                rcon[i];
+            rk[5] = rk[1] ^ rk[4];
+            rk[6] = rk[2] ^ rk[5];
+            rk[7] = rk[3] ^ rk[6];
+            if (++i == 10) {
+                return 10;
+            }
+            rk += 4;
+        }
+    return 0;
 }
 
 void aes128Encrypt(const u32 rk[/*44*/], const u8 pt[16], u8 ct[16]) {
-	u32 s0, s1, s2, s3, t0, t1, t2, t3;
+    u32 s0, s1, s2, s3, t0, t1, t2, t3;
     int r;
 
     /*
-	 * map byte array block to cipher state
-	 * and add initial round key:
-	 */
-	s0 = GETU32(pt     ) ^ rk[0];
-	s1 = GETU32(pt +  4) ^ rk[1];
-	s2 = GETU32(pt +  8) ^ rk[2];
-	s3 = GETU32(pt + 12) ^ rk[3];
+     * map byte array block to cipher state
+     * and add initial round key:
+     */
+    s0 = GETU32(pt     ) ^ rk[0];
+    s1 = GETU32(pt +  4) ^ rk[1];
+    s2 = GETU32(pt +  8) ^ rk[2];
+    s3 = GETU32(pt + 12) ^ rk[3];
     /*
-	 * 9 full rounds:
-	 */
+     * 9 full rounds:
+     */
     r = 5;
     for (;;) {
         t0 =
@@ -496,48 +496,48 @@ void aes128Encrypt(const u32 rk[/*44*/], const u8 pt[16], u8 ct[16]) {
             rk[3];
     }
     /*
-	 * apply last round and
-	 * map cipher state to byte array block:
-	 */
-	s0 =
-		(Te4[(t0 >> 24)       ] & 0xff000000) ^
-		(Te4[(t1 >> 16) & 0xff] & 0x00ff0000) ^
-		(Te4[(t2 >>  8) & 0xff] & 0x0000ff00) ^
-		(Te4[(t3      ) & 0xff] & 0x000000ff) ^
-		rk[0];
-	PUTU32(ct     , s0);
-	s1 =
-		(Te4[(t1 >> 24)       ] & 0xff000000) ^
-		(Te4[(t2 >> 16) & 0xff] & 0x00ff0000) ^
-		(Te4[(t3 >>  8) & 0xff] & 0x0000ff00) ^
-		(Te4[(t0      ) & 0xff] & 0x000000ff) ^
-		rk[1];
-	PUTU32(ct +  4, s1);
-	s2 =
-		(Te4[(t2 >> 24)       ] & 0xff000000) ^
-		(Te4[(t3 >> 16) & 0xff] & 0x00ff0000) ^
-		(Te4[(t0 >>  8) & 0xff] & 0x0000ff00) ^
-		(Te4[(t1      ) & 0xff] & 0x000000ff) ^
-		rk[2];
-	PUTU32(ct +  8, s2);
-	s3 =
-		(Te4[(t3 >> 24)       ] & 0xff000000) ^
-		(Te4[(t0 >> 16) & 0xff] & 0x00ff0000) ^
-		(Te4[(t1 >>  8) & 0xff] & 0x0000ff00) ^
-		(Te4[(t2      ) & 0xff] & 0x000000ff) ^
-		rk[3];
-	PUTU32(ct + 12, s3);
+     * apply last round and
+     * map cipher state to byte array block:
+     */
+    s0 =
+        (Te4[(t0 >> 24)       ] & 0xff000000) ^
+        (Te4[(t1 >> 16) & 0xff] & 0x00ff0000) ^
+        (Te4[(t2 >>  8) & 0xff] & 0x0000ff00) ^
+        (Te4[(t3      ) & 0xff] & 0x000000ff) ^
+        rk[0];
+    PUTU32(ct     , s0);
+    s1 =
+        (Te4[(t1 >> 24)       ] & 0xff000000) ^
+        (Te4[(t2 >> 16) & 0xff] & 0x00ff0000) ^
+        (Te4[(t3 >>  8) & 0xff] & 0x0000ff00) ^
+        (Te4[(t0      ) & 0xff] & 0x000000ff) ^
+        rk[1];
+    PUTU32(ct +  4, s1);
+    s2 =
+        (Te4[(t2 >> 24)       ] & 0xff000000) ^
+        (Te4[(t3 >> 16) & 0xff] & 0x00ff0000) ^
+        (Te4[(t0 >>  8) & 0xff] & 0x0000ff00) ^
+        (Te4[(t1      ) & 0xff] & 0x000000ff) ^
+        rk[2];
+    PUTU32(ct +  8, s2);
+    s3 =
+        (Te4[(t3 >> 24)       ] & 0xff000000) ^
+        (Te4[(t0 >> 16) & 0xff] & 0x00ff0000) ^
+        (Te4[(t1 >>  8) & 0xff] & 0x0000ff00) ^
+        (Te4[(t2      ) & 0xff] & 0x000000ff) ^
+        rk[3];
+    PUTU32(ct + 12, s3);
 }
 
 
 void aes128round(u32 s[4], const u32 rk[4]) {
 /* 1 round encrypting s with round key rk */
-	u32 s0, s1, s2, s3;
+    u32 s0, s1, s2, s3;
 
-	s0 = s[0];
-	s1 = s[1];
-	s2 = s[2];
-	s3 = s[3];
+    s0 = s[0];
+    s1 = s[1];
+    s2 = s[2];
+    s3 = s[3];
    s[0] =
        Te0[(s0 >> 24)       ] ^
        Te1[(s1 >> 16) & 0xff] ^
@@ -566,22 +566,22 @@ void aes128round(u32 s[4], const u32 rk[4]) {
 
 void aes128rounds(const u32 rk[/*44*/], const u8 pt[16], u8 ct[16], int rounds, int start) {
 
-	u32 s[4];
-	int i;
+    u32 s[4];
+    int i;
 
    s[0] = GETU32(pt     );
    s[1] = GETU32(pt +  4);
    s[2] = GETU32(pt +  8);
    s[3] = GETU32(pt + 12);
-  	for (i=0; i<rounds; i++) {
-		aes128round(s, rk+4*(start+i));
-	}
-	PUTU32(ct     , s[0]);
-	PUTU32(ct + 4 , s[1]);
-	PUTU32(ct + 8 , s[2]);
-	PUTU32(ct + 12, s[3]);
+    for (i=0; i<rounds; i++) {
+        aes128round(s, rk+4*(start+i));
+    }
+    PUTU32(ct     , s[0]);
+    PUTU32(ct + 4 , s[1]);
+    PUTU32(ct + 8 , s[2]);
+    PUTU32(ct + 12, s[3]);
 
 }
 
- 
+
 } // namespace Yaes128v2_raw

@@ -1,10 +1,9 @@
 # Ascon128v1
 
-**Designers:** n/a
+**Designers:** Christoph Dobraunig, Maria Eichlseder, Florian Mendel, Martin Schläffer
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/ascon128v1
 **Download date:** 2014-12-14
 

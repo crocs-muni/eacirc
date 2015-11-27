@@ -1,28 +1,29 @@
+#include "proest256copav1_encrypt.h"
+#include "../../common/api.h"
+#include "proest256copav1_api.h"
+#include "proest256copav1_proest256.h"
+#include "proest256copav1_zerobytes.h"
+#include "proest256copav1_copa.h"
+
+// CHANGE namespace moved due to includes
 namespace Proest256copav1_raw {
 int numRounds = -1;
 
-#include "proest256copav1_encrypt.h"
-#include "crypto_verify_32.h"
-#include "proest256copav1_api.h"
-#include "proest256.h"
-#include "zerobytes.h"
-#include "copa.h"
-    
 typedef struct {
-	unsigned char byte[COPA_BLOCKBYTES];
+    unsigned char byte[COPA_BLOCKBYTES];
 } block;
 
 
 // Encrypt single block using Proest in single-key Even-Mansour
-static void encrypt_block(unsigned char *r, const unsigned char *x, const unsigned char *k) 
+static void encrypt_block(unsigned char *r, const unsigned char *x, const unsigned char *k)
 {
-	proest_ctx y;
+    proest_ctx y;
   int i;
   for(i=0;i<CRYPTO_KEYBYTES;i++)
     r[i] = x[i] ^ k[i];
-	proest_readstate(&y, r);
-	proest_permute(&y);
-	proest_writestate(r, &y);
+    proest_readstate(&y, r);
+    proest_permute(&y);
+    proest_writestate(r, &y);
   for(i=0;i<CRYPTO_KEYBYTES;i++)
     r[i] ^= k[i];
 }
@@ -36,24 +37,24 @@ static void xor_block(unsigned char *r, const unsigned char *x, const unsigned c
 
 
 // Decrypt single block using Proest in single-key Even-Mansour
-static void decrypt_block(unsigned char *r, const unsigned char *x, const unsigned char *k) 
+static void decrypt_block(unsigned char *r, const unsigned char *x, const unsigned char *k)
 {
-	proest_ctx y;
+    proest_ctx y;
   int i;
   for(i=0;i<CRYPTO_KEYBYTES;i++)
     r[i] = x[i] ^ k[i];
-	proest_readstate(&y, r);
-	proest_inverse_permute(&y);
-	proest_writestate(r, &y);
+    proest_readstate(&y, r);
+    proest_inverse_permute(&y);
+    proest_writestate(r, &y);
   for(i=0;i<CRYPTO_KEYBYTES;i++)
     r[i] ^= k[i];
 }
 
 
 // Multiplication by x
-static void mulx(unsigned char *r, const unsigned char *x) 
+static void mulx(unsigned char *r, const unsigned char *x)
 {
-	int i;
+    int i;
   unsigned char red0, red1;
   unsigned char t[COPA_BLOCKBYTES];
   for(i=0;i<COPA_BLOCKBYTES;i++)
@@ -63,7 +64,7 @@ static void mulx(unsigned char *r, const unsigned char *x)
   red1  = 0x01 & red0;
   red0 &= 0x25;
 
-	for (i = 1; i < COPA_BLOCKBYTES; ++i)
+    for (i = 1; i < COPA_BLOCKBYTES; ++i)
     r[i] = (t[i] << 1) | (t[i-1] >> 7);
   r[0]  = (t[0] << 1) ^ red0;
   r[1] ^= red1;
@@ -71,7 +72,7 @@ static void mulx(unsigned char *r, const unsigned char *x)
 
 
 // Multiplication by (x+1)
-static void mulxp1(unsigned char *r, const unsigned char *x) 
+static void mulxp1(unsigned char *r, const unsigned char *x)
 {
   int i;
   unsigned char red0, red1;
@@ -81,18 +82,18 @@ static void mulxp1(unsigned char *r, const unsigned char *x)
   red1  = 0x01 & red0;
   red0 &= 0x25;
 
-	for (i = 1; i < COPA_BLOCKBYTES; ++i)
+    for (i = 1; i < COPA_BLOCKBYTES; ++i)
     t[i] = (x[i] << 1) | (x[i-1] >> 7);
   t[0]  = (x[0] << 1) ^ red0;
   t[1] ^= red1;
-	for (i = 0; i < COPA_BLOCKBYTES; ++i)
+    for (i = 0; i < COPA_BLOCKBYTES; ++i)
     r[i] = t[i] ^ x[i];
 }
 
-static void copa_process_ad(unsigned char *v, 
-    const unsigned char *ad, unsigned long long adlen, 
-    const unsigned char *npub, 
-    const unsigned char *_3l, 
+static void copa_process_ad(unsigned char *v,
+    const unsigned char *ad, unsigned long long adlen,
+    const unsigned char *npub,
+    const unsigned char *_3l,
     const unsigned char *k)
 {
   unsigned char buf[2*COPA_BLOCKBYTES];
@@ -152,14 +153,14 @@ static void copa_process_ad(unsigned char *v,
   }
 }
 
-  
+
 int crypto_aead_encrypt(
-	unsigned char *c, 			unsigned long long *clen,
-	const unsigned char *m, 	unsigned long long mlen,
-	const unsigned char *ad, 	unsigned long long adlen,
-	const unsigned char *nsec,
-	const unsigned char *npub,
-	const unsigned char *k
+    unsigned char *c, 			unsigned long long *clen,
+    const unsigned char *m, 	unsigned long long mlen,
+    const unsigned char *ad, 	unsigned long long adlen,
+    const unsigned char *nsec,
+    const unsigned char *npub,
+    const unsigned char *k
 )
 {
   unsigned char v[COPA_BLOCKBYTES];
@@ -188,7 +189,7 @@ int crypto_aead_encrypt(
 
   // Init V (process AD)
   copa_process_ad(v, ad, adlen, npub, delta0, key);
-   
+
   xor_block(v, v, l);
 
   // Encrypt full blocks
@@ -201,7 +202,7 @@ int crypto_aead_encrypt(
     xor_block(v, v, c);
     encrypt_block(c,v,key);
     xor_block(c, c, delta1);
-  
+
     mulx(delta0, delta0);
     mulx(delta1, delta1);
 
@@ -269,7 +270,7 @@ int crypto_aead_decrypt(
 
   *mlen = 0;
   if(clen < CRYPTO_ABYTES) return -1;
-  if((clen-COPA_TAGBYTES) & (COPA_BLOCKBYTES-1)) return -1; 
+  if((clen-COPA_TAGBYTES) & (COPA_BLOCKBYTES-1)) return -1;
 
   for(i=0;i<CRYPTO_KEYBYTES;i++)
     key[i] = k[i];
@@ -305,7 +306,7 @@ int crypto_aead_decrypt(
     *mlen  += COPA_BLOCKBYTES;
     clen  -= COPA_BLOCKBYTES;
 
-    if(clen!=COPA_TAGBYTES) 
+    if(clen!=COPA_TAGBYTES)
     {
       mulx(delta0, delta0);
       mulx(delta1, delta1);
@@ -336,7 +337,9 @@ int crypto_aead_decrypt(
 
   zerobytes(key, CRYPTO_KEYBYTES);
 
-  return crypto_verify_32(delta0,c);
+  // CHANGE namespace added
+//  return crypto_verify_32(delta0,c);
+  return CaesarCommon::crypto_verify_32(delta0,c);
 }
 
 } // namespace Proest256copav1_raw

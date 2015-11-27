@@ -1,8 +1,9 @@
-namespace Twine80n6clocv1_raw {
-
 #include <stdint.h>
 #ifndef __CLOC_H_
 #define __CLOC_H_
+
+// CHANGE namespace moved due to includes
+namespace Twine80n6clocv1_raw {
 
 typedef uint16_t            u16;
 typedef unsigned int        u32;
@@ -28,20 +29,20 @@ typedef u16 word;
 
 /* G^8 */
 #define f1(a,b,c,d)do{\
-	a ^= c;		      \
-	word t = b;       \
-	b ^= d;		      \
-	d = c^b;          \
-	c = t^a;}while(0)
+    a ^= c;		      \
+    word t = b;       \
+    b ^= d;		      \
+    d = c^b;          \
+    c = t^a;}while(0)
 
 
 /* G^1 */
 #define G(a,b,c,d) do{\
-	word t = a^b;     \
-	a = b;            \
-	b = c;            \
-	c = d;            \
-	d = t;}while(0)
+    word t = a^b;     \
+    a = b;            \
+    b = c;            \
+    c = d;            \
+    d = t;}while(0)
 
 
 /* f2 = G^1 */
@@ -50,12 +51,12 @@ typedef u16 word;
 
 /* G^2 */
 #define g1(a,b,c,d)do{\
-	word t = a;       \
-	a = c;            \
-	c = t ^ b;        \
-	t = b;            \
-	b = d;            \
-	d = a ^ t;}while(0)
+    word t = a;       \
+    a = c;            \
+    c = t ^ b;        \
+    t = b;            \
+    b = d;            \
+    d = a ^ t;}while(0)
 
 
 /* G^1 */
@@ -64,26 +65,26 @@ typedef u16 word;
 
 /* G^4 */
 #define h(a,b,c,d)do{ \
-	a ^= b;           \
-	b ^= c;           \
-	c ^= d;           \
-	d ^= a;}while(0)
+    a ^= b;           \
+    b ^= c;           \
+    c ^= d;           \
+    d ^= a;}while(0)
 
 typedef struct _ae_cxt {
-	byte es[STATE_LEN];               // encryption state
-	byte ts[STATE_LEN];               // tag processing state
-	byte* userkey;
-	int klen;
-	byte* ad;
-	unsigned long long adlen;
-	byte* nonce;
-	unsigned long long nlen;
-	byte* pt;
-	unsigned long long ptlen;
-	byte* ct;
-	unsigned long long ctlen;
-	byte* tag;
-	int tlen;
+    byte es[STATE_LEN];               // encryption state
+    byte ts[STATE_LEN];               // tag processing state
+    byte* userkey;
+    int klen;
+    byte* ad;
+    unsigned long long adlen;
+    byte* nonce;
+    unsigned long long nlen;
+    byte* pt;
+    unsigned long long ptlen;
+    byte* ct;
+    unsigned long long ctlen;
+    byte* tag;
+    int tlen;
 } ae_cxt;
 
 ae_cxt* ae_allocate();
@@ -91,11 +92,15 @@ int ae_init(ae_cxt* cxt, const byte* userkey, int keylen);
 int process_ad(ae_cxt* cxt, const byte* ad, unsigned long long adlen, const byte* nonce, unsigned long long nlen);
 int ae_encrypt(ae_cxt* cxt, byte* pt, unsigned long long mlen, byte* ct, byte* tag, unsigned long long tlen, int enc_dec);
 void pstate(const unsigned char* st, int len);
+
+// CHANGE pstate2 declaration added
+void pstate2(const char *str, const byte* state);
+
 void print_cxt(const ae_cxt* cxt);
 
 void xor_bytes(byte*x, const byte*y, int nb);
 void xor_bytes2(byte* result, const byte* x, const byte* y, int nb);
 
-#endif /* end of __CLOC_H_  */
-
 } // namespace Twine80n6clocv1_raw
+
+#endif /* end of __CLOC_H_  */

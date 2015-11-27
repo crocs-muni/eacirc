@@ -1,10 +1,9 @@
 # Juliusv1draft
 
-**Designers:** n/a
+**Designers:** Lear Bahack
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/juliusv1draft
 **Download date:** 2014-12-14
 

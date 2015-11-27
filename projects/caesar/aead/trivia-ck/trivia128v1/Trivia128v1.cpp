@@ -1,5 +1,5 @@
 #include "Trivia128v1.h"
-#include "%%NAMESMALL%%_encrypt.h"
+#include "trivia128v1_encrypt.h"
 #include "../../common/api.h"
 #include "EACglobals.h"
 
