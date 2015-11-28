@@ -137,6 +137,7 @@ struct SETTINGS_GATE_CIRCUIT {
     int genomeWidth;                //! number of function slots in single circuit row (beware: can be higher than sizeLayer!)
     int sizeOutputLayer;            //! number of outputs (including possible memory outputs)
     int sizeInputLayer;             //! number of inputs (including possible memory inputs)
+    string jvmSimFilename;          //! filename to load by JVMSimulator
     JVMSimulator* jvmSim;			//! object responsible for simulation of JVM bytecode (FNC_JVM)
     SETTINGS_GATE_CIRCUIT();
 };

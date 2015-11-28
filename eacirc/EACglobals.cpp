@@ -63,6 +63,7 @@ SETTINGS_GATE_CIRCUIT::SETTINGS_GATE_CIRCUIT() {
     sizeInputLayer = -1;
     genomeSize = -1;
     genomeWidth = -1;
+    jvmSimFilename = "";
     jvmSim = NULL;
 }
 

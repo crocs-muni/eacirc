@@ -81,6 +81,7 @@ int GateCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     pGlobals->settings->gateCircuit.numConnectors = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/NUM_CONNECTORS").c_str());
     pGlobals->settings->gateCircuit.useMemory = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/USE_MEMORY").c_str()) ? true : false;
     pGlobals->settings->gateCircuit.sizeMemory = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/SIZE_MEMORY").c_str());
+    pGlobals->settings->gateCircuit.jvmSimFilename = getXMLElementValue(pRoot,"GATE_CIRCUIT/JVM_FILENAME");
     // parsing EACIRC/GATE_CIRCUIT/ALLOWED_FUNCTIONS
     pGlobals->settings->gateCircuit.allowedFunctions[FNC_NOP] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_NOP").c_str());
     pGlobals->settings->gateCircuit.allowedFunctions[FNC_CONS] = atoi(getXMLElementValue(pRoot,"GATE_CIRCUIT/ALLOWED_FUNCTIONS/FNC_CONS").c_str());

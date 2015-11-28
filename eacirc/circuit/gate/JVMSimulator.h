@@ -191,8 +191,12 @@ public:
 
     string shortDescription();
 
-    // initialize JVMSimulator, load dis file, and save all instructions
-    int jvmsim_init();
+    /**
+     * @brief jvmsim_init parse fileName file
+     * @param fileName to parse bytecode from
+     * @return error code
+     */
+    int jvmsim_init(string fileName);
 
     /**
     * run part of loaded bytecode

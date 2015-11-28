@@ -5,9 +5,9 @@
 #pragma warning(disable:4996)
 
 JVMSimulator::JVMSimulator() {
-    int retval = jvmsim_init();
+    int retval = jvmsim_init(pGlobals->settings->gateCircuit.jvmSimFilename);
     if ( retval == 0 ) {
-        mainLogger.out(LOGGER_INFO) << "JVM simulator initialized." << endl;
+        mainLogger.out(LOGGER_INFO) << "JVM simulator initialized. Loaded file: " << pGlobals->settings->gateCircuit.jvmSimFilename << endl;
     } else {
         mainLogger.out(LOGGER_ERROR) << "JVM simulator initialisation returned error (" << retval << ")" << endl;
     }
@@ -842,10 +842,9 @@ int JVMSimulator::code(char* i) {
     exit(ERR_DATA_MISMATCH);
 }
 
-int JVMSimulator::jvmsim_init() {
-    //FILE *f = fopen("AES.dis", "rt");
-    FILE *f = fopen("oldNodesSimulator.dis", "rt");
-    //FILE *f = fopen("old_nodes_without_relational_op.dis", "rt");
+int JVMSimulator::jvmsim_init(string fileName) {
+    mainLogger.out(LOGGER_INFO) << "JVMSimulator loading file: " << fileName << endl;
+    FILE *f = fopen(fileName.c_str(), "rt");
 
     if ( f == NULL ) return(ERR_CANNOT_OPEN_FILE);
     char line[MAX_LINE_LENGTH], lastline[MAX_LINE_LENGTH];
