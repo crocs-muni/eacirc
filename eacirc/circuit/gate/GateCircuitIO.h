@@ -94,7 +94,6 @@ public:
 private:
     static void pruneGenomeSimple(GAGenome& g, vector<vector<bool> > &hasNodeEffect);
     static size_t parentsEffectCount(const unsigned char function);
-    static void setParentsToUse(GENOME_ITEM_TYPE gene, const size_t layer, vector< vector < bool > > &hasNodeEffect);
 
     vector< vector < bool > > hasNodeEffect;
 };
