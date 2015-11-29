@@ -28,6 +28,7 @@ struct SETTINGS_TEST_VECTORS;
 struct SETTINGS;
 struct STATISTICS;
 struct GLOBALS;
+struct SETTINGS_HEATMAP;
 
 /**
   Type used to store basic genom items - connectors and functions
@@ -170,6 +171,12 @@ struct SETTINGS_TEST_VECTORS {
     SETTINGS_TEST_VECTORS();
 };
 
+//! settings corresponding to EACIRC/HEATMAP
+struct SETTINGS_HEATMAP {
+    unsigned int enabledMask;//! pointer to SETTINGS in EACirc object
+    SETTINGS_HEATMAP();
+};
+
 //! all program run settings
 struct SETTINGS {
     string notes;                           //! corresponding to EACIRC/NOTES (user notes)
@@ -181,6 +188,7 @@ struct SETTINGS {
     SETTINGS_GATE_CIRCUIT gateCircuit;      //! corresponding to EACIRC/GATE_CIRCUIT
     SETTINGS_POLY_CIRCUIT polyCircuit;      //! corresponding to EACIRC/POLYNOMIAL_CIRCUIT
     SETTINGS_TEST_VECTORS testVectors;      //! corresponding to EACIRC/TEST_VECTORS
+    SETTINGS_HEATMAP heatMap;               //! corresponding to EACIRC/HEATMAP
     void* project;                          //! project specific settings
     SETTINGS();
 };
@@ -219,5 +227,7 @@ struct GLOBALS {
     unsigned long precompPow[MAX_LAYER_SIZE];   //! precomputed values up to 2^32
     GLOBALS();
 };
+
+
 
 #endif //EACGLOBALS_H

@@ -2,6 +2,7 @@
 #define TANGLE_SHA3_H
 
 #include "../../Sha3Interface.h"
+#include "EACglobals.h"
 
 class Tangle : public Sha3Interface {
 

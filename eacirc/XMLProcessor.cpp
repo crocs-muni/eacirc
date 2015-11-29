@@ -59,6 +59,25 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     } else {
         pSettings->testVectors.numTestSets = pSettings->main.numGenerations / pSettings->testVectors.setChangeFrequency;
     }
+
+    // parsing EACIRC/HEATMAP
+    if((pSettings->main.projectType == 100) && (atoi(getXMLElementValue(pRoot,"ESTREAM/ALGORITHM_1").c_str()) == 4)){
+        pSettings->heatMap.enabledMask = atoi(getXMLElementValue(pRoot,"HEATMAP/DECIM").c_str());
+    }else if((pSettings->main.projectType == 200)){
+        switch(atoi(getXMLElementValue(pRoot,"SHA3/ALGORITHM_1").c_str())){
+        case 13 :
+            pSettings->heatMap.enabledMask = atoi(getXMLElementValue(pRoot,"HEATMAP/DYNAMIC_SHA_1").c_str());
+            break;
+        case 14 :
+            pSettings->heatMap.enabledMask = atoi(getXMLElementValue(pRoot,"HEATMAP/DYNAMIC_SHA_2").c_str());
+            break;
+        case 44:
+            pSettings->heatMap.enabledMask = atoi(getXMLElementValue(pRoot,"HEATMAP/TANGLE").c_str());
+            break;
+        default :
+            break;
+        }
+    }
 }
 
 int saveXMLFile(TiXmlNode* pRoot, string filename) {

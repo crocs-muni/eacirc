@@ -51,6 +51,10 @@ SETTINGS_GA::SETTINGS_GA() {
     mutateConnectors = true;
 }
 
+SETTINGS_HEATMAP::SETTINGS_HEATMAP(){
+    enabledMask = 0xffff;
+}
+
 SETTINGS_GATE_CIRCUIT::SETTINGS_GATE_CIRCUIT() {
     numLayers = -1;
     sizeLayer = -1;

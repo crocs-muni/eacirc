@@ -3,6 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define SEED 1
+#define ITERATE 1
+#define EXTRACT 1
+#define SBOX 1
+#define XOR 1
+#define ADD 1
+
+
 #define TANGLE_ROTL(x, n)		((x << n) | (x >> (32 - n)))
 
 #define TANGLE_F1(x, y, z)		((x&(y|z)) | (y&z))
@@ -464,131 +472,210 @@ void Tangle::FuncTangle(hashState * state, const BitSequence * message)
 	unsigned int Xa[8];
 	unsigned int Xb[8];
 	unsigned int *M;
-	unsigned int B,C;
+    unsigned int B,C,D;
 
 	M = (unsigned int *)message;
 
+    unsigned int enabledMask = pGlobals->settings->heatMap.enabledMask;
+    unsigned int extract1 = enabledMask & 0x0001;
+    unsigned int extract2 = enabledMask & 0x0002;
+    unsigned int b1 = enabledMask & 0x0004;
+    unsigned int b2 = enabledMask & 0x0008;
+    unsigned int xorTangleF = enabledMask & 0x0010;
+    unsigned int xorW = enabledMask & 0x0020;
+    unsigned int xorTangleK = enabledMask & 0x0040;
+    unsigned int xorB = enabledMask & 0x0080;
+    unsigned int add = enabledMask & 0x0100;
 
-	/* copy hash values */
-	for(r=0; r<32; r++) h[r] = state->H[r];
-	
-	
-	/*
-	Message Expansion
-	*/
+    /* copy hash values */
+    for(r=0; r<32; r++) h[r] = state->H[r];
 
-	/* seeding */
-	TANGLE_SEED(0);
-	TANGLE_SEED(1);
-	TANGLE_SEED(2);
-	TANGLE_SEED(3);
-	TANGLE_SEED(4);
-	TANGLE_SEED(5);
-	TANGLE_SEED(6);
-	TANGLE_SEED(7);
-		
-	/* iteration & extraction */
 
-	t=0;
-	while(t<(state->rounds*2))
-	{
-		/* even */
+    /*
+    Message Expansion
+    */
 
-		/* iterate */
-		Xb[0] = Xa[6] ^ Xa[7];
-		Xb[1] = Xa[0] ^ Xa[1] ^ Xa[3];
-		Xb[2] = Xa[4] ^ Xa[5];
+    /* seeding */
+    TANGLE_SEED(0);
+    TANGLE_SEED(1);
+    TANGLE_SEED(2);
+    TANGLE_SEED(3);
+    TANGLE_SEED(4);
+    TANGLE_SEED(5);
+    TANGLE_SEED(6);
+    TANGLE_SEED(7);
 
-		Xb[3] = Xb[2] ^ Xb[0];
-		Xb[4] = Xa[0] ^ Xa[2] ^ Xa[7];
-		Xb[5] = Xa[2] ^ Xa[5] ^ Xb[0];
-		Xb[6] = Xa[2] ^ Xa[3] ^ Xa[4] ^ Xb[0];
-		Xb[7] = Xa[0] ^ Xa[4] ^ Xa[6];
-		
-		Xb[2] ^= Xb[1];
-		Xb[0] ^= Xa[0] ^ Xa[3];
-		Xb[1] ^= Xa[6];
-		
-				
-		/* extract */
-		W[t]	= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t	& 255]) + M[t	& 127];
-		W[t+1]	= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]) + M[t+1 & 127];
-		W[t+2]	= TANGLE_F1(Xb[4], Xb[5],TANGLE_K[t+2 & 255]) + M[t+2 & 127];
-		W[t+3]	= TANGLE_F2(Xb[6], Xb[7],TANGLE_K[t+3 & 255]) + M[t+3 & 127];
+    /* iteration & extraction */
 
-		/* odd */
+    t=0;
+    while(t<(state->rounds*2))
+    {
+        /* even */
 
-		/* iterate */
-		Xa[0] = Xb[6] ^ Xb[7];
-		Xa[1] = Xb[0] ^ Xb[1] ^ Xb[3];
-		Xa[2] = Xb[4] ^ Xb[5];
+        /* iterate */
+        Xb[0] = Xa[6] ^ Xa[7];
+        Xb[1] = Xa[0] ^ Xa[1] ^ Xa[3];
+        Xb[2] = Xa[4] ^ Xa[5];
 
-		Xa[3] = Xa[2] ^ Xa[0];
-		Xa[4] = Xb[0] ^ Xb[2] ^ Xb[7];
-		Xa[5] = Xb[2] ^ Xb[5] ^ Xa[0];
-		Xa[6] = Xb[2] ^ Xb[3] ^ Xb[4] ^ Xa[0];
-		Xa[7] = Xb[0] ^ Xb[4] ^ Xb[6];
-		
-		Xa[2] ^= Xa[1];
-		Xa[0] ^= Xb[0] ^ Xb[3];
-		Xa[1] ^= Xb[6];
-		
-		/* extract */
-		W[t+4]	= TANGLE_F1(Xa[0], Xa[1],TANGLE_K[t+4	& 255]) + M[t+4	& 127];
-		W[t+5]	= TANGLE_F2(Xa[2], Xa[3],TANGLE_K[t+5 & 255]) + M[t+5 & 127];
-		W[t+6]	= TANGLE_F1(Xa[4], Xa[5],TANGLE_K[t+6 & 255]) + M[t+6 & 127];
-		W[t+7]	= TANGLE_F2(Xa[6], Xa[7],TANGLE_K[t+7 & 255]) + M[t+7 & 127];
-		
-		t+=8;
-	}
+        Xb[3] = Xb[2] ^ Xb[0];
+        Xb[4] = Xa[0] ^ Xa[2] ^ Xa[7];
+        Xb[5] = Xa[2] ^ Xa[5] ^ Xb[0];
+        Xb[6] = Xa[2] ^ Xa[3] ^ Xa[4] ^ Xb[0];
+        Xb[7] = Xa[0] ^ Xa[4] ^ Xa[6];
 
-	
-	/*
-	Round Function
-	*/
+        Xb[2] ^= Xb[1];
+        Xb[0] ^= Xa[0] ^ Xa[3];
+        Xb[1] ^= Xa[6];
 
-	/* pre-compute s, p & q */
-	
 
-	C = W[0] + W[1];
-	C ^= C>>16;
-	C ^= C>>8;
-	s[0] = TANGLE_SBOX[(unsigned char)(C & 0xFF)];
-	p[0] = s[0] & 15;
-	q[0] = s[0] >> 4;
+        /* extract */
+        if(extract1 && extract2){
+        W[t]	= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t	& 255]) + M[t	& 127];
+        W[t+1]	= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]) + M[t+1 & 127];
+        W[t+2]	= TANGLE_F1(Xb[4], Xb[5],TANGLE_K[t+2 & 255]) + M[t+2 & 127];
+        W[t+3]	= TANGLE_F2(Xb[6], Xb[7],TANGLE_K[t+3 & 255]) + M[t+3 & 127];
+        }else if(extract1){
+            W[t]	= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t	& 255]);
+            W[t+1]	= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]);
+            W[t+2]	= TANGLE_F1(Xb[4], Xb[5],TANGLE_K[t+2 & 255]);
+            W[t+3]	= TANGLE_F2(Xb[6], Xb[7],TANGLE_K[t+3 & 255]);
+        }else if(extract2){
+            W[t]	= M[t	& 127];
+            W[t+1]	= M[t+1 & 127];
+            W[t+2]	= M[t+2 & 127];
+            W[t+3]	= M[t+3 & 127];
+        }else{
+            W[t]	= 0;
+            W[t+1]	= 0;
+            W[t+2]	= 0;
+            W[t+3]	= 0;
+        }
+        /* odd */
 
-	for(r=1;r<state->rounds;r++) 
-	{
-		C = W[r*2] + W[r*2+1]; 
-		C ^= C>>16; 
-		C ^= C>>8;
-		s[r] = s[r-1] ^ TANGLE_SBOX[(unsigned char)(C & 0xFF)]; 
-		p[r] = s[r] & 15; 
-		q[r] = s[r] >> 4;
-	}
-		
+        /* iterate */
+        Xa[0] = Xb[6] ^ Xb[7];
+        Xa[1] = Xb[0] ^ Xb[1] ^ Xb[3];
+        Xa[2] = Xb[4] ^ Xb[5];
 
-	/* perform round */
+        Xa[3] = Xa[2] ^ Xa[0];
+        Xa[4] = Xb[0] ^ Xb[2] ^ Xb[7];
+        Xa[5] = Xb[2] ^ Xb[5] ^ Xa[0];
+        Xa[6] = Xb[2] ^ Xb[3] ^ Xb[4] ^ Xa[0];
+        Xa[7] = Xb[0] ^ Xb[4] ^ Xb[6];
 
-	r=0;
-	while(r<state->rounds)
-	{
-		/* even */
-		B = TANGLE_F1(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16])) + W[(r*2)+1];
-		h[(r+16) & 31] ^= TANGLE_F1(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16])) + W[r*2] + TANGLE_K[s[r]] + B;
-		h[r & 31] += B;
-		r++;
+        Xa[2] ^= Xa[1];
+        Xa[0] ^= Xb[0] ^ Xb[3];
+        Xa[1] ^= Xb[6];
 
-		/* odd */
-		B = TANGLE_F2(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16])) + W[(r*2)+1];
-		h[(r+16) & 31] ^= TANGLE_F2(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16])) + W[r*2] + TANGLE_K[s[r]] + B;
-		h[r & 31] += B;
-		r++;
-	}
+        /* extract */
+        if(extract1 && extract2){
+        W[t+4]	= TANGLE_F1(Xa[0], Xa[1],TANGLE_K[t+4	& 255]) + M[t+4	& 127];
+        W[t+5]	= TANGLE_F2(Xa[2], Xa[3],TANGLE_K[t+5 & 255]) + M[t+5 & 127];
+        W[t+6]	= TANGLE_F1(Xa[4], Xa[5],TANGLE_K[t+6 & 255]) + M[t+6 & 127];
+        W[t+7]	= TANGLE_F2(Xa[6], Xa[7],TANGLE_K[t+7 & 255]) + M[t+7 & 127];
+        }else if(extract1){
+            W[t+4]	= TANGLE_F1(Xa[0], Xa[1],TANGLE_K[t+4	& 255]);
+            W[t+5]	= TANGLE_F2(Xa[2], Xa[3],TANGLE_K[t+5 & 255]);
+            W[t+6]	= TANGLE_F1(Xa[4], Xa[5],TANGLE_K[t+6 & 255]);
+            W[t+7]	= TANGLE_F2(Xa[6], Xa[7],TANGLE_K[t+7 & 255]);
+        }else if(extract2){
+            W[t+4]	= M[t+4	& 127];
+            W[t+5]	= M[t+5 & 127];
+            W[t+6]	= M[t+6 & 127];
+            W[t+7]	= M[t+7 & 127];
+        }
+        t+=8;
+    }
 
-	/* chain hash values */
-	for(r=0; r<32; r++) state->H[r] += h[r];
-	
+
+    /*
+    Round Function
+    */
+
+    /* pre-compute s, p & q */
+
+
+    C = W[0] + W[1];
+    C ^= C>>16;
+    C ^= C>>8;
+    s[0] = TANGLE_SBOX[(unsigned char)(C & 0xFF)];
+    p[0] = s[0] & 15;
+    q[0] = s[0] >> 4;
+
+    for(r=1;r<state->rounds;r++)
+    {
+        C = W[r*2] + W[r*2+1];
+        C ^= C>>16;
+        C ^= C>>8;
+        s[r] = s[r-1] ^ TANGLE_SBOX[(unsigned char)(C & 0xFF)];
+        p[r] = s[r] & 15;
+        q[r] = s[r] >> 4;
+    }
+
+
+    /* perform round */
+
+    r=0;
+    while(r<state->rounds)
+    {
+        /* even */
+        B = 0;
+        if(b1){
+            B += TANGLE_F1(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16]));
+        }if(b2){
+            B += W[(r*2)+1];
+        }
+
+        D = 0;
+        if(xorTangleF){
+            D += TANGLE_F1(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16]));
+        }
+        if(xorW){
+            D += W[r*2];
+        }
+        if(xorTangleK){
+            D += TANGLE_K[s[r]];
+        }
+        if(xorB){
+            D += B;
+        }
+        h[(r+16) & 31] ^= D;
+
+        if(add){
+            h[r & 31] += B;
+        }
+        r++;
+
+        /* odd */
+        B = 0;
+        if(b1){
+            B += TANGLE_F2(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16]));
+        }if(b2){
+            B += W[(r*2)+1];
+        }
+
+        D = 0;
+        if(xorTangleF){
+            D += TANGLE_F2(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16]));
+        }
+        if(xorW){
+            D += W[r*2];
+        }
+        if(xorTangleK){
+            D += TANGLE_K[s[r]];
+        }
+        if(xorB){
+            D += B;
+        }
+        if(add){
+            h[r & 31] += B;
+        }
+        r++;
+    }
+
+    /* chain hash values */
+    for(r=0; r<32; r++) state->H[r] += h[r];
+
 
 }
 

@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "../../Sha3Interface.h"
+#include "EACglobals.h"
 
 class DSHA : public Sha3Interface {
 

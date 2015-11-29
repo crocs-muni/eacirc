@@ -31,6 +31,8 @@
 #include<stdlib.h>
 #include<string.h>
 #include"ecrypt-sync.h"
+#include "EACglobals.h"
+#include "EACirc.h"
 
 
 
@@ -50,6 +52,7 @@ void decim_absg(DECIM_ctx *ctx, u8 bit);
 void decim_lfsr_init(DECIM_ctx *ctx);
 
 void decim_step(DECIM_ctx *ctx);
+void decim_step_init(DECIM_ctx *ctx);
 
 /* when we got enough bits of key stream
  * pack it into a key stream byte
