@@ -1,10 +1,9 @@
 # Cmcc42v1
 
-**Designers:** n/a
+**Designers:** Jonathan Trostle
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/cmcc42v1
 **Download date:** 2014-12-14
 

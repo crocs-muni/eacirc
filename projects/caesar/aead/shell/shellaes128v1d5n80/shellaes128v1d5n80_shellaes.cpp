@@ -1,6 +1,3 @@
-namespace Shellaes128v1d5n80_raw {
-int numRounds = -1;
-
 /*
  * SHELL-AES Reference C Implementation
  *
@@ -29,9 +26,11 @@ int numRounds = -1;
 #include<string.h>
 #include<stdint.h>
 
-#include "aes.h"
-#include "shellaes.h"
+#include "shellaes128v1d5n80_aes.h"
+#include "shellaes128v1d5n80_shellaes.h"
 
+// CHANGE namespace moved due to includes
+namespace Shellaes128v1d5n80_raw {
 
 /*print a byte string b[]. blen is the length of b[].*/
 void printf_byte_string(const u8 b[], unsigned long long int blen){
@@ -186,10 +185,10 @@ void KeySetupDec(u32 mk[], u32 sk[], u32 isk[], u8 L[], u8 Lprime[], u8 keyprime
     /*apply inverse mixcolumn to the round keys*/
     for(i=0; i< 12*d; ++i){
         isk[i] =
-			Td0[Te4[(isk[i] >> 24)       ] & 0xff] ^
-			Td1[Te4[(isk[i] >> 16) & 0xff] & 0xff] ^
-			Td2[Te4[(isk[i] >>  8) & 0xff] & 0xff] ^
-			Td3[Te4[(isk[i]      ) & 0xff] & 0xff];
+            Td0[Te4[(isk[i] >> 24)       ] & 0xff] ^
+            Td1[Te4[(isk[i] >> 16) & 0xff] & 0xff] ^
+            Td2[Te4[(isk[i] >>  8) & 0xff] & 0xff] ^
+            Td3[Te4[(isk[i]      ) & 0xff] & 0xff];
     }
 }
 

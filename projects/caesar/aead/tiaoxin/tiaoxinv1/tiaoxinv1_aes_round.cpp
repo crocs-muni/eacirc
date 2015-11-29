@@ -1,10 +1,7 @@
-namespace Tiaoxinv1_raw {
-int numRounds = -1;
-
 /*
  * AES round Reference C Implementation
- * 
- * Copyright 2014: 
+ *
+ * Copyright 2014:
  *     Ivica Nikolic <cube444@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -19,12 +16,15 @@ int numRounds = -1;
  */
 
 #include <string.h>
-#include "tiaoxin-reference.h"
+#include "tiaoxinv1_tiaoxin-reference.h"
+
+// CHANGE namespace moved due to includes
+namespace Tiaoxinv1_raw {
 
 /*
  * The S-boxes of AES
  */
-unsigned char sbox[256] = 
+unsigned char sbox[256] =
 {
    0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
    0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -55,86 +55,86 @@ unsigned char MC[4][4] = { {2,3,1,1}, {1,2,3,1}, {1,1,2,3}, {3,1,1,2} };
 void SubBytes( unsigned char state[4][4] )
 {
   unsigned int i,j;
-  
+
   for(i=0; i<4; i++)
     for(j=0; j<4; j++)
-       state[i][j] = sbox[ (unsigned int)state[i][j] ];   
-    
+       state[i][j] = sbox[ (unsigned int)state[i][j] ];
+
 }
 
 /*
- * The ShiftRows transformation of AES 
+ * The ShiftRows transformation of AES
  */
 void ShiftRows( unsigned  char state[4][4] )
 {
   int i,j;
   unsigned char tmp[4][4];
-  
+
   for(i=0; i<4; i++){
     for(j=0; j<4; j++)
       tmp[i][j] = state[i][(j+i)%4];
   }
-  memcpy( state, tmp, 4*4 );  
+  memcpy( state, tmp, 4*4 );
 }
 
-/* 
+/*
  * The field multiplication used in the MixColumns
  */
 unsigned char FieldMult(unsigned char a, unsigned char b)
-{  
+{
   const unsigned char ReductionPoly = 0x1b;
   unsigned char x = a, ret = 0;
   int i;
   for(i = 0; i < 8; i++) {
-	  if((b>>i)&1) ret ^= x;
-	  if(x&0x80) { x <<= 1; x ^= ReductionPoly; }
-	  else x <<= 1;
+      if((b>>i)&1) ret ^= x;
+      if(x&0x80) { x <<= 1; x ^= ReductionPoly; }
+      else x <<= 1;
   }
-  return ret;  
+  return ret;
 }
 
 /*
- * The MixColumns transformation of AES 
+ * The MixColumns transformation of AES
  */
 void MixColumns( unsigned char state[4][4] )
 {
   int col,row,k;
   unsigned char tmp[4][4];
-  
+
   memset ( tmp, 0, 4*4 );
-  
-  for(col=0; col<4; col++){    
+
+  for(col=0; col<4; col++){
     for(row=0; row<4; row++){
       for(k=0; k<4; k++)
-	tmp[row][col] ^= FieldMult( MC[row][k], state[k][col] );
-    }    
+    tmp[row][col] ^= FieldMult( MC[row][k], state[k][col] );
+    }
   }
   memcpy( state, tmp, 4*4 );
 }
 
-/* 
+/*
  * One AES round
  */
 void AES_round( word P, word K, word C)
 {
   int i,j;
   unsigned char state[4][4];
-  
+
   // Convert the 16 byte sequence to a 4x4 matrix
   for(i=0; i<4; i++)
     for(j=0; j<4; j++)
       state[i][j] = P[ 4 * j + i ];
-  
+
   // Apply keyless AES round
   SubBytes  ( state );
   ShiftRows ( state );
   MixColumns( state );
-  
-  // Convert the 4x4 matrix to 16-byte sequence 
+
+  // Convert the 4x4 matrix to 16-byte sequence
   for(i=0; i<4; i++)
     for(j=0; j<4; j++)
       C[ 4 * j + i ] = state[i][j];
-    
+
   // Xor the key
   for(i=0; i<16; i++)
     C[i] ^= K[i];

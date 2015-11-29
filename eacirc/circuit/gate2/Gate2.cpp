@@ -16,6 +16,10 @@ int Gate2::loadCircuitConfiguration( TiXmlNode* pRoot )
     GateCircuit::loadCircuitConfiguration( pRoot );
 
     try {
+#ifndef CUDA
+        if (pGlobals->settings->cuda.enabled)
+            throw std::invalid_argument( "Bad settings! You are trying to run CUDA circuit. This binary was not build with CUDA support." );
+#endif
         if (pGlobals->settings->gateCircuit.useMemory)
             throw std::invalid_argument( "Bad settings! Gate2 backend cannot have useMemory enabled." );
         if (pGlobals->settings->gateCircuit.allowedFunctions[FNC_JVM])

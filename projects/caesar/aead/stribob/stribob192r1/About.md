@@ -1,10 +1,9 @@
 # Stribob192r1
 
-**Designers:** n/a
+**Designers:** Markku-Juhani O. Saarinen, Billy B. Brumley
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/stribob192r1
 **Download date:** 2014-12-14
 
@@ -14,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* 'static' added to constatnt arrays

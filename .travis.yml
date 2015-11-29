@@ -1,24 +1,21 @@
-language: cpp
+sudo: required
+dist: trusty
 
+language: cpp
 compiler: gcc
 
 before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update
-  - sudo apt-get install gcc-5 g++-5
+  - sudo apt-get install gcc-5 g++-5 -y
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
   - sudo update-alternatives --config gcc
   - sudo update-alternatives --config g++
 
 install:
-  - ORIGPWD=`pwd`
-  - export CMAKESCRIPT=/tmp/cmake.sh
-  - wget -O $CMAKESCRIPT http://www.cmake.org/files/v3.1/cmake-3.1.3-Linux-x86_64.sh
-  - sudo mkdir /opt/cmake && cd /opt/cmake
-  - sudo bash $CMAKESCRIPT --skip-license
-  - export PATH=/opt/cmake/bin/:$PATH
-  - cd $ORIGPWD
+  - wget https://cmake.org/files/v3.4/cmake-3.4.0-Linux-x86_64.sh
+  - sudo sh cmake-3.4.0-Linux-x86_64.sh --prefix=/usr --exclude-subdir
 
 script:
   - mkdir build && cd build
@@ -26,20 +23,3 @@ script:
   - make
   - cd run && ./eacirc -test
 
-env:
-  global:
-   # encrypted COVERITY_SCAN_TOKEN
-   - secure: dEzkoyH1XYZjiUIRp4bukXlZZbObGbUCkp7Wzu/d+ua02LZ6XLwH4Y9dIrFm4egeGtVNBKHUR1iQoSeO5GKIvqwvrlDA0n+4yegCJmsBh08PhSvS3vLApE6IYH4I69wQ8LtAE9t2UIUstGZokXpzvjpluw3hCTWVoNe9ude8sB8=
-
-addons:
-  # Coverity static code scan
-  coverity_scan:
-    project:
-      name: petrs/EACirc
-    notification_email: mukrop@mail.muni.cz petr@svenda.com
-    # command to prepare coverity scan for clang compiler
-    build_command_prepend: cov-configure --comptype clangcxx --compiler `which clang++`
-    # command to build project
-    build_command: make
-    # brach to analyse
-    branch_pattern: coverity_scan

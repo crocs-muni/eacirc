@@ -1,10 +1,9 @@
 # Primatesv1ape120
 
-**Designers:** n/a
+**Designers:** Elena Andreeva, Begül Bilgin, Andrey Bogdanov, Atul Luykx, Florian Mendel, Bart Mennink, Nicky Mouha, Qingju Wang, Kan Yasuda
 
 **Implementation:** reference
-**Implemetors:** n/a
-**Version:** n/a
+**Version:** 1.0
 **Source:** https://github.com/floodyberry/supercop/tree/master/crypto_aead/primatesv1ape120
 **Download date:** 2014-12-14
 

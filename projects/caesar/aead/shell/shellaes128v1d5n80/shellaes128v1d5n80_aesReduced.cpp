@@ -1,6 +1,3 @@
-namespace Shellaes128v1d5n80_raw {
-int numRounds = -1;
-
 /*
  * SHELL Reference C Implementation
  *
@@ -27,8 +24,10 @@ int numRounds = -1;
 #include <assert.h>
 #include <stdlib.h>
 
-#include "aes.h"
+#include "shellaes128v1d5n80_aes.h"
 
+// CHANGE namespace moved due to includes
+namespace Shellaes128v1d5n80_raw {
 
 /* the auxiliary permutation: reduced 4-round AES encryption */
 
@@ -37,9 +36,9 @@ void aesReducedEnc(const u32 mk[], const u32 sk[], const u8 pt[], u8 ct[]){
     u32 s0, s1, s2, s3, t0, t1, t2, t3;
 
     s0 = GETU32(pt     ) ^ mk[0];
-	s1 = GETU32(pt +  4) ^ mk[1];
-	s2 = GETU32(pt +  8) ^ mk[2];
-	s3 = GETU32(pt + 12) ^ mk[3];
+    s1 = GETU32(pt +  4) ^ mk[1];
+    s2 = GETU32(pt +  8) ^ mk[2];
+    s3 = GETU32(pt + 12) ^ mk[3];
 
     /* round 1*/
     t0 =
@@ -125,71 +124,71 @@ void aesReducedEnc(const u32 mk[], const u32 sk[], const u8 pt[], u8 ct[]){
     /* round 4*/
 
     s0 =
-		(Te0[(t0 >> 24)       ] ) ^
-		(Te1[(t1 >> 16) & 0xff]) ^
-		(Te2[(t2 >>  8) & 0xff]) ^
-		(Te3[(t3      ) & 0xff]) ;
+        (Te0[(t0 >> 24)       ] ) ^
+        (Te1[(t1 >> 16) & 0xff]) ^
+        (Te2[(t2 >>  8) & 0xff]) ^
+        (Te3[(t3      ) & 0xff]) ;
 
-	PUTU32(ct     , s0);
+    PUTU32(ct     , s0);
 
-	s1 =
-		(Te0[(t1 >> 24)       ] ) ^
-		(Te1[(t2 >> 16) & 0xff] ) ^
-		(Te2[(t3 >>  8) & 0xff] ) ^
-		(Te3[(t0      ) & 0xff] );
+    s1 =
+        (Te0[(t1 >> 24)       ] ) ^
+        (Te1[(t2 >> 16) & 0xff] ) ^
+        (Te2[(t3 >>  8) & 0xff] ) ^
+        (Te3[(t0      ) & 0xff] );
 
-	PUTU32(ct +  4, s1);
+    PUTU32(ct +  4, s1);
 
-	s2 =
-		(Te0[(t2 >> 24)       ] ) ^
-		(Te1[(t3 >> 16) & 0xff] ) ^
-		(Te2[(t0 >>  8) & 0xff] ) ^
-		(Te3[(t1      ) & 0xff] );
+    s2 =
+        (Te0[(t2 >> 24)       ] ) ^
+        (Te1[(t3 >> 16) & 0xff] ) ^
+        (Te2[(t0 >>  8) & 0xff] ) ^
+        (Te3[(t1      ) & 0xff] );
 
-	PUTU32(ct +  8, s2);
+    PUTU32(ct +  8, s2);
 
-	s3 =
-		(Te0[(t3 >> 24)       ] ) ^
-		(Te1[(t0 >> 16) & 0xff] ) ^
-		(Te2[(t1 >>  8) & 0xff] ) ^
-		(Te3[(t2      ) & 0xff] );
+    s3 =
+        (Te0[(t3 >> 24)       ] ) ^
+        (Te1[(t0 >> 16) & 0xff] ) ^
+        (Te2[(t1 >>  8) & 0xff] ) ^
+        (Te3[(t2      ) & 0xff] );
 
-	PUTU32(ct + 12, s3);
+    PUTU32(ct + 12, s3);
 }
 
 void aesReducedDec(const u32 mk[], const u32 sk[], const u8 ct[], u8 pt[]){
     u32 s0, s1, s2, s3, t0, t1, t2, t3;
 
     s0 = GETU32(ct     );
-	s1 = GETU32(ct +  4);
-	s2 = GETU32(ct +  8);
-	s3 = GETU32(ct + 12);
+    s1 = GETU32(ct +  4);
+    s2 = GETU32(ct +  8);
+    s3 = GETU32(ct + 12);
 
     /*apply inverse of mixcolumn to s0-s3 */
 
     s0 =
-			Td0[Te4[(s0 >> 24)       ] & 0xff] ^
-			Td1[Te4[(s0 >> 16) & 0xff] & 0xff] ^
-			Td2[Te4[(s0 >>  8) & 0xff] & 0xff] ^
-			Td3[Te4[(s0      ) & 0xff] & 0xff];
+            Td0[Te4[(s0 >> 24)       ] & 0xff] ^
+            Td1[Te4[(s0 >> 16) & 0xff] & 0xff] ^
+            Td2[Te4[(s0 >>  8) & 0xff] & 0xff] ^
+            Td3[Te4[(s0      ) & 0xff] & 0xff];
 
     s1 =
-			Td0[Te4[(s1 >> 24)       ] & 0xff] ^
-			Td1[Te4[(s1 >> 16) & 0xff] & 0xff] ^
-			Td2[Te4[(s1 >>  8) & 0xff] & 0xff] ^
-			Td3[Te4[(s1      ) & 0xff] & 0xff];
+            Td0[Te4[(s1 >> 24)       ] & 0xff] ^
+            Td1[Te4[(s1 >> 16) & 0xff] & 0xff] ^
+            Td2[Te4[(s1 >>  8) & 0xff] & 0xff] ^
+            Td3[Te4[(s1      ) & 0xff] & 0xff];
 
     s2 =
-			Td0[Te4[(s2 >> 24)       ] & 0xff] ^
-			Td1[Te4[(s2 >> 16) & 0xff] & 0xff] ^
-			Td2[Te4[(s2 >>  8) & 0xff] & 0xff] ^
-			Td3[Te4[(s2      ) & 0xff] & 0xff];
+            Td0[Te4[(s2 >> 24)       ] & 0xff] ^
+            Td1[Te4[(s2 >> 16) & 0xff] & 0xff] ^
+            Td2[Te4[(s2 >>  8) & 0xff] & 0xff] ^
+            Td3[Te4[(s2      ) & 0xff] & 0xff];
 
     s3 =
-			Td0[Te4[(s3 >> 24)       ] & 0xff] ^
-			Td1[Te4[(s3 >> 16) & 0xff] & 0xff] ^
-			Td2[Te4[(s3 >>  8) & 0xff] & 0xff] ^
-			Td3[Te4[(s3      ) & 0xff] & 0xff];
+            Td0[Te4[(s3 >> 24)       ] & 0xff] ^
+            Td1[Te4[(s3 >> 16) & 0xff] & 0xff] ^
+            Td2[Te4[(s3 >>  8) & 0xff] & 0xff] ^
+            Td3[Te4[(s3      ) & 0xff] & 0xff];
 
     /*Decryption procedure*/
 
@@ -271,40 +270,40 @@ void aesReducedDec(const u32 mk[], const u32 sk[], const u8 ct[], u8 pt[]){
             sk[11];
 
     s0 =
-   		(Td4[(t0 >> 24)       ] & 0xff000000) ^
-   		(Td4[(t3 >> 16) & 0xff] & 0x00ff0000) ^
-   		(Td4[(t2 >>  8) & 0xff] & 0x0000ff00) ^
-   		(Td4[(t1      ) & 0xff] & 0x000000ff) ^
-   		mk[0];
+        (Td4[(t0 >> 24)       ] & 0xff000000) ^
+        (Td4[(t3 >> 16) & 0xff] & 0x00ff0000) ^
+        (Td4[(t2 >>  8) & 0xff] & 0x0000ff00) ^
+        (Td4[(t1      ) & 0xff] & 0x000000ff) ^
+        mk[0];
 
-	PUTU32(pt     , s0);
+    PUTU32(pt     , s0);
 
-   	s1 =
-   		(Td4[(t1 >> 24)       ] & 0xff000000) ^
-   		(Td4[(t0 >> 16) & 0xff] & 0x00ff0000) ^
-   		(Td4[(t3 >>  8) & 0xff] & 0x0000ff00) ^
-   		(Td4[(t2      ) & 0xff] & 0x000000ff) ^
-   		mk[1];
+    s1 =
+        (Td4[(t1 >> 24)       ] & 0xff000000) ^
+        (Td4[(t0 >> 16) & 0xff] & 0x00ff0000) ^
+        (Td4[(t3 >>  8) & 0xff] & 0x0000ff00) ^
+        (Td4[(t2      ) & 0xff] & 0x000000ff) ^
+        mk[1];
 
-	PUTU32(pt +  4, s1);
+    PUTU32(pt +  4, s1);
 
-   	s2 =
-   		(Td4[(t2 >> 24)       ] & 0xff000000) ^
-   		(Td4[(t1 >> 16) & 0xff] & 0x00ff0000) ^
-   		(Td4[(t0 >>  8) & 0xff] & 0x0000ff00) ^
-   		(Td4[(t3      ) & 0xff] & 0x000000ff) ^
-   		mk[2];
+    s2 =
+        (Td4[(t2 >> 24)       ] & 0xff000000) ^
+        (Td4[(t1 >> 16) & 0xff] & 0x00ff0000) ^
+        (Td4[(t0 >>  8) & 0xff] & 0x0000ff00) ^
+        (Td4[(t3      ) & 0xff] & 0x000000ff) ^
+        mk[2];
 
-	PUTU32(pt +  8, s2);
+    PUTU32(pt +  8, s2);
 
-   	s3 =
-   		(Td4[(t3 >> 24)       ] & 0xff000000) ^
-   		(Td4[(t2 >> 16) & 0xff] & 0x00ff0000) ^
-   		(Td4[(t1 >>  8) & 0xff] & 0x0000ff00) ^
-   		(Td4[(t0      ) & 0xff] & 0x000000ff) ^
-   		mk[3];
+    s3 =
+        (Td4[(t3 >> 24)       ] & 0xff000000) ^
+        (Td4[(t2 >> 16) & 0xff] & 0x00ff0000) ^
+        (Td4[(t1 >>  8) & 0xff] & 0x0000ff00) ^
+        (Td4[(t0      ) & 0xff] & 0x000000ff) ^
+        mk[3];
 
-	PUTU32(pt + 12, s3);
+    PUTU32(pt + 12, s3);
 
 }
 

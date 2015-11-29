@@ -1,10 +1,10 @@
-namespace Tiaoxinv1_raw {
-int numRounds = -1;
-
 #include "tiaoxinv1_encrypt.h"
 #include "tiaoxinv1_api.h"
-#include "tiaoxin-reference.h"
+#include "tiaoxinv1_tiaoxin-reference.h"
 
+// CHANGE namespace moved due to includes
+namespace Tiaoxinv1_raw {
+int numRounds = -1;
 
 int crypto_aead_encrypt(
   unsigned char *c,unsigned long long *clen,
@@ -28,7 +28,7 @@ int crypto_aead_decrypt(
 )
 {
   return tiaoxin_reference_decrypt( m , mlen, nsec, c, clen, ad, adlen, npub, k);
-  
+
 }
 
 } // namespace Tiaoxinv1_raw

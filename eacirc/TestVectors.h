@@ -2,7 +2,7 @@
 
 #include "Byte.h"
 #include <memory>
-
+#include "cxx_utils.h"
 
 class TestVectors
 {

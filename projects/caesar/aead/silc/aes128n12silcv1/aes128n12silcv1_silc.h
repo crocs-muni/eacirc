@@ -62,6 +62,10 @@ int ae_init(ae_cxt* cxt, const byte* userkey, int keylen);
 int process_ad(ae_cxt* cxt, const byte* ad, unsigned long long adlen, const byte* nonce, unsigned long long nlen);
 int ae_encrypt(ae_cxt* cxt, byte* pt, unsigned long long mlen, byte* ct, byte* tag, unsigned long long tlen, int enc_dec);
 void pstate(const unsigned char* st, int len);
+
+// CHANGE pstate2 declaration added
+void pstate2(const char *str, const byte* state);
+
 void print_cxt(const ae_cxt* cxt);
 
 void xor_bytes(byte*x, const byte*y, int nb);

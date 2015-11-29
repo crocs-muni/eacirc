@@ -153,7 +153,7 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 # === eacirc target ===
 if(BUILD_CUDA)
     cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} OPTIONS -std=c++11 -relaxed-constexpr)
+    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} OPTIONS -relaxed-constexpr)
     target_compile_definitions(eacirc PUBLIC USE_CUDA)
 else()
     add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
@@ -161,7 +161,6 @@ endif()
 
 target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS_DIR})
 target_link_libraries(eacirc galib tinyXML catch)
-
 
 # === build target to run directory ===
 set_target_properties(eacirc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})

@@ -1,40 +1,13 @@
-namespace Tiaoxinv1_raw {
-
 #ifndef AES_ROUND_H
 #define AES_ROUND_H
 
-#include "tiaoxin-reference.h"
+#include "tiaoxinv1_tiaoxin-reference.h"
+
+// CHANGE namespace moved due to includes
+namespace Tiaoxinv1_raw {
 
 void AES_round( word P, word K, word C);
 
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 } // namespace Tiaoxinv1_raw
+
+#endif

@@ -1,12 +1,12 @@
-namespace Stribob192r1_raw {
-int numRounds = -1;
-
 // sbob_pi64.c
 // 28-Apr-14  Markku-Juhani O. Saarinen <mjos@iki.fi>
 
 // Reference 64-bit GCC version
 
-#include "stribob.h"
+#include "stribob192r1_stribob.h"
+
+// CHANGE namespace moved due to includes
+namespace Stribob192r1_raw {
 
 // sbob_tab64.c
 extern const uint64_t sbob_sl64[8][256];

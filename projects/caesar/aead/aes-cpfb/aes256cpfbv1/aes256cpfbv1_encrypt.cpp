@@ -14,24 +14,31 @@
 
 #include "aes256cpfbv1_encrypt.h"
 #include "aes256cpfbv1_api.h"
-#include "crypto_uint32.h"
-
-// CHANGE namespace moved due to includes
-namespace Aes256cpfbv1_raw {
-int numRounds = -1;
+// CHANGE include commented out, typedef created instead (cinttypes necessary to add)
+// #include "crypto_uint32.h"
+#include <cinttypes>
+typedef uint32_t crypto_uint32;
 
 #define BLOCK_LENGTH 16
 
 #if CRYPTO_KEYBYTES == 16
 #define KEYBITS 128
 #define KEY_LENGTH 16
-#include "crypto_core_aes128encrypt.h"
-#define AES_encrypt(in,out,key) crypto_core_aes128encrypt(out,in,key,0)
+// CHANGE crypto_code include changed to caesar common API
+// #include "crypto_core_aes128encrypt.h"
+#include "../../common/api.h"
+// CHANGE namespace added
+// #define AES_encrypt(in,out,key) crypto_core_aes128encrypt(out,in,key,0)
+#define AES_encrypt(in,out,key) CaesarCommon::crypto_core_aes128encrypt(out,in,key,0)
 #elif CRYPTO_KEYBYTES == 32
 #define KEYBITS 256
 #define KEY_LENGTH 32
-#include "crypto_core_aes256encrypt.h"
-#define AES_encrypt(in,out,key) crypto_core_aes256encrypt(out,in,key,0)
+// CHANGE crypto_code include changed to caesar common API
+// #include "crypto_core_aes256encrypt.h"
+#include "../../common/api.h"
+// CHANGE namespace added
+// #define AES_encrypt(in,out,key) crypto_core_aes256encrypt(out,in,key,0)
+#define AES_encrypt(in,out,key) CaesarCommon::crypto_core_aes256encrypt(out,in,key,0)
 #else
 #error "Unknown Key Length"
 #endif
@@ -51,6 +58,9 @@ int numRounds = -1;
 #error "BAD NONCE LENGTH"
 #endif
 
+// CHANGE namespace moved due to includes
+namespace Aes256cpfbv1_raw {
+int numRounds = -1;
 
 static void store32(unsigned char *x, unsigned long long u)
 {

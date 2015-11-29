@@ -247,7 +247,7 @@ TEST_CASE("polydist/term-eval", "term evaluation") {
     // Macro check.
     // Warning! Endinanness may play role in failing this test.
     pInput[0] = 0xff;             pInput[1] = 0xff;
-    CHECK(TERM_ITEM_EVAL_GENOME(0x8011ul, pInput) == 1);
+    CHECK(term_item_eval(0x8011ul, pInput) == 1);
 
     // 1. evaluation, zero input
     pInput[0] = 0x0;                pInput[1] = 0x0;

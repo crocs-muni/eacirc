@@ -73,8 +73,11 @@ static void salsa20_wordtobyte(byte output[64],const u32 input[16])
   for (i = 0;i < 16;++i) U32TO8_LITTLE(output + 4 * i,x[i]);
 }
 
-// CHANGE of length ("+1" added) due to array length
+// CHANGE array prolonged to allow for terminating null character
+// static const char sigma[16] = "expand 32-byte k";
 static const char sigma[16+1] = "expand 32-byte k";
+// CHANGE array prolonged to allow for terminating null character
+// static const char tau[16] = "expand 16-byte k";
 static const char tau[16+1] = "expand 16-byte k";
 
 void chacha_keysetup(u32 *x,const byte *k,u32 kbits,u32 ivbits)
