@@ -78,7 +78,7 @@ void FileGenerator::generateFiles() {
         notes = projectName;
         notes.append(": " + algorithmName + " - " + Utils::itostr(algorithmRounds) + " rounds");
         wuName = (wuName + Utils::getDate() + "_" + OneclickConstants::getBoincProjectShort(boincProjectID) + "_" + projectName + 
-            + "_a" + Utils::itostr(algorithmConstant , 2) + "r" + Utils::itostr(algorithmRounds , 2));
+            + "_a" + Utils::itostr(algorithmConstant , 3) + "r" + Utils::itostr(algorithmRounds , 2));
 
         //Adding settings to config
         for(unsigned k = 0 ; k < configSettings.size() ; k++) {
