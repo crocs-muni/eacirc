@@ -34,6 +34,7 @@ addons:
     project:
       name: "crocs-muni-EACirc"
       description: "Build submitted via Travis CI"
+    notification_email: ph4r05@gmail.com
     build_command:  bash build-coverity.sh
     branch_pattern: coverity_scan
 
