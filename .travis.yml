@@ -38,5 +38,3 @@ addons:
     build_command:  bash build-coverity.sh
     branch_pattern: coverity_scan
 
-
-
