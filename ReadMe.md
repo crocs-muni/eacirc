@@ -35,7 +35,7 @@ The framework is developed at the [Centre for Research on Cryptography and Secur
 
 Former participation:
 * **Milan Čermák** 2012-2013 (CUDA support)
-* **Dušan Klineck** 2012-2015 (polynomial circuits, BOINC related support)
+* **Dušan Klinec** 2012-2015 (polynomial circuits, BOINC related support)
 * **Ondrej Dubovec** 2011-2012 (SHA-3 candidates testing)
 * **Matěj Prišťák** 2011-2012 (object model and refactoring, XML support, eStream candidates testing)
 * **Tobiáš Smolka** 2011-2012 (BOINC related support)
