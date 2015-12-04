@@ -35,6 +35,9 @@ int crypto_aead_encrypt(
 
     /* copy the tag to the end of ciphertext */
     memcpy(c+mlen, tag, CRYPTO_ABYTES);
+
+    // CHANGE memory free added
+    free(cxt);
     return RETURN_SUCCESS;
 }
 
@@ -68,9 +71,13 @@ int crypto_aead_decrypt(
     int i;
     for(i = 0; i < CRYPTO_ABYTES; i++)
         if(tag[i] != c[(*mlen) + i]){
+            // CHANGE memory free added
+            free(cxt);
             return RETURN_TAG_NO_MATCH;
         }
 
+    // CHANGE memory free added
+    free(cxt);
     return RETURN_SUCCESS;
 }
 

@@ -13,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Memory management changes: added free() in encrypt/decrypt routines.
