@@ -19,7 +19,7 @@ install:
 
 script:
   - mkdir -p build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_ONECLICK=OFF
+  - cmake .. -DCMAKE_BUILD_TYPE=Release
   - make
   - cd run && ./eacirc -test
 
@@ -34,7 +34,7 @@ addons:
     project:
       name: "crocs-muni-EACirc"
       description: "Build submitted via Travis CI"
-    notification_email: ph4r05@gmail.com
-    build_command:  bash build-coverity.sh
+    notification_email: mukrop@mail.muni.cz
+    build_command: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make
     branch_pattern: coverity_scan
 
