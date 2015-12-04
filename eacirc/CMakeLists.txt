@@ -74,6 +74,7 @@ set(HEADERS
     Finishers.h
     Version.h
     TestVectors.h
+    cxx_utils.h
 # === individual representation ===
     circuit/ICircuit.h
     circuit/ICircuitIO.h
@@ -84,7 +85,7 @@ set(HEADERS
     circuit/gate/GateCommonFunctions.h
     circuit/gate/GAGateCallbacks.h
     circuit/gate/JVMSimulator.h
- # === polynomial circuits ===
+# === polynomial circuits ===
     circuit/polynomial/GAPolyCallbacks.h
     circuit/polynomial/Term.h
     circuit/polynomial/PolynomialCircuit.h
