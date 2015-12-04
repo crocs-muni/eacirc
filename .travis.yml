@@ -23,3 +23,19 @@ script:
   - make
   - cd run && ./eacirc -test
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "hAYJZlldcmNTRgs+Jduw0nrFeNTeF/3u/TejSMbyIQ0Kd7/o0keTJGKWyCGIgslz1zzC13sePZ7cd54Mcwp//OV8XZSV3aHcjhbbxm+9YZBuewMBg0K9M8fSQh1W9b/bDdy+so1tP//NUwHF8a5YI+iJt0fmrjrOYva3U2bDubk="
+
+addons:
+  coverity_scan:
+    project:
+      name: "crocs-muni-EACirc"
+      description: "Build submitted via Travis CI"
+    build_command:  bash build-coverity.sh
+    branch_pattern: coverity_scan
+
+
+
