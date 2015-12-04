@@ -32,9 +32,10 @@ env:
 addons:
   coverity_scan:
     project:
-      name: "crocs-muni-EACirc"
+      name: "crocs-muni/EACirc"
       description: "Build submitted via Travis CI"
     notification_email: mukrop@mail.muni.cz
-    build_command: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && make
+    build_command_prepend: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
+    build_command: make
     branch_pattern: coverity_scan
 
