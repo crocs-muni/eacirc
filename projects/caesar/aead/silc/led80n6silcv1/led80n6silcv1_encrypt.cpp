@@ -1,5 +1,6 @@
 #include "led80n6silcv1_encrypt.h"
 #include <string.h>
+#include <stdlib.h>
 #include "led80n6silcv1_api.h"
 #include "led80n6silcv1_silc.h"
 

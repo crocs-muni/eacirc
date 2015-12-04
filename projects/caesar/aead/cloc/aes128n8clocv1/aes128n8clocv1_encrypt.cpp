@@ -1,5 +1,6 @@
 #include "aes128n8clocv1_encrypt.h"
 #include <string.h>
+#include <stdlib.h>
 #include "aes128n8clocv1_api.h"
 #include "aes128n8clocv1_cloc.h"
 

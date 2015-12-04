@@ -1,5 +1,6 @@
 #include "twine80n6clocv1_encrypt.h"
 #include <string.h>
+#include <stdlib.h>
 #include "twine80n6clocv1_api.h"
 #include "twine80n6clocv1_cloc.h"
 

@@ -1,5 +1,6 @@
 #include "aes128marble4rv1_encrypt.h"
 #include <string.h>
+#include <stdlib.h>
 #include "aes128marble4rv1_api.h"
 #include "aes128marble4rv1_marble.h"
 
