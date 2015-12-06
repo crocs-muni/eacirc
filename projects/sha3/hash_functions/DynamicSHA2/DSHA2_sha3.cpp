@@ -2,19 +2,9 @@
 
 #define COMP1 1
 #define COMP2 1
-#define G 1
-#define XOR 1
 #define AND 1
-#define ROT 1
 
-#define COMP101 1
-#define COMP102 1
-#define COMP201 1
-#define COMP202 1
 
-#define R101 1
-#define R102 1
-#define R103 1
 
 const unsigned long dsha2_i224[8] =
 {
@@ -172,7 +162,7 @@ return HReturn;
 } 
 
 int DSHA2::sha32_compile()
-{  
+{
 unsigned long hash_32[8], ch[8], temp, w[16];
 int i;
 temp = 0;
@@ -914,7 +904,7 @@ return SUCCESS;
 }
 
 int DSHA2::sha64_compile()
-{  
+{
 unsigned long long hash_64[8], ch[8], temp, w[16];
 int i;
 unsigned int enabledMask = pGlobals->settings->heatMap.enabledMask;

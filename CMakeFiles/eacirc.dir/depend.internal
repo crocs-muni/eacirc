@@ -10,6 +10,7 @@ EACirc/CMakeFiles/eacirc.dir/CommonFnc.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/Logger.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/Status.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/TestVectors.h
+ C:/Users/Radka/Desktop/BP/EACirc/eacirc/cxx_utils.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/IRndGen.h
  EACirc/libs/tinyXML/tinystr.h
  EACirc/libs/tinyXML/tinyxml.h
@@ -21,6 +22,7 @@ EACirc/CMakeFiles/eacirc.dir/EACglobals.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/Logger.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/Status.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/TestVectors.h
+ C:/Users/Radka/Desktop/BP/EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/EACirc.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/Byte.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/CommonFnc.h
@@ -35,6 +37,7 @@ EACirc/CMakeFiles/eacirc.dir/EACirc.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/ICircuit.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/ICircuitIO.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/gate/JVMSimulator.h
+ C:/Users/Radka/Desktop/BP/EACirc/eacirc/cxx_utils.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/BiasRndGen.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/IRndGen.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/MD5RndGen.h
@@ -73,6 +76,7 @@ EACirc/CMakeFiles/eacirc.dir/Finishers.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/TestVectors.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/ICircuit.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/ICircuitIO.h
+ C:/Users/Radka/Desktop/BP/EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GAEvalData.h
  EACirc/libs/galib/GAGenome.h
  EACirc/libs/galib/GAPopulation.h
@@ -103,6 +107,7 @@ EACirc/CMakeFiles/eacirc.dir/Main.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/TestVectors.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/ICircuit.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/ICircuitIO.h
+ C:/Users/Radka/Desktop/BP/EACirc/eacirc/cxx_utils.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/projects/IProject.h
  EACirc/eacirc/CommonFnc.h
  EACirc/eacirc/XMLProcessor.h
@@ -137,6 +142,7 @@ EACirc/CMakeFiles/eacirc.dir/XMLProcessor.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/TestVectors.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/XMLProcessor.cpp
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/XMLProcessor.h
+ C:/Users/Radka/Desktop/BP/EACirc/eacirc/cxx_utils.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/BiasRndGen.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/IRndGen.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/QuantumRndGen.h
@@ -167,6 +173,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/ICircuit.cpp.obj
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
  EACirc/eacirc/circuit/gate/GateCircuit.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
@@ -197,6 +204,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/ICircuitIO.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GAEvalData.h
  EACirc/libs/galib/GAGenome.h
  EACirc/libs/galib/gaconfig.h
@@ -218,6 +226,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate/GAGateCallbacks.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
@@ -252,6 +261,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate/GateCircuit.cpp.obj
  EACirc/eacirc/XMLProcessor.h
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -284,6 +294,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate/GateCircuitIO.cpp.obj
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -309,6 +320,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate/GateCommonFunctions.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -334,6 +346,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate/GateInterpreter.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -357,6 +370,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate/JVMSimulator.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/circuit/gate2/Converter.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/gate2/Circuit.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/gate2/Converter.cpp
@@ -370,6 +384,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate2/Converter.cpp.obj
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/circuit/gate/GateCommonFunctions.h
  EACirc/eacirc/cuda/base.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -394,6 +409,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate2/CpuGate.cpp.obj
  EACirc/eacirc/EACconstants.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/cuda/base.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/circuit/gate2/GaGate.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/gate2/Circuit.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/circuit/gate2/Converter.h
@@ -411,6 +427,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate2/GaGate.cpp.obj
  EACirc/eacirc/cuda/Host.h
  EACirc/eacirc/cuda/base.h
  EACirc/eacirc/cuda/cudaSafeCall.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
@@ -440,6 +457,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/gate2/Gate2.cpp.obj
  EACirc/eacirc/circuit/ICircuitIO.h
  EACirc/eacirc/circuit/gate/GAGateCallbacks.h
  EACirc/eacirc/circuit/gate/GateCircuit.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -475,6 +493,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/polynomial/GAPolyCallbacks.cpp.obj
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
@@ -505,6 +524,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/polynomial/PolyCommonFunctions.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
  EACirc/libs/galib/GA2DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -535,6 +555,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/polynomial/PolynomialCircuit.cpp.obj
  EACirc/eacirc/XMLProcessor.h
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
  EACirc/libs/galib/GA2DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -571,6 +592,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/polynomial/PolynomialCircuitIO.cpp.obj
  EACirc/eacirc/XMLProcessor.h
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
  EACirc/libs/galib/GA2DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -605,6 +627,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/polynomial/PolynomialInterpreter.cpp.obj
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
  EACirc/libs/galib/GA2DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -634,6 +657,7 @@ EACirc/CMakeFiles/eacirc.dir/circuit/polynomial/Term.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/galib/GA2DArrayGenome.cpp
  EACirc/libs/galib/GA2DArrayGenome.h
  EACirc/libs/galib/GAAllele.cpp
@@ -659,6 +683,7 @@ EACirc/CMakeFiles/eacirc.dir/evaluators/CategoriesEvaluator.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/evaluators/FeatureEvaluator.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/FeatureEvaluator.cpp
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/FeatureEvaluator.h
@@ -670,6 +695,7 @@ EACirc/CMakeFiles/eacirc.dir/evaluators/FeatureEvaluator.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/evaluators/HammingWeightEvaluator.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/HammingWeightEvaluator.cpp
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/HammingWeightEvaluator.h
@@ -680,6 +706,7 @@ EACirc/CMakeFiles/eacirc.dir/evaluators/HammingWeightEvaluator.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/evaluators/IEvaluator.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/CategoriesEvaluator.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/FeatureEvaluator.h
@@ -693,6 +720,7 @@ EACirc/CMakeFiles/eacirc.dir/evaluators/IEvaluator.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/evaluators/TopBitEvaluator.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/IEvaluator.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/evaluators/TopBitEvaluator.cpp
@@ -703,6 +731,7 @@ EACirc/CMakeFiles/eacirc.dir/evaluators/TopBitEvaluator.cpp.obj
  EACirc/eacirc/Logger.h
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
+ EACirc/eacirc/cxx_utils.h
 EACirc/CMakeFiles/eacirc.dir/generators/BiasRndGen.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/BiasRndGen.cpp
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/generators/BiasRndGen.h
@@ -716,6 +745,7 @@ EACirc/CMakeFiles/eacirc.dir/generators/BiasRndGen.cpp.obj
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/eacirc/generators/QuantumRndGen.h
  EACirc/libs/tinyXML/tinystr.h
@@ -735,6 +765,7 @@ EACirc/CMakeFiles/eacirc.dir/generators/IRndGen.cpp.obj
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/libs/tinyXML/tinystr.h
  EACirc/libs/tinyXML/tinyxml.h
@@ -751,6 +782,7 @@ EACirc/CMakeFiles/eacirc.dir/generators/MD5RndGen.cpp.obj
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/tinyXML/tinystr.h
  EACirc/libs/tinyXML/tinyxml.h
 EACirc/CMakeFiles/eacirc.dir/generators/QuantumRndGen.cpp.obj
@@ -767,6 +799,7 @@ EACirc/CMakeFiles/eacirc.dir/generators/QuantumRndGen.cpp.obj
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/libs/tinyXML/tinystr.h
  EACirc/libs/tinyXML/tinyxml.h
@@ -787,55 +820,56 @@ EACirc/CMakeFiles/eacirc.dir/projects/IProject.cpp.obj
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/eacirc/projects/IProject.h
  EACirc/libs/tinyXML/tinystr.h
  EACirc/libs/tinyXML/tinyxml.h
- EACirc/projects/caesar/CaesarCiphers.h
- EACirc/projects/caesar/CaesarConstants.h
- EACirc/projects/caesar/CaesarInterface.h
- EACirc/projects/caesar/CaesarProject.h
- EACirc/projects/caesar/Encryptor.h
- EACirc/projects/estream/EncryptorDecryptor.h
- EACirc/projects/estream/EstreamCiphers.h
- EACirc/projects/estream/EstreamConstants.h
- EACirc/projects/estream/EstreamInterface.h
- EACirc/projects/estream/EstreamProject.h
- EACirc/projects/estream/ciphers/abc/ecrypt-sync.h
- EACirc/projects/estream/ciphers/achterbahn/ecrypt-sync.h
- EACirc/projects/estream/ciphers/cryptmt/ecrypt-sync.h
- EACirc/projects/estream/ciphers/decim/ecrypt-sync.h
- EACirc/projects/estream/ciphers/dicing/ecrypt-sync.h
- EACirc/projects/estream/ciphers/dragon/ecrypt-sync.h
- EACirc/projects/estream/ciphers/ecrypt-config.h
- EACirc/projects/estream/ciphers/ecrypt-machine.h
- EACirc/projects/estream/ciphers/ecrypt-portable.h
- EACirc/projects/estream/ciphers/edon80/ecrypt-sync.h
- EACirc/projects/estream/ciphers/ffcsr/ecrypt-sync.h
- EACirc/projects/estream/ciphers/fubuki/ecrypt-sync.h
- EACirc/projects/estream/ciphers/grain/ecrypt-sync.h
- EACirc/projects/estream/ciphers/hc-128/ecrypt-sync.h
- EACirc/projects/estream/ciphers/hermes/ecrypt-sync.h
- EACirc/projects/estream/ciphers/lex/ecrypt-sync.h
- EACirc/projects/estream/ciphers/mag/ecrypt-sync.h
- EACirc/projects/estream/ciphers/mickey/ecrypt-sync.h
- EACirc/projects/estream/ciphers/mir-1/ecrypt-sync.h
- EACirc/projects/estream/ciphers/pomaranch/ecrypt-sync.h
- EACirc/projects/estream/ciphers/py/ecrypt-sync.h
- EACirc/projects/estream/ciphers/rabbit/ecrypt-sync.h
- EACirc/projects/estream/ciphers/salsa20/ecrypt-sync.h
- EACirc/projects/estream/ciphers/sfinks/ecrypt-sync.h
- EACirc/projects/estream/ciphers/sosemanuk/ecrypt-sync.h
- EACirc/projects/estream/ciphers/tea/ecrypt-sync.h
- EACirc/projects/estream/ciphers/tsc-4/ecrypt-sync.h
- EACirc/projects/estream/ciphers/wg/ecrypt-sync.h
- EACirc/projects/estream/ciphers/zk-crypt/ecrypt-sync.h
- EACirc/projects/sha3/Hasher.h
- EACirc/projects/sha3/Sha3Constants.h
- EACirc/projects/sha3/Sha3Functions.h
- EACirc/projects/sha3/Sha3Interface.h
- EACirc/projects/sha3/Sha3Project.h
+ eacirc/projects/caesar/CaesarCiphers.h
+ eacirc/projects/caesar/CaesarConstants.h
+ eacirc/projects/caesar/CaesarInterface.h
+ eacirc/projects/caesar/CaesarProject.h
+ eacirc/projects/caesar/Encryptor.h
+ eacirc/projects/estream/EncryptorDecryptor.h
+ eacirc/projects/estream/EstreamCiphers.h
+ eacirc/projects/estream/EstreamConstants.h
+ eacirc/projects/estream/EstreamInterface.h
+ eacirc/projects/estream/EstreamProject.h
+ eacirc/projects/estream/ciphers/abc/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/achterbahn/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/cryptmt/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/decim/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/dicing/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/dragon/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/ecrypt-config.h
+ eacirc/projects/estream/ciphers/ecrypt-machine.h
+ eacirc/projects/estream/ciphers/ecrypt-portable.h
+ eacirc/projects/estream/ciphers/edon80/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/ffcsr/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/fubuki/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/grain/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/hc-128/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/hermes/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/lex/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/mag/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/mickey/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/mir-1/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/pomaranch/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/py/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/rabbit/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/salsa20/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/sfinks/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/sosemanuk/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/tea/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/tsc-4/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/wg/ecrypt-sync.h
+ eacirc/projects/estream/ciphers/zk-crypt/ecrypt-sync.h
+ eacirc/projects/sha3/Hasher.h
+ eacirc/projects/sha3/Sha3Constants.h
+ eacirc/projects/sha3/Sha3Functions.h
+ eacirc/projects/sha3/Sha3Interface.h
+ eacirc/projects/sha3/Sha3Project.h
 EACirc/CMakeFiles/eacirc.dir/projects/files/filesProject.cpp.obj
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/projects/files/filesConstants.h
  C:/Users/Radka/Desktop/BP/EACirc/eacirc/projects/files/filesProject.cpp
@@ -848,6 +882,7 @@ EACirc/CMakeFiles/eacirc.dir/projects/files/filesProject.cpp.obj
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/eacirc/projects/IProject.h
@@ -864,6 +899,7 @@ EACirc/CMakeFiles/eacirc.dir/projects/pregenerated_tv/PregeneratedTvProject.cpp.
  EACirc/eacirc/Status.h
  EACirc/eacirc/TestVectors.h
  EACirc/eacirc/XMLProcessor.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/eacirc/projects/IProject.h
@@ -883,6 +919,7 @@ EACirc/CMakeFiles/eacirc.dir/self_tests/TestConfigurator.cpp.obj
  EACirc/eacirc/XMLProcessor.h
  EACirc/eacirc/circuit/ICircuit.h
  EACirc/eacirc/circuit/ICircuitIO.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/eacirc/evaluators/IEvaluator.h
  EACirc/eacirc/generators/IRndGen.h
  EACirc/eacirc/projects/IProject.h
@@ -922,6 +959,7 @@ EACirc/CMakeFiles/eacirc.dir/self_tests/Tests.cpp.obj
  EACirc/eacirc/circuit/polynomial/PolynomialCircuit.h
  EACirc/eacirc/circuit/polynomial/PolynomialInterpreter.h
  EACirc/eacirc/circuit/polynomial/Term.h
+ EACirc/eacirc/cxx_utils.h
  EACirc/libs/catch/Catch.h
  EACirc/libs/galib/GA1DArrayGenome.cpp
  EACirc/libs/galib/GA1DArrayGenome.h

@@ -29,11 +29,6 @@
 
 #include"decimv2.h"
 
-#define FILTER 1
-#define LFSR 1
-#define ABSG 1
-
-
 
 
 /* Not needed */
@@ -312,7 +307,7 @@ void decim_lfsr_filter(DECIM_ctx *ctx)
 {
   u8 b,c;
 
-  if(FILTER == 1){
+
         /* compute the boolean function */
       c = ctx->lfsr_state[1];
       b = ctx->lfsr_state[21];
@@ -352,9 +347,8 @@ void decim_lfsr_filter(DECIM_ctx *ctx)
         c ^= ctx->lfsr_state[287];
     }
   ctx->bool_out = ((b>>1)&0x01)^c;
-}
+
   /* compute the next bit for the LFSR*/
-  if(LFSR == 1){
       b  = ctx->lfsr_state[0];
       if(pGlobals->settings->heatMap.enabledMask & 0x0004){
       b ^= ctx->lfsr_state[3];
@@ -379,7 +373,6 @@ void decim_lfsr_filter(DECIM_ctx *ctx)
       b ^= ctx->lfsr_state[283];
     }
   ctx->lfsr_state[288] = b;   /* next bit */
-  }
 }
 
 void decim_lfsr_filter_init(DECIM_ctx *ctx)

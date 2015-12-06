@@ -3,14 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SEED 1
-#define ITERATE 1
-#define EXTRACT 1
-#define SBOX 1
-#define XOR 1
-#define ADD 1
-
-
 #define TANGLE_ROTL(x, n)		((x << n) | (x >> (32 - n)))
 
 #define TANGLE_F1(x, y, z)		((x&(y|z)) | (y&z))
@@ -486,6 +478,7 @@ void Tangle::FuncTangle(hashState * state, const BitSequence * message)
     unsigned int xorTangleK = enabledMask & 0x0040;
     unsigned int xorB = enabledMask & 0x0080;
     unsigned int add = enabledMask & 0x0100;
+    unsigned int xor1 = enabledMask & 0x0200;
 
     /* copy hash values */
     for(r=0; r<32; r++) h[r] = state->H[r];
@@ -639,7 +632,7 @@ void Tangle::FuncTangle(hashState * state, const BitSequence * message)
         if(xorB){
             D += B;
         }
-        h[(r+16) & 31] ^= D;
+        if(xor1) h[(r+16) & 31] ^= D;
 
         if(add){
             h[r & 31] += B;
@@ -667,6 +660,7 @@ void Tangle::FuncTangle(hashState * state, const BitSequence * message)
         if(xorB){
             D += B;
         }
+        if(xor1) h[(r+16) & 31] ^= D;
         if(add){
             h[r & 31] += B;
         }
