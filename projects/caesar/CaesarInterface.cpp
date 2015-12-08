@@ -57,8 +57,8 @@ CaesarInterface* CaesarInterface::getCaesarFunction(int algorithm, int numRounds
         case CAESAR_DEOXYSEQ256128V1: { return new Deoxyseq256128v1(numRounds); };
         case CAESAR_DEOXYSNEQ128128V1: { return new Deoxysneq128128v1(numRounds); };
         case CAESAR_DEOXYSNEQ256128V1: { return new Deoxysneq256128v1(numRounds); };
-        case CAESAR_ENCHILADA128V1: { return new Enchilada128v1(numRounds); };
-        case CAESAR_ENCHILADA256V1: { return new Enchilada256v1(numRounds); };
+//        case CAESAR_ENCHILADA128V1: { return new Enchilada128v1(numRounds); };
+//        case CAESAR_ENCHILADA256V1: { return new Enchilada256v1(numRounds); };
         case CAESAR_HS1SIVHIV1: { return new Hs1sivhiv1(numRounds); };
         case CAESAR_HS1SIVLOV1: { return new Hs1sivlov1(numRounds); };
         case CAESAR_HS1SIVV1: { return new Hs1sivv1(numRounds); };
