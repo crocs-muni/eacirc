@@ -91,7 +91,9 @@ void double_mask(u8 maskstate[]){
 
 /*MIX function used in XLS*/
 void MIX(u8 byte1[], u8 byte2[], unsigned int blen){
-    u8 temp[blen];
+	// CHANGE VLA allocation changed to dynamic (for MSVC compiler)
+	// u8 temp[blen];
+	u8* temp = new u8[blen];
     u8 tempbyte;
     int i;
     u8 carry;
@@ -110,6 +112,9 @@ void MIX(u8 byte1[], u8 byte2[], unsigned int blen){
 
     xor_byte_string(temp, byte1, blen);
     xor_byte_string(temp, byte2, blen);
+
+	// CHANGE memory management (VLA allocation changed to dynamic)
+	delete[] temp;
 }
 
 /*Setup the encryption key materials including mask key, and subkeys for SHELL-AES*/
@@ -941,7 +946,11 @@ int shellaesDec_short(const u8 key[], const u8 nonce[], const u8 ad[], unsigned 
 void XLS(const u32 rk[], const u8 Lprime[], const u8 p[], unsigned long long int fb_ptlen, unsigned int nfb_ptlen, u8 c[], u8 tag[]){
     u8 mask1[16], mask2[16];
     u8 temp[16];
-    u8 pt[16], ct[16], byte1[nfb_ptlen], byte2[nfb_ptlen];
+	// CHANGE VLA allocation changed to dynamic (for MSVC compiler)
+	// u8 pt[16], ct[16], byte1[nfb_ptlen], byte2[nfb_ptlen];
+	u8 pt[16], ct[16];
+	u8* byte1 = new u8[nfb_ptlen];
+	u8* byte2 = new u8[nfb_ptlen];
     int i;
 
     /*produce mask 3^2*Lprime, and save it to mask1[]*/
@@ -1020,6 +1029,9 @@ void XLS(const u32 rk[], const u8 Lprime[], const u8 p[], unsigned long long int
     memcpy(tag, ct+nfb_ptlen, 16-nfb_ptlen);
     memcpy(tag+16-nfb_ptlen, byte2, nfb_ptlen);
 
+	// CHANGE memory management (VLA allocation changed to dynamic)
+	delete[] byte1;
+	delete[] byte2;
 }
 
 /*inverse of XLS*/
@@ -1027,7 +1039,10 @@ void XLSInv(const u32 irk[], const u8 Lprime[], const u8 c[], unsigned long long
     u8 pt[16], ct[16];
     u8 temp[16];
     u8 mask1[16], mask2[16];
-    u8 byte1[nfb_ctlen], byte2[nfb_ctlen];
+	// CHANGE VLA allocation changed to dynamic (for MSVC compiler)
+	// u8 byte1[nfb_ctlen], byte2[nfb_ctlen];
+	u8* byte1 = new u8[nfb_ctlen];
+	u8* byte2 = new u8[nfb_ctlen];
 
     int i;
 
@@ -1098,7 +1113,9 @@ void XLSInv(const u32 irk[], const u8 Lprime[], const u8 c[], unsigned long long
     memcpy(tag, pt+nfb_ctlen, 16-nfb_ctlen);
     memcpy(tag+16-nfb_ctlen, byte2, nfb_ctlen);
 
-
+	// CHANGE memory management (VLA allocation changed to dynamic)
+	delete[] byte1;
+	delete[] byte2;
 }
 
 /*SHELL-AES encryption for plaintexts with a length longer than one block but not a multiple of block length:
