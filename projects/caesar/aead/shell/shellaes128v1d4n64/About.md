@@ -13,3 +13,4 @@
 * Includes sorted out.
 * Namespace added.
 * Variable numRounds added.
+* Variable length array allocation changed to dynamic allocation (no support for VLA in MSVC2013).

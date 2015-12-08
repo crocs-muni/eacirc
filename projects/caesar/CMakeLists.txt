@@ -172,17 +172,17 @@ set(SOURCES
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_encrypt.cpp
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_tweakableBC.cpp
     aead/deoxys/deoxysneq256128v1/Deoxysneq256128v1.cpp
-#    aead/enchilada/enchilada128v1/enchilada128v1_aes.cpp
-#    aead/enchilada/enchilada128v1/enchilada128v1_auth.cpp
-#    aead/enchilada/enchilada128v1/enchilada128v1_chacha.cpp
-#    aead/enchilada/enchilada128v1/enchilada128v1_enchilada.cpp
-#    aead/enchilada/enchilada128v1/Enchilada128v1.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_aescrypt.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_aestab.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_auth.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_chacha.cpp
-#    aead/enchilada/enchilada256v1/enchilada256v1_enchilada256.cpp
-#    aead/enchilada/enchilada256v1/Enchilada256v1.cpp
+    aead/enchilada/enchilada128v1/enchilada128v1_aes.cpp
+    aead/enchilada/enchilada128v1/enchilada128v1_auth.cpp
+    aead/enchilada/enchilada128v1/enchilada128v1_chacha.cpp
+    aead/enchilada/enchilada128v1/enchilada128v1_enchilada.cpp
+    aead/enchilada/enchilada128v1/Enchilada128v1.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_aescrypt.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_aestab.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_auth.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_chacha.cpp
+    aead/enchilada/enchilada256v1/enchilada256v1_enchilada256.cpp
+    aead/enchilada/enchilada256v1/Enchilada256v1.cpp
     aead/hs1-siv/hs1sivhiv1/hs1sivhiv1_encrypt.cpp
     aead/hs1-siv/hs1sivhiv1/Hs1sivhiv1.cpp
     aead/hs1-siv/hs1sivlov1/hs1sivlov1_encrypt.cpp
@@ -792,16 +792,16 @@ set(HEADERS
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_tweakableBC.h
     aead/deoxys/deoxysneq256128v1/deoxysneq256128v1_encrypt.h
     aead/deoxys/deoxysneq256128v1/Deoxysneq256128v1.h
-#    aead/enchilada/enchilada128v1/enchilada128v1_api.h
-#    aead/enchilada/enchilada128v1/enchilada128v1_enchilada.h
-#    aead/enchilada/enchilada128v1/enchilada128v1_encrypt.h
-#    aead/enchilada/enchilada128v1/Enchilada128v1.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_aes.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_aesopt.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_api.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_enchilada.h
-#    aead/enchilada/enchilada256v1/enchilada256v1_encrypt.h
-#    aead/enchilada/enchilada256v1/Enchilada256v1.h
+    aead/enchilada/enchilada128v1/enchilada128v1_api.h
+    aead/enchilada/enchilada128v1/enchilada128v1_enchilada.h
+    aead/enchilada/enchilada128v1/enchilada128v1_encrypt.h
+    aead/enchilada/enchilada128v1/Enchilada128v1.h
+    aead/enchilada/enchilada256v1/enchilada256v1_aes.h
+    aead/enchilada/enchilada256v1/enchilada256v1_aesopt.h
+    aead/enchilada/enchilada256v1/enchilada256v1_api.h
+    aead/enchilada/enchilada256v1/enchilada256v1_enchilada.h
+    aead/enchilada/enchilada256v1/enchilada256v1_encrypt.h
+    aead/enchilada/enchilada256v1/Enchilada256v1.h
     aead/hs1-siv/hs1sivhiv1/hs1sivhiv1_api.h
     aead/hs1-siv/hs1sivhiv1/hs1sivhiv1_encrypt.h
     aead/hs1-siv/hs1sivhiv1/Hs1sivhiv1.h
@@ -1506,8 +1506,8 @@ set(OTHER_FILES
     aead/deoxys/deoxyseq256128v1/About.md
     aead/deoxys/deoxysneq128128v1/About.md
     aead/deoxys/deoxysneq256128v1/About.md
-#    aead/enchilada/enchilada128v1/About.md
-#    aead/enchilada/enchilada256v1/About.md
+    aead/enchilada/enchilada128v1/About.md
+    aead/enchilada/enchilada256v1/About.md
     aead/hs1-siv/hs1sivhiv1/About.md
     aead/hs1-siv/hs1sivlov1/About.md
     aead/hs1-siv/hs1sivv1/About.md

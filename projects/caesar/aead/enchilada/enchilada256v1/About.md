@@ -15,3 +15,4 @@
 * Variable numRounds added.
 * Some constant arrays prologned to include tra trailing zero character.
 * "extern C" declaration commented out, since we are using C++.
+* Extra include added to enchilada256.cpp to resolve missin declaration.
