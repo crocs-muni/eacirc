@@ -175,7 +175,25 @@ double CommonFnc::gamma0(double x) {
     return ga;
 }
 
-double CommonFnc::KS_uniformity_test(std::vector<double> &samples){
+double CommonFnc::KSGetCriticalValue(unsigned long sampleSize, int significanceLevel) {
+    if (sampleSize <= 35) {
+        mainLogger.out(LOGGER_ERROR) << "Too few samples for KS critical value (<=35)." << endl;
+        return -1;
+    }
+    switch (significanceLevel) {
+        case 10:
+            return 1.224/sqrt((double)sampleSize);
+        case 5:
+            return 1.358/sqrt((double)sampleSize);
+        case 1:
+            return 1.628/sqrt((double)sampleSize);
+        default:
+            mainLogger.out(LOGGER_ERROR) << "Unusual significance level (not 1, 5, 10)." << endl;
+            return -1;
+    }
+}
+
+double CommonFnc::KSUniformityTest(std::vector<double> &samples){
     std::sort(samples.begin(), samples.end());
     // sanity check
     if (samples[samples.size()-1] > 1 || samples[0] < 0) {

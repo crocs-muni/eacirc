@@ -17,15 +17,15 @@ void Finishers::ksUniformityTestFinisher() {
     }
     mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
 
-    double KS_critical_alpha_5 = CommonFnc::KS_get_critical_value(pvalsSize);
-    double KS_P_value = CommonFnc::KS_uniformity_test(*(pGlobals->stats.pvaluesBestIndividual));
+    double KS_critical_alpha_5 = CommonFnc::KSGetCriticalValue(pvalsSize, pGlobals->settings->main.significanceLevel);
+    double KS_P_value = CommonFnc::KSUniformityTest(*(pGlobals->stats.pvaluesBestIndividual));
     mainLogger.out(LOGGER_INFO) << "   KS Statistics: " << KS_P_value << endl;
-    mainLogger.out(LOGGER_INFO) << "   KS critical value 0.05: " << KS_critical_alpha_5 << endl;
+    mainLogger.out(LOGGER_INFO) << "   KS critical value " << pGlobals->settings->main.significanceLevel << "%: " << KS_critical_alpha_5 << endl;
 
     if(KS_P_value > KS_critical_alpha_5) {
-        mainLogger.out(LOGGER_INFO) << "   KS is in 5% interval -> uniformity hypothesis rejected." << endl;
+        mainLogger.out(LOGGER_INFO) << "   KS is in " << pGlobals->settings->main.significanceLevel << "% interval -> uniformity hypothesis rejected." << endl;
     } else {
-        mainLogger.out(LOGGER_INFO) << "   KS is not in 5% interval -> is uniform." << endl;
+        mainLogger.out(LOGGER_INFO) << "   KS is not in " << pGlobals->settings->main.significanceLevel << "% interval -> is uniform." << endl;
     }
 }
 

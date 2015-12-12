@@ -76,6 +76,7 @@ struct SETTINGS_MAIN {
     int projectType;                //! project used to generate test vectors
     int evaluatorType;              //! evaluator used in fitness computation
     int evaluatorPrecision;         //! precision point for evaluators (e.g. number of categories)
+    int significanceLevel;          //! significance level for conclusion (alpha)
     bool recommenceComputation;     //! is this continuation of previous computation?
     bool loadInitialPopulation;     //! should initial population be loaded instead of randomly generated?
     int numGenerations;             //! number of generations to evolve
