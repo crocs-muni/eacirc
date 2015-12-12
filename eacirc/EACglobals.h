@@ -91,6 +91,7 @@ struct SETTINGS_OUTPUTS {
     bool intermediateCircuits;      //! should intermediate circuits be saved?
     bool allowPrunning;             //! save prunned versions as well?
     bool saveTestVectors;           //! should test vectors be saved?
+    bool fractionFile;              //! should fraction file be produced?
     SETTINGS_OUTPUTS();
 };
 

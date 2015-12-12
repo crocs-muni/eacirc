@@ -636,9 +636,11 @@ void EACirc::run() {
         }
 
         // update fraction file for boinc
-        fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
-        fitfile << ((float)(m_actGener))/((float)(m_settings.main.numGenerations));
-        fitfile.close();
+        if (m_settings.outputs.fractionFile) {
+            fitfile.open(FILE_BOINC_FRACTION_DONE, fstream::out | ios::trunc);
+            fitfile << ((float)(m_actGener))/((float)(m_settings.main.numGenerations));
+            fitfile.close();
+        }
 
         // do not evolve (if evolution is off)
         if (m_settings.ga.evolutionOff) {

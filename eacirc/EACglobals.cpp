@@ -25,6 +25,7 @@ SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
     intermediateCircuits = false;
     allowPrunning = false;
     saveTestVectors = false;
+    fractionFile = false;
 }
 
 SETTINGS_RANDOM::SETTINGS_RANDOM() {
