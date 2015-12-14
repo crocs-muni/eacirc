@@ -103,6 +103,7 @@ Hasher::Hasher() : m_initSuccess(false) {
         case SHA3_VORTEX:       m_hashFunctions[algorithmNumber] = new Vortex(numRounds); break;
         case SHA3_WAMM:         m_hashFunctions[algorithmNumber] = new WaMM(numRounds); break;
         case SHA3_WATERFALL:    m_hashFunctions[algorithmNumber] = new Waterfall(numRounds); break;
+        case SHA3_TANGLE2:      m_hashFunctions[algorithmNumber] = new Tangle2(numRounds); break;
         default:
             mainLogger.out(LOGGER_ERROR) << "Unknown hash function type (" << algorithm << ")." << endl;
             return;
