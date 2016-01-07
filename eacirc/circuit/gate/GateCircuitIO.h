@@ -94,8 +94,6 @@ public:
 private:
     static void pruneGenomeSimple(GAGenome& g, vector<vector<bool> > &hasNodeEffect);
     static size_t parentsEffectCount(const unsigned char function);
-
-    vector< vector < bool > > hasNodeEffect;
 };
 
 #endif // GATECIRCUITIO_H
