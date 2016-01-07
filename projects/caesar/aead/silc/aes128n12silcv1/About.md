@@ -14,3 +14,4 @@
 * Namespace added.
 * Variable numRounds added.
 * 'pstate2' declaration added to header file, 'unsigned' qualifier dropped.
+* Memory management changes: added free() in encrypt/decrypt routines.

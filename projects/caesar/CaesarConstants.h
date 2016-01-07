@@ -2,12 +2,14 @@
 #define CAESARCONSTANTS_H
 
 // CAESAR test vector generation method
-#define CAESAR_DISTINGUISHER          301
+#define CAESAR_DISTINGUISHER_TAG            301
+#define CAESAR_DISTINGUISHER_CIPHERTEXT     302
 
 // CAESAR data types (for key, plaintext, ad, smn, pmn)
-#define CAESAR_TYPE_ZEROS       0
-#define CAESAR_TYPE_RANDOM      1
-#define CAESAR_TYPE_COUNTER     2
+#define CAESAR_TYPE_ZEROS           0
+#define CAESAR_TYPE_RANDOM_ONCE     1
+#define CAESAR_TYPE_COUNTER         2
+#define CAESAR_TYPE_RANDOM          3
 
 // filenames
 #define CAESAR_FILE_STREAM      "caesar_stream.bin"

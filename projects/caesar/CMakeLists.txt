@@ -8,6 +8,7 @@ set(SOURCES
     CaesarInterface.cpp
     CaesarCiphers.cpp
     Encryptor.cpp
+    aead/random/RandomCipher.cpp
 # === CAESAR algorithms ===
     aead/common/crypto_verify_16.cpp
     aead/common/crypto_verify_32.cpp
@@ -600,6 +601,7 @@ set(HEADERS
     CaesarInterface.h
     CaesarCiphers.h
     Encryptor.h
+    aead/random/RandomCipher.h
 # === CAESAR algorithms ===
     aead/common/api.h
     aead/aead.h

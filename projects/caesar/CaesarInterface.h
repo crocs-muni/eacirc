@@ -15,17 +15,38 @@ public:
     CaesarInterface(int a, int nr, int kl, int smnl, int pmnl, int co);
     virtual ~CaesarInterface();
 
-    /** encryption and decryption functions
-     * c - ciphertext, clen - ciphertext length,
-     * m - message, mlen - message length,
-     * ad - associated data, adlen - associated data length,
-     * nsec - secret message number (secret nonce),
-     * npub - public message number (public nonce),
-     * k -key
+    /** Encryption utility
+     * It must be possible to recover the plaintext and the secret message number from
+     * the ciphertext, associated data, public message number, and key.
+     * @param c     ciphertext (out)
+     * @param clen  ciphertextlength (out) (at most mlen + CRYPTO_ABYTES)
+     * @param m     plaintext (in)
+     * @param mlen  plaintextlength (in)
+     * @param ad    associated data (in)
+     * @param adlen associated data length (in)
+     * @param nsec  secret message number (in, length specified by cipher)
+     * @param npub  public message number (in, length specified by cipher)
+     * @param k     key (in, length specified by cipher)
+     * @return status
      */
     virtual int encrypt(bits_t *c, length_t *clen, const bits_t *m, length_t mlen,
                         const bits_t *ad, length_t adlen, const bits_t *nsec, const bits_t *npub,
                         const bits_t *k) = 0;
+
+    /** Decryption utility
+     * It must be possible to recover the plaintext and the secret message number from
+     * the ciphertext, associated data, public message number, and key.
+     * @param m             decrypted plaintext (out)
+     * @param outputmlen    length of the decrypted plaintext (out)
+     * @param nsec          secret message output (in, length specified by cipher)
+     * @param c             ciphertext (in)
+     * @param clen          ciphertext length (in)
+     * @param ad            associated data (in)
+     * @param adlen         associated data length (in)
+     * @param npub          public message number (in, length specified by cipher)
+     * @param k             key (in, length specified by cipher)
+     * @return
+     */
     virtual int decrypt(bits_t *m, length_t *outputmlen, bits_t *nsec,
                         const bits_t *c, length_t clen, const bits_t *ad, length_t adlen,
                         const bits_t *npub, const bits_t *k) = 0;

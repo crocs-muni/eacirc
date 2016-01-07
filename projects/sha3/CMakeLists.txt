@@ -90,6 +90,7 @@ set(SOURCES
     hash_functions/WaMM/Wamm_sha3.cpp
     hash_functions/WaMM/WaMMTappingPrimes.c
     hash_functions/Waterfall/Waterfall_sha3.cpp
+    hash_functions/Tangle2/Tangle2_sha3.cpp
     #    hash_functions/ECOH/ecoh.param.cpp
     #    hash_functions/ECOH/Ecoh_sha3.cpp
     #    hash_functions/EnRUPT/EnRUPT_opt.c
@@ -213,6 +214,7 @@ set(HEADERS
     hash_functions/WaMM/Wamm_sha3.h
     hash_functions/WaMM/WaMMTappingPrimes.h
     hash_functions/Waterfall/Waterfall_sha3.h
+    hash_functions/Tangle2/Tangle2_sha3.h
     #    hash_functions/ECOH/ecoh.h
     #    hash_functions/ECOH/Ecoh_sha3.h
     #    hash_functions/EnRUPT/EnRUPT_opt.h

@@ -1,5 +1,6 @@
 #include "aes128n8silcv1_encrypt.h"
 #include <string.h>
+#include <stdlib.h>
 #include "aes128n8silcv1_api.h"
 #include "aes128n8silcv1_silc.h"
 
@@ -25,8 +26,11 @@ int crypto_aead_encrypt(
         return RETURN_MEMORY_FAIL;
 
     /* set key and compute round keys */
-    if(ae_init(cxt, k, CRYPTO_KEYBYTES))
+    if(ae_init(cxt, k, CRYPTO_KEYBYTES)) {
+        // CHANGE memory free added
+        free(cxt);
         return RETURN_KEYSIZE_ERR;
+    }
 
     /* process the associated data */
     process_ad(cxt, ad, adlen, npub, CRYPTO_NPUBBYTES);
@@ -36,6 +40,9 @@ int crypto_aead_encrypt(
 
     /* copy the tag to the end of ciphertext */
     memcpy(c+mlen, tag, CRYPTO_ABYTES);
+
+    // CHANGE memory free added
+    free(cxt);
     return RETURN_SUCCESS;
 }
 
@@ -57,8 +64,11 @@ int crypto_aead_decrypt(
         return RETURN_MEMORY_FAIL;
 
     /* set key and compute round keys */
-    if(ae_init(cxt, k, CRYPTO_KEYBYTES))
+    if(ae_init(cxt, k, CRYPTO_KEYBYTES)) {
+        // CHANGE memory free added
+        free(cxt);
         return RETURN_KEYSIZE_ERR;
+    }
 
     /* process the associated data */
     process_ad(cxt, ad, adlen, npub, CRYPTO_NPUBBYTES);
@@ -70,9 +80,13 @@ int crypto_aead_decrypt(
     int i;
     for(i = 0; i < CRYPTO_ABYTES; i++)
         if(tag[i] != c[(*mlen) + i]){
+            // CHANGE memory free added
+            free(cxt);
             return RETURN_TAG_NO_MATCH;
         }
 
+    // CHANGE memory free added
+    free(cxt);
     return RETURN_SUCCESS;
 }
 

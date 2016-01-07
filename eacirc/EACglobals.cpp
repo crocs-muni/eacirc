@@ -12,6 +12,7 @@ SETTINGS_MAIN::SETTINGS_MAIN() {
     projectType = -1;
     evaluatorType = -1;
     evaluatorPrecision = -1;
+    significanceLevel = 5;
     recommenceComputation = false;
     loadInitialPopulation = false;
     numGenerations = -1;
@@ -25,6 +26,7 @@ SETTINGS_OUTPUTS::SETTINGS_OUTPUTS() {
     intermediateCircuits = false;
     allowPrunning = false;
     saveTestVectors = false;
+    fractionFile = false;
 }
 
 SETTINGS_RANDOM::SETTINGS_RANDOM() {

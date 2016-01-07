@@ -35,6 +35,7 @@ int Encryptor::initArray(bits_t* data, length_t dataLength, int dataType) {
     case CAESAR_TYPE_COUNTER:
         memset(data, 0, dataLength);
         break;
+    case CAESAR_TYPE_RANDOM_ONCE:
     case CAESAR_TYPE_RANDOM:
         for (length_t i = 0; i < dataLength; i++) { rndGen->getRandomFromInterval(255, &(data[i])); }
         break;
@@ -73,11 +74,18 @@ int Encryptor::setup() {
 }
 
 int Encryptor::update() {
+    // update counters
     if (pCaesarSettings->adType == CAESAR_TYPE_COUNTER) { increaseArray(m_ad, pCaesarSettings->adLength); }
     if (pCaesarSettings->keyType == CAESAR_TYPE_COUNTER) { increaseArray(m_key, pCaesarSettings->keyLength); }
     if (pCaesarSettings->smnType == CAESAR_TYPE_COUNTER) { increaseArray(m_smn, pCaesarSettings->smnLength); }
     if (pCaesarSettings->pmnType == CAESAR_TYPE_COUNTER) { increaseArray(m_pmn, pCaesarSettings->pmnLength); }
     if (pCaesarSettings->plaintextType == CAESAR_TYPE_COUNTER) { increaseArray(m_plaintext, pCaesarSettings->adLength); }
+    // update randoms
+    if (pCaesarSettings->adType == CAESAR_TYPE_RANDOM) { initArray(m_ad, pCaesarSettings->adLength, CAESAR_TYPE_RANDOM); }
+    if (pCaesarSettings->keyType == CAESAR_TYPE_RANDOM) { initArray(m_key, pCaesarSettings->keyLength, CAESAR_TYPE_RANDOM); }
+    if (pCaesarSettings->smnType == CAESAR_TYPE_RANDOM) { initArray(m_smn, pCaesarSettings->smnLength, CAESAR_TYPE_RANDOM); }
+    if (pCaesarSettings->pmnType == CAESAR_TYPE_RANDOM) { initArray(m_pmn, pCaesarSettings->pmnLength, CAESAR_TYPE_RANDOM); }
+    if (pCaesarSettings->plaintextType == CAESAR_TYPE_RANDOM) { initArray(m_plaintext, pCaesarSettings->adLength, CAESAR_TYPE_RANDOM); }
     return STAT_OK;
 }
 

@@ -29,7 +29,7 @@ public:
     void addAllProjects();
 
     /** add additional project to testing
-     * @param projectType project to add 
+     * @param projectType project to add
      */
     void addProject(int projectType);
 
@@ -87,9 +87,8 @@ public:
     * For simplicity, we use relative epsilon.
     * @param x
     * @param y
-    * @return true for x ~= y
     */
-    static bool floatingPointEqual(double x, double y);
+    static void floatingPointEqual(double x, double y);
 };
 
 #endif // TESTCONFIGURATOR_H

@@ -21,10 +21,6 @@
 
 #include <assert.h>
 
-// CHANGE namespace moved due to includes
-namespace Enchilada256v1_raw {
-int numRounds = -1;
-
 /*
     I am not using the test framework's AES implementation
     It does not separate key scheduling & encryption
@@ -50,15 +46,24 @@ int numRounds = -1;
 
 /* copied from Gladmans code, Rijndael/aes.h */
 
-typedef struct                   	/* the AES context for encryption   */
-{   u32    k_sch[RD_RKEYS*RD_WORDS];	/* the encryption key schedule      */
-    u32    n_rnd;            		/* the number of cipher rounds      */
-    u32    n_blk;			/* the number of bytes in the state */
-} aes_ctx;
+// CHANGE extra include for aes_enc_blk(,,)
+#include "enchilada256v1_aes.h"
+
+// CHANGE namespace moved due to includes
+namespace Enchilada256v1_raw {
+int numRounds = -1;
+
+// CHANGE aes_ctx redefinition commented out (redefinition is due to extra include)
+//typedef struct                   	/* the AES context for encryption   */
+//{   u32    k_sch[RD_RKEYS*RD_WORDS];	/* the encryption key schedule      */
+//    u32    n_rnd;            		/* the number of cipher rounds      */
+//    u32    n_blk;			/* the number of bytes in the state */
+//} aes_ctx;
 
 static aes_ctx rd_context ;
 
-extern int aes_enc_blk(const byte *, byte *, const aes_ctx *) ;
+// CHANGE extern function declaration commeted out (extra include added)
+//extern int aes_enc_blk(const unsigned char in_blk[], unsigned char out_blk[], const aes_ctx cx[1]);
 
 /*
     static variables for various things

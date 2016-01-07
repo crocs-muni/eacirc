@@ -1,5 +1,8 @@
 #pragma once
 
+// make_unique is defined in MSVS
+#ifndef _WIN32
+
 #include <memory>
 #include <type_traits>
 
@@ -27,3 +30,5 @@ namespace std {
         return unique_ptr<T>( new E[size] );
     }
 }
+
+#endif // _WIN32

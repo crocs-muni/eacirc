@@ -51,6 +51,7 @@
 #define SHA3_VORTEX         47
 #define SHA3_WAMM           48
 #define SHA3_WATERFALL      49
+#define SHA3_TANGLE2         50
 #define SHA3_RANDOM         99
 
 namespace Sha3Functions {

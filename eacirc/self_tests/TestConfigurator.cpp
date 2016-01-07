@@ -30,7 +30,7 @@ void TestConfigurator::addAllProjects() {
 
 void TestConfigurator::addProject(int projectType) {
     // moved before switch for language reasons
-    
+
     switch (projectType) {
 #ifdef ESTREAM
     case PROJECT_ESTREAM:
@@ -164,7 +164,7 @@ void TestConfigurator::prepareConfiguration() const {
 }
 
 // See documentation in header file.
-bool TestConfigurator::floatingPointEqual(double x, double y) {
+void TestConfigurator::floatingPointEqual(double x, double y) {
     CHECK(fabs(x - y) <= 0.000001 * fabs(x));
 }
 

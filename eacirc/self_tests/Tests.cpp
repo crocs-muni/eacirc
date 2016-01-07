@@ -306,6 +306,6 @@ TEST_CASE("sanity/chi-square-test", "Chi^2 distribution sanity test") {
 TEST_CASE("sanity/ks-uniformity-test", "Kolmogorov-Smirnov sanity test") {
     std::vector<double> samples1 = { 0.10, 0.36, 0.22, 0.9, 0.6 };
     std::vector<double> samples2 = { 0.10, 0.10, 0.22, 0.24, 0.42, 0.37, 0.77, 0.99, 0.96, 0.89, 0.85, 0.28, 0.63, 0.09 };
-    TestConfigurator::floatingPointEqual(CommonFnc::KS_uniformity_test(samples1), 0.24);
-    TestConfigurator::floatingPointEqual(CommonFnc::KS_uniformity_test(samples2), 0.1514286);
+    TestConfigurator::floatingPointEqual(CommonFnc::KSUniformityTest(samples1), 0.24);
+    TestConfigurator::floatingPointEqual(CommonFnc::KSUniformityTest(samples2), 0.1514286);
 }

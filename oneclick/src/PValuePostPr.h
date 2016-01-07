@@ -34,8 +34,8 @@ private:
     std::sregex_token_iterator endExpr;
 public:
     PValuePostPr() : validLogCount(0) , nonUniformLogCount(0) ,
-        uniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in 5% interval -> is uniform\\.") ,
-        nonUniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in 5% interval -> uniformity hypothesis rejected\\.") ,
+        uniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is not in \\d% interval -> is uniform\\.") ,
+        nonUniPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS is in \\d% interval -> uniformity hypothesis rejected\\.") ,
         pValPatt("\\[\\d\\d:\\d\\d:\\d\\d\\] info:    KS Statistics: (.*)") {}
 
     bool process(std::string path) {

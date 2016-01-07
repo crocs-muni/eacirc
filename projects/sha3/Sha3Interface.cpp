@@ -53,6 +53,7 @@ Sha3Interface* Sha3Interface::getSha3Function(int algorithm, int numRounds) {
     case SHA3_VORTEX: { return new Vortex(numRounds); break; }
     case SHA3_WAMM: { return new WaMM(numRounds); break; }
     case SHA3_WATERFALL: { return new Waterfall(numRounds); break; }
+    case SHA3_TANGLE2: { return new Tangle2(numRounds); break; }
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown hash function type (" << algorithm << ")." << endl;
         return NULL;

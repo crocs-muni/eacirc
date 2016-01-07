@@ -177,6 +177,8 @@
 #define CAESAR_WHEESHTV1MR5FR7T256          174
 #define CAESAR_YAES128V2                    175
 
+#define CAESAR_RANDOM                       999
+
 namespace CaesarCiphers {
 
     /** converts CAESAR algorithm constant to human-readable string
