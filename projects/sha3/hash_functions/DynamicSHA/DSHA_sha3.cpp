@@ -1,8 +1,5 @@
 #include "DSHA_sha3.h"
 
-#define R1 1 //shifts
-
-
 const unsigned long dsha_i224[8] =
 {
     0xc1059ed8ul, 0x367cd507ul, 0x3070dd17ul, 0xf70e5939ul,
@@ -208,7 +205,6 @@ for ( i=0; i<3; i++ )
 	ttc=tt[i];
      temp=(((((ch[0]+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
     temp0 = temp;
-    if(R1 == 1){
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -220,7 +216,6 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
     if(rotate) ch[7]=DSHA_ROTR32( ch[7] ,temp );
     if(g1 + g2 + g3 != 0){
       temp0 = ch[2];
@@ -234,7 +229,6 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 2) {
      temp=(((((ch[7]+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
     temp0 = temp;
-    if(R1 == 1) {
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -246,7 +240,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[6]=DSHA_ROTR32( ch[6] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[1];
@@ -261,7 +255,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 3) {
      temp=(((((ch[6]+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -273,7 +267,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[5]=DSHA_ROTR32( ch[5] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[0];
@@ -288,7 +282,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 4) {
      temp=(((((ch[5]+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -300,7 +294,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[4]=DSHA_ROTR32( ch[4] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[7];
@@ -315,7 +309,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 5) {
      temp=(((((ch[4]+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
     temp0 = temp;
-    if(R1 == 1) {
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -327,7 +321,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[3]=DSHA_ROTR32( ch[3] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[6];
@@ -342,7 +336,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 6) {
      temp=(((((ch[3]+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
     temp0 = temp;
-    if(R1 == 1) {
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -354,7 +348,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[2]=DSHA_ROTR32( ch[2] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[5];
@@ -369,7 +363,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 7) {
      temp=(((((ch[2]+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
     temp0 = temp;
-    if(R1 == 1) {
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -381,7 +375,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[1]=DSHA_ROTR32( ch[1] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[4];
@@ -396,7 +390,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 8) {
      temp=(((((ch[1]+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -408,7 +402,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[0]=DSHA_ROTR32( ch[0] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[3];
@@ -422,7 +416,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 9) {
      temp=(((((ch[0]+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -434,7 +428,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[7]=DSHA_ROTR32( ch[7] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[2];
@@ -449,7 +443,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 10) {
      temp=(((((ch[7]+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -461,7 +455,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[6]=DSHA_ROTR32( ch[6] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[1];
@@ -475,7 +469,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 11) {
      temp=(((((ch[6]+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -487,7 +481,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[5]=DSHA_ROTR32( ch[5] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[0];
@@ -502,7 +496,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 12) {
      temp=(((((ch[5]+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -514,7 +508,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[4]=DSHA_ROTR32( ch[4] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[7];
@@ -528,7 +522,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 13) {
      temp=(((((ch[4]+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -540,7 +534,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[3]=DSHA_ROTR32( ch[3] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[6];
@@ -555,7 +549,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 14) {
      temp=(((((ch[3]+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -567,7 +561,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[2]=DSHA_ROTR32( ch[2] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[5];
@@ -582,7 +576,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 15) {
      temp=(((((ch[2]+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
     temp0 = temp;
-    if(R1 == 1) {
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -594,7 +588,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[1]=DSHA_ROTR32( ch[1] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[4];
@@ -609,7 +603,7 @@ for ( i=0; i<3; i++ )
 	if (dshaNumRounds >= 16) {
      temp=(((((ch[1]+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
     temp0 = temp;
-    if(R1 == 1){
+
         if(r101) temp= temp>>17;
         if(r102) temp = temp ^ temp0;
         if(r103) temp = temp & 0x1ffff;
@@ -621,7 +615,7 @@ for ( i=0; i<3; i++ )
         if(r107) temp=(temp>>5);
         if(r108) temp = temp ^ temp0;
         if(r109) temp = temp & 0x1f;
-    }
+
     if(rotate) ch[0]=DSHA_ROTR32( ch[0] ,temp );
     if(g1 + g2 + g3 != 0){
         temp0 = ch[3];
@@ -684,20 +678,20 @@ for ( i=0; i<3; i++ )   {
 	if (dshaNumRounds >= 1) {
 	ttc=tt[i];
      temp=(((((ch[0]+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[7]=DSHA_ROTR64( ch[7] ,temp );
     if(g) ch[2]=w[0]+(ch[0] ^ ch[1] ^ ch[2])+ttc;
 //0-th round
 	}
 	if (dshaNumRounds >= 2) {
      temp=(((((ch[7]+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[6]=DSHA_ROTR64( ch[6] ,temp );
     if(g) ch[1]=w[1]+((ch[7] & ch[0]) ^ ch[1] )+ttc;
 
@@ -705,10 +699,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 3) {
      temp=(((((ch[6]+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
-    if(R1 == 1) {temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[5]=DSHA_ROTR64( ch[5] ,temp );
     if(g) ch[0]=w[2]+((~(ch[6] | ch[0])) | (ch[6] & (ch[7] ^ ch[0])))+ttc;
 
@@ -716,10 +710,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 4) {
      temp=(((((ch[5]+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[4]=DSHA_ROTR64( ch[4] ,temp );
     if(g) ch[7]=w[3]+((~(ch[5] | (ch[6] ^ ch[7]))) | (ch[5] & (~(ch[7]))))+ttc;
 
@@ -727,10 +721,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 5) {
      temp=(((((ch[4]+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[3]=DSHA_ROTR64( ch[3] ,temp );
     if(g) ch[6]=w[4]+(ch[4] ^ ch[5] ^ ch[6])+ttc;
 
@@ -738,10 +732,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 6) {
      temp=(((((ch[3]+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[2]=DSHA_ROTR64( ch[2] ,temp );
     if(g) ch[5]=w[5]+((ch[3] & ch[4]) ^ ch[5])+ttc;
 
@@ -749,10 +743,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 7) {
      temp=(((((ch[2]+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
-    if(R1 == 1) {temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[1]=DSHA_ROTR64( ch[1] ,temp );
     if(g) ch[4]=w[6]+((~(ch[2] | ch[4])) | (ch[2] & (ch[3] ^ ch[4])))+ttc;
 
@@ -760,10 +754,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 8) {
      temp=(((((ch[1]+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[0]=DSHA_ROTR64( ch[0] ,temp );
     if(g) ch[3]=w[7]+((~(ch[1] | (ch[2] ^ ch[3]))) | (ch[1] & (~(ch[3]))))+ttc;
 
@@ -771,10 +765,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 9) {
      temp=(((((ch[0]+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[7]=DSHA_ROTR64( ch[7] ,temp );
     if(g) ch[2]=w[8]+(ch[0] ^ ch[1] ^ ch[2])+ttc;
 
@@ -782,10 +776,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 10) {
      temp=(((((ch[7]+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[6]=DSHA_ROTR64( ch[6] ,temp );
     if(g) ch[1]=w[9]+((ch[7] & ch[0]) ^ ch[1] )+ttc;
 
@@ -793,10 +787,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 11) {
      temp=(((((ch[6]+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[5]=DSHA_ROTR64( ch[5] ,temp );
     if(g) ch[0]=w[10]+((~(ch[6] | ch[0])) | (ch[6] & (ch[7] ^ ch[0])))+ttc;
 
@@ -804,10 +798,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 12) {
      temp=(((((ch[5]+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[4]=DSHA_ROTR64( ch[4] ,temp );
     if(g) ch[7]=w[11]+((~(ch[5] | (ch[6] ^ ch[7]))) | (ch[5] & (~(ch[7]))))+ttc;
 
@@ -815,10 +809,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 13) {
      temp=(((((ch[4]+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
-    if(R1 == 1) {temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[3]=DSHA_ROTR64( ch[3] ,temp );
     if(g) ch[6]=w[12]+(ch[4] ^ ch[5] ^ ch[6])+ttc;
 
@@ -826,10 +820,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 14) {
      temp=(((((ch[3]+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[2]=DSHA_ROTR64( ch[2] ,temp );
     if(g) ch[5]=w[13]+((ch[3] & ch[4]) ^ ch[5] )+ttc;
 
@@ -837,10 +831,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 15) {
      temp=(((((ch[2]+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[1]=DSHA_ROTR64( ch[1] ,temp );
     if(g) ch[4]=w[14]+((~(ch[2] | ch[4])) | (ch[2] & (ch[3] ^ ch[4])))+ttc;
 
@@ -848,10 +842,10 @@ for ( i=0; i<3; i++ )   {
 	}
 	if (dshaNumRounds >= 16) {
      temp=(((((ch[1]+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-    if(R1 == 1){ temp=((temp>>36) ^ temp) & 0xfffffffff;
+    temp=((temp>>36) ^ temp) & 0xfffffffff;
 	temp=((temp>>18) ^ temp) & 0x3ffff;
 	temp=((temp>>12) ^ temp) & 0xfff;
-    temp=((temp>>6) ^ temp) & 0x3f;}
+    temp=((temp>>6) ^ temp) & 0x3f;
     if(rotate) ch[0]=DSHA_ROTR64( ch[0] ,temp );
     if(g) ch[3]=w[15]+((~(ch[1] | (ch[2] ^ ch[3]))) | (ch[1] & (~(ch[3]))))+ttc;
 
