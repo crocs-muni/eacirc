@@ -1,6 +1,7 @@
 #include "IRndGen.h"
 #include "QuantumRndGen.h"
 #include "BiasRndGen.h"
+#include "LUTRndGen.h"
 #include "MD5RndGen.h"
 #include "EACglobals.h"
 #include "XMLProcessor.h"
@@ -37,6 +38,9 @@ IRndGen* IRndGen::parseGenerator(TiXmlNode* pRoot) {
     case GENERATOR_MD5:
         tempGenerator = new MD5RndGen(pRoot);
         break;
+	case GENERATOR_LUT:
+		tempGenerator = new LUTRndGen(pRoot);
+		break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Generator could not load - unknown type (" << generatorType << ")." << endl;
         return NULL;

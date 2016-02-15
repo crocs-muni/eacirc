@@ -127,6 +127,9 @@ int EstreamProject::setupPlaintext() {
     case ESTREAM_GENTYPE_BIASRANDOM:
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) biasRndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
         break;
+	case ESTREAM_GENTYPE_LUTRANDOM:
+		for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) lutRndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
+		break;
     case ESTREAM_GENTYPE_COUNTER: // BEWARE: Counter relies on inputArray being set to zero at the beginning!
         increaseArray(m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
         memcpy(m_plaintextIn, m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
@@ -342,8 +345,22 @@ int EstreamProject::getTestVector(){
             else { // RANDOM
                 if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG)
                     tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
+				
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                    rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+					switch (pGlobals->settings->random.generator){
+						case GENERATOR_QRNG:
+							rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							break;
+						case GENERATOR_BIAS:
+							biasRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							break;
+						case GENERATOR_MD5://TODO
+							
+							break;
+						case GENERATOR_LUT:
+							lutRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							break;
+					}
                     m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
                 }
             }

@@ -30,7 +30,7 @@ const char* EstreamCiphers::estreamToString(int cipher) {
     case ESTREAM_WG:                return "WG";
     case ESTREAM_YAMB:              return "Yamb";
     case ESTREAM_ZKCRYPT:           return "Zk-Crypt";
-    case ESTREAM_RANDOM:            return "random data";
+	case ESTREAM_RANDOM:            return "random data";
     default:                        return "(unknown stream cipher)";
     }
 }

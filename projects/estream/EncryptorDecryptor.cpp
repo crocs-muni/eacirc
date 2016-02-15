@@ -235,6 +235,9 @@ int EncryptorDecryptor::setupIV() {
     case ESTREAM_GENTYPE_BIASRANDOM:
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(m_iv[input]));
         break;
+	case ESTREAM_GENTYPE_LUTRANDOM:
+		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) lutRndGen->getRandomFromInterval(255, &(m_iv[input]));
+		break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown IV type (" << pEstreamSettings->ivType << ")." << endl;
         return STAT_INVALID_ARGUMETS;
@@ -278,6 +281,9 @@ int EncryptorDecryptor::setupKey() {
     case ESTREAM_GENTYPE_BIASRANDOM:
         for (int input = 0; input < STREAM_BLOCK_SIZE; input++) biasRndGen->getRandomFromInterval(255, &(m_key[input]));
         break;
+	case ESTREAM_GENTYPE_LUTRANDOM:
+		for (int input = 0; input < STREAM_BLOCK_SIZE; input++) lutRndGen->getRandomFromInterval(255, &(m_key[input]));
+		break;
     default:
         mainLogger.out(LOGGER_ERROR) << "Unknown key type (" << pEstreamSettings->keyType << ")." << endl;
         return STAT_INVALID_ARGUMETS;

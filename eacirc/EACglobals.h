@@ -56,11 +56,18 @@ extern IRndGen* mainGenerator;
   */
 extern IRndGen* rndGen;
 
+/** parametrised (unbiased / biased)random generator
+* - initialized at state initialization of EACirc
+* - all-purpose random generator 
+* - to be used by 'project' modules (test vector generation)
+*/
+extern IRndGen* lutRndGen;
+
 /** biased random generator
-  * - initialized at state initialization of EACirc
-  * - all-purpose random generator (biased)
-  * - to be used by 'project' modules (test vector generation)
-  */
+* - initialized at state initialization of EACirc
+* - all-purpose random generator (biased)
+* - to be used by 'project' modules (test vector generation)
+*/
 extern IRndGen* biasRndGen;
 
 /** globally accessible memory
@@ -101,6 +108,9 @@ struct SETTINGS_RANDOM {
     bool useFixedSeed;              //! should computation start from fixed seed instead of generating one?
     unsigned long seed;             //! seed to start from
     int biasRndGenFactor;           //! bias factor for general bias generator
+	int lutHW;						//! number of ones in LUT = defines level of randomness
+	int generator;					//! defines which generator is used (qrng, biased, LUT)
+
     bool useNetShare;               //! try to map net share (used on METACENTRUM resources)
     string qrngPath;                //! path to pregenerated quantum random data
     int qrngFilesMaxIndex;          //! maximal index of qrng data file

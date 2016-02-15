@@ -5,6 +5,7 @@ Logger mainLogger;
 IRndGen* mainGenerator = NULL;
 IRndGen* rndGen = NULL;
 IRndGen* biasRndGen = NULL;
+IRndGen* lutRndGen = NULL;
 GLOBALS* pGlobals = NULL;
 
 SETTINGS_MAIN::SETTINGS_MAIN() {
@@ -33,6 +34,8 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
     useFixedSeed = false;
     seed = 0;
     biasRndGenFactor = 50;
+	generator = 1;
+	lutHW = 262144;
     useNetShare = false;
     qrngPath = "";
     qrngFilesMaxIndex = -1;
