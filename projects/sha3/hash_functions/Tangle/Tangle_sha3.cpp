@@ -469,16 +469,16 @@ void Tangle::FuncTangle(hashState * state, const BitSequence * message)
     M = (unsigned int *)message;
 
     unsigned int enabledMask = pGlobals->settings->heatMap.enabledMask;
-    unsigned int extract1 = enabledMask & 0x0001;
-    unsigned int extract2 = enabledMask & 0x0002;
-    unsigned int b1 = enabledMask & 0x0004;
-    unsigned int b2 = enabledMask & 0x0008;
-    unsigned int xorTangleF = enabledMask & 0x0010;
-    unsigned int xorW = enabledMask & 0x0020;
-    unsigned int xorTangleK = enabledMask & 0x0040;
-    unsigned int xorB = enabledMask & 0x0080;
-    unsigned int add = enabledMask & 0x0100;
-    unsigned int xor1 = enabledMask & 0x0200;
+    unsigned int heatmapExtract1 = enabledMask & 0x0001;
+    unsigned int heatmapExtract2 = enabledMask & 0x0002;
+    unsigned int heatmapB1 = enabledMask & 0x0004;
+    unsigned int heatmapB2 = enabledMask & 0x0008;
+    unsigned int heatmapXorTangleF = enabledMask & 0x0010;
+    unsigned int heatmapXorW = enabledMask & 0x0020;
+    unsigned int heatmapXorTangleK = enabledMask & 0x0040;
+    unsigned int heatmapXorB = enabledMask & 0x0080;
+    unsigned int heatmapAdd = enabledMask & 0x0100;
+    unsigned int heatmapXor1 = enabledMask & 0x0200;
 
     /* copy hash values */
     for(r=0; r<32; r++) h[r] = state->H[r];
@@ -517,13 +517,13 @@ for(k=0; k<state->rounds/2; k++)
             W[i] = 0;
         }
 
-        if(extract1){
+        if(heatmapExtract1){
             W[t]	+= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t & 255]);
             W[t+1]	+= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]);
             W[t+2]	+= TANGLE_F1(Xb[4], Xb[5],TANGLE_K[t+2 & 255]);
             W[t+3]	+= TANGLE_F2(Xb[6], Xb[7],TANGLE_K[t+3 & 255]);
         }
-        if(extract2){
+        if(heatmapExtract2){
             W[t]	+= M[t	& 127];
             W[t+1]	+= M[t+1 & 127];
             W[t+2]	+= M[t+2 & 127];
@@ -555,11 +555,11 @@ if(state->rounds % 2 == 1){
         W[i] = 0;
     }
 
-    if(extract1){
+    if(heatmapExtract1){
         W[t]	+= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t & 255]);
         W[t+1]	+= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]);
     }
-    if(extract2){
+    if(heatmapExtract2){
         W[t]	+= M[t	& 127];
         W[t+1]	+= M[t+1 & 127];
     }
@@ -597,28 +597,28 @@ if(state->rounds % 2 == 1){
             /* even */
             if((r % 2)==0){
             B = 0;
-            if(b1){
+            if(heatmapB1){
                 B += TANGLE_F1(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16]));
-            }if(b2){
+            }if(heatmapB2){
                 B += W[(r*2)+1];
             }
 
             D = 0;
-            if(xorTangleF){
+            if(heatmapXorTangleF){
                 D += TANGLE_F1(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16]));
             }
-            if(xorW){
+            if(heatmapXorW){
                 D += W[r*2];
             }
-            if(xorTangleK){
+            if(heatmapXorTangleK){
                 D += TANGLE_K[s[r]];
             }
-            if(xorB){
+            if(heatmapXorB){
                 D += B;
             }
-            if(xor1) h[(r+16) & 31] ^= D;
+            if(heatmapXor1) h[(r+16) & 31] ^= D;
 
-            if(add){
+            if(heatmapAdd){
                 h[r & 31] += B;
             }
             r++;
@@ -626,27 +626,27 @@ if(state->rounds % 2 == 1){
             else{
             /* odd */
             B = 0;
-            if(b1){
+            if(heatmapB1){
                 B += TANGLE_F2(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16]));
-            }if(b2){
+            }if(heatmapB2){
                 B += W[(r*2)+1];
             }
 
             D = 0;
-            if(xorTangleF){
+            if(heatmapXorTangleF){
                 D += TANGLE_F2(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16]));
             }
-            if(xorW){
+            if(heatmapXorW){
                 D += W[r*2];
             }
-            if(xorTangleK){
+            if(heatmapXorTangleK){
                 D += TANGLE_K[s[r]];
             }
-            if(xorB){
+            if(heatmapXorB){
                 D += B;
             }
-            if(xor1) h[(r+16) & 31] ^= D;
-            if(add){
+            if(heatmapXor1) h[(r+16) & 31] ^= D;
+            if(heatmapAdd){
                 h[r & 31] += B;
             }
             r++;

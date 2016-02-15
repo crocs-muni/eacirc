@@ -1,10 +1,5 @@
 #include "DSHA2_sha3.h"
 
-#define COMP1 1
-#define COMP2 1
-#define AND 1
-
-
 
 const unsigned long dsha2_i224[8] =
 {
@@ -167,15 +162,15 @@ unsigned long hash_32[8], ch[8], temp, w[16];
 int i;
 temp = 0;
 unsigned int enabledMask = pGlobals->settings->heatMap.enabledMask;
-unsigned int comp101 = enabledMask & 0x0001;
-unsigned int comp102 = enabledMask & 0x0002;
-unsigned int g = enabledMask & 0x0004;
-unsigned int comp201 = enabledMask & 0x0008;
-unsigned int comp202 = enabledMask & 0x0010;
-unsigned int r101 = enabledMask & 0x0020;
-unsigned int r102 = enabledMask & 0x0040;
-unsigned int r103 = enabledMask & 0x0080;
-unsigned int rotate = enabledMask & 0x0100;
+unsigned int heatmapComp101 = enabledMask & 0x0001;
+unsigned int heatmapComp102 = enabledMask & 0x0002;
+unsigned int heatmapG = enabledMask & 0x0004;
+unsigned int heatmapComp201 = enabledMask & 0x0008;
+unsigned int heatmapComp202 = enabledMask & 0x0010;
+unsigned int heatmapR101 = enabledMask & 0x0020;
+unsigned int heatmapR102 = enabledMask & 0x0040;
+unsigned int heatmapR103 = enabledMask & 0x0080;
+unsigned int heatmapRotate = enabledMask & 0x0100;
 
 for (i=0;i<16;i++)
 {
@@ -192,16 +187,16 @@ for (i=0;i<8;i++) {
 
 //COMP
 temp=((((((ch[0]^ch[1])+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-if(comp101) ch[7]=DSHA2_ROTR32(temp,(w[0] & 31))+w[1];
+if(heatmapComp101) ch[7]=DSHA2_ROTR32(temp,(w[0] & 31))+w[1];
 
-if(comp102){
+if(heatmapComp102){
     ch[5]=DSHA2_ROTR32(ch[5],((w[0]>>5) & 31));
     ch[4]=ch[4]+w[3];
     ch[3]=DSHA2_ROTR32(ch[3],((w[0]>>10) & 31));
 }
 
 
-if(g){
+if(heatmapG){
 switch (w[0]>>30)
 { case 0: ch[2]=w[2]+(ch[0] ^ ch[1] ^ ch[2]);
 		break;
@@ -215,8 +210,8 @@ case 3: ch[2]=w[2]+((~(ch[0] | (ch[1] ^ ch[2]))) | (ch[0] & ~(ch[2])));
 }
 
 temp=((((((ch[7]^ch[0])+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
-if(comp201) ch[6]=DSHA2_ROTR32(temp,((w[0]>>15) & 31))+w[4];
-if(comp202){
+if(heatmapComp201) ch[6]=DSHA2_ROTR32(temp,((w[0]>>15) & 31))+w[4];
+if(heatmapComp202){
     ch[5]=ch[5]+w[7];
     ch[4]=DSHA2_ROTR32(ch[4],((w[0]>>20) & 31));
     ch[3]=ch[3]+w[6];
@@ -230,15 +225,15 @@ if(comp202){
 //COMP
 
 temp=((((((ch[6]^ch[7])+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
-if(comp101) ch[5]=DSHA2_ROTR32(temp,(w[8] & 31))+w[9];
-if(comp102){
+if(heatmapComp101) ch[5]=DSHA2_ROTR32(temp,(w[8] & 31))+w[9];
+if(heatmapComp102){
     ch[3]=DSHA2_ROTR32(ch[3],((w[8]>>5) & 31));
     ch[2]=ch[2]+w[11];
     ch[1]=DSHA2_ROTR32(ch[1],((w[8]>>10) & 31));
 }
 
 
-if(g){
+if(heatmapG){
 switch (w[8]>>30) 
 { case 0: ch[0]=w[10]+(ch[6] ^ ch[7] ^ ch[0]);
 		break;
@@ -252,8 +247,8 @@ case 3: ch[0]=w[10]+((~(ch[6] | (ch[7] ^ ch[0]))) | (ch[6] & ~(ch[0])));
 }
 
 temp=((((((ch[5]^ch[6])+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
-if(comp201) ch[4]=DSHA2_ROTR32(temp,((w[8]>>15) & 31))+w[12];
-if(comp202) {
+if(heatmapComp201) ch[4]=DSHA2_ROTR32(temp,((w[8]>>15) & 31))+w[12];
+if(heatmapComp202) {
     ch[3]=ch[3]+w[15];
     ch[2]=DSHA2_ROTR32(ch[2],((w[8]>>20) & 31));
     ch[1]=ch[1]+w[14];
@@ -268,90 +263,90 @@ if(comp202) {
 //second round
 if (dsha2NumRounds >= 2) {//R1
 temp=(((((ch[ 4]+ch[ 5])^ch[ 6])+ch[ 7])^ch[ 0])+ch[ 1])^ch[ 2];
-if(r101) temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101) temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
     ch[ 3]=DSHA2_ROTR32(ch[ 3],temp);
 }
 }
 
 if (dsha2NumRounds >= 3) {
 temp=(((((ch[ 3]+ch[ 4])^ch[ 5])+ch[ 6])^ch[ 7])+ch[ 0])^ch[ 1];
-if(r101)   temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)   temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
     ch[ 2]=DSHA2_ROTR32(ch[ 2],temp);
 }
 }
 
 if (dsha2NumRounds >= 4) {
 temp=(((((ch[ 2]+ch[ 3])^ch[ 4])+ch[ 5])^ch[ 6])+ch[ 7])^ch[ 0];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 1]=DSHA2_ROTR32(ch[ 1],temp);
 }
 }
 
 if (dsha2NumRounds >= 5) {
 temp=(((((ch[ 1]+ch[ 2])^ch[ 3])+ch[ 4])^ch[ 5])+ch[ 6])^ch[ 7];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 0]=DSHA2_ROTR32(ch[ 0],temp);
 }
 }
 
 if (dsha2NumRounds >= 6) {
 temp=(((((ch[ 0]+ch[ 1])^ch[ 2])+ch[ 3])^ch[ 4])+ch[ 5])^ch[ 6];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 7]=DSHA2_ROTR32(ch[ 7],temp);
 }
 }
 
 if (dsha2NumRounds >= 7) {
 temp=(((((ch[ 7]+ch[ 0])^ch[ 1])+ch[ 2])^ch[ 3])+ch[ 4])^ch[ 5];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 6]=DSHA2_ROTR32(ch[ 6],temp);
 }
 }
 
 if (dsha2NumRounds >= 8) {
 temp=(((((ch[ 6]+ch[ 7])^ch[ 0])+ch[ 1])^ch[ 2])+ch[ 3])^ch[ 4];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 5]=DSHA2_ROTR32(ch[ 5],temp);
 }
 }
 
 if (dsha2NumRounds >= 9) {
 temp=(((((ch[ 5]+ch[ 6])^ch[ 7])+ch[ 0])^ch[ 1])+ch[ 2])^ch[ 3];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 4]=DSHA2_ROTR32(ch[ 4],temp);
 }
 }
 
 if (dsha2NumRounds >= 10) {
 temp=(((((ch[ 4]+ch[ 5])^ch[ 6])+ch[ 7])^ch[ 0])+ch[ 1])^ch[ 2];
-if(r101)  temp=((temp>>17) ^ temp) & 0x1ffff;
-if(r102) temp=((temp>>10) ^ temp) & 0x3ff;
-if(r103) temp=((temp>>5) ^ temp) & 0x1f;
-if(rotate){
+if(heatmapR101)  temp=((temp>>17) ^ temp) & 0x1ffff;
+if(heatmapR102) temp=((temp>>10) ^ temp) & 0x3ff;
+if(heatmapR103) temp=((temp>>5) ^ temp) & 0x1f;
+if(heatmapRotate){
 ch[ 3]=DSHA2_ROTR32(ch[ 3],temp);
 }
 }
@@ -360,15 +355,15 @@ ch[ 3]=DSHA2_ROTR32(ch[ 3],temp);
 if (dsha2NumRounds >= 11) {
     //comp poprve
 temp=((((((ch[3]^ch[4])+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
-if(comp101) ch[2]=DSHA2_ROTR32(temp,(w[1] & 31))+w[2];
-if(comp102){
+if(heatmapComp101) ch[2]=DSHA2_ROTR32(temp,(w[1] & 31))+w[2];
+if(heatmapComp102){
     ch[0]=DSHA2_ROTR32(ch[0],((w[1]>>5) & 31));
     ch[7]=ch[7]+w[4];
     ch[6]=DSHA2_ROTR32(ch[6],((w[1]>>10) & 31));
     }
 
 
-    if(g){
+    if(heatmapG){
 switch (w[1]>>30) 
 { case 0: ch[5]=w[3]+(ch[3] ^ ch[4] ^ ch[5]);
 		break;
@@ -382,8 +377,8 @@ case 3: ch[5]=w[3]+((~(ch[3] | (ch[4] ^ ch[5]))) | (ch[3] & ~(ch[5])));
     }
 
 temp=((((((ch[2]^ch[3])+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
-if(comp201) ch[1]=DSHA2_ROTR32(temp,((w[1]>>15) & 31))+w[5];
-if(comp202){
+if(heatmapComp201) ch[1]=DSHA2_ROTR32(temp,((w[1]>>15) & 31))+w[5];
+if(heatmapComp202){
     ch[0]=ch[0]+w[0];
     ch[7]=DSHA2_ROTR32(ch[7],((w[1]>>20) & 31));
     ch[6]=ch[6]+w[7];
@@ -395,15 +390,15 @@ if(comp202){
 //comp podruhe
 
 temp=((((((ch[1]^ch[2])+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
-if(comp101) ch[0]=DSHA2_ROTR32(temp,(w[9] & 31))+w[10];
-if(comp102){
+if(heatmapComp101) ch[0]=DSHA2_ROTR32(temp,(w[9] & 31))+w[10];
+if(heatmapComp102){
     ch[6]=DSHA2_ROTR32(ch[6],((w[9]>>5) & 31));
     ch[5]=ch[5]+w[12];
     ch[4]=DSHA2_ROTR32(ch[4],((w[9]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[9]>>30) 
 { case 0: ch[3]=w[11]+(ch[1] ^ ch[2] ^ ch[3]);
 		break;
@@ -418,8 +413,8 @@ case 3: ch[3]=w[11]+((~(ch[1] | (ch[2] ^ ch[3]))) | (ch[1] & ~(ch[3])));
 
 
 temp=((((((ch[0]^ch[1])+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-if(comp201) ch[7]=DSHA2_ROTR32(temp,((w[9]>>15) & 31))+w[13];
-if(comp202){
+if(heatmapComp201) ch[7]=DSHA2_ROTR32(temp,((w[9]>>15) & 31))+w[13];
+if(heatmapComp202){
     ch[6]=ch[6]+w[8];
     ch[5]=DSHA2_ROTR32(ch[5],((w[9]>>20) & 31));
     ch[4]=ch[4]+w[15];
@@ -434,15 +429,15 @@ if (dsha2NumRounds >= 12) {
 
 
 temp=((((((ch[7]^ch[0])+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
-if(comp101) ch[6]=DSHA2_ROTR32(temp,(w[2] & 31))+w[3];
-if(comp102){
+if(heatmapComp101) ch[6]=DSHA2_ROTR32(temp,(w[2] & 31))+w[3];
+if(heatmapComp102){
     ch[4]=DSHA2_ROTR32(ch[4],((w[2]>>5) & 31));
     ch[3]=ch[3]+w[5];
     ch[2]=DSHA2_ROTR32(ch[2],((w[2]>>10) & 31));
     }
 
 
-    if(g){
+    if(heatmapG){
 switch (w[2]>>30) 
 { case 0: ch[1]=w[4]+(ch[7] ^ ch[0] ^ ch[1]);
 		break;
@@ -457,8 +452,8 @@ case 3: ch[1]=w[4]+((~(ch[7] | (ch[0] ^ ch[1]))) | (ch[7] & ~(ch[1])));
 
 
 temp=((((((ch[6]^ch[7])+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
-if(comp201) ch[5]=DSHA2_ROTR32(temp,((w[2]>>15) & 31))+w[6];
-if(comp202){
+if(heatmapComp201) ch[5]=DSHA2_ROTR32(temp,((w[2]>>15) & 31))+w[6];
+if(heatmapComp202){
     ch[4]=ch[4]+w[1];
     ch[3]=DSHA2_ROTR32(ch[3],((w[2]>>20) & 31));
     ch[2]=ch[2]+w[0];
@@ -470,15 +465,15 @@ if(comp202){
 
 
 temp=((((((ch[5]^ch[6])+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
-if(comp101) ch[4]=DSHA2_ROTR32(temp,(w[10] & 31))+w[11];
-if(comp102){
+if(heatmapComp101) ch[4]=DSHA2_ROTR32(temp,(w[10] & 31))+w[11];
+if(heatmapComp102){
     ch[2]=DSHA2_ROTR32(ch[2],((w[10]>>5) & 31));
     ch[1]=ch[1]+w[13];
     ch[0]=DSHA2_ROTR32(ch[0],((w[10]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[10]>>30) 
 { case 0: ch[7]=w[12]+(ch[5] ^ ch[6] ^ ch[7]);
 		break;
@@ -493,8 +488,8 @@ case 3: ch[7]=w[12]+((~(ch[5] | (ch[6] ^ ch[7]))) | (ch[5] & ~(ch[7])));
 
 
 temp=((((((ch[4]^ch[5])+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
-if(comp201) ch[3]=DSHA2_ROTR32(temp,((w[10]>>15) & 31))+w[14];
-if(comp202){
+if(heatmapComp201) ch[3]=DSHA2_ROTR32(temp,((w[10]>>15) & 31))+w[14];
+if(heatmapComp202){
     ch[2]=ch[2]+w[9];
     ch[1]=DSHA2_ROTR32(ch[1],((w[10]>>20) & 31));
     ch[0]=ch[0]+w[8];
@@ -509,15 +504,15 @@ if (dsha2NumRounds >= 13) {
 
 
 temp=((((((ch[3]^ch[4])+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
-if(comp101) ch[2]=DSHA2_ROTR32(temp,(w[3] & 31))+w[4];
-if(comp102){
+if(heatmapComp101) ch[2]=DSHA2_ROTR32(temp,(w[3] & 31))+w[4];
+if(heatmapComp102){
     ch[0]=DSHA2_ROTR32(ch[0],((w[3]>>5) & 31));
     ch[7]=ch[7]+w[6];
     ch[6]=DSHA2_ROTR32(ch[6],((w[3]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[3]>>30) 
 { case 0: ch[5]=w[5]+(ch[3] ^ ch[4] ^ ch[5]);
 		break;
@@ -532,8 +527,8 @@ case 3: ch[5]=w[5]+((~(ch[3] | (ch[4] ^ ch[5]))) | (ch[3] & ~(ch[5])));
 
 
 temp=((((((ch[2]^ch[3])+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
-if(comp201) ch[1]=DSHA2_ROTR32(temp,((w[3]>>15) & 31))+w[7];
-if(comp202){
+if(heatmapComp201) ch[1]=DSHA2_ROTR32(temp,((w[3]>>15) & 31))+w[7];
+if(heatmapComp202){
     ch[0]=ch[0]+w[2];
     ch[7]=DSHA2_ROTR32(ch[7],((w[3]>>20) & 31));
     ch[6]=ch[6]+w[1];
@@ -545,15 +540,15 @@ if(comp202){
 
 
 temp=((((((ch[1]^ch[2])+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
-if(comp101) ch[0]=DSHA2_ROTR32(temp,(w[11] & 31))+w[12];
-if(comp102){
+if(heatmapComp101) ch[0]=DSHA2_ROTR32(temp,(w[11] & 31))+w[12];
+if(heatmapComp102){
     ch[6]=DSHA2_ROTR32(ch[6],((w[11]>>5) & 31));
     ch[5]=ch[5]+w[14];
     ch[4]=DSHA2_ROTR32(ch[4],((w[11]>>10) & 31));
   }
 
 
-  if(g){
+  if(heatmapG){
 switch (w[11]>>30) 
 { case 0: ch[3]=w[13]+(ch[1] ^ ch[2] ^ ch[3]);
 		break;
@@ -568,8 +563,8 @@ case 3: ch[3]=w[13]+((~(ch[1] | (ch[2] ^ ch[3]))) | (ch[1] & ~(ch[3])));
 
 
 temp=((((((ch[0]^ch[1])+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-if(comp201) ch[7]=DSHA2_ROTR32(temp,((w[11]>>15) & 31))+w[15];
-if(comp202){
+if(heatmapComp201) ch[7]=DSHA2_ROTR32(temp,((w[11]>>15) & 31))+w[15];
+if(heatmapComp202){
     ch[6]=ch[6]+w[10];
     ch[5]=DSHA2_ROTR32(ch[5],((w[11]>>20) & 31));
     ch[4]=ch[4]+w[9];
@@ -583,15 +578,15 @@ if(comp202){
 if (dsha2NumRounds >= 14) {
 
     temp=((((((ch[7]^ch[0])+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
-    if(comp101) ch[6]=DSHA2_ROTR32(temp,(w[4] & 31))+w[5];
-if(comp102){
+    if(heatmapComp101) ch[6]=DSHA2_ROTR32(temp,(w[4] & 31))+w[5];
+if(heatmapComp102){
     ch[4]=DSHA2_ROTR32(ch[4],((w[4]>>5) & 31));
     ch[3]=ch[3]+w[7];
     ch[2]=DSHA2_ROTR32(ch[2],((w[4]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[4]>>30) 
 { case 0: ch[1]=w[6]+(ch[7] ^ ch[0] ^ ch[1]);
 		break;
@@ -605,8 +600,8 @@ case 3: ch[1]=w[6]+((~(ch[7] | (ch[0] ^ ch[1]))) | (ch[7] & ~(ch[1])));
 
 
 temp=((((((ch[6]^ch[7])+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
-if(comp201) ch[5]=DSHA2_ROTR32(temp,((w[4]>>15) & 31))+w[0];
-if(comp202){
+if(heatmapComp201) ch[5]=DSHA2_ROTR32(temp,((w[4]>>15) & 31))+w[0];
+if(heatmapComp202){
     ch[4]=ch[4]+w[3];
     ch[3]=DSHA2_ROTR32(ch[3],((w[4]>>20) & 31));
     ch[2]=ch[2]+w[2];
@@ -617,15 +612,15 @@ if(comp202){
 
 
 temp=((((((ch[5]^ch[6])+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
-if(comp101) ch[4]=DSHA2_ROTR32(temp,(w[12] & 31))+w[13];
-if(comp102){
+if(heatmapComp101) ch[4]=DSHA2_ROTR32(temp,(w[12] & 31))+w[13];
+if(heatmapComp102){
     ch[2]=DSHA2_ROTR32(ch[2],((w[12]>>5) & 31));
     ch[1]=ch[1]+w[15];
     ch[0]=DSHA2_ROTR32(ch[0],((w[12]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[12]>>30) 
 { case 0: ch[7]=w[14]+(ch[5] ^ ch[6] ^ ch[7]);
 		break;
@@ -639,8 +634,8 @@ case 3: ch[7]=w[14]+((~(ch[5] | (ch[6] ^ ch[7]))) | (ch[5] & ~(ch[7])));
 
 
 temp=((((((ch[4]^ch[5])+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
-if(comp201) ch[3]=DSHA2_ROTR32(temp,((w[12]>>15) & 31))+w[8];
-if(comp202){
+if(heatmapComp201) ch[3]=DSHA2_ROTR32(temp,((w[12]>>15) & 31))+w[8];
+if(heatmapComp202){
     ch[2]=ch[2]+w[11];
     ch[1]=DSHA2_ROTR32(ch[1],((w[12]>>20) & 31));
     ch[0]=ch[0]+w[10];
@@ -654,15 +649,15 @@ if(comp202){
 if (dsha2NumRounds >= 15) {
 
 temp=((((((ch[3]^ch[4])+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
-if(comp101) ch[2]=DSHA2_ROTR32(temp,(w[5] & 31))+w[6];
-if(comp102){
+if(heatmapComp101) ch[2]=DSHA2_ROTR32(temp,(w[5] & 31))+w[6];
+if(heatmapComp102){
     ch[0]=DSHA2_ROTR32(ch[0],((w[5]>>5) & 31));
     ch[7]=ch[7]+w[0];
     ch[6]=DSHA2_ROTR32(ch[6],((w[5]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[5]>>30) 
 { case 0: ch[5]=w[7]+(ch[3] ^ ch[4] ^ ch[5]);
 		break;
@@ -676,8 +671,8 @@ case 3: ch[5]=w[7]+((~(ch[3] | (ch[4] ^ ch[5]))) | (ch[3] & ~(ch[5])));
 
 
 temp=((((((ch[2]^ch[3])+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
-if(comp201) ch[1]=DSHA2_ROTR32(temp,((w[5]>>15) & 31))+w[1];
-if(comp202){
+if(heatmapComp201) ch[1]=DSHA2_ROTR32(temp,((w[5]>>15) & 31))+w[1];
+if(heatmapComp202){
     ch[0]=ch[0]+w[4];
     ch[7]=DSHA2_ROTR32(ch[7],((w[5]>>20) & 31));
     ch[6]=ch[6]+w[3];
@@ -689,15 +684,15 @@ if(comp202){
 
 
 temp=((((((ch[1]^ch[2])+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
-if(comp101) ch[0]=DSHA2_ROTR32(temp,(w[13] & 31))+w[14];
-if(comp102){
+if(heatmapComp101) ch[0]=DSHA2_ROTR32(temp,(w[13] & 31))+w[14];
+if(heatmapComp102){
     ch[6]=DSHA2_ROTR32(ch[6],((w[13]>>5) & 31));
     ch[5]=ch[5]+w[8];
     ch[4]=DSHA2_ROTR32(ch[4],((w[13]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[13]>>30) 
 { case 0: ch[3]=w[15]+(ch[1] ^ ch[2] ^ ch[3]);
 		break;
@@ -710,8 +705,8 @@ case 3: ch[3]=w[15]+((~(ch[1] | (ch[2] ^ ch[3]))) | (ch[1] & ~(ch[3])));
 }			}
 
 temp=((((((ch[0]^ch[1])+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-if(comp201) ch[7]=DSHA2_ROTR32(temp,((w[13]>>15) & 31))+w[9];
-if(comp201){
+if(heatmapComp201) ch[7]=DSHA2_ROTR32(temp,((w[13]>>15) & 31))+w[9];
+if(heatmapComp201){
     ch[6]=ch[6]+w[12];
     ch[5]=DSHA2_ROTR32(ch[5],((w[13]>>20) & 31));
     ch[4]=ch[4]+w[11];
@@ -726,15 +721,15 @@ if(comp201){
 if (dsha2NumRounds >= 16) {
 
 temp=((((((ch[7]^ch[0])+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
-if(comp101) ch[6]=DSHA2_ROTR32(temp,(w[6] & 31))+w[7];
-if(comp102){
+if(heatmapComp101) ch[6]=DSHA2_ROTR32(temp,(w[6] & 31))+w[7];
+if(heatmapComp102){
     ch[4]=DSHA2_ROTR32(ch[4],((w[6]>>5) & 31));
     ch[3]=ch[3]+w[1];
     ch[2]=DSHA2_ROTR32(ch[2],((w[6]>>10) & 31));
     }
 
 
-    if(g){
+    if(heatmapG){
 switch (w[6]>>30) 
 { case 0: ch[1]=w[0]+(ch[7] ^ ch[0] ^ ch[1]);
 		break;
@@ -748,8 +743,8 @@ case 3: ch[1]=w[0]+((~(ch[7] | (ch[0] ^ ch[1]))) | (ch[7] & ~(ch[1])));
 
 
 temp=((((((ch[6]^ch[7])+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
-if(comp201) ch[5]=DSHA2_ROTR32(temp,((w[6]>>15) & 31))+w[2];
-if(comp202){
+if(heatmapComp201) ch[5]=DSHA2_ROTR32(temp,((w[6]>>15) & 31))+w[2];
+if(heatmapComp202){
     ch[4]=ch[4]+w[5];
     ch[3]=DSHA2_ROTR32(ch[3],((w[6]>>20) & 31));
     ch[2]=ch[2]+w[4];
@@ -760,15 +755,15 @@ if(comp202){
 
 
 temp=((((((ch[5]^ch[6])+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
-if(comp101) ch[4]=DSHA2_ROTR32(temp,(w[14] & 31))+w[15];
-if(comp102){
+if(heatmapComp101) ch[4]=DSHA2_ROTR32(temp,(w[14] & 31))+w[15];
+if(heatmapComp102){
     ch[2]=DSHA2_ROTR32(ch[2],((w[14]>>5) & 31));
     ch[1]=ch[1]+w[9];
     ch[0]=DSHA2_ROTR32(ch[0],((w[14]>>10) & 31));
     }
 
 
-    if(g){
+    if(heatmapG){
 switch (w[14]>>30) 
 { case 0: ch[7]=w[8]+(ch[5] ^ ch[6] ^ ch[7]);
 		break;
@@ -782,8 +777,8 @@ case 3: ch[7]=w[8]+((~(ch[5] | (ch[6] ^ ch[7]))) | (ch[5] & ~(ch[7])));
 
 
 temp=((((((ch[4]^ch[5])+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
-if(comp201) ch[3]=DSHA2_ROTR32(temp,((w[14]>>15) & 31))+w[10];
-if(comp202){
+if(heatmapComp201) ch[3]=DSHA2_ROTR32(temp,((w[14]>>15) & 31))+w[10];
+if(heatmapComp202){
     ch[2]=ch[2]+w[13];
     ch[1]=DSHA2_ROTR32(ch[1],((w[14]>>20) & 31));
     ch[0]=ch[0]+w[12];
@@ -798,15 +793,15 @@ if (dsha2NumRounds >= 17) {
 
 
 temp=((((((ch[3]^ch[4])+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
-if(comp101) ch[2]=DSHA2_ROTR32(temp,(w[7] & 31))+w[0];
-if(comp102){
+if(heatmapComp101) ch[2]=DSHA2_ROTR32(temp,(w[7] & 31))+w[0];
+if(heatmapComp102){
     ch[0]=DSHA2_ROTR32(ch[0],((w[7]>>5) & 31));
     ch[7]=ch[7]+w[2];
     ch[6]=DSHA2_ROTR32(ch[6],((w[7]>>10) & 31));
         }
 
 
-    if(g){
+    if(heatmapG){
 switch (w[7]>>30) 
 { case 0: ch[5]=w[1]+(ch[3] ^ ch[4] ^ ch[5]);
 		break;
@@ -820,8 +815,8 @@ case 3: ch[5]=w[1]+((~(ch[3] | (ch[4] ^ ch[5]))) | (ch[3] & ~(ch[5])));
 
 
 temp=((((((ch[2]^ch[3])+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
-if(comp201) ch[1]=DSHA2_ROTR32(temp,((w[7]>>15) & 31))+w[3];
-if(comp202){
+if(heatmapComp201) ch[1]=DSHA2_ROTR32(temp,((w[7]>>15) & 31))+w[3];
+if(heatmapComp202){
     ch[0]=ch[0]+w[6];
     ch[7]=DSHA2_ROTR32(ch[7],((w[7]>>20) & 31));
     ch[6]=ch[6]+w[5];
@@ -832,15 +827,15 @@ if(comp202){
 
 
 temp=((((((ch[1]^ch[2])+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
-if(comp101) ch[0]=DSHA2_ROTR32(temp,(w[15] & 31))+w[8];
-if(comp102){
+if(heatmapComp101) ch[0]=DSHA2_ROTR32(temp,(w[15] & 31))+w[8];
+if(heatmapComp102){
     ch[6]=DSHA2_ROTR32(ch[6],((w[15]>>5) & 31));
     ch[5]=ch[5]+w[10];
     ch[4]=DSHA2_ROTR32(ch[4],((w[15]>>10) & 31));
     }
 
 
-if(g){
+if(heatmapG){
 switch (w[15]>>30) 
 { case 0: ch[3]=w[9]+(ch[1] ^ ch[2] ^ ch[3]);
 		break;
@@ -854,8 +849,8 @@ case 3: ch[3]=w[9]+((~(ch[1] | (ch[2] ^ ch[3]))) | (ch[1] & ~(ch[3])));
 
 
 temp=((((((ch[0]^ch[1])+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
-if(comp201) ch[7]=DSHA2_ROTR32(temp,((w[15]>>15) & 31))+w[11];
-if(comp202){
+if(heatmapComp201) ch[7]=DSHA2_ROTR32(temp,((w[15]>>15) & 31))+w[11];
+if(heatmapComp202){
     ch[6]=ch[6]+w[14];
     ch[5]=DSHA2_ROTR32(ch[5],((w[15]>>20) & 31));
     ch[4]=ch[4]+w[13];

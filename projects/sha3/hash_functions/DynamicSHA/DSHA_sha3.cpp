@@ -167,19 +167,19 @@ temp = 0;
 temp0 = temp;
 
 unsigned int enabledMask = pGlobals->settings->heatMap.enabledMask;
-unsigned int r101 = enabledMask & 0x0001;
-unsigned int r102 = enabledMask & 0x0002;
-unsigned int r103 = enabledMask & 0x0004;
-unsigned int r104 = enabledMask & 0x0008;
-unsigned int r105 = enabledMask & 0x0010;
-unsigned int r106 = enabledMask & 0x0020;
-unsigned int r107 = enabledMask & 0x0040;
-unsigned int r108 = enabledMask & 0x0080;
-unsigned int r109 = enabledMask & 0x0100;
-unsigned int rotate = enabledMask & 0x0200;
-unsigned int g1 = enabledMask & 0x0400;
-unsigned int g2 = enabledMask & 0x0800;
-unsigned int g3 = enabledMask & 0x1000;
+unsigned int heatmapR101 = enabledMask & 0x0001;
+unsigned int heatmapR102 = enabledMask & 0x0002;
+unsigned int heatmapR103 = enabledMask & 0x0004;
+unsigned int heatmapR104 = enabledMask & 0x0008;
+unsigned int heatmapR105 = enabledMask & 0x0010;
+unsigned int heatmapR106 = enabledMask & 0x0020;
+unsigned int heatmapR107 = enabledMask & 0x0040;
+unsigned int heatmapR108 = enabledMask & 0x0080;
+unsigned int heatmapR109 = enabledMask & 0x0100;
+unsigned int heatmapRotate = enabledMask & 0x0200;
+unsigned int heatmapG1 = enabledMask & 0x0400;
+unsigned int heatmapG2 = enabledMask & 0x0800;
+unsigned int heatmapG3 = enabledMask & 0x1000;
 
 for (i=0;i<16;i++)
 {
@@ -205,49 +205,49 @@ for ( i=0; i<3; i++ )
 	ttc=tt[i];
      temp=(((((ch[0]+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
     temp0 = temp;
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
-    if(rotate) ch[7]=DSHA_ROTR32( ch[7] ,temp );
-    if(g1 + g2 + g3 != 0){
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
+    if(heatmapRotate) ch[7]=DSHA_ROTR32( ch[7] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
       temp0 = ch[2];
       ch[2] = 0;
-      if(g1) ch[2] += w[0];
-      if(g2) ch[2] +=(ch[0] ^ ch[1] ^ temp0);
-      if(g3) ch[2] += ttc;
+      if(heatmapG1) ch[2] += w[0];
+      if(heatmapG2) ch[2] +=(ch[0] ^ ch[1] ^ temp0);
+      if(heatmapG3) ch[2] += ttc;
     }
 //0-th round
 	}
 	if (dshaNumRounds >= 2) {
      temp=(((((ch[7]+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
     temp0 = temp;
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[6]=DSHA_ROTR32( ch[6] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[6]=DSHA_ROTR32( ch[6] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[1];
         ch[1] = 0;
-        if(g1) ch[1] +=w[1];
-        if(g2) ch[1] += ((ch[7] & ch[0]) ^ temp0);
-        if(g3) ch[1] += ttc;
+        if(heatmapG1) ch[1] +=w[1];
+        if(heatmapG2) ch[1] += ((ch[7] & ch[0]) ^ temp0);
+        if(heatmapG3) ch[1] += ttc;
     }
 
 //1-th round
@@ -256,25 +256,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[6]+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[5]=DSHA_ROTR32( ch[5] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[5]=DSHA_ROTR32( ch[5] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[0];
         ch[0] = 0;
-        if(g1) ch[0] += w[2];
-        if(g2) ch[0] += (~(ch[6] | temp0)) | (ch[6] & (ch[7] ^ temp0));
-        if(g3) ch[0] += ttc;
+        if(heatmapG1) ch[0] += w[2];
+        if(heatmapG2) ch[0] += (~(ch[6] | temp0)) | (ch[6] & (ch[7] ^ temp0));
+        if(heatmapG3) ch[0] += ttc;
     }
 
 //2-th round
@@ -283,25 +283,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[5]+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[4]=DSHA_ROTR32( ch[4] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[4]=DSHA_ROTR32( ch[4] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[7];
         ch[7] = 0;
-        if(g1) ch[7] += w[3];
-        if(g2) ch[7] += (~(ch[5] | (ch[6] ^ temp0))) | (ch[5] & (~(temp0)));
-        if(g3) ch[7] += ttc;
+        if(heatmapG1) ch[7] += w[3];
+        if(heatmapG2) ch[7] += (~(ch[5] | (ch[6] ^ temp0))) | (ch[5] & (~(temp0)));
+        if(heatmapG3) ch[7] += ttc;
     }
 
 //3-th round
@@ -310,25 +310,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[4]+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[3]=DSHA_ROTR32( ch[3] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[3]=DSHA_ROTR32( ch[3] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[6];
         ch[6] = 0;
-        if(g1) ch[6] += w[4];
-        if(g2) ch[6] += ch[4] ^ ch[5] ^ temp0;
-        if(g3) ch[6] += ttc;
+        if(heatmapG1) ch[6] += w[4];
+        if(heatmapG2) ch[6] += ch[4] ^ ch[5] ^ temp0;
+        if(heatmapG3) ch[6] += ttc;
     }
 
 //4-th round
@@ -337,25 +337,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[3]+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[2]=DSHA_ROTR32( ch[2] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[2]=DSHA_ROTR32( ch[2] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[5];
         ch[5] = 0;
-        if(g1) ch[5] += w[5];
-        if(g2) ch[5] += (ch[3] & ch[4]) ^ temp0;
-        if(g3) ch[5] += ttc;
+        if(heatmapG1) ch[5] += w[5];
+        if(heatmapG2) ch[5] += (ch[3] & ch[4]) ^ temp0;
+        if(heatmapG3) ch[5] += ttc;
     }
 
 //5-th round
@@ -364,25 +364,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[2]+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[1]=DSHA_ROTR32( ch[1] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[1]=DSHA_ROTR32( ch[1] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[4];
         ch[4] = 0;
-        if(g1) ch[4] += w[6];
-        if(g2) ch[4] += (~(ch[2] | temp0)) | (ch[2] & (ch[3] ^ temp0));
-        if(g3) ch[4] += ttc;
+        if(heatmapG1) ch[4] += w[6];
+        if(heatmapG2) ch[4] += (~(ch[2] | temp0)) | (ch[2] & (ch[3] ^ temp0));
+        if(heatmapG3) ch[4] += ttc;
     }
 
 //6-th round
@@ -391,25 +391,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[1]+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[0]=DSHA_ROTR32( ch[0] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[0]=DSHA_ROTR32( ch[0] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[3];
         ch[3] = 0;
-        if(g1) ch[3] += w[7];
-        if(g2) ch[3] += (~(ch[1] | (ch[2] ^ temp0))) | (ch[1] & (~(temp0)));
-        if(g3) ch[3] += ttc;
+        if(heatmapG1) ch[3] += w[7];
+        if(heatmapG2) ch[3] += (~(ch[1] | (ch[2] ^ temp0))) | (ch[1] & (~(temp0)));
+        if(heatmapG3) ch[3] += ttc;
     }
 //7-th round
 	}
@@ -417,25 +417,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[0]+ch[1])^ch[2])+ch[3])^ch[4])+ch[5])^ch[6];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[7]=DSHA_ROTR32( ch[7] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[7]=DSHA_ROTR32( ch[7] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[2];
         ch[2] = 0;
-        if(g1) ch[2] += w[8];
-        if(g2) ch[2] += ch[0] ^ ch[1] ^ temp0;
-        if(g3) ch[2] += ttc;
+        if(heatmapG1) ch[2] += w[8];
+        if(heatmapG2) ch[2] += ch[0] ^ ch[1] ^ temp0;
+        if(heatmapG3) ch[2] += ttc;
     }
 
 //8-th round
@@ -444,25 +444,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[7]+ch[0])^ch[1])+ch[2])^ch[3])+ch[4])^ch[5];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[6]=DSHA_ROTR32( ch[6] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[6]=DSHA_ROTR32( ch[6] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[1];
         ch[1] = 0;
-        if(g1) ch[1] += w[9];
-        if(g2) ch[1] += (ch[7] & ch[0]) ^ temp0;
-        if(g3) ch[1] += ttc;
+        if(heatmapG1) ch[1] += w[9];
+        if(heatmapG2) ch[1] += (ch[7] & ch[0]) ^ temp0;
+        if(heatmapG3) ch[1] += ttc;
     }
 //9-th round
 	}
@@ -470,25 +470,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[6]+ch[7])^ch[0])+ch[1])^ch[2])+ch[3])^ch[4];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[5]=DSHA_ROTR32( ch[5] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[5]=DSHA_ROTR32( ch[5] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[0];
         ch[0] = 0;
-        if(g1) ch[0] += w[10];
-        if(g2) ch[0] += (~(ch[6] | temp0)) | (ch[6] & (ch[7] ^ temp0));
-        if(g3) ch[0] += ttc;
+        if(heatmapG1) ch[0] += w[10];
+        if(heatmapG2) ch[0] += (~(ch[6] | temp0)) | (ch[6] & (ch[7] ^ temp0));
+        if(heatmapG3) ch[0] += ttc;
     }
 
 //10-th round
@@ -497,25 +497,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[5]+ch[6])^ch[7])+ch[0])^ch[1])+ch[2])^ch[3];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[4]=DSHA_ROTR32( ch[4] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[4]=DSHA_ROTR32( ch[4] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[7];
         ch[7] = 0;
-        if(g1) ch[7] += w[11];
-        if(g2) ch[7] += (~(ch[5] | (ch[6] ^ temp0))) | (ch[5] & (~(temp0)));
-        if(g3) ch[7] += ttc;
+        if(heatmapG1) ch[7] += w[11];
+        if(heatmapG2) ch[7] += (~(ch[5] | (ch[6] ^ temp0))) | (ch[5] & (~(temp0)));
+        if(heatmapG3) ch[7] += ttc;
     }
 //11-th round
 	}
@@ -523,25 +523,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[4]+ch[5])^ch[6])+ch[7])^ch[0])+ch[1])^ch[2];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[3]=DSHA_ROTR32( ch[3] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[3]=DSHA_ROTR32( ch[3] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[6];
         ch[6] = 0;
-        if(g1) ch[6] += w[12];
-        if(g2) ch[6] += ch[4] ^ ch[5] ^ temp0;
-        if(g3) ch[6] += ttc;
+        if(heatmapG1) ch[6] += w[12];
+        if(heatmapG2) ch[6] += ch[4] ^ ch[5] ^ temp0;
+        if(heatmapG3) ch[6] += ttc;
     }
 
 //12-th round
@@ -550,25 +550,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[3]+ch[4])^ch[5])+ch[6])^ch[7])+ch[0])^ch[1];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[2]=DSHA_ROTR32( ch[2] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[2]=DSHA_ROTR32( ch[2] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[5];
         ch[5] = 0;
-        if(g1) ch[5] += w[13];
-        if(g2) ch[5] += (ch[3] & ch[4]) ^ temp0;
-        if(g3) ch[5] += ttc;
+        if(heatmapG1) ch[5] += w[13];
+        if(heatmapG2) ch[5] += (ch[3] & ch[4]) ^ temp0;
+        if(heatmapG3) ch[5] += ttc;
     }
 
 //13-th round
@@ -577,25 +577,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[2]+ch[3])^ch[4])+ch[5])^ch[6])+ch[7])^ch[0];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[1]=DSHA_ROTR32( ch[1] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[1]=DSHA_ROTR32( ch[1] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[4];
         ch[4] = 0;
-        if(g1) ch[4] += w[14];
-        if(g2) ch[4] += ~(ch[2] | temp0) | (ch[2] & (ch[3] ^ temp0));
-        if(g3) ch[4] += ttc;
+        if(heatmapG1) ch[4] += w[14];
+        if(heatmapG2) ch[4] += ~(ch[2] | temp0) | (ch[2] & (ch[3] ^ temp0));
+        if(heatmapG3) ch[4] += ttc;
     }
 
 //14-th round
@@ -604,25 +604,25 @@ for ( i=0; i<3; i++ )
      temp=(((((ch[1]+ch[2])^ch[3])+ch[4])^ch[5])+ch[6])^ch[7];
     temp0 = temp;
 
-        if(r101) temp= temp>>17;
-        if(r102) temp = temp ^ temp0;
-        if(r103) temp = temp & 0x1ffff;
+        if(heatmapR101) temp= temp>>17;
+        if(heatmapR102) temp = temp ^ temp0;
+        if(heatmapR103) temp = temp & 0x1ffff;
         temp0 = temp;
-        if(r104) temp = temp>>10;
-        if(r105) temp = temp ^ temp0;
-        if(r106) temp = temp & 0x3ff;
+        if(heatmapR104) temp = temp>>10;
+        if(heatmapR105) temp = temp ^ temp0;
+        if(heatmapR106) temp = temp & 0x3ff;
         temp0 = temp;
-        if(r107) temp=(temp>>5);
-        if(r108) temp = temp ^ temp0;
-        if(r109) temp = temp & 0x1f;
+        if(heatmapR107) temp=(temp>>5);
+        if(heatmapR108) temp = temp ^ temp0;
+        if(heatmapR109) temp = temp & 0x1f;
 
-    if(rotate) ch[0]=DSHA_ROTR32( ch[0] ,temp );
-    if(g1 + g2 + g3 != 0){
+    if(heatmapRotate) ch[0]=DSHA_ROTR32( ch[0] ,temp );
+    if(heatmapG1 + heatmapG2 + heatmapG3 != 0){
         temp0 = ch[3];
         ch[3] = 0;
-        if(g1) ch[3] += w[15];
-        if(g2) ch[3] += (~(ch[1] | (ch[2] ^ temp0))) | (ch[1] & (~(temp0)));
-        if(g3) ch[3] += ttc;
+        if(heatmapG1) ch[3] += w[15];
+        if(heatmapG2) ch[3] += (~(ch[1] | (ch[2] ^ temp0))) | (ch[1] & (~(temp0)));
+        if(heatmapG3) ch[3] += ttc;
     }
 //15-th round
 	}
