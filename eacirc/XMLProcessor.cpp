@@ -32,6 +32,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->random.useFixedSeed = (atoi(getXMLElementValue(pRoot,"RANDOM/USE_FIXED_SEED").c_str())) ? true : false;
     istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pSettings->random.seed;
     pSettings->random.biasRndGenFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
+	if (atoi(getXMLElementValue(pRoot, "RANDOM/LUT_HW").c_str()))
 	pSettings->random.lutHW = atoi(getXMLElementValue(pRoot, "RANDOM/LUT_HW").c_str());
 	pSettings->random.generator = atoi(getXMLElementValue(pRoot, "RANDOM/GENERATOR").c_str());
     pSettings->random.useNetShare = atoi(getXMLElementValue(pRoot,"RANDOM/USE_NET_SHARE").c_str()) ? true : false;

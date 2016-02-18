@@ -361,6 +361,7 @@ int EstreamProject::getTestVector(){
 							lutRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
 							break;
 					}
+					rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
                     m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
                 }
             }

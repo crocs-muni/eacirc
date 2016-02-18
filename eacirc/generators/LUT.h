@@ -2,9 +2,12 @@
 #ifndef LUT_H
 #define LUT_H
 
+#define LUT_STATE_LENGTH           16  
+
 /* typedef a 32 bit type */
 typedef unsigned long long u64;
 typedef unsigned char u8;
+
 
 /* Data structure for LUT  */
 typedef struct

@@ -189,9 +189,9 @@ void EACirc::saveState(const string filename) {
     pElem2 = new TiXmlElement("biasrndgen");
     pElem2->LinkEndChild(biasRndGen->exportGenerator());
     pElem->LinkEndChild(pElem2);
-	pElem2 = new TiXmlElement("lutrndgen");
-	pElem2->LinkEndChild(lutRndGen->exportGenerator());
-	pElem->LinkEndChild(pElem2);
+	//pElem2 = new TiXmlElement("lutrndgen");
+	//pElem2->LinkEndChild(lutRndGen->exportGenerator());
+	//pElem->LinkEndChild(pElem2);
     pRoot->LinkEndChild(pElem);
 
     // save project
@@ -261,13 +261,15 @@ void EACirc::createState() {
 
     unsigned long generatorSeed;
     // INIT RNG
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
+    mainGenerator->getRandomFromInterval(ULONG_MAX, &generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
     mainLogger.out(LOGGER_INFO) << "Random generator initialized (" << rndGen->shortDescription() << ")" << endl;
     // INIT BIAS RNDGEN
+
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     biasRndGen = new BiasRndGen(generatorSeed, m_settings.random.qrngPath, m_settings.random.biasRndGenFactor);
     mainLogger.out(LOGGER_INFO) << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
+
 	// INIT LUT RNDGEN
 	mainGenerator->getRandomFromInterval(ULONG_MAX, &generatorSeed);
 	lutRndGen = new LUTRndGen(generatorSeed, m_settings.random.lutHW);

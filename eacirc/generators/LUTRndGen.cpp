@@ -135,11 +135,53 @@ TiXmlNode* LUTRndGen::exportGenerator() const {
 	TiXmlElement* pRoot = new TiXmlElement("generator");
 	pRoot->SetAttribute("type", CommonFnc::toString(m_type).c_str());
 	pRoot->SetAttribute("description", shortDescription().c_str());
+
+	TiXmlElement* originalSeed = new TiXmlElement("original_seed");
+	stringstream sSeed;
+	sSeed << m_seed;
+	originalSeed->LinkEndChild(new TiXmlText(sSeed.str().c_str()));
+	pRoot->LinkEndChild(originalSeed);
+
+	TiXmlElement* accumulatorState = new TiXmlElement("accumulator_state");
+	accumulatorState->SetAttribute("length", LUT_STATE_LENGTH);
+	stringstream sAccValue;
+	sAccValue << left << dec;
+	for (unsigned char i = 0; i < LUT_STATE_LENGTH; i++) {
+		//sAccValue << 1 << " ";
+		//sAccValue << (unsigned int)S.stateBytes[i] << " ";
+	}
+	accumulatorState->LinkEndChild(new TiXmlText(sAccValue.str().c_str()));
+	pRoot->LinkEndChild(accumulatorState);
+
+	return pRoot;
+	/*TiXmlElement* pRoot = new TiXmlElement("generator");
+	pRoot->SetAttribute("type", CommonFnc::toString(m_type).c_str());
+	pRoot->SetAttribute("description", shortDescription().c_str());
+
 	TiXmlElement* levelOfRandomness = new TiXmlElement("level_of_randomness");
 	stringstream sLevelOfRandomness;
 	sLevelOfRandomness << m_LevelOfRandomness;
 	levelOfRandomness->LinkEndChild(new TiXmlText(sLevelOfRandomness.str().c_str()));
 	pRoot->LinkEndChild(levelOfRandomness);
+	TiXmlElement* pElem = new TiXmlElement("internal_rng");
+
+
+	TiXmlElement* originalSeed = new TiXmlElement("original_seed");
+	stringstream sSeed;
+	sSeed << m_seed;
+	originalSeed->LinkEndChild(new TiXmlText(sSeed.str().c_str()));
+	pRoot->LinkEndChild(originalSeed);
+
+	TiXmlElement* accumulatorState = new TiXmlElement("accumulator_state");
+	accumulatorState->SetAttribute("length", 16);
+	stringstream sAccValue;
+	sAccValue << left << dec;
+	for (unsigned char i = 0; i < 16; i++) {
+		sAccValue << (unsigned int)S.stateBytes[i] << " ";
+	}
+	accumulatorState->LinkEndChild(new TiXmlText(sAccValue.str().c_str()));
+	pRoot->LinkEndChild(accumulatorState);
 
 	return pRoot;
+	*/
 }
