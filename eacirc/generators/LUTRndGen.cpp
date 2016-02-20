@@ -36,7 +36,7 @@ LUTRndGen::LUTRndGen(TiXmlNode *pRoot)
 		return;
 	}
 	m_LevelOfRandomness = atoi(getXMLElementValue(pRoot, "level_of_randomness").c_str());
-
+	LUTSetRfunc(&S, 0, m_LevelOfRandomness);
 	istringstream(getXMLElementValue(pRoot, "original_seed")) >> m_seed;
 
 	if (atol(getXMLElementValue(pRoot, "accumulator_state/@length").c_str()) != LUT_STATE_LENGTH) {
