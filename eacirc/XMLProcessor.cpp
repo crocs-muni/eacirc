@@ -33,8 +33,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     istringstream(getXMLElementValue(pRoot,"RANDOM/SEED")) >> pSettings->random.seed;
     pSettings->random.biasRndGenFactor = atoi(getXMLElementValue(pRoot,"RANDOM/BIAS_RNDGEN_FACTOR").c_str());
 	pSettings->random.lutHW = atoi(getXMLElementValue(pRoot, "RANDOM/LUT_HW").c_str());
-	pSettings->random.generator = atoi(getXMLElementValue(pRoot, "RANDOM/GENERATOR").c_str());
-    pSettings->random.useNetShare = atoi(getXMLElementValue(pRoot,"RANDOM/USE_NET_SHARE").c_str()) ? true : false;
+	pSettings->random.useNetShare = atoi(getXMLElementValue(pRoot,"RANDOM/USE_NET_SHARE").c_str()) ? true : false;
     pSettings->random.qrngPath = getXMLElementValue(pRoot,"RANDOM/QRNG_PATH");
     pSettings->random.qrngFilesMaxIndex = atoi(getXMLElementValue(pRoot,"RANDOM/QRNG_MAX_INDEX").c_str());
 
@@ -52,6 +51,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->ga.mutateConnectors = atoi(getXMLElementValue(pRoot,"GA/MUTATE_CONNECTORS").c_str()) ? true : false;
 
     // parsing EACIRC/TEST_VECTORS
+	pSettings->testVectors.generator = atoi(getXMLElementValue(pRoot, "TEST_VECTORS/GENERATOR").c_str());
     pSettings->testVectors.inputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/INPUT_LENGTH").c_str());
     pSettings->testVectors.outputLength = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/OUTPUT_LENGTH").c_str());
     pSettings->testVectors.setSize = atoi(getXMLElementValue(pRoot,"TEST_VECTORS/SET_SIZE").c_str());

@@ -347,7 +347,7 @@ int EstreamProject::getTestVector(){
                     tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
 				
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-					switch (pGlobals->settings->random.generator){
+					switch (pGlobals->settings->testVectors.generator){
 						case GENERATOR_QRNG:
 							rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
 							break;

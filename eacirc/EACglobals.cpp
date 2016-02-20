@@ -34,7 +34,6 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
     useFixedSeed = false;
     seed = 0;
     biasRndGenFactor = 50;
-	generator = 0;
 	lutHW = 262144;
     useNetShare = false;
     qrngPath = "";
@@ -72,6 +71,7 @@ SETTINGS_GATE_CIRCUIT::SETTINGS_GATE_CIRCUIT() {
 }
 
 SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
+	generator = 0;
     inputLength = -1;
     outputLength = -1;
     setSize = -1;
