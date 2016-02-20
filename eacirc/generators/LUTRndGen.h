@@ -8,9 +8,9 @@
 
 class LUTRndGen : public IRndGen{
 	LUT_CTX S;
-	int m_LevelOfRandomness; // 
+	int m_LevelOfRandomness; //number of ones () in LUT - defines level of randomness 
 public:
-	LUTRndGen(unsigned long seed = 0, int m_LevelOfRandomness = 262144);
+	LUTRndGen(unsigned long seed = 0, int m_LevelOfRandomness = 262144); //best random generator for half(262144) of ones on LUTs 
 	LUTRndGen(TiXmlNode* pRoot);
 	~LUTRndGen();
 

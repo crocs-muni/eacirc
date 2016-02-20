@@ -189,10 +189,12 @@ void EACirc::saveState(const string filename) {
     pElem2 = new TiXmlElement("biasrndgen");
     pElem2->LinkEndChild(biasRndGen->exportGenerator());
     pElem->LinkEndChild(pElem2);
-	//pElem2 = new TiXmlElement("lutrndgen");
-	//pElem2->LinkEndChild(lutRndGen->exportGenerator());
-	//pElem->LinkEndChild(pElem2);
-    pRoot->LinkEndChild(pElem);
+	
+	pElem2 = new TiXmlElement("lutrndgen");
+	pElem2->LinkEndChild(lutRndGen->exportGenerator());
+	pElem->LinkEndChild(pElem2);
+    
+	pRoot->LinkEndChild(pElem);
 
     // save project
     pRoot->LinkEndChild(m_project->saveProjectStateMain());

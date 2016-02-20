@@ -3,64 +3,47 @@
 #include <random>
 #include <iostream>
 
-void LUTSetRfunc(LUT_CTX *S, u64* seed, int count){
-	std::random_device rd;
-	std::mt19937_64 gen1(seed[1]), gen2(seed[2]);
-	std::uniform_int_distribution<u64> dist(0, 16 * 256 * 2 - 1);
-
-	u64 * luts = reinterpret_cast<u64 *>(S);
-
-	while (count != 0) {
-		const u64 idx = dist(gen1) ^ dist(gen2);
-		const u64 mask = u64(1) << (idx % 64);
-
-		if (luts[idx / 64] & mask)
-			continue;
-
-		luts[idx / 64] |= mask;
-		--count;
-	}
-}
-
 void LUTSetRfunc(LUT_CTX *S, unsigned long seed , int count){
 	std::random_device rd;
-	std::mt19937_64 gen1(seed), gen2(seed+1);
+	std::mt19937_64 gen1(seed);
 	std::uniform_int_distribution<u64> dist(0, 16 * 256 * 128 - 1);
 
 	u64 * luts = reinterpret_cast<u64 *>(S);
 
+	/* compute number of bytes mod 64 */
 	S->stateBytes = (u8*)S->state;
 
-	for (size_t i = 0; i < 16*256*2; i++)
-	{
-		luts[i] = 0;
-	}
-
+	/* LUTs are  cleared*/
+	for (size_t i = 0; i < 16*256*2; i++)		luts[i] = 0;
+	
+	/* count of bits of LUT definning array is set to 1*/
 	while (count != 0) {
-		const u64 idx = dist(gen1);
-		const u64 mask = u64(1) << (idx % 64);
+		const u64 bit = dist(gen1); //which bit we want to set
+		const u64 mask = u64(1) << (bit % 64);
 
-		//std::cout << idx << std::endl;
-		if (luts[idx / 64] & mask)
+		/* if bit is already set */
+		if (luts[bit / 64] & mask)
 			continue;
 
-		luts[idx / 64] |= mask;
+		/*otherwise set bit */
+		luts[bit / 64] |= mask;
 		--count;
-		//std::cout << count << std::endl;
-	}
-
-	
+	}	
+	/*internal state set to 0 */
+	S->state[0] = S->state[1] = 0;
 }
 
 void LUTLoadRfunc(LUT_CTX *S, u8* Rfunc){
 	memcpy(S->stateBytes, Rfunc, 16*256*16);
 }
+
 void LUTSetState(LUT_CTX *S, u8* inn_state){
 	memcpy(S->stateBytes,inn_state,16);
 }
 void LUTRound(LUT_CTX *S){
 	u64 tmp_state[2] = { 0, 0 };
 	u8 idx;
+	/* XOR of LUT values (for 16 LUTs) corresponding to 16 Bytes of internal state  */
 	for (int i = 0; i < 16; i++)
 	{
 		idx = S->stateBytes[i];

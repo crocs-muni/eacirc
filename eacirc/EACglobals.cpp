@@ -34,7 +34,7 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
     useFixedSeed = false;
     seed = 0;
     biasRndGenFactor = 50;
-	generator = 1;
+	generator = 0;
 	lutHW = 262144;
     useNetShare = false;
     qrngPath = "";

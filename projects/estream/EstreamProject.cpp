@@ -360,9 +360,10 @@ int EstreamProject::getTestVector(){
 						case GENERATOR_LUT:
 							lutRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
 							break;
+						default:
+							rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
 					}
-					rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
-                    m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
+					m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
                 }
             }
             break;

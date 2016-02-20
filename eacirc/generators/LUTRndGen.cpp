@@ -8,25 +8,50 @@ LUTRndGen::LUTRndGen(unsigned long seed, int m_LevelOfRandomness)
 : IRndGen(GENERATOR_LUT, seed) {
 	
 	this->m_LevelOfRandomness = m_LevelOfRandomness;
-	LUTSetRfunc(&S, seed, m_LevelOfRandomness);
-	S.state[0] = S.state[1] = 0;
+	
 	
 	if (mainGenerator == NULL) {
-	
+		
 		// most likely this is about to become main generator
 		// must create initial state deterministicly
 		minstd_rand systemGenerator(m_seed);
+		LUTSetRfunc(&S, 0, m_LevelOfRandomness);
 		for (unsigned char i = 0; i < 16; i++) {
 			S.stateBytes[i] = systemGenerator();
 		}
-
 	}
 	else {
 		// if main generator was already initialized, use it to get new random accumulator
-
+		LUTSetRfunc(&S, 0, m_LevelOfRandomness);
 		for (unsigned char i = 0; i < 16; i++) {
 			mainGenerator->getRandomFromInterval((unsigned char)UCHAR_MAX, S.stateBytes + i);
 		}
+	}
+}
+
+LUTRndGen::LUTRndGen(TiXmlNode *pRoot)
+: IRndGen(GENERATOR_LUT, 1) {  // cannot call IRndGen with seed 0, warning would be issued
+	if (atoi(getXMLElementValue(pRoot, "@type").c_str()) != m_type) {
+		mainLogger.out(LOGGER_ERROR) << "Incompatible generator types." << endl;
+		return;
+	}
+	m_LevelOfRandomness = atoi(getXMLElementValue(pRoot, "level_of_randomness").c_str());
+
+	istringstream(getXMLElementValue(pRoot, "original_seed")) >> m_seed;
+
+	if (atol(getXMLElementValue(pRoot, "accumulator_state/@length").c_str()) != LUT_STATE_LENGTH) {
+		mainLogger.out(LOGGER_ERROR) << "Incompatible accumulator length - state not loaded." << endl;
+		mainLogger.out() << "       required: " << LUT_STATE_LENGTH << endl;
+		mainLogger.out() << "          found: " << getXMLElementValue(pRoot, "accumulator_state/@length") << endl;
+	}
+	else {
+		istringstream ss(getXMLElementValue(pRoot, "accumulator_state"));
+		unsigned char value;
+		for (int i = 0; i < LUT_STATE_LENGTH; i++) {
+			ss >> value;
+			S.stateBytes[i] = value;
+		}
+		
 	}
 }
 
@@ -121,67 +146,33 @@ string LUTRndGen::shortDescription() const {
 	return mes;
 }
 
-LUTRndGen::LUTRndGen(TiXmlNode* pRoot)
-: IRndGen(GENERATOR_LUT, 1), // cannot call IRndGen with seed 0, warning would be issued
-  m_LevelOfRandomness(0) {
-	if (atoi(getXMLElementValue(pRoot, "@type").c_str()) != m_type) {
-		mainLogger.out(LOGGER_ERROR) << "incompatible generator types." << endl;
-		return;
-	}
-	m_LevelOfRandomness = atoi(getXMLElementValue(pRoot, "level_of_randomness").c_str());
-}
-
 TiXmlNode* LUTRndGen::exportGenerator() const {
 	TiXmlElement* pRoot = new TiXmlElement("generator");
 	pRoot->SetAttribute("type", CommonFnc::toString(m_type).c_str());
 	pRoot->SetAttribute("description", shortDescription().c_str());
 
+	TiXmlElement* levelOfRandomness = new TiXmlElement("level_of_randomness");
+	stringstream slevelOfRandomness;
+	slevelOfRandomness << m_LevelOfRandomness;
+	levelOfRandomness->LinkEndChild(new TiXmlText(slevelOfRandomness.str().c_str()));
+	pRoot->LinkEndChild(levelOfRandomness);
+
 	TiXmlElement* originalSeed = new TiXmlElement("original_seed");
 	stringstream sSeed;
 	sSeed << m_seed;
 	originalSeed->LinkEndChild(new TiXmlText(sSeed.str().c_str()));
 	pRoot->LinkEndChild(originalSeed);
-
+	
 	TiXmlElement* accumulatorState = new TiXmlElement("accumulator_state");
 	accumulatorState->SetAttribute("length", LUT_STATE_LENGTH);
 	stringstream sAccValue;
 	sAccValue << left << dec;
 	for (unsigned char i = 0; i < LUT_STATE_LENGTH; i++) {
-		//sAccValue << 1 << " ";
-		//sAccValue << (unsigned int)S.stateBytes[i] << " ";
+		sAccValue << (unsigned char)S.stateBytes[i] << " ";
 	}
 	accumulatorState->LinkEndChild(new TiXmlText(sAccValue.str().c_str()));
+	
 	pRoot->LinkEndChild(accumulatorState);
-
+	
 	return pRoot;
-	/*TiXmlElement* pRoot = new TiXmlElement("generator");
-	pRoot->SetAttribute("type", CommonFnc::toString(m_type).c_str());
-	pRoot->SetAttribute("description", shortDescription().c_str());
-
-	TiXmlElement* levelOfRandomness = new TiXmlElement("level_of_randomness");
-	stringstream sLevelOfRandomness;
-	sLevelOfRandomness << m_LevelOfRandomness;
-	levelOfRandomness->LinkEndChild(new TiXmlText(sLevelOfRandomness.str().c_str()));
-	pRoot->LinkEndChild(levelOfRandomness);
-	TiXmlElement* pElem = new TiXmlElement("internal_rng");
-
-
-	TiXmlElement* originalSeed = new TiXmlElement("original_seed");
-	stringstream sSeed;
-	sSeed << m_seed;
-	originalSeed->LinkEndChild(new TiXmlText(sSeed.str().c_str()));
-	pRoot->LinkEndChild(originalSeed);
-
-	TiXmlElement* accumulatorState = new TiXmlElement("accumulator_state");
-	accumulatorState->SetAttribute("length", 16);
-	stringstream sAccValue;
-	sAccValue << left << dec;
-	for (unsigned char i = 0; i < 16; i++) {
-		sAccValue << (unsigned int)S.stateBytes[i] << " ";
-	}
-	accumulatorState->LinkEndChild(new TiXmlText(sAccValue.str().c_str()));
-	pRoot->LinkEndChild(accumulatorState);
-
-	return pRoot;
-	*/
 }
