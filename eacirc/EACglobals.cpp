@@ -34,7 +34,7 @@ SETTINGS_RANDOM::SETTINGS_RANDOM() {
     useFixedSeed = false;
     seed = 0;
     biasRndGenFactor = 50;
-	lutHW = 262144;
+	lutHW = 0;
     useNetShare = false;
     qrngPath = "";
     qrngFilesMaxIndex = -1;

@@ -45,6 +45,7 @@ struct ESTREAM_SETTINGS {
     int plaintextType;
     int ivType;
     bool generateStream;
+	int generatorForRandStream;
     unsigned long streamSize;
 
     ESTREAM_SETTINGS(void) {
@@ -60,6 +61,7 @@ struct ESTREAM_SETTINGS {
         plaintextType = -1;
         ivType = -1;
         generateStream = false;
+		generatorForRandStream = 0;
         streamSize = -1;
     }
 };

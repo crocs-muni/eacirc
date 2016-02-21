@@ -72,6 +72,7 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_estreamSettings.ivType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
     m_estreamSettings.cipherInitializationFrequency = atoi(getXMLElementValue(pRoot,"ESTREAM/CIPHER_INIT_FREQ").c_str());
     m_estreamSettings.generateStream = (atoi(getXMLElementValue(pRoot,"ESTREAM/GENERATE_STREAM").c_str())) ? true : false;
+	m_estreamSettings.generatorForRandStream = atoi(getXMLElementValue(pRoot,"ESTREAM/GENERATOR_FOR_RAND_STREAM").c_str());
     istringstream ss(getXMLElementValue(pRoot,"ESTREAM/STREAM_SIZE"));
     ss >> m_estreamSettings.streamSize;
     pEstreamSettings = &m_estreamSettings;
@@ -354,14 +355,14 @@ int EstreamProject::getTestVector(){
 						case GENERATOR_BIAS:
 							biasRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
 							break;
-						case GENERATOR_MD5://TODO
-							
+						case GENERATOR_MD5:
+							mainLogger.out(LOGGER_ERROR) << "MD5 generator for test vectors is not implemented " << endl;
 							break;
 						case GENERATOR_LUT:
 							lutRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
 							break;
 						default:
-							rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							mainLogger.out(LOGGER_ERROR) << "type of generator for test vectors is not set " << endl;
 					}
 					m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
                 }
@@ -479,7 +480,23 @@ int EstreamProject::generateCipherDataStream() {
                 if (algorithm == ESTREAM_RANDOM) {  // RANDOM
                     // copied from getTestVector();
                     for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                        rndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+                        
+						switch (m_estreamSettings.generatorForRandStream){
+						case GENERATOR_QRNG:
+							rndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+							break;
+						case GENERATOR_BIAS:
+							biasRndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+							break;
+						case GENERATOR_MD5:
+							mainLogger.out(LOGGER_ERROR) << "MD5 generator for random stream is not implemented " << endl;
+							break;
+						case GENERATOR_LUT:
+							lutRndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+							break;
+						default:
+							mainLogger.out(LOGGER_ERROR) << "type of generator for random stream is not set " << endl;
+						}
                     }
 
                 } else {                            // CIPHER
