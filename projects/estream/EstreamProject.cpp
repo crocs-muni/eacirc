@@ -42,6 +42,7 @@ string EstreamProject::shortDescription() const {
 string EstreamProject::testingConfiguration() {
     string config =
             "<ESTREAM>"
+            "    <GENERATOR_FOR_RAND_STREAM>1</GENERATOR_FOR_RAND_STREAM>"
             "    <USAGE_TYPE>101</USAGE_TYPE>"
             "    <CIPHER_INIT_FREQ>1</CIPHER_INIT_FREQ>"
             "    <ALGORITHM_1>10</ALGORITHM_1>"
