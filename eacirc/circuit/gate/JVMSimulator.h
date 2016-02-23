@@ -167,13 +167,13 @@ using namespace std;
 struct Instruction {
     int line_number;
     int instruction_code;
-    char *instruction;
-    char *param1, *param2;
-    char *full_line;
+    char* instruction;
+    char* param1, * param2;
+    char* full_line;
 };
 
 //container for instructions
-struct Instructions{
+struct Instructions {
     struct Instruction** array;
     int filled_elements;
     int maximum_elements;
@@ -181,10 +181,10 @@ struct Instructions{
 
 //represents one function with all instructions in list
 struct FunctionNode {
-    char *full_name;
-    char *short_name;
+    char* full_name;
+    char* short_name;
     struct Instructions* ins_array;
-    struct FunctionNode *next;
+    struct FunctionNode* next;
 };
 
 //stack node
@@ -192,14 +192,14 @@ struct StackNode {
     int data_type;
     //unsigned char data;
     int32_t integer;
-    struct StackNode *next;
+    struct StackNode* next;
 };
 
 //call element stack node
-struct CallStackNode{
+struct CallStackNode {
     struct FunctionNode* function;
     int next_line;
-    struct CallStackNode *next;
+    struct CallStackNode* next;
 };
 
 //represents current state (which function is used, on which line)
@@ -210,8 +210,8 @@ struct Pc {
 
 //represents global array
 struct GlobalArray {
-    int32_t *int_array;
-    signed char *ba;
+    int32_t* int_array;
+    signed char* ba;
     int type;
     int number_of_elements;
 };
@@ -224,8 +224,6 @@ public:
     JVMSimulator();
 
     ~JVMSimulator();
-
-    string shortDescription();
 
     /**
      * @brief jvmsim_init parse fileName file
@@ -241,9 +239,6 @@ public:
     * @param line_to number of instruction where evaluation ends
     */
     int jvmsim_run(int function_number, int line_from, int line_to);
-
-    //old, won't be used, will be refactored soon
-    int jvmsim_main(int argc, char* argv[]);
 
     /**
     * @return number of functions loaded
@@ -278,7 +273,7 @@ public:
     /**
     * Loads state from call stack and save it to PC param
     */
-    int call_pop(struct Pc *PC);
+    int call_pop(struct Pc* PC);
 
     /**
     * Write all stack values to stdout
@@ -352,6 +347,9 @@ public:
     * Find out if there is integer on top of stack
     */
     bool hasIntegerOnStack();
+
+    unsigned long long int instructions = 0;
+    unsigned long long int unknownInstructions = 0;
 
 private:
 
