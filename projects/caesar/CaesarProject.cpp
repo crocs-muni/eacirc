@@ -161,12 +161,33 @@ int CaesarProject::generateTestVectors() {
 int CaesarProject::prepareSingleTestVector(unsigned char* tvInputs, unsigned char* tvOutputs) {
     int status = STAT_OK;
     switch (pCaesarSettings->usageType) {
-    case CAESAR_DISTINGUISHER:
+    case CAESAR_DISTINGUISHER_TAG:
         // ciphertext stream
         status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
         if (status != STAT_OK) { return status; }
         // copy authentication tag
         memcpy(tvInputs, m_ciphertext+m_caesarSettings.plaintextLength,
+                min(m_realCiphertextLength-m_caesarSettings.plaintextLength, (length_t)pGlobals->settings->testVectors.inputLength));
+        // fill with zeroes
+        if ((int) (m_realCiphertextLength-m_caesarSettings.plaintextLength) < pGlobals->settings->testVectors.inputLength) {
+            mainLogger.out(LOGGER_WARNING) << "Authentication tag shorter than test vector input -- padded with zeroes." << endl;
+            for (int byte = static_cast<int>(m_caesarSettings.plaintextLength); byte < pGlobals->settings->testVectors.inputLength; byte++) {
+                tvInputs[byte] = 0;
+            }
+        }
+        status = m_encryptor->update();
+        if (status != STAT_OK) { return status; }
+        // 0x00 to denote ciphertext stream
+        for (int byte = 0; byte < pGlobals->settings->testVectors.outputLength; byte++) {
+            tvOutputs[byte] = 0;
+        }
+        break;
+    case CAESAR_DISTINGUISHER_CIPHERTEXT:
+        // ciphertext stream
+        status = m_encryptor->encrypt(m_ciphertext, &m_realCiphertextLength);
+        if (status != STAT_OK) { return status; }
+        // copy ciphertext
+        memcpy(tvInputs, m_ciphertext,
                 min(m_realCiphertextLength-m_caesarSettings.plaintextLength, (length_t)pGlobals->settings->testVectors.inputLength));
         // fill with zeroes
         if ((int) (m_realCiphertextLength-m_caesarSettings.plaintextLength) < pGlobals->settings->testVectors.inputLength) {

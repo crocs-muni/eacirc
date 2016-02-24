@@ -1,6 +1,7 @@
 #include "GateCircuitIO.h"
 #include "XMLProcessor.h"
 #include "CommonFnc.h"
+#include <limits>
 
 int CircuitIO::genomeFromBinarySt(string binaryCircuit, GAGenome& g) {
     GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
@@ -125,7 +126,91 @@ int CircuitIO::genomeToCodeSt(GAGenome& g, string fileName) {
     return STAT_NOT_IMPLEMENTED_YET;
 }
 
+void CircuitIO::pruneGenomeSimple(GAGenome& g, vector<vector<bool>> &hasNodeEffect) {
+    GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
+    size_t layersCount = pGlobals->settings->gateCircuit.numLayers;
+    size_t layerWidth = pGlobals->settings->gateCircuit.sizeLayer;
+
+    // init all nodes to unused
+
+    //iner nodes
+    for (size_t layer = 0; layer < layersCount - 1; ++layer) {
+        vector< bool > tmpVector;
+        for (size_t slot = 0; slot < layerWidth; ++slot) {
+            tmpVector.push_back(false);
+        }
+        hasNodeEffect.push_back(tmpVector);
+    }
+
+    // just output layer is used
+    vector< bool > outputLayer;
+    for (int slotInOutputLayer = 0; slotInOutputLayer < pGlobals->settings->gateCircuit.sizeOutputLayer; ++slotInOutputLayer) {
+        outputLayer.push_back(true);
+    }
+    hasNodeEffect.push_back(outputLayer);
+
+    // iterate trought layers from down and change all used nodes to true
+    for (size_t layer = layersCount-1; layer != 0; --layer) {
+        size_t connectorWidth = (layer == layersCount-1) ? pGlobals->settings->gateCircuit.sizeLayer : pGlobals->settings->gateCircuit.numConnectors;
+        size_t layerWidth = (layer == layersCount-1) ? pGlobals->settings->gateCircuit.sizeOutputLayer : pGlobals->settings->gateCircuit.sizeLayer;
+        for (size_t slot = 0; slot < layerWidth; ++slot) {
+            if (hasNodeEffect[layer][slot]) {
+                GENOME_ITEM_TYPE connectors = genome.gene(layer*2 * pGlobals->settings->gateCircuit.genomeWidth + slot);
+                connectors = relativeToAbsoluteConnectorMask(connectors, slot, pGlobals->settings->gateCircuit.sizeLayer, connectorWidth);
+                GENOME_ITEM_TYPE function = genome.gene((layer*2 + 1) * pGlobals->settings->gateCircuit.genomeWidth + slot);
+
+                size_t arity = parentsEffectCount(nodeGetFunction(function));
+                for (int i = 0; (i < pGlobals->settings->gateCircuit.sizeLayer) && connectors; ++i) {
+                    if (arity == 0) {
+                        break;
+                    }
+                    if (connectors & 0x01) {
+                        hasNodeEffect[layer-1][i] = true;
+                        --arity;
+                    }
+                    connectors = connectors >> 1;
+                }
+            }
+        }
+    }
+}
+
+size_t CircuitIO::parentsEffectCount(const unsigned char function) {
+    switch (function) {
+    case FNC_CONS:
+    case FNC_READ:
+        return 0;
+    case FNC_NOP:
+    case FNC_NOT:
+    case FNC_SHIL:
+    case FNC_SHIR:
+    case FNC_ROTL:
+    case FNC_ROTR:
+    case FNC_BSLC:
+        return 1;
+    case FNC_EQ:
+    case FNC_LT:
+    case FNC_GT:
+    case FNC_LEQ:
+    case FNC_GEQ:
+        return 2;
+    case FNC_AND:
+    case FNC_NAND:
+    case FNC_OR:
+    case FNC_XOR:
+    case FNC_NOR:
+    case FNC_JVM:
+        return pGlobals->settings->gateCircuit.genomeWidth;
+    default:
+        return pGlobals->settings->gateCircuit.genomeWidth;
+    }
+}
+
 int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
+    vector< vector < bool > > hasNodeEffect;
+    if (pGlobals->settings->outputs.allowPrunning) {
+        pruneGenomeSimple(g, hasNodeEffect); //initialize hasNodeEffect
+    }
     GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     int layerWidth;
     int previousLayerWidth;
@@ -154,6 +239,12 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
         layerWidth = layer == pGlobals->settings->gateCircuit.numLayers-1 ? pGlobals->settings->gateCircuit.sizeOutputLayer : pGlobals->settings->gateCircuit.sizeLayer;
         file << "{ rank=same;" << endl;
         for (int slot = 0; slot < layerWidth; slot++) {
+            if (pGlobals->settings->outputs.allowPrunning && hasNodeEffect[layer][slot]) {
+                file << "node [color=lightblue3];" << endl;
+            }
+            else {
+                file << "node [color=lightblue1];" << endl;
+            }
             GENOME_ITEM_TYPE gene = genome.gene((layer*2+1) * pGlobals->settings->gateCircuit.genomeWidth + slot);
             file << "\"" << layer << "_" << slot << "\"[label=\"";
             file << functionToString(nodeGetFunction(gene)) << "\\n" << (int) nodeGetArgument(gene,1) << "\"];" << endl;
@@ -183,18 +274,45 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
     file << endl;
 
     // connectors
-    file << "edge[style=solid];" << endl;
     for (int layer = 0; layer < pGlobals->settings->gateCircuit.numLayers + 1; layer++) {
         previousLayerWidth = layer == 0 ? pGlobals->settings->gateCircuit.sizeInputLayer : pGlobals->settings->gateCircuit.sizeLayer;
         layerWidth = layer < pGlobals->settings->gateCircuit.numLayers - 1 ? pGlobals->settings->gateCircuit.sizeLayer : pGlobals->settings->gateCircuit.sizeOutputLayer;
         connectorWidth = (layer == 0 || layer >= pGlobals->settings->gateCircuit.numLayers-1) ? previousLayerWidth : pGlobals->settings->gateCircuit.numConnectors;
         for (int slot = 0; slot < layerWidth; slot++) {
             if (layer == pGlobals->settings->gateCircuit.numLayers) { // last pseudo-output layer
+                file << "edge[style=solid];" << endl;
                 file << "\"-2_" << slot << "\" -- \"" << pGlobals->settings->gateCircuit.numLayers - 1 << "_" << slot << "\";" << endl;
             } else { // common layer
                 connectors = genome.gene(layer * 2 * pGlobals->settings->gateCircuit.genomeWidth + slot);
                 connectors = relativeToAbsoluteConnectorMask(connectors, slot, previousLayerWidth, connectorWidth);
+
+                // arity for dotted unused edges of layer 1
+                size_t arity;
+                if (layer == 0) {
+                    arity = parentsEffectCount(genome.gene((layer * 2 + 1) * pGlobals->settings->gateCircuit.genomeWidth + slot));
+                }
+
                 while (connectorsDiscartFirst(connectors,connection)) {
+                    if (!pGlobals->settings->outputs.allowPrunning) {
+                        file << "edge[style=solid];" << endl;
+                    }
+                    else if (layer == 0) {
+                        if (hasNodeEffect[layer][slot] && arity) {
+                            file << "edge[style=solid];" << endl;
+                            --arity;
+                        }
+                        else {
+                            file << "edge[style=dotted];" << endl;
+                        }
+                    }
+                    else {
+                        if (hasNodeEffect[layer][slot] && hasNodeEffect[layer-1][connection]) {
+                            file << "edge[style=solid];" << endl;
+                        }
+                        else {
+                            file << "edge[style=dotted];" << endl;
+                        }
+                    }
                     file << "\"" << layer << "_" << slot << "\" -- \"" << layer-1 << "_" << connection << "\";" << endl;
                 }
             }

@@ -51,6 +51,7 @@ const char* Sha3Functions::sha3ToString(int algorithm) {
     case SHA3_VORTEX:           return "Vortex";
     case SHA3_WAMM:             return "WaMM";
     case SHA3_WATERFALL:        return "Waterfall";
+    case SHA3_TANGLE2:          return "Tangle2";
     case SHA3_RANDOM:           return "random data";
     default:                    return "(unknown hash function)";
     }

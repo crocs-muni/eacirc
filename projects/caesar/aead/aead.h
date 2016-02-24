@@ -179,4 +179,6 @@
     #include "elmd/elmd51271v1/Elmd51271v1.h"
 #endif
 
+#include "random/RandomCipher.h"
+
 #endif // AEAD_H

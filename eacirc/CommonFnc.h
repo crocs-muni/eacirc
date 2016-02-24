@@ -80,11 +80,12 @@ namespace CommonFnc {
      */
     double gamma0(double x);
 
-    /** Returns critical value for KS test with alpha=0.05.
-     * @param sampleSize
-     * @return
+    /** returns critical value for KS test
+     * @param sampleSize            number of samples
+     * @param significanceLevel     alpha in percents (only 1, 5, 10 supported)
+     * @return critical value
      */
-    inline double KS_get_critical_value(unsigned long sampleSize) { return 1.36/sqrt((double)sampleSize); }
+    double KSGetCriticalValue(unsigned long sampleSize, int significanceLevel);
 
     /** Kolmogorov-Smirnov uniformity test
      * - tests uniformity distribution on [0,1]
@@ -94,7 +95,7 @@ namespace CommonFnc {
      * @param samples       vector of observer values -- will be sorted!
      * @return KS test statistic value
      */
-    double KS_uniformity_test(std::vector<double> &samples);
+    double KSUniformityTest(std::vector<double> &samples);
 
 } // namespace CommonFnc
 

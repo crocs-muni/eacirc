@@ -12,6 +12,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->main.projectType = atoi(getXMLElementValue(pRoot,"MAIN/PROJECT").c_str());
     pSettings->main.evaluatorType = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR").c_str());
     pSettings->main.evaluatorPrecision = atoi(getXMLElementValue(pRoot,"MAIN/EVALUATOR_PRECISION").c_str());
+    pSettings->main.significanceLevel = atoi(getXMLElementValue(pRoot,"MAIN/SIGNIFICANCE_LEVEL").c_str());
     pSettings->main.recommenceComputation = (atoi(getXMLElementValue(pRoot,"MAIN/RECOMMENCE_COMPUTATION").c_str())) ? true : false;
     pSettings->main.loadInitialPopulation = (atoi(getXMLElementValue(pRoot,"MAIN/LOAD_INITIAL_POPULATION").c_str())) ? true : false;
     pSettings->main.numGenerations = atol(getXMLElementValue(pRoot,"MAIN/NUM_GENERATIONS").c_str());
@@ -24,6 +25,7 @@ void LoadConfigScript(TiXmlNode* pRoot, SETTINGS *pSettings) {
     pSettings->outputs.intermediateCircuits = (atoi(getXMLElementValue(pRoot,"OUTPUTS/INTERMEDIATE_CIRCUITS").c_str())) ? true : false;
     pSettings->outputs.allowPrunning = (atoi(getXMLElementValue(pRoot,"OUTPUTS/ALLOW_PRUNNING").c_str())) ? true : false;
     pSettings->outputs.saveTestVectors = (atoi(getXMLElementValue(pRoot,"OUTPUTS/SAVE_TEST_VECTORS").c_str())) ? true : false;
+    pSettings->outputs.fractionFile = (atoi(getXMLElementValue(pRoot,"OUTPUTS/FRACTION_FILE").c_str())) ? true : false;
 
     // parsing EACIRC/RANDOM
     pSettings->random.useFixedSeed = (atoi(getXMLElementValue(pRoot,"RANDOM/USE_FIXED_SEED").c_str())) ? true : false;
