@@ -5,6 +5,7 @@
 *.Release
 *.sdf
 *.opensdf
+.idea
 
 # object files, linked application, build filed
 *.o
