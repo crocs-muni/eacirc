@@ -139,7 +139,8 @@ static const uint64_t K512[80] = {
  */
 void sha512_comp (hashblock res, const hashblock hash, const messageblock in)
 	{
-	const uint64_t *W=in;
+    // CHANGE type casting added due to c++
+    const uint64_t *W=reinterpret_cast<const uint64_t*>(in);
 	uint64_t	A,E,T;
 	uint64_t	X[9+80],*F;
 	uint64_t H[8];
