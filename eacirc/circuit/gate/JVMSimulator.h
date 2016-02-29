@@ -297,6 +297,12 @@ public:
     void push_int(int32_t value);
 
     /**
+    * push long to stack
+    * @param value
+    */
+    void push_long(int64_t value);
+
+    /**
     * push index of referenced array to stack
     * @param value
     */
@@ -307,6 +313,12 @@ public:
     * @return value from stack
     */
     void pop_int(int32_t& returnValue);
+
+    /**
+    * pop long from stack
+    * @return value from stack
+    */
+    void pop_long(int64_t& returnValue);
 
     /**
     * pop index of referenced array
@@ -339,6 +351,13 @@ public:
     bool hasArrayRefOnStack();
 
     /**
+    * Find out if there are four integers on top of stack
+    */
+    bool hasFourIntegersOnStack();
+
+    bool hasThreeIntegersOnStack();
+
+    /**
     * Find out if there are two integers on top of stack
     */
     bool hasTwoIntegersOnStack();
@@ -347,6 +366,8 @@ public:
     * Find out if there is integer on top of stack
     */
     bool hasIntegerOnStack();
+
+    bool hasTwoArrRefOnStack();
 
     unsigned long long int instructions = 0;
     unsigned long long int unknownInstructions = 0;
@@ -381,8 +402,10 @@ private:
     //meant to be number of local variables stored, but I am not sure if it is correct
     bool m_localsUsed[MAX_NUMBER_OF_VARIABLES];
 
+    long createLongFromTwoInts(int32_t first, int32_t second);
     //global arrays
     struct GlobalArray m_globalArrays[MAX_NUMBER_OF_VARIABLES];
+
     bool m_globalArraysUsed[MAX_NUMBER_OF_VARIABLES];
 };
 

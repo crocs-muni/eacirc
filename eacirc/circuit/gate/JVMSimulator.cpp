@@ -71,7 +71,7 @@ bool JVMSimulator::callStackEmpty() {
     return m_callStack == NULL;
 }
 
-void JVMSimulator::push_int(int32_t ii) {
+void JVMSimulator::push_int(int32_t value) {
     struct StackNode* n = static_cast<struct StackNode*>(malloc(sizeof(struct StackNode)));
     if (n == NULL) {
         mainLogger.out(LOGGER_ERROR) << "Cannot allocate memory. Exiting..." << endl;
@@ -79,9 +79,14 @@ void JVMSimulator::push_int(int32_t ii) {
     }
 
     n->next = m_stack;
-    n->integer = ii;
+    n->integer = value;
     n->data_type = STACKTYPE_INTEGER;
     m_stack = n;
+}
+
+void JVMSimulator::push_long(int64_t value) {
+    push_int(static_cast<int32_t>(value));
+    push_int(static_cast<int32_t>(value >> 32));
 }
 
 void JVMSimulator::push_arrayref(int32_t ii) {
@@ -115,6 +120,17 @@ void JVMSimulator::pop_int(int32_t& returnValue) {
     //return; // STACK_ERR_NO_ERROR;
 }
 
+void JVMSimulator::pop_long(int64_t& returnValue) {
+    int32_t word1;
+    int32_t word2;
+
+    pop_int(word1);
+    pop_int(word2);
+
+    returnValue = createLongFromTwoInts(word1, word2);
+}
+
+
 void JVMSimulator::pop_arrayref(int32_t& returnValue) {
     if (m_stack == NULL) {
         returnValue = 0;
@@ -139,6 +155,14 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
         case NOP: {
             break;
         }
+        case LCONST_0: {
+            push_long(0);
+        }
+            break;
+        case LCONST_1: {
+            push_long(1);
+        }
+            break;
         case IADD: {
             if (!hasTwoIntegersOnStack()) {
                 return CONTINUE;
@@ -149,6 +173,17 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             pop_int(b);
             int32_t c = a + b;
             push_int(c);
+        }
+            break;
+        case LADD: {
+            if (!hasFourIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int64_t a;
+            int64_t b;
+            pop_long(a);
+            pop_long(b);
+            push_long(a + b);
         }
             break;
         case ISUB: {
@@ -163,6 +198,17 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             push_int(c);
         }
             break;
+        case LSUB: {
+            if (!hasFourIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int64_t a;
+            int64_t b;
+            pop_long(a);
+            pop_long(b);
+            push_long(b - a);
+        }
+            break;
         case IAND: {
             if (!hasTwoIntegersOnStack()) {
                 return CONTINUE;
@@ -173,6 +219,17 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             pop_int(b);
             int32_t c = a & b;
             push_int(c);
+        }
+            break;
+        case LAND: {
+            if (!hasFourIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int64_t a;
+            int64_t b;
+            pop_long(a);
+            pop_long(b);
+            push_long(a & b);
         }
             break;
         case IOR: {
@@ -197,6 +254,34 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             pop_int(b);
             int32_t c = a ^b;
             push_int(c);
+        }
+            break;
+        case I2L: {
+            if (!hasIntegerOnStack()) {
+                return CONTINUE;
+            }
+            int32_t a;
+            pop_int(a);
+            push_long(static_cast<int64_t>(a));
+        }
+            break;
+        case L2I: {
+            if (!hasTwoIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int64_t a;
+            pop_long(a);
+            push_int(static_cast<int32_t>(a));
+        }
+            break;
+        case I2S: {
+            if (!hasIntegerOnStack()) {
+                return CONTINUE;
+            }
+            int32_t a;
+            pop_int(a);
+            int16_t c = static_cast<int16_t>(a);
+            push_int(static_cast<int32_t>(c));
         }
             break;
         case ICONST_M1:
@@ -227,7 +312,18 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             int32_t a;
             pop_int(a);
             signed char c = static_cast<signed char>(a);
-            push_int(static_cast<int>(c));
+            push_int(static_cast<int32_t>(c));
+        }
+            break;
+        case I2C: {
+            if (!hasIntegerOnStack()) {
+                return CONTINUE;
+            }
+            int32_t a;
+            pop_int(a);
+            int16_t c = static_cast<int16_t>(a);
+            a = 0 + c;
+            push_int(a);
         }
             break;
         case IDIV: {
@@ -245,6 +341,25 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             }
             int32_t c = b / a;
             push_int(c);
+        }
+            break;
+        case LDIV: {
+            if (!hasFourIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int64_t value1;
+            int64_t value2;
+
+            pop_long(value1);
+
+            if (value1 == 0) {
+                push_long(value1);
+                return CONTINUE;
+            }
+
+            pop_long(value2);
+            push_long(value2 / value1);
         }
             break;
         case IMUL: {
@@ -312,6 +427,21 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             push_int(c);
         }
             break;
+        case LSHR: {
+            if (!hasThreeIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int32_t value1;
+            int64_t value2;
+
+            pop_int(value1);
+            pop_long(value2);
+
+            value2 = value2 >> (value1 & 0x3f);
+
+            push_long(value2);
+        }
+            break;
         case BIPUSH: {
             int j = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
             signed char c = static_cast<signed char>(j);
@@ -322,6 +452,17 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             int j = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
             int16_t s = static_cast<int16_t>(j);
             push_int(static_cast<int32_t>(s));
+        }
+            break;
+        case DUP2: {
+            if (!hasTwoIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int64_t value;
+            pop_long(value);
+
+            push_long(value);
+            push_long(value);
         }
             break;
         case DUP: {
@@ -339,6 +480,29 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             return GOTO_VALUE;
         }
             break;
+        case LCMP: {
+            if (!hasFourIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int64_t value1;
+            int64_t value2;
+
+            pop_long(value1);
+            pop_long(value2);
+
+            if (value1 == value2) {
+                push_int(0);
+                return CONTINUE;
+            }
+
+            if (value2 > value1) {
+                push_int(1);
+            } else {
+                push_int(-1);
+            }
+        }
+            break;
         case IFEQ: {
             if (!hasIntegerOnStack()) {
                 return CONTINUE;
@@ -346,6 +510,30 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             int32_t value;
             pop_int(value);
             if (value == 0) {
+                returnValue = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
+                return GOTO_VALUE;
+            }
+        }
+            break;
+        case IFGE: {
+            if (!hasIntegerOnStack()) {
+                return CONTINUE;
+            }
+            int32_t value;
+            pop_int(value);
+            if (value >= 0) {
+                returnValue = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
+                return GOTO_VALUE;
+            }
+        }
+            break;
+        case IFLE: {
+            if (!hasIntegerOnStack()) {
+                return CONTINUE;
+            }
+            int32_t value;
+            pop_int(value);
+            if (value <= 0) {
                 returnValue = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
                 return GOTO_VALUE;
             }
@@ -421,6 +609,26 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             }
         }
             break;
+        case IINC: {
+            uint16_t varnum = static_cast<uint16_t>(atoi(PC->currentFunction->ins_array->array[PC->ln]->param1));
+            int16_t n = static_cast<int16_t>(atoi(PC->currentFunction->ins_array->array[PC->ln]->param1));
+
+            if (varnum >= MAX_NUMBER_OF_VARIABLES || !m_localsUsed[varnum]) {
+                return CONTINUE;
+            }
+
+            m_locals[varnum] += n;
+        }
+        case LDC:
+        case LDC_W: {
+            push_int(atoi(PC->currentFunction->ins_array->array[PC->ln]->param1));
+        }
+            break;
+        case LDC2_W: {
+            push_long(atol(PC->currentFunction->ins_array->array[PC->ln]->param1));
+        }
+            break;
+        case INVOKEVIRTUAL:
         case INVOKESTATIC: {
             if (PC->currentFunction->ins_array->filled_elements <= PC->ln) {
                 mainLogger.out(LOGGER_WARNING) << "Data mismatch during INVOKESTATIC jump. Interrupting execution." <<
@@ -466,6 +674,25 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             call_pop(PC);
         }
             break;
+        case LREM: {
+            if (!hasFourIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int64_t value1;
+            int64_t value2;
+
+            pop_long(value1);
+
+            if (value1 == 0) {
+                push_long(value1);
+                return CONTINUE;
+            }
+            pop_long(value2);
+
+            push_long(value2 % value1);
+        }
+            break;
         case ILOAD_0: {
             if (!m_localsUsed[0]) {
                 return CONTINUE;
@@ -506,6 +733,64 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             }
 
             push_int(static_cast<int32_t>(m_locals[index]));
+            m_localsUsed[index] = false;
+        }
+            break;
+        case LLOAD_0: {
+            if (!m_localsUsed[0] || !m_localsUsed[1]) {
+                return CONTINUE;
+            }
+            push_int(m_locals[1]);
+            m_locals[1] = false;
+
+            push_int(m_locals[0]);
+            m_locals[0] = false;
+        }
+            break;
+        case LLOAD_1: {
+            if (!m_localsUsed[1] || !m_localsUsed[2]) {
+                return CONTINUE;
+            }
+            push_int(m_locals[2]);
+            m_locals[2] = false;
+
+            push_int(m_locals[1]);
+            m_locals[1] = false;
+        }
+            break;
+        case LLOAD_2: {
+            if (!m_localsUsed[2] || !m_localsUsed[3]) {
+                return CONTINUE;
+            }
+            push_int(m_locals[3]);
+            m_locals[3] = false;
+
+            push_int(m_locals[2]);
+            m_locals[2] = false;
+        }
+            break;
+        case LLOAD_3: {
+            if (!m_localsUsed[3] || !m_localsUsed[4]) {
+                return CONTINUE;
+            }
+            push_int(m_locals[4]);
+            m_locals[4] = false;
+
+            push_int(m_locals[3]);
+            m_locals[3] = false;
+        }
+            break;
+        case LLOAD: {
+            int index = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
+
+            if (index + 1 >= MAX_NUMBER_OF_VARIABLES || !m_localsUsed[index] || !m_localsUsed[index + 1]) {
+                return CONTINUE;
+            }
+
+            push_int(m_locals[index + 1]);
+            m_localsUsed[index + 1] = false;
+
+            push_int(m_locals[index]);
             m_localsUsed[index] = false;
         }
             break;
@@ -631,14 +916,103 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             m_locals[3] = ref;
             m_localsUsed[3] = true;
         }
-            break;
-        case ASTORE: {
-            if (!hasArrayRefOnStack()) {
+        case LSTORE_0: {
+            if (!hasTwoIntegersOnStack()) {
                 return CONTINUE;
             }
+
+            int32_t first;
+            int32_t second;
+
+            pop_int(first);
+            pop_int(second);
+
+
+            m_locals[0] = second;
+            m_localsUsed[0] = true;
+            m_locals[1] = first;
+            m_localsUsed[1] = true;
+        }
+            break;
+        case LSTORE_1: {
+            if (!hasTwoIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int32_t first;
+            int32_t second;
+
+            pop_int(first);
+            pop_int(second);
+
+            m_locals[1] = second;
+            m_localsUsed[1] = true;
+            m_locals[2] = first;
+            m_localsUsed[2] = true;
+        }
+            break;
+        case LSTORE_2: {
+            if (!hasTwoIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int32_t first;
+            int32_t second;
+
+            pop_int(second);
+            pop_int(first);
+
+            m_locals[2] = second;
+            m_localsUsed[2] = true;
+            m_locals[3] = first;
+            m_localsUsed[3] = true;
+        }
+            break;
+        case LSTORE_3: {
+            if (!hasTwoIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int32_t first;
+            int32_t second;
+
+            pop_int(second);
+            pop_int(first);
+
+            m_locals[3] = second;
+            m_localsUsed[3] = true;
+            m_locals[4] = first;
+            m_localsUsed[4] = true;
+        }
+            break;
+        case LSTORE: {
+            int index = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
+
+            if (index + 1 >= MAX_NUMBER_OF_VARIABLES || !hasTwoIntegersOnStack()) {
+                return CONTINUE;
+            }
+
+            int32_t first;
+            int32_t second;
+
+            pop_int(second);
+            pop_int(first);
+
+
+            m_locals[index] = second;
+            m_localsUsed[index] = true;
+            m_locals[index + 1] = first;
+            m_localsUsed[index + 1] = true;
+        }
+            break;
+        case ASTORE: {
+            int index = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
+            if (index >= MAX_NUMBER_OF_VARIABLES || !hasArrayRefOnStack()) {
+                return CONTINUE;
+            }
+
             int32_t ref;
             pop_arrayref(ref);
-            int index = atoi(PC->currentFunction->ins_array->array[PC->ln]->param1);
             m_locals[index] = ref;
             m_localsUsed[index] = true;
         }
@@ -684,7 +1058,6 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
 
     return CONTINUE;
 }
-
 
 int JVMSimulator::white(char c) {
     if (c == ' ' || c == '\t' || c == '\r' || c == '\n') return 1;
@@ -989,7 +1362,7 @@ int JVMSimulator::jvmsim_run(int function_number, int line_from, int line_to) {
         }
         insc--;
     } while ((strcmp(PC.currentFunction->short_name, function->short_name) || PC.ln <= line_to) && insc);
-    //if we are in invoked function, the line limitation is ignored. 
+    //if we are in invoked function, the line limitation is ignored.
 
     if (!insc)
         return (ERR_MAX_NUMBER_OF_INSTRUCTIONS_EXHAUSTED);
@@ -1072,6 +1445,19 @@ int JVMSimulator::get_next_global_index() {
     return -1;
 }
 
+bool JVMSimulator::hasFourIntegersOnStack() {
+    if (m_stack == NULL || m_stack->next == NULL || m_stack->next->next == NULL || m_stack->next->next->next == NULL)
+        return false;
+    return m_stack->data_type == STACKTYPE_INTEGER && m_stack->next->data_type == STACKTYPE_INTEGER &&
+           m_stack->next->next->data_type == STACKTYPE_INTEGER &&
+           m_stack->next->next->next->data_type == STACKTYPE_INTEGER;
+}
+
+bool JVMSimulator::hasThreeIntegersOnStack() {
+    if (m_stack == NULL || m_stack->next == NULL || m_stack->next->next == NULL) return false;
+    return m_stack->data_type == STACKTYPE_INTEGER && m_stack->next->data_type == STACKTYPE_INTEGER && m_stack->next->next->data_type == STACKTYPE_INTEGER;
+}
+
 bool JVMSimulator::hasTwoIntegersOnStack() {
     if (m_stack == NULL || m_stack->next == NULL) return false;
     return m_stack->data_type == STACKTYPE_INTEGER && m_stack->next->data_type == STACKTYPE_INTEGER;
@@ -1083,4 +1469,15 @@ bool JVMSimulator::hasIntegerOnStack() {
 
 bool JVMSimulator::hasArrayRefOnStack() {
     return m_stack != NULL && m_stack->data_type == STACKTYPE_ARRAYREF;
+}
+
+bool JVMSimulator::hasTwoArrRefOnStack() {
+    if (m_stack == NULL || m_stack->next == NULL) return false;
+    return m_stack->data_type == STACKTYPE_ARRAYREF && m_stack->next->data_type == STACKTYPE_ARRAYREF;
+}
+
+int64_t JVMSimulator::createLongFromTwoInts(int32_t first, int32_t second) {
+    int64_t ret = first;
+    ret = (ret << 32) | second;
+    return ret;
 }
