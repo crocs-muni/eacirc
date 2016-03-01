@@ -29,15 +29,10 @@ if(CUDA_FOUND)
     endif()
 endif()
 
-
 # === Global variables ===
 set(EACIRC_DIR   ${CMAKE_SOURCE_DIR}/eacirc)
 set(PROJECTS_DIR ${CMAKE_SOURCE_DIR}/projects)
 set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
-
-# === options ===
-option(BUILD_EACIRC "Include eacirc in build" ON)
-option(BUILD_ONECLICK "Include oneclick in build" ON)
 
 # === static build? (applicable only on linux compilers) ===
 if(STATIC_BUILD)
@@ -47,23 +42,15 @@ if(STATIC_BUILD)
 endif()
 
 # === projects ===
-if(BUILD_EACIRC)
-    include_eacirc_project(caesar)
-    include_eacirc_project(estream)
-    include_eacirc_project(sha3)
-endif()
-# === executables ===
-if(BUILD_EACIRC)
-    add_subdirectory(eacirc)
-endif()
+include_eacirc_project(caesar)
+include_eacirc_project(estream)
+include_eacirc_project(sha3)
 
-if(BUILD_ONECLICK)
-    add_subdirectory(oneclick)
-endif()
+# === executables ===
+add_subdirectory(eacirc)
+
 # === 3rd party dependencies ===
-if(BUILD_EACIRC)
-    add_subdirectory(libs/galib)
-endif()
+add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
 
