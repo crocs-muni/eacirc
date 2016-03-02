@@ -1,5 +1,5 @@
 ![EACirc](https://raw.githubusercontent.com/wiki/petrs/EACirc/img/logo-home.png)  
-[![Build status](https://travis-ci.org/crocs-muni/EACirc.svg?branch=master)](https://travis-ci.org/crocs-muni/EACirc)  
+[![Build Status](https://travis-ci.org/crocs-muni/eacirc.svg?branch=master)](https://travis-ci.org/crocs-muni/eacirc)  
 [![Coverity status](https://scan.coverity.com/projects/7192/badge.svg)](https://scan.coverity.com/projects/crocs-muni-eacirc)  
 EACirc is a framework for automatic problem solving. It uses supervised learning techniques based on evolutionary algorithms to construct and optimize software circuits in order to solve the given problem.
 
