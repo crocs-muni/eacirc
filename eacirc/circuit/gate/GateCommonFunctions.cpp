@@ -105,10 +105,10 @@ string functionToString(unsigned char function) {
     case FNC_XOR:   return "XOR";
     case FNC_NOR:   return "NOR";
     case FNC_NOT:   return "NOT";
-    case FNC_SHIL:  return "ROTL";
-    case FNC_SHIR:  return "ROTR";
-    case FNC_ROTL:  return "CYCL";
-    case FNC_ROTR:  return "CYCR";
+    case FNC_SHIL:  return "SHIL";
+    case FNC_SHIR:  return "SHIR";
+    case FNC_ROTL:  return "ROTL";
+    case FNC_ROTR:  return "ROTR";
     case FNC_EQ:    return "EQ";
     case FNC_LT:    return "LT";
     case FNC_GT:    return "GT";
