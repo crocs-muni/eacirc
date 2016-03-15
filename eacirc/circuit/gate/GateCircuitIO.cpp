@@ -208,9 +208,7 @@ size_t CircuitIO::parentsEffectCount(const unsigned char function) {
 
 int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
     vector< vector < bool > > hasNodeEffect;
-    if (pGlobals->settings->outputs.allowPrunning) {
-        pruneGenomeSimple(g, hasNodeEffect); //initialize hasNodeEffect
-    }
+    pruneGenomeSimple(g, hasNodeEffect); //initialize hasNodeEffect
     GA1DArrayGenome<GENOME_ITEM_TYPE>& genome = dynamic_cast<GA1DArrayGenome<GENOME_ITEM_TYPE>&>(g);
     int layerWidth;
     int previousLayerWidth;
@@ -239,7 +237,7 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
         layerWidth = layer == pGlobals->settings->gateCircuit.numLayers-1 ? pGlobals->settings->gateCircuit.sizeOutputLayer : pGlobals->settings->gateCircuit.sizeLayer;
         file << "{ rank=same;" << endl;
         for (int slot = 0; slot < layerWidth; slot++) {
-            if (pGlobals->settings->outputs.allowPrunning && hasNodeEffect[layer][slot]) {
+            if (hasNodeEffect[layer][slot]) {
                 file << "node [color=lightblue3];" << endl;
             }
             else {
@@ -293,10 +291,7 @@ int CircuitIO::genomeToGraphSt(GAGenome& g, string fileName) {
                 }
 
                 while (connectorsDiscartFirst(connectors,connection)) {
-                    if (!pGlobals->settings->outputs.allowPrunning) {
-                        file << "edge[style=solid];" << endl;
-                    }
-                    else if (layer == 0) {
+                    if (layer == 0) {
                         if (hasNodeEffect[layer][slot] && arity) {
                             file << "edge[style=solid];" << endl;
                             --arity;
