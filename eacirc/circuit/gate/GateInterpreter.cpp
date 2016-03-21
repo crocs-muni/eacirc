@@ -196,7 +196,7 @@ int GateInterpreter::executeExternalFunction(GENOME_ITEM_TYPE node, GENOME_ITEM_
     unsigned char argument3 = nodeGetArgument(node, 3); // instruction to
 
     // Execute given subpart of bytecode 
-    int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, argument3);
+    int runval = pGlobals->settings->gateCircuit.jvmSim->jvmsim_run(argument1, argument2, static_cast<int32_t>(argument2) + argument3);
 
     if (runval != 0) { 
         //assert(runval == 0);

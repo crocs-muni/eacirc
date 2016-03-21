@@ -30,7 +30,7 @@ void nodeSetArgument(GENOME_ITEM_TYPE& nodeValue, int argumentNumber, unsigned c
     nodeValue |= ((GENOME_ITEM_TYPE) argumentValue << shift);
 }
 
-void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue){
+void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue) {
     int functionNumber = GARandomInt(0, pGlobals->settings->gateCircuit.jvmSim->get_num_of_functions() - 1);
     struct FunctionNode* function = pGlobals->settings->gateCircuit.jvmSim->get_function_by_number(functionNumber);
 
@@ -44,20 +44,19 @@ void nodeSetJVMArguments(GENOME_ITEM_TYPE& nodeValue){
     int startLine = 0;
     if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
         startLine = GARandomInt(0, UCHAR_MAX);
-    }
-    else {
+    } else {
         startLine = GARandomInt(0, function->ins_array->filled_elements - 1);
     }
     nodeSetArgument(nodeValue, 2, startLine);
 
-    int endLine = 0;
-    if (function->ins_array->filled_elements - 1 > UCHAR_MAX) {
-        endLine = GARandomInt(startLine, UCHAR_MAX);
+    int numberOfInstructions = 0;
+    if (function->ins_array->filled_elements - 1 > startLine + UCHAR_MAX) {
+        numberOfInstructions = GARandomInt(0, UCHAR_MAX);
     } else {
-        endLine = GARandomInt(startLine, function->ins_array->filled_elements - 1);
+        numberOfInstructions = GARandomInt(0, function->ins_array->filled_elements - startLine - 1);
     }
 
-    nodeSetArgument(nodeValue, 3, endLine);
+    nodeSetArgument(nodeValue, 3, numberOfInstructions);
     //mainLogger.out(LOGGER_INFO) << "function chosen: " <<  function->short_name << "(" << functionNumber <<  ") [" << startLine << ", " << endLine << "] - " << nodeValue << endl;
 }
 
