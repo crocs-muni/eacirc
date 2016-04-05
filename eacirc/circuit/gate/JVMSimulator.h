@@ -46,6 +46,8 @@ using namespace std;
 #define NOP		0x00
 #define LCONST_0    0x09
 #define LCONST_1    0x0a
+#define ACONST_NULL 0x01
+#define CHECKCAST   0xc0
 #define AALOAD	0x32
 #define AASTORE	0x53
 #define ALOAD	0x19
@@ -57,6 +59,7 @@ using namespace std;
 #define	ARRAYLENGTH	0xbe
 #define LSTORE  0x37
 #define	ASTORE	0x3a
+#define LASTORE 0x50
 #define LSTORE_0    0x3f
 #define LSTORE_1    0x40
 #define LSTORE_2    0x41
@@ -67,6 +70,7 @@ using namespace std;
 #define	ASTORE_3	0x4e
 #define	BALOAD	0x33
 #define	CALOAD	0x34
+#define	LALOAD	0x2f
 #define	BASTORE	0x54
 #define	CASTORE	0x54
 #define	BIPUSH	0x10
@@ -128,6 +132,7 @@ using namespace std;
 #define ISHR			0x7a
 #define LSHR			0x7b
 #define IUSHR			0x7c
+#define LUSHR			0x7d
 #define LAND            0x7f
 #define	ISTORE			0x36
 #define	ISTORE_0		0x3b

@@ -427,6 +427,18 @@ int JVMSimulator::emulate_ins(struct Pc* PC, int& returnValue) {
             push_int(c);
         }
             break;
+        case LUSHR: {
+            if (!hasThreeIntegersOnStack()) {
+                return CONTINUE;
+            }
+            int64_t a;
+            int32_t b;
+            pop_int(b);
+            pop_long(a);
+            int64_t c = static_cast<int64_t>(static_cast<uint64_t>(a) >> (b & 0x3f));
+            push_long(c);
+        }
+            break;
         case LSHR: {
             if (!hasThreeIntegersOnStack()) {
                 return CONTINUE;
@@ -1068,6 +1080,8 @@ int JVMSimulator::code(char* i) {
     if (!strcmp(i, "nop"))return NOP;
     if (!strcmp(i, "lconst_0"))return LCONST_0;
     if (!strcmp(i, "lconst_1"))return LCONST_1;
+    if (!strcmp(i, "aconst_null"))return ACONST_NULL;
+    if (!strcmp(i, "checkcast"))return CHECKCAST;
     if (!strcmp(i, "aaload"))return AALOAD;
     if (!strcmp(i, "aastore"))return AASTORE;
     if (!strcmp(i, "aload"))return ALOAD;
@@ -1079,6 +1093,7 @@ int JVMSimulator::code(char* i) {
     if (!strcmp(i, "arraylength"))return ARRAYLENGTH;
     if (!strcmp(i, "lstore"))return LSTORE;
     if (!strcmp(i, "astore"))return ASTORE;
+    if (!strcmp(i, "lastore"))return LASTORE;
     if (!strcmp(i, "lstore_0"))return LSTORE_0;
     if (!strcmp(i, "lstore_1"))return LSTORE_1;
     if (!strcmp(i, "lstore_2"))return LSTORE_2;
@@ -1089,6 +1104,7 @@ int JVMSimulator::code(char* i) {
     if (!strcmp(i, "astore_3"))return ASTORE_3;
     if (!strcmp(i, "baload"))return BALOAD;
     if (!strcmp(i, "caload"))return CALOAD;
+    if (!strcmp(i, "laload"))return LALOAD;
     if (!strcmp(i, "bastore"))return BASTORE;
     if (!strcmp(i, "castore"))return CASTORE;
     if (!strcmp(i, "bipush"))return BIPUSH;
@@ -1150,6 +1166,7 @@ int JVMSimulator::code(char* i) {
     if (!strcmp(i, "ishr"))return ISHR;
     if (!strcmp(i, "lshr"))return LSHR;
     if (!strcmp(i, "iushr"))return IUSHR;
+    if (!strcmp(i, "lushr"))return LUSHR;
     if (!strcmp(i, "land"))return LAND;
     if (!strcmp(i, "istore"))return ISTORE;
     if (!strcmp(i, "istore_0"))return ISTORE_0;
