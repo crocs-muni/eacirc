@@ -369,9 +369,6 @@ public:
 
     bool hasTwoArrRefOnStack();
 
-    unsigned long long int instructions = 0;
-    unsigned long long int unknownInstructions = 0;
-
 private:
 
     /**
