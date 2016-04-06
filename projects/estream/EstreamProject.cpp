@@ -42,6 +42,7 @@ string EstreamProject::shortDescription() const {
 string EstreamProject::testingConfiguration() {
     string config =
             "<ESTREAM>"
+            "    <GENERATOR_FOR_RAND_STREAM>1</GENERATOR_FOR_RAND_STREAM>"
             "    <USAGE_TYPE>101</USAGE_TYPE>"
             "    <CIPHER_INIT_FREQ>1</CIPHER_INIT_FREQ>"
             "    <ALGORITHM_1>10</ALGORITHM_1>"
@@ -72,6 +73,7 @@ int EstreamProject::loadProjectConfiguration(TiXmlNode* pRoot) {
     m_estreamSettings.ivType = atoi(getXMLElementValue(pRoot,"ESTREAM/IV_TYPE").c_str());
     m_estreamSettings.cipherInitializationFrequency = atoi(getXMLElementValue(pRoot,"ESTREAM/CIPHER_INIT_FREQ").c_str());
     m_estreamSettings.generateStream = (atoi(getXMLElementValue(pRoot,"ESTREAM/GENERATE_STREAM").c_str())) ? true : false;
+	m_estreamSettings.generatorForRandStream = atoi(getXMLElementValue(pRoot,"ESTREAM/GENERATOR_FOR_RAND_STREAM").c_str());
     istringstream ss(getXMLElementValue(pRoot,"ESTREAM/STREAM_SIZE"));
     ss >> m_estreamSettings.streamSize;
     pEstreamSettings = &m_estreamSettings;
@@ -127,6 +129,9 @@ int EstreamProject::setupPlaintext() {
     case ESTREAM_GENTYPE_BIASRANDOM:
         for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) biasRndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
         break;
+	case ESTREAM_GENTYPE_LUTRANDOM:
+		for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) lutRndGen->getRandomFromInterval(255, &(m_plaintextIn[input]));
+		break;
     case ESTREAM_GENTYPE_COUNTER: // BEWARE: Counter relies on inputArray being set to zero at the beginning!
         increaseArray(m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
         memcpy(m_plaintextIn, m_plaintextCounter, pGlobals->settings->testVectors.inputLength);
@@ -342,9 +347,25 @@ int EstreamProject::getTestVector(){
             else { // RANDOM
                 if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEEP_DEBUG)
                     tvFile << "(RANDOM INPUT - " << rndGen->shortDescription() << "):";
+				
                 for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                    rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
-                    m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
+					switch (pGlobals->settings->testVectors.generator){
+						case GENERATOR_QRNG:
+							rndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							break;
+						case GENERATOR_BIAS:
+							biasRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							break;
+						case GENERATOR_MD5:
+							mainLogger.out(LOGGER_ERROR) << "MD5 generator for test vectors is not implemented " << endl;
+							break;
+						case GENERATOR_LUT:
+							lutRndGen->getRandomFromInterval(255, &m_plaintextOut[input]);
+							break;
+						default:
+							mainLogger.out(LOGGER_ERROR) << "type of generator for test vectors is not set " << endl;
+					}
+					m_plaintextIn[input] = m_tvInputs[input] = m_plaintextOut[input];
                 }
             }
             break;
@@ -460,7 +481,23 @@ int EstreamProject::generateCipherDataStream() {
                 if (algorithm == ESTREAM_RANDOM) {  // RANDOM
                     // copied from getTestVector();
                     for (int input = 0; input < pGlobals->settings->testVectors.inputLength; input++) {
-                        rndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+                        
+						switch (m_estreamSettings.generatorForRandStream){
+						case GENERATOR_QRNG:
+							rndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+							break;
+						case GENERATOR_BIAS:
+							biasRndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+							break;
+						case GENERATOR_MD5:
+							mainLogger.out(LOGGER_ERROR) << "MD5 generator for random stream is not implemented " << endl;
+							break;
+						case GENERATOR_LUT:
+							lutRndGen->getRandomFromInterval(255, &m_tvInputs[input]);
+							break;
+						default:
+							mainLogger.out(LOGGER_ERROR) << "type of generator for random stream is not set " << endl;
+						}
                     }
 
                 } else {                            // CIPHER

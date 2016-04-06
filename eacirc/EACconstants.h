@@ -123,6 +123,7 @@ typedef unsigned __int64 uint64_t;
 #define GENERATOR_QRNG				1
 #define	GENERATOR_BIAS				2
 #define GENERATOR_MD5               3
+#define GENERATOR_LUT               4
 
 // CIRCUIT FUNCTIONS
 #define FNC_NOP     0

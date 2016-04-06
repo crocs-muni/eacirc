@@ -51,6 +51,8 @@ set(SOURCES
     generators/QuantumRndGen.cpp
     generators/MD5RndGen.cpp
     generators/md5.cpp
+    generators/LUTRndGen.cpp
+    generators/LUT.cpp
 # === project interface ===
     projects/IProject.cpp
     projects/pregenerated_tv/PregeneratedTvProject.cpp
@@ -117,6 +119,8 @@ set(HEADERS
     generators/QuantumRndGen.h
     generators/MD5RndGen.h
     generators/md5.h
+    generators/LUTRndGen.h
+    generators/LUT.h
 # === project interface ===
     projects/IProject.h
     projects/pregenerated_tv/PregeneratedTvProject.h

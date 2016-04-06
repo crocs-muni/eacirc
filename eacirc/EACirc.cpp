@@ -1,6 +1,7 @@
 #include "EACirc.h"
 #include "CommonFnc.h"
 #include "generators/BiasRndGen.h"
+#include "generators/LUTRndGen.h"
 #include "generators/QuantumRndGen.h"
 #include "generators/MD5RndGen.h"
 #include "XMLProcessor.h"
@@ -53,6 +54,8 @@ EACirc::~EACirc() {
     rndGen = NULL;
     if (biasRndGen) delete biasRndGen;
     biasRndGen = NULL;
+	if (lutRndGen) delete lutRndGen;
+	lutRndGen = NULL;
     if (mainGenerator) delete mainGenerator;
     mainGenerator = NULL;
     if (m_circuit) delete m_circuit;
@@ -186,7 +189,12 @@ void EACirc::saveState(const string filename) {
     pElem2 = new TiXmlElement("biasrndgen");
     pElem2->LinkEndChild(biasRndGen->exportGenerator());
     pElem->LinkEndChild(pElem2);
-    pRoot->LinkEndChild(pElem);
+	
+	pElem2 = new TiXmlElement("lutrndgen");
+	pElem2->LinkEndChild(lutRndGen->exportGenerator());
+	pElem->LinkEndChild(pElem2);
+    
+	pRoot->LinkEndChild(pElem);
 
     // save project
     pRoot->LinkEndChild(m_project->saveProjectStateMain());
@@ -221,10 +229,11 @@ void EACirc::loadState(const string filename) {
         pGlobals->stats.pvaluesBestIndividual->push_back(val);
     }
 
-    // initialize random generators (main, quantum, bias)
+    // initialize random generators (main, quantum, bias, lut)
     mainGenerator = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/main_generator/generator"));
     rndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/rndgen/generator"));
     biasRndGen = IRndGen::parseGenerator(getXMLElement(pRoot,"random_generators/biasrndgen/generator"));
+	lutRndGen = IRndGen::parseGenerator(getXMLElement(pRoot, "random_generators/lutrndgen/generator"));
 
     // load project
     m_status = m_project->loadProjectStateMain(getXMLElement(pRoot,"project"));
@@ -254,14 +263,20 @@ void EACirc::createState() {
 
     unsigned long generatorSeed;
     // INIT RNG
-    mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
+    mainGenerator->getRandomFromInterval(ULONG_MAX, &generatorSeed);
     rndGen = new QuantumRndGen(generatorSeed, m_settings.random.qrngPath);
     mainLogger.out(LOGGER_INFO) << "Random generator initialized (" << rndGen->shortDescription() << ")" << endl;
     // INIT BIAS RNDGEN
+
     mainGenerator->getRandomFromInterval(ULONG_MAX,&generatorSeed);
     biasRndGen = new BiasRndGen(generatorSeed, m_settings.random.qrngPath, m_settings.random.biasRndGenFactor);
     mainLogger.out(LOGGER_INFO) << "Bias random generator initialized (" << biasRndGen->shortDescription() << ")" << endl;
 
+	// INIT LUT RNDGEN
+	mainGenerator->getRandomFromInterval(ULONG_MAX, &generatorSeed);
+	lutRndGen = new LUTRndGen(generatorSeed, m_settings.random.lutHW);
+	mainLogger.out(LOGGER_INFO) << "LUT random generator initialized (" << lutRndGen->shortDescription() << ")" << endl;
+	
     // GENERATE SEED FOR GALIB
     mainGenerator->getRandomFromInterval(UINT_MAX,&m_currentGalibSeed);
     mainLogger.out(LOGGER_INFO) << "State successfully initialized." << endl;
@@ -369,7 +384,8 @@ void EACirc::loadPopulation(const string filename) {
         m_status = m_circuit->io()->genomeFromBinary(textCircuit, *genome);
         if (m_status != STAT_OK) return;
         population->add(*genome);
-        pGenome = pGenome->NextSiblingElement();
+      
+		pGenome = pGenome->NextSiblingElement();
     }
 
     seedAndResetGAlib(*population);

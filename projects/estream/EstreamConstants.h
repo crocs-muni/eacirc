@@ -22,7 +22,7 @@
 #define ESTREAM_GENTYPE_COUNTER      4
 #define ESTREAM_GENTYPE_FLIP5BITS    5
 #define ESTREAM_GENTYPE_HALFBLOCKSAC 6
-
+#define ESTREAM_GENTYPE_LUTRANDOM    7
 // filenames for streams
 #define ESTREAM_FILE_STREAM_1      "estream_stream1.bin"
 #define ESTREAM_FILE_STREAM_2      "estream_stream2.bin"
@@ -45,6 +45,7 @@ struct ESTREAM_SETTINGS {
     int plaintextType;
     int ivType;
     bool generateStream;
+	int generatorForRandStream;
     unsigned long streamSize;
 
     ESTREAM_SETTINGS(void) {
@@ -60,6 +61,7 @@ struct ESTREAM_SETTINGS {
         plaintextType = -1;
         ivType = -1;
         generateStream = false;
+		generatorForRandStream = 0;
         streamSize = -1;
     }
 };
