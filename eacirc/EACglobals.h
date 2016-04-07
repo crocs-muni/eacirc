@@ -153,7 +153,9 @@ struct SETTINGS_GATE_CIRCUIT {
 
 //! settings corresponding to EACIRC/POLYNOMIAL_CIRCUIT
 struct SETTINGS_POLY_CIRCUIT {
-    int mutateTermStrategy;                 //! strategy for mutating single term. 0=bitflip, 1=either add or remove variable.
+	int TermCount;                          //! numTerms  0 random (limited by maxNumTerms), otherwise fixed with TermCount of terms 
+	int TermDegree;                         //! degree of each term - 0=random (limited by num variables), otherwise fixed with TermDegree vars
+	int mutateTermStrategy;                 //! strategy for mutating single term. 0=bitflip, 1=either add or remove variable.
     int numPolynomials;                     //! number of polynomials. Bit size of the output layer. 8*numPolynomials <= outputSize.
     double genomeInitTermStopProbability;   //! p for geometric distribution for number of terms in polynomial.
     double genomeInitTermCountProbability;  //! p for geometric distribution for number of variables in term.

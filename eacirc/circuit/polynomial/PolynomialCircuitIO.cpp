@@ -112,17 +112,22 @@ int PolyIO::genomeToPopulation_static(GAGenome& g, string fileName) {
 
 int PolyIO::genomeToText_static(GAGenome& g, string fileName) {
     GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>& genome = dynamic_cast<GA2DArrayGenome<POLY_GENOME_ITEM_TYPE>&>(g);
+	
 
     int numVariables = PolynomialCircuit::getNumVariables();
     int numPolynomials = PolynomialCircuit::getNumPolynomials();
     unsigned int   termSize = Term::getTermSize(numVariables);   // Length of one term in terms of POLY_GENOME_ITEM_TYPE.
 
     ofstream file(fileName);
+	std::ofstream filetmp;
+	filetmp.open("SYSO.txt", std::ofstream::out | std::ofstream::app);
+
     if (!file.is_open()) {
         mainLogger.out(LOGGER_ERROR) << "Cannot write genome (" << fileName << ")." << endl;
         return STAT_FILE_WRITE_FAIL;
     }
 
+	
     // output file header with current circuit configuration
     file << pGlobals->settings->main.circuitSizeInput << " \t(number of variables)" << endl;
     file << pGlobals->settings->main.circuitSizeOutput << " \t(number of polynomials)" << endl;
@@ -166,6 +171,7 @@ int PolyIO::genomeToText_static(GAGenome& g, string fileName) {
                     if ((gene & (1ul << x)) == 0) continue;
 
                     file << "x_" << setw(2) << right << setfill('0') << (j*8*sizeof(POLY_GENOME_ITEM_TYPE) + x) << ".";
+					if (cPoly == 0) filetmp << setw(2) << right  << (j * 8 * sizeof(POLY_GENOME_ITEM_TYPE)+x) << " ,"; 
                 }
             }
 
@@ -183,6 +189,7 @@ int PolyIO::genomeToText_static(GAGenome& g, string fileName) {
 
     file << endl;
     file.close();
+	filetmp.close();
     return STAT_OK;
 }
 

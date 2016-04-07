@@ -60,7 +60,6 @@ int main(int argc, char **argv) {
         }
 
         testEnvironment();
-
         EACirc eacirc;
         eacirc.loadConfiguration( configFilename );
         eacirc.prepare();

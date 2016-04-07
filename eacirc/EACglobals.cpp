@@ -82,6 +82,8 @@ SETTINGS_TEST_VECTORS::SETTINGS_TEST_VECTORS() {
 }
 
 SETTINGS_POLY_CIRCUIT::SETTINGS_POLY_CIRCUIT() {
+	TermCount = -1;
+	TermDegree = -1;
     numPolynomials = -1;
     genomeInitTermStopProbability = -1;
     genomeInitTermCountProbability = -1;

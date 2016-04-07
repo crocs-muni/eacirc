@@ -5,6 +5,7 @@
 #include "PolynomialInterpreter.h"
 #include "Term.h"
 #include "PolynomialCircuit.h"
+#include "PolynomialCircuitIO.h"
 #include <random>       // std::default_random_engine
 #include <algorithm>    // std::move_backward
 #include <vector>
@@ -51,12 +52,17 @@ void GAPolyCallbacks::initializer(GAGenome& g){
         // Otherwise new ones are generated.
         // To generate polynomial with k terms, probability is: p^{k-1}*p.
         int curTerms;
+
         for(curTerms = 0; curTerms <  pGlobals->settings->polyCircuit.maxNumTerms; curTerms++){
             // Generating polynomials with chain
-            if (curTerms >= 1 && GAFlipCoin(pGlobals->settings->polyCircuit.genomeInitTermStopProbability)) {
+			if (pGlobals->settings->polyCircuit.TermCount == 0 && curTerms >= 1 && GAFlipCoin(pGlobals->settings->polyCircuit.genomeInitTermStopProbability)) {
                 break;
             }
+			if (pGlobals->settings->polyCircuit.TermCount != 0 && pGlobals->settings->polyCircuit.TermCount == curTerms) {
+				break;
+			}
 
+			
             // Generate term itself.
             Term t(numVariables);
 
@@ -68,10 +74,15 @@ void GAPolyCallbacks::initializer(GAGenome& g){
             // Same process again -> sample another geometric distribution.
             int curVars = 0;
             for(curVars = 0; curVars < numVariables; curVars++){
-                // Generating terms with chain.
-                if (curVars >= 1 && GAFlipCoin(pGlobals->settings->polyCircuit.genomeInitTermCountProbability)) {
+                // Generating terms with chain - random term degree
+				if (pGlobals->settings->polyCircuit.TermDegree == 0 && curVars >= 1 && GAFlipCoin(pGlobals->settings->polyCircuit.genomeInitTermCountProbability)) {
                     break;
                 }
+
+				// Generating terms with chain - fixed term degree
+				if (pGlobals->settings->polyCircuit.TermDegree != 0 && pGlobals->settings->polyCircuit.TermDegree == curVars) {
+					break;
+				}
 
                 // Add new random variable to the term, remove variable from the var pool.
                 t.setBit(vars.at(curVars), 1);
@@ -164,10 +175,46 @@ int GAPolyCallbacks::mutator(GAGenome& g, float probMutation){
                     int var2operateOn = vars.at(GARandomInt(0, vars.size()-1));
                     // Toggle specified variable in the term.
                     const int bitPos = Term::elementIndexWithinVector(var2operateOn, randTerm, termSize);
-                    genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::bitIndexWithinElement(var2operateOn)));
+					genome.gene(cPoly, bitPos, genome.gene(cPoly, bitPos) ^ (1ul << Term::bitIndexWithinElement(var2operateOn)));
                     numOfMutations+=1;
                 }
-            } else {
+			}else if (pGlobals->settings->polyCircuit.mutateTermStrategy == MUTATE_TERM_STRATEGY_CHANGE){
+				// CHANGE strategy: 
+				// randomly change existing variable to new (new term has the same degree)
+				// Pros: Better for hypothesis that shorter terms are more valuable for our purpose (i.e., distinguisher).
+				// Cons: Slower implementation, not that clean. Impl.: O(k) if k is size of a term (constant).
+				
+				// Build vector of present variables in term,
+				// if we want to add a variable to a term, construct a list of non-set variables.
+				// if we want to remove a variable from a term, construct a list of set variables.
+				std::vector<int> set_vars, non_set_vars;
+				for (int i = 0; i<numVariables; i++){
+					const int bitPos = Term::elementIndexWithinVector(i, randTerm, termSize);
+					const int bitLoc = Term::bitIndexWithinElement(i);
+					const bool isVariableInTerm = (genome.gene(cPoly, bitPos) & (1ul << bitLoc)) > 0;
+
+					// Add to the variable set either if it is present or not.
+					if (isVariableInTerm) set_vars.push_back(i);
+					else non_set_vars.push_back(i);
+				}
+
+				// If term is fully saturated (all variables, cannot add),
+				// if term is zero, cannot remove.
+				if ( (set_vars.size() > 0) && (non_set_vars.size() > 0) ){
+					// Pick one variable at random to either remove or delete.
+					int var2erase = set_vars.at(GARandomInt(0, set_vars.size() - 1));
+					int var2set = non_set_vars.at(GARandomInt(0, non_set_vars.size() - 1));
+					// Toggle specified variable in the term.
+					const int bitPos2erase = Term::elementIndexWithinVector(var2erase, randTerm, termSize);
+					const int bitPos2set = Term::elementIndexWithinVector(var2set, randTerm, termSize);
+
+					//change of bit already set and bit which is not set
+					genome.gene(cPoly, bitPos2erase, genome.gene(cPoly, bitPos2erase) ^ (1ul << Term::bitIndexWithinElement(var2erase)));
+					genome.gene(cPoly, bitPos2set, genome.gene(cPoly, bitPos2set) ^ (1ul << Term::bitIndexWithinElement(var2set)));
+
+					numOfMutations += 2;
+				}
+			}else {
                 mainLogger.out(LOGGER_ERROR) << "Unknown mutate term strategy: " << pGlobals->settings->polyCircuit.mutateTermStrategy << endl;
                 return 0;
             }

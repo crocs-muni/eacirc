@@ -55,6 +55,8 @@ int PolynomialCircuit::loadCircuitConfiguration(TiXmlNode* pRoot) {
     pGlobals->settings->polyCircuit.numPolynomials                 = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/NUM_POLYNOMIALS").c_str());
     pGlobals->settings->polyCircuit.maxNumTerms                    = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MAX_NUM_TERMS").c_str());
     pGlobals->settings->polyCircuit.mutateTermStrategy             = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/MUTATE_TERM_STRATEGY").c_str());
+	pGlobals->settings->polyCircuit.TermCount                      = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_COUNT").c_str());
+	pGlobals->settings->polyCircuit.TermDegree                     = atoi(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_DEGREE").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermCountProbability = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_COUNT_PROB").c_str());
     pGlobals->settings->polyCircuit.genomeInitTermStopProbability  = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/TERM_VAR_PROB").c_str());
     pGlobals->settings->polyCircuit.mutateAddTermProbability       = atof(getXMLElementValue(pRoot,"POLYNOMIAL_CIRCUIT/ADD_TERM_PROB").c_str());
