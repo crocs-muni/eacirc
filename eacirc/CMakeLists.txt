@@ -1,7 +1,4 @@
 # === EACirc cmake file ===
-cmake_minimum_required(VERSION 3.0.2)
-
-
 include(${PROJECT_SOURCE_DIR}/cmake/detect_version.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 

@@ -1,16 +1,13 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.4)
 project(EACirc)
 
 include(cmake/eacirc_project.cmake)
 
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
-    # === general flags ===
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
-    # === force coloured output (for Ninja and such) ===
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color")
-    # === Supress warnings when building 3rd party libs on Linux ===
-    set(SUPRESS_LIBS_WARNINGS "-Wall -Wextra -Weffc++" CACHE STRING "Supress warnings when building 3rd party libs")
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++11> -Wall -Wextra -Weffc++)
+    add_compile_options(-fdiagnostics-color)
+
     # static build option is currently available only for linux
     option(STATIC_BUILD "Produce static buils" OFF)
 elseif (MSVC AND (MSVC_VERSION GREATER 1700))
