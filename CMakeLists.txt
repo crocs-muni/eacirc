@@ -47,7 +47,6 @@ include_eacirc_project(sha3)
 add_subdirectory(eacirc)
 
 # === 3rd party dependencies ===
-add_subdirectory(libs/galib)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
 

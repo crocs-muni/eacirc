@@ -13,35 +13,12 @@ set(SOURCES
     EACirc.cpp
     Finishers.cpp
     EACglobals.cpp
-# === individual representation ===
-    circuit/ICircuit.cpp
-    circuit/ICircuitIO.cpp
-# === circuit gate processing ===
-    circuit/gate/GateCircuitIO.cpp
-    circuit/gate/GateCircuit.cpp
-    circuit/gate/GateInterpreter.cpp
-    circuit/gate/GateCommonFunctions.cpp
-    circuit/gate/GAGateCallbacks.cpp
-    circuit/gate/JVMSimulator.cpp
-# === polynomial circuits ===
-    circuit/polynomial/PolynomialCircuit.cpp
-    circuit/polynomial/PolynomialCircuitIO.cpp
-    circuit/polynomial/Term.cpp
-    circuit/polynomial/GAPolyCallbacks.cpp
-    circuit/polynomial/PolyCommonFunctions.cpp
-    circuit/polynomial/PolynomialInterpreter.cpp
 # === evaluators ===
     evaluators/IEvaluator.cpp
     evaluators/TopBitEvaluator.cpp
     evaluators/CategoriesEvaluator.cpp
     evaluators/HammingWeightEvaluator.cpp
     evaluators/FeatureEvaluator.cpp
-# === gate2 ===
-    circuit/gate2/Converter.cpp
-    circuit/gate2/CpuGate.cpp
-    circuit/gate2/Gate2.cpp
-    circuit/gate2/GpuGate.cu
-    circuit/gate2/GaGate.cpp
 # === random generators ===
     generators/BiasRndGen.cpp
     generators/IRndGen.cpp
@@ -74,23 +51,6 @@ set(HEADERS
     Version.h
     TestVectors.h
     cxx_utils.h
-# === individual representation ===
-    circuit/ICircuit.h
-    circuit/ICircuitIO.h
-# === circuit gate processing ===
-    circuit/gate/GateCircuit.h
-    circuit/gate/GateCircuitIO.h
-    circuit/gate/GateInterpreter.h
-    circuit/gate/GateCommonFunctions.h
-    circuit/gate/GAGateCallbacks.h
-    circuit/gate/JVMSimulator.h
-# === polynomial circuits ===
-    circuit/polynomial/GAPolyCallbacks.h
-    circuit/polynomial/Term.h
-    circuit/polynomial/PolynomialCircuit.h
-    circuit/polynomial/PolynomialCircuitIO.h
-    circuit/polynomial/PolyCommonFunctions.h
-    circuit/polynomial/PolynomialInterpreter.h
 # === cuda ===
     cuda/base.h
     cuda/cudaSafeCall.h
@@ -101,15 +61,6 @@ set(HEADERS
     evaluators/CategoriesEvaluator.h
     evaluators/HammingWeightEvaluator.h
     evaluators/FeatureEvaluator.h
-# === gate2 ===
-    circuit/gate2/Circuit.h
-    circuit/gate2/Converter.h
-    circuit/gate2/Gate2.h
-    circuit/gate2/CpuGate.h
-    circuit/gate2/GaGate.h
-    circuit/gate2/GenomeItem_t.h
-    circuit/gate2/GpuGate.h
-    circuit/gate2/Interpreter.h
 # === random generators ===
     generators/BiasRndGen.h
     generators/IRndGen.h
@@ -137,11 +88,6 @@ detect_version(Version.h)
 
 
 # === source groups ===
-source_group("circuit"         REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/.*")
-source_group("circuit\\gate"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate/.*")
-source_group("circuit\\gate2"           REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gate2/.*")
-source_group("circuit\\gpu_gate"        REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/gpu_gate/.*")
-source_group("circuit\\polynomial"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/circuit/polynomial/.*")
 source_group("cuda"            REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/cuda/.*")
 source_group("evaluators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/evaluators/.*")
 source_group("generators"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/generators/.*")
