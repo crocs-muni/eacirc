@@ -5,77 +5,42 @@ include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 
 set(SOURCES
 # === main project files ===
-    Main.cpp
-    CommonFnc.cpp
-    XMLProcessor.cpp
-    Logger.cpp
-    Status.cpp
-    EACirc.cpp
-    Finishers.cpp
-    EACglobals.cpp
-# === evaluators ===
-    evaluators/IEvaluator.cpp
-    evaluators/TopBitEvaluator.cpp
-    evaluators/CategoriesEvaluator.cpp
-    evaluators/HammingWeightEvaluator.cpp
-    evaluators/FeatureEvaluator.cpp
-# === random generators ===
-    generators/BiasRndGen.cpp
-    generators/IRndGen.cpp
-    generators/QuantumRndGen.cpp
-    generators/MD5RndGen.cpp
-    generators/md5.cpp
-    generators/LUTRndGen.cpp
-    generators/LUT.cpp
-# === project interface ===
-    projects/IProject.cpp
-    projects/pregenerated_tv/PregeneratedTvProject.cpp
-    projects/files/filesProject.cpp
-# === testing using CATCH framework ===
-    self_tests/Tests.cpp
-    self_tests/TestConfigurator.cpp
-)
-
-set(HEADERS
-# === main project files ===
     Byte.h
-    Main.h
-    CommonFnc.h
-    XMLProcessor.h
+    Main
+    CommonFnc
+    XMLProcessor
+    Logger
+    Status
+    EACirc
+    Finishers
     EACconstants.h
-    EACglobals.h
-    Logger.h
-    Status.h
-    EACirc.h
+    EACglobals
     Finishers.h
     Version.h
     TestVectors.h
     cxx_utils.h
-# === cuda ===
-    cuda/base.h
-    cuda/cudaSafeCall.h
-    cuda/Host.h
 # === evaluators ===
-    evaluators/IEvaluator.h
-    evaluators/TopBitEvaluator.h
-    evaluators/CategoriesEvaluator.h
-    evaluators/HammingWeightEvaluator.h
-    evaluators/FeatureEvaluator.h
+    evaluators/IEvaluator
+    evaluators/TopBitEvaluator
+    evaluators/CategoriesEvaluator
+    evaluators/HammingWeightEvaluator
+    evaluators/FeatureEvaluator
 # === random generators ===
-    generators/BiasRndGen.h
-    generators/IRndGen.h
-    generators/QuantumRndGen.h
-    generators/MD5RndGen.h
-    generators/md5.h
-    generators/LUTRndGen.h
-    generators/LUT.h
+    generators/BiasRndGen
+    generators/IRndGen
+    generators/QuantumRndGen
+    generators/MD5RndGen
+    generators/md5
+    generators/LUTRndGen
+    generators/LUT
 # === project interface ===
-    projects/IProject.h
-    projects/pregenerated_tv/PregeneratedTvProject.h
-    projects/files/filesConstants.h
-    projects/files/filesProject.h
+    projects/IProject
+    projects/pregenerated_tv/PregeneratedTvProject
+    projects/files/filesProject
+    projects/files/filesConstants
 # === testing using CATCH framework ===
-    self_tests/TestConfigurator.h
+    self_tests/Tests
+    self_tests/TestConfigurator
 )
 
 set(OTHER_FILES
@@ -101,10 +66,10 @@ source_group("self_tests"      REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/s
 # === eacirc target ===
 if(BUILD_CUDA)
     cuda_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-    cuda_add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES} OPTIONS -relaxed-constexpr)
+    cuda_add_executable(eacirc ${SOURCES} ${OTHER_FILES} OPTIONS -relaxed-constexpr)
     target_compile_definitions(eacirc PUBLIC USE_CUDA)
 else()
-    add_executable(eacirc ${SOURCES} ${HEADERS} ${OTHER_FILES})
+    add_executable(eacirc ${SOURCES} ${OTHER_FILES})
 endif()
 
 target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS_DIR})
