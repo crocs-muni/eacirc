@@ -1,7 +1,6 @@
 #include "EncryptorDecryptor.h"
 #include "EstreamInterface.h"
 #include "EstreamProject.h"
-#include <garandom.h>
 #include <string>
 
 EncryptorDecryptor::EncryptorDecryptor() : m_setIV(false), m_setKey(false), m_initSuccess(false) {
