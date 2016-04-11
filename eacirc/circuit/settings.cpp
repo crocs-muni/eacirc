@@ -1,5 +1,5 @@
 #include "settings.h"
-#include <minijson/minijson_reader.hpp>
+#include <minijson_reader.hpp>
 
 using namespace minijson;
 
