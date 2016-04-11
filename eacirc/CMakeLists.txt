@@ -25,6 +25,11 @@ set(SOURCES
     evaluators/CategoriesEvaluator
     evaluators/HammingWeightEvaluator
     evaluators/FeatureEvaluator
+# === circuit backend ===
+    circuit/circuit
+    circuit/interpreter
+    circuit/operators
+    circuit/settings
 # === random generators ===
     generators/BiasRndGen
     generators/IRndGen
