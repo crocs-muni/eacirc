@@ -1,57 +1,47 @@
-#include "Main.h"
 #include "EACirc.h"
 
-// problem with g++ lower than 4.8, temporary solution
-#ifndef _GLIBCXX_USE_NANOSLEEP
-#define _GLIBCXX_USE_NANOSLEEP
-#endif
 #ifdef DEBUG
-#include <thread>
+    #include <thread>
 #endif
 
 #define CATCH_CONFIG_RUNNER
 #include <catch.hpp>
 
+void testEnvironment();
+
 int main(int argc, char **argv) {
     try {
-    #ifdef DEBUG
-        // used in debug mode, wait for debugger to attach
-        std::this_thread::sleep_for(std::chrono::milliseconds(3));
-    #endif
-
         string configFilename = FILE_CONFIG;
         // COMMAND LINE ARGUMENTS PROCESSING
-        int argument = 0;
-        while (argument + 1 < argc) {
-            argument++;
+        for (int arg = 1; arg < argc; ++arg) {
             // RUN SELF-TESTS
-            if (strcmp(argv[argument],CMD_OPT_SELF_TEST) == 0) {
+            if (strcmp(argv[arg],CMD_OPT_SELF_TEST) == 0) {
                 testEnvironment();
-                return Catch::Main(argc-argument,argv+argument);
+                return Catch::Session().run(argc-arg,argv+arg);
             }
             // CUSTOM CONFIG FILE
-            if (strcmp(argv[argument],CMD_OPT_CUSTOM_CONFIG) == 0) {
-                if (argument + 1 == argc) {
+            if (strcmp(argv[arg],CMD_OPT_CUSTOM_CONFIG) == 0) {
+                if (arg + 1 == argc) {
                     mainLogger.out(LOGGER_ERROR) << "Incorrect CLI arguments: empty name of custom config file." << endl;
                     return STAT_INVALID_ARGUMETS;
                 } else {
-                    configFilename = argv[argument+1];
-                    argument++;
+                    configFilename = argv[arg+1];
+                    arg++;
                 }
                 continue;
             }
             // LOGGING TO FILE
-            if (strcmp(argv[argument],CMD_OPT_LOGGING_TO_FILE) == 0) {
-                if (argument + 1 == argc) {
+            if (strcmp(argv[arg],CMD_OPT_LOGGING_TO_FILE) == 0) {
+                if (arg + 1 == argc) {
                     mainLogger.out(LOGGER_ERROR) << "Incorrect CLI arguments: logfile name not provided." << endl;
                     return STAT_INVALID_ARGUMETS;
                 }
-                mainLogger.setOutputFile(argv[argument+1]);
-                argument++;
+                mainLogger.setOutputFile(argv[arg+1]);
+                arg++;
                 continue;
             }
             // INCORRECT CLI OPTION
-            mainLogger.out(LOGGER_ERROR) << "\"" << argv[argument] << "\" is not a valid argument." << endl;
+            mainLogger.out(LOGGER_ERROR) << "\"" << argv[arg] << "\" is not a valid argument." << endl;
             mainLogger.out() << "Only valid arguments for EACirc are:" << endl;
             mainLogger.out() << "  " << CMD_OPT_LOGGING_TO_FILE << " <filename> (set logging to a specific file)" << endl;
             mainLogger.out() << "  " << CMD_OPT_SELF_TEST << "  (run self-tests, use " << CMD_OPT_SELF_TEST << " -h to display options)" << endl;
@@ -80,15 +70,18 @@ int main(int argc, char **argv) {
         mainLogger.out() << "exiting..." << std::endl;
         return 1;
     }
+    catch (...) {
+        throw;
+    }
 }
 
 void testEnvironment() {
     if (UCHAR_MAX != 255) {
-        mainLogger.out(LOGGER_ERROR) << "Maximum for unsigned char is not 255 (it's " << UCHAR_MAX << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Maximum for unsigned char is not 255 (it's " << UCHAR_MAX << ")." << std::endl;
         exit(-1);
     }
     if (BITS_IN_UCHAR != 8) {
-        mainLogger.out(LOGGER_ERROR) << "Unsigned char does not have 8 bits (it has " << BITS_IN_UCHAR << ")." << endl;
+        mainLogger.out(LOGGER_ERROR) << "Unsigned char does not have 8 bits (it has " << BITS_IN_UCHAR << ")." << std::endl;
         exit(-1);
     }
 }

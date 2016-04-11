@@ -5,7 +5,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 
 set(SOURCES
 # === main project files ===
-    Main
+    main
     CommonFnc
     XMLProcessor
     Logger
