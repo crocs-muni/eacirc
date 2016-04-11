@@ -43,7 +43,8 @@ include_eacirc_project(caesar)
 include_eacirc_project(estream)
 include_eacirc_project(sha3)
 
-# === executables ===
+# === targets ===
+add_subdirectory(core)
 add_subdirectory(eacirc)
 
 # === 3rd party dependencies ===
