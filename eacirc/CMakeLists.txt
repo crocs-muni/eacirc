@@ -19,6 +19,7 @@ set(SOURCES
     Version.h
     TestVectors.h
     cxx_utils.h
+    metaheuristics
 # === evaluators ===
     evaluators/IEvaluator
     evaluators/TopBitEvaluator
