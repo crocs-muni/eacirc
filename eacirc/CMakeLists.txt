@@ -79,7 +79,7 @@ else()
 endif()
 
 target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS_DIR})
-target_link_libraries(eacirc core tinyXML catch)
+target_link_libraries(eacirc core minijson tinyXML catch)
 
 # === build target to run directory ===
 set_target_properties(eacirc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})

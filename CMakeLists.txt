@@ -48,6 +48,7 @@ add_subdirectory(core)
 add_subdirectory(eacirc)
 
 # === 3rd party dependencies ===
+add_subdirectory(libs/minijson)
 add_subdirectory(libs/tinyXML)
 add_subdirectory(libs/catch)
 
