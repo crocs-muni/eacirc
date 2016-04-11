@@ -1,6 +1,6 @@
 #include "TestConfigurator.h"
 #include <iostream>
-#include <Catch.h>
+#include <catch.hpp>
 #include "EACirc.h"
 #include <tinyxml.h>
 

@@ -1,4 +1,3 @@
-# === Catch framework cmake file ===
 add_library(catch INTERFACE)
 
 target_include_directories(catch

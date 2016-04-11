@@ -1,4 +1,4 @@
-#include <Catch.h>
+#include <catch.hpp>
 #include "CommonFnc.h"
 #include "TestConfigurator.h"
 #include "XMLProcessor.h"
