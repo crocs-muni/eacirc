@@ -17,14 +17,12 @@ public:
 };
 
 template <class T>
-constexpr auto make_range(T& container) -> Range<typename T::iterator>
-{
+constexpr auto make_range(T& container) -> Range<typename T::iterator> {
     return {container.begin(), container.end()};
 }
 
 template <class T>
 constexpr auto make_range(T const& container)
-        -> Range<typename T::const_iterator>
-{
+        -> Range<typename T::const_iterator> {
     return {container.begin(), container.end()};
 }

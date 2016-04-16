@@ -7,43 +7,42 @@
 /**
  * Iterator which iterates over true bits in bit mask from lower to higher
  * position.
+ *
  * @param Bits the size of the bit mask in bits
  */
 template <unsigned Bits>
-class BitIterator
-        : std::iterator<std::forward_iterator_tag, unsigned, std::ptrdiff_t,
-                        const unsigned*, const unsigned&> {
-    Store<Bits> _mask{0u};
+struct BitIterator : std::iterator<std::forward_iterator_tag, const unsigned> {
 
 public:
     BitIterator() = default;
     BitIterator(Store<Bits> mask) : _mask(mask) {}
 
-    BitIterator& operator++()
-    {
+    BitIterator& operator++() {
         auto i = ::count_trailing_zeros(_mask);
         _mask ^= 1u << i;
         return *this;
     }
 
-    BitIterator operator++(int)
-    {
+    BitIterator operator++(int) {
         auto self = *this;
         ++(*this);
         return self;
     }
 
-    unsigned operator*() const
-    {
+    unsigned operator*() const {
         return static_cast<unsigned>(::count_trailing_zeros(_mask));
     }
 
-    bool operator==(BitIterator b) const { return _mask == b._mask; }
-    bool operator!=(BitIterator b) const { return !(*this == b); }
+    bool operator==(BitIterator& b) const { return _mask == b._mask; }
+    bool operator!=(BitIterator& b) const { return !(*this == b); }
+
+private:
+    Store<Bits> _mask{0u};
 };
 
 /**
  * Bit mask parametrized by it's size
+ *
  * @param Bits the size of the storage in bits
  */
 template <unsigned Bits> class Bitset {

@@ -13,8 +13,7 @@ public:
     static std::ostream& warning() { return out() << " [warning] "; }
     static std::ostream& error() { return out() << " [error] "; }
     static std::ostream& info() { return out() << " [info] "; }
-    static std::ostream& out()
-    {
+    static std::ostream& out() {
         static Logger logger;
         return logger._tee;
     }
