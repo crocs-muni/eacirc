@@ -9,15 +9,6 @@
 #include "garandom.h"
 #include "circuit/gate/JVMSimulator.h"
 
-#ifdef _WIN32
-    #include <Windows.h>
-    #define getpid() GetCurrentProcessId()
-#endif
-#ifdef __linux__
-    #include <sys/types.h>
-    #include <unistd.h>
-#endif
-
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_circuit(NULL), m_project(NULL), m_gaData(NULL),
       m_readyToRun(0), m_actGener(0), m_oldGenerations(0), m_evaluateStepVisitor(NULL) {
@@ -253,7 +244,8 @@ void EACirc::createState() {
         mainLogger.out(LOGGER_INFO) << "Using fixed seed: " << m_originalSeed << endl;
     } else {
         // generate random seed, if none provided
-        mainGenerator = new MD5RndGen(clock() + time(NULL) + getpid());
+        std::random_device rd;
+        mainGenerator = new MD5RndGen(rd());
         mainGenerator->getRandomFromInterval(ULONG_MAX,&m_originalSeed);
         delete mainGenerator;
         mainGenerator = NULL; // necessary !!! (see guts of MD5RndGen)
