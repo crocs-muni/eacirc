@@ -2,14 +2,21 @@
 #include <iomanip>
 #include <iostream>
 
-std::ostream& Logger::date_stamp() {
-    auto t = std::time(nullptr);
-    auto tm = *std::localtime(&t);
-    return _tee << std::put_time(&tm, "%F");
+Logger* Logger::instance = nullptr;
+
+std::ostream& Logger::out() {
+    assert(Logger::instance != nullptr);
+    return Logger::instance->_tee << Timestamp{};
 }
 
-std::ostream& Logger::time_stamp() {
+std::ostream& operator<<(std::ostream& os, Logger::Datestamp) {
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
-    return _tee << std::put_time(&tm, "%T");
+    return os << std::put_time(&tm, "%F");
+}
+
+std::ostream& operator<<(std::ostream& os, Logger::Timestamp) {
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    return os << std::put_time(&tm, "%T");
 }

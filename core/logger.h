@@ -1,24 +1,33 @@
 #include "teestream.h"
+#include <cassert>
 #include <fstream>
 #include <iostream>
 
 struct Logger {
 private:
-    std::ofstream _file{"bogo.log"};
+    std::ofstream _file;
     Teestream _tee{_file, std::cout};
 
 public:
-    ~Logger() { _tee << "exiting..." << std::endl; }
+    struct Datestamp {};
+    struct Timestamp {};
+
+    Logger(const std::string file) : _file(file) {
+        assert(instance == nullptr);
+        Logger::instance = this;
+    }
+    ~Logger() { Logger::instance = nullptr; }
 
     static std::ostream& warning() { return out() << " [warning] "; }
     static std::ostream& error() { return out() << " [error] "; }
     static std::ostream& info() { return out() << " [info] "; }
-    static std::ostream& out() {
-        static Logger logger;
-        return logger._tee;
-    }
 
 protected:
-    std::ostream& date_stamp();
-    std::ostream& time_stamp();
+    static std::ostream& out();
+
+private:
+    static Logger* instance;
 };
+
+std::ostream& operator<<(std::ostream& os, Logger::Timestamp);
+std::ostream& operator<<(std::ostream& os, Logger::Datestamp);
