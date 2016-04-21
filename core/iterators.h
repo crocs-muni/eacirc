@@ -1,53 +1,38 @@
 #pragma once
 
-#include <cassert>
+#include "range.h"
 #include <iterator>
 
-namespace core {
-namespace detail {
-    template <class I>
-    using StepIteratorBase = std::iterator<
-            std::forward_iterator_tag, I,
-            typename std::iterator_traits<I>::difference_type>;
-}
-
-template <class I> struct StepIterator : detail::StepIteratorBase<I> {
-    using difference_type =
-            typename std::iterator_traits<StepIterator>::difference_type;
-    using reference = typename std::iterator_traits<StepIterator>::reference;
-
+template <class I>
+struct BlockIterator : std::iterator<
+                               std::forward_iterator_tag, Range<I>, std::ptrdiff_t, Range<I> const*,
+                               Range<I> const&> {
 public:
-    StepIterator() : _it(), _step(0) {}
-    StepIterator(I iterator, difference_type step)
-        : _it(iterator), _step(step) {}
+    using Size = typename std::iterator_traits<I>::difference_type;
 
-    reference operator*() { return _it; }
-    const reference operator*() const { return _it; }
+    BlockIterator() : _it(), _size(0) {}
+    BlockIterator(I iterator, Size block_size) : _it(iterator), _size(block_size) {}
 
-    StepIterator& operator++() {
-        _it += _step;
+    Range<I> operator*() const { return {_it, _it + _size}; }
+
+    BlockIterator& operator++() {
+        _it += _size;
         return *this;
     }
 
-    StepIterator operator++(int) {
+    BlockIterator operator++(int) {
         auto self = *this;
-        _it += _step;
+        ++(*this);
         return self;
     }
 
-    bool operator==(StepIterator const& b) const {
-        assert(_step == b._step);
-        return _it == b._it;
+    bool operator==(BlockIterator const& b) const {
+        assert(_size == b._size);
+        return _it <= b._it && b._it < _it + _size;
     }
-    bool operator!=(StepIterator const& b) const { return !(*this == b); }
+    bool operator!=(BlockIterator const& b) const { return !(*this == b); }
 
 private:
     I _it;
-    difference_type _step;
+    Size _size;
 };
-
-template <class I, class Difference = typename StepIterator<I>::difference_type>
-StepIterator<I> make_step_iterator(I iterator, Difference step) {
-    return {iterator, step};
-}
-} // namespace core

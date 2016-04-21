@@ -22,23 +22,13 @@ int count_trailing_zeros(u64 x) {
 #endif
 }
 
+#include <memory>
 
 /**
-  * Compile-time base 2 logarithm, ie Log2<8>::value is 3.
+  * Basics C++14 make_unique emulation.
   */
-// clang-format off
-template <unsigned I> struct Log2
-{ const static unsigned value = 1 + Log2<I / 2>::value; };
-
-template <> struct Log2<1>
-{ const static unsigned value = 1; };
-// clang-format on
-
-/**
- * Compile-time maximum of the given values, ie. Max<1,9,6>::value is 9.
- */
-template <unsigned... I> struct Max;
-template <unsigned I> struct Max<I> { const static unsigned value = I; };
-template <unsigned I, unsigned... Is> struct Max<I, Is...> {
-    const static unsigned value = I > Max<Is...>::value ? I : Max<Is...>::value;
-};
+namespace std {
+template <class T, class... Args> std::unique_ptr<T> make_unique(Args... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+} // namespace std
