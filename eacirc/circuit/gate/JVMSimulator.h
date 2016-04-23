@@ -149,6 +149,7 @@ using namespace std;
 #define IFLE            0x9e
 #define	MULTIANEWARRAY	0xc5
 #define	NEWARRAY		0xbc
+#define ANEWARRAY       0xbd
 #define	PUTSTATIC		0xb3
 #define	RETURN			0xb1
 #define NEW             0xbb

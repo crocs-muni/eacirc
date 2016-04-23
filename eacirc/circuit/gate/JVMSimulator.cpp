@@ -1183,6 +1183,7 @@ int JVMSimulator::code(char* i) {
     if (!strcmp(i, "ifle"))return IFLE;
     if (!strcmp(i, "multianewarray"))return MULTIANEWARRAY;
     if (!strcmp(i, "newarray"))return NEWARRAY;
+    if (!strcmp(i, "anewarray"))return ANEWARRAY;
     if (!strcmp(i, "pop"))return POP;
     if (!strcmp(i, "putstatic"))return PUTSTATIC;
     if (!strcmp(i, "new"))return NEW;
