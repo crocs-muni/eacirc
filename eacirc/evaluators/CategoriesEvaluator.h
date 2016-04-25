@@ -46,7 +46,7 @@ public:
      * fitness is based on weighed Euclidean distance of corresponding categories
      * @return description
      */
-    string shortDescription() const;
+    std::string shortDescription() const;
 };
 
 #endif // CATEGORIESEVALUATOR_H

@@ -1,119 +1,110 @@
 #pragma once
 
-#include "circuit.h"
+#include "genotype.h"
 #include <algorithm>
+#include <cassert>
 #include <core/base.h>
-#include <memory>
+#include <core/compiletime.h>
 
 namespace circuit {
-    template <class Allocator = std::allocator<ui8>>
-    class Interpreter : Allocator {
-        unsigned _isize;
-        unsigned _osize;
-        Owner<ui8*> _in;
-        ui8* _out;
+template <class Def, template <class, size_t> class Storage> class Interpreter {
+    Storage<u8, Max<Def::in, Def::out>::value> _in;
+    Storage<u8, Max<Def::in, Def::out>::value> _out;
+    Genotype<Def> const& _circuit;
 
-    public:
-        Interpreter(unsigned in_size, unsigned out_size)
-                : _isize(in_size), _osize(out_size),
-                  _in(Allocator::allocate(2 * std::max(_isize, _osize))),
-                  _out(_in + std::max(_isize, _osize))
-        {
+public:
+    Interpreter(Genotype<Def> const& circ) : _circuit(circ) {}
+
+    DataVec<Def::out> operator()(DataVec<Def::in> const& input) {
+        std::copy(input.begin(), input.end(), _in.begin());
+
+        for (auto& layer : _circuit) {
+            auto out = _out.begin();
+
+            for (auto& node : layer)
+                *out++ = execute_node(node);
+            std::swap(_in, _out);
         }
 
-        ~Interpreter()
-        {
-            Allocator::dealocate(_in, 2 * std::max(_isize, _osize));
-        }
+        DataVec<Def::out> output;
+        std::copy_n(_in.begin(), output.size(), output.begin());
+        return output;
+    }
 
-        template <class Circuit>
-        void operator()(Circuit const& circuit, ui8 const* input, ui8* output)
-        {
-            std::copy(input, input + _isize, _in);
+protected:
+    u8 execute_node(Node<Def> const& node) noexcept {
+        u8 result = 0u;
 
-            for (auto layer : circuit.layers()) {
-                for (unsigned i = 0; i != Circuit::x; ++i)
-                    _out[i] = execute_node(layer[i]);
-                std::swap(_in, _out);
-            }
+        auto i = node.connectors.begin();
+        const auto end = node.connectors.end();
+        const u8 bits = std::numeric_limits<u8>::digits;
 
-            std::copy(_out, _out + _osize, output);
-        }
-
-    protected:
-        ui8 execute_node(Node const& node) noexcept
-        {
-            ui8 result = 0u;
-
-            auto i = node.connectors.begin();
-            const auto end = node.connectors.end();
-            const ui8 bits = std::numeric_limits<ui8>::digits;
-
-            switch (node.function) {
-            case Function::NOP:
-                if (i != end)
+        switch (node.function) {
+        case Fn::NOP:
+            if (i != end)
+                result = _in[*i];
+            return result;
+        case Fn::CONS:
+            return node.argument;
+        case Fn::AND:
+            result = 0xff;
+            for (; i != end; ++i)
+                result &= _in[*i];
+            return result;
+        case Fn::NAND:
+            result = 0xff;
+            for (; i != end; ++i)
+                result &= _in[*i];
+            return ~result;
+        case Fn::OR:
+            for (; i != end; ++i)
+                result |= _in[*i];
+            return result;
+        case Fn::XOR:
+            for (; i != end; ++i)
+                result ^= _in[*i];
+            return result;
+        case Fn::NOR:
+            for (; i != end; ++i)
+                result |= _in[*i];
+            return ~result;
+        case Fn::NOT:
+            if (i != end)
+                result = ~_in[*i];
+        case Fn::SHIL:
+            if (i != end)
+                result = _in[*i] << (node.argument % bits);
+            return result;
+        case Fn::SHIR:
+            if (i != end)
+                result = _in[*i] >> (node.argument % bits);
+            return result;
+        case Fn::ROTL:
+            if (i != end) {
+                const u8 shift = node.argument % bits;
+                if (shift == 0)
                     result = _in[*i];
-                return result;
-            case Function::CONS:
-                return node.argument;
-            case Function::AND:
-                result = 0xff;
-                for (; i != end; ++i)
-                    result &= _in[*i];
-                return result;
-            case Function::NAND:
-                result = 0xff;
-                for (; i != end; ++i)
-                    result &= _in[*i];
-                return ~result;
-            case Function::OR:
-                for (; i != end; ++i)
-                    result |= _in[*i];
-                return result;
-            case Function::XOR:
-                for (; i != end; ++i)
-                    result ^= _in[*i];
-                return result;
-            case Function::NOR:
-                for (; i != end; ++i)
-                    result |= _in[*i];
-                return ~result;
-            case Function::NOT:
-                if (i != end)
-                    result = ~_in[*i];
-            case Function::SHIL:
-                if (i != end)
-                    result = _in[*i] << (node.argument % bits);
-                return result;
-            case Function::SHIR:
-                if (i != end)
-                    result = _in[*i] >> (node.argument % bits);
-                return result;
-            case Function::ROTL:
-                if (i != end) {
-                    const ui8 shift = node.argument % bits;
-                    if (shift == 0)
-                        result = _in[*i];
-                    else
-                        result = (_in[*i] << shift) |
-                                 (_in[*i] >> (bits - shift));
-                }
-                return result;
-            case Function::ROTR:
-                if (i != end) {
-                    const ui8 shift = node.argument % bits;
-                    if (shift == 0)
-                        result = _in[*i];
-                    else
-                        result = (_in[*i] >> shift) |
-                                 (_in[*i] << (bits - shift));
-                }
-                return result;
-            case Function::MASK:
-                if (i != end)
-                    result = _in[*i] & node.argument;
-                return result;
+                else
+                    result = (_in[*i] << shift) | (_in[*i] >> (bits - shift));
             }
+            return result;
+        case Fn::ROTR:
+            if (i != end) {
+                const u8 shift = node.argument % bits;
+                if (shift == 0)
+                    result = _in[*i];
+                else
+                    result = (_in[*i] >> shift) | (_in[*i] << (bits - shift));
+            }
+            return result;
+        case Fn::MASK:
+            if (i != end)
+                result = _in[*i] & node.argument;
+            return result;
+        case Fn::_Size:
+            assert(false);
         }
-    };
-}
+    }
+};
+
+} // namespace circuit

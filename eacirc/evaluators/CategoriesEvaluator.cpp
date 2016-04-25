@@ -1,6 +1,8 @@
 #include "CategoriesEvaluator.h"
 #include "CommonFnc.h"
 
+using namespace std;
+
 CategoriesEvaluator::CategoriesEvaluator()
     : IEvaluator(EVALUATOR_CATEGORIES), m_categoriesStream0(NULL), m_categoriesStream1(NULL),
       m_totalStream0(0), m_totalStream1(0) {
@@ -49,7 +51,7 @@ float CategoriesEvaluator::getFitness() const {
     }
     dof--; // last category is fully determined by others
     float fitness = (1.0 - CommonFnc::chisqr(dof,chiSquareValue));
-
+/*
     // write histogram data in necessary
     if (pGlobals->settings->outputs.verbosity >= LOGGER_VERBOSITY_DEBUG) {
         ofstream hist(FILE_HISTOGRAMS, ios_base::app);
@@ -70,7 +72,7 @@ float CategoriesEvaluator::getFitness() const {
         hist << endl;
         hist.close();
     }
-
+*/
     return fitness;
 }
 

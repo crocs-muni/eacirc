@@ -1,7 +1,8 @@
 #ifndef EVALUATOR_INTERFACE_H
 #define EVALUATOR_INTERFACE_H
 
-#include "EACglobals.h"
+#include "legacy.h"
+#include <string>
 
 class IEvaluator {
 protected:
@@ -36,7 +37,7 @@ public:
     /** return short, human readable description of the evaluator
       * @return description
       */
-    virtual string shortDescription() const = 0;
+    virtual std::string shortDescription() const = 0;
 
     /** constatnt of active evaluator
       * @return evaluator constant
