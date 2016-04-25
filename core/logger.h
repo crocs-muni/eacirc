@@ -1,3 +1,5 @@
+#pragma once
+
 #include "teestream.h"
 #include <cassert>
 #include <fstream>
