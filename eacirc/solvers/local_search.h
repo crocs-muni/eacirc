@@ -35,7 +35,7 @@ public:
             _mutator(neighbour.genotype, _generator);
             neighbour.score = _evaluator(neighbour.genotype);
 
-            if (_solution.score < neighbour.score)
+            if (_solution.score <= neighbour.score)
                 _solution = std::move(neighbour);
         }
     }
