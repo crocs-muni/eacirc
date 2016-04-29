@@ -4,25 +4,30 @@
 #include <core/logger.h>
 #include <core/project.h>
 #include <fstream>
-#include <istream>
 
-template <size_t Size>
-std::basic_istream<u8>& operator>>(std::basic_istream<u8>& is, DataVecStorage<Size>& tvs) {
-    is.read(tvs.front().data(), Size * tvs.size());
-
-    if (!is.good()) {
-        Logger::error() << "An error occurred during read of test vectors from the stream."
-                        << std::endl;
-        throw fatal_error();
-    }
-    return is;
-}
-
-template <size_t Size> class FileStream : public TestedStream {
-    std::basic_ifstream<u8> _ifs;
+struct FileStream final : Stream {
+    std::ifstream _ifs;
 
 public:
-    FileStream(const std::string file) : _ifs(file, std::ios::binary) {}
+    FileStream(const std::string file) : _ifs(file, std::ifstream::binary) {
+        if (!_ifs.is_open()) {
+            Logger::error() << "Cannot open file " << file << std::endl;
+            throw fatal_error();
+        }
+    }
 
-    void read(DataVectors& tvs) override { _ifs >> dynamic_cast<DataVecStorage<Size>&>(tvs); }
+    void read(Dataset& tvs) override {
+        _ifs.read(
+                reinterpret_cast<char*>(tvs.data()),
+                static_cast<std::streamsize>(tvs.num_of_tvs() * tvs.tv_size()));
+
+        if (!_ifs.good()) {
+            Logger::error() << "An error occurred during read of test vectors from the stream."
+                            << std::endl;
+            Logger::error() << _ifs.fail() << std::endl;
+            Logger::error() << _ifs.bad() << std::endl;
+            Logger::error() << _ifs.eof() << std::endl;
+            throw fatal_error();
+        }
+    }
 };

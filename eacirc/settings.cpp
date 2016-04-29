@@ -73,11 +73,11 @@ template <> struct convert<Circuit> {
 void load_settings(const std::string file) {
     try {
         auto config = YAML::LoadFile(file);
-
+/*
         auto main = config["main_settings"].as<Main>();
         auto random = config["random"].as<Random>();
         auto test_vectors = config["test_vectors"].as<TestVectors>();
-
+*/
     } catch (std::exception& e) {
         Logger::error() << e.what() << std::endl;
         throw fatal_error();

@@ -14,20 +14,15 @@ set(SOURCES
     EACconstants.h
 # === circuit backend ===
     circuit/circuit
-    circuit/backend
+    circuit/evaluators
     circuit/genotype
     circuit/interpreter
+    circuit/module
     circuit/operators
 # === evaluators ===
     evaluators/categories
 # === projects ===
     projects/file
-# === evaluators ===
-#    evaluators/IEvaluator
-#    evaluators/TopBitEvaluator
-#    evaluators/CategoriesEvaluator
-#    evaluators/HammingWeightEvaluator
-#    evaluators/FeatureEvaluator
 # === solvers ===
     solvers/solver
     solvers/local_search

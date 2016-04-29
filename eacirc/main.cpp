@@ -11,7 +11,7 @@ int main() {
     try {
         test_environment();
 
-        Eacirc app("config.yaml");
+        Eacirc app("config.json");
         app.run();
     } catch (std::system_error& e) {
         Logger::error() << "System error " << e.code() << ": " << e.what()

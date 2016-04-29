@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/base.h>
+#include <core/dataset.h>
 #include <vector>
 
 class Categories {
@@ -17,13 +18,13 @@ public:
         std::fill(_histogram_B.begin(), _histogram_B.end(), 0u);
     }
 
-    template <class DataVec> void stream_A(std::vector<DataVec> const& data) {
+    void stream_A(Dataset const& data) {
         for (auto& tv : data)
             for (auto byte : tv)
                 _histogram_A[byte % _precision]++;
     }
 
-    template <class DataVec> void stream_B(std::vector<DataVec> const& data) {
+    void stream_B(Dataset const& data) {
         for (auto& tv : data)
             for (auto byte : tv)
                 _histogram_B[byte % _precision]++;

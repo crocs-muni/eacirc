@@ -1,10 +1,10 @@
 #pragma once
 
-#include <core/base.h>
-#include <solvers/solver.h>
+#include "solvers/solver.h"
+#include <core/dataset.h>
 
 struct Backend {
-    virtual ~Backend()= default;
+    virtual ~Backend() = default;
 
-    virtual std::unique_ptr<solvers::Solver> solver(u32 seed) const = 0;
+    virtual std::unique_ptr<Solver> solver(u64 seed) = 0;
 };
