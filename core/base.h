@@ -13,13 +13,6 @@ using u16 = std::uint16_t;
 using u32 = std::uint32_t;
 using u64 = std::uint64_t;
 
-#include <array>
-
-/**
- * Fix-sized storage of bytes.
- */
-template <size_t Size> using DataVec = std::array<u8, Size>;
-
 #include <memory>
 
 namespace std {
@@ -37,3 +30,18 @@ template <bool B, class T = void> using enable_if_t = typename enable_if<B, T>::
 template <class T> using underlying_type_t = typename underlying_type<T>::type;
 template <class T> using result_of_t = typename result_of<T>::type;
 } // namespace std
+
+/**
+ * Various type classes
+ */
+struct Eq {};
+struct Swappable {};
+
+template <class T>
+auto operator!=(const T& a, const T& b) -> std::enable_if_t<std::is_base_of<Eq, T>::value, bool> {
+    return !(a == b);
+}
+
+template <class T> auto swap(T& a, T& b) -> std::enable_if_t<std::is_base_of<Swappable, T>::value> {
+    a.swap(b);
+}
