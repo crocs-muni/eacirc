@@ -4,35 +4,34 @@
 #include <algorithm>
 #include <cassert>
 #include <core/base.h>
-#include <core/compiletime.h>
+#include <core/range.h>
 
 namespace circuit {
-template <class Def, template <class, size_t> class Storage> class Interpreter {
-    Storage<u8, Max<Def::in, Def::out>::value> _in;
-    Storage<u8, Max<Def::in, Def::out>::value> _out;
-    Genotype<Def> const& _circuit;
+template <class IO, class Shape, template <class, size_t> class Storage> struct Interpreter {
+private:
+    Storage<u8, Max<IO::in, IO::out>::value> _in;
+    Storage<u8, Max<IO::in, IO::out>::value> _out;
+    Genotype<IO, Shape> _circuit;
 
 public:
-    Interpreter(Genotype<Def> const& circ) : _circuit(circ) {}
+    Interpreter(Genotype<IO, Shape> const& circuit) : _circuit(circuit) {}
 
-    DataVec<Def::out> operator()(DataVec<Def::in> const& input) {
+    template <class I, class O> Range<O> operator()(Range<I> input, Range<O> output) noexcept {
         std::copy(input.begin(), input.end(), _in.begin());
 
         for (auto& layer : _circuit) {
-            auto out = _out.begin();
-
+            auto o = _out.begin();
             for (auto& node : layer)
-                *out++ = execute_node(node);
+                *o++ = execute(node);
             std::swap(_in, _out);
         }
 
-        DataVec<Def::out> output;
         std::copy_n(_in.begin(), output.size(), output.begin());
         return output;
     }
 
 protected:
-    u8 execute_node(Node<Def> const& node) noexcept {
+    u8 execute(Node<IO, Shape> const& node) noexcept {
         u8 result = 0u;
 
         auto i = node.connectors.begin();
@@ -103,8 +102,8 @@ protected:
             return result;
         case Fn::_Size:
             assert(false);
+            return result;
         }
     }
 };
-
 } // namespace circuit
