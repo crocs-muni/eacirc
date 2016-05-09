@@ -25,6 +25,8 @@ set(RUN_DIR      ${CMAKE_BINARY_DIR}/run)
 # === targets ===
 add_subdirectory(core)
 add_subdirectory(eacirc)
+add_subdirectory(Synthesizer)
+
 
 # === 3rd party dependencies ===
 add_subdirectory(libs/tinyXML)
