@@ -26,22 +26,6 @@ set(SOURCES
 # === solvers ===
     solvers/solver
     solvers/local_search
-# === random generators ===
-#    generators/BiasRndGen
-#    generators/IRndGen
-#    generators/QuantumRndGen
-#    generators/MD5RndGen
-#    generators/md5
-#    generators/LUTRndGen
-#    generators/LUT
-# === project interface ===
-#    projects/IProject
-#    projects/pregenerated_tv/PregeneratedTvProject
-#    projects/files/filesProject
-#    projects/files/filesConstants
-# === testing using CATCH framework ===
-#    self_tests/Tests
-#    self_tests/TestConfigurator
 )
 
 # === source groups ===
@@ -57,7 +41,6 @@ else()
     add_executable(eacirc ${SOURCES})
 endif()
 
-find_package(yaml-cpp)
-target_link_libraries(eacirc catch core yaml-cpp)
+target_link_libraries(eacirc catch core json)
 target_include_directories(eacirc PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECTS_DIR})
 set_target_properties(eacirc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${RUN_DIR})

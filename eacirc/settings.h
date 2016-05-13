@@ -1,50 +1,19 @@
 #pragma once
 
-#include <core/base.h>
 #include <string>
 
-namespace settings {
-struct Main {
-    bool enable_cuda;
-    std::string project;
-    std::string evaluator;
-    unsigned evaluator_precision;
+struct Settings {
+    unsigned num_of_epochs;
+    unsigned epoch_duration;
     unsigned significance_level;
+
+    unsigned tv_size;
+    unsigned num_of_tvs;
 };
 
-struct Random {
-    bool use_fixed_seed;
-    u32 main_seed;
-    std::string qrng_path;
-};
+template <class> struct json;
 
-struct TestVectors {
-    unsigned input_size;
-    unsigned output_size;
-    unsigned size_of_set;
-    unsigned change_frequency;
+template <> struct json<Settings> {
+    static void load(const std::string, Settings&);
+    static void save(const std::string, Settings const&);
 };
-} // namespace settings
-
-namespace settings {
-struct Circuit {
-    unsigned size_of_layer;
-    unsigned num_of_layers;
-
-    struct FunctionSet {
-        bool NOP;
-        bool CONS;
-        bool AND;
-        bool NAND;
-        bool OR;
-        bool XOR;
-        bool NOR;
-        bool NOT;
-        bool SHIL;
-        bool SHIR;
-        bool ROTL;
-        bool ROTR;
-        bool MASK;
-    } function_set;
-};
-} // namespace settings
