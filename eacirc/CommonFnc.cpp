@@ -5,6 +5,7 @@
 #include <core/logger.h>
 #include <limits>
 #include <set>
+#include <cmath>
 
 #ifndef M_PI // to resolve cmath constants problems
 #define M_PI 3.141592653589793238462
