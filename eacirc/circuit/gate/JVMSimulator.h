@@ -361,6 +361,9 @@ public:
     */
     bool hasFourIntegersOnStack();
 
+    /**
+    * Find out if there are three integers on top of stack
+    */
     bool hasThreeIntegersOnStack();
 
     /**
@@ -373,6 +376,9 @@ public:
     */
     bool hasIntegerOnStack();
 
+    /**
+    * Find out if there are two array references on top of stack
+    */
     bool hasTwoArrRefOnStack();
 
 private:
@@ -386,6 +392,11 @@ private:
     * Remove state from last run global arrays and local variables
     */
     void destroy_state();
+
+    /**
+     * Create long from two integers
+     */
+    long createLongFromTwoInts(int32_t first, int32_t second);
 
     //list of all functions
     struct FunctionNode* m_functions = NULL;
@@ -405,7 +416,6 @@ private:
     //meant to be number of local variables stored, but I am not sure if it is correct
     bool m_localsUsed[MAX_NUMBER_OF_VARIABLES];
 
-    long createLongFromTwoInts(int32_t first, int32_t second);
     //global arrays
     struct GlobalArray m_globalArrays[MAX_NUMBER_OF_VARIABLES];
 
