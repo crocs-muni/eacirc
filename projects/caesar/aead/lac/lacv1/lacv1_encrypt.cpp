@@ -1,6 +1,11 @@
 #include "lacv1_encrypt.h"
 #include <stdio.h>
-#include <malloc.h>
+#if defined(__APPLE__)			// EACIRC: manual edit: apple compatibility
+#  include <malloc/malloc.h>
+#  include <stdlib.h>
+#else
+#  include <malloc.h>
+#endif
 
 // CHANGE namespace moved due to includes
 namespace Lacv1_raw {

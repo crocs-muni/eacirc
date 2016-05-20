@@ -163,8 +163,12 @@
 #endif
 
 #if defined(__GNUC__) || defined(__GNU_LIBRARY__)
-#  include <endian.h>
-#  include <byteswap.h>
+#  if defined(__APPLE__)        // EACIRC: manual edit: apple compatibility
+#    include <machine/endian.h>
+#  else
+#    include <endian.h>
+#    include <byteswap.h>
+#  endif
 #elif defined(__CRYPTLIB__)
 #  if defined( INC_ALL )
 #    include "crypt.h"
