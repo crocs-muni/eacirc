@@ -1,4 +1,9 @@
-#include <malloc.h>
+#if defined(__APPLE__)			// EACIRC: manual edit: apple compatibility
+#  include <malloc/malloc.h>
+#  include <stdlib.h>
+#else
+#  include <malloc.h>
+#endif
 #include <stdio.h>
 #include "Vortex_sha3.h"
 extern "C" {

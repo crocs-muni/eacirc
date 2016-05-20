@@ -22,6 +22,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if defined(_WIN32) || defined(_WIN64)
 #include <stdlib.h>
 #   define bswap_32 _byteswap_ulong
+#elif defined(__APPLE__)            // EACIRC: manual edit: apple compatibility
+#   include <libkern/OSByteOrder.h>
+#   define bswap_16 OSSwapInt16
+#   define bswap_32 OSSwapInt32
+#   define bswap_64 OSSwapInt64
 #else
 #   include <byteswap.h>
 #endif
