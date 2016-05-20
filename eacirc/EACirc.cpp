@@ -17,6 +17,9 @@
     #include <sys/types.h>
     #include <unistd.h>
 #endif
+#ifdef __APPLE__
+    #include <unistd.h>
+#endif
 
 EACirc::EACirc()
     : m_status(STAT_OK), m_originalSeed(0), m_currentGalibSeed(0), m_circuit(NULL), m_project(NULL), m_gaData(NULL),
