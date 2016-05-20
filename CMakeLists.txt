@@ -5,10 +5,13 @@ project(EACirc)
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++11> -Wall -Wextra -Weffc++)
     add_compile_options(-fdiagnostics-color)
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL AppleClang)
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++11> -Wall -Wextra -Weffc++)
+    add_compile_options(-fdiagnostics-color)
 elseif (MSVC AND (MSVC_VERSION GREATER 1700))
     # nothing special yet
 else()
-    message(FATAL_ERROR "unsuported compiler: ${CMAKE_CXX_COMPILER}")
+    message(FATAL_ERROR "unsuported compiler id:${CMAKE_CXX_COMPILER_ID}, path: ${CMAKE_CXX_COMPILER}")
 endif()
 
 # === detect CUDA ===
