@@ -37,6 +37,7 @@ void PatternRndGen::read(Dataset& data) {
 		setRandomData();
 		setPolynomial();
 		memcpy(dataPtr,(void*)&_testVector[0], tvSize);
+		dataPtr += tvSize;
 	}
 
 }

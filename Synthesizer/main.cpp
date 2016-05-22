@@ -5,10 +5,13 @@
 #include "../Synthesizer/MersenneTwisterRndGen.h"
 #include "../Synthesizer/QuantumGen.h"
 #include "../Synthesizer/Synthesizer.h"
+#include "arcfour.h"
 
 using namespace std;
 
-int main() {		
+int main() {
+
+	
 	Setting S;
 	std::vector<std::vector<short>> terms;
 	terms.resize(2);
@@ -18,7 +21,7 @@ int main() {
 	terms[1].push_back(4);
 
 	S.filename = "test.bin";
-	S.genID = 3;
+	S.genID = 0;
 	S.levelOfRandomness = 1000;
 	S.seed = 0;
 	S.terms = terms;

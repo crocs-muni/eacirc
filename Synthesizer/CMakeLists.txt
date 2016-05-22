@@ -3,7 +3,8 @@ include(${PROJECT_SOURCE_DIR}/cmake/detect_version.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/eacirc_project.cmake)
 
 set(SOURCES
-    Synthesizer
+    arcfour.cpp
+    RC4RndGen.cpp
     LUT.cpp
     LUTRndGen.cpp
     MersenneTwisterRndGen.cpp
@@ -12,6 +13,8 @@ set(SOURCES
 )
 
 set(HEADERS
+    arcfour.h
+    RC4RndGen.h
     LUT.h
     LUTRndGen.h
     MersenneTwisterRndGen.h

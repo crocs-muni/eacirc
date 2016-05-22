@@ -10,12 +10,17 @@ void LUTRndGen::read(Dataset& data) {
 	int byteSize = data.num_of_tvs()*data.tv_size();
 	int numIter = byteSize / 16; //LUT generates 16 bytesof rand data
 	
-	for (int i = 0; i < byteSize; i+= 16)
+	for (int i = 0; i < numIter; i++)
 	{
 		LUTUpdate(&S, 1);
 		memcpy(dataPtr, S.stateBytes, 16);
+		dataPtr += 16;
 	}
-
+	
+	if ((byteSize % 16) != 0) {
+		LUTUpdate(&S, 1);
+		memcpy(dataPtr, S.stateBytes, byteSize % 16);
+	}
 }
 
 

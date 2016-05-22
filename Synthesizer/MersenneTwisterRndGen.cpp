@@ -3,11 +3,18 @@
 
 void MersenneTwisterRndGen::read(Dataset& data) {
 	u64* dataPtr = (u64*)data.data();
-	int numIter = data.num_of_tvs()*data.tv_size() / 8;
+	int byteSize = data.num_of_tvs()*data.tv_size();
+	int numIter = byteSize / 8;
 	
 	for (int i = 0; i < numIter; i++)
 	{
-		dataPtr[i] = engine();
+		dataPtr[0] = engine();
+		dataPtr++;
+	}
+
+	if ((byteSize % 8) != 0) {
+		u64 tmp = engine();
+		memcpy(dataPtr,&tmp, byteSize % 8);
 	}
 }
 
