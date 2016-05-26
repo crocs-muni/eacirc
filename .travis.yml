@@ -16,7 +16,7 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
-          packages: ['clang-3.7']
+          packages: ['g++-5', 'clang-3.7']
       env: [CC_COMPILER=clang-3.7, CXX_COMPILER=clang++-3.7]
 
 before_script:
