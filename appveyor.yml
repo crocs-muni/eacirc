@@ -8,7 +8,7 @@ configuration:
   - Release
 
 build:
-  project: '{APPVEYOR_BUILD_FOLDER}/build/eacirc.sln'
+  project: ${APPVEYOR_BUILD_FOLDER}/build/eacirc.sln
 
 before_build:
   - mkdir build
