@@ -1,0 +1,16 @@
+os: Visual Studio 2015
+
+platform:
+  - x64
+
+configuration:
+  - Debug
+  - Release
+
+build:
+  project: '{APPVEYOR_BUILD_FOLDER}/build/eacirc.sln'
+
+before_build:
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 14 2015 Win64" ..
