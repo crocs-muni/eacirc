@@ -19,7 +19,9 @@ int bitCount(u64 val){
 
 template<typename T>
 int countBits(T v) {
+#ifndef CHAR_BIT
     const int CHAR_BIT = 8;
+#endif
     const u64 k1 = 0x5555555555555555ull; /*  -1/3   */
     const u64 k2 = 0x3333333333333333ull; /*  -1/5   */
     const u64 k4 = 0x0f0f0f0f0f0f0f0full; /*  -1/17  */
