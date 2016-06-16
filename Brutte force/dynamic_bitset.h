@@ -30,7 +30,7 @@ public:
         else alloc(numVars);
     }
     void set(int bitIdx, bool bit = true){
-        if (bitIdx > _numVars){
+        if (bitIdx >= _numVars){
             throw std::out_of_range("illegal bit position");
         }
 		if(bit)
@@ -40,7 +40,7 @@ public:
 		}
     }
     bool get(int bitIdx){
-        if (bitIdx > _numVars){
+        if (bitIdx >= _numVars){
             throw std::out_of_range("illegal bit position");
         }
         return (_array[bitIdx / Tsize] & (1ull  << (bitIdx % Tsize))) != 0;
