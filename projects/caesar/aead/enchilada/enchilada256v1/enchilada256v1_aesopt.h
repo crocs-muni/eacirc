@@ -163,7 +163,11 @@
 #endif
 
 #if defined(__GNUC__) || defined(__GNU_LIBRARY__)
-#  include <endian.h>
+#  if defined(__APPLE__)
+#    include <machine/endian.h>
+#  else
+#    include <endian.h>
+#  endif
 #  include <byteswap.h>
 #elif defined(__CRYPTLIB__)
 #  if defined( INC_ALL )
