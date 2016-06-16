@@ -9,83 +9,9 @@
 #include "CommonFnc.h"
 #include "finisher.h"
 #include "logger.h"
+#include "TermGenerator.h"
 
 using namespace std;
-
-void init_comb(vector<int> &com, int k) {
-    com.clear();
-    for (int i = 0; i < k; ++i) {
-        com.push_back(i);
-    }
-}
-
-bool next_combination(vector<int> &com, int max) {
-    static int size = com.size();
-    int idx = size - 1;
-
-    if (com[idx] == max - 1) {
-        while (com[--idx] + 1 == com[idx + 1]) {
-            if (idx == 0) return false;
-        }
-        for (int j = idx + 1; j < size; ++j) {
-            com[j] = com[idx] + j - idx + 1;
-        }
-    }
-    com[idx]++;
-    return true;
-}
-
-template<class T>
-void printVec(vector <T> v) {
-    for (int i = 0; i < v.size(); ++i) {
-        std::cout << v[i] << " ";
-    }
-    std::cout << std::endl;
-
-}
-
-template<int deg>
-int compute(vector<bitarray < u64> *
-
-> a,
-vector<int> &bestTerm,
-int numTVs
-){
-int diff, biggestDiff = 0;
-const int refCount = numTVs >> deg;
-vector<int> indices;
-
-init_comb(indices, deg
-);
-//printVec(indices);
-do{
-diff = abs(HW_AND<deg>(a, indices) - refCount);
-
-if(biggestDiff<diff){
-bestTerm = indices;
-biggestDiff = diff;
-}
-
-}while (
-next_combination(indices,
-128));
-//printVec(indices);
-
-return
-biggestDiff;
-}
-
-float Chival(int diff, int deg, int numTVs) {
-    int refCount = (numTVs >> deg);
-    return ((float) diff * diff / refCount) + ((float) diff * diff / (numTVs - refCount));
-}
-
-void genRandData(u8 *TVs, int numBytes) {
-
-    for (size_t i = 0; i < numBytes; i++) {
-        TVs[i] = rand();
-    }
-}
 
 int main(int argc, char *argv[]) {
 

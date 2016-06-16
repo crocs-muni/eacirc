@@ -34,7 +34,7 @@ set(SOURCE_FILES
     teestream.h
     
     Term.h
-)
+        TermGenerator.cpp TermGenerator.h bithacks.cpp)
 
 
 

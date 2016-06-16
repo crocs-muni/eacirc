@@ -6,10 +6,13 @@
 #ifndef DYNAMIC_BITSET_BITHACKS_H
 #define DYNAMIC_BITSET_BITHACKS_H
 
+#include "dynamic_bitset.h"
+
 template<int i>
 int bitCount(u64 val){
-
+    return -1;
 }
+
 //
 //template<typename T>
 //int countBits_LUT(T v){
@@ -33,14 +36,7 @@ int countBits(T v) {
     return (v * kf) >> (sizeof(T) - 1) * CHAR_BIT; // count
 }
 
-int NumberOfSetBits(int i)
-{
-    // Java: use >>> instead of >>
-    // C or C++: use uint32_t
-    i = i - ((i >> 1) & 0x55555555);
-    i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
-    return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
-}
+int NumberOfSetBits(int i);
 
 template<typename T>
 int popCount (T x) {
