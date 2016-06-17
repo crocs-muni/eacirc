@@ -43,6 +43,22 @@ int testDeps(){
 }
 
 template<typename T>
+double computeMean(vector<T> data){
+    return accumulate(data.begin(), data.end(), 0) / (double)data.size();
+}
+
+template<typename T>
+double computeStddev(vector<T> data, double mean){
+    auto size = data.size();
+    double var = 0;
+    for(auto i = 0; i < size; i++ ) {
+        var += (data[i] - mean) * (data[i] - mean);
+    }
+    var /= size;
+    return sqrt(var);
+}
+
+template<typename T>
 void histogram(vector<T> data, unsigned long bins, bool center = false){
     const unsigned long size = data.size();
     const double mean = accumulate(data.begin(), data.end(), 0) / (double)size;
