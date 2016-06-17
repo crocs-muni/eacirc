@@ -106,6 +106,7 @@ int testBi(ifstream &in){
     u64 totalObserved = 0;
     u64 rejected95 = 0;
     u64 rejected99 = 0;
+    double zscoreTotal = 0;
     termRep indices;
     init_comb(indices, TERM_DEG);
     do {
@@ -121,6 +122,7 @@ int testBi(ifstream &in){
             rejected99+=1;
         }
 
+        zscoreTotal += zscore;
         if (polyTotalCtr < 128){
             printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
                    (unsigned)polyTotalCtr, observed, observedProb, zscore);
@@ -133,6 +135,8 @@ int testBi(ifstream &in){
     double avgProb = avgOcc / (numTVs * numEpochs);
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
            polyTotalCtr, totalObserved, avgOcc, avgProb);
+
+    printf("      ztotal: %0.6f, avg-zscore: %0.6f\n", zscoreTotal, zscoreTotal/polyTotalCtr);
 
     printf("# of rejected 95%%: %04llu that is %0.6f%%\n", rejected95, 100.0*rejected95/polyTotalCtr);
     printf("# of rejected 99%%: %04llu that is %0.6f%%\n", rejected99, 100.0*rejected99/polyTotalCtr);
