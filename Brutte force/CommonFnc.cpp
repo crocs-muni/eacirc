@@ -181,3 +181,11 @@ double CommonFnc::KSUniformityTest(std::vector<double>& samples) {
 double CommonFnc::zscore(double observed, double expected, double samples){
     return (observed-expected) / sqrt((expected*(1-expected))/samples);
 }
+
+long long CommonFnc::getFileSize(std::string filename) {
+    ifstream myFile(filename, ios::binary); // get filesize V2
+    myFile.seekg(0, ios::end);
+    auto len = myFile.tellg();
+    myFile.close();
+    return (unsigned long long) len;
+}

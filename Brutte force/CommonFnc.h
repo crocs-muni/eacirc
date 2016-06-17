@@ -32,6 +32,8 @@ int hexaToArray(std::string hexa, unsigned int dataLength, unsigned char* data);
   */
 void removeFile(std::string filename);
 
+long long getFileSize(std::string filename);
+
 template <typename T> std::string toString(T value) {
     std::ostringstream ss;
     ss << std::left << std::dec;
