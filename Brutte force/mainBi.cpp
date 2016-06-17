@@ -82,6 +82,7 @@ int testBi(ifstream &in){
         for (int j = 0; j < TERM_WIDTH; ++j) {
             s[j].evaluateTVs(TERM_WIDTH_BYTES, TVs);
         }
+        printf("  elementary results computed\n");
 
         // Generate all polynomials from precomputed values.
         termRep indices;
