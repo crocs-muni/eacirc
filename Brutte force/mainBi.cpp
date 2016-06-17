@@ -60,9 +60,13 @@ int testBi(ifstream &in){
         resultArrays.push_back(&s[j].getResults());
     }
 
-    // Map remembers all results for all polynomials.
-    unordered_map<int, u64> resultStatsMap(TERM_NUMBER);
-    bool resultStatsMapInitialized = false;
+    // Remembers all results for all polynomials.
+    // unordered_map was here before, but we don't need it for now as
+    // order on polynomials is well defined for given order - by the generator.
+    vector<u64> resultStats(TERM_NUMBER);
+    for(u64 idx = 0; idx < TERM_NUMBER; idx++){
+        resultStats[idx] = 0;
+    }
 
     // Epoch is some kind of redefined here.
     // Epoch = next processing step of the input data of size numBytes.
@@ -81,23 +85,14 @@ int testBi(ifstream &in){
 
         // Generate all polynomials from precomputed values.
         termRep indices;
+        u64 termIdx = 0;
         init_comb(indices, TERM_DEG);
         do {
-            // Serialize term to integer.
-            int termRep = serializeTerm<int>(indices, TERM_DEG);
-
-            // Number of times polynomial <indices> returned 1 on 128bit test vector.
+            // Number of times the polynomial <indices> returned 1 on 128bit test vector.
             int hw = HW_AND<TERM_DEG>(resultArrays, indices);
-
-            // If not found in result map, initialize to zero.
-            if (!resultStatsMapInitialized && resultStatsMap.find(termRep) == resultStatsMap.end()){
-                resultStatsMap[termRep] = (u64)hw;
-            } else {
-                resultStatsMap[termRep] += (u64)hw;
-            }
+            resultStats[termIdx++] += (u64)hw;
 
         } while (next_combination(indices, TERM_WIDTH));
-        resultStatsMapInitialized = true;
     }
 
     // Result processing.
@@ -112,8 +107,7 @@ int testBi(ifstream &in){
     termRep indices;
     init_comb(indices, TERM_DEG);
     do {
-        int termRep = serializeTerm<int>(indices, TERM_DEG);
-        u64 observed = resultStatsMap[termRep];
+        u64 observed = resultStats[polyTotalCtr];
         occAcc += observed;
 
         double observedProb = (double)observed / (numTVs * numEpochs);
@@ -126,7 +120,8 @@ int testBi(ifstream &in){
         }
 
         if (polyTotalCtr < 128){
-            printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n", termRep, observed, observedProb, zscore);
+            printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
+                   (unsigned)polyTotalCtr, observed, observedProb, zscore);
         }
 
         polyTotalCtr+=1;
