@@ -116,6 +116,7 @@ int testBi(std::string fileName){
     const bool disjointTerms = false;
     const u64 inputData2ReadInTotal = numTVs*numEpochs*TERM_WIDTH_BYTES;
 
+    // We need to check input file for required size so test has correct interpretation and code is valid.
     long long fileSize = CommonFnc::getFileSize(fileName);
     if (fileSize < 0){
         cerr << "Invalid file: " << fileName << endl;
@@ -130,11 +131,12 @@ int testBi(std::string fileName){
     cout << "Opening file: " << fileName << ", size: " << setw(4) << (fileSize /1024/1024) << " MB" << endl;
     ifstream in(fileName, ios::binary);
 
+    // Allocation, initialization.
     u8 *TVs = new u8[numBytes];
     vector < bitarray < u64 > * > resultArrays;
     SimpleTerm <u64, u64> s[TERM_WIDTH];
 
-    // Allocation, initialization.
+    // s[j] = term with only j variable set. Allocate result arrays.
     for (int j = 0; j < TERM_WIDTH; ++j) {
         s[j].alloc(TERM_WIDTH);
         s[j].set(j);
