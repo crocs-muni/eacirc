@@ -23,6 +23,7 @@
 using namespace std;
 #define TERM_WIDTH_BYTES 16
 #define TERM_DEG 3
+//#define DUMP_ZSCORE 1
 
 // Do not edit.
 #define TERM_WIDTH (TERM_WIDTH_BYTES*8)
@@ -102,6 +103,12 @@ int testBi(ifstream &in){
     double expectedProb = 1.0 / (1 << TERM_DEG);
     printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
 
+    // Output file with z-scores.
+#ifdef DUMP_ZSCORE
+    ofstream scoreFile("./zscores.csv", ios::trunc);
+    scoreFile << "polyIdx;zscore" << endl;
+#endif
+
     u64 polyTotalCtr = 0;
     u64 totalObserved = 0;
     u64 rejected95 = 0;
@@ -128,11 +135,21 @@ int testBi(ifstream &in){
                    (unsigned)polyTotalCtr, observed, observedProb, zscore);
         }
 
+#ifdef DUMP_ZSCORE
+        scoreFile << polyTotalCtr << ";" << zscore << endl;
+#endif
+
         polyTotalCtr+=1;
     } while (next_combination(indices, TERM_WIDTH, disjointTerms));
 
+#ifdef DUMP_ZSCORE
+    // Finish zscore file.
+    scoreFile.close();
+#endif
+
     double avgOcc = (double)totalObserved / polyTotalCtr;
     double avgProb = avgOcc / (numTVs * numEpochs);
+
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
            polyTotalCtr, totalObserved, avgOcc, avgProb);
 
