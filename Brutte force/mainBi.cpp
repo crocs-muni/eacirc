@@ -44,8 +44,8 @@ int testDeps(){
  * Compute
  */
 int testBi(ifstream &in){
-    const int numTVs = 1024*32;
-    const int numEpochs = 1;
+    const int numTVs = 1024*512;
+    const int numEpochs = 4;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
 
     u8 *TVs = new u8[numBytes];
@@ -64,6 +64,10 @@ int testBi(ifstream &in){
     unordered_map<int, u64> resultStatsMap(TERM_NUMBER);
     bool resultStatsMapInitialized = false;
 
+    // Epoch is some kind of redefined here.
+    // Epoch = next processing step of the input data of size numBytes.
+    // Statistical processing is done over all epochs. It makes some kind of trade-off between CPU/RAM.
+    // If desired, wrap this with another level of loop.
     for (int epoch = 0; epoch < numEpochs; ++epoch) {
         printf("## EPOCH: %02d\n", epoch);
 
