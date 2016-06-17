@@ -113,10 +113,10 @@ int testBi(ifstream &in){
 
         double observedProb = (double)observed / (numTVs * numEpochs);
         double zscore = abs(CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs));
-        if (zscore > 1.98){
+        if (zscore > 1.96){
             rejected95+=1;
         }
-        if (zscore > 2.58){
+        if (zscore > 2.576){
             rejected99+=1;
         }
 
