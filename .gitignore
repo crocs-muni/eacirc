@@ -5,6 +5,7 @@
 *.Release
 *.sdf
 *.opensdf
+.idea
 
 # object files, linked application, build filed
 *.o
@@ -20,6 +21,7 @@
 [Rr]elease*/
 [Bb]uild*/
 [Rr]un/
+**/CMakeFiles/*
 
 # Generated Version.h
 eacirc/Version.h
