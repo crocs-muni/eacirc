@@ -43,11 +43,21 @@ int testDeps(){
 }
 
 template<typename T>
-void histogram(vector<T> data, unsigned long bins){
+void histogram(vector<T> data, unsigned long bins, bool center = false){
     const unsigned long size = data.size();
     T min = *(min_element(data.begin(), data.end()));
     T max = *(max_element(data.begin(), data.end()));
     double binSize = (max-min)/(double)bins;
+
+    if (center){
+        const double mean = accumulate(data.begin(), data.end(), 0) / (double)size;
+        printf("mean: %0.6f\n", mean);
+        const double meanBinLow = mean-binSize/2;
+        const double binsMeanLeft = ceil((meanBinLow - min) / binSize);
+        const double newMin = meanBinLow - binsMeanLeft * binSize;
+        assert(newMin <= min);
+        min = newMin;
+    }
 
     vector<unsigned long> binVector(bins+2);
     fill(binVector.begin(), binVector.end(), 0);
@@ -72,7 +82,7 @@ void histogram(vector<T> data, unsigned long bins){
  */
 int testBi(ifstream &in){
     const int numTVs = 1024*512; // keep this number divisible by 128 pls!
-    const int numEpochs = 4;
+    const int numEpochs = 1;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
     const bool disjointTerms = false;
 
@@ -181,7 +191,7 @@ int testBi(ifstream &in){
     double avgProb = avgOcc / (numTVs * numEpochs);
 
     printf("z-score histogram: \n");
-    histogram(zscores, 20);
+    histogram(zscores, 51, true);
 
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
            polyTotalCtr, totalObserved, avgOcc, avgProb);
