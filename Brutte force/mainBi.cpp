@@ -45,19 +45,21 @@ int testDeps(){
 template<typename T>
 void histogram(vector<T> data, unsigned long bins, bool center = false){
     const unsigned long size = data.size();
+    const double mean = accumulate(data.begin(), data.end(), 0) / (double)size;
     T min = *(min_element(data.begin(), data.end()));
     T max = *(max_element(data.begin(), data.end()));
     double binSize = (max-min)/(double)bins;
 
+    // Center around mean, so mean is in the middle of the bin.
     if (center){
-        const double mean = accumulate(data.begin(), data.end(), 0) / (double)size;
-        printf("mean: %0.6f\n", mean);
         const double meanBinLow = mean-binSize/2;
         const double binsMeanLeft = ceil((meanBinLow - min) / binSize);
         const double newMin = meanBinLow - binsMeanLeft * binSize;
         assert(newMin <= min);
         min = newMin;
     }
+
+    printf("(hist binSize: %0.6f, min: %0.6f, mean: %0.6f, max: %0.6f)\n", binSize, min, mean, max);
 
     vector<unsigned long> binVector(bins+2);
     fill(binVector.begin(), binVector.end(), 0);
@@ -68,7 +70,7 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
 
     unsigned long binMax = *(max_element(binVector.begin(), binVector.end()));
     for(int i = 0; i < bins; i++){
-        printf("%04d[%+0.6f]: ", i, min + binSize*i);
+        printf("%04d[c:%+0.6f]: ", i, min + binSize*i + binSize/2.0);
         int chars = (int)ceil(100 * (binVector[i] / (double)binMax));
         for(int j=0; j<chars; j++){
             cout << "+";
