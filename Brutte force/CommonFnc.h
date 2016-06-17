@@ -6,7 +6,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
+#include <cmath>
+#include <numeric>
 
 
 namespace CommonFnc {
@@ -92,6 +93,28 @@ double KSUniformityTest(std::vector<double>& samples);
  * Distance of a observed from expected in standard deviations for Normal distribution
  */
 double zscore(double observed, double expected, double samples);
+
+/**
+ * Compute mean of vector values
+ */
+template<typename T>
+double computeMean(std::vector<T> data){
+    return std::accumulate(data.begin(), data.end(), 0) / (double)data.size();
+}
+
+/**
+ * Compute standard deviation on input vector.
+ */
+template<typename T>
+double computeStddev(std::vector<T> data, double mean){
+    auto size = data.size();
+    double var = 0;
+    for(auto i = 0; i < size; i++ ) {
+        var += (data[i] - mean) * (data[i] - mean);
+    }
+    var /= size;
+    return sqrt(var);
+}
 
 } // namespace CommonFnc
 

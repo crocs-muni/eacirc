@@ -43,26 +43,10 @@ int testDeps(){
 }
 
 template<typename T>
-double computeMean(vector<T> data){
-    return accumulate(data.begin(), data.end(), 0) / (double)data.size();
-}
-
-template<typename T>
-double computeStddev(vector<T> data, double mean){
-    auto size = data.size();
-    double var = 0;
-    for(auto i = 0; i < size; i++ ) {
-        var += (data[i] - mean) * (data[i] - mean);
-    }
-    var /= size;
-    return sqrt(var);
-}
-
-template<typename T>
 void histogram(vector<T> data, unsigned long bins, bool center = false){
     const unsigned long size = data.size();
-    const double mean = computeMean(data);
-    const double stddev = computeStddev(data, mean);
+    const double mean = CommonFnc::computeMean(data);
+    const double stddev = CommonFnc::computeStddev(data, mean);
     T min = *(min_element(data.begin(), data.end()));
     T max = *(max_element(data.begin(), data.end()));
     double binSize = (max-min)/(double)bins;
