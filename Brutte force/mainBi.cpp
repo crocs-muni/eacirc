@@ -44,8 +44,8 @@ int testDeps(){
  * Compute
  */
 int testBi(ifstream &in){
-    const int numTVs = 1024*512;
-    const int numEpochs = 4;
+    const int numTVs = 1024*16; // keep this number divisible by 128 pls!
+    const int numEpochs = 1;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
 
     u8 *TVs = new u8[numBytes];
