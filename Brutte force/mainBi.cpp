@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <string>
 #include <unordered_map>
+#include <iomanip>
 
 using namespace std;
 #define TERM_WIDTH_BYTES 16
@@ -108,11 +109,26 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
 /**
  * Compute
  */
-int testBi(ifstream &in){
-    const int numTVs = 1024*512; // keep this number divisible by 128 pls!
-    const int numEpochs = 1;
+int testBi(std::string fileName){
+    const int numTVs = 1024*32; // keep this number divisible by 128 pls!
+    const int numEpochs = 4;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
     const bool disjointTerms = false;
+    const u64 inputData2ReadInTotal = numTVs*numEpochs*TERM_WIDTH_BYTES;
+
+    long long fileSize = CommonFnc::getFileSize(fileName);
+    if (fileSize < 0){
+        cerr << "Invalid file: " << fileName << endl;
+        return -1;
+
+    } else if (fileSize < inputData2ReadInTotal){
+        cerr << "Input file: " << fileName << " is too short. Size: " << fileSize << " B, required: " << inputData2ReadInTotal << " B" << endl;
+        return -2;
+
+    }
+
+    cout << "Opening file: " << fileName << ", size: " << setw(4) << (fileSize /1024/1024) << " MB" << endl;
+    ifstream in(fileName, ios::binary);
 
     u8 *TVs = new u8[numBytes];
     vector < bitarray < u64 > * > resultArrays;
@@ -226,11 +242,12 @@ int testBi(ifstream &in){
            polyTotalCtr, totalObserved, avgOcc, avgProb);
 
     printf("      ztotal: %0.6f, avg-zscore: %0.6f\n", zscoreTotal, zscoreTotal/polyTotalCtr);
+    printf("      data processed: %0.2f kB = %0.2f MB\n",
+           inputData2ReadInTotal/1024.0,
+           inputData2ReadInTotal/1024.0/1024);
 
     printf("# of rejected 95%%: %04llu that is %0.6f%%\n", rejected95, 100.0*rejected95/polyTotalCtr);
     printf("# of rejected 99%%: %04llu that is %0.6f%%\n", rejected99, 100.0*rejected99/polyTotalCtr);
-
-    // Test Binomial distribution hypothesis.
 
     return 0;
 }
@@ -243,9 +260,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    printf("Opening file: %s\n", argv[1]);
-    ifstream in(argv[1], ios::binary);
-    testBi(in);
+    std::string fileName = argv[1];
+    testBi(fileName);
 
     return 0;
 }
