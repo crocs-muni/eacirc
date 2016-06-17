@@ -146,6 +146,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    printf("Opening file: %s\n", argv[1]);
     ifstream in(argv[1], ios::binary);
     testBi(in);
 
