@@ -17,6 +17,7 @@
 #include "finisher.h"
 #include "logger.h"
 #include "TermGenerator.h"
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 
@@ -41,12 +42,37 @@ int testDeps(){
     return -1; // TODO:impl.
 }
 
+template<typename T>
+void histogram(vector<T> data, unsigned long bins){
+    const unsigned long size = data.size();
+    T min = *(min_element(data.begin(), data.end()));
+    T max = *(max_element(data.begin(), data.end()));
+    double binSize = (max-min)/(double)bins;
+
+    vector<unsigned long> binVector(bins+2);
+    fill(binVector.begin(), binVector.end(), 0);
+
+    for(int i = 0; i<size; i++){
+        binVector[ (data[i] - min)/binSize ] += 1;
+    }
+
+    unsigned long binMax = *(max_element(binVector.begin(), binVector.end()));
+    for(int i = 0; i < bins; i++){
+        printf("%04d[%+0.6f]: ", i, min + binSize*i);
+        int chars = (int)ceil(100 * (binVector[i] / (double)binMax));
+        for(int j=0; j<chars; j++){
+            cout << "+";
+        }
+        cout << endl;
+    }
+}
+
 /**
  * Compute
  */
 int testBi(ifstream &in){
-    const int numTVs = 1024*16; // keep this number divisible by 128 pls!
-    const int numEpochs = 1;
+    const int numTVs = 1024*512; // keep this number divisible by 128 pls!
+    const int numEpochs = 4;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
     const bool disjointTerms = false;
 
@@ -65,6 +91,7 @@ int testBi(ifstream &in){
     // Remembers all results for all polynomials.
     // unordered_map was here before, but we don't need it for now as
     // order on polynomials is well defined for given order - by the generator.
+    u64 termCnt = 0;
     vector<u64> resultStats(TERM_NUMBER);
     for(u64 idx = 0; idx < TERM_NUMBER; idx++){
         resultStats[idx] = 0;
@@ -96,6 +123,7 @@ int testBi(ifstream &in){
             resultStats[termIdx++] += (u64)hw;
 
         } while (next_combination(indices, TERM_WIDTH, disjointTerms));
+        if (termCnt == 0) termCnt = termIdx;
     }
 
     // Result processing.
@@ -108,7 +136,7 @@ int testBi(ifstream &in){
     ofstream scoreFile("./zscores.csv", ios::trunc);
     scoreFile << "polyIdx;zscore" << endl;
 #endif
-
+    vector<double> zscores(termCnt);
     u64 polyTotalCtr = 0;
     u64 totalObserved = 0;
     u64 rejected95 = 0;
@@ -120,16 +148,18 @@ int testBi(ifstream &in){
         u64 observed = resultStats[polyTotalCtr];
         totalObserved += observed;
 
-        double observedProb = (double)observed / (numTVs * numEpochs);
-        double zscore = abs(CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs));
-        if (zscore > 1.96){
+        double observedProb = (double)observed / numTVs / numEpochs;
+        double zscore = CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs);
+        double zscoreAbs = abs(zscore);
+        if (zscoreAbs > 1.96){
             rejected95+=1;
         }
-        if (zscore > 2.576){
+        if (zscoreAbs > 2.576){
             rejected99+=1;
         }
 
-        zscoreTotal += zscore;
+        zscores[polyTotalCtr] = zscore;
+        zscoreTotal += zscoreAbs;
         if (polyTotalCtr < 128){
             printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
                    (unsigned)polyTotalCtr, observed, observedProb, zscore);
@@ -150,6 +180,9 @@ int testBi(ifstream &in){
     double avgOcc = (double)totalObserved / polyTotalCtr;
     double avgProb = avgOcc / (numTVs * numEpochs);
 
+    printf("z-score histogram: \n");
+    histogram(zscores, 20);
+
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
            polyTotalCtr, totalObserved, avgOcc, avgProb);
 
@@ -157,10 +190,12 @@ int testBi(ifstream &in){
 
     printf("# of rejected 95%%: %04llu that is %0.6f%%\n", rejected95, 100.0*rejected95/polyTotalCtr);
     printf("# of rejected 99%%: %04llu that is %0.6f%%\n", rejected99, 100.0*rejected99/polyTotalCtr);
+
     // Test Binomial distribution hypothesis.
 
     return 0;
 }
+
 
 
 int main(int argc, char *argv[]) {
