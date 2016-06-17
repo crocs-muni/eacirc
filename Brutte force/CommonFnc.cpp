@@ -177,3 +177,7 @@ double CommonFnc::KSUniformityTest(std::vector<double>& samples) {
 
     return test_statistic;
 }
+
+double CommonFnc::zscore(double observed, double expected, double samples){
+    return (observed-expected) / sqrt((expected*(1-expected))/samples);
+}

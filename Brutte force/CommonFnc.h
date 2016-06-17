@@ -88,6 +88,11 @@ double KSGetCriticalValue(unsigned long sampleSize, unsigned significanceLevel);
  */
 double KSUniformityTest(std::vector<double>& samples);
 
+/**
+ * Distance of a observed from expected in standard deviations for Normal distribution
+ */
+double zscore(double observed, double expected, double samples);
+
 } // namespace CommonFnc
 
 #endif
