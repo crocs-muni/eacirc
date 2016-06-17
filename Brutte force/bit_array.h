@@ -23,8 +23,8 @@ public:
 template <int n, typename T = uint64_t>
 int HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
     T tmp;
-    int hw = 0;
-    for (int i = 0; i < a[0]->size() ; ++i) {
+    int hw = 0, ln = a[0]->size();
+    for (int i = 0; i < ln; ++i) {
 
         //tmp = a[indices[0]]->operator[](i) & a[indices[1]]->operator[](i) & a[indices[2]]->operator[](i) & a[indices[2]]->operator[](i);
 //        tmp = a[indices[0]]->operator[](i) & a[indices[1]]->operator[](i) & a[indices[2]]->operator[](i) & a[indices[3]]->operator[](i);
