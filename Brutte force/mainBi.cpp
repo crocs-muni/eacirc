@@ -61,7 +61,8 @@ double computeStddev(vector<T> data, double mean){
 template<typename T>
 void histogram(vector<T> data, unsigned long bins, bool center = false){
     const unsigned long size = data.size();
-    const double mean = accumulate(data.begin(), data.end(), 0) / (double)size;
+    const double mean = computeMean(data);
+    const double stddev = computeStddev(data, mean);
     T min = *(min_element(data.begin(), data.end()));
     T max = *(max_element(data.begin(), data.end()));
     double binSize = (max-min)/(double)bins;
@@ -75,15 +76,40 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
         min = newMin;
     }
 
-    printf("(hist binSize: %0.6f, min: %0.6f, mean: %0.6f, max: %0.6f)\n", binSize, min, mean, max);
+    // TODO: Simple normality testing on data.
+    // ...
 
+    printf("(hist size: %05lu, binSize: %0.6f, min: %0.6f, mean: %0.6f, max: %0.6f, stddev: %0.6f)\n",
+           size, binSize, min, mean, max, stddev);
+
+    // Very simple test - how many numbers lies in mean - (1.96 x stddev) and mean + (1.96 x stddev).
+    u64 liesIn95 = 0;
+    u64 liesIn99 = 0;
+    double crit95Lo = mean - (1.96 * stddev);
+    double crit95Hi = mean + (1.96 * stddev);
+    double crit99Lo = mean - (2.576 * stddev);
+    double crit99Hi = mean + (2.576 * stddev);
+
+    // Binning
     vector<unsigned long> binVector(bins+2);
     fill(binVector.begin(), binVector.end(), 0);
 
     for(int i = 0; i<size; i++){
         binVector[ (data[i] - min)/binSize ] += 1;
+
+        if (crit95Lo < data[i] &&  data[i] < crit95Hi){
+            liesIn95 += 1;
+        }
+
+        if (crit99Lo < data[i] &&  data[i] < crit99Hi){
+            liesIn99 += 1;
+        }
     }
 
+    printf("  histLiesIn95: %llu it is: %0.6f%%\n", liesIn95, (double)liesIn95/size);
+    printf("  histLiesIn99: %llu it is: %0.6f%%\n", liesIn99, (double)liesIn99/size);
+
+    // Draw the histogram.
     unsigned long binMax = *(max_element(binVector.begin(), binVector.end()));
     for(int i = 0; i < bins; i++){
         printf("%04d[c:%+0.6f]: ", i, min + binSize*i + binSize/2.0);
