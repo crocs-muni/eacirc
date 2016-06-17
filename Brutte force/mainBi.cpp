@@ -47,6 +47,7 @@ int testBi(ifstream &in){
     const int numTVs = 1024*16; // keep this number divisible by 128 pls!
     const int numEpochs = 1;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
+    const bool disjointTerms = false;
 
     u8 *TVs = new u8[numBytes];
     vector < bitarray < u64 > * > resultArrays;
@@ -93,7 +94,7 @@ int testBi(ifstream &in){
             int hw = HW_AND<TERM_DEG>(resultArrays, indices);
             resultStats[termIdx++] += (u64)hw;
 
-        } while (next_combination(indices, TERM_WIDTH));
+        } while (next_combination(indices, TERM_WIDTH, disjointTerms));
     }
 
     // Result processing.
@@ -126,7 +127,7 @@ int testBi(ifstream &in){
         }
 
         polyTotalCtr+=1;
-    } while (next_combination(indices, TERM_WIDTH));
+    } while (next_combination(indices, TERM_WIDTH, disjointTerms));
 
     double avgOcc = (double)totalObserved / polyTotalCtr;
     double avgProb = avgOcc / (numTVs * numEpochs);

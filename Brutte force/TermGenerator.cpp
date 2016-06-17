@@ -18,9 +18,19 @@ void init_comb(vector<int> &com, int k) {
     }
 }
 
-bool next_combination(vector<int> &com, int max) {
-    static int size = com.size();
+bool next_combination(vector<int> &com, int max, bool disjoint) {
+    const int size = (int)com.size();
     int idx = size - 1;
+
+    // disjoint: 0, 1, 2 -> 3, 4, 5
+    if (disjoint){
+        if (com[idx] + size >= max) return false;
+        for(idx=0; idx < size; ++idx){
+            com[idx] += size;
+        }
+
+        return true;
+    }
 
     if (com[idx] == max - 1) {
         while (com[--idx] + 1 == com[idx + 1]) {

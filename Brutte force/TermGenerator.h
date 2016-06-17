@@ -8,7 +8,7 @@
 
 void init_comb(std::vector<int> &com, int k);
 
-bool next_combination(std::vector<int> &com, int max);
+bool next_combination(std::vector<int> &com, int max, bool disjoint = false);
 
 float Chival(int diff, int deg, int numTVs);
 
