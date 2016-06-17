@@ -194,6 +194,7 @@ int testBi(ifstream &in){
 
     printf("z-score histogram: \n");
     histogram(zscores, 51, true);
+    // TODO: normality test for zscores.
 
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
            polyTotalCtr, totalObserved, avgOcc, avgProb);
