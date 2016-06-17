@@ -14,6 +14,33 @@ float Chival(int diff, int deg, int numTVs);
 
 void genRandData(u8 *TVs, int numBytes);
 
+template<typename T = uint64_t>
+inline T serializeTerm(std::vector<int> &indices, int deg){
+    if (deg > sizeof(T)){
+        throw std::out_of_range("term too big to serialize");
+    }
+
+    T res = 0;
+    for(int i=0;i<deg;++i){
+        if (indices[i] > 0xff){
+            throw std::out_of_range("term var too big to serialize");
+        }
+
+        res |= ((T)(indices[i]&0xff)) << (8*i);
+    }
+    return res;
+}
+
+template<typename T = uint64_t>
+inline void deserializeTerm(std::vector<int> &indices, int deg, T term){
+    if (deg > sizeof(T)){
+        throw std::out_of_range("term too big to serialize");
+    }
+    for(int i=0;i<deg;++i){
+        indices[i] = (term >> (8*i))&0xff;
+    }
+}
+
 template<class T>
 void printVec(std::vector<T> v) {
     for (int i = 0; i < v.size(); ++i) {
