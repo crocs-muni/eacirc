@@ -75,7 +75,7 @@ int testBi(ifstream &in){
     for (int epoch = 0; epoch < numEpochs; ++epoch) {
         printf("## EPOCH: %02d\n", epoch);
 
-        // Read test vectors, first set.
+        // Read test vectors.
         in.read((char *) TVs, numBytes);
 
         // Single-var term s_j (hw(s_j)=1) is evaluated numTVs times on 128 input bits
@@ -102,14 +102,14 @@ int testBi(ifstream &in){
     printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
 
     u64 polyTotalCtr = 0;
-    u64 occAcc = 0;
+    u64 totalObserved = 0;
     u64 rejected95 = 0;
     u64 rejected99 = 0;
     termRep indices;
     init_comb(indices, TERM_DEG);
     do {
         u64 observed = resultStats[polyTotalCtr];
-        occAcc += observed;
+        totalObserved += observed;
 
         double observedProb = (double)observed / (numTVs * numEpochs);
         double zscore = abs(CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs));
@@ -128,10 +128,10 @@ int testBi(ifstream &in){
         polyTotalCtr+=1;
     } while (next_combination(indices, TERM_WIDTH));
 
-    double avgOcc = (double)occAcc / polyTotalCtr;
+    double avgOcc = (double)totalObserved / polyTotalCtr;
     double avgProb = avgOcc / (numTVs * numEpochs);
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
-           polyTotalCtr, occAcc, avgOcc, avgProb);
+           polyTotalCtr, totalObserved, avgOcc, avgProb);
 
     printf("# of rejected 95%%: %04llu that is %0.6f%%\n", rejected95, 100.0*rejected95/polyTotalCtr);
     printf("# of rejected 99%%: %04llu that is %0.6f%%\n", rejected99, 100.0*rejected99/polyTotalCtr);
