@@ -116,7 +116,7 @@ double binomialU(double n, double successCtr, double p0);
  */
 template<typename T>
 double computeMean(std::vector<T> data){
-    return std::accumulate(data.begin(), data.end(), 0) / (double)data.size();
+    return std::accumulate(data.begin(), data.end(), 0.0) / (double)data.size();
 }
 
 /**
