@@ -293,7 +293,7 @@ int testBi(std::string fileName){
         double avgProb = avgOcc / (numTVs * numEpochs);
 
         // TODO: normality test for zscores.
-        printf("      z-score histogram: \n");
+        printf("z-score histogram: \n");
         histogram(zscores, 31, true);
 
         printf("      totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
@@ -315,11 +315,19 @@ int testBi(std::string fileName){
     }
 
     // Test statistics
+    printf("--------------------------------------------------------------------\n");
+    printf("---- Testing completed --- \n");
+    printf("--------------------------------------------------------------------\n");
+
     printf("\nHistogram for ratio of failed hypotheses with alpha=0.05:\n");
     histogram(overallFailed95, 21, true);
+    // Test if ~ Bi(tests, 0.05)
+
 
     printf("\nHistogram for ratio of failed hypotheses with alpha=0.01:\n");
     histogram(overallFailed99, 21, true);
+    // Test if ~ Bi(tests, 0.01)
+
 
 
     return 0;
