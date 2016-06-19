@@ -117,8 +117,8 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
         }
     }
 
-    printf("  #ofValues in 95%% if normal: %llu it is: %0.6f%% of values\n", liesIn95, (double)liesIn95/size);
-    printf("  #ofValues in 99%% if normal: %llu it is: %0.6f%% of values\n", liesIn99, (double)liesIn99/size);
+    printf("  #ofValues in 95%% if normal: %llu it is: %0.6f%% of values\n", liesIn95, 100.0*liesIn95/size);
+    printf("  #ofValues in 99%% if normal: %llu it is: %0.6f%% of values\n", liesIn99, 100.0*liesIn99/size);
 
     // Draw the histogram.
     unsigned long binMax = *(max_element(binVector.begin(), binVector.end()));
