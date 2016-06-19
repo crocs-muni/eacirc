@@ -201,6 +201,9 @@ double CommonFnc::ucrit(double alpha){
     } else if (alpha == 0.001){
         return 3.090232;
 
+    } else if (alpha == 0.0005){
+        return 3.290527;
+
     } else if (alpha == 0.0001){
         return 3.719016;
 
