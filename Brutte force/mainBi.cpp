@@ -207,10 +207,10 @@ int testBi(std::string fileName){
         double observedProb = (double)observed / numTVs / numEpochs;
         double zscore = CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs);
         double zscoreAbs = abs(zscore);
-        if (zscoreAbs > 1.96){
+        if (zscoreAbs >= 1.959964){
             rejected95+=1;
         }
-        if (zscoreAbs > 2.576){
+        if (zscoreAbs >= 2.575829){
             rejected99+=1;
         }
 
