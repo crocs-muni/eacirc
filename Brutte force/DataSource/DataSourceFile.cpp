@@ -3,7 +3,7 @@
 //
 
 #include "DataSourceFile.h"
-#include "CommonFnc.h"
+#include "../CommonFnc.h"
 
 using namespace std;
 DataSourceFile::DataSourceFile(std::string fileName) {

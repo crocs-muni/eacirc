@@ -19,8 +19,8 @@ set(SOURCE_FILES_COMMON
         Term.h
         TermGenerator.cpp
         TermGenerator.h
-        DataSource.cpp
-        DataSource.h DataSourceFile.cpp DataSourceFile.h DataSourceAES.cpp DataSourceAES.h)
+        DataSource/DataSource.cpp
+        DataSource/DataSource.h DataSource/DataSourceFile.cpp DataSource/DataSourceFile.h DataSource/DataSourceAES.cpp DataSource/DataSourceAES.h)
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}

@@ -17,7 +17,7 @@
 #include "finisher.h"
 #include "logger.h"
 #include "TermGenerator.h"
-#include "DataSourceFile.h"
+#include "DataSource/DataSourceFile.h"
 #include <algorithm>
 #include <string>
 #include <iomanip>
