@@ -182,6 +182,10 @@ double CommonFnc::zscore(double observed, double expected, double samples){
     return (observed-expected) / sqrt((expected*(1-expected))/samples);
 }
 
+double CommonFnc::binomialU(double n, double successCtr, double p0){
+    return (successCtr - n*p0) / sqrt((n*p0)/(1-p0));
+}
+
 long long CommonFnc::getFileSize(std::string filename) {
     ifstream myFile(filename, ios::binary); // get filesize V2
     myFile.seekg(0, ios::end);

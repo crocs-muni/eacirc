@@ -97,6 +97,16 @@ double KSUniformityTest(std::vector<double>& samples);
 double zscore(double observed, double expected, double samples);
 
 /**
+ * Binomial distribution testing statistics.
+ * Returns U. Reject if |U| >= u(alpha/2)
+ *
+ * @param n number of samples
+ * @param sucessCtr number of success events
+ * @param p0 testing probability of success event.
+ */
+double binomialU(double n, double successCtr, double p0);
+
+/**
  * Compute mean of vector values
  */
 template<typename T>
