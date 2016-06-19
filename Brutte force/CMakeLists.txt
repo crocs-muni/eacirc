@@ -32,3 +32,14 @@ set(SOURCE_FILES_BI
 
 add_executable(Brutte_force ${SOURCE_FILES_KS})
 add_executable(BrutteBi ${SOURCE_FILES_BI})
+
+# BOOST
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost REQUIRED COMPONENTS random)
+include_directories(${Boost_INCLUDE_DIRS})
+
+# Linking
+target_link_libraries(Brutte_force ${Boost_LIBRARIES})
+target_link_libraries(BrutteBi ${Boost_LIBRARIES})

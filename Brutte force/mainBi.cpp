@@ -19,13 +19,18 @@
 #include "TermGenerator.h"
 #include <algorithm>
 #include <string>
-#include <unordered_map>
 #include <iomanip>
 
-using namespace std;
+#ifdef BOOST
+#include <boost/math/distributions/students_t.hpp>
+#endif
+
+//
+// Some definitions.
+//
 #define TERM_WIDTH_BYTES 16
 #define TERM_DEG 3
-//#define DUMP_ZSCORE 1
+//#define DUMP_FILES 1
 
 // Do not edit.
 #define TERM_WIDTH (TERM_WIDTH_BYTES*8)
@@ -33,14 +38,14 @@ using namespace std;
 #define TERM_NUMBER 341376
 typedef std::vector<int> termRep;
 
-/**
- * Test if x_i x_j x_k and x_i x_j x_l where i!=j!=k!=l can skew statistics
- * due to common i, j sub-terms.
- *
- * Does by simulating the exact calculation.
- */
-int testDeps(){
-    return -1; // TODO:impl.
+
+using namespace std;
+#ifdef BOOST
+using namespace boost::math;
+#endif
+
+int initState(){
+    return -1;
 }
 
 template<typename T>
@@ -62,18 +67,39 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
     }
 
     // TODO: Simple normality testing on data.
-    // ...
+    // Randomize the array
+//    std::random_shuffle ( data.begin(), data.end() );
+
+    // T-test, testing u0=u for N(u, q) for unknown q.
+    double t0 = (mean/stddev) * sqrt((double)size);
+#ifdef BOOST
+    students_t distStudent(size - 1);
+    double tCrit95 = quantile(complement(distStudent, 0.05 / 2));
+    double tCrit99 = quantile(complement(distStudent, 0.01 / 2));
+    double tCrit999 = quantile(complement(distStudent, 0.001 / 2));
+#else
+    double tCrit95 = 0, tCrit99 = 0, tCrit999 = 0;
+#endif
+
+    // U-test, testing u0=u for N(u, q) for known q.
+    double u0 = (mean/1) * sqrt((double)size);
 
     printf("(hist size: %05lu, binSize: %0.6f, min: %0.6f, mean: %0.6f, max: %0.6f, stddev: %0.6f)\n",
            size, binSize, min, mean, max, stddev);
 
+    printf("(hist t0: %0.6f, 95%% reject: %d, 99%% reject: %d, 99.9%% reject: %d)\n",
+           t0, abs(t0)>=tCrit95,  abs(t0)>=tCrit99,  abs(t0)>=tCrit999);
+
+    printf("(hist u0: %0.6f, 95%% reject: %d, 99%% reject: %d, 99.9%% reject: %d)\n",
+           u0, abs(u0)>=CommonFnc::ucrit(0.05/2), abs(u0)>=CommonFnc::ucrit(0.01/2), abs(u0)>=CommonFnc::ucrit(0.001/2));
+
     // Very simple test - how many numbers lies in mean - (1.96 x stddev) and mean + (1.96 x stddev).
     u64 liesIn95 = 0;
     u64 liesIn99 = 0;
-    double crit95Lo = mean - (1.96 * stddev);
-    double crit95Hi = mean + (1.96 * stddev);
-    double crit99Lo = mean - (2.576 * stddev);
-    double crit99Hi = mean + (2.576 * stddev);
+    double crit95Lo = mean - (CommonFnc::ucrit(0.05/2) * stddev);
+    double crit95Hi = mean + (CommonFnc::ucrit(0.05/2) * stddev);
+    double crit99Lo = mean - (CommonFnc::ucrit(0.01/2) * stddev);
+    double crit99Hi = mean + (CommonFnc::ucrit(0.01/2) * stddev);
 
     // Binning
     vector<unsigned long> binVector(bins+2);
@@ -110,8 +136,8 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
  * Compute
  */
 int testBi(std::string fileName){
-    const int numTVs = 1024*32; // keep this number divisible by 128 pls!
-    const int numEpochs = 4;
+    const int numTVs = 1024*128; // keep this number divisible by 128 pls!
+    const int numEpochs = 12;
     const int numBytes = numTVs * TERM_WIDTH_BYTES;
     const bool disjointTerms = false;
     const u64 inputData2ReadInTotal = numTVs*numEpochs*TERM_WIDTH_BYTES;
@@ -188,10 +214,12 @@ int testBi(std::string fileName){
     printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
 
     // Output file with z-scores.
-#ifdef DUMP_ZSCORE
+#ifdef DUMP_FILES
     ofstream scoreFile("./zscores.csv", ios::trunc);
-    scoreFile << "polyIdx;zscore" << endl;
+    ofstream polyFile("./polynomials.csv", ios::trunc);
+    //scoreFile << "polyIdx;zscore" << endl;
 #endif
+    
     vector<double> zscores(termCnt);
     u64 polyTotalCtr = 0;
     u64 totalObserved = 0;
@@ -207,10 +235,10 @@ int testBi(std::string fileName){
         double observedProb = (double)observed / numTVs / numEpochs;
         double zscore = CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs);
         double zscoreAbs = abs(zscore);
-        if (zscoreAbs >= 1.959964){
+        if (zscoreAbs >= CommonFnc::ucrit(0.05/2)){
             rejected95+=1;
         }
-        if (zscoreAbs >= 2.575829){
+        if (zscoreAbs >= CommonFnc::ucrit(0.01/2)){
             rejected99+=1;
         }
 
@@ -221,24 +249,26 @@ int testBi(std::string fileName){
                    (unsigned)polyTotalCtr, observed, observedProb, zscore);
         }
 
-#ifdef DUMP_ZSCORE
-        scoreFile << polyTotalCtr << ";" << zscore << endl;
+#ifdef DUMP_FILES
+        //scoreFile << polyTotalCtr << ";" << zscore << endl;
+        scoreFile << zscore << endl;
+        polyFile << observed << endl;
 #endif
 
         polyTotalCtr+=1;
     } while (next_combination(indices, TERM_WIDTH, disjointTerms));
 
-#ifdef DUMP_ZSCORE
-    // Finish zscore file.
+#ifdef DUMP_FILES
     scoreFile.close();
+    polyFile.close();
 #endif
 
     double avgOcc = (double)totalObserved / polyTotalCtr;
     double avgProb = avgOcc / (numTVs * numEpochs);
 
-    printf("z-score histogram: \n");
-    histogram(zscores, 51, true);
     // TODO: normality test for zscores.
+    printf("z-score histogram: \n");
+    histogram(zscores, 31, true);
 
     printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
            polyTotalCtr, totalObserved, avgOcc, avgProb);
@@ -248,8 +278,12 @@ int testBi(std::string fileName){
            inputData2ReadInTotal/1024.0,
            inputData2ReadInTotal/1024.0/1024);
 
-    printf("# of rejected 95%%: %04llu that is %0.6f%%\n", rejected95, 100.0*rejected95/polyTotalCtr);
-    printf("# of rejected 99%%: %04llu that is %0.6f%%\n", rejected99, 100.0*rejected99/polyTotalCtr);
+    // Test Bi(polyTotalCtr, 0.05), Bi(polyTotalCtr, 0.01).
+    printf("# of rejected 95%%: %04llu that is %0.6f%%, zscore: %0.6f\n",
+           rejected95, 100.0*rejected95/polyTotalCtr, CommonFnc::zscore((double)rejected95/polyTotalCtr, 0.05, polyTotalCtr));
+
+    printf("# of rejected 99%%: %04llu that is %0.6f%%, zscore: %0.6f\n",
+           rejected99, 100.0*rejected99/polyTotalCtr, CommonFnc::zscore((double)rejected99/polyTotalCtr, 0.01, polyTotalCtr));
 
     return 0;
 }
@@ -261,6 +295,8 @@ int main(int argc, char *argv[]) {
         printf("No input file given");
         return -1;
     }
+
+    initState();
 
     std::string fileName = argv[1];
     testBi(fileName);
