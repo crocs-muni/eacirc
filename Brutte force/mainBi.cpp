@@ -17,6 +17,7 @@
 #include "finisher.h"
 #include "logger.h"
 #include "TermGenerator.h"
+#include "DataSourceFile.h"
 #include <algorithm>
 #include <string>
 #include <iomanip>
@@ -135,9 +136,9 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
 /**
  * Compute
  */
-int testBi(std::string fileName){
+int testBi(DataSource & dataSource){
     // Number of tests running
-    const int numIndependentTests = 100;
+    const int numIndependentTests = 200;
 
     // Should disjoint terms should be used? If yes, for 3order it is 128/3=42 terms.
     const bool disjointTerms = false;
@@ -146,25 +147,24 @@ int testBi(std::string fileName){
     const int numTVs = 1024; // keep this number divisible by 128 pls!
 
     // Number of iterations of evaluation.
-    const int numEpochs = 4;
+    const int numEpochs = 2;
 
     // Number of bytes needed to load from input source for one epoch.
-    const int numBytes = numTVs * TERM_WIDTH_BYTES;
+    const unsigned int numBytes = numTVs * TERM_WIDTH_BYTES;
     const u64 inputData2ReadInTotal = numIndependentTests*numTVs*numEpochs*TERM_WIDTH_BYTES;
 
     // We need to check input file for required size so test has correct interpretation and code is valid.
-    long long fileSize = CommonFnc::getFileSize(fileName);
-    if (fileSize < 0){
-        cerr << "Invalid file: " << fileName << endl;
+    long long dataInputSize = dataSource.getAvailableData();
+    if (dataInputSize < 0){
+        cerr << "Invalid file: " << dataSource.desc() << endl;
         return -1;
 
-    } else if (fileSize < inputData2ReadInTotal){
-        cerr << "Input file: " << fileName << " is too short. Size: " << fileSize << " B, required: " << inputData2ReadInTotal << " B" << endl;
+    } else if (dataInputSize < inputData2ReadInTotal){
+        cerr << "Input file: " << dataSource.desc() << " is too short. Size: " << dataInputSize << " B, required: " << inputData2ReadInTotal << " B" << endl;
         return -2;
     }
 
-    cout << "Opening file: " << fileName << ", size: " << setw(4) << (fileSize /1024/1024) << " MB" << endl;
-    ifstream in(fileName, ios::binary);
+    cout << "Using data source: " << dataSource.desc() << ", size: " << setw(4) << (dataInputSize /1024/1024) << " MB" << endl;
 
     // Allocation, initialization.
     // number of terms we evaluate (affected by degree, disjoint generation strategy, ...)
@@ -204,7 +204,7 @@ int testBi(std::string fileName){
             //printf("## EPOCH: %02d\n", epoch);
 
             // Read test vectors.
-            in.read((char *) TVs, numBytes);
+            dataSource.read((char *) TVs, numBytes);
 
             // Single-var term s_j (hw(s_j)=1) is evaluated numTVs times on 128 input bits
             for (int j = 0; j < TERM_WIDTH; ++j) {
@@ -344,7 +344,10 @@ int main(int argc, char *argv[]) {
     initState();
 
     std::string fileName = argv[1];
-    testBi(fileName);
+    DataSourceFile dsFile(fileName);
+
+    // Test
+    testBi(dsFile);
 
     return 0;
 }
