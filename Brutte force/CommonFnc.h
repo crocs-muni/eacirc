@@ -97,6 +97,11 @@ double KSUniformityTest(std::vector<double>& samples);
 double zscore(double observed, double expected, double samples);
 
 /**
+ * Critical value for N(0,1) for alpha.
+ */
+double ucrit(double alpha);
+
+/**
  * Binomial distribution testing statistics.
  * Returns U. Reject if |U| >= u(alpha/2)
  *

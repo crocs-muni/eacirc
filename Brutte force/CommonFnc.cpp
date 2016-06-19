@@ -182,6 +182,33 @@ double CommonFnc::zscore(double observed, double expected, double samples){
     return (observed-expected) / sqrt((expected*(1-expected))/samples);
 }
 
+double CommonFnc::ucrit(double alpha){
+    if (alpha == 0.1) {
+        return 1.281522;
+
+    } else if (alpha == 0.05){
+        return 1.644854;
+
+    } else if (alpha == 0.025){
+        return 1.959964;
+
+    } else if (alpha == 0.01){
+        return 2.326348;
+
+    } else if (alpha == 0.005){
+        return 2.575829;
+
+    } else if (alpha == 0.001){
+        return 3.090232;
+
+    } else if (alpha == 0.0001){
+        return 3.719016;
+
+    } else {
+        throw std::out_of_range("u(alpha) not implemented for this value");
+    }
+}
+
 double CommonFnc::binomialU(double n, double successCtr, double p0){
     return (successCtr - n*p0) / sqrt((n*p0)*(1-p0));
 }
