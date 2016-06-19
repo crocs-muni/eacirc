@@ -78,10 +78,10 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
     double tCrit99 = quantile(complement(distStudent, 0.01 / 2));
     double tCrit999 = quantile(complement(distStudent, 0.001 / 2));
 #else
-    double tCrit95 = 0, tCrit99 = 0, tCrit999 = 0;
+    double tCrit95 = 1e50, tCrit99 = 1e50, tCrit999 = 1e50;
 #endif
 
-    // U-test, testing u0=u for N(u, q) for known q.
+    // U-test, testing u0=u for N(u, q) for known q. For us it is 1.
     double u0 = (mean/1) * sqrt((double)size);
 
     printf("(hist size: %05lu, binSize: %0.6f, min: %0.6f, mean: %0.6f, max: %0.6f, stddev: %0.6f)\n",
@@ -136,11 +136,21 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
  * Compute
  */
 int testBi(std::string fileName){
-    const int numTVs = 1024*128; // keep this number divisible by 128 pls!
-    const int numEpochs = 12;
-    const int numBytes = numTVs * TERM_WIDTH_BYTES;
+    // Number of tests running
+    const int numIndependentTests = 100;
+
+    // Should disjoint terms should be used? If yes, for 3order it is 128/3=42 terms.
     const bool disjointTerms = false;
-    const u64 inputData2ReadInTotal = numTVs*numEpochs*TERM_WIDTH_BYTES;
+
+    // Test vector configuration. How many times one term is evaluated.
+    const int numTVs = 1024; // keep this number divisible by 128 pls!
+
+    // Number of iterations of evaluation.
+    const int numEpochs = 4;
+
+    // Number of bytes needed to load from input source for one epoch.
+    const int numBytes = numTVs * TERM_WIDTH_BYTES;
+    const u64 inputData2ReadInTotal = numIndependentTests*numTVs*numEpochs*TERM_WIDTH_BYTES;
 
     // We need to check input file for required size so test has correct interpretation and code is valid.
     long long fileSize = CommonFnc::getFileSize(fileName);
@@ -151,16 +161,24 @@ int testBi(std::string fileName){
     } else if (fileSize < inputData2ReadInTotal){
         cerr << "Input file: " << fileName << " is too short. Size: " << fileSize << " B, required: " << inputData2ReadInTotal << " B" << endl;
         return -2;
-
     }
 
     cout << "Opening file: " << fileName << ", size: " << setw(4) << (fileSize /1024/1024) << " MB" << endl;
     ifstream in(fileName, ios::binary);
 
     // Allocation, initialization.
+    // number of terms we evaluate (affected by degree, disjoint generation strategy, ...)
+    u64 termCnt = 0;
+    // Buffer for testvector data read from input.
     u8 *TVs = new u8[numBytes];
     vector < bitarray < u64 > * > resultArrays;
     SimpleTerm <u64, u64> s[TERM_WIDTH];
+    // Mapping termId -> number of evaluations to 1 for 1 test (all epochs).
+    vector<u64> resultStats(TERM_NUMBER);
+
+    // Collecting statistics over all test numbers.
+    vector<double> overallFailed95(numIndependentTests);
+    vector<double> overallFailed99(numIndependentTests);
 
     // s[j] = term with only j variable set. Allocate result arrays.
     for (int j = 0; j < TERM_WIDTH; ++j) {
@@ -170,120 +188,138 @@ int testBi(std::string fileName){
         resultArrays.push_back(&s[j].getResults());
     }
 
-    // Remembers all results for all polynomials.
-    // unordered_map was here before, but we don't need it for now as
-    // order on polynomials is well defined for given order - by the generator.
-    u64 termCnt = 0;
-    vector<u64> resultStats(TERM_NUMBER);
-    for(u64 idx = 0; idx < TERM_NUMBER; idx++){
-        resultStats[idx] = 0;
-    }
+    for(int testNumber = 0; testNumber < numIndependentTests; ++testNumber) {
+        printf("##test: %d/%d\n", testNumber + 1, numIndependentTests);
 
-    // Epoch is some kind of redefined here.
-    // Epoch = next processing step of the input data of size numBytes.
-    // Statistical processing is done over all epochs. It makes some kind of trade-off between CPU/RAM.
-    // If desired, wrap this with another level of loop.
-    for (int epoch = 0; epoch < numEpochs; ++epoch) {
-        printf("## EPOCH: %02d\n", epoch);
+        // Remembers all results for all polynomials.
+        // unordered_map was here before, but we don't need it for now as
+        // order on polynomials is well defined for given order - by the generator.
+        fill(resultStats.begin(), resultStats.end(), 0);
 
-        // Read test vectors.
-        in.read((char *) TVs, numBytes);
+        // Epoch is some kind of redefined here.
+        // Epoch = next processing step of the input data of size numBytes.
+        // Statistical processing is done over all epochs. It makes some kind of trade-off between CPU/RAM.
+        // If desired, wrap this with another level of loop.
+        for (int epoch = 0; epoch < numEpochs; ++epoch) {
+            //printf("## EPOCH: %02d\n", epoch);
 
-        // Single-var term s_j (hw(s_j)=1) is evaluated numTVs times on 128 input bits
-        for (int j = 0; j < TERM_WIDTH; ++j) {
-            s[j].evaluateTVs(TERM_WIDTH_BYTES, TVs);
+            // Read test vectors.
+            in.read((char *) TVs, numBytes);
+
+            // Single-var term s_j (hw(s_j)=1) is evaluated numTVs times on 128 input bits
+            for (int j = 0; j < TERM_WIDTH; ++j) {
+                s[j].evaluateTVs(TERM_WIDTH_BYTES, TVs);
+            }
+            //printf("  elementary results computed\n");
+
+            // Generate all polynomials from precomputed values.
+            termRep indices;
+            u64 termIdx = 0;
+            init_comb(indices, TERM_DEG);
+            do {
+                // Number of times the polynomial <indices> returned 1 on 128bit test vector.
+                int hw = HW_AND<TERM_DEG>(resultArrays, indices);
+                resultStats[termIdx++] += (u64) hw;
+
+            } while (next_combination(indices, TERM_WIDTH, disjointTerms));
+            if (termCnt == 0) termCnt = termIdx;
         }
-        printf("  elementary results computed\n");
 
-        // Generate all polynomials from precomputed values.
+        // Result processing.
+        const double expectedOccurrences = (numTVs * numEpochs) / (double) (1 << TERM_DEG);
+        const double expectedProb = 1.0 / (1 << TERM_DEG);
+//        printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
+
+#ifdef DUMP_FILES
+        ofstream scoreFile("./zscores.csv", ios::trunc);
+        ofstream polyFile("./polynomials.csv", ios::trunc);
+        //scoreFile << "polyIdx;zscore" << endl;
+#endif
+
+        vector<double> zscores(termCnt);
+        u64 polyTotalCtr = 0;
+        u64 totalObserved = 0;
+        u64 rejected95 = 0;
+        u64 rejected99 = 0;
+        double zscoreTotal = 0;
         termRep indices;
-        u64 termIdx = 0;
         init_comb(indices, TERM_DEG);
         do {
-            // Number of times the polynomial <indices> returned 1 on 128bit test vector.
-            int hw = HW_AND<TERM_DEG>(resultArrays, indices);
-            resultStats[termIdx++] += (u64)hw;
+            u64 observed = resultStats[polyTotalCtr];
+            totalObserved += observed;
 
+            double observedProb = (double) observed / numTVs / numEpochs;
+            double zscore = CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs);
+            double zscoreAbs = abs(zscore);
+            if (zscoreAbs >= CommonFnc::ucrit(0.05 / 2)) {
+                rejected95 += 1;
+            }
+            if (zscoreAbs >= CommonFnc::ucrit(0.01 / 2)) {
+                rejected99 += 1;
+            }
+
+            zscores[polyTotalCtr] = zscore;
+            zscoreTotal += zscoreAbs;
+//            if (polyTotalCtr < 128) {
+//                printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
+//                       (unsigned) polyTotalCtr, observed, observedProb, zscore);
+//            }
+
+#ifdef DUMP_FILES
+            //scoreFile << polyTotalCtr << ";" << zscore << endl;
+            scoreFile << zscore << endl;
+            polyFile << observed << endl;
+#endif
+
+            polyTotalCtr += 1;
         } while (next_combination(indices, TERM_WIDTH, disjointTerms));
-        if (termCnt == 0) termCnt = termIdx;
+
+#ifdef DUMP_FILES
+        scoreFile.close();
+        polyFile.close();
+#endif
+
+        // Store all data over all tests.
+        overallFailed95[testNumber] = (double)rejected95 / polyTotalCtr;
+        overallFailed99[testNumber] = (double)rejected99 / polyTotalCtr;
+
+        // Info dumping phase, do only for the last experiment.
+        if (testNumber+1 != numIndependentTests){
+            continue;
+        }
+
+        double avgOcc = (double) totalObserved / polyTotalCtr;
+        double avgProb = avgOcc / (numTVs * numEpochs);
+
+        // TODO: normality test for zscores.
+        printf("z-score histogram: \n");
+        histogram(zscores, 31, true);
+
+        printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
+               polyTotalCtr, totalObserved, avgOcc, avgProb);
+
+        printf("      ztotal: %0.6f, avg-zscore: %0.6f\n", zscoreTotal, zscoreTotal / polyTotalCtr);
+        printf("      data processed: %0.2f kB = %0.2f MB\n",
+               inputData2ReadInTotal / 1024.0,
+               inputData2ReadInTotal / 1024.0 / 1024);
+
+        // Test Bi(polyTotalCtr, 0.05), Bi(polyTotalCtr, 0.01).
+        printf("# of rejected 95%%: %04llu that is %0.6f%%, zscore: %0.6f\n",
+               rejected95, 100.0 * rejected95 / polyTotalCtr,
+               CommonFnc::zscore((double) rejected95 / polyTotalCtr, 0.05, polyTotalCtr));
+
+        printf("# of rejected 99%%: %04llu that is %0.6f%%, zscore: %0.6f\n",
+               rejected99, 100.0 * rejected99 / polyTotalCtr,
+               CommonFnc::zscore((double) rejected99 / polyTotalCtr, 0.01, polyTotalCtr));
     }
 
-    // Result processing.
-    double expectedOccurrences = (numTVs * numEpochs) / (double)(1 << TERM_DEG);
-    double expectedProb = 1.0 / (1 << TERM_DEG);
-    printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
+    // Test statistics
+    printf("\nHistogram for ratio of failed hypotheses with alpha=0.05:\n");
+    histogram(overallFailed95, 31, true);
 
-    // Output file with z-scores.
-#ifdef DUMP_FILES
-    ofstream scoreFile("./zscores.csv", ios::trunc);
-    ofstream polyFile("./polynomials.csv", ios::trunc);
-    //scoreFile << "polyIdx;zscore" << endl;
-#endif
-    
-    vector<double> zscores(termCnt);
-    u64 polyTotalCtr = 0;
-    u64 totalObserved = 0;
-    u64 rejected95 = 0;
-    u64 rejected99 = 0;
-    double zscoreTotal = 0;
-    termRep indices;
-    init_comb(indices, TERM_DEG);
-    do {
-        u64 observed = resultStats[polyTotalCtr];
-        totalObserved += observed;
+    printf("\nHistogram for ratio of failed hypotheses with alpha=0.01:\n");
+    histogram(overallFailed99, 31, true);
 
-        double observedProb = (double)observed / numTVs / numEpochs;
-        double zscore = CommonFnc::zscore(observedProb, expectedProb, numTVs * numEpochs);
-        double zscoreAbs = abs(zscore);
-        if (zscoreAbs >= CommonFnc::ucrit(0.05/2)){
-            rejected95+=1;
-        }
-        if (zscoreAbs >= CommonFnc::ucrit(0.01/2)){
-            rejected99+=1;
-        }
-
-        zscores[polyTotalCtr] = zscore;
-        zscoreTotal += zscoreAbs;
-        if (polyTotalCtr < 128){
-            printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
-                   (unsigned)polyTotalCtr, observed, observedProb, zscore);
-        }
-
-#ifdef DUMP_FILES
-        //scoreFile << polyTotalCtr << ";" << zscore << endl;
-        scoreFile << zscore << endl;
-        polyFile << observed << endl;
-#endif
-
-        polyTotalCtr+=1;
-    } while (next_combination(indices, TERM_WIDTH, disjointTerms));
-
-#ifdef DUMP_FILES
-    scoreFile.close();
-    polyFile.close();
-#endif
-
-    double avgOcc = (double)totalObserved / polyTotalCtr;
-    double avgProb = avgOcc / (numTVs * numEpochs);
-
-    // TODO: normality test for zscores.
-    printf("z-score histogram: \n");
-    histogram(zscores, 31, true);
-
-    printf("Done, totalTerms: %04llu, acc: %08llu, average occurrence: %0.6f, average prob: %0.6f\n",
-           polyTotalCtr, totalObserved, avgOcc, avgProb);
-
-    printf("      ztotal: %0.6f, avg-zscore: %0.6f\n", zscoreTotal, zscoreTotal/polyTotalCtr);
-    printf("      data processed: %0.2f kB = %0.2f MB\n",
-           inputData2ReadInTotal/1024.0,
-           inputData2ReadInTotal/1024.0/1024);
-
-    // Test Bi(polyTotalCtr, 0.05), Bi(polyTotalCtr, 0.01).
-    printf("# of rejected 95%%: %04llu that is %0.6f%%, zscore: %0.6f\n",
-           rejected95, 100.0*rejected95/polyTotalCtr, CommonFnc::zscore((double)rejected95/polyTotalCtr, 0.05, polyTotalCtr));
-
-    printf("# of rejected 99%%: %04llu that is %0.6f%%, zscore: %0.6f\n",
-           rejected99, 100.0*rejected99/polyTotalCtr, CommonFnc::zscore((double)rejected99/polyTotalCtr, 0.01, polyTotalCtr));
 
     return 0;
 }
