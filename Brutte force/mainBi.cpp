@@ -24,6 +24,7 @@
 #include <string>
 #include <iomanip>
 #include <random>
+#include <memory>
 
 #ifdef BOOST
 #include <boost/math/distributions/students_t.hpp>
