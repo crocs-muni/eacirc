@@ -155,7 +155,7 @@ int testBi(DataSource * dataSource){
 
     // Number of bytes needed to load from input source for one epoch.
     const unsigned int numBytes = numTVs * TERM_WIDTH_BYTES;
-    const u64 inputData2ReadInTotal = numIndependentTests*numTVs*numEpochs*TERM_WIDTH_BYTES;
+    const u64 inputData2ReadInTotal = ((u64)numIndependentTests)*numTVs*numEpochs*TERM_WIDTH_BYTES;
 
     // We need to check input file for required size so test has correct interpretation and code is valid.
     long long dataInputSize = dataSource->getAvailableData();
