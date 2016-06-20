@@ -205,7 +205,7 @@ int testBi(DataSource * dataSource){
         // Statistical processing is done over all epochs. It makes some kind of trade-off between CPU/RAM.
         // If desired, wrap this with another level of loop.
         for (int epoch = 0; epoch < numEpochs; ++epoch) {
-            //printf("## EPOCH: %02d\n", epoch);
+            if (numIndependentTests == 1) printf("## EPOCH: %02d\n", epoch);
 
             // Read test vectors.
             dataSource->read((char *) TVs, numBytes);
@@ -214,7 +214,7 @@ int testBi(DataSource * dataSource){
             for (int j = 0; j < TERM_WIDTH; ++j) {
                 s[j].evaluateTVs(TERM_WIDTH_BYTES, TVs);
             }
-            //printf("  elementary results computed\n");
+            if (numIndependentTests == 1) printf("  elementary results computed\n");
 
             // Generate all polynomials from precomputed values.
             termRep indices;
@@ -232,7 +232,7 @@ int testBi(DataSource * dataSource){
         // Result processing.
         const double expectedOccurrences = (numTVs * numEpochs) / (double) (1 << TERM_DEG);
         const double expectedProb = 1.0 / (1 << TERM_DEG);
-//        printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
+        if (numIndependentTests == 1) printf("Expected occ: %.6f, expected prob: %.6f\n", expectedOccurrences, expectedProb);
 
 #ifdef DUMP_FILES
         ofstream scoreFile("./zscores.csv", ios::trunc);
@@ -264,10 +264,10 @@ int testBi(DataSource * dataSource){
 
             zscores[polyTotalCtr] = zscore;
             zscoreTotal += zscoreAbs;
-//            if (polyTotalCtr < 128) {
-//                printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
-//                       (unsigned) polyTotalCtr, observed, observedProb, zscore);
-//            }
+            if (numIndependentTests == 1 && polyTotalCtr < 128) {
+                printf("Observed[%08x]: %08llu, probability: %.6f, z-score: %0.6f\n",
+                       (unsigned) polyTotalCtr, observed, observedProb, zscore);
+            }
 
 #ifdef DUMP_FILES
             //scoreFile << polyTotalCtr << ";" << zscore << endl;
