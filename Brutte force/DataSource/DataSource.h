@@ -17,7 +17,7 @@ public:
     /**
      * Reads size data to the buffer.
      */
-    virtual void read (char *buffer, unsigned long long size) = 0;
+    virtual void read (char *buffer, size_t size) = 0;
 
     /**
      * Describe the data source.

@@ -16,7 +16,7 @@ long long DataSourceFile::getAvailableData() {
     return this->fileSize;
 }
 
-void DataSourceFile::read(char *buffer, unsigned long long size) {
+void DataSourceFile::read(char *buffer, size_t size) {
     this->in.read(buffer, (streamsize) size);
 }
 

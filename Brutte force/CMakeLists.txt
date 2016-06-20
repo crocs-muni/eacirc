@@ -19,8 +19,18 @@ set(SOURCE_FILES_COMMON
         Term.h
         TermGenerator.cpp
         TermGenerator.h
+        DataGenerators/md5.h
+        DataGenerators/md5.cpp
+        DataGenerators/aes.h
+        DataGenerators/aes.cpp
         DataSource/DataSource.cpp
-        DataSource/DataSource.h DataSource/DataSourceFile.cpp DataSource/DataSourceFile.h DataSource/DataSourceAES.cpp DataSource/DataSourceAES.h)
+        DataSource/DataSource.h
+        DataSource/DataSourceFile.cpp
+        DataSource/DataSourceFile.h
+        DataSource/DataSourceAES.cpp
+        DataSource/DataSourceAES.h
+        DataSource/DataSourceMD5.cpp
+        DataSource/DataSourceMD5.h)
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}

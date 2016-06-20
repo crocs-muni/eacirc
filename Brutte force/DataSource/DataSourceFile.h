@@ -14,7 +14,7 @@ class DataSourceFile : public DataSource {
 public:
     DataSourceFile(std::string fileName);
     virtual long long getAvailableData() override;
-    virtual void read(char *buffer, unsigned long long size) override;
+    virtual void read(char *buffer, size_t size) override;
     virtual std::string desc() override;
 
 private:

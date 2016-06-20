@@ -9,10 +9,16 @@
 
 class DataSourceAES : public DataSource {
 public:
-    DataSourceAES(unsigned seed);
+    DataSourceAES(unsigned long seed = 0);
+    ~DataSourceAES() {}
+
     virtual long long getAvailableData() override;
-    virtual void read(char *buffer, unsigned long long size) override;
+    virtual void read(char *buffer, size_t size) override;
     virtual std::string desc() override;
+
+private:
+    uint8_t m_key[16];
+    uint8_t m_iv[16];
 private:
 };
 

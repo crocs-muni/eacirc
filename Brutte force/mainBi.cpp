@@ -18,9 +18,12 @@
 #include "logger.h"
 #include "TermGenerator.h"
 #include "DataSource/DataSourceFile.h"
+#include "DataSource/DataSourceAES.h"
+#include "DataSource/DataSourceMD5.h"
 #include <algorithm>
 #include <string>
 #include <iomanip>
+#include <random>
 
 #ifdef BOOST
 #include <boost/math/distributions/students_t.hpp>
@@ -136,7 +139,7 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
 /**
  * Compute
  */
-int testBi(DataSource & dataSource){
+int testBi(DataSource * dataSource){
     // Number of tests running
     const int numIndependentTests = 200;
 
@@ -154,17 +157,18 @@ int testBi(DataSource & dataSource){
     const u64 inputData2ReadInTotal = numIndependentTests*numTVs*numEpochs*TERM_WIDTH_BYTES;
 
     // We need to check input file for required size so test has correct interpretation and code is valid.
-    long long dataInputSize = dataSource.getAvailableData();
+    long long dataInputSize = dataSource->getAvailableData();
     if (dataInputSize < 0){
-        cerr << "Invalid file: " << dataSource.desc() << endl;
+        cerr << "Invalid file: " << dataSource->desc() << endl;
         return -1;
 
     } else if (dataInputSize < inputData2ReadInTotal){
-        cerr << "Input file: " << dataSource.desc() << " is too short. Size: " << dataInputSize << " B, required: " << inputData2ReadInTotal << " B" << endl;
+        cerr << "Input file: " << dataSource->desc() << " is too short. Size: " << dataInputSize << " B, required: " << inputData2ReadInTotal << " B" << endl;
         return -2;
     }
 
-    cout << "Using data source: " << dataSource.desc() << ", size: " << setw(4) << (dataInputSize /1024/1024) << " MB" << endl;
+    cout << "Using data source: " << dataSource->desc() << ", size: " << setw(4) << (dataInputSize /1024/1024) << " MB, required:"
+         << (inputData2ReadInTotal/1024/1024) << " MB" << endl;
 
     // Allocation, initialization.
     // number of terms we evaluate (affected by degree, disjoint generation strategy, ...)
@@ -204,7 +208,7 @@ int testBi(DataSource & dataSource){
             //printf("## EPOCH: %02d\n", epoch);
 
             // Read test vectors.
-            dataSource.read((char *) TVs, numBytes);
+            dataSource->read((char *) TVs, numBytes);
 
             // Single-var term s_j (hw(s_j)=1) is evaluated numTVs times on 128 input bits
             for (int j = 0; j < TERM_WIDTH; ++j) {
@@ -321,13 +325,12 @@ int testBi(DataSource & dataSource){
 
     printf("\nHistogram for ratio of failed hypotheses with alpha=0.05:\n");
     histogram(overallFailed95, 21, true);
-    // Test if ~ Bi(tests, 0.05)
+    // TODO: T-test for mean = 0.05
 
 
     printf("\nHistogram for ratio of failed hypotheses with alpha=0.01:\n");
     histogram(overallFailed99, 21, true);
-    // Test if ~ Bi(tests, 0.01)
-
+    // TODO: T-test for mean = 0.01
 
 
     return 0;
@@ -336,18 +339,25 @@ int testBi(DataSource & dataSource){
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 2){
-        printf("No input file given");
-        return -1;
+    initState();
+    unsigned long seed = (unsigned long) random();
+
+    std::unique_ptr<DataSourceFile> dsFile(nullptr);
+    std::unique_ptr<DataSourceAES> dsAES(new DataSourceAES(seed));
+    std::unique_ptr<DataSourceMD5> dsMD5(new DataSourceMD5(seed));
+    DataSource * dsToUse = dsAES.get();
+
+    if (argc >= 2){
+        std::string fileName = argv[1];
+        dsFile.reset(new DataSourceFile(fileName));
+        dsToUse = dsFile.get();
     }
 
-    initState();
+    // Try AES for now
+    dsToUse = dsAES.get();
 
-    std::string fileName = argv[1];
-    DataSourceFile dsFile(fileName);
-
-    // Test
-    testBi(dsFile);
+    // Test - watch out which data source is passed in!
+    testBi(dsToUse);
 
     return 0;
 }
