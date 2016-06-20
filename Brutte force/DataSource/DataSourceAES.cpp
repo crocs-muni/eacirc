@@ -4,6 +4,7 @@
 
 #include "DataSourceAES.h"
 #include <random>
+#include <cstring>
 #include "../DataGenerators/aes.h"
 
 DataSourceAES::DataSourceAES(unsigned long seed) {

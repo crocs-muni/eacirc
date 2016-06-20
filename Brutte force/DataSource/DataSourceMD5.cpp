@@ -3,6 +3,7 @@
 //
 
 #include "DataSourceMD5.h"
+#include <cstring>
 #include <random>
 
 DataSourceMD5::DataSourceMD5(unsigned long seed) {
