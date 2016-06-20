@@ -19,7 +19,7 @@ long long DataSourceMD5::getAvailableData() {
 void DataSourceMD5::read(char *buffer, size_t size) {
     for(size_t offset = 0; offset < size; offset += MD5_DIGEST_LENGTH){
         updateAccumulator();
-        memcpy(buffer+offset, m_md5Accumulator, std::max((size_t)MD5_DIGEST_LENGTH, size-offset));
+        memcpy(buffer+offset, m_md5Accumulator, std::min((size_t)MD5_DIGEST_LENGTH, size-offset));
     }
 }
 

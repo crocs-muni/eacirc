@@ -30,7 +30,7 @@ void DataSourceAES::read(char *buffer, size_t size) {
         AES128_CBC_encrypt_buffer(workingBufferOu, workingBufferIn, workingBufferSize+16, m_key, m_iv);
         memcpy(m_iv, workingBufferOu + workingBufferSize, 16);
 
-        memcpy(buffer+offset, workingBufferOu, std::max((size_t)workingBufferSize, size-offset));
+        memcpy(buffer+offset, workingBufferOu, std::min((size_t)workingBufferSize, size-offset));
     }
 }
 
