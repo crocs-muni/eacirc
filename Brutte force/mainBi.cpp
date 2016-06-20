@@ -341,6 +341,7 @@ int testBi(DataSource * dataSource){
 int main(int argc, char *argv[]) {
     initState();
     unsigned long seed = (unsigned long) random();
+    printf("Main seed number: %lu\n", seed);
 
     std::unique_ptr<DataSourceFile> dsFile(nullptr);
     std::unique_ptr<DataSourceAES> dsAES(new DataSourceAES(seed));
