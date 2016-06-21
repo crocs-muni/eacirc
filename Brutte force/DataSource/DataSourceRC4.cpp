@@ -7,13 +7,19 @@
 #include <cstring>
 #include "../DataGenerators/arcfour.h"
 
-DataSourceRC4::DataSourceRC4(unsigned long seed) {
+DataSourceRC4::DataSourceRC4(unsigned long seed, unsigned keySize) {
     std::minstd_rand systemGenerator((unsigned int) seed);
-    for (unsigned i = 0; i < RC4_STATE_SIZE; i++) {
+
+    if(keySize > RC4_STATE_SIZE){
+        throw std::out_of_range("Maximum key size is 256B");
+    }
+
+    this->keySize = keySize;
+    for (unsigned i = 0; i < this->keySize; i++) {
         m_key[i] = (uint8_t) systemGenerator();
     }
 
-    arcfour_key_setup(m_state, m_key, RC4_STATE_SIZE);
+    arcfour_key_setup(m_state, m_key, this->keySize);
 }
 
 long long DataSourceRC4::getAvailableData() {

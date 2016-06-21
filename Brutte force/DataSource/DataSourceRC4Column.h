@@ -11,7 +11,7 @@
 
 class DataSourceRC4Column : public DataSource{
 public:
-    DataSourceRC4Column(unsigned long seed = 0, int blockSize = 16);
+    DataSourceRC4Column(unsigned long seed = 0, unsigned blockSize = 16, unsigned keySize = 16);
     ~DataSourceRC4Column();
 
     virtual long long getAvailableData() override;
@@ -20,7 +20,8 @@ public:
 
 protected:
     std::minstd_rand * gen;
-    int blockSize;
+    unsigned blockSize;
+    unsigned keySize;
 private:
 };
 

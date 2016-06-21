@@ -10,7 +10,7 @@
 
 class DataSourceRC4 : public DataSource {
 public:
-    DataSourceRC4(unsigned long seed = 0);
+    DataSourceRC4(unsigned long seed = 0, unsigned keySize = 16);
     ~DataSourceRC4() {}
 
     virtual long long getAvailableData() override;
@@ -20,6 +20,7 @@ public:
 protected:
     BYTE m_state[RC4_STATE_SIZE];
     BYTE m_key[RC4_STATE_SIZE];
+    unsigned keySize;
 private:
 };
 
