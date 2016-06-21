@@ -14,12 +14,12 @@ DataSourceRC4::DataSourceRC4(unsigned long seed, unsigned keySize) {
         throw std::out_of_range("Maximum key size is 256B");
     }
 
-    this->keySize = keySize;
-    for (unsigned i = 0; i < this->keySize; i++) {
+    this->m_keySize = keySize;
+    for (unsigned i = 0; i < this->m_keySize; i++) {
         m_key[i] = (uint8_t) systemGenerator();
     }
 
-    arcfour_key_setup(m_state, m_key, this->keySize);
+    arcfour_key_setup(m_state, m_key, this->m_keySize);
 }
 
 long long DataSourceRC4::getAvailableData() {

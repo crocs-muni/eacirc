@@ -19,9 +19,9 @@ public:
     virtual std::string desc() override;
 
 protected:
-    std::minstd_rand * gen;
-    unsigned blockSize;
-    unsigned keySize;
+    std::minstd_rand * m_gen;
+    unsigned m_blockSize;
+    unsigned m_keySize;
 private:
 };
 

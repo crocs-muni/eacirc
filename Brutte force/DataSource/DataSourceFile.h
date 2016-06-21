@@ -18,9 +18,9 @@ public:
     virtual std::string desc() override;
 
 private:
-    std::string fileName;
-    long long fileSize;
-    std::ifstream in;
+    std::string m_fileName;
+    long long m_fileSize;
+    std::ifstream m_in;
 };
 
 

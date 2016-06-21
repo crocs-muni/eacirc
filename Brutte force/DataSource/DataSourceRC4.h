@@ -20,7 +20,7 @@ public:
 protected:
     BYTE m_state[RC4_STATE_SIZE];
     BYTE m_key[RC4_STATE_SIZE];
-    unsigned keySize;
+    unsigned m_keySize;
 private:
 };
 

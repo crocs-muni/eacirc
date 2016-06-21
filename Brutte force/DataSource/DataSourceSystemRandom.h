@@ -18,7 +18,7 @@ public:
     virtual std::string desc() override;
 
 protected:
-    std::minstd_rand * gen;
+    std::minstd_rand * m_gen;
 private:
 };
 

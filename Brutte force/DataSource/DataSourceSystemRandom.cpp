@@ -4,13 +4,13 @@
 
 #include "DataSourceSystemRandom.h"
 DataSourceSystemRandom::DataSourceSystemRandom(unsigned long seed) {
-    this->gen = new std::minstd_rand((unsigned int) seed);
+    this->m_gen = new std::minstd_rand((unsigned int) seed);
 }
 
 DataSourceSystemRandom::~DataSourceSystemRandom() {
-    if (this->gen != nullptr) {
-        delete this->gen;
-        this->gen = nullptr;
+    if (this->m_gen != nullptr) {
+        delete this->m_gen;
+        this->m_gen = nullptr;
     }
 }
 
@@ -20,7 +20,7 @@ long long DataSourceSystemRandom::getAvailableData() {
 
 void DataSourceSystemRandom::read(char *buffer, size_t size) {
     for(size_t offset = 0; offset < size; offset += 1) {
-        buffer[offset] = (uint8_t) this->gen->operator()();
+        buffer[offset] = (uint8_t) this->m_gen->operator()();
     }
 }
 
