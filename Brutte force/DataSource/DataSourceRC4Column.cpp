@@ -57,6 +57,6 @@ void DataSourceRC4Column::read(char *buffer, size_t size) {
 
 std::string DataSourceRC4Column::desc() {
     std::stringstream ss;
-    ss << "RC4-key" << this->m_keySize << "-block" << this->m_blockSize;
+    ss << "RC4Column-key" << this->m_keySize << "-block" << this->m_blockSize;
     return ss.str();
 }
