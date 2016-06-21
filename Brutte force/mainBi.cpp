@@ -23,6 +23,7 @@
 #include "DataSource/DataSourceRC4.h"
 #include "DataSource/DataSourceRC4Column.h"
 #include "DataSource/DataSourceSystemRandom.h"
+#include "DataSource/DataSourceDecim.h"
 #include <algorithm>
 #include <string>
 #include <iomanip>
@@ -353,6 +354,7 @@ int main(int argc, char *argv[]) {
     std::unique_ptr<DataSourceRC4>          dsRC4(new DataSourceRC4(seed));
     std::unique_ptr<DataSourceRC4Column>    dsRC4Col(new DataSourceRC4Column(seed, TERM_WIDTH_BYTES));
     std::unique_ptr<DataSourceSystemRandom> dsSys(new DataSourceSystemRandom(seed));
+    std::unique_ptr<DataSourceDecim>        dsDecim(new DataSourceDecim(seed, 5));
     DataSource * dsToUse = dsAES.get();
 
     if (argc >= 2){
