@@ -20,6 +20,9 @@
 #include "DataSource/DataSourceFile.h"
 #include "DataSource/DataSourceAES.h"
 #include "DataSource/DataSourceMD5.h"
+#include "DataSource/DataSourceRC4.h"
+#include "DataSource/DataSourceRC4Column.h"
+#include "DataSource/DataSourceSystemRandom.h"
 #include <algorithm>
 #include <string>
 #include <iomanip>
@@ -344,9 +347,12 @@ int main(int argc, char *argv[]) {
     unsigned long seed = (unsigned long) random();
     printf("Main seed number: %lu\n", seed);
 
-    std::unique_ptr<DataSourceFile> dsFile(nullptr);
-    std::unique_ptr<DataSourceAES> dsAES(new DataSourceAES(seed));
-    std::unique_ptr<DataSourceMD5> dsMD5(new DataSourceMD5(seed));
+    std::unique_ptr<DataSourceFile>         dsFile(nullptr);
+    std::unique_ptr<DataSourceAES>          dsAES(new DataSourceAES(seed));
+    std::unique_ptr<DataSourceMD5>          dsMD5(new DataSourceMD5(seed));
+    std::unique_ptr<DataSourceRC4>          dsRC4(new DataSourceRC4(seed));
+    std::unique_ptr<DataSourceRC4Column>    dsRC4Col(new DataSourceRC4Column(seed, TERM_WIDTH_BYTES));
+    std::unique_ptr<DataSourceSystemRandom> dsSys(new DataSourceSystemRandom(seed));
     DataSource * dsToUse = dsAES.get();
 
     if (argc >= 2){
