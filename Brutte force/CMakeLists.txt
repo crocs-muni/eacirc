@@ -19,6 +19,19 @@ set(SOURCE_FILES_COMMON
         Term.h
         TermGenerator.cpp
         TermGenerator.h
+        )
+
+set(SOURCE_FILES_ESTREAM
+        DataGenerators/estream/EstreamInterface.h
+        DataGenerators/estream/ciphers/ecrypt-config.h
+        DataGenerators/estream/ciphers/ecrypt-machine.h
+        DataGenerators/estream/ciphers/ecrypt-portable.h
+        DataGenerators/estream/ciphers/decim/decimv2.h
+        DataGenerators/estream/ciphers/decim/decim-v2.cpp
+        DataGenerators/estream/ciphers/decim/ecrypt-sync.h
+        )
+
+set(SOURCE_DATA_SOURCES
         DataGenerators/md5.h
         DataGenerators/md5.cpp
         DataGenerators/aes.h
@@ -30,16 +43,33 @@ set(SOURCE_FILES_COMMON
         DataSource/DataSourceAES.cpp
         DataSource/DataSourceAES.h
         DataSource/DataSourceMD5.cpp
-        DataSource/DataSourceMD5.h DataGenerators/arcfour.cpp DataGenerators/arcfour.h DataSource/DataSourceRC4.cpp DataSource/DataSourceRC4.h DataSource/DataSourceRC4Column.cpp DataSource/DataSourceRC4Column.h DataSource/DataSourceSystemRandom.cpp DataSource/DataSourceSystemRandom.h)
+        DataSource/DataSourceMD5.h
+        DataGenerators/arcfour.cpp
+        DataGenerators/arcfour.h
+        DataSource/DataSourceRC4.cpp
+        DataSource/DataSourceRC4.h
+        DataSource/DataSourceRC4Column.cpp
+        DataSource/DataSourceRC4Column.h
+        DataSource/DataSourceSystemRandom.cpp
+        DataSource/DataSourceSystemRandom.h
+        DataSource/DataSourceDecim.cpp
+        DataSource/DataSourceDecim.h
+        )
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}
-        main.cpp)
+        ${SOURCE_FILES_ESTREAM}
+        ${SOURCE_DATA_SOURCES}
+        main.cpp
+        )
 
 set(SOURCE_FILES_BI
         ${SOURCE_FILES_COMMON}
+        ${SOURCE_FILES_ESTREAM}
+        ${SOURCE_DATA_SOURCES}
         mainBi.h
-        mainBi.cpp)
+        mainBi.cpp
+        )
 
 add_executable(Brutte_force ${SOURCE_FILES_KS})
 add_executable(BrutteBi ${SOURCE_FILES_BI})
