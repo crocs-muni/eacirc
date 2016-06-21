@@ -30,7 +30,7 @@ set(SOURCE_FILES_COMMON
         DataSource/DataSourceAES.cpp
         DataSource/DataSourceAES.h
         DataSource/DataSourceMD5.cpp
-        DataSource/DataSourceMD5.h DataGenerators/arcfour.cpp DataGenerators/arcfour.h DataSource/DataSourceRC4.cpp DataSource/DataSourceRC4.h DataSource/DataSourceRC4Column.cpp DataSource/DataSourceRC4Column.h)
+        DataSource/DataSourceMD5.h DataGenerators/arcfour.cpp DataGenerators/arcfour.h DataSource/DataSourceRC4.cpp DataSource/DataSourceRC4.h DataSource/DataSourceRC4Column.cpp DataSource/DataSourceRC4Column.h DataSource/DataSourceSystemRandom.cpp DataSource/DataSourceSystemRandom.h)
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}
