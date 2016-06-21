@@ -36,10 +36,8 @@ long long DataSourceRC4Column::getAvailableData() {
 }
 
 void DataSourceRC4Column::read(char *buffer, size_t size) {
-    const int workingBufferSize = RC4_STATE_SIZE;
     BYTE rc4State[RC4_STATE_SIZE];
     BYTE rc4Key[RC4_STATE_SIZE];
-    uint8_t workingBufferOu[workingBufferSize];
 
     for(size_t offset = 0; offset < size; offset += this->m_blockSize){
         // Each time generate new key and initialize a new state.
@@ -49,9 +47,7 @@ void DataSourceRC4Column::read(char *buffer, size_t size) {
         arcfour_key_setup(rc4State, rc4Key, this->m_keySize);
 
         // Generate key stream.
-        arcfour_generate_stream(rc4State, workingBufferOu, (size_t) this->m_blockSize);
-        // Copy workingBufferSizeB to the output buffer.
-        memcpy(buffer+offset, workingBufferOu, std::min((size_t)this->m_blockSize, size-offset));
+        arcfour_generate_stream(rc4State, (BYTE*)(buffer+offset), std::min((size_t)this->m_blockSize, size-offset));
     }
 }
 

@@ -28,15 +28,7 @@ long long DataSourceRC4::getAvailableData() {
 }
 
 void DataSourceRC4::read(char *buffer, size_t size) {
-    const int workingBufferSize = 256;
-    uint8_t workingBufferOu[workingBufferSize];
-
-    for(size_t offset = 0; offset < size; offset += workingBufferSize){
-        // Generate key stream.
-        arcfour_generate_stream(m_state, workingBufferOu, workingBufferSize);
-        // Copy workingBufferSizeB to the output buffer.
-        memcpy(buffer+offset, workingBufferOu, std::min((size_t)workingBufferSize, size-offset));
-    }
+    arcfour_generate_stream(m_state, (BYTE*)buffer, size);
 }
 
 std::string DataSourceRC4::desc() {
