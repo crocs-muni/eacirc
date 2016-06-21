@@ -5,6 +5,7 @@
 #include "DataSourceRC4.h"
 #include <random>
 #include <cstring>
+#include <sstream>
 #include "../DataGenerators/arcfour.h"
 
 DataSourceRC4::DataSourceRC4(unsigned long seed, unsigned keySize) {
@@ -39,6 +40,8 @@ void DataSourceRC4::read(char *buffer, size_t size) {
 }
 
 std::string DataSourceRC4::desc() {
-    return "RC4";
+    std::stringstream ss;
+    ss << "RC4-key" << this->m_keySize;
+    return ss.str();
 }
 

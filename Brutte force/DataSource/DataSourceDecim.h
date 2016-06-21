@@ -23,6 +23,7 @@ protected:
     std::minstd_rand * m_gen;
     DECIM_ctx m_ctx;
     ECRYPT_Decim * m_cipher;
+    int m_rounds;
 private:
 
 };

@@ -2,12 +2,14 @@
 // Created by Dusan Klinec on 21.06.16.
 //
 
+#include <sstream>
 #include "DataSourceDecim.h"
 #define DECIM_DEFAULT_IV_LEN 16
 #define DECIM_DEFAULT_KEY_LEN 16
 
 DataSourceDecim::DataSourceDecim(unsigned long seed, int rounds) {
     this->m_gen = new std::minstd_rand((unsigned int) seed);
+    this->m_rounds = (unsigned)rounds;
     this->m_cipher = new ECRYPT_Decim();
     this->m_cipher->numRounds = rounds;
     this->m_cipher->ECRYPT_init();
@@ -46,5 +48,7 @@ void DataSourceDecim::read(char *buffer, size_t size) {
 }
 
 std::string DataSourceDecim::desc() {
-    return "Decim";
+    std::stringstream ss;
+    ss << "Decim-r" << this->m_rounds;
+    return ss.str();
 }

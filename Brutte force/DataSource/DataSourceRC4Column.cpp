@@ -5,6 +5,7 @@
 #include "DataSourceRC4Column.h"
 #include <random>
 #include <cstring>
+#include <sstream>
 #include "../DataGenerators/arcfour.h"
 
 DataSourceRC4Column::DataSourceRC4Column(unsigned long seed, unsigned blockSize, unsigned keySize) {
@@ -55,5 +56,7 @@ void DataSourceRC4Column::read(char *buffer, size_t size) {
 }
 
 std::string DataSourceRC4Column::desc() {
-    return "RC4Column";
+    std::stringstream ss;
+    ss << "RC4-key" << this->m_keySize << "-block" << this->m_blockSize;
+    return ss.str();
 }
