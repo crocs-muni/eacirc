@@ -54,6 +54,8 @@ set(SOURCE_DATA_SOURCES
         DataSource/DataSourceSystemRandom.h
         DataSource/DataSourceDecim.cpp
         DataSource/DataSourceDecim.h
+        DataSource/DataSourceDecimColumn.cpp
+        DataSource/DataSourceDecimColumn.h
         )
 
 set(SOURCE_FILES_KS
