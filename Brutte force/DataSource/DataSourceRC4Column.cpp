@@ -36,7 +36,7 @@ void DataSourceRC4Column::read(char *buffer, size_t size) {
 
     for(size_t offset = 0; offset < size; offset += this->blockSize){
         // Each time generate new key and initialize a new state.
-        for (unsigned char i = 0; i < RC4_STATE_SIZE; i++) {
+        for (unsigned i = 0; i < RC4_STATE_SIZE; i++) {
             rc4Key[i] = (uint8_t) this->gen->operator()();
         }
         arcfour_key_setup(rc4State, rc4Key, RC4_STATE_SIZE);

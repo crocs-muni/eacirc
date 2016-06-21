@@ -9,7 +9,7 @@
 
 DataSourceRC4::DataSourceRC4(unsigned long seed) {
     std::minstd_rand systemGenerator((unsigned int) seed);
-    for (unsigned char i = 0; i < 16; i++) {
+    for (unsigned i = 0; i < RC4_STATE_SIZE; i++) {
         m_key[i] = (uint8_t) systemGenerator();
     }
 
