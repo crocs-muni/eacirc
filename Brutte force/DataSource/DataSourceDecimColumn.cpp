@@ -8,9 +8,7 @@
 #define DECIM_DEFAULT_KEY_LEN 16
 
 DataSourceDecimColumn::DataSourceDecimColumn(unsigned long seed, int rounds, unsigned blockSize) {
-    if (blockSize > 256){
-        throw std::out_of_range("Block size maximum is 256B for this mode");
-    } else if (blockSize <= 0){
+    if (blockSize <= 0){
         throw std::out_of_range("Invalid block value");
     }
 

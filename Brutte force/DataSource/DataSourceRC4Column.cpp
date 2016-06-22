@@ -9,9 +9,7 @@
 #include "../DataGenerators/arcfour.h"
 
 DataSourceRC4Column::DataSourceRC4Column(unsigned long seed, unsigned blockSize, unsigned keySize) {
-    if (blockSize > RC4_STATE_SIZE){
-        throw std::out_of_range("Block size maximum is 256B for this mode");
-    } else if (blockSize <= 0){
+    if (blockSize <= 0){
         throw std::out_of_range("Invalid block value");
     }
 
