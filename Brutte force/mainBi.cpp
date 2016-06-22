@@ -329,15 +329,16 @@ int testBi(DataSource * dataSource){
     printf("---- Testing completed --- \n");
     printf("--------------------------------------------------------------------\n");
 
-    printf("\nHistogram for ratio of failed hypotheses with alpha=0.05:\n");
-    histogram(overallFailed95, 21, true);
-    // TODO: T-test for mean = 0.05
+    if (numIndependentTests > 1) {
+        printf("\nHistogram for ratio of failed hypotheses with alpha=0.05:\n");
+        histogram(overallFailed95, 21, true);
+        // TODO: T-test for mean = 0.05
 
 
-    printf("\nHistogram for ratio of failed hypotheses with alpha=0.01:\n");
-    histogram(overallFailed99, 21, true);
-    // TODO: T-test for mean = 0.01
-
+        printf("\nHistogram for ratio of failed hypotheses with alpha=0.01:\n");
+        histogram(overallFailed99, 21, true);
+        // TODO: T-test for mean = 0.01
+    }
 
     return 0;
 }
