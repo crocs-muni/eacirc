@@ -56,6 +56,7 @@ typedef unsigned I32T u32;
 #endif
 
 #ifdef I64T
+#include <inttypes.h>
 typedef int64_t s64;   // Ph4r05 compile fix
 typedef uint64_t u64; // Ph4r05 compile fix
 #endif
