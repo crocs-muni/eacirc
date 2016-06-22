@@ -153,7 +153,7 @@ int testBi(DataSource * dataSource){
     const bool disjointTerms = false;
 
     // Test vector configuration. How many times one term is evaluated.
-    const int numTVs = 1024*64; // keep this number divisible by 128 pls!
+    const int numTVs = 1024*64; // keep this number divisible by 128 pls! At least: 1024*64
 
     // Number of iterations of evaluation.
     const int numEpochs = 1;
