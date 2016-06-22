@@ -20,7 +20,7 @@ long long DataSourceAES::getAvailableData() {
 }
 
 void DataSourceAES::read(char *buffer, size_t size) {
-    const int workingBufferSize = 256;
+    const int workingBufferSize = 1024;
     uint8_t workingBufferInHlp[workingBufferSize+16];
     uint8_t workingBufferOuHlp[workingBufferSize+16];
     uint8_t * workingBufferIn = workingBufferInHlp;
