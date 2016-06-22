@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
     std::unique_ptr<DataSourceRC4Column>    dsRC4Col(new DataSourceRC4Column(seed, TERM_WIDTH_BYTES));
     std::unique_ptr<DataSourceSystemRandom> dsSys(new DataSourceSystemRandom(seed));
     std::unique_ptr<DataSourceDecim>        dsDecim(new DataSourceDecim(seed, 6));
-    std::unique_ptr<DataSourceDecimColumn>  dsDecimCol(new DataSourceDecimColumn(seed, 6, TERM_WIDTH_BYTES));
+    std::unique_ptr<DataSourceDecimColumn>  dsDecimCol(new DataSourceDecimColumn(seed, 6, 32*TERM_WIDTH_BYTES));
     DataSource * dsToUse = dsAES.get();
 
     if (argc >= 2){
