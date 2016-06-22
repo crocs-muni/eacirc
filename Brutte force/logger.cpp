@@ -12,11 +12,11 @@ std::ostream& Logger::out() {
 std::ostream& operator<<(std::ostream& os, Logger::Datestamp) {
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
-    return os << std::put_time(&tm, "%F");
+    return os;// << std::put_time(&tm, "%F"); //ph4r05 quickfix centaur compile
 }
 
 std::ostream& operator<<(std::ostream& os, Logger::Timestamp) {
     auto t = std::time(nullptr);
     auto tm = *std::localtime(&t);
-    return os << std::put_time(&tm, "%T");
+    return os;// << std::put_time(&tm, "%T"); //ph4r05 quickfix centaur compile
 }
