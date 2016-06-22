@@ -4,6 +4,7 @@
 
 #include "DataSourceDecimColumn.h"
 #include <sstream>
+#include <stdexcept>
 #define DECIM_DEFAULT_IV_LEN 16
 #define DECIM_DEFAULT_KEY_LEN 16
 

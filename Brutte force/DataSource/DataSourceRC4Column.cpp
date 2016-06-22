@@ -6,6 +6,7 @@
 #include <random>
 #include <cstring>
 #include <sstream>
+#include <stdexcept>
 #include "../DataGenerators/arcfour.h"
 
 DataSourceRC4Column::DataSourceRC4Column(unsigned long seed, unsigned blockSize, unsigned keySize) {

@@ -5,6 +5,7 @@
 #ifndef BRUTTE_FORCE_TERMGENERATOR_H
 #define BRUTTE_FORCE_TERMGENERATOR_H
 #include <vector>
+#include <stdexcept>
 
 void init_comb(std::vector<int> &com, int k);
 
