@@ -199,8 +199,6 @@ int testBi(DataSource * dataSource){
     }
 
     for(int testNumber = 0; testNumber < numIndependentTests; ++testNumber) {
-        printf("##test: %d/%d\n", testNumber + 1, numIndependentTests);
-
         // Remembers all results for all polynomials.
         // unordered_map was here before, but we don't need it for now as
         // order on polynomials is well defined for given order - by the generator.
@@ -293,6 +291,10 @@ int testBi(DataSource * dataSource){
         overallFailed95[testNumber] = (double)rejected95 / polyTotalCtr;
         overallFailed99[testNumber] = (double)rejected99 / polyTotalCtr;
 
+        // Result dumping
+        printf("##test: %d/%d; re95: %.6f; re99: %.6f;\n",
+               testNumber + 1, numIndependentTests, overallFailed95[testNumber], overallFailed99[testNumber]);
+
         // Info dumping phase, do only for the last experiment.
         if (testNumber+1 != numIndependentTests){
             continue;
@@ -325,9 +327,11 @@ int testBi(DataSource * dataSource){
     }
 
     // Test statistics
-    printf("--------------------------------------------------------------------\n");
-    printf("---- Testing completed --- \n");
-    printf("--------------------------------------------------------------------\n");
+    printf("-------------------------------------------------------------------------------\n");
+    printf("---- Testing completed: ");
+    printf("---- %s, numtests: %d, test vectors: %d, epochs: %d --- \n",
+           dataSource->desc().c_str(), numIndependentTests, numTVs, numEpochs);
+    printf("-------------------------------------------------------------------------------\n");
 
     if (numIndependentTests > 1) {
         printf("\nHistogram for ratio of failed hypotheses with alpha=0.05:\n");
