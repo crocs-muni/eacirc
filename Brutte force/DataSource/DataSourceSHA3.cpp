@@ -18,10 +18,10 @@ DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigne
         throw std::out_of_range("Maximum output size is 256B");
     }
 
-    if (hash == SHA3_MD6){
+    if (hash == SHA3_TANGLE){
         m_sha3 = new Tangle(rounds);
 
-    } else if (hash == SHA3_TANGLE){
+    } else if (hash == SHA3_MD6){
         m_sha3 = new MD6(rounds);
 
     } else {
