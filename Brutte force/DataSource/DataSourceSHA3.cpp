@@ -46,10 +46,10 @@ long long DataSourceSHA3::getAvailableData() {
 }
 
 void DataSourceSHA3::read(char *buffer, size_t size) {
-    BitSequence results[256];
+    BitSequence results[4096];
     for(size_t offset = 0; offset < size; offset += m_outputSize){
         m_sha3->Init(m_outputSize * 8);
-        m_sha3->Update((const BitSequence *) &m_counter, sizeof(m_counter));
+        m_sha3->Update((const BitSequence *) &m_counter, sizeof(m_counter)*8);
         m_sha3->Final(results);
         m_counter += 1;
         memcpy(buffer+offset, results, std::min((size_t)m_outputSize, size-offset));
