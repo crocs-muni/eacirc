@@ -45,12 +45,24 @@
 
 // Do not edit.
 #define TERM_WIDTH (TERM_WIDTH_BYTES*8)
-// Combination(TERM_WIDTH, TERM_DEG) for C(128,3)
-#define TERM_NUMBER 341376
+
+// Combination(TERM_WIDTH, TERM_DEG)
+#if   (TERM_WIDTH_BYTES==16) && (TERM_DEG==1)
+#  define TERM_NUMBER 128
+#elif (TERM_WIDTH_BYTES==16) && (TERM_DEG==2)
+#  define TERM_NUMBER 8128
+#elif (TERM_WIDTH_BYTES==16) && (TERM_DEG==3)
+#  define TERM_NUMBER 341376
+#elif (TERM_WIDTH_BYTES==16) && (TERM_DEG==4)
+#  define TERM_NUMBER 10668000
+#else
+#  error "Undefined for given configuration"
+#endif
+
 typedef std::vector<int> termRep;
 
-
 using namespace std;
+
 #ifdef BOOST
 using namespace boost::math;
 #endif
