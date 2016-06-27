@@ -33,9 +33,14 @@ bool next_combination(vector<int> &com, int max, bool disjoint) {
     }
 
     if (com[idx] == max - 1) {
-        while (com[--idx] + 1 == com[idx + 1]) {
-            if (idx == 0) return false;
+        do {
+            idx -= 1;
+        } while (idx >= 0 && com[idx] + 1 == com[idx + 1]);
+
+        if (idx < 0) {
+            return false;
         }
+
         for (int j = idx + 1; j < size; ++j) {
             com[j] = com[idx] + j - idx + 1;
         }
