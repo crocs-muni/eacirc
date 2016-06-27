@@ -25,6 +25,7 @@
 #include "DataSource/DataSourceSystemRandom.h"
 #include "DataSource/DataSourceDecim.h"
 #include "DataSource/DataSourceDecimColumn.h"
+#include "DataSource/DataSourceSHA3.h"
 #include <algorithm>
 #include <string>
 #include <iomanip>
@@ -362,6 +363,8 @@ int main(int argc, char *argv[]) {
     std::unique_ptr<DataSourceSystemRandom> dsSys(new DataSourceSystemRandom(seed));
     std::unique_ptr<DataSourceDecim>        dsDecim(new DataSourceDecim(seed, 6));
     std::unique_ptr<DataSourceDecimColumn>  dsDecimCol(new DataSourceDecimColumn(seed, 6, 32*TERM_WIDTH_BYTES));
+    std::unique_ptr<DataSourceSHA3>         dsMD6(new DataSourceSHA3(seed, SHA3_MD6, 2, TERM_WIDTH_BYTES));
+    std::unique_ptr<DataSourceSHA3>         dsTangle(new DataSourceSHA3(seed, SHA3_TANGLE, 2, TERM_WIDTH_BYTES));
     DataSource * dsToUse = dsAES.get();
 
     if (argc >= 2){
