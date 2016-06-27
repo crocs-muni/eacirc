@@ -31,6 +31,20 @@ set(SOURCE_FILES_ESTREAM
         DataGenerators/estream/ciphers/decim/ecrypt-sync.h
         )
 
+set(SOURCE_FILES_SHA3
+        DataGenerators/sha3/Sha3Constants.h
+        DataGenerators/sha3/Sha3Interface.h
+        DataGenerators/sha3/hash_functions/Tangle/Tangle_sha3.h
+        DataGenerators/sha3/hash_functions/Tangle/Tangle_sha3.cpp
+        DataGenerators/sha3/hash_functions/MD6/inttypes.h
+        DataGenerators/sha3/hash_functions/MD6/md6.h
+        DataGenerators/sha3/hash_functions/MD6/md6_compress.c
+        DataGenerators/sha3/hash_functions/MD6/md6_mode.c
+        DataGenerators/sha3/hash_functions/MD6/MD6_sha3.h
+        DataGenerators/sha3/hash_functions/MD6/MD6_sha3.cpp
+        DataGenerators/sha3/hash_functions/MD6/stdint.h
+        )
+
 set(SOURCE_DATA_SOURCES
         DataGenerators/md5.h
         DataGenerators/md5.cpp
@@ -56,11 +70,12 @@ set(SOURCE_DATA_SOURCES
         DataSource/DataSourceDecim.h
         DataSource/DataSourceDecimColumn.cpp
         DataSource/DataSourceDecimColumn.h
-        )
+        DataSource/DataSourceSHA3.cpp DataSource/DataSourceSHA3.h)
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}
         ${SOURCE_FILES_ESTREAM}
+        ${SOURCE_FILES_SHA3}
         ${SOURCE_DATA_SOURCES}
         main.cpp
         )
@@ -68,6 +83,7 @@ set(SOURCE_FILES_KS
 set(SOURCE_FILES_BI
         ${SOURCE_FILES_COMMON}
         ${SOURCE_FILES_ESTREAM}
+        ${SOURCE_FILES_SHA3}
         ${SOURCE_DATA_SOURCES}
         mainBi.h
         mainBi.cpp
