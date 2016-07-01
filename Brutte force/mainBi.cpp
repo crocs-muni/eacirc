@@ -388,7 +388,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Try AES for now
-    dsToUse = dsAES.get();
+    dsToUse = dsDecim.get();
 
     // Test - watch out which data source is passed in!
     testBi(dsToUse);
