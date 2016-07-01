@@ -364,6 +364,8 @@ int testBi(DataSource * dataSource){
 
 int main(int argc, char *argv[]) {
     initState();
+    srand((unsigned) time(0));
+
     unsigned long seed = (unsigned long) random();
     printf("Main seed number: %lu\n", seed);
 
