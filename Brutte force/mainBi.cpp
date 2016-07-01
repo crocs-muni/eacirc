@@ -160,16 +160,16 @@ void histogram(vector<T> data, unsigned long bins, bool center = false){
  */
 int testBi(DataSource * dataSource){
     // Number of tests running
-    const int numIndependentTests = 200;
+    const int numIndependentTests = 1;
 
     // Should disjoint terms should be used? If yes, for 3order it is 128/3=42 terms.
     const bool disjointTerms = false;
 
     // Test vector configuration. How many times one term is evaluated.
-    const int numTVs = 1024*128; // keep this number divisible by 128 pls! At least: 1024*64
+    const int numTVs = 1024*256; // keep this number divisible by 128 pls! At least: 1024*64
 
     // Number of iterations of evaluation.
-    const int numEpochs = 16;
+    const int numEpochs = 6;
 
     // Number of bytes needed to load from input source for one epoch.
     const unsigned int numBytes = numTVs * TERM_WIDTH_BYTES;
