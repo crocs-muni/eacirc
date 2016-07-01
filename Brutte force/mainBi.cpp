@@ -55,6 +55,14 @@
 #  define TERM_NUMBER 341376
 #elif (TERM_WIDTH_BYTES==16) && (TERM_DEG==4)
 #  define TERM_NUMBER 10668000
+#elif (TERM_WIDTH_BYTES==32) && (TERM_DEG==1)
+#  define TERM_NUMBER 256
+#elif (TERM_WIDTH_BYTES==32) && (TERM_DEG==2)
+#  define TERM_NUMBER 32640
+#elif (TERM_WIDTH_BYTES==32) && (TERM_DEG==3)
+#  define TERM_NUMBER 2763520
+#elif (TERM_WIDTH_BYTES==32) && (TERM_DEG==4)
+#  define TERM_NUMBER 174792640
 #else
 #  error "Undefined for given configuration"
 #endif
