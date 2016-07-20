@@ -202,7 +202,7 @@ struct sequence_iterator : _impl::sequence_iterator<T>::type {
     constexpr explicit sequence_iterator(value_type value)
         : _value(value) {}
 
-    constexpr typename base::reference operator*() const { return *_value; }
+    constexpr typename base::reference operator*() const { return _value; }
 
     sequence_iterator &operator++() {
         ++_value;
@@ -232,14 +232,14 @@ private:
  */
 template <class T>
 constexpr range<sequence_iterator<T>> sequence(T from, T to) {
-    return {{from}, {to}};
+    return {sequence_iterator<T>{from}, sequence_iterator<T>{to}};
 }
 
 /**
  * @brief utility for creating a sequence_iterator from a range [0, to)
  */
 template <class T> constexpr range<sequence_iterator<T>> sequence(T to) {
-    return sequence(0, to);
+    return sequence<T>(0, to);
 }
 
 } // namespace ea
