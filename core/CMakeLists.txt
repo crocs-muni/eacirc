@@ -1,6 +1,15 @@
 add_library(core STATIC
-    base bitset compiletime dataset exceptions iterator logger project range teestream utils)
+    ea-bitset
+    ea-datastream
+    ea-debug
+    ea-iterators
+    ea-logger
+    ea-settings
+    ea-traits
+    ea-utils
+    ea-variant
+    )
 
 target_include_directories(core INTERFACE
-  ${CMAKE_CURRENT_SOURCE_DIR}/..
+  ${CMAKE_CURRENT_SOURCE_DIR}
 )
