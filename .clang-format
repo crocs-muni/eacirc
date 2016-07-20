@@ -1,0 +1,8 @@
+---
+BasedOnStyle:    LLVM
+AccessModifierOffset: -4
+BreakBeforeBinaryOperators: All
+BreakConstructorInitializersBeforeComma: true
+ContinuationIndentWidth: 8
+IndentWidth: 4
+...
