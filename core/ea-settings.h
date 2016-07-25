@@ -7,37 +7,24 @@
 namespace ea {
 
 struct settings {
+    settings() = default;
+    settings(settings &&) = default;
+    settings(const settings &) = default;
+
+    settings &operator=(settings o) {
+        swap(o);
+        return *this;
+    }
+
     void swap(settings &o) {
         using std::swap;
         swap(_value, o._value);
     }
 
-    settings &operator=(bool val) {
-        _value = val;
-        return *this;
-    }
+    template <class T> T &as() { return _value.as<T>(); }
+    template <class T> const T &as() const { return _value.as<T>(); }
 
-    settings &operator=(long long val) {
-        _value = val;
-        return *this;
-    }
-
-    settings &operator=(double val) {
-        _value = val;
-        return *this;
-    }
-
-    settings &operator=(std::string val) {
-        _value = std::move(val);
-        return *this;
-    }
-
-    operator const bool() const { return _value.as<bool>(); }
-    operator const long long() const { return _value.as<long long>(); }
-    operator const double() const { return _value.as<double>(); }
-    operator const std::string &() const { return _value.as<std::string>(); }
-
-    settings &operator[](const char *key) {
+    settings &operator[](std::string key) {
         if (!_value.is<dictionary>())
             _value.emplace<dictionary>();
 
@@ -46,7 +33,7 @@ struct settings {
         return *proxy;
     }
 
-    const settings &operator[](const char *key) const {
+    const settings &operator[](std::string key) const {
         auto dict = _value.as<dictionary>();
         return *(dict.at(key));
     }
@@ -75,7 +62,7 @@ private:
 
     using dictionary = std::unordered_map<std::string, proxy>;
 
-    variant<bool, long long, double, std::string, dictionary> _value;
+    variant<bool, double, std::uint64_t, std::string, dictionary> _value;
 };
 
 void swap(settings &a, settings &b) { a.swap(b); }
