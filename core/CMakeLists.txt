@@ -2,6 +2,7 @@ add_library(core STATIC
     ea-bitset
     ea-debug
     ea-iterators
+    ea-json
     ea-logger
     ea-settings
     ea-stream
