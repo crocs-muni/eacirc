@@ -66,7 +66,8 @@ using wteestream = basic_teestream<wchar_t>;
 
 struct logger {
     logger(const char *file)
-        : _file(file) {
+        : _file(file)
+        , _tee(_file, std::cout) {
         ASSERT(instance == nullptr);
         logger::instance = this;
     }
@@ -83,7 +84,7 @@ protected:
 
 private:
     std::ofstream _file;
-    teestream _tee{_file, std::cout};
+    teestream _tee;
 
     static logger *instance;
 };
