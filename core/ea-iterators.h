@@ -118,7 +118,7 @@ auto make_range_iterator(I begin, I end) -> range_iterator<I> {
  */
 template <class I, class S = typename std::iterator_traits<I>::difference_type>
 auto make_range_iterator(I iterator, S n) -> range_iterator<I> {
-    return make_range(iterator, n);
+    return {make_range(iterator, n)};
 }
 
 namespace _impl {
