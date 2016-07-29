@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ea-traits.h"
+#include "traits.h"
 #include <exception>
 #include <utility>
 
-namespace ea {
+namespace core {
 namespace _impl {
 
 template <class...> struct variant;
@@ -209,4 +209,4 @@ template <class... T> void swap(variant<T...> &a, variant<T...> &b) {
     a.swap(b);
 }
 
-} // namespace ea
+} // namespace core

@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace ea {
+namespace core {
 
 /**
  * @brief implements compile-time sequence of std::size_t
@@ -119,4 +119,10 @@ struct max<X, Xs...>
                              std::integral_constant<std::size_t, X>,
                              max<Xs...>> {};
 
-} // namespace ea
+template <class, template <class...> class>
+struct is_specialization_of : std::false_type {};
+
+template <template <class...> class T, class... Args>
+struct is_specialization_of<T<Args...>, T> : std::true_type {};
+
+} // namespace core

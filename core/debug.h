@@ -3,7 +3,7 @@
 #include <sstream>
 #include <stdexcept>
 
-namespace ea {
+namespace core {
 
 struct assertion_failure : std::logic_error {
     assertion_failure(const char *function, const char *file, int line)
@@ -16,7 +16,7 @@ struct assertion_failure : std::logic_error {
 
 #define ASSERT_ALLWAYS(expr_)                                                  \
     if (!(expr_))                                                              \
-        throw assertion_failure{__FUNCTION__, __FILE__, __LINE__};
+        throw ::core::assertion_failure{__FUNCTION__, __FILE__, __LINE__};
 
 #ifdef NDEBUG
 #define ASSERT(expr_)
@@ -26,4 +26,4 @@ struct assertion_failure : std::logic_error {
 
 #define ASSERT_UNREACHABLE() ASSERT(false)
 
-} // namespace ea
+} // namespace core

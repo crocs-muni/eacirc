@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ea-debug.h"
-#include "ea-traits.h"
+#include "debug.h"
+#include "traits.h"
 
-namespace ea {
+namespace core {
 
 namespace _impl {
 
@@ -158,4 +158,4 @@ private:
     bitset<Bits> _container;
 };
 
-} // namespace ea
+} // namespace core
