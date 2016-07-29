@@ -110,14 +110,11 @@ template <bool B, class T> struct opt : std::integral_constant<bool, B> {
 /**
  * @brief variadic metaclass for computing maximum
  */
-template <std::size_t...>
-struct max : std::integral_constant<std::size_t, 0> {};
+template <unsigned X, unsigned...>
+struct max : std::integral_constant<unsigned, X> {};
 
-template <std::size_t X, std::size_t... Xs>
-struct max<X, Xs...>
-        : std::conditional_t<(X > max<Xs...>::value),
-                             std::integral_constant<std::size_t, X>,
-                             max<Xs...>> {};
+template <unsigned X, unsigned Y, unsigned... Zs>
+struct max<X, Y, Zs...> : max<(X > Y) ? X : Y, Zs...> {};
 
 /**
  * @brief determine whether some class A is a specialization of some tepmplate
