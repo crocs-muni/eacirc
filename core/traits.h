@@ -119,7 +119,11 @@ struct max<X, Xs...>
                              std::integral_constant<std::size_t, X>,
                              max<Xs...>> {};
 
-template <class, template <class...> class>
+/**
+ * @brief determine whether some class A is a specialization of some tepmplate
+ * class B<...>
+ */
+template <class A, template <class...> class B>
 struct is_specialization_of : std::false_type {};
 
 template <template <class...> class T, class... Args>
