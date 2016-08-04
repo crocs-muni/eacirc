@@ -14,9 +14,3 @@ endif()
 # === targets ===
 add_subdirectory(core)
 add_subdirectory(eacirc)
-add_subdirectory(metaheuristics)
-add_subdirectory(tests)
-
-# === 3rd party dependencies ===
-add_subdirectory(external/catch)
-add_subdirectory(external/json)
