@@ -1,11 +1,10 @@
 #pragma once
 
-#include "../ea-backend.h"
+#include "../backend.h"
 #include <array>
-#include <ea-bitset.h>
-#include <ea-traits.h>
+#include <core/bitset.h>
+#include <core/traits.h>
 
-namespace ea {
 namespace circuit {
 
 template <unsigned In, unsigned Out, unsigned X, unsigned Y> struct def {
@@ -33,7 +32,8 @@ enum class function {
 
 };
 
-template <class Def> using connectors = bitset<max<Def::in, Def::x>::value>;
+template <class Def>
+using connectors = core::bitset<core::max<Def::in, Def::x>::value>;
 
 template <class Def> struct node {
     node()
@@ -46,7 +46,7 @@ template <class Def> struct node {
     connectors<Def> conns;
 };
 
-template <class Def> struct circuit : backend {
+template <class Def> struct circuit final : backend {
     using node = node<Def>;
     using layer = std::array<node, Def::x>;
     using layout = std::array<layer, Def::y>;
@@ -60,9 +60,11 @@ template <class Def> struct circuit : backend {
     layer &operator[](std::size_t i) { return _layers[i]; }
     const layer &operator[](std::size_t i) const { return _layers[i]; }
 
+    constexpr static std::size_t num_of_nodes
+            = Def::x * (Def::y - 1) + Def::out - 1;
+
 private:
     layout _layers;
 };
 
 } // namespace circuit
-} // namespace ea
