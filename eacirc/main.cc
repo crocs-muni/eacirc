@@ -1,21 +1,17 @@
-#include "ea-eacirc.h"
-#include <ea-logger.h>
+#include "eacirc.h"
 #include <limits>
-
-using namespace ea;
 
 void test_environment();
 
-int main() {
-
-    logger{"eacirc.log"};
-
+int main() try {
     test_environment();
 
-    eacirc app("config.json");
+    eacirc app;
     app.run();
 
     return 0;
+} catch (std::exception &e) {
+    // TODO
 }
 
 void test_environment() {
