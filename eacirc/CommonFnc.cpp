@@ -195,6 +195,7 @@ double CommonFnc::KSGetCriticalValue(unsigned long sampleSize, int significanceL
 
 double CommonFnc::KSUniformityTest(std::vector<double> &samples){
     std::sort(samples.begin(), samples.end());
+    size_t sample_size = samples.size();
     // sanity check
     if (samples[samples.size()-1] > 1 || samples[0] < 0) {
         mainLogger.out(LOGGER_ERROR) << "Cannot run K-S test, data out of range." << endl;
@@ -202,11 +203,24 @@ double CommonFnc::KSUniformityTest(std::vector<double> &samples){
 
     double test_statistic = 0;
     double temp = 0;
+    size_t j = 0;
+
+    while (samples[j] == 0) ++j;
+    std::vector<double>(samples.begin() + j, samples.end()).swap(samples);
+
+    mainLogger.out(LOGGER_INFO) << "KS test on p-values, from=" << sample_size
+                                << " were " << j << " discarded (nonuniform)." << endl;
+
+    if ((double) j / (double) sample_size > 0.001) { // for first few epochs, 0 is "acceptable"
+        mainLogger.out(LOGGER_WARNING) << "Significant amount of zero p-values discarded: "
+                                       << j << endl;
+    }
+
     double N = samples.size();
 
-    for(int i = 0; i < N; i++){
-        temp = max( samples[i] - i/N, (i+1)/N - samples[i] );
-        test_statistic = max(test_statistic, temp);
+    for(size_t i = 0; i < N; i++){
+            temp = max( samples[i] - i/N, (i+1)/N - samples[i] );
+            test_statistic = max(test_statistic, temp);
     }
 
     return test_statistic;
