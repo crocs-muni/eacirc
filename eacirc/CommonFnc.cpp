@@ -219,8 +219,8 @@ double CommonFnc::KSUniformityTest(std::vector<double> &samples){
     double N = samples.size();
 
     for(size_t i = 0; i < N; i++){
-            temp = max( samples[i] - i/N, (i+1)/N - samples[i] );
-            test_statistic = max(test_statistic, temp);
+        temp = max( samples[i] - i/N, (i+1)/N - samples[i] );
+        test_statistic = max(test_statistic, temp);
     }
 
     return test_statistic;
