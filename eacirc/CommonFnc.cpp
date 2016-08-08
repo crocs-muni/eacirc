@@ -206,7 +206,8 @@ double CommonFnc::KSUniformityTest(std::vector<double> &samples){
     size_t j = 0;
 
     while (samples[j] == 0) ++j;
-    std::vector<double>(samples.begin() + j, samples.end()).swap(samples);
+    std::remove(samples.begin(), samples.end(), 0);
+    //std::vector<double>(samples.begin() + j, samples.end()).swap(samples);
 
     mainLogger.out(LOGGER_INFO) << "KS test on p-values, from=" << sample_size
                                 << " were " << j << " discarded (nonuniform)." << endl;
