@@ -8,5 +8,6 @@ target_sources(eacirc PRIVATE
     eacirc
     backend
     dataset
+    solvers/local_search
     statistics
     )
