@@ -4,6 +4,12 @@ struct backend {
     virtual ~backend() = default;
 };
 
+struct initializer {
+    virtual ~initializer() = default;
+
+    virtual void apply(backend &) = 0;
+};
+
 struct mutator {
     virtual ~mutator() = default;
 
