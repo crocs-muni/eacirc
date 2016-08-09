@@ -4,7 +4,8 @@
 #include <array>
 #include <random>
 
-template <class T, std::size_t S> struct sample_pool {
+template <class T, std::size_t S = static_cast<std::size_t>(T::_Size)>
+struct sample_pool {
     sample_pool(std::initializer_list<T> samples)
         : _size(samples.size()) {
         std::copy(samples.begin(), samples.end(), _pool.begin());
