@@ -6,7 +6,7 @@ void test_environment();
 int main() try {
     test_environment();
 
-    eacirc app;
+    eacirc app("settings.json");
     app.run();
 
     return 0;
