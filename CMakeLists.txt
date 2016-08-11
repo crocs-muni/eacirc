@@ -14,3 +14,5 @@ endif()
 # === targets ===
 add_subdirectory(core)
 add_subdirectory(eacirc)
+add_subdirectory(external/json)
+add_subdirectory(external/pcg-cpp-0.98)
