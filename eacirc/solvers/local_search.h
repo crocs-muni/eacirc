@@ -3,36 +3,41 @@
 #include <cstddef>
 #include <utility>
 
-template <class Genotype, class Score> struct solution {
-    Genotype genotype;
-    Score score;
-};
-
-template <class Type, class Initializer, class Mutator, class Evaluator>
-struct local_search {
-    local_search(Initializer &&initializer, Mutator &&mutator,
-                 Evaluator &&evaluator)
-        : _initializer(initializer)
-        , _mutator(mutator)
-        , _evaluator(evaluator) {
-        _initializer.apply(_solution.genotype);
+template <class Type, class Mut, class Eval, class Init> struct local_search {
+    local_search(Mut &mutator, Eval &evaluator, Init &initializer)
+        : _mutator(mutator)
+        , _evaluator(evaluator)
+        , _initializer(initializer) {
+        _initializer.apply(_solution_a);
+        _score_a = _evaluator(_solution_a);
     }
 
-    void run(const std::size_t iterations) {
-        for (size_t i = 0; i != iterations; ++i) {
-            auto neighbour = _solution;
-
-            _mutator.apply(neighbour.genotype);
-            neighbour.score = _evaluator.apply(neighbour.genotype);
-
-            if (_solution.score <= neighbour.score)
-                _solution = std::move(neighbour);
-        }
+    Type run(const std::size_t iterations) {
+        for (std::size_t i = 0; i != iterations; ++i)
+            _step();
+        return _solution_a;
     }
 
 private:
-    Initializer _initializer;
-    Mutator _mutator;
-    Evaluator _evaluator;
-    solution<Type, double> _solution;
+    Type _solution_a;
+    Type _solution_b;
+
+    double _score_a;
+    double _score_b;
+
+    Mut &_mutator;
+    Eval &_evaluator;
+    Init &_initializer;
+
+    void _step() {
+        _solution_b = _solution_a;
+        _mutator.apply(_solution_b);
+
+        _score_b = _evaluator.apply(_solution_b);
+        if (_score_a <= _score_b) {
+            using std::swap;
+            swap(_solution_a, _solution_b);
+            swap(_score_a, _score_b);
+        }
+    }
 };
