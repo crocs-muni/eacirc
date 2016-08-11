@@ -1,5 +1,5 @@
 add_executable(eacirc main.cc)
-target_link_libraries(eacirc core)
+target_link_libraries(eacirc core pcg)
 
 target_sources(eacirc PRIVATE
     circuit/circuit
@@ -8,6 +8,7 @@ target_sources(eacirc PRIVATE
     eacirc
     backend
     dataset
+    seed
     solvers/local_search
     statistics
     )
