@@ -1,11 +1,7 @@
 add_library(core STATIC
-    #ea-iterators
-    #ea-json
-    #ea-logger
-    #ea-settings
-    #ea-utils
     bitset
     debug
+    json
     lazy
     maybe
     random
@@ -21,4 +17,8 @@ target_include_directories(core INTERFACE
 
 set_target_properties(core PROPERTIES
     LINKER_LANGUAGE CXX
+    )
+
+target_link_libraries(core
+    json
     )
