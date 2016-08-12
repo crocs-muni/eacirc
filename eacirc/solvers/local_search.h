@@ -17,7 +17,7 @@ template <class Type, class Mut, class Eval, class Init> struct local_search {
             _step();
     }
 
-    void reevaluate() { return _score_a = _evaluator.apply(_solution_a); }
+    double reevaluate() { return _score_a = _evaluator.apply(_solution_a); }
 
 private:
     Type _solution_a;
