@@ -9,11 +9,12 @@
 namespace circuit {
 
 template <class Def> struct interpreter {
-    using input = datavec<Def::in>;
-    using output = datavec<Def::out>;
+    using input = vec<Def::in>;
+    using output = vec<Def::out>;
 
     interpreter(const circuit<Def> &circuit)
-        : _circuit(circuit) {}
+        : _circuit(circuit) {
+    }
 
     output operator()(const input &in) noexcept {
         _in = {in.begin(), Def::in};
@@ -105,8 +106,8 @@ protected:
     }
 
 private:
-    datavec<core::max<Def::in, Def::out>::value> _in;
-    datavec<core::max<Def::in, Def::out>::value> _out;
+    vec<core::max<Def::in, Def::out>::value> _in;
+    vec<core::max<Def::in, Def::out>::value> _out;
     const circuit<Def> &_circuit;
 };
 

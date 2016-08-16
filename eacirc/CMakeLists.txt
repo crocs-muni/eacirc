@@ -6,7 +6,6 @@ target_sources(eacirc PRIVATE
     circuit/genetics
     circuit/interpreter
     eacirc
-    backend
     dataset
     seed
     solvers/local_search
