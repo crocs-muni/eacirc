@@ -82,11 +82,11 @@ struct all_unique<T, Ts...>
  * @brief choose a proper type from several alternatives (the first feasible
  * alternative is chosen)
  */
-template <class... Option> struct choose {};
+template <class... Option> struct choose { using type = void; };
 
 template <class Opt, class... Opts>
-struct choose<Opt, Opts...>
-        : std::conditional_t<Opt::value, typename Opt::type, choose<Opts...>> {
+struct choose<Opt, Opts...> : std::conditional<Opt::value, typename Opt::type,
+                                               typename choose<Opts...>::type> {
 };
 
 /**
