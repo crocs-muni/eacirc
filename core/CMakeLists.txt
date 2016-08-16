@@ -1,5 +1,6 @@
 add_library(core STATIC
     bitset
+    cmd
     debug
     json
     lazy
