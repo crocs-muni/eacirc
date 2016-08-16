@@ -11,4 +11,7 @@ target_sources(eacirc PRIVATE
     seed
     solvers/local_search
     statistics
+    version
     )
+
+detect_version(version.h)

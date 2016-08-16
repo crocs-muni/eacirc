@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.4)
 project(eacirc)
 
+include(cmake/detect_version.cmake)
+
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-std=c++14> -Wall -Wextra -Weffc++)

@@ -21,8 +21,8 @@
 [Bb]uild*/
 [Rr]un/
 
-# Generated Version.h
-eacirc/Version.h
+# Generated version.h
+eacirc/version.h
 
 # backup and system files
 *~
