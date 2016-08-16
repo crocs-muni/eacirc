@@ -3,6 +3,7 @@ add_library(core STATIC
     debug
     json
     lazy
+    logger
     maybe
     random
     range
