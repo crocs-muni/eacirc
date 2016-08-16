@@ -5,6 +5,7 @@ add_library(core STATIC
     lazy
     maybe
     random
+    range
     stream
     traits
     utils
