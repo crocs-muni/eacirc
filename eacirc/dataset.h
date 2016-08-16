@@ -3,37 +3,58 @@
 #include <cstdint>
 #include <vector>
 
-template <unsigned Size> struct datavec {
+template <unsigned Size> struct vec {
     using value_type = std::uint8_t;
 
-    using storage = value_type[Size];
+    using reference = value_type &;
+    using const_reference = const value_type &;
+
     using iterator = value_type *;
     using const_iterator = const value_type *;
 
-    datavec() = default;
+    vec() = default;
 
     template <class I>
-    datavec(I beg, I end)
-        : datavec() {
+    vec(I beg, I end)
+        : vec() {
         std::copy(beg, end, _data);
     }
 
-    template <class I, class S>
-    datavec(I beg, S size)
-        : datavec(beg, beg + size) {}
+    template <class I, class S = std::size_t>
+    vec(I beg, S size)
+        : vec(beg, beg + size) {
+    }
 
-    iterator begin() { return _data; }
-    const_iterator begin() const { return _data; }
+    reference operator[](unsigned i) {
+        return _data[i];
+    }
 
-    iterator end() { return _data + Size; }
-    const_iterator end() const { return _data + Size; }
+    const_reference operator[](unsigned i) const {
+        return _data[i];
+    }
+
+    iterator begin() {
+        return _data;
+    }
+
+    iterator end() {
+        return _data + Size;
+    }
+
+    const_iterator end() const {
+        return _data + Size;
+    }
+
+    const_iterator begin() const {
+        return _data;
+    }
 
 private:
-    storage _data;
+    value_type _data[Size];
 };
 
 template <unsigned Datavec> struct dataset {
-    using value_type = datavec<Datavec>;
+    using value_type = vec<Datavec>;
 
     using storage = std::vector<value_type>;
     using iterator = typename storage::iterator;
@@ -44,14 +65,26 @@ template <unsigned Datavec> struct dataset {
         swap(_set, o._set);
     }
 
-    iterator begin() { return _set.begin(); }
-    const_iterator begin() const { return _set.begin(); }
+    friend void swap(const dataset &a, const dataset &b) {
+        a.swap(b);
+    }
 
-    iterator end() { return _set.end(); }
-    const_iterator end() const { return _set.end(); }
+    iterator begin() {
+        return _set.begin();
+    }
+
+    const_iterator begin() const {
+        return _set.begin();
+    }
+
+    iterator end() {
+        return _set.end();
+    }
+
+    const_iterator end() const {
+        return _set.end();
+    }
 
 private:
     std::vector<value_type> _set;
 };
-
-template <std::size_t S> void swap(dataset<S> &a, dataset<S> &b) { a.swap(b); }
