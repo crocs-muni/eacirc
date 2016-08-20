@@ -2,6 +2,7 @@ add_executable(eacirc main.cc)
 target_link_libraries(eacirc core)
 
 target_sources(eacirc PRIVATE
+	backend
     circuit/circuit
     circuit/genetics
     circuit/interpreter
