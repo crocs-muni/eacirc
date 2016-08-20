@@ -1,22 +1,45 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
+#include <fstream>
+#include <limits.h>
+#include <pcg/pcg_extras.hpp>
+#include <pcg/pcg_random.hpp>
 #include <random>
 
-template <class T, std::size_t S = static_cast<std::size_t>(T::_Size)>
-struct sample_pool {
-    sample_pool(std::initializer_list<T> samples)
-        : _size(samples.size()) {
-        std::copy(samples.begin(), samples.end(), _pool.begin());
+namespace core {
+
+using default_rng = pcg32;
+using main_seed_source = pcg_extras::seed_seq_from<pcg32>;
+
+template <class Type> struct qrng_engine {
+    using result_type = Type;
+
+    qrng_engine(const std::string file)
+        : _file(file) {
+        if (!_file.is_open())
+            throw std::runtime_error("Can't open file \"" + file + "\".");
     }
 
-    template <class Generator> const T &operator()(Generator &g) const {
-        std::uniform_int_distribution<std::size_t> dis{0, _size};
-        return _pool[dis(g)];
+    result_type operator()() {
+        result_type value;
+        _file.read(reinterpret_cast<std::ifstream::char_type*>(&value));
+        if (_file.eof())
+            throw std::range_error("reading of qrng data reached end of file.");
+        if (_file.fail())
+            throw std::runtime_error("an unrecoverable read error during reading of qrng data");
+        return value;
+    }
+
+    static constexpr result_type min() {
+        return std::numeric_limits<result_type>::min();
+    }
+
+    static constexpr result_type max() {
+        return std::numeric_limits<result_type>::max();
     }
 
 private:
-    std::size_t _size;
-    std::array<T, S> _pool;
+    std::ifstream _file;
 };
+
+} // namespace core
