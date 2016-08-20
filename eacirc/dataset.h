@@ -6,11 +6,11 @@
 template <unsigned Size> struct vec {
     using value_type = std::uint8_t;
 
-    using reference = value_type &;
-    using const_reference = const value_type &;
+    using reference = value_type&;
+    using const_reference = const value_type&;
 
-    using iterator = value_type *;
-    using const_iterator = const value_type *;
+    using iterator = value_type*;
+    using const_iterator = const value_type*;
 
     vec() = default;
 
@@ -53,38 +53,54 @@ private:
     value_type _data[Size];
 };
 
-template <unsigned Datavec> struct dataset {
-    using value_type = vec<Datavec>;
+template <unsigned vec_size> struct dataset {
+    using storage = std::vector<vec<vec_size>>;
 
-    using storage = std::vector<value_type>;
+    using value_type = typename storage::value_type;
+
     using iterator = typename storage::iterator;
     using const_iterator = typename storage::const_iterator;
 
-    void swap(dataset &o) {
-        using std::swap;
-        swap(_set, o._set);
+    dataset(std::size_t size)
+        : _vectors(size) {
     }
 
-    friend void swap(const dataset &a, const dataset &b) {
-        a.swap(b);
+    void clear() {
+        _vectors.clear();
+    }
+
+    void push_back(value_type&& value) {
+        _vectors.push_back(std::move(value));
     }
 
     iterator begin() {
-        return _set.begin();
+        return _vectors.begin();
     }
 
     const_iterator begin() const {
-        return _set.begin();
+        return _vectors.begin();
     }
 
     iterator end() {
-        return _set.end();
+        return _vectors.end();
     }
 
     const_iterator end() const {
-        return _set.end();
+        return _vectors.begin();
+    }
+
+    std::uint8_t* data() {
+        return reinterpret_cast<std::uint8_t*>(_vectors.data());
+    }
+
+    const std::uint8_t* data() const {
+        return reinterpret_cast<const std::uint8_t*>(_vectors.data());
+    }
+
+    std::size_t size() const {
+        return _vectors.size();
     }
 
 private:
-    std::vector<value_type> _set;
+    storage _vectors;
 };
