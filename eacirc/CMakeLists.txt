@@ -8,7 +8,9 @@ target_sources(eacirc PRIVATE
     eacirc
     dataset
     seed
+    solvers/criteria
     solvers/local_search
+    solvers/solver
     statistics
     version
     )
