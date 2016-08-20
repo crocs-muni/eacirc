@@ -24,4 +24,5 @@ set_target_properties(core PROPERTIES
 
 target_link_libraries(core
     json
+    pcg
     )
