@@ -8,7 +8,9 @@
 template <class Type> struct seed {
     using value_type = Type;
 
-    const value_type value() const { return _value; }
+    const value_type value() const {
+        return _value;
+    }
 
     std::string to_string() const {
         std::ostringstream out;
@@ -34,7 +36,7 @@ template <class Type> struct seed {
         return seed(pcg_extras::generate_one<value_type>(seed_source));
     }
 
-    static seed create(const core::json &settings) {
+    static seed create(const core::json& settings) {
         if (settings.is_null())
             return seed::create(nullptr);
         else
@@ -45,5 +47,6 @@ private:
     const value_type _value;
 
     explicit seed(const value_type value)
-        : _value(value) {}
+        : _value(value) {
+    }
 };

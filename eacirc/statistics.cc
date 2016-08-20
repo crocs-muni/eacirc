@@ -89,7 +89,7 @@ double gamma0(double x) {
  * @param gip
  * @return
  */
-static int incog(double a, double x, double &gin, double &gim, double &gip) {
+static int incog(double a, double x, double& gin, double& gim, double& gip) {
     double xam, r, s, ga, t0;
     int k;
 
@@ -168,9 +168,7 @@ double two_sample_chisqr::_compute() const {
         auto sum = _histogram_a[i] + _histogram_b[i];
         if (sum > 5) {
             dof++;
-            chisqr_value
-                    += std::pow(k1 * _histogram_a[i] - k2 * _histogram_b[i], 2)
-                       / sum;
+            chisqr_value += std::pow(k1 * _histogram_a[i] - k2 * _histogram_b[i], 2) / sum;
         }
     }
     dof--; // last category is fully determined by others
