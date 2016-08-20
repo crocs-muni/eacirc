@@ -1,5 +1,5 @@
 add_executable(eacirc main.cc)
-target_link_libraries(eacirc core pcg)
+target_link_libraries(eacirc core)
 
 target_sources(eacirc PRIVATE
     circuit/circuit
