@@ -4,49 +4,51 @@
 #include "../statistics.h"
 #include "circuit.h"
 #include "interpreter.h"
-#include <core/random.h>
+#include <algorithm>
+#include <core/stream.h>
+#include <iterator>
+#include <random>
 
 namespace circuit {
 
-template <class Def> struct helper {
-    template <class Generator> static std::uint8_t generate_argument(Generator &g) {
-        std::uniform_int_distribution<std::uint8_t> dst;
-        return dst(g);
+template <typename Generator> static std::uint8_t generate_argument(Generator& g) {
+    std::uniform_int_distribution<std::uint8_t> dst;
+    return dst(g);
+}
+
+template <typename Connectors, std::size_t Size, typename Generator>
+static Connectors generate_connetors(Generator& g) {
+    std::uniform_int_distribution<typename Connectors::value_type> dst{0, (1u << Size) - 1};
+    return Connectors{dst(g)};
+}
+
+template <typename Circuit> struct basic_mutator {
+    basic_mutator(fn_set const& function_set)
+        : _changes_of_functions(2)
+        , _changes_of_arguments(2)
+        , _changes_of_connectors(3)
+        , _function_set{function_set} {
     }
 
-    template <class Generator> static connectors<Def> generate_connetors(Generator &g, std::size_t size) {
-        std::uniform_int_distribution<connectors<Def>> dst{0, (1u << size) - 1};
-        return dst(g);
-    }
-};
-
-template <class Def> struct basic_mutator {
-    basic_mutator(const sample_pool<function> &pool)
-        : changes_of_functions(2)
-        , changes_of_arguments(2)
-        , changes_of_connectors(3)
-        , function_generator{pool} {
-    }
-
-    template <class Generator> void apply(circuit<Def> &circuit, Generator &g) const {
-        std::uniform_int_distribution<std::size_t> x{0, Def::x};
-        std::uniform_int_distribution<std::size_t> y{0, Def::y};
+    template <typename Generator> void apply(Circuit& circuit, Generator& g) {
+        std::uniform_int_distribution<std::size_t> x{0, Circuit::x};
+        std::uniform_int_distribution<std::size_t> y{0, Circuit::y};
 
         // mutate functions
-        for (size_t i = 0; i != changes_of_functions; ++i) {
-            circuit[y(g)][x(g)].function = function_generator(g);
+        for (size_t i = 0; i != _changes_of_functions; ++i) {
+            circuit[y(g)][x(g)].function = _function_set.choose(g);
         }
 
         // mutate arguments
-        for (size_t i = 0; i != changes_of_arguments; ++i) {
-            circuit[y(g)][x(g)].argument = helper<Def>::generate_argument(g);
+        for (size_t i = 0; i != _changes_of_arguments; ++i) {
+            circuit[y(g)][x(g)].argument = generate_argument(g);
         }
 
         // mutate connectors
-        for (size_t i = 0; i != changes_of_connectors; ++i) {
+        for (size_t i = 0; i != _changes_of_connectors; ++i) {
             std::uniform_int_distribution<std::size_t> dst;
-            std::uniform_int_distribution<std::size_t>::param_type first_layer{0, Def::in};
-            std::uniform_int_distribution<std::size_t>::param_type other_layer{0, Def::x};
+            std::uniform_int_distribution<std::size_t>::param_type first_layer{0, Circuit::in};
+            std::uniform_int_distribution<std::size_t>::param_type other_layer{0, Circuit::x};
 
             const auto y_idx = y(g);
             if (y_idx == 0)
@@ -57,63 +59,68 @@ template <class Def> struct basic_mutator {
     }
 
 private:
-    const std::size_t changes_of_functions;
-    const std::size_t changes_of_arguments;
-    const std::size_t changes_of_connectors;
-    const sample_pool<function> function_generator;
+    const std::size_t _changes_of_functions;
+    const std::size_t _changes_of_arguments;
+    const std::size_t _changes_of_connectors;
+    const fn_set _function_set;
 };
 
-template <class Def> struct categories_evaluator {
-    categories_evaluator(std::size_t categories)
-        : _chisqr(categories) {
+template <typename Circuit> struct basic_initializer {
+    basic_initializer(fn_set const& function_set)
+        : _function_set(function_set) {
     }
 
-    double apply(const circuit<Def> &circuit) {
-        interpreter<Def> kernel{circuit};
-
-        _out_a.clear();
-        _out_b.clear();
-
-        std::transform(_in_a.begin(), _in_a.end(), std::back_inserter(_out_a.begin()), kernel);
-        std::transform(_in_b.begin(), _in_b.end(), std::back_inserter(_out_b.begin()), kernel);
-
-        return 1.0 - _chisqr(_out_a, _out_b);
-    }
-
-private:
-    dataset<Def::in> _in_a;
-    dataset<Def::in> _in_b;
-    dataset<Def::out> _out_a;
-    dataset<Def::out> _out_b;
-    two_sample_chisqr _chisqr;
-};
-
-template <class Def> struct basic_initializer {
-    basic_initializer(const sample_pool<function> &pool)
-        : function_generator(pool) {
-    }
-
-    template <class Generator> void apply(circuit<Def> &circuit, Generator &g) const {
+    template <typename Generator> void apply(Circuit& circuit, Generator& g) {
         // for the first layer...
-        for (unsigned i = 0; i != Def::x; ++i) {
+        for (unsigned i = 0; i != Circuit::x; ++i) {
             auto node = circuit[0][i];
 
-            node.connectors = (i < Def::in) ? 1u << i : 0;
-            node.function = function::XOR;
-            node.argument = helper<Def>::generate_argument(g);
+            node.connectors = (i < Circuit::in) ? (1u << i) : 0u;
+            node.function = fn::XOR;
+            node.argument = generate_argument(g);
         }
 
         // for the other layers...
-        for (unsigned i = 1; i != Def::y; ++i)
+        for (unsigned i = 1; i != Circuit::y; ++i)
             for (auto node : circuit[i]) {
-                node.connectors = helper<Def>::generate_connectors(g, Def::x);
-                node.function = function_generator(g);
-                node.argument = helper<Def>::generate_argument(g);
+                node.connectors = generate_connetors<typename Circuit::connectors, Circuit::x>(g);
+                node.function = _function_set.choose(g);
+                node.argument = generate_argument(g);
             }
     }
 
 private:
-    const sample_pool<function> function_generator;
+    const fn_set _function_set;
+};
+
+template <typename Circuit> struct categories_evaluator {
+    categories_evaluator(std::size_t categories)
+        : _chisqr(categories) {
+    }
+
+    double apply(Circuit const& circuit) {
+        interpreter<Circuit> kernel{circuit};
+
+        _out_a.clear();
+        _out_b.clear();
+
+        std::transform(_in_a.begin(), _in_a.end(), std::back_inserter(_out_a), kernel);
+        std::transform(_in_b.begin(), _in_b.end(), std::back_inserter(_out_b), kernel);
+
+        return 1.0 - _chisqr(_out_a, _out_b);
+    }
+
+    void replace_datasets(core::stream& stream_a, core::stream& stream_b) {
+        stream_a.read(_in_a.data(), _in_a.size());
+        stream_b.read(_in_b.data(), _in_b.size());
+    }
+
+private:
+    dataset<Circuit::in> _in_a;
+    dataset<Circuit::in> _in_b;
+    dataset<Circuit::out> _out_a;
+    dataset<Circuit::out> _out_b;
+    two_sample_chisqr _chisqr;
 };
 
 } // namespace circuit

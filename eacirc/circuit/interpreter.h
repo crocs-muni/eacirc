@@ -8,29 +8,29 @@
 
 namespace circuit {
 
-template <class Def> struct interpreter {
-    using input = vec<Def::in>;
-    using output = vec<Def::out>;
+template <typename Circuit> struct interpreter {
+    using input = vec<Circuit::in>;
+    using output = vec<Circuit::out>;
 
-    interpreter(const circuit<Def> &circuit)
+    interpreter(Circuit const& circuit)
         : _circuit(circuit) {
     }
 
-    output operator()(const input &in) noexcept {
-        _in = {in.begin(), Def::in};
+    output operator()(input const& in) noexcept {
+        _in = {in.begin(), Circuit::in};
 
-        for (auto &layer : _circuit) {
+        for (auto& layer : _circuit) {
             auto o = _out.begin();
-            for (auto &node : layer)
+            for (auto& node : layer)
                 *o++ = execute(node);
             std::swap(_in, _out);
         }
 
-        return {_out.begin(), Def::out};
+        return {_out.begin(), Circuit::out};
     }
 
 protected:
-    std::uint8_t execute(const node<Def> &node) noexcept {
+    std::uint8_t execute(typename Circuit::node const& node) noexcept {
         std::uint8_t result = 0u;
 
         auto i = node.connectors.begin();
@@ -38,46 +38,46 @@ protected:
         const std::uint8_t bits = std::numeric_limits<std::uint8_t>::digits;
 
         switch (node.function) {
-        case function::NOP:
+        case fn::NOP:
             if (i != end)
                 result = _in[*i];
             return result;
-        case function::CONS:
+        case fn::CONS:
             return node.argument;
-        case function::AND:
+        case fn::AND:
             result = 0xff;
             for (; i != end; ++i)
                 result &= _in[*i];
             return result;
-        case function::NAND:
+        case fn::NAND:
             result = 0xff;
             for (; i != end; ++i)
                 result &= _in[*i];
             return ~result;
-        case function::OR:
+        case fn::OR:
             for (; i != end; ++i)
                 result |= _in[*i];
             return result;
-        case function::XOR:
+        case fn::XOR:
             for (; i != end; ++i)
                 result ^= _in[*i];
             return result;
-        case function::NOR:
+        case fn::NOR:
             for (; i != end; ++i)
                 result |= _in[*i];
             return ~result;
-        case function::NOT:
+        case fn::NOT:
             if (i != end)
                 result = ~_in[*i];
-        case function::SHIL:
+        case fn::SHIL:
             if (i != end)
                 result = _in[*i] << (node.argument % bits);
             return result;
-        case function::SHIR:
+        case fn::SHIR:
             if (i != end)
                 result = _in[*i] >> (node.argument % bits);
             return result;
-        case function::ROTL:
+        case fn::ROTL:
             if (i != end) {
                 const std::uint8_t shift = node.argument % bits;
                 if (shift == 0)
@@ -86,7 +86,7 @@ protected:
                     result = (_in[*i] << shift) | (_in[*i] >> (bits - shift));
             }
             return result;
-        case function::ROTR:
+        case fn::ROTR:
             if (i != end) {
                 const std::uint8_t shift = node.argument % bits;
                 if (shift == 0)
@@ -95,20 +95,20 @@ protected:
                     result = (_in[*i] >> shift) | (_in[*i] << (bits - shift));
             }
             return result;
-        case function::MASK:
+        case fn::MASK:
             if (i != end)
                 result = _in[*i] & node.argument;
             return result;
-        case function::_Size:
+        case fn::_Size:
             ASSERT_UNREACHABLE();
             return result;
         }
     }
 
 private:
-    vec<core::max<Def::in, Def::out>::value> _in;
-    vec<core::max<Def::in, Def::out>::value> _out;
-    const circuit<Def> &_circuit;
+    vec<core::max<Circuit::in, Circuit::out, Circuit::x>::value> _in;
+    vec<core::max<Circuit::in, Circuit::out, Circuit::x>::value> _out;
+    Circuit const& _circuit;
 };
 
 } // namespace circuit

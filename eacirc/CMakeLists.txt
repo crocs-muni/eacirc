@@ -4,6 +4,8 @@ target_link_libraries(eacirc core)
 target_sources(eacirc PRIVATE
 	backend
     circuit/circuit
+    circuit/circuit_backend
+    circuit/functions
     circuit/genetics
     circuit/interpreter
     eacirc

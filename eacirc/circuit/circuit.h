@@ -1,56 +1,29 @@
 #pragma once
 
+#include "functions.h"
 #include <array>
 #include <core/bitset.h>
 #include <core/traits.h>
 
 namespace circuit {
 
-template <unsigned In, unsigned Out, unsigned X, unsigned Y> struct def {
-    constexpr static unsigned in = In;
-    constexpr static unsigned out = Out;
-    constexpr static unsigned x = X;
-    constexpr static unsigned y = Y;
+template <unsigned I, unsigned O, unsigned X, unsigned Y> struct circuit {
+    static constexpr unsigned in = I;
+    static constexpr unsigned out = O;
+    static constexpr unsigned x = X;
+    static constexpr unsigned y = Y;
+    static constexpr unsigned num_of_nodes = x * (y - 1) + out - 1;
 
-    constexpr static std::size_t num_of_nodes = x * (y - 1) + out - 1;
-};
+    using connectors = core::bitset<core::max<in, x>::value>;
 
-enum class function {
-    NOP,
-    CONS,
-    AND,
-    NAND,
-    OR,
-    XOR,
-    NOR,
-    NOT,
-    SHIL,
-    SHIR,
-    ROTL,
-    ROTR,
-    MASK,
-    _Size // this must be the last item of this enum
+    struct node {
+        fn function{fn::NOP};
+        std::uint8_t argument{0u};
+        connectors connectors{0u};
+    };
 
-};
-
-template <class Def> using connectors = core::bitset<core::max<Def::in, Def::x>::value>;
-
-template <class Def> struct node {
-    node()
-        : fn(function::NOP)
-        , arg(0u)
-        , conns(0u) {
-    }
-
-    function fn;
-    std::uint8_t arg;
-    connectors<Def> conns;
-};
-
-template <class Def> struct circuit {
-    using node = node<Def>;
-    using layer = std::array<node, Def::x>;
-    using layout = std::array<layer, Def::y>;
+    using layer = std::array<node, x>;
+    using layout = std::array<layer, y>;
 
     typename layout::iterator begin() {
         return _layers.begin();
@@ -68,11 +41,11 @@ template <class Def> struct circuit {
         return _layers.end();
     }
 
-    layer &operator[](std::size_t i) {
+    layer& operator[](std::size_t i) {
         return _layers[i];
     }
 
-    const layer &operator[](std::size_t i) const {
+    const layer& operator[](std::size_t i) const {
         return _layers[i];
     }
 
