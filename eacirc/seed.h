@@ -1,52 +1,25 @@
 #pragma once
 
 #include <core/json.h>
-#include <pcg/pcg_extras.hpp>
-#include <random>
-#include <sstream>
+#include <cstdint>
+#include <string>
 
-template <class Type> struct seed {
-    using value_type = Type;
+struct seed {
+    using value_type = std::uint64_t;
 
-    const value_type value() const {
-        return _value;
-    }
+    explicit seed(std::nullptr_t);
+    explicit seed(std::string const str);
 
-    std::string to_string() const {
-        std::ostringstream out;
-
-        out.flags(std::ios_base::hex);
-        out << _value;
-
-        return out.str();
-    }
-
-    static seed create(std::string str) {
-        value_type value;
-        std::istringstream in{str};
-
-        in.flags(std::ios_base::hex);
-        in >> value;
-
-        return seed(value);
-    }
-
-    static seed create(std::nullptr_t) {
-        pcg_extras::seed_seq_from<std::random_device> seed_source;
-        return seed(pcg_extras::generate_one<value_type>(seed_source));
-    }
-
-    static seed create(const core::json& settings) {
-        if (settings.is_null())
-            return seed::create(nullptr);
+    static seed create(json const& object) {
+        if (object.is_null())
+            return seed(nullptr);
         else
-            return seed::create(settings.get<std::string>());
+            return seed(object.get<std::string>());
     }
+
+    operator std::string() const;
+    operator value_type() const { return _value; }
 
 private:
     const value_type _value;
-
-    explicit seed(const value_type value)
-        : _value(value) {
-    }
 };
