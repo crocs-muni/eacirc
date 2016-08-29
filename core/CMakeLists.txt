@@ -7,6 +7,7 @@ add_library(core STATIC
     stream
     traits
     variant
+    view
     )
 
 target_include_directories(core INTERFACE
