@@ -1,16 +1,11 @@
 add_library(core STATIC
-    bitset
     cmd
     debug
     json
-    lazy
     logger
-    maybe
     random
-    range
     stream
     traits
-    utils
     variant
     )
 
