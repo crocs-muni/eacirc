@@ -3,20 +3,22 @@
 #include <sstream>
 #include <stdexcept>
 
-namespace core {
+namespace debug {
 
-struct assertion_failure : std::logic_error {
-    assertion_failure(const char *function, const char *file, int line)
-        : std::logic_error(static_cast<std::ostringstream &>(
-                                   std::ostringstream{}.flush()
-                                   << "Assertion failure in function "
-                                   << function << "in " << file << ":" << line)
-                                   .str()) {}
-};
+    struct assertion_failure : std::logic_error {
+        assertion_failure(const char* message)
+            : std::logic_error(message) {}
+    };
 
-#define ASSERT_ALLWAYS(expr_)                                                  \
-    if (!(expr_))                                                              \
-        throw ::core::assertion_failure{__FUNCTION__, __FILE__, __LINE__};
+} // namespace debug
+
+#define STRINGIFY_IMPL(x) #x
+#define STRINGIFY(x) STRINGIFY_IMPL(x)
+
+#define ASSERT_ALLWAYS(expr_)                                                                      \
+    if (!(expr_))                                                                                  \
+        throw ::debug::assertion_failure("Assertion failure in function " STRINGIFY(               \
+                __FUNCTION__) " in " __FILE__ ":" STRINGIFY(__LINE__));
 
 #ifdef NDEBUG
 #define ASSERT(expr_)
@@ -25,5 +27,3 @@ struct assertion_failure : std::logic_error {
 #endif
 
 #define ASSERT_UNREACHABLE() ASSERT(false)
-
-} // namespace core
