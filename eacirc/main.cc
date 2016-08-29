@@ -17,17 +17,17 @@ struct config {
     std::string config = "config.json";
 };
 
-static core::cmd<config> cmd{{"-h", "--help", "display help message", &config::help},
-                             {"-v", "--version", "display program version", &config::version},
-                             {"-c", "--config", "specify the config file to load", &config::config}};
+static cmd<config> options{{"-h", "--help", "display help message", &config::help},
+                           {"-v", "--version", "display program version", &config::version},
+                           {"-c", "--config", "specify the config file to load", &config::config}};
 
-int main(const int argc, const char **argv) try {
-    auto cfg = cmd.parse(core::make_range(argv, argc));
+int main(const int argc, const char** argv) try {
+    auto cfg = options.parse(make_view(argv, argc));
 
     if (cfg.help) {
         std::cout << "Usage: eacirc [options]" << std::endl;
 
-        cmd.print(std::cout);
+        options.print(std::cout);
     } else if (cfg.version) {
         std::cout << "eacirc version " VERSION_TAG << std::endl;
     } else {
@@ -38,7 +38,7 @@ int main(const int argc, const char **argv) try {
     }
 
     return 0;
-} catch (std::exception &e) {
+} catch (std::exception& e) {
     logger::error(e.what());
     return 1;
 }
