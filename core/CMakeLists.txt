@@ -1,5 +1,6 @@
 add_library(core STATIC
     cmd
+    dataset
     debug
     iterators
     json

@@ -1,8 +1,17 @@
 #pragma once
 
-#include <cstdint>
+#include "dataset.h"
+#include <stdexcept>
+
+struct stream_error : std::runtime_error {
+    stream_error(std::string const& what)
+        : runtime_error(what) {}
+
+    stream_error(char const* what)
+        : runtime_error(what) {}
+};
 
 struct stream {
     virtual ~stream() = default;
-    virtual std::size_t read(std::uint8_t* data, std::size_t size) = 0;
+    virtual void read(dataset& data) = 0;
 };
