@@ -7,11 +7,13 @@
  * @brief an iterator interval [beg, end) wich is acting as container, but it does not owns any data
  */
 template <typename Iterator> struct view {
-    using value_type = typename std::iterator_traits<Iterator>::value_type;
-    using reference = typename std::iterator_traits<Iterator>::reference;
     using pointer = typename std::iterator_traits<Iterator>::pointer;
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
     using difference_type = typename std::iterator_traits<Iterator>::difference_type;
     using iterator_category = typename std::iterator_traits<Iterator>::iterator_category;
+
+    template <typename> friend struct view_iterator;
 
     view()
         : _beg()
@@ -19,7 +21,9 @@ template <typename Iterator> struct view {
 
     view(Iterator beg, Iterator end)
         : _beg(beg)
-        , _end(end) {}
+        , _end(end) {
+        ASSERT(std::distance(_beg, _end) >= 0);
+    }
 
     view(Iterator beg, difference_type n)
         : view(beg, beg + n) {}

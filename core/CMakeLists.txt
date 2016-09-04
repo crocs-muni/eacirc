@@ -1,6 +1,7 @@
 add_library(core STATIC
     cmd
     debug
+    iterators
     json
     logger
     random
