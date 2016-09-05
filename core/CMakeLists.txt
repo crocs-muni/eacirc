@@ -9,6 +9,7 @@ add_library(core STATIC
     stream
     traits
     variant
+    vec
     view
     )
 
