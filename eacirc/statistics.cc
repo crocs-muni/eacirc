@@ -1,4 +1,5 @@
 #include "statistics.h"
+#include <cmath>
 
 /** gamma function
  * taken from http://www.crbond.com/math.htm (Gamma function in C/C++ for real
@@ -54,8 +55,8 @@ double gamma0(double x) {
         } else
             ga = 1e308;
     } else {
-        if (fabs(x) > 1.0) {
-            z = fabs(x);
+        if (std::fabs(x) > 1.0) {
+            z = std::fabs(x);
             m = (int)z;
             r = 1.0;
             for (k = 1; k <= m; k++) {
@@ -69,10 +70,10 @@ double gamma0(double x) {
             gr = gr * z + g[k];
         }
         ga = 1.0 / (gr * z);
-        if (fabs(x) > 1.0) {
+        if (std::fabs(x) > 1.0) {
             ga *= r;
             if (x < 0.0) {
-                ga = -M_PI / (x * ga * sin(M_PI * x));
+                ga = -M_PI / (x * ga * std::sin(M_PI * x));
             }
         }
     }
@@ -95,7 +96,7 @@ static int incog(double a, double x, double& gin, double& gim, double& gip) {
 
     if ((a < 0.0) || (x < 0))
         return 1;
-    xam = -x + a * log(x);
+    xam = -x + a * std::log(x);
     if ((xam > 700) || (a > 170.0))
         return 1;
     if (x == 0.0) {
@@ -110,10 +111,10 @@ static int incog(double a, double x, double& gin, double& gim, double& gip) {
         for (k = 1; k <= 60; k++) {
             r *= x / (a + k);
             s += r;
-            if (fabs(r / s) < 1e-15)
+            if (std::fabs(r / s) < 1e-15)
                 break;
         }
-        gin = exp(xam) * s;
+        gin = std::exp(xam) * s;
         ga = gamma0(a);
         gip = gin / ga;
         gim = ga - gin;
@@ -122,7 +123,7 @@ static int incog(double a, double x, double& gin, double& gim, double& gip) {
         for (k = 60; k >= 1; k--) {
             t0 = (k - a) / (1.0 + k / (x + t0));
         }
-        gim = exp(xam) / (x + t0);
+        gim = std::exp(xam) / (x + t0);
         ga = gamma0(a);
         gin = ga - gim;
         gip = 1.0 - gim / ga;
@@ -174,4 +175,39 @@ double two_sample_chisqr::_compute() const {
     dof--; // last category is fully determined by others
 
     return (1.0 - chisqr(dof, chisqr_value));
+}
+
+#include <algorithm>
+#include <stdexcept>
+
+double ks_uniformity_test::_compute_critical_value(std::size_t size, unsigned significance_level) {
+    if (size <= 35)
+        throw std::runtime_error("Too few samples for KS critical value (<=35).");
+
+    switch (significance_level) {
+    case 10:
+        return 1.224 / std::sqrt(double(size));
+    case 5:
+        return 1.358 / std::sqrt(double(size));
+    case 1:
+        return 1.628 / sqrt(double(size));
+    default:
+        throw std::runtime_error("Significance level must be 1, 5, or 10.");
+    }
+}
+
+double ks_uniformity_test::_compute_uniformity_test(std::vector<double>& samples) {
+    std::sort(samples.begin(), samples.end());
+
+    if (samples.front() < 0 || samples.back() > 1)
+        throw std::out_of_range("Cannot run K-S test, data out of range.");
+
+    double test_statistic = 0;
+    double n = samples.size();
+
+    for (std::size_t i = 0; i != samples.size(); ++i) {
+        double temp = std::max(samples[i] - i / n, (i + 1) / n - samples[i]);
+        test_statistic = std::max(test_statistic, temp);
+    }
+    return test_statistic;
 }
