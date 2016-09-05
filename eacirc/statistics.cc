@@ -174,7 +174,7 @@ double two_sample_chisqr::_compute() const {
     }
     dof--; // last category is fully determined by others
 
-    return (1.0 - chisqr(dof, chisqr_value));
+    return chisqr(dof, chisqr_value);
 }
 
 #include <algorithm>

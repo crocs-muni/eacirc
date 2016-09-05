@@ -39,7 +39,7 @@ namespace circuit {
 
             // mutate arguments
             for (size_t i = 0; i != _changes_of_arguments; ++i) {
-                circuit[y(g)][x(g)].argument = 0; // generate_argument(g);
+                circuit[y(g)][x(g)].argument = generate_argument(g);
             }
 
             // mutate connectors
@@ -72,7 +72,7 @@ namespace circuit {
         template <typename Circuit, typename Generator> void apply(Circuit& circuit, Generator& g) {
             // for the first layer...
             for (unsigned i = 0; i != Circuit::x; ++i) {
-                auto node = circuit[0][i];
+                auto& node = circuit[0][i];
 
                 node.connectors = (i < circuit.input()) ? (1u << i) : 0u;
                 node.function = fn::XOR;
@@ -81,7 +81,7 @@ namespace circuit {
 
             // for the other layers...
             for (unsigned i = 1; i != Circuit::y; ++i)
-                for (auto node : circuit[i]) {
+                for (auto& node : circuit[i]) {
                     using connectors = typename Circuit::connectors_type;
                     node.connectors = generate_connetors<connectors>(g, Circuit::x);
                     node.function = _function_set.choose(g);
@@ -111,7 +111,7 @@ namespace circuit {
             std::transform(_a.begin(), _a.end(), std::back_inserter(_oa), kernel);
             std::transform(_b.begin(), _b.end(), std::back_inserter(_ob), kernel);
 
-            return 1. - _chisqr(_oa, _ob);
+            return 1.0 - _chisqr(_oa, _ob);
         }
 
     private:
