@@ -1,56 +1,54 @@
 #pragma once
 
+#include "connectors.h"
 #include "functions.h"
-#include <array>
-#include <core/bitset.h>
-#include <core/traits.h>
+#include <core/vec.h>
 
 namespace circuit {
 
-template <unsigned I, unsigned O, unsigned X, unsigned Y> struct circuit {
-    static constexpr unsigned in = I;
-    static constexpr unsigned out = O;
-    static constexpr unsigned x = X;
-    static constexpr unsigned y = Y;
-    static constexpr unsigned num_of_nodes = x * (y - 1) + out - 1;
+    template <unsigned DimX, unsigned DimY, unsigned Out> struct circuit {
+        static constexpr unsigned x = DimX;
+        static constexpr unsigned y = DimY;
 
-    using connectors = core::bitset<core::max<in, x>::value>;
+        using output = vec<Out>;
+        using connectors_type = connectors<32>;
 
-    struct node {
-        fn function{fn::NOP};
-        std::uint8_t argument{0u};
-        connectors connectors{0u};
+        struct node {
+            fn function{fn::NOP};
+            std::uint8_t argument{0u};
+            connectors_type connectors{0u};
+        };
+
+        using layer = std::array<node, x>;
+        using layers = std::array<layer, y>;
+
+        using iterator = typename layers::iterator;
+        using const_iterator = typename layers::const_iterator;
+
+        circuit(unsigned input)
+            : _input(input) {}
+
+        unsigned input() const { return _input; }
+
+        iterator begin() { return _layers.begin(); }
+        const_iterator begin() const { return _layers.begin(); }
+
+        iterator end() { return _layers.end(); }
+        const_iterator end() const { return _layers.end(); }
+
+        layer& operator[](std::size_t const i) {
+            ASSERT(i < DimY);
+            return _layers[i];
+        }
+
+        layer const& operator[](std::size_t const i) const {
+            ASSERT(i < DimY);
+            return _layers[i];
+        }
+
+    private:
+        layers _layers;
+        unsigned _input;
     };
-
-    using layer = std::array<node, x>;
-    using layout = std::array<layer, y>;
-
-    typename layout::iterator begin() {
-        return _layers.begin();
-    }
-
-    typename layout::iterator end() {
-        return _layers.end();
-    }
-
-    typename layout::const_iterator begin() const {
-        return _layers.begin();
-    }
-
-    typename layout::const_iterator end() const {
-        return _layers.end();
-    }
-
-    layer& operator[](std::size_t i) {
-        return _layers[i];
-    }
-
-    const layer& operator[](std::size_t i) const {
-        return _layers[i];
-    }
-
-private:
-    layout _layers;
-};
 
 } // namespace circuit
