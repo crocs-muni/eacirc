@@ -39,7 +39,12 @@ namespace circuit {
 
     std::unique_ptr<backend>
     create_backend(unsigned tv_size, json const& config, default_seed_source& seed) {
-        return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, config, seed);
+        std::string solver = config["solver"];
+
+        if (solver == "global-search")
+            return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, config, seed);
+        else
+            throw std::runtime_error("no such solver named [" + solver + "] is avalable");
     }
 
 } // namespace circuit

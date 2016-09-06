@@ -11,6 +11,9 @@ struct logger {
     static std::ostream& error() { return logger::out() << "[error] "; }
     static std::ostream& info() { return logger::out() << "[info] "; }
 
+    static std::string date();
+    static std::string time();
+
 private:
     static std::ostream& out();
 };

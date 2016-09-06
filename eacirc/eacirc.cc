@@ -1,5 +1,6 @@
 #include "eacirc.h"
 #include "statistics.h"
+#include "version.h"
 #include <core/logger.h>
 #include <core/random.h>
 #include <fstream>
@@ -25,13 +26,24 @@ eacirc::eacirc(json const& config)
     , _significance_level(config["significance-level"])
     , _tv_size(config["tv-size"])
     , _tv_count(config["tv-count"]) {
+    logger::info() << "eacirc framework version: " << VERSION_TAG << std::endl;
+    logger::info() << "current date: " << logger::date() << std::endl;
+    logger::info() << "using seed: " << _seed << std::endl;
+
     seed_seq_from<pcg32> main_seeder(_seed);
 
-    // TODO: create streams & backend
-    _stream_a = std::make_unique<streams::filestream>(config["stream-a"]);
-    _stream_b = std::make_unique<streams::filestream>(config["stream-b"]);
+    {
+        _stream_a = std::make_unique<streams::filestream>(config["stream-a"]);
+        _stream_b = std::make_unique<streams::filestream>(config["stream-b"]);
+    }
 
-    _backend = circuit::create_backend(_tv_size, config["backend"], main_seeder);
+    {
+        std::string backend_type = config["backend"]["type"];
+        if (backend_type == "circuit")
+            _backend = circuit::create_backend(_tv_size, config["backend"], main_seeder);
+        else
+            throw std::runtime_error("no backend named [" + backend_type + "] is available");
+    }
 }
 
 void eacirc::run() {
