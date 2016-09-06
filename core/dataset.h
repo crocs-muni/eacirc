@@ -18,10 +18,10 @@ struct dataset {
         , _data(m * n) {}
 
     iterator begin() { return {{_data.begin(), _m}, _m}; }
-    iterator end() { return {{_data.begin(), _m}, _m}; }
+    iterator end() { return {{_data.end(), _m}, _m}; }
 
     const_iterator begin() const { return {{_data.begin(), _m}, _m}; }
-    const_iterator end() const { return {{_data.begin(), _m}, _m}; }
+    const_iterator end() const { return {{_data.end(), _m}, _m}; }
 
     std::uint8_t* data() { return _data.data(); }
     std::uint8_t const* data() const { return _data.data(); }

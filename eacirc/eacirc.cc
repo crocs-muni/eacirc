@@ -51,8 +51,6 @@ void eacirc::run() {
         _stream_b->read(b);
 
         pvalues.emplace_back(_backend->test(a, b));
-
-        std::cout << i << std::endl;
     }
 
     ks_uniformity_test test{pvalues, _significance_level};
