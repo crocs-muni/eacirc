@@ -68,6 +68,7 @@ namespace circuit {
             case fn::NOT:
                 if (i.has_next())
                     result = ~_in[i];
+                return result;
             case fn::SHIL:
                 if (i.has_next())
                     result = _in[i] << (node.argument % bits);

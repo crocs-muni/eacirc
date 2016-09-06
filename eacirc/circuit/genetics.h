@@ -44,7 +44,7 @@ namespace circuit {
 
             // mutate connectors
             for (size_t i = 0; i != _changes_of_connectors; ++i) {
-                using uniform_distribution = std::uniform_int_distribution<std::size_t>;
+                using uniform_distribution = std::uniform_int_distribution<unsigned>;
 
                 uniform_distribution dst;
                 uniform_distribution::param_type first_layer{0, circuit.input() - 1};

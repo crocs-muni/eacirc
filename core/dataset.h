@@ -29,6 +29,6 @@ struct dataset {
     std::size_t size() const { return _data.size(); }
 
 private:
-    unsigned _m;
+    std::ptrdiff_t _m;
     storage _data;
 };

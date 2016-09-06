@@ -7,7 +7,7 @@
  * returns 1e308 if argument is a negative integer or 0 or if argument exceeds
  * 171.
  * @param x     argument
- * @return      \Gamma(argument)
+ * @return      Gamma(argument)
  */
 double gamma0(double x) {
     /* gamma function.
