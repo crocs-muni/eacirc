@@ -15,6 +15,7 @@ void Finishers::ksUniformityTestFinisher() {
         mainLogger.out(LOGGER_WARNING) << "Only 1-2 samples, cannot run K-S test." << endl;
         return;
     }
+    mainLogger.out(LOGGER_INFO) << "KS test on p-values, size=" << pvalsSize << endl;
 
     double KS_critical_alpha_5 = CommonFnc::KSGetCriticalValue(pvalsSize, pGlobals->settings->main.significanceLevel);
     double KS_P_value = CommonFnc::KSUniformityTest(*(pGlobals->stats.pvaluesBestIndividual));
