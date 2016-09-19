@@ -10,12 +10,12 @@ namespace circuit {
     template <typename Circuit> struct global_search : backend {
         template <typename Sseq>
         global_search(unsigned tv_size, json const& config, Sseq&& seed)
-            : _function_set(config["function-set"])
-            , _num_of_generations(config["num-of-generations"])
+            : _function_set(config.at("function-set"))
+            , _num_of_generations(config.at("num-of-generations"))
             , _solver(Circuit(tv_size),
-                      ini(config["initializer"], _function_set),
-                      mut(config["mutator"], _function_set),
-                      eva(config["evaluator"]),
+                      ini(config.at("initializer"), _function_set),
+                      mut(config.at("mutator"), _function_set),
+                      eva(config.at("evaluator")),
                       std::forward<Sseq>(seed)) {}
 
         void train(dataset const& a, dataset const& b) override {
@@ -39,7 +39,7 @@ namespace circuit {
 
     std::unique_ptr<backend>
     create_backend(unsigned tv_size, json const& config, default_seed_source& seed) {
-        std::string solver = config["solver"];
+        std::string solver = config.at("solver");
 
         if (solver == "global-search")
             return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, config, seed);

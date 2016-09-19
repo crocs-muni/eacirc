@@ -23,9 +23,9 @@ namespace circuit {
 
     struct basic_mutator {
         basic_mutator(json const& config, fn_set function_set)
-            : _changes_of_functions(config["changes-of-functions"])
-            , _changes_of_arguments(config["changes-of-arguments"])
-            , _changes_of_connectors(config["changes-of-connectors"])
+            : _changes_of_functions(config.at("changes-of-functions"))
+            , _changes_of_arguments(config.at("changes-of-arguments"))
+            , _changes_of_connectors(config.at("changes-of-connectors"))
             , _function_set(std::move(function_set)) {}
 
         template <typename Circuit, typename Generator> void apply(Circuit& circuit, Generator& g) {
@@ -95,7 +95,7 @@ namespace circuit {
 
     template <typename Circuit> struct categories_evaluator {
         categories_evaluator(json const& config)
-            : _chisqr(std::size_t(config["num-of-categories"])) {}
+            : _chisqr(std::size_t(config.at("num-of-categories"))) {}
 
         void change_datasets(dataset const& a, dataset const& b) {
             _a = a;

@@ -21,11 +21,11 @@ eacirc::eacirc(std::string config)
 
 eacirc::eacirc(json const& config)
     : _config(config)
-    , _seed(seed::create(config["seed"]))
-    , _num_of_epochs(config["num-of-epochs"])
-    , _significance_level(config["significance-level"])
-    , _tv_size(config["tv-size"])
-    , _tv_count(config["tv-count"]) {
+    , _seed(seed::create(config.at("seed")))
+    , _num_of_epochs(config.at("num-of-epochs"))
+    , _significance_level(config.at("significance-level"))
+    , _tv_size(config.at("tv-size"))
+    , _tv_count(config.at("tv-count")) {
     logger::info() << "eacirc framework version: " << VERSION_TAG << std::endl;
     logger::info() << "current date: " << logger::date() << std::endl;
     logger::info() << "using seed: " << _seed << std::endl;
@@ -33,14 +33,14 @@ eacirc::eacirc(json const& config)
     seed_seq_from<pcg32> main_seeder(_seed);
 
     {
-        _stream_a = std::make_unique<streams::filestream>(config["stream-a"]);
-        _stream_b = std::make_unique<streams::filestream>(config["stream-b"]);
+        _stream_a = std::make_unique<streams::filestream>(config.at("stream-a"));
+        _stream_b = std::make_unique<streams::filestream>(config.at("stream-b"));
     }
 
     {
-        std::string backend_type = config["backend"]["type"];
+        std::string backend_type = config.at("backend").at("type");
         if (backend_type == "circuit")
-            _backend = circuit::create_backend(_tv_size, config["backend"], main_seeder);
+            _backend = circuit::create_backend(_tv_size, config.at("backend"), main_seeder);
         else
             throw std::runtime_error("no backend named [" + backend_type + "] is available");
     }
