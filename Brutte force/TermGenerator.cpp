@@ -8,6 +8,7 @@
 #include <random>
 #include <fstream>
 #include "CommonFnc.h"
+#include "TermGenerator.h"
 
 using namespace std;
 
@@ -60,3 +61,19 @@ void genRandData(u8 *TVs, int numBytes) {
     }
 }
 
+// Utilities for min-heap in array
+void push_min_heap(vector<pairDiffTerm>& heap, pairDiffTerm val) {
+    heap.push_back(val);
+    push_heap(heap.begin(), heap.end(), pairDiffTermCompare());
+}
+
+pairDiffTerm pop_min_heap(vector<pairDiffTerm>& heap) {
+    pairDiffTerm val = heap.front();
+
+    //This operation will move the smallest element to the end of the vector
+    pop_heap(heap.begin(), heap.end(), pairDiffTermCompare());
+
+    //Remove the last element from vector, which is the smallest element
+    heap.pop_back();
+    return val;
+}
