@@ -7,6 +7,7 @@
 
 #include "dynamic_bitset.h"
 #include "bithacks.h"
+#include "base.h"
 #include <vector>
 
 template <typename T = uint64_t >
@@ -19,8 +20,9 @@ public:
 
 ////Bitwise functions over bitArrays
 template <typename T = uint64_t>
-int HW(bitarray<T>& res){
-    int hw = 0, ln = res[0]->size();
+hwres HW(bitarray<T>& res){
+    hwres hw = 0;
+    int ln = res[0]->size();
     for (int i = 0; i < ln; ++i) {
         hw += popCount(res[i]);
     }
@@ -29,9 +31,10 @@ int HW(bitarray<T>& res){
 
 //Hamming distance
 template <int n, typename T = uint64_t>
-int HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
+hwres HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
     T tmp;
-    int hw = 0, ln = a[0]->size();
+    hwres hw = 0;
+    int ln = a[0]->size();
     for (int i = 0; i < ln; ++i) {
 
         //tmp = a[indices[0]]->operator[](i) & a[indices[1]]->operator[](i) & a[indices[2]]->operator[](i) & a[indices[2]]->operator[](i);
@@ -48,9 +51,10 @@ int HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
 
 //Hamming distance, without template parameter on degree
 template <typename T = uint64_t>
-int HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
+hwres HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
     T tmp;
-    int hw = 0, ln = a[0]->size(), lnIdx = (int)indices.size();
+    hwres hw = 0;
+    int ln = a[0]->size(), lnIdx = (int)indices.size();
     for (int i = 0; i < ln; ++i) {
         tmp = a[indices[0]]->operator[](i);
         for (int j = 1; j < lnIdx; ++j) {
@@ -66,9 +70,10 @@ int HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
 //   where a is a basis. i.e., a[0] = results for x_0, ...
 // returns hw(res)
 template <typename T = uint64_t>
-int HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, std::vector<int>& indices){
+hwres HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, std::vector<int>& indices){
     T tmp;
-    int hw = 0, ln = a[0]->size(), lnIdx = (int)indices.size();
+    hwres hw = 0;
+    int ln = a[0]->size(), lnIdx = (int)indices.size();
     if (res.size() != ln){
         std::cout << "different sizes";
     }
@@ -88,11 +93,11 @@ int HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, std::vector<int>& ind
 
 //Hamming distance
 template <typename T = uint64_t >
-int HW_AND(bitarray<T>& a, bitarray<T>& b){
+hwres HW_AND(bitarray<T>& a, bitarray<T>& b){
     if(a.getNumVars() != b.getNumVars() )
         std::cout << "diferent sizes";
     T tmp;
-    int hw = 0;
+    hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
         tmp = a[i] & b[i];
         hw += popCount(tmp);
@@ -101,11 +106,11 @@ int HW_AND(bitarray<T>& a, bitarray<T>& b){
 }
 
 template <typename T = uint64_t >
-int HW_AND(bitarray<T>& res, bitarray<T>& a, bitarray<T>& b){
+hwres HW_AND(bitarray<T>& res, bitarray<T>& a, bitarray<T>& b){
     if(a.getNumVars() != b.getNumVars() )
         std::cout << "diferent sizes";
     T tmp;
-    int hw = 0;
+    hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
         tmp = a[i] & b[i];
         hw += popCount(tmp);
@@ -115,11 +120,11 @@ int HW_AND(bitarray<T>& res, bitarray<T>& a, bitarray<T>& b){
 }
 
 template <typename T = uint64_t >
-int HW_AND3(bitarray<T>& a, bitarray<T>& b, bitarray<T>& c){
+hwres HW_AND3(bitarray<T>& a, bitarray<T>& b, bitarray<T>& c){
     if(a.getNumVars() != b.getNumVars() || c.getNumVars() != b.getNumVars() )
         std::cout << "diferent sizes";
     T tmp;
-    int hw = 0;
+    hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
         tmp = a[i] & b[i] & c[i];
         hw += __builtin_popcountll (tmp);
@@ -142,12 +147,12 @@ bitarray<T>& XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
 
 // result = a xor b, returns hamming weight of the result
 template <typename T = uint64_t >
-int HW_XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
+hwres HW_XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
      if(a.getNumVars() != b.getNumVars() )
         std::cout << "diferent sizes";
 
     T tmp;
-    int hw = 0;
+    hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
         tmp = a[i] ^ b[i];
         result[i] = tmp;
@@ -159,12 +164,12 @@ int HW_XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
 
 // returns hamming weight of the a xor b
 template <typename T = uint64_t >
-int HW_XOR(bitarray<T>& a, bitarray<T>& b){
+hwres HW_XOR(bitarray<T>& a, bitarray<T>& b){
      if(a.getNumVars() != b.getNumVars() )
         std::cout << "diferent sizes";
 
     T tmp;
-    int hw = 0;
+    hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
         tmp = a[i] ^ b[i];
         hw += popCount(tmp);
