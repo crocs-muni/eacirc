@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
                 // WARNING - hardcoded term deg = 3, you need to change that.
                 // But just to visualize how various the terms are...
                 printf(" - [%03u, %03u], hwTerm1: %d, hwTerm2: %d, hwXor: %d, hwAnd: %d "
-                               "t1: %d,%d,%d t2: %d,%d,%d\n",
+                               "t1: %03d,%03d,%03d t2: %03d,%03d,%03d\n",
                     termIdx1, termIdx2, (int)term1_hw, (int)term2_hw, (int)xor_hw, (int)and_hw,
                     bestTerms[termIdx1].second[0],
                     bestTerms[termIdx1].second[1],
