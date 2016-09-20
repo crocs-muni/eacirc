@@ -67,6 +67,10 @@ int main(int argc, char *argv[]) {
         }
 
         // Compute top K best distinguishers
+        // TODO: in order to test the hypothesis about TOP k best distinguishers
+        // replace the logic inside this method so it picks random k distinguishers.
+        // If our hypothesis works, the results with "best" k distinguishers" should be better
+        // than with "random" k distinguishers.
         computeTopKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs);
 
         // Now you can get top K max diff terms by order - by calling k * pop() / pop_min_heap().
