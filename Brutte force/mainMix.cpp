@@ -42,28 +42,33 @@ int main(int argc, char *argv[]) {
     int diff;
     double chisqrValue, pval;
 
-    vector<int> bestTermIndices;
     vector<double> Pvals;
 
     // Min-heap of best maxTerms terms
     vector<pairDiffTerm> bestTerms(maxTerms);
-    // Evaluated best maxTerms terms, used for further processing (base).
-    vector<Term <u64>> evaluatedBestTerms(maxTerms);
+
+    // Evaluated best terms on the data. Used for combining terms into polynomials (faster eval)
+    vector<bitarray<u64> > bestTermsEvaluations(maxTerms);
+    vector<hwres> bestTermsHw(maxTerms);
+    for (int j = 0; j < maxTerms; ++j) {
+        bestTermsEvaluations[j].alloc(numTVs);
+    }
 
     in.read((char *) TVs, numBytes);
+    for (int j = 0; j < numVars; ++j) {
+        s[j].evaluateTVs(tvsize, TVs);
+    }
+
     //genRandData(TVs, numBytes);
 
     int counter = numBytes;
     for (int epoch = 0; epoch < numEpochs; ++epoch) {
-        for (int j = 0; j < numVars; ++j) {
-            s[j].evaluateTVs(tvsize, TVs);
-        }
-
         // Reset best terms from the previous round.
         // Setting diff values to -1 is enough as they will got replaced by
         // non-negative ones in the next process in min-heap insertion.
         for(int tmpIdx=0; tmpIdx < maxTerms; ++tmpIdx){
             bestTerms[0].first = -1;
+            bestTermsEvaluations[0].reset();
         }
 
         // Compute top K best distinguishers
@@ -77,24 +82,32 @@ int main(int argc, char *argv[]) {
         // Or use the following trick to extract the underlying data structure from the
         // priority_queue.
 
-        // Marek, if you want, we can read a new data set here and evaluate...
+        // If you want, we can read a new data set here and evaluate...
         in.read((char *) TVs, numBytes);
+
+        // Data changed -> re-evaluate base terms / regenerate basis
+        // This is needed for further fast evaluation of combined terms.
+        for (int j = 0; j < numVars; ++j) {
+            s[j].evaluateTVs(tvsize, TVs);
+        }
 
         // -------------------------------------------------------------------------------------------------------------
         // Evaluate top best terms k on new data.
-        // The evaluation is helpful for computing fitness of the term itself AND for the further evaluation
-        // of pairs, triplets, ... n-tuples of terms (polynomials).
+        // The evaluation is helpful for computing fitness of the term itself.
         for(unsigned termIdx = 0; termIdx < maxTerms; ++termIdx){
-            evaluatedBestTerms[0] = Term<u64>(128, bestTerms[termIdx].second);
-            int curResults = evaluatedBestTerms[0].evaluateTVs(tvsize, numTVs, TVs);
+            // We have basis regenerated now, we can evaluate terms on new data faster with using the basis.
+            // The evaluation result is stored to bestTermsEvaluations for further combinations.
+            const int result_hw = HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
+            bestTermsHw[termIdx] = result_hw;
 
-            // Log if you want ;)
-            diff = abs(curResults - (numTVs >> deg));
+            diff = abs(result_hw - (numTVs >> deg));
 
             // The old evaluation routine for terms only
             chisqrValue = Chival(diff, deg, numTVs);
             pval = CommonFnc::chisqr(1, chisqrValue);
-            cout << " term-only-difference:= " << diff << "  p-value:= " << pval << endl;
+
+            printf(" term-only-difference: %d, old-data-diff: %d, p-value:=%f\n", diff, bestTerms[termIdx].first, pval);
+            //cout << " term-only-difference:= " << diff << "  p-value:= " << pval << endl;
         }
 
         // Compute all pairs on terms
@@ -102,8 +115,28 @@ int main(int argc, char *argv[]) {
         // as next_combination() uses can be used, if needed, just one level above.
         for(unsigned termIdx1 = 0; termIdx1 < maxTerms-1; ++termIdx1){
             for(unsigned termIdx2 = termIdx1 + 1; termIdx2 < maxTerms; ++termIdx2){
-                // XOR
+                const hwres term1_hw = bestTermsHw[termIdx1];
+                const hwres term2_hw = bestTermsHw[termIdx2];
 
+                // termIdx1 XOR termIdx2
+                const hwres xor_hw = HW_XOR(bestTermsEvaluations[termIdx1], bestTermsEvaluations[termIdx2]);
+
+                // termIdx1 AND termIdx2
+                const hwres and_hw = HW_AND(bestTermsEvaluations[termIdx1], bestTermsEvaluations[termIdx2]);
+
+                // Sorry for printf, its just better then cout in this case...
+                // WARNING - hardcoded term deg = 3, you need to change that.
+                // But just to visualize how various the terms are...
+                printf(" - [%03u, %03u], hwTerm1: %d, hwTerm2: %d, hwXor: %d, hwAnd: %d "
+                               "t1: %d,%d,%d t2: %d,%d,%d\n",
+                    termIdx1, termIdx2, (int)term1_hw, (int)term2_hw, (int)xor_hw, (int)and_hw,
+                    bestTerms[termIdx1].second[0],
+                    bestTerms[termIdx1].second[1],
+                    bestTerms[termIdx1].second[2],
+                    bestTerms[termIdx2].second[0],
+                    bestTerms[termIdx2].second[1],
+                    bestTerms[termIdx2].second[2]
+                );
             }
         }
 
