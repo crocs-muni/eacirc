@@ -19,6 +19,7 @@ public:
 private:
     uint8_t m_key[16];
     uint8_t m_iv[16];
+    int Nr;
 private:
 };
 
