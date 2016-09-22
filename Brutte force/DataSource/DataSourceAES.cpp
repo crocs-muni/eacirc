@@ -7,7 +7,7 @@
 #include <cstring>
 #include "../DataGenerators/aes.h"
 
-DataSourceAES::DataSourceAES(unsigned long seed) {
+DataSourceAES::DataSourceAES(unsigned long seed, int Nr) {
     std::minstd_rand systemGenerator((unsigned int) seed);
     for (unsigned char i = 0; i < 16; i++) {
         m_key[i] = (uint8_t) systemGenerator();

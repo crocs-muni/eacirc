@@ -9,7 +9,7 @@
 
 class DataSourceAES : public DataSource {
 public:
-    DataSourceAES(unsigned long seed = 0);
+    DataSourceAES(unsigned long seed = 0, int Nr = 10);
     ~DataSourceAES() {}
 
     virtual long long getAvailableData() override;

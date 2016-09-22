@@ -47,8 +47,10 @@ NOTE:   String length must be evenly divisible by 16byte (str_len % 16 == 0)
 #define Nk 4
 // Key length in bytes [128 bit]
 #define KEYLEN 16
+
+//now used as param
 // The number of rounds in AES Cipher.
-#define Nr 10
+//#define Nr 10
 
 // jcallan@github points out that declaring Multiply as a function
 // reduces code size considerably with the Keil ARM compiler.
@@ -153,7 +155,7 @@ static uint8_t getSBoxInvert(uint8_t num)
 }
 
 // This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
-static void KeyExpansion(void)
+static void KeyExpansion(int Nr = 10)
 {
     uint32_t i, j, k;
     uint8_t tempa[4]; // Used for the column/row operations
@@ -384,7 +386,7 @@ static void InvShiftRows(void)
 
 
 // Cipher is the main function that encrypts the PlainText.
-static void Cipher(void)
+static void Cipher(int Nr = 10)
 {
     uint8_t round = 0;
 
@@ -409,7 +411,7 @@ static void Cipher(void)
     AddRoundKey(Nr);
 }
 
-static void InvCipher(void)
+static void InvCipher(int Nr = 10)
 {
     uint8_t round=0;
 
@@ -451,20 +453,20 @@ static void BlockCopy(uint8_t* output, uint8_t* input)
 #if defined(ECB) && ECB
 
 
-void AES128_ECB_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output)
+void AES128_ECB_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output, int Nr)
 {
   // Copy input to output, and work in-memory on output
   BlockCopy(output, input);
   state = (state_t*)output;
 
   Key = key;
-  KeyExpansion();
+  KeyExpansion(Nr);
 
   // The next function call encrypts the PlainText with the Key using AES algorithm.
-  Cipher();
+  Cipher(Nr);
 }
 
-void AES128_ECB_decrypt(uint8_t* input, const uint8_t* key, uint8_t *output)
+void AES128_ECB_decrypt(uint8_t* input, const uint8_t* key, uint8_t *output, int Nr)
 {
   // Copy input to output, and work in-memory on output
   BlockCopy(output, input);
@@ -472,9 +474,9 @@ void AES128_ECB_decrypt(uint8_t* input, const uint8_t* key, uint8_t *output)
 
   // The KeyExpansion routine must be called before encryption.
   Key = key;
-  KeyExpansion();
+  KeyExpansion(Nr);
 
-  InvCipher();
+  InvCipher(Nr);
 }
 
 
@@ -508,7 +510,7 @@ void AES128_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length,
   if(0 != key)
   {
     Key = key;
-    KeyExpansion();
+    KeyExpansion(10);
   }
 
   if(iv != 0)
