@@ -22,7 +22,7 @@ public:
 template <typename T = uint64_t>
 hwres HW(bitarray<T>& res){
     hwres hw = 0;
-    int ln = res[0]->size();
+    int ln = res.size();
     for (int i = 0; i < ln; ++i) {
         hw += popCount(res[i]);
     }
