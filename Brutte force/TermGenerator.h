@@ -7,6 +7,8 @@
 #include <vector>
 #include <stdexcept>
 #include <queue>
+#include <vector>
+#include <set>
 #include "base.h"
 #include "CommonFnc.h"
 
@@ -76,7 +78,7 @@ int compute(std::vector<bitarray<u64> * > a,
     return biggestDiff;
 }
 
-// diff from the expected value of 'ones' + term
+// zscore from the expected value of 'ones' + term
 typedef std::pair<double, term> pairZscoreTerm;
 
 // Utility which helps us to extract underlying container from the std::priority_queue.
@@ -153,6 +155,11 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
 
     return biggestZscore;
 }
+
+bool all_combinations(std::vector<int>& com, int n);
+
+double expProbofXORTerms(std::vector<pairZscoreTerm> termsForXoring,  int tvsize = 128);
+double expProbofANDTerms(std::vector<pairZscoreTerm> termsForAnding,  int tvsize = 128);
 
 
 #endif //BRUTTE_FORCE_TERMGENERATOR_H
