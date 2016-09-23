@@ -20,6 +20,7 @@ set(SOURCE_FILES_COMMON
         Term.h
         TermGenerator.cpp
         TermGenerator.h
+
         )
 
 set(SOURCE_FILES_ESTREAM
@@ -87,7 +88,8 @@ set(SOURCE_FILES_MIX
         ${SOURCE_FILES_ESTREAM}
         ${SOURCE_FILES_SHA3}
         ${SOURCE_DATA_SOURCES}
-        mainMixSinglePval.cpp)
+        mainMixSinglePval.cpp
+        )
 
 set(SOURCE_FILES_BI
         ${SOURCE_FILES_COMMON}

@@ -114,7 +114,7 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
                 std::vector<pairZscoreTerm> &queue,
                 int maxTerms,
                 int numTVs,
-                int tvsize = 128)
+                int numVars = 128)
 {
     double zscore, biggestZscore = 0;
     const int refCount = numTVs >> deg;
@@ -128,16 +128,6 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
     // Priority queue is min-heap. If new element is lower than minimum
     // then ignore it. Otherwise add it to the heap and delete the previous minimum.
     init_comb(indices, deg);
-    //init queue
-    //put first maxTerms of terms to queue
-    for (int i = 0; i < maxTerms; ++i) {
-
-        freqOnes = HW_AND<deg>(a, indices);
-        zscore = CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs);
-        next_combination(indices, tvsize);
-        pairZscoreTerm c_pair(zscore, indices);
-        push_min_heap(queue, c_pair);
-    }
     do {
         freqOnes = HW_AND<deg>(a, indices);
         zscore = CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs);
@@ -151,15 +141,16 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
                 pop_min_heap(queue);
             }
         }
-    } while (next_combination(indices, tvsize));
+    } while (next_combination(indices, numVars));
 
     return biggestZscore;
 }
 
 bool all_combinations(std::vector<int>& com, int n);
 
-double expProbofXORTerms(std::vector<pairZscoreTerm> termsForXoring,  int tvsize = 128);
-double expProbofANDTerms(std::vector<pairZscoreTerm> termsForAnding,  int tvsize = 128);
+double expProbofXORTerms(std::vector<pairZscoreTerm>& termsForXoring,  int tvsize = 128);
+double expProbofANDTerms(std::vector<pairZscoreTerm>& termsForAnding,  int tvsize = 128);
 
-
+double XORkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs);
+double ANDkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs);
 #endif //BRUTTE_FORCE_TERMGENERATOR_H

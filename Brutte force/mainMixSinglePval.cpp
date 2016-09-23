@@ -35,8 +35,6 @@ int main(int argc, char *argv[]) {
     cout << filePath << endl;
     ifstream in(filePath.c_str(), ios::binary);
 
-
-
     int resultSize = TarraySize<u64>(numTVs);
     u64 *block = new u64[resultSize * 128];
     vector < bitarray < u64 > * > resultArrays;
@@ -84,7 +82,20 @@ int main(int argc, char *argv[]) {
     // than with "random" k distinguishers.
     computeTopKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs);
 
+    // -------------------------------------------------------------------------------------------------------------
+    // Evaluate top best terms k on new data.
+    // The evaluation is helpful for computing fitness of the term itself.
+    for(unsigned termIdx = 0; termIdx < maxTerms; ++termIdx){
+        // We have basis regenerated now, we can evaluate terms on new data faster with using the basis.
+        // The evaluation result is stored to bestTermsEvaluations for further combinations.
+        const int result_hw = HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
+    }
+
+
     for(int i = 0; i < bestTerms.size(); i++)
         cout << bestTerms[i].first << endl;
+
+    cout << XORkbestTerms(bestTermsEvaluations, bestTerms, 1, numVars, numTVs);
+
     return 0;
 }

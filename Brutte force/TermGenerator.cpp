@@ -116,7 +116,7 @@ bool subsetVars(set<int>& S, vector<int>& term) {
     return true;
 }
 
-double expProbofXorTerms(std::vector<pairZscoreTerm> termsForXoring,  int tvsize){
+double expProbofXorTerms(std::vector<pairZscoreTerm>& termsForXoring, int numVars){
     set<int> S;
     vector<int> com;
     double prob = 0;
@@ -147,7 +147,7 @@ double expProbofXorTerms(std::vector<pairZscoreTerm> termsForXoring,  int tvsize
     return prob;
 }
 
-double expProbofAND(std::vector<pairZscoreTerm> termsForAnding,  int tvsize){
+double expProbofANDTerms(std::vector<pairZscoreTerm>& termsForAnding, int numVars){
     set<int> S;
     for(int i = 0; i < termsForAnding.size(); i++)
     {
@@ -158,3 +158,62 @@ double expProbofAND(std::vector<pairZscoreTerm> termsForAnding,  int tvsize){
 }
 
 
+double XORkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs){
+    vector<int> combination;
+    int numTerms = bestTerms.size(), termInd, freqOnes;
+    bitarray<u64> XORedBitarrays(numTVs);
+    vector<pairZscoreTerm> termsForXoring;
+    double expectedProb, observedProb,zscore,biggestZscore = 0;
+
+    init_comb(combination, k);
+    do {
+        XORedBitarrays.reset();
+        termsForXoring.clear();
+
+        for (int i = 0; i < combination.size(); ++i) {
+            termInd = combination[i];
+
+            termsForXoring.push_back(bestTerms[termInd]);
+            XOR(XORedBitarrays,XORedBitarrays,bestTermsEvaluations[termInd]);
+
+        }
+        freqOnes = HW(XORedBitarrays);
+        observedProb = (double)freqOnes/numTVs;
+        expectedProb = expProbofXorTerms(termsForXoring, numVars);
+        zscore = CommonFnc::zscore(observedProb,expectedProb,numTVs);
+
+        if(biggestZscore < zscore) biggestZscore = zscore;
+    }while(next_combination(combination,numTerms,false) );
+
+    return biggestZscore;
+}
+
+double ANDkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs){
+    vector<int> combination;
+    int numTerms = bestTerms.size(), termInd, freqOnes;
+    bitarray<u64> ANDedBitarrays(numTVs);
+    vector<pairZscoreTerm> termsForANDing;
+    double expectedProb, observedProb,zscore,biggestZscore = 0;
+
+    init_comb(combination, k);
+    do {
+        ANDedBitarrays.reset();
+        termsForANDing.clear();
+
+        for (int i = 0; i < combination.size(); ++i) {
+            termInd = combination[i];
+
+            termsForANDing.push_back(bestTerms[termInd]);
+            XOR(ANDedBitarrays,ANDedBitarrays,bestTermsEvaluations[termInd]);
+
+        }
+        freqOnes = HW(ANDedBitarrays);
+        observedProb = (double)freqOnes/numTVs;
+        expectedProb = expProbofANDTerms(termsForANDing, numVars);
+        zscore = CommonFnc::zscore(observedProb,expectedProb,numTVs);
+
+        if(biggestZscore < zscore) biggestZscore = zscore;
+    }while(next_combination(combination,numTerms,false) );
+
+    return biggestZscore;
+}
