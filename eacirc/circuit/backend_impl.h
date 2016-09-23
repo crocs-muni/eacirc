@@ -3,6 +3,7 @@
 #include "backend.h"
 #include "circuit.h"
 #include "genetics.h"
+#include <fstream>
 #include <solvers/local_search.h>
 
 namespace circuit {
