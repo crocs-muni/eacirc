@@ -7,6 +7,7 @@
 #include <cstring>
 #include "../DataGenerators/aes.h"
 
+
 DataSourceAES::DataSourceAES(unsigned long seed, int Nr_) {
     std::minstd_rand systemGenerator((unsigned int) seed);
     for (unsigned char i = 0; i < 16; i++) {
@@ -30,6 +31,7 @@ void DataSourceAES::read(char *buffer, size_t size) {
         memcpy(workingBufferIn,&counter,workingBufferSize);
         // Encrypt input buffer.
         AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), Nr);
+        counter++;
     }
 }
 
