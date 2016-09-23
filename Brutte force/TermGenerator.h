@@ -11,6 +11,7 @@
 #include <set>
 #include "base.h"
 #include "CommonFnc.h"
+#include <fstream>
 
 void init_comb(std::vector<int> &com, int k);
 
@@ -48,12 +49,11 @@ inline void deserializeTerm(std::vector<int> &indices, int deg, T term){
 }
 
 template<class T>
-void printVec(std::vector<T> v) {
+void printVec(std::vector<T> v, bool newline = true, std::ostream& out = std::cout) {
     for (int i = 0; i < v.size(); ++i) {
-        std::cout << v[i] << " ";
+        out << v[i] << " ";
     }
-    std::cout << std::endl;
-
+    if (newline)out << std::endl;
 }
 
 template<int deg>
@@ -151,6 +151,6 @@ bool all_combinations(std::vector<int>& com, int n);
 double expProbofXORTerms(std::vector<pairZscoreTerm>& termsForXoring,  int tvsize = 128);
 double expProbofANDTerms(std::vector<pairZscoreTerm>& termsForAnding,  int tvsize = 128);
 
-double XORkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs);
+double XORkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs, std::vector<int>& best_combination);
 double ANDkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs);
 #endif //BRUTTE_FORCE_TERMGENERATOR_H
