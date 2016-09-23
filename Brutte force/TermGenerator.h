@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <queue>
 #include "base.h"
+#include "CommonFnc.h"
 
 void init_comb(std::vector<int> &com, int k);
 
@@ -76,7 +77,7 @@ int compute(std::vector<bitarray<u64> * > a,
 }
 
 // diff from the expected value of 'ones' + term
-typedef std::pair<int, term> pairDiffTerm;
+typedef std::pair<double, term> pairZscoreTerm;
 
 // Utility which helps us to extract underlying container from the std::priority_queue.
 template <class T, class S, class C>
@@ -92,64 +93,34 @@ S& Container(std::priority_queue<T, S, C>& q) {
 // Comparator on pairDiffTerm so we have min-heap.
 struct pairDiffTermCompare
 {
-    bool operator()(const pairDiffTerm& l, const pairDiffTerm& r)
+    bool operator()(const pairZscoreTerm& l, const pairZscoreTerm& r)
     {
         return l.first > r.first;
     }
 };
 
 // Priority queue
-typedef std::priority_queue<pairDiffTerm, std::vector<pairDiffTerm>, pairDiffTermCompare> priorityQueueOnTerms;
+typedef std::priority_queue<pairZscoreTerm, std::vector<pairZscoreTerm>, pairDiffTermCompare> priorityQueueOnTerms;
 
-template<int deg>
-int computeTopK(std::vector<bitarray<u64> * > a,
-               priorityQueueOnTerms &queue,
-                int maxTerms,
-                int numTVs)
-{
-    int diff, biggestDiff = 0;
-    const int refCount = numTVs >> deg;
-    std::vector<int> indices;
-
-    // Keeping top K max elements in the priority queue.
-    // Priority queue is min-heap. If new element is lower than minimum
-    // then ignore it. Otherwise add it to the heap and delete the previous minimum.
-    init_comb(indices, deg);
-    do {
-        diff = abs(HW_AND<deg>(a, indices) - refCount);
-
-        // If queue is not full OR the value is higher than queue-minimal, add it.
-        const pairDiffTerm & c_top = queue.top();
-        if (queue.size() < maxTerms || diff > c_top.first){
-            pairDiffTerm c_pair(diff, indices);
-            queue.push(c_pair);
-
-            if (queue.size() > maxTerms){
-                queue.pop();
-            }
-        }
-    } while (next_combination(indices, 128));
-
-    return biggestDiff;
-}
 
 // In place variant without reallocations.
-void push_min_heap(std::vector<pairDiffTerm>& heap, pairDiffTerm val);
-pairDiffTerm pop_min_heap(std::vector<pairDiffTerm>& heap);
+void push_min_heap(std::vector<pairZscoreTerm>& heap, pairZscoreTerm val);
+pairZscoreTerm pop_min_heap(std::vector<pairZscoreTerm>& heap);
 
 template<int deg>
-int computeTopKInPlace(std::vector<bitarray<u64> * > a,
-                std::vector<pairDiffTerm> &queue,
+double computeTopKInPlace(std::vector<bitarray<u64> * > a,
+                std::vector<pairZscoreTerm> &queue,
                 int maxTerms,
                 int numTVs,
                 int tvsize = 128)
 {
-    int diff, biggestDiff = 0;
+    double zscore, biggestZscore = 0;
     const int refCount = numTVs >> deg;
     std::vector<int> indices;
+    int freqOnes;
 
     // Make sure the queue is of the given size.
-    queue.resize((unsigned)maxTerms, pairDiffTerm(-1, term()));
+    queue.resize((unsigned)maxTerms, pairZscoreTerm(-1, term()));
 
     // Keeping top K max elements in the priority queue.
     // Priority queue is min-heap. If new element is lower than minimum
@@ -158,18 +129,20 @@ int computeTopKInPlace(std::vector<bitarray<u64> * > a,
     //init queue
     //put first maxTerms of terms to queue
     for (int i = 0; i < maxTerms; ++i) {
-        diff = abs(HW_AND<deg>(a, indices) - refCount);
+
+        freqOnes = HW_AND<deg>(a, indices);
+        zscore = CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs);
         next_combination(indices, tvsize);
-        pairDiffTerm c_pair(diff, indices);
+        pairZscoreTerm c_pair(zscore, indices);
         push_min_heap(queue, c_pair);
     }
     do {
-        diff = abs(HW_AND<deg>(a, indices) - refCount);
-
+        freqOnes = HW_AND<deg>(a, indices);
+        zscore = CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs);
         // If queue is not full OR the value is higher than queue-minimal, add it.
-        const pairDiffTerm & c_top = queue.back();
-        if (queue.size() < maxTerms || diff > c_top.first){
-            pairDiffTerm c_pair(diff, indices);
+        const pairZscoreTerm & c_top = queue.back();
+        if (queue.size() < maxTerms || zscore > c_top.first){
+            pairZscoreTerm c_pair(zscore, indices);
             push_min_heap(queue, c_pair);
 
             if (queue.size() > maxTerms){
@@ -178,7 +151,7 @@ int computeTopKInPlace(std::vector<bitarray<u64> * > a,
         }
     } while (next_combination(indices, tvsize));
 
-    return biggestDiff;
+    return biggestZscore;
 }
 
 

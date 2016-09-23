@@ -62,13 +62,13 @@ void genRandData(u8 *TVs, int numBytes) {
 }
 
 // Utilities for min-heap in array
-void push_min_heap(vector<pairDiffTerm>& heap, pairDiffTerm val) {
+void push_min_heap(vector<pairZscoreTerm>& heap, pairZscoreTerm val) {
     heap.push_back(val);
     push_heap(heap.begin(), heap.end(), pairDiffTermCompare());
 }
 
-pairDiffTerm pop_min_heap(vector<pairDiffTerm>& heap) {
-    pairDiffTerm val = heap.front();
+pairZscoreTerm pop_min_heap(vector<pairZscoreTerm>& heap) {
+    pairZscoreTerm val = heap.front();
 
     //This operation will move the smallest element to the end of the vector
     pop_heap(heap.begin(), heap.end(), pairDiffTermCompare());

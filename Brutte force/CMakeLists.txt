@@ -71,7 +71,8 @@ set(SOURCE_DATA_SOURCES
         DataSource/DataSourceDecim.h
         DataSource/DataSourceDecimColumn.cpp
         DataSource/DataSourceDecimColumn.h
-        DataSource/DataSourceSHA3.cpp DataSource/DataSourceSHA3.h)
+        DataSource/DataSourceSHA3.cpp
+        DataSource/DataSourceSHA3.h)
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}
@@ -86,8 +87,7 @@ set(SOURCE_FILES_MIX
         ${SOURCE_FILES_ESTREAM}
         ${SOURCE_FILES_SHA3}
         ${SOURCE_DATA_SOURCES}
-        mainMix.cpp
-        )
+        mainMixSinglePval.cpp)
 
 set(SOURCE_FILES_BI
         ${SOURCE_FILES_COMMON}
@@ -98,9 +98,18 @@ set(SOURCE_FILES_BI
         mainBi.cpp
         )
 
+set(SOURCE_FILES_DATA_GEN
+        ${SOURCE_FILES_COMMON}
+        ${SOURCE_FILES_ESTREAM}
+        ${SOURCE_FILES_SHA3}
+        ${SOURCE_DATA_SOURCES}
+        mainDatageneration.cpp
+        )
+
 #add_executable(Brutte_force ${SOURCE_FILES_KS})
 #add_executable(BrutteBi ${SOURCE_FILES_BI})
 add_executable(BrutteMix ${SOURCE_FILES_MIX})
+#add_executable(BrutteDataGen ${SOURCE_FILES_DATA_GEN})
 
 # BOOST
 #set(Boost_USE_STATIC_LIBS OFF)
@@ -110,5 +119,5 @@ add_executable(BrutteMix ${SOURCE_FILES_MIX})
 #include_directories(${Boost_INCLUDE_DIRS})
 
 # Linking
-target_link_libraries(Brutte_force ${Boost_LIBRARIES})
+#target_link_libraries(Brutte_force ${Boost_LIBRARIES})
 #target_link_libraries(BrutteBi ${Boost_LIBRARIES})
