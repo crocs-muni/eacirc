@@ -17,6 +17,12 @@ namespace solvers {
             : genotype(std::move(gen))
             , score() {}
 
+        individual(individual&&) = default;
+        individual(individual const&) = default;
+
+        individual& operator=(individual&&) = default;
+        individual& operator=(individual const&) = default;
+
         friend bool operator<(individual const& lhs, individual const& rhs) {
             return lhs.score < rhs.score;
         }

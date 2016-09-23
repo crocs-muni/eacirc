@@ -28,6 +28,12 @@ namespace circuit {
         circuit(unsigned input)
             : _input(input) {}
 
+        circuit(circuit&&) = default;
+        circuit(circuit const&) = default;
+
+        circuit& operator=(circuit&&) = default;
+        circuit& operator=(circuit const&) = default;
+
         unsigned input() const { return _input; }
 
         iterator begin() { return _layers.begin(); }
