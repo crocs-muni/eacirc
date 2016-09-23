@@ -18,6 +18,14 @@ namespace circuit {
                       eva(config.at("evaluator")),
                       std::forward<Sseq>(seed)) {}
 
+        ~global_search() {
+            {
+                std::ofstream out("scores.txt");
+                for (double score : _solver.scores())
+                    out << score << std::endl;
+            }
+        }
+
         void train(dataset const& a, dataset const& b) override {
             _solver.reevaluate(a, b);
             _solver.run(_num_of_generations);
