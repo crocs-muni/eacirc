@@ -121,7 +121,7 @@ double expProbofXorTerms(std::vector<pairZscoreTerm>& termsForXoring, int numVar
     vector<int> com;
     double prob = 0;
     int ind;
-    int Ssize, parity;
+
     int numTerms = termsForXoring.size();
     while (all_combinations(com, numTerms)) {
         //print(com);
@@ -132,16 +132,8 @@ double expProbofXorTerms(std::vector<pairZscoreTerm>& termsForXoring, int numVar
             ind = com[i];
             addSetVars(S, termsForXoring[ind].second);
         }
-
-        parity = 0;
-        for (int i = 0; i < numTerms; i++)
-        {
-            if (subsetVars(S, termsForXoring[i].second)) parity++;
-        }
-
-        if ( (parity & 1 ) && (parity == com.size()) ) {
-            prob += 1.0 / (1 << S.size());
-        }
+        if(com.size() & 1 ) prob += 1.0 / (1 << (S.size()-com.size()+1));
+        else prob -= 1.0 / (1 << (S.size()-com.size()+1));
     }
 
     return prob;
@@ -172,16 +164,13 @@ double XORkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZs
 
         for (int i = 0; i < combination.size(); ++i) {
             termInd = combination[i];
-
             termsForXoring.push_back(bestTerms[termInd]);
             XOR(XORedBitarrays,XORedBitarrays,bestTermsEvaluations[termInd]);
-
         }
         freqOnes = HW(XORedBitarrays);
         observedProb = (double)freqOnes/numTVs;
         expectedProb = expProbofXorTerms(termsForXoring, numVars);
         zscore = CommonFnc::zscore(observedProb,expectedProb,numTVs);
-
         if(biggestZscore < zscore) biggestZscore = zscore;
     }while(next_combination(combination,numTerms,false) );
 
@@ -202,10 +191,8 @@ double ANDkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZs
 
         for (int i = 0; i < combination.size(); ++i) {
             termInd = combination[i];
-
             termsForANDing.push_back(bestTerms[termInd]);
             XOR(ANDedBitarrays,ANDedBitarrays,bestTermsEvaluations[termInd]);
-
         }
         freqOnes = HW(ANDedBitarrays);
         observedProb = (double)freqOnes/numTVs;
