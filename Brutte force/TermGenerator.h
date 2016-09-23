@@ -141,7 +141,8 @@ template<int deg>
 int computeTopKInPlace(std::vector<bitarray<u64> * > a,
                 std::vector<pairDiffTerm> &queue,
                 int maxTerms,
-                int numTVs)
+                int numTVs,
+                int tvsize = 128)
 {
     int diff, biggestDiff = 0;
     const int refCount = numTVs >> deg;
@@ -154,6 +155,14 @@ int computeTopKInPlace(std::vector<bitarray<u64> * > a,
     // Priority queue is min-heap. If new element is lower than minimum
     // then ignore it. Otherwise add it to the heap and delete the previous minimum.
     init_comb(indices, deg);
+    //init queue
+    //put first maxTerms of terms to queue
+    for (int i = 0; i < maxTerms; ++i) {
+        diff = abs(HW_AND<deg>(a, indices) - refCount);
+        next_combination(indices, tvsize);
+        pairDiffTerm c_pair(diff, indices);
+        push_min_heap(queue, c_pair);
+    }
     do {
         diff = abs(HW_AND<deg>(a, indices) - refCount);
 
@@ -167,7 +176,7 @@ int computeTopKInPlace(std::vector<bitarray<u64> * > a,
                 pop_min_heap(queue);
             }
         }
-    } while (next_combination(indices, 128));
+    } while (next_combination(indices, tvsize));
 
     return biggestDiff;
 }
