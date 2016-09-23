@@ -14,20 +14,19 @@
 #include "finisher.h"
 #include "logger.h"
 #include "TermGenerator.h"
-
 using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    const int numTVs = 10000;
-    const int tvsize = 16, numVars = 8 * tvsize;
-    const int numEpochs = 40;
-    const int numBytes = numTVs * tvsize;
     const int deg = 2;
-    const int maxTerms = 30;
+    int numTVs = 10000000;
+    int tvsize = 16, numVars = 8 * tvsize;
+    int numBytes = numTVs * tvsize;
+    int maxTerms = 30;
     u8 *TVs = new u8[numBytes];
 
 
+    ofstream results("results.txt");
     int Nr = 12;
     //string path = "C:/Users/syso/.CLion2016.1/system/cmake/generated/Brutte force-2fe67558/2fe67558/Release/";
 
@@ -90,12 +89,21 @@ int main(int argc, char *argv[]) {
         // The evaluation result is stored to bestTermsEvaluations for further combinations.
         const int result_hw = HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
     }
+    results << "best terms:" << endl;
+    for(int i = 0; i < bestTerms.size(); i++) {
+        results << "zscore=" << bestTerms[i].first << " [ ";
+        printVec(bestTerms[i].second, false, results);
+        results << "]\n";
+    }
 
+    vector<int> best_combination;
+    for (int k = 1; k < 3; ++k) {
+        results << "best combination:" << endl;
+        results << "zscore " <<  XORkbestTerms(bestTermsEvaluations, bestTerms, k, numVars, numTVs, best_combination) << " best combination=[";
+        printVec(best_combination, false, results);
+        results << "]" << endl;
+    }
 
-    for(int i = 0; i < bestTerms.size(); i++)
-        cout << bestTerms[i].first << endl;
-
-    cout << XORkbestTerms(bestTermsEvaluations, bestTerms, 1, numVars, numTVs);
 
     return 0;
 }

@@ -150,7 +150,7 @@ double expProbofANDTerms(std::vector<pairZscoreTerm>& termsForAnding, int numVar
 }
 
 
-double XORkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs){
+double XORkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs, vector<int>& best_combination){
     vector<int> combination;
     int numTerms = bestTerms.size(), termInd, freqOnes;
     bitarray<u64> XORedBitarrays(numTVs);
@@ -171,7 +171,10 @@ double XORkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZs
         observedProb = (double)freqOnes/numTVs;
         expectedProb = expProbofXorTerms(termsForXoring, numVars);
         zscore = CommonFnc::zscore(observedProb,expectedProb,numTVs);
-        if(biggestZscore < zscore) biggestZscore = zscore;
+        if(biggestZscore < zscore){
+            biggestZscore = zscore;
+            best_combination = combination;
+        }
     }while(next_combination(combination,numTerms,false) );
 
     return biggestZscore;
