@@ -13,7 +13,7 @@ target_sources(eacirc PRIVATE
     eacirc
     seed
     statistics
-    streams/filestream
+    streams/streams
     version
     )
 

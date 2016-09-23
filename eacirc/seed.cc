@@ -1,4 +1,5 @@
 #include "seed.h"
+#include <ios>
 #include <random>
 #include <sstream>
 
@@ -10,11 +11,12 @@ static auto generate_one(Generator&& gen) -> std::enable_if_t<std::is_unsigned<T
 template <typename Type>
 static auto from_hex(std::string str) -> std::enable_if_t<std::is_unsigned<Type>::value, Type> {
     std::istringstream in(str);
-    in.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
-    in.flags(std::ios_base::hex);
 
     Type value;
-    in >> value;
+    in >> std::hex >> value;
+
+    if (in.fail())
+        throw std::runtime_error("can not convert string to hexadecimal number");
 
     return value;
 }
@@ -22,10 +24,11 @@ static auto from_hex(std::string str) -> std::enable_if_t<std::is_unsigned<Type>
 template <typename Type>
 static auto to_hex(Type value) -> std::enable_if_t<std::is_unsigned<Type>::value, std::string> {
     std::ostringstream out;
-    out.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
-    out.flags(std::ios_base::hex);
 
-    out << value;
+    out << std::hex << value;
+
+    if (out.fail())
+        throw std::runtime_error("can not convert hexadecimal number to string");
 
     return out.str();
 }

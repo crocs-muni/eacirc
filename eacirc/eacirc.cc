@@ -7,7 +7,7 @@
 #include <pcg/pcg_random.hpp>
 
 #include "circuit/backend.h"
-#include "streams/filestream.h"
+#include "streams/streams.h"
 
 static std::ifstream open_config_file(std::string path) {
     std::ifstream file(path);
@@ -28,13 +28,13 @@ eacirc::eacirc(json const& config)
     , _tv_count(config.at("tv-count")) {
     logger::info() << "eacirc framework version: " << VERSION_TAG << std::endl;
     logger::info() << "current date: " << logger::date() << std::endl;
-    logger::info() << "using seed: " << _seed << std::endl;
+    logger::info() << "using seed: " << std::string(_seed) << std::endl;
 
     seed_seq_from<pcg32> main_seeder(_seed);
 
     {
-        _stream_a = std::make_unique<streams::filestream>(config.at("stream-a"));
-        _stream_b = std::make_unique<streams::filestream>(config.at("stream-b"));
+        _stream_a = make_stream(config.at("stream-a"));
+        _stream_b = make_stream(config.at("stream-b"));
     }
 
     {
@@ -65,9 +65,15 @@ void eacirc::run() {
         pvalues.emplace_back(_backend->test(a, b));
     }
 
+    {
+        std::ofstream of("pvals.txt");
+        for (auto v : pvalues)
+            of << v << std::endl;
+    }
+
     ks_uniformity_test test{pvalues, _significance_level};
 
-    logger::info() << "KS test on p-values of size " << pvalues.size() << std::endl;
+    logger::info() << "KS test on p-values of size: " << pvalues.size() << std::endl;
     logger::info() << "KS statistics: " << test.test_statistic << std::endl;
     logger::info() << "KS critical value: " << _significance_level << "%: " << test.critical_value
                    << std::endl;
@@ -76,7 +82,7 @@ void eacirc::run() {
         logger::info() << "KS is in " << _significance_level
                        << "% interval -> uniformity hypothesis rejected" << std::endl;
     } else {
-        logger::info() << "KS is not in " << _significance_level
-                       << "% interval -> uniformity hypothesis not rejected" << std::endl;
+        logger::info() << "KS is not in " << _significance_level << "% interval -> is uniform"
+                       << std::endl;
     }
 }
