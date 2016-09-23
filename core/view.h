@@ -61,3 +61,10 @@ template <typename I> auto make_view(I beg, I end) -> view<I> {
 template <typename I, typename S> auto make_view(I beg, S n) -> view<I> {
     return {beg, typename view<I>::difference_type(n)};
 }
+
+/**
+ * @brief convinient function for creating \a view<I> from an arbitrary container
+ */
+template <typename Cont> auto make_view(Cont&& container) -> view<decltype(container.begin())> {
+    return {container.begin(), container.end()};
+}
