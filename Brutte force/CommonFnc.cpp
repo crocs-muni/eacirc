@@ -180,7 +180,7 @@ double CommonFnc::KSUniformityTest(std::vector<double>& samples) {
 }
 
 double CommonFnc::zscore(double observed, double expected, double samples){
-    return (observed-expected) / sqrt((expected*(1-expected))/samples);
+    return fabs((observed-expected) / sqrt((expected*(1-expected))/samples));
 }
 
 double CommonFnc::ucrit(double alpha){
