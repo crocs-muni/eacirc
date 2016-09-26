@@ -7,7 +7,7 @@
 #include <pcg/pcg_random.hpp>
 
 #include "circuit/backend.h"
-#include "streams/streams.h"
+#include "streams.h"
 
 static std::ifstream open_config_file(std::string path) {
     std::ifstream file(path);
@@ -33,8 +33,8 @@ eacirc::eacirc(json const& config)
     seed_seq_from<pcg32> main_seeder(_seed);
 
     {
-        _stream_a = make_stream(config.at("stream-a"));
-        _stream_b = make_stream(config.at("stream-b"));
+        _stream_a = make_stream(config.at("stream-a"), main_seeder);
+        _stream_b = make_stream(config.at("stream-b"), main_seeder);
     }
 
     {
