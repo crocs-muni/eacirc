@@ -63,15 +63,23 @@ void genRandData(u8 *TVs, int numBytes) {
 
 // Utilities for min-heap in array
 void push_min_heap(vector<pairZscoreTerm>& heap, pairZscoreTerm val) {
-    heap.push_back(val);
-    push_heap(heap.begin(), heap.end(), pairDiffTermCompare());
+
+    if(val.first < heap.back().first) {
+        heap.push_back(val);
+        return;
+    }
+
+    for (int i = 0; i < heap.size(); ++i) {
+        if(val.first >= heap[i].first) {
+            heap.insert(heap.begin() + i, val);
+            return;
+        }
+    }
+
 }
 
 pairZscoreTerm pop_min_heap(vector<pairZscoreTerm>& heap) {
     pairZscoreTerm val = heap.front();
-
-    //This operation will move the smallest element to the end of the vector
-    pop_heap(heap.begin(), heap.end(), pairDiffTermCompare());
 
     //Remove the last element from vector, which is the smallest element
     heap.pop_back();
@@ -174,36 +182,41 @@ double XORkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZs
         if(biggestZscore < zscore){
             biggestZscore = zscore;
             best_combination = combination;
+
         }
     }while(next_combination(combination,numTerms,false) );
 
     return biggestZscore;
 }
 
-double ANDkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs){
+double ANDkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs, vector<int>& best_combination){
     vector<int> combination;
     int numTerms = bestTerms.size(), termInd, freqOnes;
     bitarray<u64> ANDedBitarrays(numTVs);
-    vector<pairZscoreTerm> termsForANDing;
+    vector<pairZscoreTerm> termsForAnding;
     double expectedProb, observedProb,zscore,biggestZscore = 0;
 
     init_comb(combination, k);
     do {
         ANDedBitarrays.reset();
-        termsForANDing.clear();
+        termsForAnding.clear();
 
         for (int i = 0; i < combination.size(); ++i) {
             termInd = combination[i];
-            termsForANDing.push_back(bestTerms[termInd]);
+            termsForAnding.push_back(bestTerms[termInd]);
             XOR(ANDedBitarrays,ANDedBitarrays,bestTermsEvaluations[termInd]);
         }
         freqOnes = HW(ANDedBitarrays);
         observedProb = (double)freqOnes/numTVs;
-        expectedProb = expProbofANDTerms(termsForANDing, numVars);
+        expectedProb = expProbofANDTerms(termsForAnding, numVars);
         zscore = CommonFnc::zscore(observedProb,expectedProb,numTVs);
-
-        if(biggestZscore < zscore) biggestZscore = zscore;
+        if(biggestZscore < zscore){
+            biggestZscore = zscore;
+            best_combination = combination;
+        }
     }while(next_combination(combination,numTerms,false) );
 
     return biggestZscore;
 }
+
+

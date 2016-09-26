@@ -130,10 +130,10 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
     init_comb(indices, deg);
     do {
         freqOnes = HW_AND<deg>(a, indices);
-        zscore = CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs);
+        zscore = fabs(CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs));
         // If queue is not full OR the value is higher than queue-minimal, add it.
         const pairZscoreTerm & c_top = queue.back();
-        if (queue.size() < maxTerms || zscore > c_top.first){
+        if ( zscore > c_top.first){
             pairZscoreTerm c_pair(zscore, indices);
             push_min_heap(queue, c_pair);
 
@@ -152,5 +152,5 @@ double expProbofXORTerms(std::vector<pairZscoreTerm>& termsForXoring,  int tvsiz
 double expProbofANDTerms(std::vector<pairZscoreTerm>& termsForAnding,  int tvsize = 128);
 
 double XORkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs, std::vector<int>& best_combination);
-double ANDkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs);
+double ANDkbestTerms(std::vector<bitarray<u64> >& bestTermsEvaluations, std::vector<pairZscoreTerm>& bestTerms, int k, int numVars, int numTVs, std::vector<int>& best_combination);
 #endif //BRUTTE_FORCE_TERMGENERATOR_H
