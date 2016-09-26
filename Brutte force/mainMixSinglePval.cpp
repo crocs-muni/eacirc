@@ -14,25 +14,29 @@
 #include "finisher.h"
 #include "logger.h"
 #include "TermGenerator.h"
+#include <iomanip>
 using namespace std;
 
 int main(int argc, char *argv[]) {
-
-    const int deg = 2;
+    const int deg = 3;
     int numTVs = 10000000;
     int tvsize = 16, numVars = 8 * tvsize;
     int numBytes = numTVs * tvsize;
-    int maxTerms = 30;
+    int kbound = 2;
     u8 *TVs = new u8[numBytes];
 
+    ifstream in(argv[1], ios::binary);
+    int maxTerms = atoi(argv[2]);
+    //tvsize = atoi(argv[3])/8;
+    numTVs = atoi(argv[4]);
+    if(maxTerms == 10) kbound = 10;
+    else kbound = 2;
 
-    ofstream results("results.txt");
-    int Nr = 12;
-    //string path = "C:/Users/syso/.CLion2016.1/system/cmake/generated/Brutte force-2fe67558/2fe67558/Release/";
 
-    string filePath =  "MD6_CRT_" + std::to_string(Nr) + ".bin";
-    cout << filePath << endl;
-    ifstream in(filePath.c_str(), ios::binary);
+
+    ofstream ZscoreFile("best Zscore.txt",std::ofstream::app);
+    ofstream besttermsFile("best Terms.txt",std::ofstream::app);
+
 
     int resultSize = TarraySize<u64>(numTVs);
     u64 *block = new u64[resultSize * 128];
@@ -40,15 +44,13 @@ int main(int argc, char *argv[]) {
 
     // s = base vector. Evaluation of x_i on the input data.
     // The term of 3 variables is then evaluated by: s[i]&s[j]&s[k].
-    SimpleTerm <u64, u64> s[numVars];
+    SimpleTerm <u64, u64>* s = new SimpleTerm <u64, u64>[numVars];
     for (int j = 0; j < numVars; ++j) {
         s[j].alloc(numVars);
         s[j].set(j);
         s[j].allocResults(numTVs);
         resultArrays.push_back(&s[j].getResults());
     }
-
-    double pval;
 
     // Min-heap of best maxTerms terms
     vector<pairZscoreTerm> bestTerms(maxTerms);
@@ -61,7 +63,6 @@ int main(int argc, char *argv[]) {
     }
 
     in.read((char *) TVs, numBytes);
-
 
     for (int j = 0; j < numVars; ++j) {
         s[j].evaluateTVs(tvsize, TVs);
@@ -87,23 +88,38 @@ int main(int argc, char *argv[]) {
     for(unsigned termIdx = 0; termIdx < maxTerms; ++termIdx){
         // We have basis regenerated now, we can evaluate terms on new data faster with using the basis.
         // The evaluation result is stored to bestTermsEvaluations for further combinations.
-        const int result_hw = HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
+        HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
     }
-    results << "best terms:" << endl;
+
+
+    /*results << "best terms:" << endl;
     for(int i = 0; i < bestTerms.size(); i++) {
-        results << "zscore=" << bestTerms[i].first << " [ ";
+        results  <<  setw(3) << i << ". zscore=" << setprecision(3) <<  bestTerms[i].first << " [ ";
         printVec(bestTerms[i].second, false, results);
         results << "]\n";
-    }
+    }*/
+
+    ZscoreFile << argv[1] << " maxterms=" <<  maxTerms << " deg=" << deg << " NumTVs=10^"  << log10(numTVs) << " numVars=" << numVars;
+    besttermsFile << argv[1] << " maxterms=" <<  maxTerms << " deg=" << deg << " NumTVs=10^"  << log10(numTVs) << " numVars=" << numVars;
 
     vector<int> best_combination;
-    for (int k = 1; k < 3; ++k) {
-        results << "best combination:" << endl;
-        results << "zscore " <<  XORkbestTerms(bestTermsEvaluations, bestTerms, k, numVars, numTVs, best_combination) << " best combination=[";
-        printVec(best_combination, false, results);
-        results << "]" << endl;
-    }
+    for (int k = 1; k < kbound+1; ++k) {
+        double zscore = ANDkbestTerms(bestTermsEvaluations, bestTerms, k, numVars, numTVs, best_combination);
 
+        ZscoreFile << " k= "  << k << " zscore= " <<  zscore << " ";
+        besttermsFile << " k= "  << k << " zscore= " <<  zscore << "  best terms= ";
+
+        for (int i = 0; i < best_combination.size(); ++i) {
+            for (int j = 0; j < bestTerms[i].second.size(); ++j) {
+                besttermsFile << bestTerms[i].second[j] << " ";
+            }
+            besttermsFile << "     ";
+        }
+        ZscoreFile << " " ;
+        besttermsFile << " " ;
+    }
+    ZscoreFile << endl;
+    besttermsFile <<endl;
 
     return 0;
 }
