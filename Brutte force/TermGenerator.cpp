@@ -217,7 +217,7 @@ double ANDkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZs
         for (int i = 0; i < combination.size(); ++i) {
             termInd = combination[i];
             termsForAnding.push_back(bestTerms[termInd]);
-            XOR(ANDedBitarrays,ANDedBitarrays,bestTermsEvaluations[termInd]);
+            AND(ANDedBitarrays,ANDedBitarrays,bestTermsEvaluations[termInd]);
         }
         freqOnes = HW(ANDedBitarrays);
         observedProb = (double)freqOnes/numTVs;
