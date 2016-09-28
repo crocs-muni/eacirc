@@ -95,7 +95,7 @@ hwres HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, std::vector<int>& i
 template <typename T = uint64_t >
 hwres HW_AND(bitarray<T>& a, bitarray<T>& b){
     if(a.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
     T tmp;
     hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
@@ -108,7 +108,7 @@ hwres HW_AND(bitarray<T>& a, bitarray<T>& b){
 template <typename T = uint64_t >
 hwres HW_AND(bitarray<T>& res, bitarray<T>& a, bitarray<T>& b){
     if(a.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
     T tmp;
     hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
@@ -122,7 +122,7 @@ hwres HW_AND(bitarray<T>& res, bitarray<T>& a, bitarray<T>& b){
 template <typename T = uint64_t >
 hwres HW_AND3(bitarray<T>& a, bitarray<T>& b, bitarray<T>& c){
     if(a.getNumVars() != b.getNumVars() || c.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
     T tmp;
     hwres hw = 0;
     for (int i = 0; i < a.size() ; ++i) {
@@ -137,7 +137,7 @@ hwres HW_AND3(bitarray<T>& a, bitarray<T>& b, bitarray<T>& c){
 template <typename T = uint64_t >
 bitarray<T>& XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
      if(a.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
 
     for (int i = 0; i < a.size() ; ++i) {
         result[i] = a[i] ^ b[i];
@@ -149,7 +149,7 @@ bitarray<T>& XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
 template <typename T = uint64_t >
 hwres HW_XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
      if(a.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
 
     T tmp;
     hwres hw = 0;
@@ -166,7 +166,7 @@ hwres HW_XOR(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
 template <typename T = uint64_t >
 hwres HW_XOR(bitarray<T>& a, bitarray<T>& b){
      if(a.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
 
     T tmp;
     hwres hw = 0;
@@ -187,7 +187,7 @@ bitarray& XOR(bitarray& a, bitarray& b){
 template <typename T = uint64_t >
 bitarray<T>& AND(bitarray<T>& result, bitarray<T>& a, bitarray<T>& b){
     if(a.getNumVars() != b.getNumVars() )
-        std::cout << "diferent sizes";
+        std::cout << "different sizes";
 
     for (int i = 0; i < a.size() ; ++i) {
         result[i] = a[i] & b[i];
