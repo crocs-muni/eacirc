@@ -108,6 +108,10 @@ typedef std::priority_queue<pairZscoreTerm, std::vector<pairZscoreTerm>, pairZSc
 void push_min_heap(std::vector<pairZscoreTerm>& heap, pairZscoreTerm val);
 pairZscoreTerm pop_min_heap(std::vector<pairZscoreTerm>& heap);
 
+// Naive variant with select sort
+void push_selsort(std::vector<pairZscoreTerm>& heap, pairZscoreTerm val);
+pairZscoreTerm pop_selsort(std::vector<pairZscoreTerm>& heap);
+
 template<int deg>
 double computeTopKInPlace(std::vector<bitarray<u64> * > a,
                 std::vector<pairZscoreTerm> &queue,
@@ -132,12 +136,14 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
         zscore = fabs(CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs));
         // If queue is not full OR the value is higher than queue-minimal, add it.
         const pairZscoreTerm & c_top = queue.back();
-        if ( zscore > c_top.first){
+        if (zscore > c_top.first){
             pairZscoreTerm c_pair(zscore, indices);
             push_min_heap(queue, c_pair);
+            //push_selsort(queue, c_pair);
 
-            if (queue.size() > maxTerms){
+            while (queue.size() > maxTerms){
                 pop_min_heap(queue);
+                //pop_selsort(queue);
             }
         }
     } while (next_combination(indices, numVars));

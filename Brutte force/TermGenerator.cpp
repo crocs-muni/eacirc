@@ -63,7 +63,22 @@ void genRandData(u8 *TVs, int numBytes) {
 
 // Utilities for min-heap in array
 void push_min_heap(vector<pairZscoreTerm>& heap, pairZscoreTerm val) {
+    heap.push_back(val);
+    push_heap(heap.begin(), heap.end(), pairZScoreTermCompare());
+}
 
+pairZscoreTerm pop_min_heap(vector<pairZscoreTerm>& heap) {
+    pairZscoreTerm val = heap.front();
+
+    //This operation will move the smallest element to the end of the vector
+    pop_heap(heap.begin(), heap.end(), pairZScoreTermCompare());
+
+    //Remove the last element from vector, which is the smallest element
+    heap.pop_back();
+    return val;
+}
+
+void push_selsort(vector<pairZscoreTerm>& heap, pairZscoreTerm val) {
     if(val.first < heap.back().first) {
         heap.push_back(val);
         return;
@@ -75,17 +90,15 @@ void push_min_heap(vector<pairZscoreTerm>& heap, pairZscoreTerm val) {
             return;
         }
     }
-
 }
 
-pairZscoreTerm pop_min_heap(vector<pairZscoreTerm>& heap) {
+pairZscoreTerm pop_selsort(vector<pairZscoreTerm>& heap) {
     pairZscoreTerm val = heap.front();
 
     //Remove the last element from vector, which is the smallest element
     heap.pop_back();
     return val;
 }
-
 
 bool all_combinations(vector<int>& com, int n) {
     static int counter = 0;
