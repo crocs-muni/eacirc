@@ -29,7 +29,7 @@ hwres HW(bitarray<T>& res){
     return hw;
 }
 
-//Hamming distance
+//Hamming distance, evaluating on a term - second parameter
 template <int n, typename T = uint64_t>
 hwres HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
     T tmp;
