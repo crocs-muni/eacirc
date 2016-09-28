@@ -23,8 +23,7 @@ int main(int argc, char *argv[]) {
     const int maxTerms = 30;
     u8 *TVs = new u8[numBytes];
 
-    //ifstream in(argv[1], ios::binary);
-    ifstream in("D:\\Projects\\EACirc\\Brutte force\\data\\AES_5", ios::binary);
+    ifstream in(argv[1], ios::binary);
 
     int resultSize = TarraySize<u64>(numTVs);
     u64 *block = new u64[resultSize * 128];
