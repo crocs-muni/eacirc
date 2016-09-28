@@ -93,7 +93,7 @@ S& Container(std::priority_queue<T, S, C>& q) {
 }
 
 // Comparator on pairDiffTerm so we have min-heap.
-struct pairDiffTermCompare
+struct pairZScoreTermCompare
 {
     bool operator()(const pairZscoreTerm& l, const pairZscoreTerm& r)
     {
@@ -102,8 +102,7 @@ struct pairDiffTermCompare
 };
 
 // Priority queue
-typedef std::priority_queue<pairZscoreTerm, std::vector<pairZscoreTerm>, pairDiffTermCompare> priorityQueueOnTerms;
-
+typedef std::priority_queue<pairZscoreTerm, std::vector<pairZscoreTerm>, pairZScoreTermCompare> priorityQueueOnTerms;
 
 // In place variant without reallocations.
 void push_min_heap(std::vector<pairZscoreTerm>& heap, pairZscoreTerm val);
