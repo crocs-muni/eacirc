@@ -18,7 +18,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    const int deg = 3;
+    const int deg = 2;
     int numTVs = 10000000;
     int tvsize = 16, numVars = 8 * tvsize;
     int kbound = 2;
@@ -87,15 +87,6 @@ int main(int argc, char *argv[]) {
     // If our hypothesis works, the results with "best" k distinguishers" should be better
     // than with "random" k distinguishers.
     computeTopKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs);
-
-    // -------------------------------------------------------------------------------------------------------------
-    // Evaluate top best terms k on new data.
-    // The evaluation is helpful for computing fitness of the term itself.
-    for(unsigned termIdx = 0; termIdx < maxTerms; ++termIdx){
-        // We have basis regenerated now, we can evaluate terms on new data faster with using the basis.
-        // The evaluation result is stored to bestTermsEvaluations for further combinations.
-        HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
-    }
 
 
     /*results << "best terms:" << endl;
