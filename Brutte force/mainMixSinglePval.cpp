@@ -64,9 +64,7 @@ int main(int argc, char *argv[]) {
     // Evaluated best terms on the data. Used for combining terms into polynomials (faster eval)
     vector<bitarray<u64> > bestTermsEvaluations(maxTerms);
     vector<hwres> bestTermsHw(maxTerms);
-    for (int j = 0; j < maxTerms; ++j) {
-        bestTermsEvaluations[j].alloc(numTVs);
-    }
+
 
     in.read((char *) TVs, numBytes);
 
@@ -79,7 +77,9 @@ int main(int argc, char *argv[]) {
     for(int tmpIdx=0; tmpIdx < maxTerms; ++tmpIdx){
         bestTerms[tmpIdx].first = -1;
         bestTermsEvaluations[tmpIdx].reset();
+        bestTermsEvaluations[tmpIdx].alloc(numTVs);
     }
+
 
     // Compute top K best distinguishers
     // TODO: in order to test the hypothesis about TOP k best distinguishers
@@ -88,6 +88,19 @@ int main(int argc, char *argv[]) {
     // than with "random" k distinguishers.
     computeTopKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs);
 
+
+    // -------------------------------------------------------------------------------------------------------------
+    // Evaluate top best terms k on new data.
+    // The evaluation is helpful for computing fitness of the term itself.
+    for(unsigned termIdx = 0; termIdx < maxTerms; ++termIdx){
+        // We have basis regenerated now, we can evaluate terms on new data faster with using the basis.
+        // The evaluation result is stored to bestTermsEvaluations for further combinations
+        HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
+    }
+
+    for (int l = 0; l < bestTerms.size() ; ++l) {
+        cout << bestTerms[l].first << endl;
+    }
 
     /*results << "best terms:" << endl;
     for(int i = 0; i < bestTerms.size(); i++) {
