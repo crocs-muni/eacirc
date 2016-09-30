@@ -77,8 +77,8 @@ int main(int argc, char *argv[]) {
     // Setting diff values to -1 is enough as they will got replaced by
     // non-negative ones in the next process in min-heap insertion.
     for(int tmpIdx=0; tmpIdx < maxTerms; ++tmpIdx){
-        bestTerms[0].first = -1;
-        bestTermsEvaluations[0].reset();
+        bestTerms[tmpIdx].first = -1;
+        bestTermsEvaluations[tmpIdx].reset();
     }
 
     // Compute top K best distinguishers
