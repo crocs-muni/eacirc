@@ -1,5 +1,5 @@
 add_executable(eacirc main.cc)
-target_link_libraries(eacirc core solvers)
+target_link_libraries(eacirc core solvers sha3)
 
 target_sources(eacirc PRIVATE
     backend
