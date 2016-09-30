@@ -32,7 +32,11 @@ int main(int argc, char *argv[]) {
     if(maxTerms == 10) kbound = 10;
     else kbound = 2;
 
-
+    long long input_size = CommonFnc::getFileSize(argv[1]);
+    if (numBytes > input_size) {
+        cerr << "Input file " << argv[1] << " has " << input_size << " B but required is " << numBytes << endl;
+        return -1;
+    }
 
     ofstream ZscoreFile("best Zscore.txt",std::ofstream::app);
     ofstream besttermsFile("best Terms.txt",std::ofstream::app);
