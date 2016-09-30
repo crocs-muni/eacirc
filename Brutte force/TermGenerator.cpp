@@ -148,18 +148,17 @@ double expProbofXorTerms(std::vector<pairZscoreTerm>& termsForXoring, int numVar
         //print(com);
         S.clear();
 
-        for(int i = 0; i < com.size(); i++)
+        for (int i = 0; i < com.size(); i++)
         {
             ind = com[i];
             addSetVars(S, termsForXoring[ind].second);
         }
-        if(com.size() & 1 ) prob += 1.0 / (1 << (S.size()-com.size()+1));
-        else prob -= 1.0 / (1 << (S.size()-com.size()+1));
+        if (com.size() & 1) prob += 1.0 / (1 << S.size())*(1<<(com.size()-1));
+        else prob -= 1.0 / (1 << S.size())*(1 << (com.size()-1));
     }
 
     return prob;
 }
-
 double expProbofANDTerms(std::vector<pairZscoreTerm>& termsForAnding, int numVars){
     set<int> S;
     for(int i = 0; i < termsForAnding.size(); i++)
