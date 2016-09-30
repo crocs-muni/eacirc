@@ -1,6 +1,7 @@
 #include "streams.h"
 #include "streams/files.h"
 #include "streams/generators.h"
+#include "streams/sha3/sha3.h"
 #include <string>
 
 std::unique_ptr<stream> make_stream(json const& config, default_seed_source& seeder) {
@@ -16,6 +17,8 @@ std::unique_ptr<stream> make_stream(json const& config, default_seed_source& see
         return std::make_unique<streams::mt19937_stream>(seeder);
     else if (type == "pcg32-stream")
         return std::make_unique<streams::pcg32_stream>(seeder);
+    else if (type == "sha3-stream")
+        return std::make_unique<sha3::sha3_stream>(config);
     else
-        throw std::runtime_error("no stream named [" + type + "] available");
+        throw std::runtime_error("no such stream named \"" + type + "\" is available");
 }

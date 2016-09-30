@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <core/json.h>
 #include <core/stream.h>
 #include <limits>
 #include <pcg/pcg_random.hpp>
@@ -9,64 +8,50 @@
 
 namespace streams {
 
+    namespace _impl {
+
+        template <byte Value> struct const_stream : stream {
+            void read(byte_view out) override { std::fill(out.begin(), out.end(), Value); }
+        };
+
+        template <typename Generator> struct prng_stream : stream {
+            template <typename Sseq>
+            prng_stream(Sseq&& seeder)
+                : _prng(seeder) {}
+
+            void read(byte_view out) override {
+                using type = typename Generator::result_type;
+
+                auto p = reinterpret_cast<type*>(out.begin());
+                auto n = out.size() / sizeof(type);
+
+                std::generate_n(p, n, _prng);
+            }
+
+        private:
+            Generator _prng;
+        };
+
+    } // namespace _impl
+
     /**
      * \brief Stream of true bits
      */
-    struct true_stream : stream {
-        void read(dataset& data) override {
-            std::fill_n(data.data(), data.size(), std::numeric_limits<std::uint8_t>::max());
-        }
-    };
+    using true_stream = _impl::const_stream<std::numeric_limits<byte>::max()>;
 
     /**
-     * \brief Stream of false bits (everything is zeroed out)
+     * \brief Stream of false bits
      */
-    struct false_stream : stream {
-        void read(dataset& data) override {
-            std::fill_n(data.data(), data.size(), std::numeric_limits<std::uint8_t>::min());
-        }
-    };
+    using false_stream = _impl::const_stream<std::numeric_limits<byte>::min()>;
 
     /**
-     * \brief Merseine Twister generator
+     * \brief Stream of data produced by Merseine Twister
      */
-    struct mt19937_stream : stream {
-        template <typename Sseq>
-        mt19937_stream(Sseq&& seeder)
-            : _prng(seeder) {}
-
-        void read(dataset& data) override {
-            using uint_type = decltype(_prng)::result_type;
-
-            auto p = reinterpret_cast<uint_type*>(data.data());
-            auto n = data.size() / sizeof(uint_type);
-
-            std::generate_n(p, n, _prng);
-        }
-
-    private:
-        std::mt19937 _prng;
-    };
+    using mt19937_stream = _impl::prng_stream<std::mt19937>;
 
     /**
-     * \brief Permutation Congruential generator
+     * \brief Stream of data produced by PCG (Permutation Congruential Generator)
      */
-    struct pcg32_stream : stream {
-        template <typename Sseq>
-        pcg32_stream(Sseq&& seeder)
-            : _prng(seeder) {}
-
-        void read(dataset& data) override {
-            using uint_type = decltype(_prng)::result_type;
-
-            auto p = reinterpret_cast<uint_type*>(data.data());
-            auto n = data.size() / sizeof(uint_type);
-
-            std::generate_n(p, n, _prng);
-        }
-
-    private:
-        pcg32 _prng;
-    };
+    using pcg32_stream = _impl::prng_stream<pcg32>;
 
 } // namespace streams

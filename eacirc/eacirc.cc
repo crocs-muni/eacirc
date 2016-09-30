@@ -53,14 +53,14 @@ void eacirc::run() {
     dataset a{_tv_size, _tv_count};
     dataset b{_tv_size, _tv_count};
 
-    _stream_a->read(a);
-    _stream_b->read(b);
+    _stream_a->read(a.raw());
+    _stream_b->read(b.raw());
 
     for (std::size_t i = 0; i != _num_of_epochs; ++i) {
         _backend->train(a, b);
 
-        _stream_a->read(a);
-        _stream_b->read(b);
+        _stream_a->read(a.raw());
+        _stream_b->read(b.raw());
 
         pvalues.emplace_back(_backend->test(a, b));
     }

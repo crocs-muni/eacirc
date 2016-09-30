@@ -14,8 +14,8 @@ namespace streams {
                 throw std::runtime_error("Cannot open file " + _file);
         }
 
-        void read(dataset& data) override {
-            _in.read(reinterpret_cast<char*>(data.data()), std::streamsize(data.size()));
+        void read(byte_view out) override {
+            _in.read(reinterpret_cast<char*>(out.begin()), std::streamsize(out.size()));
 
             if (_in.fail())
                 throw stream_error("I/O error while reading a file " + _file);

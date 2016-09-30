@@ -1,6 +1,7 @@
 #pragma once
 
 #include "iterators.h"
+#include "view.h"
 #include <vector>
 
 struct dataset {
@@ -10,25 +11,31 @@ struct dataset {
     using const_iterator = step_iterator<view_iterator<typename storage::const_iterator>>;
 
     dataset()
-        : _m(0)
+        : _tvsize(0)
         , _data() {}
 
-    dataset(unsigned m, std::size_t n)
-        : _m(m)
-        , _data(m * n) {}
+    dataset(unsigned tv_size, std::size_t n)
+        : _tvsize(tv_size)
+        , _data(tv_size * n) {}
 
-    iterator begin() { return {{_data.begin(), _m}, _m}; }
-    iterator end() { return {{_data.end(), _m}, _m}; }
+    dataset(dataset&&) = default;
+    dataset(dataset const&) = default;
 
-    const_iterator begin() const { return {{_data.begin(), _m}, _m}; }
-    const_iterator end() const { return {{_data.end(), _m}, _m}; }
+    dataset& operator=(dataset&&) = default;
+    dataset& operator=(dataset const&) = default;
 
-    std::uint8_t* data() { return _data.data(); }
-    std::uint8_t const* data() const { return _data.data(); }
+    iterator begin() { return {{_data.begin(), _tvsize}, _tvsize}; }
+    iterator end() { return {{_data.end(), _tvsize}, _tvsize}; }
 
-    std::size_t size() const { return _data.size(); }
+    const_iterator begin() const { return {{_data.begin(), _tvsize}, _tvsize}; }
+    const_iterator end() const { return {{_data.end(), _tvsize}, _tvsize}; }
+
+    std::size_t size() const { return _data.size() / _tvsize; }
+
+    auto raw() { return make_view(_data.data(), _data.size()); }
+    auto raw() const { return make_view(_data.data(), _data.size()); }
 
 private:
-    std::ptrdiff_t _m;
+    unsigned _tvsize;
     storage _data;
 };
