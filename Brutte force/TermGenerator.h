@@ -132,11 +132,13 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
     // then ignore it. Otherwise add it to the heap and delete the previous minimum.
     init_comb(indices, deg);
     do {
+
         freqOnes = HW_AND<deg>(a, indices);
         zscore = fabs(CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs));
+        //std::cout  << indices.size() << " " << freqOnes << " " << zscore << std::endl;
         // If queue is not full OR the value is higher than queue-minimal, add it.
         const pairZscoreTerm & c_top = queue.back();
-        if (zscore > c_top.first){
+        if (zscore >= c_top.first){
             pairZscoreTerm c_pair(zscore, indices);
             push_min_heap(queue, c_pair);
             //push_selsort(queue, c_pair);
