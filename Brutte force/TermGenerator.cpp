@@ -213,6 +213,11 @@ double ANDkbestTerms(vector<bitarray<u64> >& bestTermsEvaluations, vector<pairZs
         ANDedBitarrays.reset();
         termsForAnding.clear();
 
+        // Init ANDedBitarray to 11111...111 mask initially.
+        for (int i = 0, ln = ANDedBitarrays.size(); i < ln; ++i) {
+            ANDedBitarrays[i] = ~((u64)0);
+        }
+
         for (int i = 0; i < combination.size(); ++i) {
             termInd = combination[i];
             termsForAnding.push_back(bestTerms[termInd]);
