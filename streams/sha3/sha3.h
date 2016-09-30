@@ -1,7 +1,6 @@
 #pragma once
 
 #include "factory.h"
-#include <core/iterators.h>
 #include <core/json.h>
 #include <core/stream.h>
 
