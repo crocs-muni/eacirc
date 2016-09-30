@@ -21,16 +21,18 @@ int main(int argc, char *argv[]) {
     const int deg = 3;
     int numTVs = 10000000;
     int tvsize = 16, numVars = 8 * tvsize;
-    int numBytes = numTVs * tvsize;
     int kbound = 2;
-    u8 *TVs = new u8[numBytes];
 
     ifstream in(argv[1], ios::binary);
     int maxTerms = atoi(argv[2]);
     //tvsize = atoi(argv[3])/8;
     numTVs = atoi(argv[4]);
+
     if(maxTerms == 10) kbound = 10;
     else kbound = 2;
+
+    int numBytes = numTVs * tvsize;
+    u8 *TVs = new u8[numBytes];
 
     long long input_size = CommonFnc::getFileSize(argv[1]);
     if (numBytes > input_size) {
