@@ -17,7 +17,7 @@ namespace streams {
         template <typename Generator> struct prng_stream : stream {
             template <typename Sseq>
             prng_stream(Sseq&& seeder)
-                : _prng(seeder) {}
+                : _prng(std::forward<Sseq>(seeder)) {}
 
             void read(byte_view out) override {
                 using type = typename Generator::result_type;
@@ -25,7 +25,8 @@ namespace streams {
                 auto p = reinterpret_cast<type*>(out.begin());
                 auto n = out.size() / sizeof(type);
 
-                std::generate_n(p, n, _prng);
+                std::generate_n(
+                        p, n, [this] { return std::uniform_int_distribution<type>()(_prng); });
             }
 
         private:
