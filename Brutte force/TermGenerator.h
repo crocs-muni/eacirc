@@ -137,7 +137,7 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
         zscore = fabs(CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs));
         //std::cout  << indices.size() << " " << freqOnes << " " << zscore << std::endl;
         // If queue is not full OR the value is higher than queue-minimal, add it.
-        const pairZscoreTerm & c_top = queue.back();
+        const pairZscoreTerm & c_top = queue.front();
         if (zscore >= c_top.first){
             pairZscoreTerm c_pair(zscore, indices);
             push_min_heap(queue, c_pair);
