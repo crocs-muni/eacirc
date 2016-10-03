@@ -51,7 +51,7 @@ hwres HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
 
 //Hamming distance, without template parameter on degree
 template <typename T = uint64_t>
-hwres HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
+hwres HW_AND(std::vector<bitarray<T>*>& a, const std::vector<int>& indices){
     T tmp;
     hwres hw = 0;
     int ln = a[0]->size(), lnIdx = (int)indices.size();
@@ -70,7 +70,7 @@ hwres HW_AND(std::vector<bitarray<T>*>& a, std::vector<int>& indices){
 //   where a is a basis. i.e., a[0] = results for x_0, ...
 // returns hw(res)
 template <typename T = uint64_t>
-hwres HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, std::vector<int>& indices){
+hwres HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, const std::vector<int>& indices){
     T tmp;
     hwres hw = 0;
     int ln = a[0]->size(), lnIdx = (int)indices.size();
@@ -93,7 +93,7 @@ hwres HW_AND(bitarray<T>& res, std::vector<bitarray<T>*>& a, std::vector<int>& i
 
 //Hamming distance
 template <typename T = uint64_t >
-hwres HW_AND(bitarray<T>& a, bitarray<T>& b){
+hwres HW_AND(const bitarray<T>& a, bitarray<T>& b){
     if(a.getNumVars() != b.getNumVars() )
         std::cout << "different sizes";
     T tmp;

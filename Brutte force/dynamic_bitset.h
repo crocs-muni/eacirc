@@ -57,7 +57,7 @@ public:
     void setNumVars(int numVars){
         _numVars = numVars;
     }
-    int getNumVars(){
+    int getNumVars() const {
         return _numVars;
     }
     T& operator[](int idx){
@@ -68,7 +68,7 @@ public:
         arraySize = TarraySize<T>(numVars);
         setNumVars(numVars);
     }
-    int size(){
+    int size() const{
         return arraySize;
     }
     void print(){
