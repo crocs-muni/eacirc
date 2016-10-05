@@ -5,6 +5,7 @@
 #include "DataSourceAES.h"
 #include <random>
 #include <cstring>
+#include <sstream>
 #include "../DataGenerators/aes.h"
 
 
@@ -37,6 +38,8 @@ void DataSourceAES::read(char *buffer, size_t size) {
 }
 
 std::string DataSourceAES::desc() {
-    return "AES";
+    std::stringstream ss;
+    ss << "AES-CTR-r" << m_rounds;
+    return ss.str();
 }
 
