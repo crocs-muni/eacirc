@@ -8,13 +8,13 @@
 #include "../DataGenerators/aes.h"
 
 
-DataSourceAES::DataSourceAES(unsigned long seed, int Nr_) {
+DataSourceAES::DataSourceAES(unsigned long seed, int rounds) {
     std::minstd_rand systemGenerator((unsigned int) seed);
     for (unsigned char i = 0; i < 16; i++) {
         m_key[i] = (uint8_t) systemGenerator();
         m_iv[i] = (uint8_t) systemGenerator();
     }
-    Nr = Nr_;
+    m_rounds = rounds;
 }
 
 long long DataSourceAES::getAvailableData() {
@@ -30,7 +30,7 @@ void DataSourceAES::read(char *buffer, size_t size) {
     for(size_t offset = 0; offset < size; offset += workingBufferSize){
         memcpy(workingBufferIn,&counter,workingBufferSize);
         // Encrypt input buffer.
-        AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), Nr);
+        AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), m_rounds);
         counter++;
     }
 }
