@@ -82,7 +82,7 @@ void eacirc::run() {
         logger::info() << "KS is in " << _significance_level
                        << "% interval -> uniformity hypothesis rejected" << std::endl;
     } else {
-        logger::info() << "KS is not in " << _significance_level << "% interval -> is uniform"
-                       << std::endl;
+        logger::info() << "KS is not in " << _significance_level
+                       << "% interval -> uniformity hypothesis accepted" << std::endl;
     }
 }
