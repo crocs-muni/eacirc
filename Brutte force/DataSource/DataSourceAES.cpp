@@ -25,10 +25,11 @@ void DataSourceAES::read(char *buffer, size_t size) {
     __uint64_t counter = 0;
     const int workingBufferSize = 16;
     uint8_t workingBufferIn[workingBufferSize];
+    memset(workingBufferIn, 0, workingBufferSize);
 
     //counter mode
     for(size_t offset = 0; offset < size; offset += workingBufferSize){
-        memcpy(workingBufferIn,&counter,workingBufferSize);
+        memcpy(workingBufferIn, &counter, sizeof(counter));
         // Encrypt input buffer.
         AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), m_rounds);
         counter++;
