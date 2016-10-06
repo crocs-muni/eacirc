@@ -45,6 +45,17 @@ set(SOURCE_FILES_SHA3
         DataGenerators/sha3/hash_functions/MD6/MD6_sha3.h
         DataGenerators/sha3/hash_functions/MD6/MD6_sha3.cpp
         DataGenerators/sha3/hash_functions/MD6/stdint.h
+        DataGenerators/sha3/hash_functions/Keccak/brg_endian.h
+        DataGenerators/sha3/hash_functions/Keccak/Keccak_sha3.h
+        DataGenerators/sha3/hash_functions/Keccak/Keccak_sha3.cpp
+        DataGenerators/sha3/hash_functions/Keccak/KeccakDuplex.h
+        DataGenerators/sha3/hash_functions/Keccak/KeccakDuplex.c
+        DataGenerators/sha3/hash_functions/Keccak/KeccakF-1600-int-set.h
+        DataGenerators/sha3/hash_functions/Keccak/KeccakF-1600-interface.h
+        DataGenerators/sha3/hash_functions/Keccak/KeccakF-1600-opt32.c
+        DataGenerators/sha3/hash_functions/Keccak/KeccakF-1600-opt32-settings.h
+        DataGenerators/sha3/hash_functions/Keccak/KeccakSponge.h
+        DataGenerators/sha3/hash_functions/Keccak/KeccakSponge.c
         )
 
 set(SOURCE_DATA_SOURCES

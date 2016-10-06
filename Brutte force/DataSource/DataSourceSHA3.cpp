@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include "../DataGenerators/sha3/hash_functions/Tangle/Tangle_sha3.h"
 #include "../DataGenerators/sha3/hash_functions/MD6/MD6_sha3.h"
+#include "../DataGenerators/sha3/hash_functions/Keccak/Keccak_sha3.h"
 #include "../DataGenerators/md5.h"
 
 DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize) {
@@ -21,8 +22,11 @@ DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigne
     if (hash == SHA3_TANGLE){
         m_sha3 = new Tangle(rounds);
 
-    } else if (hash == SHA3_MD6){
+    } else if (hash == SHA3_MD6) {
         m_sha3 = new MD6(rounds);
+
+    } else if (hash == SHA3_KECCAK) {
+        m_sha3 = new Keccak;
 
     } else {
         throw std::out_of_range("Unknown SHA3 function");

@@ -10,6 +10,7 @@
 
 #define SHA3_MD6 1
 #define SHA3_TANGLE 2
+#define SHA3_KECCAK 3
 
 class DataSourceSHA3 : public DataSource {
 public:
