@@ -9,7 +9,7 @@
 
 class DataSourceAES : public DataSource {
 public:
-    DataSourceAES(unsigned long seed = 0, int Nr = 10);
+    DataSourceAES(unsigned long seed = 0, int rounds = 10);
     ~DataSourceAES() {}
 
     virtual long long getAvailableData() override;
@@ -19,7 +19,7 @@ public:
 private:
     uint8_t m_key[16];
     uint8_t m_iv[16];
-    int Nr;
+    int m_rounds;
 private:
 };
 
