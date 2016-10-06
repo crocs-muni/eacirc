@@ -15,7 +15,11 @@
 
 DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize, int hash_init) {
     std::minstd_rand systemGenerator((unsigned int) seed);
-    if (outputSize > 256){
+    if (outputSize > SHA3_MAX_OUTPUT){
+        throw std::out_of_range("Maximum output size is 256B");
+    }
+
+    if (hash_init > SHA3_MAX_OUTPUT){
         throw std::out_of_range("Maximum output size is 256B");
     }
 
@@ -51,7 +55,7 @@ long long DataSourceSHA3::getAvailableData() {
 }
 
 void DataSourceSHA3::read(char *buffer, size_t size) {
-    BitSequence results[4096];
+    BitSequence results[SHA3_MAX_OUTPUT];
     int res = 0;
     for(size_t offset = 0; offset < size; offset += m_outputSize){
         res = m_sha3->Init(m_hash_init);

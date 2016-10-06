@@ -13,9 +13,11 @@
 #define SHA3_KECCAK 3
 
 #define SHA3_DEFAULT_HASH_INIT -999
+#define SHA3_MAX_OUTPUT 4096
 
 class DataSourceSHA3 : public DataSource {
 public:
+    // hash_init should be used only in special circumstances (keccak default init  - faulty)
     DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize = 16, int hash_init = SHA3_DEFAULT_HASH_INIT);
     ~DataSourceSHA3();
 
