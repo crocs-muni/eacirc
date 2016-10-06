@@ -238,7 +238,7 @@ int testBi(DataSource * dataSource){
             if (numIndependentTests == 1) {
                 printf("Sample: ");
                 for (int kk = 0; kk < 2048; kk++) {
-                    printf("%02x", TVs[kk]);
+                    printf("%02x", (unsigned)(TVs[kk]&0xff));
                 }
                 printf("\n");
             }
