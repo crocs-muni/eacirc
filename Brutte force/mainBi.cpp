@@ -233,8 +233,15 @@ int testBi(DataSource * dataSource){
         for (int epoch = 0; epoch < numEpochs; ++epoch) {
             if (numIndependentTests == 1) printf("## EPOCH: %02d\n", epoch);
 
-            // Read test vectors.
+            // Read test vectors + print sample
             dataSource->read((char *) TVs, numBytes);
+            if (numIndependentTests == 1) {
+                printf("Sample: ");
+                for (int kk = 0; kk < 2048; kk++) {
+                    printf("%02x", TVs[kk]);
+                }
+                printf("\n");
+            }
 
             // Single-var term s_j (hw(s_j)=1) is evaluated numTVs times on 128 input bits
             for (int j = 0; j < TERM_WIDTH; ++j) {
