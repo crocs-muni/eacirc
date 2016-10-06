@@ -31,6 +31,8 @@ set(SOURCE_FILES_ESTREAM
         DataGenerators/estream/ciphers/decim/decimv2.h
         DataGenerators/estream/ciphers/decim/decim-v2.cpp
         DataGenerators/estream/ciphers/decim/ecrypt-sync.h
+        DataGenerators/estream/ciphers/tea/ecrypt-sync.h
+        DataGenerators/estream/ciphers/tea/tea.cpp
         )
 
 set(SOURCE_FILES_SHA3
@@ -84,7 +86,10 @@ set(SOURCE_DATA_SOURCES
         DataSource/DataSourceDecimColumn.cpp
         DataSource/DataSourceDecimColumn.h
         DataSource/DataSourceSHA3.cpp
-        DataSource/DataSourceSHA3.h)
+        DataSource/DataSourceSHA3.h
+        DataSource/DataSourceEstream.h
+        DataSource/DataSourceEstream.cpp
+        )
 
 set(SOURCE_FILES_KS
         ${SOURCE_FILES_COMMON}

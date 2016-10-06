@@ -39,7 +39,7 @@ class EstreamInterface {
 //#include "ciphers/salsa20/ecrypt-sync.h"
 //#include "ciphers/sfinks/ecrypt-sync.h"
 //#include "ciphers/sosemanuk/ecrypt-sync.h"
-//#include "ciphers/tea/ecrypt-sync.h"
+#include "ciphers/tea/ecrypt-sync.h"
 ////#include "ciphers/trivium/ecrypt-sync.h"     // stopped working after IDE update
 //#include "ciphers/tsc-4/ecrypt-sync.h"
 //#include "ciphers/wg/ecrypt-sync.h"

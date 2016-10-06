@@ -8,6 +8,7 @@
 #include "DataSource/DataSourceRC4.h"
 #include "DataSource/DataSourceRC4Column.h"
 #include "DataSource/DataSourceSHA3.h"
+#include "DataSource/DataSourceEstream.h"
 #include <string>
 
 using namespace std;
@@ -30,6 +31,9 @@ int main(int argc, char *argv[]) {
 
     string funcName = "AES_CRT_";
     DataSourceAES S;
+    // Keccak needs a special initialization
+//    DataSourceSHA3 S(0, SHA3_KECCAK, 32, 16, 0);
+
     S.read(buffer, Bsize);
 
     for (int Nr = 1; Nr < num_rounds; ++Nr) {
