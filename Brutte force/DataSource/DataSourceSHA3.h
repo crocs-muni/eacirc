@@ -12,9 +12,11 @@
 #define SHA3_TANGLE 2
 #define SHA3_KECCAK 3
 
+#define SHA3_DEFAULT_HASH_INIT -999
+
 class DataSourceSHA3 : public DataSource {
 public:
-    DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize = 16);
+    DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize = 16, int hash_init = SHA3_DEFAULT_HASH_INIT);
     ~DataSourceSHA3();
 
     virtual long long getAvailableData() override;
@@ -26,6 +28,7 @@ protected:
     int m_outputSize;
     long long m_counter;
     int m_rounds;
+    int m_hash_init;
     Sha3Interface * m_sha3;
 private:
 };

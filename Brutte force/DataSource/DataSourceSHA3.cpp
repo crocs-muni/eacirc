@@ -13,7 +13,7 @@
 #include "../DataGenerators/sha3/hash_functions/Keccak/Keccak_sha3.h"
 #include "../DataGenerators/md5.h"
 
-DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize) {
+DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize, int hash_init) {
     std::minstd_rand systemGenerator((unsigned int) seed);
     if (outputSize > 256){
         throw std::out_of_range("Maximum output size is 256B");
@@ -35,6 +35,7 @@ DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigne
     m_hashFunction = hash;
     m_rounds = rounds;
     m_outputSize = outputSize;
+    m_hash_init = hash_init != SHA3_DEFAULT_HASH_INIT ? hash_init : (int)outputSize*8;
     m_counter = systemGenerator.operator()();
 }
 
@@ -51,10 +52,23 @@ long long DataSourceSHA3::getAvailableData() {
 
 void DataSourceSHA3::read(char *buffer, size_t size) {
     BitSequence results[4096];
+    int res = 0;
     for(size_t offset = 0; offset < size; offset += m_outputSize){
-        m_sha3->Init(m_outputSize * 8);
-        m_sha3->Update((const BitSequence *) &m_counter, sizeof(m_counter)*8);
-        m_sha3->Final(results);
+        res = m_sha3->Init(m_hash_init);
+        if (res != 0){
+            throw std::runtime_error("Init of the hash function failed");
+        }
+
+        res = m_sha3->Update((const BitSequence *) &m_counter, sizeof(m_counter)*8);
+        if (res != 0){
+            throw std::runtime_error("SHA3 update failed");
+        }
+
+        res = m_sha3->Final(results);
+        if (res != 0){
+            throw std::runtime_error("SHA3 final failed");
+        }
+
         m_counter += 1;
         memcpy(buffer+offset, results, std::min((size_t)m_outputSize, size-offset));
     }
