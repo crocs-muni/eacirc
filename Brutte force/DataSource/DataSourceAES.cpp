@@ -16,6 +16,7 @@ DataSourceAES::DataSourceAES(unsigned long seed, int rounds) {
         m_iv[i] = (uint8_t) systemGenerator();
     }
     m_rounds = rounds;
+    m_counter = systemGenerator();
 }
 
 long long DataSourceAES::getAvailableData() {
@@ -23,17 +24,16 @@ long long DataSourceAES::getAvailableData() {
 }
 
 void DataSourceAES::read(char *buffer, size_t size) {
-    __uint64_t counter = 0;
     const int workingBufferSize = 16;
     uint8_t workingBufferIn[workingBufferSize];
     memset(workingBufferIn, 0, workingBufferSize);
 
     //counter mode
     for(size_t offset = 0; offset < size; offset += workingBufferSize){
-        memcpy(workingBufferIn, &counter, sizeof(counter));
+        memcpy(workingBufferIn, &m_counter, sizeof(m_counter));
         // Encrypt input buffer.
         AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), m_rounds);
-        counter++;
+        ++m_counter;
     }
 }
 
