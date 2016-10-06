@@ -153,6 +153,46 @@ double computeTopKInPlace(std::vector<bitarray<u64> * > a,
     return biggestZscore;
 }
 
+template<int deg>
+double computeRandKInPlace(std::vector<bitarray<u64> * > a,
+                          std::vector<pairZscoreTerm> &queue,
+                          int maxTerms,
+                          int numTVs,
+                          int numVars = 128)
+{
+    double zscore, biggestZscore = 0;
+    const int refCount = numTVs >> deg;
+    std::vector<int> indices;
+    int freqOnes;
+
+    // Make sure the queue is of the given size.
+    queue.resize((unsigned)maxTerms, pairZscoreTerm(-1, term()));
+
+    // Keeping top K max elements in the priority queue.
+    // Priority queue is min-heap. If new element is lower than minimum
+    // then ignore it. Otherwise add it to the heap and delete the previous minimum.
+
+    for (int i = 0; i < maxTerms; ++i) {
+        indices.clear();
+        for (int j = 0; j < deg; ++j) {
+            indices.push_back(rand() % numVars);
+        }
+        freqOnes = HW_AND<deg>(a, indices);
+        zscore = fabs(CommonFnc::zscore((double)freqOnes/numTVs,(double)refCount/numTVs,numTVs));
+        const pairZscoreTerm & c_top = queue.back();
+
+        pairZscoreTerm c_pair(zscore, indices);
+        push_min_heap(queue, c_pair);
+
+        while (queue.size() > maxTerms){
+            pop_min_heap(queue);
+        }
+    }
+
+
+    return biggestZscore;
+}
+
 bool all_combinations(std::vector<int>& com, int n);
 
 double expProbofXORTerms(std::vector<pairZscoreTerm>& termsForXoring,  int tvsize = 128);
