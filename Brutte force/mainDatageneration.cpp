@@ -30,9 +30,13 @@ int main(int argc, char *argv[]) {
 
 
     string funcName = "AES_CRT_";
-    DataSourceAES S;
+    //DataSourceAES S;
+    //DataSourceEstream S(0, ESTREAM_TEA, 64);
+    DataSourceEstream S(0, ESTREAM_DECIM, 6);
+
     // Keccak needs a special initialization
-//    DataSourceSHA3 S(0, SHA3_KECCAK, 32, 16, 0);
+    //DataSourceSHA3 S(0, SHA3_KECCAK, 32, 32);
+    //DataSourceSHA3 S(0, SHA3_MD6, 32, 16);
 
     S.read(buffer, Bsize);
 
