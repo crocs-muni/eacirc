@@ -29,13 +29,27 @@ public:
 protected:
     int m_function;
     int m_rounds;
-    long long m_counter;
 
-    void * m_ctx;
     std::minstd_rand * m_gen;
+
+    // Context + cipher
+    void * m_ctx;
     EstreamInterface * m_estream;
 
-    // 00...0 array used as an input to the estream to get the key stream
+    // If stream cipher, keystream is extracted by encrypting zero vector.
+    // Otherwise for block cipher its CTR mode.
+    bool m_stream_cipher;
+
+    // Makes sense for a block cipher - size of an input block
+    unsigned m_block_size_bytes;
+
+    // Counter for block cipher CTR mode
+    u64 m_counter;
+
+    // Input block buffer for block ciphers (counter incrementation).
+    u8 * m_input_block;
+
+    // 00...0 array used as an input to the stream cipher to get the key stream
     static const unsigned char m_zero_plaintext[ESTREAM_ZERO_PLAINTEXT_BLOCK];
 
 private:

@@ -7,12 +7,18 @@
 #include <random>
 #include <sstream>
 #include <stdexcept>
+#include <cassert>
 
 const unsigned char DataSourceEstream::m_zero_plaintext[ESTREAM_ZERO_PLAINTEXT_BLOCK] = {0};
 
 DataSourceEstream::DataSourceEstream(unsigned long seed, int function, int rounds) {
-    std::minstd_rand systemGenerator((unsigned int) seed);
+    // Safe initialization
+    m_stream_cipher = true;
+    m_block_size_bytes = 0;
+    m_input_block = nullptr;
+    m_ctx = nullptr;
 
+    // Per-cipher initialization
     if (function == ESTREAM_DECIM){
         m_estream = new ECRYPT_Decim();
         m_ctx = malloc(sizeof(DECIM_ctx));
@@ -20,6 +26,8 @@ DataSourceEstream::DataSourceEstream(unsigned long seed, int function, int round
     } else if (function == ESTREAM_TEA) {
         m_estream = new ECRYPT_TEA();
         m_ctx = malloc(sizeof(TEA_ctx));
+        m_stream_cipher = false;
+        m_block_size_bytes = 8;
 
     } else {
         throw std::out_of_range("Unknown Estream function");
@@ -44,7 +52,12 @@ DataSourceEstream::DataSourceEstream(unsigned long seed, int function, int round
 
     m_function = function;
     m_rounds = rounds;
-    m_counter = systemGenerator.operator()();
+    m_counter = m_gen->operator()();
+
+    if (!m_stream_cipher && m_block_size_bytes > 0){
+        assert(sizeof(u8) == 1);
+        m_input_block = (u8*)malloc(m_block_size_bytes*sizeof(u8));
+    }
 }
 
 DataSourceEstream::~DataSourceEstream() {
@@ -62,6 +75,11 @@ DataSourceEstream::~DataSourceEstream() {
         free(this->m_ctx);
         this->m_ctx = nullptr;
     }
+
+    if (this->m_input_block != nullptr){
+        free(this->m_input_block);
+        this->m_input_block = nullptr;
+    }
 }
 
 long long DataSourceEstream::getAvailableData() {
@@ -69,9 +87,24 @@ long long DataSourceEstream::getAvailableData() {
 }
 
 void DataSourceEstream::read(char *buffer, size_t size) {
-    for(size_t offset=0; offset < size; offset += ESTREAM_ZERO_PLAINTEXT_BLOCK){
-        const size_t to_enc = std::min((size_t)ESTREAM_ZERO_PLAINTEXT_BLOCK, size-offset);
-        this->m_estream->ECRYPT_encrypt_bytes(m_ctx, m_zero_plaintext, ((u8*)(buffer))+offset, (u32)to_enc);
+    if (m_stream_cipher) {
+        // Stream cipher -> extract key stream by encrypting zero vector
+        for (size_t offset = 0; offset < size; offset += ESTREAM_ZERO_PLAINTEXT_BLOCK) {
+            const size_t to_enc = std::min((size_t) ESTREAM_ZERO_PLAINTEXT_BLOCK, size - offset);
+            this->m_estream->ECRYPT_encrypt_bytes(m_ctx, m_zero_plaintext, ((u8 *) (buffer)) + offset, (u32) to_enc);
+        }
+
+    } else {
+        // Block cipher - encrypt counter.
+        assert(m_input_block != NULL && m_block_size_bytes > 0);
+        for(size_t offset = 0; offset < size; offset += m_block_size_bytes){
+            memset(m_input_block, 0, m_block_size_bytes);
+            memcpy(m_input_block, &m_counter, sizeof(m_counter));
+
+            const size_t to_enc = std::min((size_t) m_block_size_bytes, size - offset);
+            this->m_estream->ECRYPT_encrypt_bytes(m_ctx, m_input_block, ((u8 *) (buffer)) + offset, to_enc);
+            ++m_counter;
+        }
     }
 }
 

@@ -18,6 +18,8 @@
 class DataSourceSHA3 : public DataSource {
 public:
     // hash_init should be used only in special circumstances (keccak default init  - faulty)
+    // hash_init = parameter to Init() function of the hash. In most cases it is equal to outputSize*8
+    // set to SHA3_DEFAULT_HASH_INIT to use outputSize*8 value.
     DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize = 16, int hash_init = SHA3_DEFAULT_HASH_INIT);
     ~DataSourceSHA3();
 
