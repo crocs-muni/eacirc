@@ -396,7 +396,7 @@ int main(int argc, char *argv[]) {
     std::unique_ptr<DataSourceSHA3>         dsMD6(new DataSourceSHA3(seed, SHA3_MD6, 9, TERM_WIDTH_BYTES));
     std::unique_ptr<DataSourceSHA3>         dsTangle(new DataSourceSHA3(seed, SHA3_TANGLE, 2, TERM_WIDTH_BYTES));
     DataSource * dsToUse = dsAES.get();
-    std::unique_ptr<DataSourceSHA3>         dsKeccak(new DataSourceSHA3(seed, SHA3_KECCAK, 2, TERM_WIDTH_BYTES));
+    std::unique_ptr<DataSourceSHA3>         dsKeccak(new DataSourceSHA3(seed, SHA3_KECCAK, 2, 32));
     std::unique_ptr<DataSourceEstream>      dsTea(new DataSourceEstream(seed, ESTREAM_TEA, 2));
 
     if (argc >= 2){
