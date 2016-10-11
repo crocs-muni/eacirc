@@ -6,6 +6,7 @@ add_library(core STATIC
     json
     logger
     memory
+    optional
     random
     stream
     traits
