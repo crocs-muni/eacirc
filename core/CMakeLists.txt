@@ -5,6 +5,7 @@ add_library(core STATIC
     iterators
     json
     logger
+    memory
     random
     stream
     traits

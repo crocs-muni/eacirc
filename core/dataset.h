@@ -32,8 +32,8 @@ struct dataset {
 
     std::size_t size() const { return _data.size() / _tvsize; }
 
-    auto raw() { return make_view(_data.data(), _data.size()); }
-    auto raw() const { return make_view(_data.data(), _data.size()); }
+    view<storage::iterator> raw() { return make_view(_data.begin(), _data.end()); }
+    view<storage::const_iterator> raw() const { return make_view(_data.begin(), _data.end()); }
 
 private:
     unsigned _tvsize;

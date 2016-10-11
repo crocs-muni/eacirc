@@ -100,8 +100,8 @@ template <typename... Types> struct variant {
     }
 
     template <typename T,
-              typename U = std::decay_t<T>,
-              typename = std::enable_if_t<contains<U, Types...>::value>>
+              typename U = typename std::decay<T>::type,
+              typename = typename std::enable_if<contains<U, Types...>::value>::type>
     variant(T&& val)
         : _index(helper::template index_of<U>()) {
         new (&_data) U(std::forward<T>(val));
@@ -132,8 +132,8 @@ template <typename... Types> struct variant {
     }
 
     template <typename T,
-              typename U = std::decay_t<T>,
-              typename = std::enable_if_t<contains<U, Types...>::value>>
+              typename U = typename std::decay<T>::type,
+              typename = typename std::enable_if<contains<U, Types...>::value>::type>
     variant& operator=(T&& val) {
         if (is<U>())
             unsafe_as<U>() = std::forward<T>(val);
@@ -194,5 +194,5 @@ private:
     using helper = _impl::variant<Types...>;
 
     unsigned _index;
-    std::aligned_union_t<1, Types...> _data;
+    typename std::aligned_union<1, Types...>::type _data;
 };

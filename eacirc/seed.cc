@@ -4,12 +4,14 @@
 #include <sstream>
 
 template <typename Type, typename Generator>
-static auto generate_one(Generator&& gen) -> std::enable_if_t<std::is_unsigned<Type>::value, Type> {
+static auto generate_one(Generator&& gen) ->
+        typename std::enable_if<std::is_unsigned<Type>::value, Type>::type {
     return std::uniform_int_distribution<Type>()(gen);
 }
 
 template <typename Type>
-static auto from_hex(std::string str) -> std::enable_if_t<std::is_unsigned<Type>::value, Type> {
+static auto from_hex(std::string str) ->
+        typename std::enable_if<std::is_unsigned<Type>::value, Type>::type {
     std::istringstream in(str);
 
     Type value;
@@ -22,7 +24,8 @@ static auto from_hex(std::string str) -> std::enable_if_t<std::is_unsigned<Type>
 }
 
 template <typename Type>
-static auto to_hex(Type value) -> std::enable_if_t<std::is_unsigned<Type>::value, std::string> {
+static auto to_hex(Type value) ->
+        typename std::enable_if<std::is_unsigned<Type>::value, std::string>::type {
     std::ostringstream out;
 
     out << std::hex << value;

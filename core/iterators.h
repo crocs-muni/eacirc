@@ -5,22 +5,22 @@
 namespace _impl {
 
     template <typename Iterator, typename T = void>
-    using enable_if_forward_t = std::enable_if_t<
+    using enable_if_forward_t = typename std::enable_if<
             std::is_base_of<std::forward_iterator_tag,
                             typename std::iterator_traits<Iterator>::iterator_category>::value,
-            T>;
+            T>::type;
 
     template <typename Iterator, typename T = void>
-    using enable_if_bidirectional_t = std::enable_if_t<
+    using enable_if_bidirectional_t = typename std::enable_if<
             std::is_base_of<std::bidirectional_iterator_tag,
                             typename std::iterator_traits<Iterator>::iterator_category>::value,
-            T>;
+            T>::type;
 
     template <typename Iterator, typename T = void>
-    using enable_if_random_access_t = std::enable_if_t<
+    using enable_if_random_access_t = typename std::enable_if<
             std::is_base_of<std::random_access_iterator_tag,
                             typename std::iterator_traits<Iterator>::iterator_category>::value,
-            T>;
+            T>::type;
 
 } // namespace _impl
 

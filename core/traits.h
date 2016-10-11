@@ -8,7 +8,7 @@
 
 template <typename...> struct conjunction : std::true_type {};
 template <typename B, typename... Bs>
-struct conjunction<B, Bs...> : std::conditional_t<B::value, conjunction<Bs...>, B> {};
+struct conjunction<B, Bs...> : std::conditional<B::value, conjunction<Bs...>, B>::type {};
 
 /**
  * @brief variadic logical OR metafunction
@@ -16,7 +16,7 @@ struct conjunction<B, Bs...> : std::conditional_t<B::value, conjunction<Bs...>, 
 
 template <typename...> struct disjunction : std::false_type {};
 template <typename B, typename... Bs>
-struct disjunction<B, Bs...> : std::conditional_t<B::value, B, disjunction<Bs...>> {};
+struct disjunction<B, Bs...> : std::conditional<B::value, B, disjunction<Bs...>>::type {};
 
 /**
  * @brief logical NOT metafunction
