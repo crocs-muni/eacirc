@@ -7,6 +7,7 @@
 #include <limits>
 #include <pcg/pcg_random.hpp>
 #include <random>
+#include <streams/estream/estream_stream.h>
 #include <streams/sha3/sha3_stream.h>
 #include <string>
 
@@ -104,6 +105,8 @@ std::unique_ptr<stream> make_stream(json const& config, default_seed_source& see
         return std::make_unique<mt19937_stream>(seeder);
     else if (type == "pcg32-stream")
         return std::make_unique<pcg32_stream>(seeder);
+    else if (type == "estream-stream")
+        return std::make_unique<estream_stream>(config, seeder);
     else if (type == "sha3-stream")
         return std::make_unique<sha3_stream>(config);
     else

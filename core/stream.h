@@ -9,6 +9,8 @@ struct counter {
     using value_type = std::uint8_t;
     using pointer = typename std::add_pointer<value_type>::type;
     using const_pointer = typename std::add_pointer<const value_type>::type;
+    using iterator = std::vector<value_type>::iterator;
+    using const_iterator = std::vector<value_type>::const_iterator;
 
     counter(std::size_t size)
         : _data(size) {
@@ -24,6 +26,12 @@ struct counter {
             value = std::numeric_limits<value_type>::min();
         }
     }
+
+    iterator begin() { return _data.begin(); }
+    const_iterator begin() const { return _data.begin(); }
+
+    iterator end() { return _data.end(); }
+    const_iterator end() const { return _data.end(); }
 
     pointer data() { return _data.data(); }
     const_pointer data() const { return _data.data(); }
