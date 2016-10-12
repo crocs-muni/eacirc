@@ -53,14 +53,14 @@ void eacirc::run() {
     dataset a{_tv_size, _tv_count};
     dataset b{_tv_size, _tv_count};
 
-    _stream_a->read(a.raw());
-    _stream_b->read(b.raw());
+    _stream_a->read_dataset(a);
+    _stream_b->read_dataset(b);
 
     for (std::size_t i = 0; i != _num_of_epochs; ++i) {
         _backend->train(a, b);
 
-        _stream_a->read(a.raw());
-        _stream_b->read(b.raw());
+        _stream_a->read_dataset(a);
+        _stream_b->read_dataset(b);
 
         pvalues.emplace_back(_backend->test(a, b));
     }
@@ -85,4 +85,6 @@ void eacirc::run() {
         logger::info() << "KS is not in " << _significance_level
                        << "% interval -> uniformity hypothesis accepted" << std::endl;
     }
+
+    std::cout << "the last p-value is: " << pvalues.back() << std::endl;
 }

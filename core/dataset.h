@@ -7,6 +7,9 @@
 struct dataset {
     using storage = std::vector<std::uint8_t>;
 
+    using pointer = storage::pointer;
+    using const_pointer = storage::const_pointer;
+
     using iterator = step_iterator<view_iterator<typename storage::iterator>>;
     using const_iterator = step_iterator<view_iterator<typename storage::const_iterator>>;
 
@@ -30,10 +33,13 @@ struct dataset {
     const_iterator begin() const { return {{_data.begin(), _tvsize}, _tvsize}; }
     const_iterator end() const { return {{_data.end(), _tvsize}, _tvsize}; }
 
+    std::size_t tvsize() const { return _tvsize; }
     std::size_t size() const { return _data.size() / _tvsize; }
 
-    view<storage::iterator> raw() { return make_view(_data.begin(), _data.end()); }
-    view<storage::const_iterator> raw() const { return make_view(_data.begin(), _data.end()); }
+    pointer rawdata() { return _data.data(); }
+    const_pointer rawdata() const { return _data.data(); }
+
+    std::size_t rawsize() const { return _data.size(); }
 
 private:
     unsigned _tvsize;

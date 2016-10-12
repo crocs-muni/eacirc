@@ -1,61 +1,84 @@
 #pragma once
 
-#include "view.h"
-#include <cstdint>
+#include "dataset.h"
+#include <algorithm>
 #include <limits>
-#include <stdexcept>
+#include <vector>
 
-using byte = unsigned char;
+struct counter {
+    using value_type = std::uint8_t;
+    using pointer = typename std::add_pointer<value_type>::type;
+    using const_pointer = typename std::add_pointer<const value_type>::type;
 
-using byte_view = view<byte*>;
-using const_byte_view = view<const byte*>;
+    counter(std::size_t size)
+        : _data(size) {
+        std::fill(_data.begin(), _data.end(), std::numeric_limits<value_type>::min());
+    }
 
-struct stream_error : std::runtime_error {
-    stream_error(std::string const& what)
-        : runtime_error(what) {}
+    void increment() {
+        for (value_type& value : _data) {
+            if (value != std::numeric_limits<value_type>::max()) {
+                ++value;
+                break;
+            }
+            value = std::numeric_limits<value_type>::min();
+        }
+    }
 
-    stream_error(char const* what)
-        : runtime_error(what) {}
+    pointer data() { return _data.data(); }
+    const_pointer data() const { return _data.data(); }
+
+    std::size_t size() const { return _data.size(); }
+
+private:
+    std::vector<value_type> _data;
 };
 
 struct stream {
+    using value_type = std::uint8_t;
+
     virtual ~stream() = default;
 
-    virtual std::size_t output_block_size() const { return 0u; }
-
-    virtual void read(byte_view out) = 0;
+    virtual void read_dataset(dataset& set) = 0;
+    virtual void read_raw(std::basic_ostream<value_type>& os, std::size_t size) = 0;
 };
 
-struct counter {
-    using value_type = std::uint64_t;
-    using reference = value_type const&;
-    using pointer = value_type const*;
-    using difference_type = std::int64_t;
-    using iterator_tag = std::forward_iterator_tag;
+struct block_stream : stream {
+    block_stream(std::size_t block)
+        : _block(block) {}
 
-    counter()
-        : _data(0ul) {}
+    void read_dataset(dataset& set) override {
+        for (auto& vec : set) {
+            auto beg = vec.begin();
+            auto end = vec.end();
 
-    reference operator*() const { return _data; }
-    pointer operator->() const { return &_data; }
+            while (beg != end) {
+                auto n = std::min(_block.size(), std::size_t(std::distance(beg, end)));
 
-    std::size_t size() const { return sizeof(_data); }
-    std::uint8_t const* data() const { return reinterpret_cast<std::uint8_t const*>(&_data); }
-
-    counter& operator++() {
-        ++_data;
-        return *this;
+                generate();
+                beg = std::copy_n(_block.data(), n, beg);
+            }
+        }
     }
 
-    counter operator++(int) {
-        auto self = *this;
-        ++(*this);
-        return self;
+    void read_raw(std::basic_ostream<value_type>& os, std::size_t size) override {
+        while (size != 0) {
+            auto n = std::min(_block.size(), size);
+
+            generate();
+            os.write(_block.data(), std::streamsize(n));
+            if (!os.good())
+                throw std::runtime_error("an error has occured during raw read");
+            size -= n;
+        }
     }
 
-    bool operator==(counter const& rhs) const { return _data == rhs._data; }
-    bool operator!=(counter const& rhs) const { return !(*this == rhs); }
+protected:
+    virtual void generate() = 0;
+
+    std::vector<value_type>& block() { return _block; }
+    const std::vector<value_type>& block() const { return _block; }
 
 private:
-    value_type _data;
+    std::vector<value_type> _block;
 };
