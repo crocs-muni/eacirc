@@ -1,6 +1,6 @@
 add_library(sha3 STATIC
-    factory
-    sha3
+    sha3_factory
+    sha3_stream
     sha3_interface
     hash_functions/hash_functions
 # === SHA-3 hash function files ===
