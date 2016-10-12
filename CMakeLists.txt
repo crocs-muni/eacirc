@@ -23,3 +23,5 @@ add_subdirectory(streams/sha3)
 
 add_subdirectory(external/json)
 add_subdirectory(external/pcg-cpp-0.98)
+
+add_custom_target(config SOURCES config.json)
