@@ -37,8 +37,8 @@ estream_stream::estream_stream(const json& config, default_seed_source& seeder)
     , _algorithm(config.at("algorithm"),
                  config.at("round").is_null() ? optional<unsigned>{nullopt}
                                               : optional<unsigned>{unsigned(config.at("round"))},
-                 config.at("ivtype"),
-                 config.at("keytype")) {
+                 config.at("iv-type"),
+                 config.at("key-type")) {
     if (_initfreq == estream_init_frequency::ONLY_ONCE) {
         _algorithm.setup_key(_rng);
         _algorithm.setup_iv(_rng);
