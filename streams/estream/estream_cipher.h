@@ -2,6 +2,7 @@
 
 #include <array>
 #include <core/optional.h>
+#include <core/random.h>
 #include <memory>
 
 struct estream_interface;
@@ -20,8 +21,8 @@ struct estream_cipher {
     estream_cipher(estream_cipher&&);
     ~estream_cipher();
 
-    void setup_iv();
-    void setup_key();
+    void setup_iv(polymorphic_generator& rng);
+    void setup_key(polymorphic_generator& rng);
 
     void encrypt(const std::uint8_t* plaintext, std::uint8_t* ciphertext, std::size_t size);
     void decrypt(const std::uint8_t* ciphertext, std::uint8_t* plaintext, std::size_t size);

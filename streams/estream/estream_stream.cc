@@ -41,8 +41,8 @@ estream_stream::estream_stream(const json& config, default_seed_source& seeder)
                  config.at("ivtype"),
                  config.at("keytype")) {
     if (_initfreq == estream_init_frequency::ONLY_ONCE) {
-        _algorithm.setup_key();
-        _algorithm.setup_iv();
+        _algorithm.setup_key(_rng);
+        _algorithm.setup_iv(_rng);
     }
 }
 
@@ -70,8 +70,8 @@ void estream_stream::generate() {
     }
 
     if (_initfreq == estream_init_frequency::EVERY_VECTOR) {
-        _algorithm.setup_key();
-        _algorithm.setup_iv();
+        _algorithm.setup_key(_rng);
+        _algorithm.setup_iv(_rng);
     }
 
     _algorithm.encrypt(_plaintext.data(), _encrypted.data(), _plaintext.size());

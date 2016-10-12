@@ -1,5 +1,6 @@
 #include "estream_cipher.h"
 #include "estream_interface.h"
+#include <algorithm>
 #include <core/memory.h>
 
 #include "ciphers/abc/ecrypt-sync.h"
@@ -102,7 +103,7 @@ estream_cipher::estream_cipher(const std::string& name,
 estream_cipher::estream_cipher(estream_cipher&&) = default;
 estream_cipher::~estream_cipher() = default;
 
-void estream_cipher::setup_iv() {
+void estream_cipher::setup_iv(polymorphic_generator& rng) {
     switch (_ivtype) {
     case estream_ivtype::ZEROS:
         std::fill(_iv.begin(), _iv.end(), 0x00u);
@@ -111,6 +112,8 @@ void estream_cipher::setup_iv() {
         std::fill(_iv.begin(), _iv.end(), 0x01u);
         break;
     case estream_ivtype::RANDOM:
+        std::generate(_iv.begin(), _iv.end(), rng);
+        break;
     case estream_ivtype::BIASRANDOM:
         throw std::logic_error("feature not yet implemented");
     }
@@ -119,15 +122,17 @@ void estream_cipher::setup_iv() {
     _decryptor->ECRYPT_ivsetup(_iv.data());
 }
 
-void estream_cipher::setup_key() {
+void estream_cipher::setup_key(polymorphic_generator& rng) {
     switch (_keytype) {
     case estream_keytype::ZEROS:
-        std::fill(_iv.begin(), _iv.end(), 0x00u);
+        std::fill(_key.begin(), _key.end(), 0x00u);
         break;
     case estream_keytype::ONES:
-        std::fill(_iv.begin(), _iv.end(), 0x01u);
+        std::fill(_key.begin(), _key.end(), 0x01u);
         break;
     case estream_keytype::RANDOM:
+        std::generate(_key.begin(), _key.end(), rng);
+        break;
     case estream_keytype::BIASRANDOM:
         throw std::logic_error("feature not yet implemented");
     }
