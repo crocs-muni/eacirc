@@ -27,8 +27,7 @@ static estream_plaintext_type create_plaintext_type(const std::string& type) {
 }
 
 estream_stream::estream_stream(const json& config, default_seed_source& seeder)
-    : block_stream(estream_cipher::block_size)
-    , _initfreq(create_init_frequency(config.at("init-frequency")))
+    : _initfreq(create_init_frequency(config.at("init-frequency")))
     , _plaitext_type(create_plaintext_type(config.at("plaintext-type")))
     , _rng(config.at("generator").get<std::string>(), seeder)
     , _counter(estream_cipher::block_size)
@@ -46,7 +45,7 @@ estream_stream::estream_stream(const json& config, default_seed_source& seeder)
     }
 }
 
-void estream_stream::generate() {
+void estream_stream::setup_plaintext() {
     switch (_plaitext_type) {
     case estream_plaintext_type::ZEROS:
         std::fill(_plaintext.begin(), _plaintext.end(), 0x00u);
@@ -68,17 +67,29 @@ void estream_stream::generate() {
     case estream_plaintext_type::HALFBLOCKSAC:
         throw std::logic_error("feature not yet implemented");
     }
+}
 
-    if (_initfreq == estream_init_frequency::EVERY_VECTOR) {
-        _algorithm.setup_key(_rng);
-        _algorithm.setup_iv(_rng);
+void estream_stream::read(dataset& set) {
+    auto beg = set.rawdata();
+    auto end = set.rawdata() + set.rawsize();
+
+    if ((set.rawsize() % estream_cipher::block_size) != 0)
+        throw std::runtime_error("eSTREAM dataset size must be multiple of block size");
+
+    for (; beg != end; beg += estream_cipher::block_size) {
+        setup_plaintext();
+
+        if (_initfreq == estream_init_frequency::EVERY_VECTOR) {
+            _algorithm.setup_key(_rng);
+            _algorithm.setup_iv(_rng);
+        }
+
+        _algorithm.encrypt(_plaintext.data(), _encrypted.data(), _plaintext.size());
+        _algorithm.decrypt(_encrypted.data(), _encrypted_decrypted.data(), _encrypted.size());
+
+        if (_plaintext != _encrypted_decrypted)
+            throw std::logic_error("eSTREAM decrypted text does not match the original plaintext");
+
+        std::copy(_encrypted.begin(), _encrypted.end(), beg);
     }
-
-    _algorithm.encrypt(_plaintext.data(), _encrypted.data(), _plaintext.size());
-    _algorithm.decrypt(_encrypted.data(), _encrypted_decrypted.data(), _encrypted.size());
-
-    if (_plaintext != _encrypted_decrypted)
-        throw std::logic_error("eSTREAM decrypted text does not match the original plaintext");
-
-    std::copy(_encrypted.begin(), _encrypted.end(), block().begin());
 }

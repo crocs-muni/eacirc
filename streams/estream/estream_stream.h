@@ -18,11 +18,13 @@ enum class estream_plaintext_type {
     HALFBLOCKSAC
 };
 
-struct estream_stream : block_stream {
+struct estream_stream : stream {
     estream_stream(const json& config, default_seed_source& seeder);
 
+    void read(dataset& set) override;
+
 protected:
-    void generate() override;
+    void setup_plaintext();
 
 private:
     const estream_init_frequency _initfreq;
@@ -30,9 +32,9 @@ private:
 
     polymorphic_generator _rng;
     counter _counter;
-    std::vector<value_type> _plaintext;
-    std::vector<value_type> _encrypted;
-    std::vector<value_type> _encrypted_decrypted;
+    std::vector<std::uint8_t> _plaintext;
+    std::vector<std::uint8_t> _encrypted;
+    std::vector<std::uint8_t> _encrypted_decrypted;
 
     estream_cipher _algorithm;
 };

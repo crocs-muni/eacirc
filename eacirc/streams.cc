@@ -14,13 +14,7 @@
 namespace _impl {
 
     template <std::uint8_t value> struct const_stream : stream {
-        void read_dataset(dataset& set) override {
-            std::fill_n(set.rawdata(), set.rawsize(), value);
-        }
-
-        void read_raw(std::basic_ostream<value_type>& os, std::size_t size) override {
-            std::fill_n(std::ostreambuf_iterator<value_type>(os), size, value);
-        }
+        void read(dataset& set) override { std::fill_n(set.rawdata(), set.rawsize(), value); }
     };
 
     template <typename Generator> struct rng_stream : stream {
@@ -28,15 +22,9 @@ namespace _impl {
         rng_stream(Seeder&& seeder)
             : _rng(std::forward<Seeder>(seeder)) {}
 
-        void read_dataset(dataset& set) override {
+        void read(dataset& set) override {
             std::generate_n(set.rawdata(), set.rawsize(), [this]() {
-                return std::uniform_int_distribution<value_type>()(_rng);
-            });
-        }
-
-        void read_raw(std::basic_ostream<value_type>& os, std::size_t size) override {
-            std::generate_n(std::ostreambuf_iterator<value_type>(os), size, [this]() {
-                return std::uniform_int_distribution<value_type>()(_rng);
+                return std::uniform_int_distribution<std::uint8_t>()(_rng);
             });
         }
 
@@ -74,11 +62,7 @@ struct file_stream : stream {
         : _path(config.at("path").get<std::string>())
         , _istream(_path, std::ios::binary) {}
 
-    void read_raw(std::basic_ostream<value_type>&, std::size_t) override {
-        throw std::logic_error("this function is useless for file stream");
-    }
-
-    void read_dataset(dataset& set) override {
+    void read(dataset& set) override {
         _istream.read(set.rawdata(), std::streamsize(set.rawsize()));
 
         if (_istream.fail())

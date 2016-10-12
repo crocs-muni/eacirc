@@ -43,50 +43,7 @@ private:
 };
 
 struct stream {
-    using value_type = std::uint8_t;
-
     virtual ~stream() = default;
 
-    virtual void read_dataset(dataset& set) = 0;
-    virtual void read_raw(std::basic_ostream<value_type>& os, std::size_t size) = 0;
-};
-
-struct block_stream : stream {
-    block_stream(std::size_t block)
-        : _block(block) {}
-
-    void read_dataset(dataset& set) override {
-        for (auto& vec : set) {
-            auto beg = vec.begin();
-            auto end = vec.end();
-
-            while (beg != end) {
-                auto n = std::min(_block.size(), std::size_t(std::distance(beg, end)));
-
-                generate();
-                beg = std::copy_n(_block.data(), n, beg);
-            }
-        }
-    }
-
-    void read_raw(std::basic_ostream<value_type>& os, std::size_t size) override {
-        while (size != 0) {
-            auto n = std::min(_block.size(), size);
-
-            generate();
-            os.write(_block.data(), std::streamsize(n));
-            if (!os.good())
-                throw std::runtime_error("an error has occured during raw read");
-            size -= n;
-        }
-    }
-
-protected:
-    virtual void generate() = 0;
-
-    std::vector<value_type>& block() { return _block; }
-    const std::vector<value_type>& block() const { return _block; }
-
-private:
-    std::vector<value_type> _block;
+    virtual void read(dataset& set) = 0;
 };
