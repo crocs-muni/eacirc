@@ -21,7 +21,7 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     if (name == "Cheetah")        return std::make_unique<Cheetah>(rounds);
     if (name == "CHI")            return std::make_unique<Chi>(rounds);
     if (name == "CRUNCH")         return std::make_unique<Crunch>(rounds);
-    if (name == "Cubehash")       return std::make_unique<Cubehash>(rounds);
+    if (name == "CubeHash")       return std::make_unique<Cubehash>(rounds);
     if (name == "DCH")            return std::make_unique<DCH>(rounds);
     if (name == "DynamicSHA")     return std::make_unique<DSHA>(rounds);
     if (name == "DynamicSHA2")    return std::make_unique<DSHA2>(rounds);
