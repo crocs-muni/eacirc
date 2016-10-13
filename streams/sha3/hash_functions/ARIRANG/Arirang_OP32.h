@@ -85,6 +85,8 @@ typedef struct {
         #define ARIRANG_LITTLE_ENDIAN    // edit
     #elif defined(__WIN32__)             // EACIRC: manual edit: these two lines added
         #define ARIRANG_LITTLE_ENDIAN    // edit
+	#elif defined(__APPLE__)             // EACIRC: manual edit: these two lines added
+        #define ARIRANG_LITTLE_ENDIAN    // edit
 	#else
 		#error
 	#endif

@@ -35,7 +35,11 @@ Added RCS Header Comment block using RCS Keywords.
 #include <stdio.h>
 #include <stddef.h>
 #include <memory.h>
-#include <malloc.h>
+#if defined(__APPLE__)			// EACIRC: manual edit: apple compatibility
+#  include <malloc/malloc.h>
+#else
+#  include <malloc.h>
+#endif
 #include <time.h>
 #include <assert.h>
 //#include "SHA3API.h"
