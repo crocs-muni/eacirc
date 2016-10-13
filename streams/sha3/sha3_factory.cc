@@ -13,8 +13,8 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     // clang-format off
     if (name == "Abacus")         return std::make_unique<Abacus>(rounds);
     if (name == "ARIRANG")        return std::make_unique<Arirang>(rounds);
-    if (name == "Aurora")         return std::make_unique<Aurora>(rounds);
-    if (name == "Blake")          return std::make_unique<Blake>(rounds);
+    if (name == "AURORA")         return std::make_unique<Aurora>(rounds);
+    if (name == "BLAKE")          return std::make_unique<Blake>(rounds);
     if (name == "Blender")        return std::make_unique<Blender>(rounds);
     if (name == "BMW")            return std::make_unique<BMW>(rounds);
     if (name == "Boole")          return std::make_unique<Boole>(rounds);
@@ -42,10 +42,10 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     if (name == "Khichidi") {     _check_rounds(name, rounds);
                                   return std::make_unique<Khichidi>();
     }
-    if (name == "Lane")           return std::make_unique<Lane>(rounds);
+    if (name == "LANE")           return std::make_unique<Lane>(rounds);
     if (name == "Lesamnta")       return std::make_unique<Lesamnta>(rounds);
     if (name == "Luffa")          return std::make_unique<Luffa>(rounds);
-    // if (name == "Lux")            return std::make_unique<Lux>(rounds);
+    // if (name == "LUX")            return std::make_unique<Lux>(rounds);
     if (name == "MCSSHA3") {      _check_rounds(name, rounds);
                                   return std::make_unique<Mscsha>();
     }
@@ -59,7 +59,7 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     if (name == "Shabal") {       _check_rounds(name, rounds);
                                   return std::make_unique<Shabal>();
     }
-    if (name == "Shameta") {      _check_rounds(name, rounds);
+    if (name == "SHAMATA") {      _check_rounds(name, rounds);
                                   return std::make_unique<Shamata>();
     }
     if (name == "SHAvite3")       return std::make_unique<SHAvite>(rounds);
