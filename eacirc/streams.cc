@@ -7,9 +7,15 @@
 #include <limits>
 #include <pcg/pcg_random.hpp>
 #include <random>
-#include <streams/estream/estream_stream.h>
-#include <streams/sha3/sha3_stream.h>
 #include <string>
+
+#ifdef BUILD_estream
+#include <streams/estream/estream_stream.h>
+#endif
+
+#ifdef BUILD_sha3
+#include <streams/sha3/sha3_stream.h>
+#endif
 
 namespace _impl {
 
@@ -89,10 +95,15 @@ std::unique_ptr<stream> make_stream(json const& config, default_seed_source& see
         return std::make_unique<mt19937_stream>(seeder);
     else if (type == "pcg32-stream")
         return std::make_unique<pcg32_stream>(seeder);
+#ifdef BUILD_estream
     else if (type == "estream-stream")
         return std::make_unique<estream_stream>(config, seeder);
+#endif
+#ifdef BUILD_sha3
+#include <streams/sha3/sha3_stream.h>
     else if (type == "sha3-stream")
         return std::make_unique<sha3_stream>(config);
+#endif
     else
         throw std::runtime_error("requested stream named \"" + type + "\" does not exist");
 }

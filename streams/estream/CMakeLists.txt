@@ -1,4 +1,4 @@
-add_library(estream STATIC
+add_library(estream STATIC EXCLUDE_FROM_ALL
     estream_cipher
     estream_interface
     estream_stream

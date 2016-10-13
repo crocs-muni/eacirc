@@ -1,7 +1,7 @@
-add_executable(eacirc main.cc)
-target_link_libraries(eacirc core solvers estream sha3)
+include(build_stream)
+include(detect_version)
 
-target_sources(eacirc PRIVATE
+add_executable(eacirc main.cc
     backend
     circuit/backend
     circuit/backend_impl
@@ -16,5 +16,9 @@ target_sources(eacirc PRIVATE
     streams
     version
     )
+target_link_libraries(eacirc core solvers)
 
 detect_version(version.h)
+
+build_stream(estream)
+build_stream(sha3)

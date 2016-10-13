@@ -1,4 +1,4 @@
-add_library(sha3 STATIC
+add_library(sha3 STATIC EXCLUDE_FROM_ALL
     sha3_factory
     sha3_stream
     sha3_interface

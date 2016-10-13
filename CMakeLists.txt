@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4)
 project(eacirc)
 
-include(cmake/detect_version.cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
