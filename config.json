@@ -1,0 +1,40 @@
+{
+    "notes" : "Big testbed: rnd-rnd",
+    "seed" : null,
+
+    "num-of-epochs" : 300,
+    "significance-level" : 1,
+    "tv-size" : 16,
+    "tv-count" : 1000,
+    "stream-a" : {
+        "type" : "pcg32-stream"
+    },
+    "stream-b" : {
+        "type" : "pcg32-stream"
+    },
+
+    "backend" : {
+        "type" : "circuit",
+        "solver" : "global-search",
+
+        "function-set" : [ "NOP", "CONS", "NOT",
+                           "AND", "NAND", "OR", "XOR", "NOR",
+                           "SHIL", "SHIR", "ROTL", "ROTR",
+                           "MASK" ],
+        "num-of-generations": 100,
+
+        "initializer" : {
+            "type" : "basic-initializer"
+        },
+        "mutator" : {
+            "type" : "basic-mutator",
+            "changes-of-functions" : 2,
+            "changes-of-arguments" : 2,
+            "changes-of-connectors" : 3
+        },
+        "evaluator" : {
+            "type" : "categories-evaluator",
+            "num-of-categories" : 8
+        }
+    }
+ }

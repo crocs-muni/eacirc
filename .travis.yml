@@ -1,41 +1,29 @@
-sudo: required
-dist: trusty
-
 language: cpp
-compiler: gcc
 
-before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update
-  - sudo apt-get install gcc-5 g++-5 -y
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
-  - sudo update-alternatives --config gcc
-  - sudo update-alternatives --config g++
+sudo: false
 
-install:
-  - wget https://cmake.org/files/v3.4/cmake-3.4.0-Linux-x86_64.sh
-  - sudo sh cmake-3.4.0-Linux-x86_64.sh --prefix=/usr --exclude-subdir
+matrix:
+  include:
+    - os: linux
+      compiler: gcc-5
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
+      env: [CC_COMPILER=gcc-5, CXX_COMPILER=g++-5]
+    - os: linux
+      compiler: clang-3.7
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
+          packages: ['g++-5', 'clang-3.7']
+      env: [CC_COMPILER=clang-3.7, CXX_COMPILER=clang++-3.7]
+
+before_script:
+  - wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.sh
+  - sh cmake-3.5.2-Linux-x86_64.sh --exclude-subdir --prefix=$HOME
 
 script:
   - mkdir -p build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Release
+  - CC=$CC_COMPILER CXX=$CXX_COMPILER cmake .. -DCMAKE_BUILD_TYPE=Debug
   - make
-  - cd run && ./eacirc -test
-
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "hAYJZlldcmNTRgs+Jduw0nrFeNTeF/3u/TejSMbyIQ0Kd7/o0keTJGKWyCGIgslz1zzC13sePZ7cd54Mcwp//OV8XZSV3aHcjhbbxm+9YZBuewMBg0K9M8fSQh1W9b/bDdy+so1tP//NUwHF8a5YI+iJt0fmrjrOYva3U2bDubk="
-
-addons:
-  coverity_scan:
-    project:
-      name: "crocs-muni/EACirc"
-      description: "Build submitted via Travis CI"
-    notification_email: mukrop@mail.muni.cz
-    build_command_prepend: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
-    build_command: make
-    branch_pattern: coverity_scan
-
