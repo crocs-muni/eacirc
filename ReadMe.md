@@ -26,6 +26,7 @@ The framework is developed at the [Centre for Research on Cryptography and Secur
 * **Karel Kubíček** 2014-now (TEA, metaheuristics)
 * **Ľubomír Obrátil** 2014-now (RTT, Oneclick)
 * **Marek Sýs** 2013-now (statistics evaluation, polynomials)
+* **Martin Ukrop** 2012-now (framework model, refactoring, SHA-3 & CAESAR candidates testing, supporting tools)
 
 Former participation:
 * **Milan Čermák** 2012-2013 (CUDA)
@@ -33,5 +34,5 @@ Former participation:
 * **Matěj Prišťák** 2011-2012 (object model and refactoring, XML support, eStream candidates testing)
 * **Zdenek Říha** 2013-2016 (Java bytecode emulator)
 * **Tobiáš Smolka** 2011-2012 (BOINC related support)
-* **Martin Ukrop** 2012-2016 (framework model, refactoring, SHA-3 candidates testing, supporting tools)
+
  
