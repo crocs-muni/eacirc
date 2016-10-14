@@ -1,6 +1,7 @@
 ![EACirc](https://raw.githubusercontent.com/wiki/petrs/EACirc/img/logo-home.png)  
 [![Build Status](https://travis-ci.org/crocs-muni/eacirc.svg?branch=master)](https://travis-ci.org/crocs-muni/eacirc) [![Coverity status](https://scan.coverity.com/projects/7192/badge.svg)](https://scan.coverity.com/projects/crocs-muni-eacirc)
 [![Latest release](https://img.shields.io/github/release/crocs-muni/EACirc.svg)](https://github.com/crocs-muni/EACirc/releases/latest)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.160808.svg)](https://doi.org/10.5281/zenodo.160808)
 
 EACirc is a framework for automatic problem solving. It can be utilized as randomness testing tool similar to statistical batteries (NIST STS, Dieaharder, TestU01), for instance for analysis of cryptographic function outputs.
 
