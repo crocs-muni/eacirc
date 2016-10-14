@@ -2,13 +2,13 @@
 [![Build Status](https://travis-ci.org/crocs-muni/eacirc.svg?branch=master)](https://travis-ci.org/crocs-muni/eacirc) [![Coverity status](https://scan.coverity.com/projects/7192/badge.svg)](https://scan.coverity.com/projects/crocs-muni-eacirc)
 [![Latest release](https://img.shields.io/github/release/crocs-muni/EACirc.svg)](https://github.com/crocs-muni/EACirc/releases/latest)
 
-EACirc is a framework for automatic problem solving. It can be utilized as randomness testing tool similar to statistical bateries (NIST STS, Dieaharder, TestU01), for instance for analysis of cryptografical function outputs.
+EACirc is a framework for automatic problem solving. It can be utilized as randomness testing tool similar to statistical batteries (NIST STS, Dieaharder, TestU01), for instance for analysis of cryptographic function outputs.
 
-It uses supervised learning techniques based on metaheuristics to construct adapted distinguisher of two input data streams. The distinguisher can be represented as harware-like circuits or algebraic polynomial. 
+It uses supervised learning techniques based on metaheuristics to construct adapted distinguisher of two input data streams. The distinguisher can be represented as hardware-like circuits or algebraic polynomial. 
 
 ## The Framework
 
-This repository contains EACirc core and code for data stream generaion (mainly eSTREAM and SHA-3 candidates).
+This repository contains EACirc core and code for data stream generation (mainly eSTREAM and SHA-3 candidates).
 Further tools are:
 * [Randomness Testing Toolkit (RTT)](https://github.com/crocs-muni/randomness-testing-toolkit),
 * [tools for GRID computations](https://github.com/crocs-muni/eacirc-utils)
