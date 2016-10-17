@@ -17,6 +17,7 @@ public:
     virtual long long getAvailableData() override;
     virtual void read(char *buffer, size_t size) override;
     virtual std::string desc() override;
+    virtual void read(char *buffer, char* messages, size_t size);
 
 protected:
     MD5_DIGEST m_md5Accumulator; // accumulator for MD5

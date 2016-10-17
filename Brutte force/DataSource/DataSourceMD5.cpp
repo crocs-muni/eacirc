@@ -23,6 +23,15 @@ void DataSourceMD5::read(char *buffer, size_t size) {
         memcpy(buffer+offset, m_md5Accumulator, std::min((size_t)MD5_DIGEST_LENGTH, size-offset));
     }
 }
+void DataSourceMD5::read(char *buffer, char* messages, size_t size){
+    for(size_t offset = 0; offset < size; offset += MD5_DIGEST_LENGTH){
+        memcpy(m_md5Accumulator, messages, MD5_DIGEST_LENGTH);
+        updateAccumulator();
+        memcpy(buffer+offset, m_md5Accumulator, std::min((size_t)MD5_DIGEST_LENGTH, size-offset));
+    }
+
+}
+
 
 std::string DataSourceMD5::desc() {
     return "MD5";
