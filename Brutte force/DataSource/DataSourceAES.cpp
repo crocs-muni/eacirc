@@ -37,6 +37,25 @@ void DataSourceAES::read(char *buffer, size_t size) {
     }
 }
 
+void DataSourceAES::read(char *buffer, char *key, char *messages, size_t size) {
+    const int workingBufferSize = 16;
+    uint8_t workingBufferIn[workingBufferSize];
+
+    if(key == 0)
+        for (int i = 0; i < 16; ++i) {
+            m_key[i] = (unsigned char)rand();
+        }
+    for(size_t offset = 0; offset < size; offset += workingBufferSize){
+        //load messages from array
+        memcpy(workingBufferIn, messages + offset, workingBufferSize );
+        //load key from array
+        if(key != 0)
+            memcpy(m_key, key + offset, 16 );
+
+        // Encrypt input buffer.
+        AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), m_rounds);
+    }
+}
 std::string DataSourceAES::desc() {
     std::stringstream ss;
     ss << "AES-CTR-r" << m_rounds;

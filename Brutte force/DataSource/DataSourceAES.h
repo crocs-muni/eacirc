@@ -13,9 +13,11 @@ public:
     DataSourceAES(unsigned long seed = 0, int rounds = 10);
     ~DataSourceAES() {}
 
+
     virtual long long getAvailableData() override;
     virtual void read(char *buffer, size_t size) override;
     virtual std::string desc() override;
+    virtual void read(char *buffer, char* key, char* messages, size_t size);
 
 private:
     uint8_t m_key[16];
