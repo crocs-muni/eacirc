@@ -16,6 +16,7 @@ public:
     virtual long long getAvailableData() override;
     virtual void read(char *buffer, size_t size) override;
     virtual std::string desc() override;
+    virtual void read(char *buffer, char* keys, size_t size, size_t BytesPerIter = 16);
 
 protected:
     BYTE m_state[RC4_STATE_SIZE];
