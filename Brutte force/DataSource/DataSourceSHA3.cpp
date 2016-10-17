@@ -78,6 +78,36 @@ void DataSourceSHA3::read(char *buffer, size_t size) {
     }
 }
 
+void DataSourceSHA3::read(char *buffer, char *messages, size_t message_size, size_t size) {
+    //const int workingBufferSize = 16;
+    //uint8_t workingBufferIn[workingBufferSize];
+    //memcpy(workingBufferIn, messages + offset, workingBufferSize );
+    size_t message_offset = 0;
+    BitSequence results[SHA3_MAX_OUTPUT];
+    int res = 0;
+
+    for(size_t offset = 0; offset < size; offset += m_outputSize){
+        res = m_sha3->Init(m_hash_init);
+        if (res != 0){
+            throw std::runtime_error("Init of the hash function failed");
+        }
+
+        res = m_sha3->Update((const BitSequence *) (messages + message_offset), message_size);
+        message_offset += message_size;
+
+        if (res != 0){
+            throw std::runtime_error("SHA3 update failed");
+        }
+
+        res = m_sha3->Final(results);
+        if (res != 0){
+            throw std::runtime_error("SHA3 final failed");
+        }
+
+        memcpy(buffer+offset, results, std::min((size_t)m_outputSize, size-offset));
+    }
+}
+
 std::string DataSourceSHA3::desc() {
     std::stringstream ss;
     ss << "SHA3-ID" << m_hashFunction << "-r" << m_rounds << "-out" << m_outputSize;
