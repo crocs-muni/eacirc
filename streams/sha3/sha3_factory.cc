@@ -36,9 +36,7 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     if (name == "Grostl")         return std::make_unique<Grostl>(rounds);
     if (name == "Hamsi")          return std::make_unique<Hamsi>(rounds);
     if (name == "JH")             return std::make_unique<JH>(rounds);
-    if (name == "Keccak") {       _check_rounds(name, rounds);
-                                  return std::make_unique<Keccak>();
-    }
+    if (name == "Keccak")         return std::make_unique<Keccak>(rounds);
     if (name == "Khichidi") {     _check_rounds(name, rounds);
                                   return std::make_unique<Khichidi>();
     }

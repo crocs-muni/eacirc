@@ -112,9 +112,9 @@ http://creativecommons.org/publicdomain/zero/1.0/
     } \
     copyToState(state, A)
 #elif (Unrolling == 1)
-#define rounds \
+#define rounds(nrounds) \
     prepareTheta \
-    for(i=0; i<24; i++) { \
+    for(i=0; i<(nrounds); i++) { \
         thetaRhoPiChiIotaPrepareTheta(i  , A, E) \
         copyStateVariables(A, E) \
     } \

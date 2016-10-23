@@ -240,68 +240,68 @@ void setInterleavedWordsInto8bytes(UINT8* dest, UINT32* evenAndOdd)
 #error "Only unrolling 2 is supported by schedule 3."
 #endif
 
-void KeccakPermutationOnWords(UINT32 *state)
+void KeccakPermutationOnWords(UINT32 *state, unsigned nrounds)
 {
-    rounds
+    rounds(nrounds);
 }
 
-void KeccakPermutationOnWordsAfterXoring(UINT32 *state, const UINT8 *input, unsigned int laneCount)
+void KeccakPermutationOnWordsAfterXoring(UINT32 *state, const UINT8 *input, unsigned int laneCount, unsigned nrounds)
 {
     xorLanesIntoState(laneCount, state, input)
-    rounds
+    rounds(nrounds);
 }
 
 #ifdef ProvideFast576
-void KeccakPermutationOnWordsAfterXoring576bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring576bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     xorLanesIntoState(9, state, input)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast832
-void KeccakPermutationOnWordsAfterXoring832bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring832bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     xorLanesIntoState(13, state, input)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1024
-void KeccakPermutationOnWordsAfterXoring1024bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1024bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     xorLanesIntoState(16, state, input)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1088
-void KeccakPermutationOnWordsAfterXoring1088bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1088bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     xorLanesIntoState(17, state, input)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1152
-void KeccakPermutationOnWordsAfterXoring1152bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1152bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     xorLanesIntoState(18, state, input)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1344
-void KeccakPermutationOnWordsAfterXoring1344bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1344bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     xorLanesIntoState(21, state, input)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #else // (Schedule != 3)
 
-void KeccakPermutationOnWords(UINT32 *state)
+void KeccakPermutationOnWords(UINT32 *state, unsigned nrounds)
 {
     declareABCDE
 #if (Unrolling != 24)
@@ -309,88 +309,88 @@ void KeccakPermutationOnWords(UINT32 *state)
 #endif
 
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 
-void KeccakPermutationOnWordsAfterXoring(UINT32 *state, const UINT8 *input, unsigned int laneCount)
+void KeccakPermutationOnWordsAfterXoring(UINT32 *state, const UINT8 *input, unsigned int laneCount, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(laneCount, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 
 #ifdef ProvideFast576
-void KeccakPermutationOnWordsAfterXoring576bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring576bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(9, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast832
-void KeccakPermutationOnWordsAfterXoring832bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring832bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(13, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1024
-void KeccakPermutationOnWordsAfterXoring1024bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1024bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(16, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1088
-void KeccakPermutationOnWordsAfterXoring1088bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1088bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(17, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1152
-void KeccakPermutationOnWordsAfterXoring1152bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1152bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(18, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
 #ifdef ProvideFast1344
-void KeccakPermutationOnWordsAfterXoring1344bits(UINT32 *state, const UINT8 *input)
+void KeccakPermutationOnWordsAfterXoring1344bits(UINT32 *state, const UINT8 *input, unsigned nrounds)
 {
     declareABCDE
     unsigned int i;
 
     xorLanesIntoState(21, state, input)
     copyFromState(A, state)
-    rounds
+    rounds(nrounds);
 }
 #endif
 
@@ -422,57 +422,57 @@ void KeccakInitializeState(unsigned char *state)
 #endif
 }
 
-void KeccakPermutation(unsigned char *state)
+void KeccakPermutation(unsigned char *state, unsigned nrounds)
 {
     // We assume the state is always stored as interleaved 32-bit words
-    KeccakPermutationOnWords((UINT32*)state);
+    KeccakPermutationOnWords((UINT32*)state, nrounds);
 }
 
 #ifdef ProvideFast576
-void KeccakAbsorb576bits(unsigned char *state, const unsigned char *data)
+void KeccakAbsorb576bits(unsigned char *state, const unsigned char *data, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring576bits((UINT32*)state, data);
+    KeccakPermutationOnWordsAfterXoring576bits((UINT32*)state, data, nrounds);
 }
 #endif
 
 #ifdef ProvideFast832
-void KeccakAbsorb832bits(unsigned char *state, const unsigned char *data)
+void KeccakAbsorb832bits(unsigned char *state, const unsigned char *data, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring832bits((UINT32*)state, data);
+    KeccakPermutationOnWordsAfterXoring832bits((UINT32*)state, data, nrounds);
 }
 #endif
 
 #ifdef ProvideFast1024
-void KeccakAbsorb1024bits(unsigned char *state, const unsigned char *data)
+void KeccakAbsorb1024bits(unsigned char *state, const unsigned char *data, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring1024bits((UINT32*)state, data);
+    KeccakPermutationOnWordsAfterXoring1024bits((UINT32*)state, data, nrounds);
 }
 #endif
 
 #ifdef ProvideFast1088
-void KeccakAbsorb1088bits(unsigned char *state, const unsigned char *data)
+void KeccakAbsorb1088bits(unsigned char *state, const unsigned char *data, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring1088bits((UINT32*)state, data);
+    KeccakPermutationOnWordsAfterXoring1088bits((UINT32*)state, data, nrounds);
 }
 #endif
 
 #ifdef ProvideFast1152
-void KeccakAbsorb1152bits(unsigned char *state, const unsigned char *data)
+void KeccakAbsorb1152bits(unsigned char *state, const unsigned char *data, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring1152bits((UINT32*)state, data);
+    KeccakPermutationOnWordsAfterXoring1152bits((UINT32*)state, data, nrounds);
 }
 #endif
 
 #ifdef ProvideFast1344
-void KeccakAbsorb1344bits(unsigned char *state, const unsigned char *data)
+void KeccakAbsorb1344bits(unsigned char *state, const unsigned char *data, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring1344bits((UINT32*)state, data);
+    KeccakPermutationOnWordsAfterXoring1344bits((UINT32*)state, data, nrounds);
 }
 #endif
 
-void KeccakAbsorb(unsigned char *state, const unsigned char *data, unsigned int laneCount)
+void KeccakAbsorb(unsigned char *state, const unsigned char *data, unsigned int laneCount, unsigned nrounds)
 {
-    KeccakPermutationOnWordsAfterXoring((UINT32*)state, data, laneCount);
+    KeccakPermutationOnWordsAfterXoring((UINT32*)state, data, laneCount, nrounds);
 }
 
 #ifdef ProvideFast1024

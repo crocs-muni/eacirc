@@ -32,7 +32,7 @@ int InitDuplex(duplexState *state, unsigned int rate, unsigned int capacity)
     return 0;
 }
 
-int Duplexing(duplexState *state, const unsigned char *in, unsigned int inBitLen, unsigned char *out, unsigned int outBitLen)
+int Duplexing(duplexState *state, const unsigned char *in, unsigned int inBitLen, unsigned char *out, unsigned int outBitLen, unsigned int rounds)
 {
     KECCAK_ALIGN unsigned char block[KeccakPermutationSizeInBytes];
 
@@ -55,7 +55,7 @@ int Duplexing(duplexState *state, const unsigned char *in, unsigned int inBitLen
     #ifdef KeccakReference
     displayBytes(1, "Block to be absorbed (after padding)", block, (state->rate+7)/8);
     #endif
-    KeccakAbsorb(state->state, block, (state->rate+63)/64);
+    KeccakAbsorb(state->state, block, (state->rate+63)/64, rounds);
 
     KeccakExtract(state->state, block, (state->rate+63)/64);
     memcpy(out, block, (outBitLen+7)/8);

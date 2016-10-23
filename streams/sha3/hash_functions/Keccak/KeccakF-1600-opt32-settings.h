@@ -1,4 +1,4 @@
-#define Unrolling 2
+#define Unrolling 1
 //#define UseBebigokimisa
 //#define UseInterleaveTables
-#define UseSchedule 3
+//#define UseSchedule 3

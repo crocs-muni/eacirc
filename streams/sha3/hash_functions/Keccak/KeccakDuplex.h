@@ -54,6 +54,6 @@ int InitDuplex(duplexState *state, unsigned int rate, unsigned int capacity);
   * @pre    outBitLen ≤ r
   * @return Zero if successful, 1 otherwise.
   */
-int Duplexing(duplexState *state, const unsigned char *in, unsigned int inBitLen, unsigned char *out, unsigned int outBitLen);
+int Duplexing(duplexState *state, const unsigned char *in, unsigned int inBitLen, unsigned char *out, unsigned int outBitLen, unsigned int rounds);
 
 #endif
