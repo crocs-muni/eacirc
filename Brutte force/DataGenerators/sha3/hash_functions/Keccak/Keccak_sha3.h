@@ -16,8 +16,10 @@ typedef spongeState hashState;
 
 private:
 hashState keccakState;
+unsigned m_rounds;
 
 public:
+Keccak(const int numRounds=24);
 int Init(int hashbitlen);
 int Update(const BitSequence *data, DataLength databitlen);
 int Final(BitSequence *hashval);

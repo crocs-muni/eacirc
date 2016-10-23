@@ -18,26 +18,26 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 void KeccakInitialize( void );
 void KeccakInitializeState(unsigned char *state);
-void KeccakPermutation(unsigned char *state);
+void KeccakPermutation(unsigned char *state, unsigned int rounds);
 #ifdef ProvideFast576
-void KeccakAbsorb576bits(unsigned char *state, const unsigned char *data);
+void KeccakAbsorb576bits(unsigned char *state, const unsigned char *data, unsigned int rounds);
 #endif
 #ifdef ProvideFast832
-void KeccakAbsorb832bits(unsigned char *state, const unsigned char *data);
+void KeccakAbsorb832bits(unsigned char *state, const unsigned char *data, unsigned int rounds);
 #endif
 #ifdef ProvideFast1024
-void KeccakAbsorb1024bits(unsigned char *state, const unsigned char *data);
+void KeccakAbsorb1024bits(unsigned char *state, const unsigned char *data, unsigned int rounds);
 #endif
 #ifdef ProvideFast1088
-void KeccakAbsorb1088bits(unsigned char *state, const unsigned char *data);
+void KeccakAbsorb1088bits(unsigned char *state, const unsigned char *data, unsigned int rounds);
 #endif
 #ifdef ProvideFast1152
-void KeccakAbsorb1152bits(unsigned char *state, const unsigned char *data);
+void KeccakAbsorb1152bits(unsigned char *state, const unsigned char *data, unsigned int rounds);
 #endif
 #ifdef ProvideFast1344
-void KeccakAbsorb1344bits(unsigned char *state, const unsigned char *data);
+void KeccakAbsorb1344bits(unsigned char *state, const unsigned char *data, unsigned int rounds);
 #endif
-void KeccakAbsorb(unsigned char *state, const unsigned char *data, unsigned int laneCount);
+void KeccakAbsorb(unsigned char *state, const unsigned char *data, unsigned int laneCount, unsigned int rounds);
 #ifdef ProvideFast1024
 void KeccakExtract1024bits(const unsigned char *state, unsigned char *data);
 #endif

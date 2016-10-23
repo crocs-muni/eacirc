@@ -30,7 +30,7 @@ DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigne
         m_sha3 = new MD6(rounds);
 
     } else if (hash == SHA3_KECCAK) {
-        m_sha3 = new Keccak;
+        m_sha3 = new Keccak(rounds);
 
     } else {
         throw std::out_of_range("Unknown SHA3 function");

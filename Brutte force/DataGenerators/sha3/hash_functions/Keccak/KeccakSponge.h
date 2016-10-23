@@ -60,7 +60,7 @@ int InitSponge(spongeState *state, unsigned int rate, unsigned int capacity);
   *         i.e., Squeeze() must not have been called before.
   * @return Zero if successful, 1 otherwise.
   */
-int Absorb(spongeState *state, const unsigned char *data, unsigned long long databitlen);
+int Absorb(spongeState *state, const unsigned char *data, unsigned long long databitlen, unsigned int rounds);
 /**
   * Function to squeeze output data from the sponge function.
   * If the sponge function was in the absorbing phase, this function 
@@ -71,6 +71,6 @@ int Absorb(spongeState *state, const unsigned char *data, unsigned long long dat
   *                     It must be a multiple of 8.
   * @return Zero if successful, 1 otherwise.
   */
-int Squeeze(spongeState *state, unsigned char *output, unsigned long long outputLength);
+int Squeeze(spongeState *state, unsigned char *output, unsigned long long outputLength, unsigned int rounds);
 
 #endif
