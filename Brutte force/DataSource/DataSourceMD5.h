@@ -11,7 +11,7 @@
 
 class DataSourceMD5 : public DataSource{
 public:
-    DataSourceMD5(unsigned long seed = 0);
+    DataSourceMD5(unsigned long seed = 0, int Nr = 64);
     ~DataSourceMD5() {}
 
     virtual long long getAvailableData() override;
@@ -22,7 +22,7 @@ public:
 protected:
     MD5_DIGEST m_md5Accumulator; // accumulator for MD5
     int updateAccumulator();
-
+    int m_rounds;
 private:
 };
 

@@ -45,28 +45,28 @@ typedef unsigned long int UINT4;
 
 /* Data structure for MD5 (Message Digest) computation */
 typedef struct {
-  UINT4 i[2];                   /* number of _bits_ handled mod 2^64 */
-  UINT4 buf[4];                                    /* scratch buffer */
-  unsigned char in[64];                              /* input buffer */
-  unsigned char digest[16];     /* actual digest after MD5Final call */
+    UINT4 i[2];                   /* number of _bits_ handled mod 2^64 */
+    UINT4 buf[4];                                    /* scratch buffer */
+    unsigned char in[64];                              /* input buffer */
+    unsigned char digest[16];     /* actual digest after MD5Final call */
 } MD5_CTX;
 
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-void MD5Init(MD5_CTX *mdContext);
-void MD5Update(MD5_CTX *mdContext, unsigned char *inBuf, unsigned int inLen);
-void MD5Final(MD5_CTX *mdContext);
+void MD5Init(MD5_CTX *mdContext, int Nr);
+void MD5Update(MD5_CTX *mdContext, unsigned char *inBuf, unsigned int inLen, int Nr = 64);
+void MD5Final(MD5_CTX *mdContext, int Nr);
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-  
-#define MD5_DIGEST_LENGTH           16    
-#define MD5_BLOCK_LENGTH            16    
-typedef unsigned char    MD5_DIGEST[MD5_DIGEST_LENGTH];    
+
+#define MD5_DIGEST_LENGTH           16
+#define MD5_BLOCK_LENGTH            16
+typedef unsigned char    MD5_DIGEST[MD5_DIGEST_LENGTH];
 
 #endif  //MD5_H
