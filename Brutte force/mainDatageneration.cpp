@@ -16,8 +16,8 @@ using namespace std;
 //for loading array of keys, messages,..
 char* load_array(string filename){
     ifstream infile(filename.c_str(), ios::binary);
-    ifstream::pos_type pos = 1024*1024*1000;//infile.tellg();
-    char* result = new char[1024*1024*1000];
+    ifstream::pos_type pos = infile.tellg();
+    char* result = new char[pos];
     infile.seekg(0, ios::beg);
     infile.read(&result[0], pos);
 
