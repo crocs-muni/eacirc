@@ -96,7 +96,7 @@ void DataSourceSHA3::read(char *buffer, char *messages, size_t message_size, siz
             throw std::runtime_error("Init of the hash function failed");
         }
 
-        res = m_sha3->Update((const BitSequence *) (messages + message_offset), message_size);
+        res = m_sha3->Update((const BitSequence *) (messages + message_offset), message_size*8);
         message_offset += message_size;
 
         if (res != 0){
