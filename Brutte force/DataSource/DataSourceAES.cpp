@@ -9,7 +9,7 @@
 #include "../DataGenerators/aes.h"
 
 
-DataSourceAES::DataSourceAES(unsigned long seed, int rounds, unsigned char* key = NULL) {
+DataSourceAES::DataSourceAES(unsigned long seed, int rounds, unsigned char* key) {
     if(key == NULL) {
         std::minstd_rand systemGenerator((unsigned int) seed);
         for (unsigned char i = 0; i < 16; i++) {
