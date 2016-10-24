@@ -31,12 +31,6 @@ int main(int argc, char *argv[]) {
     long num_rounds = 20, Bsize = 1000*1024*1024 ;
     char* buffer = new char[Bsize];
 
-    /*ofstream outfile("RC4Column.bin", ios::binary);
-    DataSourceRC4Column S;
-    S.read(buffer, Bsize);
-    outfile.write(buffer, Bsize);
-     */
-
     string datatypes[] = {"rand","minimalHW","cube1", "cube2", "cube3" };
     string filesnames[] = {"rand128.bin","minimalHW128.bin", "cube1fromrand128.bin", "cube12fromrand128.bin", "cube123fromrand128.bin", "zeroes.bin" };
     string scenario[] = {"keys", "messages", "ivs"};
@@ -70,17 +64,6 @@ int main(int argc, char *argv[]) {
         //S.read(buffer, keys, messages, Bsize );
         outfile.write(buffer, Bsize);
     }
-
-   /* string funcName = "MD6_CRT_";
-
-    for (int Nr = 1; Nr < num_rounds; ++Nr) {
-        DataSourceSHA3 S(0,SHA3_MD6,Nr);
-        string fileName = funcName + std::to_string(Nr) + ".bin";
-        ofstream outfile(fileName.c_str(), ios::binary);
-        S.read(buffer, Bsize);
-        outfile.write(buffer, Bsize);
-    }*/
-
 
     return 0;
 }
