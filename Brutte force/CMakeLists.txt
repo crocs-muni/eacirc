@@ -56,6 +56,8 @@ set(SOURCE_FILES_SHA3
         DataGenerators/sha3/hash_functions/Keccak/KeccakF-1600-opt32-settings.h
         DataGenerators/sha3/hash_functions/Keccak/KeccakSponge.h
         DataGenerators/sha3/hash_functions/Keccak/KeccakSponge.c
+        DataGenerators/sha3/hash_functions/SHA2/sha256.h
+        DataGenerators/sha3/hash_functions/SHA2/sha256.cpp
         )
 
 set(SOURCE_DATA_SOURCES

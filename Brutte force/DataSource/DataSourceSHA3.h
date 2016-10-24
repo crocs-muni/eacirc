@@ -11,6 +11,7 @@
 #define SHA3_MD6 1
 #define SHA3_TANGLE 2
 #define SHA3_KECCAK 3
+#define SHA3_SHA256 4
 
 #define SHA3_DEFAULT_HASH_INIT -999
 #define SHA3_MAX_OUTPUT 4096

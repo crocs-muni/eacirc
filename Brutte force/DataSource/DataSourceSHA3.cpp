@@ -11,6 +11,7 @@
 #include "../DataGenerators/sha3/hash_functions/Tangle/Tangle_sha3.h"
 #include "../DataGenerators/sha3/hash_functions/MD6/MD6_sha3.h"
 #include "../DataGenerators/sha3/hash_functions/Keccak/Keccak_sha3.h"
+#include "../DataGenerators/sha3/hash_functions/SHA2/sha256.h"
 #include "../DataGenerators/md5.h"
 
 DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigned outputSize, int hash_init) {
@@ -31,6 +32,9 @@ DataSourceSHA3::DataSourceSHA3(unsigned long seed, int hash, int rounds, unsigne
 
     } else if (hash == SHA3_KECCAK) {
         m_sha3 = new Keccak(rounds);
+
+    } else if (hash == SHA3_SHA256) {
+        m_sha3 = new SHA256(rounds);
 
     } else {
         throw std::out_of_range("Unknown SHA3 function");
