@@ -10,7 +10,7 @@
 
 class DataSourceAES : public DataSource {
 public:
-    DataSourceAES(unsigned long seed = 0, int rounds = 10);
+    DataSourceAES(unsigned long seed = 0, int rounds = 10, unsigned char* key = NULL);
     ~DataSourceAES() {}
 
 

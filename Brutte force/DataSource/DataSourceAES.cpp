@@ -9,14 +9,18 @@
 #include "../DataGenerators/aes.h"
 
 
-DataSourceAES::DataSourceAES(unsigned long seed, int rounds) {
-    std::minstd_rand systemGenerator((unsigned int) seed);
-    for (unsigned char i = 0; i < 16; i++) {
-        m_key[i] = (uint8_t) systemGenerator();
-        m_iv[i] = (uint8_t) systemGenerator();
+DataSourceAES::DataSourceAES(unsigned long seed, int rounds, unsigned char* key = NULL) {
+    if(key == NULL) {
+        std::minstd_rand systemGenerator((unsigned int) seed);
+        for (unsigned char i = 0; i < 16; i++) {
+            m_key[i] = (uint8_t) systemGenerator();
+            m_iv[i] = (uint8_t) systemGenerator();
+        }
+        m_counter = systemGenerator();
     }
-    m_rounds = rounds;
-    m_counter = systemGenerator();
+    else{
+        memcpy(m_key,key,16);
+    }
 }
 
 long long DataSourceAES::getAvailableData() {
