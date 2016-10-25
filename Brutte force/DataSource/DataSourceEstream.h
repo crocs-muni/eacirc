@@ -24,6 +24,7 @@ public:
 
     virtual long long getAvailableData() override;
     virtual void read(char *buffer, size_t size) override;
+    virtual void read(char *buffer, char* keys, char* messages, size_t size);
     virtual std::string desc() override;
 
 protected:

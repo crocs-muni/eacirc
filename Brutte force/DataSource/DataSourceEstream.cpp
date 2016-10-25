@@ -108,6 +108,61 @@ void DataSourceEstream::read(char *buffer, size_t size) {
     }
 }
 
+void  DataSourceEstream::read(char *buffer, char* keys, char* messages, size_t size){
+    uint8_t keyBuff[ESTREAM_DEFAULT_KEY_LEN];
+    uint8_t ivBuff[ESTREAM_DEFAULT_IV_LEN];
+    int keyoffset = 0, messageoffset = 0;
+
+    unsigned char m_plaintext[ESTREAM_ZERO_PLAINTEXT_BLOCK];
+    if (m_stream_cipher) {
+        if(messages == NULL)
+            // Stream cipher -> extract key stream by encrypting zero vector
+            for (size_t offset = 0; offset < size; offset += ESTREAM_ZERO_PLAINTEXT_BLOCK) {
+                const size_t to_enc = std::min((size_t) ESTREAM_ZERO_PLAINTEXT_BLOCK, size - offset);
+                this->m_estream->ECRYPT_encrypt_bytes(m_ctx, m_zero_plaintext, ((u8 *) (buffer)) + offset, (u32) to_enc);
+            }
+        else // Stream cipher -> extract key stream by encrypting messages
+            for (size_t offset = 0; offset < size; offset += ESTREAM_ZERO_PLAINTEXT_BLOCK) {
+                const size_t to_enc = std::min((size_t) ESTREAM_ZERO_PLAINTEXT_BLOCK, size - offset);
+
+                //set key
+                if(keys != NULL){
+                    memcpy(keyBuff, keys, ESTREAM_DEFAULT_KEY_LEN);
+                    m_estream->ECRYPT_keysetup(this->m_ctx, keyBuff, (u32)ESTREAM_DEFAULT_KEY_LEN*8, (u32)ESTREAM_DEFAULT_IV_LEN*8);
+                }
+                m_estream->ECRYPT_init();
+
+                //set IV
+                if(keys != NULL){
+                    memcpy(ivBuff, keys, ESTREAM_DEFAULT_KEY_LEN);
+                    m_estream->ECRYPT_ivsetup(this->m_ctx, ivBuff);
+                }
+
+                memset(m_plaintext, 0, ESTREAM_ZERO_PLAINTEXT_BLOCK);
+                memcpy(m_plaintext, messages + offset, ESTREAM_ZERO_PLAINTEXT_BLOCK);
+
+                this->m_estream->ECRYPT_encrypt_bytes(m_ctx, m_plaintext, ((u8 *) (buffer)) + offset, (u32) to_enc);
+            }
+
+    } else {
+        // Block cipher - encrypt counter.
+        assert(m_input_block != NULL && m_block_size_bytes > 0);
+        for(size_t offset = 0; offset < size; offset += m_block_size_bytes){
+
+            //set keys
+            m_estream->ECRYPT_init();
+            memcpy(keyBuff, keys, ESTREAM_DEFAULT_KEY_LEN);
+            m_estream->ECRYPT_keysetup(this->m_ctx, keyBuff, (u32)ESTREAM_DEFAULT_KEY_LEN*8, (u32)ESTREAM_DEFAULT_IV_LEN*8);
+
+            memset(m_input_block, 0, m_block_size_bytes);
+            memcpy(m_input_block, messages + offset, m_block_size_bytes);
+
+            const size_t to_enc = std::min((size_t) m_block_size_bytes, size - offset);
+            this->m_estream->ECRYPT_encrypt_bytes(m_ctx, m_input_block, ((u8 *) (buffer)) + offset, to_enc);
+        }
+    }
+}
+
 std::string DataSourceEstream::desc() {
     std::stringstream ss;
     ss << "Estream-ID" << m_function << "-r" << m_rounds;
