@@ -8471,6 +8471,7 @@ basic_json_parser_63:
             std::string line;
             assert(m_stream != nullptr);
             std::getline(*m_stream, line);
+            _lines_read++;
             m_buffer += "\n" + line; // add line with newline symbol
 
             m_content = reinterpret_cast<const lexer_char_t*>(m_buffer.c_str());
@@ -8817,6 +8818,13 @@ basic_json_parser_63:
             result.m_type = type;
         }
 
+        int get_current_line_number() const {
+            int i;
+            unsigned const char* s = m_cursor;
+            for (i=0; s[i]; s[i]=='\n' ? i++ : *s++);
+            return _lines_read - i;
+        }
+
       private:
         /// optional input stream
         std::istream* m_stream = nullptr;
@@ -8834,6 +8842,8 @@ basic_json_parser_63:
         const lexer_char_t* m_limit = nullptr;
         /// the last token type
         token_type last_token_type = token_type::end_of_input;
+        /// number of lines read, for better error output
+        int _lines_read = 1;
     };
 
     /*!
@@ -9082,7 +9092,7 @@ basic_json_parser_63:
                               "'") :
                               lexer::token_type_name(last_token));
                 error_msg += "; expected " + lexer::token_type_name(t);
-                throw std::invalid_argument(error_msg);
+                throw std::invalid_argument(error_msg + getErrorInfo());
             }
         }
 
@@ -9094,8 +9104,12 @@ basic_json_parser_63:
                 error_msg += (last_token == lexer::token_type::parse_error ? ("'" +  m_lexer.get_token_string() +
                               "'") :
                               lexer::token_type_name(last_token));
-                throw std::invalid_argument(error_msg);
+                throw std::invalid_argument(error_msg + getErrorInfo());
             }
+        }
+
+        std::string getErrorInfo() const {
+            return " on line " + std::to_string(m_lexer.get_current_line_number());
         }
 
       private:
