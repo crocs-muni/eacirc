@@ -34,7 +34,6 @@ private:
     counter _counter;
     std::vector<std::uint8_t> _plaintext;
     std::vector<std::uint8_t> _encrypted;
-    std::vector<std::uint8_t> _encrypted_decrypted;
 
     estream_cipher _algorithm;
 };

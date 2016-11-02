@@ -33,12 +33,12 @@ estream_stream::estream_stream(const json& config, default_seed_source& seeder)
     , _counter(estream_cipher::block_size)
     , _plaintext(estream_cipher::block_size)
     , _encrypted(estream_cipher::block_size)
-    , _encrypted_decrypted(estream_cipher::block_size)
     , _algorithm(config.at("algorithm"),
                  config.at("round").is_null() ? optional<unsigned>{nullopt}
                                               : optional<unsigned>{unsigned(config.at("round"))},
                  config.at("iv-type"),
-                 config.at("key-type")) {
+                 config.at("key-type"),
+                 config.count("heatmap") != 0 ? std::uint64_t(config.at("heatmap")) : 0x0u) {
     if (_initfreq == estream_init_frequency::ONLY_ONCE) {
         _algorithm.setup_key(_rng);
         _algorithm.setup_iv(_rng);
@@ -85,10 +85,6 @@ void estream_stream::read(dataset& set) {
         }
 
         _algorithm.encrypt(_plaintext.data(), _encrypted.data(), _plaintext.size());
-        _algorithm.decrypt(_encrypted.data(), _encrypted_decrypted.data(), _encrypted.size());
-
-        if (_plaintext != _encrypted_decrypted)
-            throw std::logic_error("eSTREAM decrypted text does not match the original plaintext");
 
         std::copy(_encrypted.begin(), _encrypted.end(), beg);
     }

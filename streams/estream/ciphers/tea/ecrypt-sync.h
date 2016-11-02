@@ -12,6 +12,7 @@
 
 #include "../../estream_interface.h"
 #include "../ecrypt-portable.h"
+#include <cstdint>
 
 /* ------------------------------------------------------------------------- */
 
@@ -68,6 +69,7 @@ class ECRYPT_TEA : public estream_interface {
     TEA_ctx _ctx;
 
 public:
+    ECRYPT_TEA(int rounds, std::uint64_t heatmap);
     /* Mandatory functions */
 
     /*

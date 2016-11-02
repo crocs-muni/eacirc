@@ -16,7 +16,8 @@ struct estream_cipher {
     estream_cipher(const std::string& name,
                    optional<unsigned> round,
                    const std::string& ivtype,
-                   const std::string& keytype);
+                   const std::string& keytype,
+                   const std::uint64_t heatmap);
 
     estream_cipher(estream_cipher&&);
     ~estream_cipher();

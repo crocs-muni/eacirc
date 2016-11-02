@@ -54,8 +54,8 @@ static estream_keytype create_keytype(const std::string& ivtype) {
     throw std::runtime_error("requested eSTREAM key type named \"" + ivtype + "\" does not exist");
 }
 
-static std::unique_ptr<estream_interface> create_cipher(const std::string& name,
-                                                        optional<unsigned> round) {
+static std::unique_ptr<estream_interface>
+create_cipher(const std::string& name, optional<unsigned> round, const std::uint64_t heatmap) {
     // clang-format off
     if (name == "ABC")              return std::make_unique<ECRYPT_ABC>();
     if (name == "Achterbahn")       return std::make_unique<ECRYPT_Achterbahn>();
@@ -79,7 +79,7 @@ static std::unique_ptr<estream_interface> create_cipher(const std::string& name,
     if (name == "Salsa20")          return std::make_unique<ECRYPT_Salsa>(!round ? 12 : *round);
     if (name == "SFINKS")           return std::make_unique<ECRYPT_Sfinks>();
     if (name == "SOSEMANUK")        return std::make_unique<ECRYPT_Sosemanuk>();
-    if (name == "TEA")              return std::make_unique<ECRYPT_TEA>();
+    if (name == "TEA")              return std::make_unique<ECRYPT_TEA>(!round ? 32 : *round, heatmap);
     // if (name == "Trivium")          return std::make_unique<ECRYPT_Trivium>();
     if (name == "TSC-4")            return std::make_unique<ECRYPT_Tsc4>(!round ? 32 : *round);
     if (name == "WG")               return std::make_unique<ECRYPT_Wg>();
@@ -94,11 +94,12 @@ static std::unique_ptr<estream_interface> create_cipher(const std::string& name,
 estream_cipher::estream_cipher(const std::string& name,
                                optional<unsigned> round,
                                const std::string& ivtype,
-                               const std::string& keytype)
+                               const std::string& keytype,
+                               const std::uint64_t heatmap)
     : _ivtype(create_ivtype(ivtype))
     , _keytype(create_keytype(keytype))
-    , _encryptor(create_cipher(name, round))
-    , _decryptor(create_cipher(name, round)) {}
+    , _encryptor(create_cipher(name, round, heatmap))
+    , _decryptor(create_cipher(name, round, heatmap)) {}
 
 estream_cipher::estream_cipher(estream_cipher&&) = default;
 estream_cipher::~estream_cipher() = default;

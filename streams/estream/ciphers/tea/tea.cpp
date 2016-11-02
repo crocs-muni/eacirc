@@ -4,6 +4,11 @@
 
 static const u32 delta = 0x9e3779b9;
 
+ECRYPT_TEA::ECRYPT_TEA(int rounds, std::uint64_t heatmap)
+    : estream_interface(rounds) {
+    // TODO: parse heatmaps
+}
+
 void ECRYPT_TEA::ECRYPT_init() {}
 
 void ECRYPT_TEA::ECRYPT_keysetup(const u8* key, u32 keysize, u32 ivsize) {
