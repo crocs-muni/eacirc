@@ -1,7 +1,7 @@
 #include "sha3_stream.h"
+#include "eacirc/streams.h"
 #include "sha3_factory.h"
 #include "sha3_interface.h"
-#include "eacirc/streams.h"
 #include <algorithm>
 
 template <typename I>
@@ -9,7 +9,7 @@ static void
 hash_data(sha3_interface& hasher, const I& data, std::uint8_t* hash, const std::size_t hash_size) {
     using std::to_string;
 
-    int status = hasher.Init(int(8 * hash_size));
+    int status = hasher.Init(int(hash_size));
     if (status != 0)
         throw std::runtime_error("cannot initialize hash (code: " + to_string(status) + ")");
 
@@ -23,13 +23,14 @@ hash_data(sha3_interface& hasher, const I& data, std::uint8_t* hash, const std::
 }
 
 sha3_stream::sha3_stream(const json& config, std::size_t osize)
-    :  stream(osize)
+    : stream(osize)
     , _algorithm(config.at("algorithm").get<std::string>())
     , _round(config.at("round"))
     , _hash_size(std::size_t(config.at("hash-bitsize")))
     , _source(make_stream(config.at("source"), _hash_size / 8)) // TODO: hash-input-size?
     , _hasher(sha3_factory::create(_algorithm, unsigned(_round)))
-    , _data(osize) {
+    , _data(((_hash_size / 8) % osize) ? ((osize / (_hash_size / 8)) + 1) * (_hash_size / 8)
+                                       : osize) { // round osize to multiple of _hash_size
 
     if ((std::size_t(config.at("hash-bitsize")) % 8) != 0)
         throw std::runtime_error("the SHA-3 hash-bitsize parameter must be multiple of 8");
@@ -41,9 +42,12 @@ sha3_stream::sha3_stream(sha3_stream&&) = default;
 sha3_stream::~sha3_stream() = default;
 
 vec_view sha3_stream::next() {
-    vec_view view = _source->next();
 
-    hash_data(*_hasher, view, _data.data(), _hash_size); // TODO: solve hash_size != osize
+    for (auto beg = _data.begin(); beg != _data.end(); beg += (_hash_size / 8)) {
+        vec_view view = _source->next();
 
-    return make_cview(_data);
+        hash_data(*_hasher, view, &(*beg), _hash_size);
+    }
+
+    return make_view(_data.cbegin(), osize());
 }
