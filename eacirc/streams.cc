@@ -106,7 +106,8 @@ private:
  */
 struct counter : stream {
     counter(const std::size_t osize)
-        : stream(osize) {
+        : stream(osize)
+        , _data(osize) {
         std::fill(_data.begin(), _data.end(), std::numeric_limits<value_type>::min());
     }
 

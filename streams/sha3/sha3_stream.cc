@@ -29,13 +29,14 @@ sha3_stream::sha3_stream(const json& config, std::size_t osize)
     , _hash_size(std::size_t(config.at("hash-bitsize")))
     , _source(make_stream(config.at("source"), _hash_size / 8)) // TODO: hash-input-size?
     , _hasher(sha3_factory::create(_algorithm, unsigned(_round)))
-    , _data(((_hash_size / 8) % osize) ? ((osize / (_hash_size / 8)) + 1) * (_hash_size / 8)
-                                       : osize) { // round osize to multiple of _hash_size
+    , _data(((_hash_size / 8) > osize)
+                    ? (_hash_size / 8)
+                    : ((_hash_size / 8) % osize)
+                              ? ((osize / (_hash_size / 8)) + 1) * (_hash_size / 8)
+                              : osize) { // round osize to multiple of _hash_size
 
     if ((std::size_t(config.at("hash-bitsize")) % 8) != 0)
         throw std::runtime_error("the SHA-3 hash-bitsize parameter must be multiple of 8");
-    if ((_hash_size / 8) != osize)
-        throw std::runtime_error("multiple/parts hashes in one vector are not supported yet");
 }
 
 sha3_stream::sha3_stream(sha3_stream&&) = default;
