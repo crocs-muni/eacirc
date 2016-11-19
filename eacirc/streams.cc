@@ -23,8 +23,7 @@ namespace _impl {
         const_stream(const std::size_t osize)
             : stream(osize)
             , _data(osize) {
-            std::fill(_data.begin(), _data.end(), std::numeric_limits<value_type>::min());
-            _data[_data.size() - 1] = value;
+            std::fill_n(_data.begin(), osize, value);
         }
 
         vec_view next() override { return make_cview(_data); }
