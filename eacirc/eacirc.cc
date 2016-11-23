@@ -16,11 +16,12 @@ static std::ifstream open_config_file(std::string path) {
     return file;
 }
 
-eacirc::eacirc(std::string config)
-    : eacirc(open_config_file(config)) {}
+eacirc::eacirc(cmd_options options)
+    : eacirc(options, open_config_file(options.config)) {}
 
-eacirc::eacirc(json const& config)
-    : _config(config)
+eacirc::eacirc(cmd_options options, json const& config)
+    : _cmd_options(options)
+    , _config_file(config)
     , _seed(seed::create(config.at("seed")))
     , _num_of_epochs(config.at("num-of-epochs"))
     , _significance_level(config.at("significance-level"))
@@ -39,9 +40,10 @@ eacirc::eacirc(json const& config)
 
     {
         std::string backend_type = config.at("backend").at("type");
-        if (backend_type == "circuit")
+        if (backend_type == "circuit") {
             _backend = circuit::create_backend(_tv_size, config.at("backend"), main_seeder);
-        else
+            _backend->set_produce_file("scores.txt", !_cmd_options.not_produce_scores);
+        } else
             throw std::runtime_error("no backend named [" + backend_type + "] is available");
     }
 }
@@ -65,7 +67,7 @@ void eacirc::run() {
         pvalues.emplace_back(_backend->test(a, b));
     }
 
-    {
+    if (!_cmd_options.not_produce_pvals) {
         std::ofstream of("pvals.txt");
         for (auto v : pvalues)
             of << v << std::endl;

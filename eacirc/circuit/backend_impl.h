@@ -21,7 +21,7 @@ namespace circuit {
                       std::forward<Sseq>(seed)) {}
 
         ~global_search() {
-            {
+            if (_produce_scores_file) {
                 std::ofstream out("scores.txt");
                 for (double score : _solver.scores())
                     out << score << std::endl;
@@ -37,6 +37,13 @@ namespace circuit {
             return _solver.reevaluate(a, b);
         }
 
+        virtual void set_produce_file(std::string filename, bool value) override {
+            if (filename == "scores.txt") {
+                _produce_scores_file = value;
+            } else
+                throw std::runtime_error("File '" + filename + "' is not produce with this backend");
+        }
+
     private:
         using ini = basic_initializer;
         using mut = basic_mutator;
@@ -45,6 +52,7 @@ namespace circuit {
         fn_set _function_set;
         std::uint64_t _num_of_generations;
         solvers::local_search<Circuit, ini, mut, eva> _solver;
+        bool _produce_scores_file = true;
     };
 
     std::unique_ptr<backend>

@@ -7,23 +7,33 @@
 #include <memory>
 
 struct eacirc {
-    eacirc(std::string cofig);
 
-    eacirc(std::istream& config)
-        : eacirc(json::parse(config)) {}
+    struct cmd_options {
+        bool help = false;
+        bool version = false;
+        bool not_produce_pvals= false;
+        bool not_produce_scores = false;
+        std::string config = "config.json";
+    };
 
-    eacirc(std::istream&& config)
-        : eacirc(json::parse(config)) {}
+    eacirc(cmd_options options);
 
-    eacirc(json&& config)
-        : eacirc(config) {}
+    eacirc(cmd_options options, std::istream& config)
+        : eacirc(options, json::parse(config)) {}
 
-    eacirc(json const& config);
+    eacirc(cmd_options options, std::istream&& config)
+        : eacirc(options, json::parse(config)) {}
+
+    eacirc(cmd_options options, json&& config)
+        : eacirc(options, config) {}
+
+    eacirc(cmd_options options, json const& config);
 
     void run();
 
 private:
-    const json _config;
+    const cmd_options _cmd_options;
+    const json _config_file;
     const seed _seed;
 
     const std::uint64_t _num_of_epochs;
