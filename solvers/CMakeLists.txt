@@ -1,6 +1,8 @@
 add_library(solvers STATIC
+    solvers
     individual
     local_search
+    simulated_annealing
     )
 
 target_include_directories(solvers INTERFACE
