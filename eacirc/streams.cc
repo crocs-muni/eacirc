@@ -17,6 +17,10 @@
 #include <streams/sha3/sha3_stream.h>
 #endif
 
+#ifdef BUILD_block
+#include <streams/block/block_stream.h>
+#endif
+
 namespace _impl {
 
     template <std::uint8_t value> struct const_stream : stream {
@@ -144,6 +148,10 @@ make_stream(const json& config, default_seed_source& seeder, std::size_t osize =
 #ifdef BUILD_sha3
     else if (type == "sha3")
         return std::make_unique<sha3_stream>(config, osize);
+#endif
+#ifdef BUILD_block
+    else if (type == "block")
+        return std::make_unique<block_stream>(config, osize);
 #endif
     throw std::runtime_error("requested stream named \"" + type + "\" does not exist");
 }
