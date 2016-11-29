@@ -22,3 +22,4 @@ detect_version(version.h)
 
 build_stream(estream)
 build_stream(sha3)
+build_stream(block)
