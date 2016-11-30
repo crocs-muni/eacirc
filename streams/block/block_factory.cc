@@ -6,7 +6,7 @@
 #include "ciphers/tea/block-sync.h"
 
 
-std::unique_ptr<block_interface> block_factory::make_cipher(const std::string& name, unsigned round) {
+std::unique_ptr<block_cipher> block::make_block_cipher(const std::string& name, unsigned round) {
     // clang-format off
     if (name == "TEA")              return std::make_unique<ECRYPT_TEA>(round);
     // clang-format on
