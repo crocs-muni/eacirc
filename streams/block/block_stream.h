@@ -3,7 +3,8 @@
 #include <core/json.h>
 #include <core/stream.h>
 #include <memory>
-#include "block_factory.h"
+
+struct block_interface;
 
 struct block_stream : public stream
 {

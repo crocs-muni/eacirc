@@ -3,6 +3,13 @@
 #include "block_factory.h"
 #include "block_interface.h"
 
+static std::size_t compute_vector_size(const std::size_t block_size, const std::size_t osize) {
+    return (block_size > osize)
+            ? block_size
+            : (block_size % osize) ? ((osize / block_size) + 1) * block_size
+                                   : osize
+}
+
 block_stream::block_stream(const json& config, std::size_t osize)
     : stream(osize)
     , _algorithm(config.at("algorithm").get<std::string>())
@@ -13,10 +20,7 @@ block_stream::block_stream(const json& config, std::size_t osize)
     , _key(make_stream(config.at("key"), _block_size)) // TODO: check, if key_len is always of _block_size
     , _encryptor(block_factory::make_cipher(_algorithm, unsigned(_round)))
     , _decryptor(block_factory::make_cipher(_algorithm, unsigned(_round)))
-    , _data((_block_size > osize)
-                    ? _block_size
-                    : (_block_size % osize) ? ((osize / _block_size) + 1) * _block_size
-                                           : osize)
+    , _data(compute_vector_size(_block_size, osize))
 {
     vec_view iv_view = _iv->next();
     _encryptor->ECRYPT_ivsetup(iv_view.data());
