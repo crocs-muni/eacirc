@@ -151,7 +151,7 @@ make_stream(const json& config, default_seed_source& seeder, std::size_t osize =
 #endif
 #ifdef BUILD_block
     else if (type == "block")
-        return std::make_unique<block_stream>(config, osize);
+        return std::make_unique<block::block_stream>(config, osize);
 #endif
     throw std::runtime_error("requested stream named \"" + type + "\" does not exist");
 }
