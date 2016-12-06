@@ -2,8 +2,9 @@ add_library(block STATIC EXCLUDE_FROM_ALL
     block_stream
     block_cipher
     block_factory.h
+    ciphers/common_fun.h
     # === eSTREAM cipher files ===
-    ciphers/tea/block-sync.h
-    ciphers/tea/tea.cpp
+    ciphers/tea/tea
+    ciphers/aes/aes
     )
 target_link_libraries(block core)
