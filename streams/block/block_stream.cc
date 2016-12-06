@@ -26,12 +26,12 @@ namespace block {
         , _data(compute_vector_size(_block_size, osize))
     {
         vec_view iv_view = _iv->next();
-        _encryptor->ivsetup(iv_view.data());
-        _decryptor->ivsetup(iv_view.data());
+        _encryptor->ivsetup(iv_view.data(), iv_view.size());
+        _decryptor->ivsetup(iv_view.data(), iv_view.size());
 
         vec_view key_view = _key->next();
-        _encryptor->keysetup(key_view.data(), 8 * _block_size, 8 * _block_size);
-        _decryptor->keysetup(key_view.data(), 8 * _block_size, 8 * _block_size);
+        _encryptor->keysetup(key_view.data(), key_view.size());
+        _decryptor->keysetup(key_view.data(), key_view.size());
     }
 
     block_stream::block_stream(block_stream&&) = default;
@@ -49,7 +49,7 @@ namespace block {
         for (auto beg = _data.begin(); beg != _data.end(); beg += _block_size) {
             vec_view view = _source->next();
 
-            _encryptor->encrypt(view.data(), &(*beg), std::uint32_t(_block_size));
+            _encryptor->encrypt(view.data(), &(*beg));
         }
 
         return make_view(_data.cbegin(), osize());
