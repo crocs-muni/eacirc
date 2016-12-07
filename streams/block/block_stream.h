@@ -4,6 +4,7 @@
 #include <core/stream.h>
 #include <memory>
 #include <../../core/random.h>
+#include <../../core/logger.h>
 
 namespace block {
     struct block_cipher;

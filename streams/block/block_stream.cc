@@ -25,9 +25,13 @@ namespace block {
         , _decryptor(make_block_cipher(_algorithm, unsigned(_round)))
         , _data(compute_vector_size(_block_size, osize))
     {
+        logger::info() << "stream source is cipher: " << _algorithm << std::endl;
+
+        /* others modes than ECB are not implemented yet
         vec_view iv_view = _iv->next();
         _encryptor->ivsetup(iv_view.data(), iv_view.size());
         _decryptor->ivsetup(iv_view.data(), iv_view.size());
+        */
 
         vec_view key_view = _key->next();
         _encryptor->keysetup(key_view.data(), key_view.size());
