@@ -1,27 +1,35 @@
 #pragma once
 
 /**
- * Source: https://github.com/kokke/tiny-AES128-C
+ * Source: https://github.com/B-Con/crypto-algorithms
  */
 
 #include "../../block_cipher.h"
+#include <memory>
 
 namespace block {
 
-    class aes : public block_cipher {
+    class rc4 : public block_cipher {
 
         /* Data structures */
 
-        struct aes_ctx {
-            aes_ctx()
-                : key{0} {}
+        struct rc4_ctx {
 
-            uint8_t key[16];
+            rc4_ctx()
+                : state{0}
+                , key_size(0) {}
+
+            std::uint8_t state[256];
+            std::unique_ptr<std::uint8_t[]> key;
+            std::uint32_t key_size;
         } _ctx;
 
+        unsigned _block_size;
+
     public:
-        aes(unsigned rounds)
-            : block_cipher(rounds) {}
+        rc4(unsigned rounds, unsigned block_size)
+            : block_cipher(rounds)
+            , _block_size(block_size) {}
 
         void keysetup(const std::uint8_t* key, const std::uint32_t keysize) override;
 

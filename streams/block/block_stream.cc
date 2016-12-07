@@ -13,14 +13,14 @@ namespace block {
         return osize;
     }
 
-    block_stream::block_stream(const json& config, std::size_t osize)
+    block_stream::block_stream(const json& config, default_seed_source& seeder, std::size_t osize)
         : stream(osize)
         , _algorithm(config.at("algorithm").get<std::string>())
         , _round(config.at("round"))
         , _block_size(std::size_t(config.at("block-size")))
-        , _source(make_stream(config.at("source"), _block_size))
-        , _iv(make_stream(config.at("iv"), _block_size))
-        , _key(make_stream(config.at("key"), _block_size)) // TODO: check, if key_len is always of _block_size
+        , _source(make_stream(config.at("plaintext"), seeder, _block_size))
+        , _iv(make_stream(config.at("iv"), seeder, _block_size))
+        , _key(make_stream(config.at("key"), seeder, unsigned(config.at("key-size"))))
         , _encryptor(make_block_cipher(_algorithm, unsigned(_round)))
         , _decryptor(make_block_cipher(_algorithm, unsigned(_round)))
         , _data(compute_vector_size(_block_size, osize))

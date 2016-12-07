@@ -20,16 +20,13 @@ namespace block {
             std::uint32_t key[4];
         } _ctx;
 
-        const std::uint32_t _delta = 0x9e3779b9;
-        const std::uint32_t _msglen = 64;
-
     public:
         tea(unsigned rounds)
             : block_cipher(rounds) {}
 
-        void keysetup(const std::uint8_t* key, std::uint32_t keysize) override;
+        void keysetup(const std::uint8_t* key, const uint32_t keysize) override;
 
-        void ivsetup(const std::uint8_t* iv, std::uint32_t ivsize) override;
+        void ivsetup(const std::uint8_t* iv, const uint32_t ivsize) override;
 
         void encrypt(const std::uint8_t* plaintext,
                      std::uint8_t* ciphertext) override;

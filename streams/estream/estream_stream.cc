@@ -15,7 +15,7 @@ estream_stream::estream_stream(const json& config, default_seed_source& seeder, 
     : stream(osize)
     , _initfreq(create_init_frequency(config.at("init-frequency")))
     , _rng(config.at("generator").get<std::string>(), seeder)
-    , _source(make_stream(config.at("plaintext-type"), estream_cipher::block_size))
+    , _source(make_stream(config.at("plaintext-type"), seeder, estream_cipher::block_size))
     , _plaintext(estream_cipher::block_size)
     , _encrypted(estream_cipher::block_size)
     , _encrypted_decrypted(estream_cipher::block_size)

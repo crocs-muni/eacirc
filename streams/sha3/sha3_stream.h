@@ -3,11 +3,12 @@
 #include <core/json.h>
 #include <core/stream.h>
 #include <memory>
+#include <../../core/random.h>
 
 struct sha3_interface;
 
 struct sha3_stream : stream {
-    sha3_stream(const json& config, std::size_t osize);
+    sha3_stream(const json& config, default_seed_source& seeder, std::size_t osize);
     sha3_stream(sha3_stream&&);
     ~sha3_stream();
 
