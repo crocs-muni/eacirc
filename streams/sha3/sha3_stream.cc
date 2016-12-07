@@ -22,12 +22,12 @@ hash_data(sha3_interface& hasher, const I& data, std::uint8_t* hash, const std::
         throw std::runtime_error("cannot finalize the hash (code: " + to_string(status) + ")");
 }
 
-sha3_stream::sha3_stream(const json& config, std::size_t osize)
+sha3_stream::sha3_stream(const json& config, default_seed_source &seeder, std::size_t osize)
     : stream(osize)
     , _algorithm(config.at("algorithm").get<std::string>())
     , _round(config.at("round"))
     , _hash_size(std::size_t(config.at("hash-bitsize")) / 8)
-    , _source(make_stream(config.at("source"), _hash_size)) // TODO: hash-input-size?
+    , _source(make_stream(config.at("source"), seeder, _hash_size)) // TODO: hash-input-size?
     , _hasher(sha3_factory::create(_algorithm, unsigned(_round)))
     , _data((_hash_size > osize)
                     ? _hash_size

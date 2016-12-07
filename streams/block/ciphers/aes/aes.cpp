@@ -1,12 +1,9 @@
 #include "aes.h"
 
-#include <cstring>
+#include <algorithm>
 #include <stdexcept>
 
 namespace block {
-
-namespace aes_128_impl {
-
 
 /*****************************************************************************/
 /* Includes:                                                                 */
@@ -23,7 +20,7 @@ namespace aes_128_impl {
 // Key length in bytes [128 bit]
 #define KEYLEN 16
 // The number of rounds in AES Cipher.
-#define Nr 10
+static unsigned Nr = 10;
 
 /*****************************************************************************/
 /* Private variables:                                                        */
@@ -401,7 +398,7 @@ static void BlockCopy(uint8_t* output, const uint8_t* input)
 /* Public functions:                                                         */
 /*****************************************************************************/
 
-void AES128_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t* output)
+static void AES128_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t* output)
 {
   // Copy input to output, and work in-memory on output
   BlockCopy(output, input);
@@ -414,7 +411,7 @@ void AES128_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t* outpu
   Cipher();
 }
 
-void AES128_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *output)
+static void AES128_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *output)
 {
   // Copy input to output, and work in-memory on output
   BlockCopy(output, input);
@@ -427,24 +424,24 @@ void AES128_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *outpu
   InvCipher();
 }
 
+void aes::keysetup(const std::uint8_t* key, const std::uint32_t keysize) {
+    std::copy_n(key, keysize, _ctx.key);
 }
 
-void aes::keysetup(const std::uint8_t* key, std::uint32_t keysize) {
-    std::memcpy(_ctx.key, key, keysize);
-}
-
-void aes::ivsetup(const std::uint8_t* iv, std::uint32_t ivsize) {
+void aes::ivsetup(const std::uint8_t* iv, const std::uint32_t ivsize) {
     throw std::runtime_error("not implemented yet");
 }
 
 void aes::encrypt(const std::uint8_t* plaintext,
              std::uint8_t* ciphertext) {
-    aes_128_impl::AES128_ECB_encrypt(plaintext, _ctx.key, ciphertext);
+    Nr = _rounds; // setting rounds here allows running aes vs aes experiment
+    AES128_ECB_encrypt(plaintext, _ctx.key, ciphertext);
 }
 
 void aes::decrypt(const std::uint8_t* ciphertext,
              std::uint8_t* plaintext) {
-    aes_128_impl::AES128_ECB_decrypt(ciphertext, _ctx.key, plaintext);
+    Nr = _rounds; // setting rounds here allows running aes vs aes experiment
+    AES128_ECB_decrypt(ciphertext, _ctx.key, plaintext);
 }
 
-}
+} // namespace block
