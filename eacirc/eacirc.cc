@@ -35,7 +35,9 @@ eacirc::eacirc(json const& config)
     seed_seq_from<pcg32> main_seeder(_seed);
 
     {
+        logger::info() << "stream a: type: " << config.at("stream-a").at("type") << std::endl;
         _stream_a = make_stream(config.at("stream-a"), main_seeder, _tv_size);
+        logger::info() << "stream b: type: " << config.at("stream-b").at("type") << std::endl;
         _stream_b = make_stream(config.at("stream-b"), main_seeder, _tv_size);
     }
 
