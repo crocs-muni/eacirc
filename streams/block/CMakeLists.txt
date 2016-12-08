@@ -7,5 +7,8 @@ add_library(block STATIC EXCLUDE_FROM_ALL
     ciphers/tea/tea
     ciphers/aes/aes
     ciphers/rc4/rc4
+    ciphers/des/des
+    ciphers/des/single_des
+    ciphers/des/triple_des
     )
 target_link_libraries(block core)

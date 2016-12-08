@@ -21,8 +21,8 @@ namespace block {
         , _source(make_stream(config.at("plaintext"), seeder, _block_size))
         , _iv(make_stream(config.at("iv"), seeder, _block_size))
         , _key(make_stream(config.at("key"), seeder, unsigned(config.at("key-size"))))
-        , _encryptor(make_block_cipher(_algorithm, unsigned(_round)))
-        , _decryptor(make_block_cipher(_algorithm, unsigned(_round)))
+        , _encryptor(make_block_cipher(_algorithm, unsigned(_round), _block_size, true))
+        , _decryptor(make_block_cipher(_algorithm, unsigned(_round), _block_size, false))
         , _data(compute_vector_size(_block_size, osize))
     {
         logger::info() << "stream source is cipher: " << _algorithm << std::endl;
