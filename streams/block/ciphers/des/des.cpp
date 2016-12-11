@@ -209,19 +209,22 @@ void des_key_setup(const BYTE key[], BYTE schedule[][6], DES_MODE mode) {
     }
 }
 
-void des_crypt(const BYTE in[], BYTE out[], const BYTE key[][6], const unsigned rounds) {
+void des_crypt(const BYTE in[], BYTE out[], const BYTE key[16][6], const unsigned rounds) {
     WORD state[2], idx, t;
 
     IP(state, in);
 
-    for (idx = 0; idx < (rounds - 1); ++idx) {
-        t = state[1];
-        state[1] = f(state[1], key[idx]) ^ state[0];
-        state[0] = t;
-    }
-    // Perform the final loop manually as it doesn't switch sides
-    if (rounds == 0)
+    if (rounds > 0) {
+        for (idx = 0; idx < (rounds - 1); ++idx) {
+            t = state[1];
+            state[1] = f(state[1], key[idx]) ^ state[0];
+            state[0] = t;
+        }
+        // Perform the final loop manually as it doesn't switch sides
         state[0] = f(state[1], key[15]) ^ state[0];
+    } else {
+        state[0] = f(state[1], key[15]) ^ state[0];
+    }
 
     InvIP(state, out);
 }
@@ -233,7 +236,7 @@ DES_MODE operator!(DES_MODE orig) {
         return DES_ENCRYPT;
 }
 
-void three_des_key_setup(const BYTE key[], BYTE schedule[][16][6], DES_MODE mode) {
+void three_des_key_setup(const BYTE key[], BYTE schedule[3][16][6], DES_MODE mode) {
     if (mode == DES_ENCRYPT) {
         des_key_setup(&key[0], schedule[0], mode);
         des_key_setup(&key[8], schedule[1], !mode);
