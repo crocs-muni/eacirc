@@ -17,6 +17,10 @@
 #include <streams/sha3/sha3_stream.h>
 #endif
 
+#ifdef BUILD_block
+#include <streams/block/block_stream.h>
+#endif
+
 namespace _impl {
 
     template <std::uint8_t value> struct const_stream : stream {
@@ -133,7 +137,15 @@ make_stream(const json& config, default_seed_source& seeder, std::size_t osize =
     if (osize == 0)
         osize = config.at("size");
 
-    if (type == "mt19937-stream")
+    if (type == "file-stream")
+        return std::make_unique<file_stream>(config, osize);
+    else if (type == "true-stream")
+        return std::make_unique<true_stream>(osize);
+    else if (type == "false-stream")
+        return std::make_unique<false_stream>(osize);
+    else if (type == "counter")
+        return std::make_unique<counter>(osize);
+    else if (type == "mt19937-stream")
         return std::make_unique<mt19937_stream>(seeder, osize);
     else if (type == "pcg32-stream")
         return std::make_unique<pcg32_stream>(seeder, osize);
@@ -143,28 +155,11 @@ make_stream(const json& config, default_seed_source& seeder, std::size_t osize =
 #endif
 #ifdef BUILD_sha3
     else if (type == "sha3")
-        return std::make_unique<sha3_stream>(config, osize);
+        return std::make_unique<sha3_stream>(config, seeder, osize);
 #endif
-    throw std::runtime_error("requested stream named \"" + type + "\" does not exist");
-}
-
-std::unique_ptr<stream> make_stream(const json& config, std::size_t osize = 0) {
-    std::string type = config.at("type");
-
-    if (osize == 0)
-        osize = config.at("size");
-
-    if (type == "file-stream")
-        return std::make_unique<file_stream>(config, osize);
-    else if (type == "true-stream")
-        return std::make_unique<true_stream>(osize);
-    else if (type == "false-stream")
-        return std::make_unique<false_stream>(osize);
-    else if (type == "counter")
-        return std::make_unique<counter>(osize);
-#ifdef BUILD_sha3
-    else if (type == "sha3")
-        return std::make_unique<sha3_stream>(config, osize);
+#ifdef BUILD_block
+    else if (type == "block")
+        return std::make_unique<block::block_stream>(config, seeder, osize);
 #endif
     throw std::runtime_error("requested stream named \"" + type + "\" does not exist");
 }

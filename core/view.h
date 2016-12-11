@@ -43,6 +43,10 @@ template <typename Iterator> struct view {
         return {std::next(_beg, n), _end};
     }
 
+    pointer data() {
+        return &(*_beg);
+    }
+
 private:
     Iterator _beg;
     Iterator _end;
