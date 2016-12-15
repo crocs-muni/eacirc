@@ -8,7 +8,7 @@
 #include "Term.h"
 #include "bithacks.h"
 #include <ctime>
-#include <random>
+//#include <random>
 #include <fstream>
 #include "CommonFnc.h"
 #include "finisher.h"
@@ -17,19 +17,33 @@
 #include <iomanip>
 using namespace std;
 
+void print(pairZscoreTerm t, ofstream& out){
+
+    out << " Zscore " << t.first << " ";
+    for (int j = 0; j < t.second.size(); ++j) {
+        out << t.second[j] << " ";
+    }
+    out << endl;
+
+}
+
+
 int main(int argc, char *argv[]) {
-    const int deg = 2;
+    const int deg = 1;
     int numTVs = 10000000;
     int tvsize = 16, numVars = 8 * tvsize;
-    int kbound = 2;
+    int kfrom = 1, kto = 2;
 
+    ofstream dbg("DBG.txt",std::ofstream::app);
     ifstream in(argv[1], ios::binary);
     int maxTerms = atoi(argv[2]);
-    //tvsize = atoi(argv[3])/8;
+    tvsize = atoi(argv[3])/8;
+    numVars = 8 * tvsize;
     numTVs = atoi(argv[4]);
 
-    if(maxTerms == 10) kbound = 10;
-    else kbound = 2;
+    if(argc >= 6) kfrom = atoi(argv[5]);
+    if(argc >= 7) kto = atoi(argv[6]);
+
 
     int numBytes = numTVs * tvsize;
     u8 *TVs = new u8[numBytes];
@@ -45,7 +59,6 @@ int main(int argc, char *argv[]) {
 
 
     int resultSize = TarraySize<u64>(numTVs);
-    u64 *block = new u64[resultSize * 128];
     vector < bitarray < u64 > * > resultArrays;
 
     // s = base vector. Evaluation of x_i on the input data.
@@ -86,8 +99,14 @@ int main(int argc, char *argv[]) {
     // replace the logic inside this method so it picks random k distinguishers.
     // If our hypothesis works, the results with "best" k distinguishers" should be better
     // than with "random" k distinguishers.
-    computeTopKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs);
+    //computeRandKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs);
+    computeTopKInPlace<deg>(resultArrays, bestTerms, maxTerms, numTVs, numVars);
 
+    //print best basic terms to file
+    dbg << argv[1] << " maxterms=" <<  maxTerms << " deg=" << deg << " NumTVs=10^"  << log10(numTVs) << " numVars=" << numVars << endl;
+    for (int l = 0; l < bestTerms.size(); ++l) {
+        print(bestTerms[l],dbg);
+    }
 
     // -------------------------------------------------------------------------------------------------------------
     // Evaluate top best terms k on new data.
@@ -98,9 +117,7 @@ int main(int argc, char *argv[]) {
         HW_AND(bestTermsEvaluations[termIdx], resultArrays, bestTerms[termIdx].second);
     }
 
-    for (int l = 0; l < bestTerms.size() ; ++l) {
-        cout << bestTerms[l].first << endl;
-    }
+
 
     /*results << "best terms:" << endl;
     for(int i = 0; i < bestTerms.size(); i++) {
@@ -112,13 +129,15 @@ int main(int argc, char *argv[]) {
     ZscoreFile << argv[1] << " maxterms=" <<  maxTerms << " deg=" << deg << " NumTVs=10^"  << log10(numTVs) << " numVars=" << numVars;
     besttermsFile << argv[1] << " maxterms=" <<  maxTerms << " deg=" << deg << " NumTVs=10^"  << log10(numTVs) << " numVars=" << numVars;
 
+
     vector<int> best_combination;
-    for (int k = 1; k < kbound+1; ++k) {
+    for (int k = kfrom; k <= kto; ++k) {
+        //cout << k << endl << endl;
         double zscore = ANDkbestTerms(bestTermsEvaluations, bestTerms, k, numVars, numTVs, best_combination);
 
         ZscoreFile << " k= "  << k << " zscore= " <<  zscore << " ";
         besttermsFile << " k= "  << k << " zscore= " <<  zscore << "  best terms= ";
-
+        dbg << " k= "  << k << " zscore= " <<  zscore << "  best term= ";
         for (int i = 0; i < best_combination.size(); ++i) {
             for (int j = 0; j < bestTerms[i].second.size(); ++j) {
                 besttermsFile << bestTerms[i].second[j] << " ";
@@ -127,9 +146,14 @@ int main(int argc, char *argv[]) {
         }
         ZscoreFile << " " ;
         besttermsFile << " " ;
+
+
+        printVec(best_combination, true,dbg);
     }
     ZscoreFile << endl;
     besttermsFile <<endl;
+
+
 
     return 0;
 }
