@@ -21,6 +21,7 @@ DataSourceAES::DataSourceAES(unsigned long seed, int rounds, unsigned char* key)
     else{
         memcpy(m_key,key,16);
     }
+    m_rounds = rounds;
 }
 
 long long DataSourceAES::getAvailableData() {
@@ -58,6 +59,7 @@ void DataSourceAES::read(char *buffer, char *key, char *messages, size_t size) {
 
         // Encrypt input buffer.
         AES128_ECB_encrypt(workingBufferIn, m_key, (uint8_t*)(buffer + offset), m_rounds);
+
     }
 }
 std::string DataSourceAES::desc() {
