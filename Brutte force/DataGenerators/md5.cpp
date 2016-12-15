@@ -33,6 +33,7 @@ round reduced modification by Syso 22.10.2016
  */
 
 #include "md5.h"
+#include <stdio.h>
 
 /* forward declaration */
 static void Transform (UINT4 *buf, UINT4 *in, int Nr = 64);
@@ -80,8 +81,9 @@ static unsigned char PADDING[64] = {
    (a) += (b); \
   }
 
-void MD5Init (MD5_CTX* mdContext) {
+void MD5Init (MD5_CTX* mdContext, int Nr) {
   mdContext->i[0] = mdContext->i[1] = (UINT4)0;
+
 
   /* Load magic initialization constants.
    */
@@ -89,6 +91,10 @@ void MD5Init (MD5_CTX* mdContext) {
   mdContext->buf[1] = (UINT4)0xefcdab89;
   mdContext->buf[2] = (UINT4)0x98badcfe;
   mdContext->buf[3] = (UINT4)0x10325476;
+
+
+
+
 }
 
 void MD5Update (MD5_CTX *mdContext, unsigned char *inBuf, unsigned int inLen, int Nr) {
@@ -161,8 +167,9 @@ void MD5Final (MD5_CTX *mdContext, int Nr) {
 
 /* Basic MD5 step. Transform buf based on in.
  */
-static void Transform (UINT4 *buf, UINT4 *in, int Nr) {
+static void Transform (UINT4 *buf, UINT4 *in, int Nr ) {
   UINT4 a = buf[0], b = buf[1], c = buf[2], d = buf[3];
+  int k = sizeof(a);
 
   /* Round 1 */
 #define S11 7
