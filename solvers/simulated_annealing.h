@@ -12,9 +12,10 @@ namespace solvers {
               typename Mutator,
               typename Evaluator,
               typename Generator = default_random_generator>
-    struct simulated_annealing {
+    struct simulated_annealing : solver {
         template <typename Sseq>
-        simulated_annealing(Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed)
+        simulated_annealing(
+                Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed)
             : _solution(std::move(gen))
             , _neighbour(_solution)
             , _initializer(std::move(ini))
@@ -52,6 +53,8 @@ namespace solvers {
 
         std::vector<double> _scores;
 
+        float _temperature = 500;
+
         void _step() {
             _neighbour = _solution;
             _mutator.apply(_neighbour.genotype, _generator);
@@ -62,9 +65,16 @@ namespace solvers {
             } else {
                 std::uniform_real_distribution<float> rnd_float(0, 1);
                 float f = rnd_float(_generator);
+                float prob =
+                        std::exp(-(std::abs(_neighbour.score - _solution.score)) / _temperature);
+                if (f < prob) {
+                    _solution = std::move(_neighbour);
+                }
             }
             _scores.emplace_back(_solution.score);
         }
+
+        void _temperature_update() { _temperature *= 0.9; }
     };
 
 } // namespace solvers
