@@ -1,6 +1,7 @@
 #pragma once
 
 #include "individual.h"
+#include "solvers.h"
 #include <core/dataset.h>
 #include <core/random.h>
 #include <core/view.h>
@@ -15,13 +16,15 @@ namespace solvers {
     struct simulated_annealing : solver {
         template <typename Sseq>
         simulated_annealing(
-                Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed)
+                Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed, float temp, float cooling_ratio)
             : _solution(std::move(gen))
             , _neighbour(_solution)
             , _initializer(std::move(ini))
             , _mutator(std::move(mut))
             , _evaluator(std::move(eva))
-            , _generator(std::forward<Sseq>(seed)) {
+            , _generator(std::forward<Sseq>(seed))
+            , _temperature(temp)
+            , _cooling_ratio(cooling_ratio) {
             _initializer.apply(_solution.genotype, _generator);
         }
 
@@ -53,7 +56,8 @@ namespace solvers {
 
         std::vector<double> _scores;
 
-        float _temperature = 500;
+        float _temperature;
+        const float _cooling_ratio;
 
         void _step() {
             _neighbour = _solution;
@@ -74,7 +78,7 @@ namespace solvers {
             _scores.emplace_back(_solution.score);
         }
 
-        void _temperature_update() { _temperature *= 0.9; }
+        void _temperature_update() { _temperature *= _cooling_ratio; }
     };
 
 } // namespace solvers

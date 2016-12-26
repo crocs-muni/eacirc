@@ -51,12 +51,13 @@ namespace circuit {
 
     std::unique_ptr<backend>
     create_backend(unsigned tv_size, json const& config, default_seed_source& seed) {
-        std::string solver = config.at("solver");
+        json const solver = config.at("solver");
+        std::string solver_type = solver.at("type");
 
-        if (solver == "global-search")
-            return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, config, seed);
+        if (solver_type == "global-search")
+            return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, solver, seed);
         else
-            throw std::runtime_error("no such solver named [" + solver + "] is avalable");
+            throw std::runtime_error("no such solver named [" + solver_type + "] is avalable");
     }
 
 } // namespace circuit

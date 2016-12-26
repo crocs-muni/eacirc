@@ -20,7 +20,7 @@ namespace solvers {
 
         circuit::fn_set function_set(config.at("function-set"));
 
-        std::string sol_type = config.at("solver");
+        std::string sol_type = config.at("type");
 
         if (sol_type == "local-search")
             return std::make_unique<local_search<Circuit, ini, mut, eva>>(
@@ -29,14 +29,16 @@ namespace solvers {
                     mut(config.at("mutator"), function_set),
                     eva(config.at("evaluator")),
                     seed);
-        if (sol_type == "simulated-annealing")
+        if (sol_type == "simulated-annealing") {
             return std::make_unique<simulated_annealing<Circuit, ini, mut, eva>>(
                     Circuit(tv_size),
                     ini(config.at("initializer"), function_set),
                     mut(config.at("mutator"), function_set),
                     eva(config.at("evaluator")),
-                    seed);
-        else
+                    seed,
+                    float(config.at("initial-temperature")),
+                    float(config.at("cooling-ratio")));
+        } else
             throw std::runtime_error("no such solver named [" + sol_type + "] is avalable");
     }
 
