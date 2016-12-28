@@ -3,10 +3,10 @@
 #include "backend.h"
 #include "circuit.h"
 #include "genetics.h"
+#include "solvers/solver_factory.h"
+#include "solvers/solvers.h"
 #include <core/memory.h>
 #include <fstream>
-#include "solvers/solvers.h"
-#include "solvers/solver_factory.h"
 
 namespace circuit {
 
@@ -15,12 +15,8 @@ namespace circuit {
         global_search(unsigned tv_size, json const& config, Sseq&& seed)
             : _function_set(config.at("function-set"))
             , _num_of_generations(config.at("num-of-generations"))
-            , _solver(solvers::create_solver<Circuit, Sseq>(tv_size, config, std::forward<Sseq>(seed)))
-              /*_solver(Circuit(tv_size),
-                      ini(config.at("initializer"), _function_set),
-                      mut(config.at("mutator"), _function_set),
-                      eva(config.at("evaluator")),
-                      std::forward<Sseq>(seed))*/ {}
+            , _solver(solvers::create_solver<Circuit, Sseq>(
+                      tv_size, config, std::forward<Sseq>(seed))) {}
 
         ~global_search() {
             {
@@ -55,7 +51,7 @@ namespace circuit {
         std::string solver_type = solver.at("type");
 
         if (solver_type == "global-search")
-            return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, solver, seed);
+            return std::make_unique<global_search<circuit<8, 5, 1>>>(tv_size, config, seed);
         else
             throw std::runtime_error("no such solver named [" + solver_type + "] is avalable");
     }

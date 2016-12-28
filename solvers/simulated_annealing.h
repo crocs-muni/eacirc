@@ -15,8 +15,13 @@ namespace solvers {
               typename Generator = default_random_generator>
     struct simulated_annealing : solver {
         template <typename Sseq>
-        simulated_annealing(
-                Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed, float temp, float cooling_ratio)
+        simulated_annealing(Genotype&& gen,
+                            Initializer&& ini,
+                            Mutator&& mut,
+                            Evaluator&& eva,
+                            Sseq&& seed,
+                            float temp,
+                            float cooling_ratio)
             : _solution(std::move(gen))
             , _neighbour(_solution)
             , _initializer(std::move(ini))
@@ -76,6 +81,7 @@ namespace solvers {
                 }
             }
             _scores.emplace_back(_solution.score);
+            _temperature_update();
         }
 
         void _temperature_update() { _temperature *= _cooling_ratio; }

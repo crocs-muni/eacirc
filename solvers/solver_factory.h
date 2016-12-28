@@ -8,6 +8,8 @@
 #include "../eacirc/circuit/backend.h"
 #include "../eacirc/circuit/circuit.h"
 #include "../eacirc/circuit/genetics.h"
+
+#include <core/memory.h>
 #include <core/random.h>
 
 namespace solvers {
@@ -20,15 +22,18 @@ namespace solvers {
 
         circuit::fn_set function_set(config.at("function-set"));
 
-        std::string sol_type = config.at("type");
+        const json solver = config.at("solver");
 
-        if (sol_type == "local-search")
+        std::string sol_type = solver.at("internal");
+
+        if (sol_type == "local-search") {
             return std::make_unique<local_search<Circuit, ini, mut, eva>>(
                     Circuit(tv_size),
                     ini(config.at("initializer"), function_set),
                     mut(config.at("mutator"), function_set),
                     eva(config.at("evaluator")),
                     seed);
+        }
         if (sol_type == "simulated-annealing") {
             return std::make_unique<simulated_annealing<Circuit, ini, mut, eva>>(
                     Circuit(tv_size),
@@ -36,8 +41,8 @@ namespace solvers {
                     mut(config.at("mutator"), function_set),
                     eva(config.at("evaluator")),
                     seed,
-                    float(config.at("initial-temperature")),
-                    float(config.at("cooling-ratio")));
+                    float(solver.at("initial-temperature")),
+                    float(solver.at("cooling-ratio")));
         } else
             throw std::runtime_error("no such solver named [" + sol_type + "] is avalable");
     }
