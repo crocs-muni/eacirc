@@ -28,12 +28,13 @@ namespace solvers {
             , _mutator(std::move(mut))
             , _evaluator(std::move(eva))
             , _generator(std::forward<Sseq>(seed))
-            , _temperature(temp)
+            , _initial_temperature(temp)
             , _cooling_ratio(cooling_ratio) {
             _initializer.apply(_solution.genotype, _generator);
         }
 
         double run(std::uint64_t generations) {
+            _temperature = _initial_temperature;
             for (std::uint64_t i = 0; i != generations; ++i)
                 _step();
             return _solution.score;
@@ -62,6 +63,7 @@ namespace solvers {
         std::vector<double> _scores;
 
         float _temperature;
+        float _initial_temperature;
         const float _cooling_ratio;
 
         void _step() {
