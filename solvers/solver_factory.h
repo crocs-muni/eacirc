@@ -42,15 +42,6 @@ namespace solvers {
                     seed,
                     float(solver.at("initial-temperature")),
                     float(solver.at("cooling-ratio")));
-        if (sol_type == "global-simulated-annealing")
-            return std::make_unique<global_simulated_annealing<Circuit, ini, mut, eva>>(
-                    Circuit(tv_size),
-                    ini(config.at("initializer"), function_set),
-                    mut(config.at("mutator"), function_set),
-                    eva(config.at("evaluator")),
-                    seed,
-                    float(solver.at("initial-temperature")),
-                    float(solver.at("cooling-ratio")));
         else
             throw std::runtime_error("no such solver named [" + sol_type + "] is avalable");
     }
