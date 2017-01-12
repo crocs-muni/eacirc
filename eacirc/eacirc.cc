@@ -66,6 +66,15 @@ void eacirc::run() {
         pvalues.emplace_back(_backend->test(a, b));
     }
 
+    std::uniform_real_distribution<double> rnd_double(0, 1);
+    default_random_generator gen(_seed);
+
+    for (auto it = pvalues.begin(); it != pvalues.end(); ++it) {
+        if (*it < 0.00001) { // if p-val == 0, but with float uncertainty
+            *it = rnd_double(gen);
+        }
+    }
+
     {
         std::ofstream of("pvals.txt");
         for (auto v : pvalues)
