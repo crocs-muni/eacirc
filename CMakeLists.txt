@@ -22,6 +22,8 @@ add_subdirectory(streams/estream)
 add_subdirectory(streams/sha3)
 add_subdirectory(streams/block)
 
+add_subdirectory(generator)
+
 add_subdirectory(external/json)
 add_subdirectory(external/pcg-cpp-0.98)
 
