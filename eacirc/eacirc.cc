@@ -72,7 +72,7 @@ void eacirc::run() {
             of << v << std::endl;
     }
 
-    ks_uniformity_test test{pvalues, _significance_level};
+    /*ks_uniformity_test test{pvalues, _significance_level};
 
     logger::info() << "KS test on p-values of size: " << pvalues.size() << std::endl;
     logger::info() << "KS statistics: " << test.test_statistic << std::endl;
@@ -85,7 +85,7 @@ void eacirc::run() {
     } else {
         logger::info() << "KS is not in " << _significance_level
                        << "% interval -> uniformity hypothesis accepted" << std::endl;
-    }
+    }*/
 
     dataset final_a{_tv_size, _tv_count * _num_of_epochs};
     dataset final_b{_tv_size, _tv_count * _num_of_epochs};

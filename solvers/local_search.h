@@ -15,7 +15,7 @@ namespace solvers {
               typename Generator = default_random_generator>
     struct local_search : solver {
         template <typename Sseq>
-        local_search(Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed)
+        local_search(Genotype&& gen, Initializer&& ini, Mutator&& mut, std::unique_ptr<Evaluator> eva, Sseq&& seed)
             : _solution(std::move(gen))
             , _neighbour(_solution)
             , _initializer(std::move(ini))
@@ -32,8 +32,8 @@ namespace solvers {
         }
 
         double reevaluate(dataset const& a, dataset const& b) {
-            _evaluator.change_datasets(a, b);
-            _solution.score = _evaluator.apply(_solution.genotype);
+            _evaluator->change_datasets(a, b);
+            _solution.score = _evaluator->apply(_solution.genotype);
             _scores.emplace_back(_solution.score);
             return _solution.score;
         }
@@ -48,7 +48,7 @@ namespace solvers {
 
         Initializer _initializer;
         Mutator _mutator;
-        Evaluator _evaluator;
+        std::unique_ptr<Evaluator> _evaluator;
         Generator _generator;
 
         std::vector<double> _scores;
@@ -57,7 +57,7 @@ namespace solvers {
             _neighbour = _solution;
             _mutator.apply(_neighbour.genotype, _generator);
 
-            _neighbour.score = _evaluator.apply(_neighbour.genotype);
+            _neighbour.score = _evaluator->apply(_neighbour.genotype);
             if (_solution <= _neighbour) {
                 _solution = std::move(_neighbour);
             }
