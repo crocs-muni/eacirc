@@ -16,6 +16,7 @@ endif()
 # === targets ===
 add_subdirectory(core)
 add_subdirectory(eacirc)
+
 add_subdirectory(solvers)
 
 add_subdirectory(streams/estream)

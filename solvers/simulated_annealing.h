@@ -18,7 +18,7 @@ namespace solvers {
         simulated_annealing(Genotype&& gen,
                             Initializer&& ini,
                             Mutator&& mut,
-                            Evaluator&& eva,
+                            std::unique_ptr<Evaluator> eva,
                             Sseq&& seed,
                             float temp,
                             float cooling_ratio)
@@ -42,8 +42,8 @@ namespace solvers {
         }
 
         double reevaluate(dataset const& a, dataset const& b) {
-            _evaluator.change_datasets(a, b);
-            _solution.score = _evaluator.apply(_solution.genotype);
+            _evaluator->change_datasets(a, b);
+            _solution.score = _evaluator->apply(_solution.genotype);
             _scores.emplace_back(_solution.score);
             return _solution.score;
         }
@@ -58,7 +58,7 @@ namespace solvers {
 
         Initializer _initializer;
         Mutator _mutator;
-        Evaluator _evaluator;
+        std::unique_ptr<Evaluator> _evaluator;
         Generator _generator;
 
         std::vector<double> _scores;
@@ -71,7 +71,7 @@ namespace solvers {
             _neighbour = _solution;
             _mutator.apply(_neighbour.genotype, _generator);
 
-            _neighbour.score = _evaluator.apply(_neighbour.genotype);
+            _neighbour.score = _evaluator->apply(_neighbour.genotype);
             if (_solution <= _neighbour) {
                 _solution = std::move(_neighbour);
             } else {

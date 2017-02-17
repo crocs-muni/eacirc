@@ -10,6 +10,7 @@ add_executable(eacirc main.cc
     circuit/functions
     circuit/genetics
     circuit/interpreter
+    evaluators/evaluator_factory
     eacirc
     seed
     statistics

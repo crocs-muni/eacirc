@@ -92,34 +92,4 @@ namespace circuit {
     private:
         const fn_set _function_set;
     };
-
-    template <typename Circuit> struct categories_evaluator {
-        categories_evaluator(json const& config)
-            : _chisqr(std::size_t(config.at("num-of-categories"))) {}
-
-        void change_datasets(dataset const& a, dataset const& b) {
-            _a = a;
-            _b = b;
-        }
-
-        double apply(Circuit const& circuit) {
-            interpreter<Circuit> kernel{circuit};
-
-            _oa.clear();
-            _ob.clear();
-
-            std::transform(_a.begin(), _a.end(), std::back_inserter(_oa), kernel);
-            std::transform(_b.begin(), _b.end(), std::back_inserter(_ob), kernel);
-
-            return 1.0 - _chisqr(_oa, _ob);
-        }
-
-    private:
-        dataset _a;
-        dataset _b;
-        std::vector<typename Circuit::output> _oa;
-        std::vector<typename Circuit::output> _ob;
-        two_sample_chisqr _chisqr;
-    };
-
 } // namespace circuit

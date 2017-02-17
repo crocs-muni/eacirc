@@ -9,6 +9,7 @@ namespace circuit {
     template <unsigned DimX, unsigned DimY, unsigned Out> struct circuit {
         static constexpr unsigned x = DimX;
         static constexpr unsigned y = DimY;
+        static constexpr unsigned output_size = Out;
 
         using output = vec<Out>;
         using connectors_type = connectors<32>;

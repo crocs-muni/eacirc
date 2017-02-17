@@ -3,6 +3,7 @@
 #include "backend.h"
 #include "circuit.h"
 #include "genetics.h"
+#include <eacirc/evaluators/evaluator_factory.h>
 #include "solvers/solver_factory.h"
 #include "solvers/solvers.h"
 #include <core/memory.h>
@@ -38,7 +39,7 @@ namespace circuit {
     private:
         using ini = basic_initializer;
         using mut = basic_mutator;
-        using eva = categories_evaluator<Circuit>;
+        using eva = evaluators::evaluator<Circuit>;
 
         fn_set _function_set;
         std::uint64_t _num_of_generations;
