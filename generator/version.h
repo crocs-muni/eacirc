@@ -1,3 +1,3 @@
 #pragma once
 
-#define VERSION_TAG "v4.0-24-g0faa762-dirty"
+#define VERSION_TAG "v4.0-26-g9723a5a-dirty"
