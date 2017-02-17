@@ -76,7 +76,8 @@ namespace evaluators {
     };
 
     template <typename Circuit> struct weight_evaluator : evaluator<Circuit> {
-        weight_evaluator() {}
+        weight_evaluator(bool normalise)
+            : _normalise(normalise) {}
 
         void change_datasets(dataset const& a, dataset const& b) {
             _a = a;
@@ -98,10 +99,13 @@ namespace evaluators {
             //                          ones in a           zeros in b
             std::size_t oposite_guesses = count_ones(_oa) + (bits_count_b - count_ones(_ob));
 
-            //return double(oposite_guesses) / double(bits_count_a + bits_count_b); // <0.5,1>
-            return normalized_p_val(oposite_guesses, bits_count_a + bits_count_b); // pval
-            //std::size_t total = bits_count_a + bits_count_b; // <0,1>
-            //return double(std::max(oposite_guesses, total - oposite_guesses) - total/2) / double(total);
+            if (_normalise)
+                return normalized_p_val(oposite_guesses, bits_count_a + bits_count_b); // pval
+            else {
+                std::size_t total = bits_count_a + bits_count_b; // <0,1>
+                return double(std::max(oposite_guesses, total - oposite_guesses) - total / 2) /
+                       double(total);
+            }
         }
 
     private:
@@ -130,12 +134,14 @@ namespace evaluators {
         double erf(double z) {
             double t = 1.0 / (1.0 + 0.5 * std::abs(z));
             // use Horner's method
+            // clang-format off
             double ans = 1 - t * std::exp(-z * z - 1.26551223 +
                              t * (1.00002368 + t * (0.37409196 +
                              t * (0.09678418 + t * (-0.18628806 +
                              t * (0.27886807 + t * (-1.13520398 +
                              t * (1.48851587 + t * (-0.82215223 +
                              t * (0.17087277))))))))));
+            // clang-format on
             if (z >= 0.0)
                 return ans;
             else
@@ -144,15 +150,16 @@ namespace evaluators {
 
         double normal_estimate(std::size_t guesses, double p, std::size_t total) {
             double u = total * p; // always count of TV*bitsize of output
-            double o = std::sqrt(u * (1-p));
+            double o = std::sqrt(u * (1 - p));
 
-            return 0.5 * (1 + erf((guesses-u)/(o*std::sqrt(2))));
+            return 0.5 * (1 + erf((guesses - u) / (o * std::sqrt(2))));
         }
 
         dataset _a;
         dataset _b;
         std::vector<typename Circuit::output> _oa;
         std::vector<typename Circuit::output> _ob;
+        bool _normalise;
     };
 
     template <typename Circuit>
@@ -164,7 +171,7 @@ namespace evaluators {
             return std::make_unique<categories_evaluator<Circuit>>(
                     std::size_t(config.at("num-of-categories")));
         if (type == "weight-evaluator")
-            return std::make_unique<weight_evaluator<Circuit>>();
+            return std::make_unique<weight_evaluator<Circuit>>(bool(config.at("normalise")));
 
         throw std::runtime_error("requested block cipher named \"" + type +
                                  "\" is either broken or does not exists");
