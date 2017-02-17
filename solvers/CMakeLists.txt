@@ -3,6 +3,7 @@ add_library(solvers STATIC
     individual
     local_search
     simulated_annealing
+    vns
     solver_factory
     )
 

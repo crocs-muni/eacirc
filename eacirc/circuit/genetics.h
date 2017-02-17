@@ -65,6 +65,46 @@ namespace circuit {
         const fn_set _function_set;
     };
 
+    template <typename Circuit, typename Generator> void reduce(Circuit& circuit, Generator& g, std::size_t count) {
+        std::uniform_int_distribution<std::size_t> x{0, Circuit::x - 1};
+        std::uniform_int_distribution<std::size_t> y{0, Circuit::y - 1};
+
+        // mutate connectors
+        for (std::size_t i = 0; i != count; ++i) {
+            using uniform_distribution = std::uniform_int_distribution<unsigned>;
+
+            uniform_distribution dst;
+            uniform_distribution::param_type first_layer{0, circuit.input() - 1};
+            uniform_distribution::param_type other_layer{0, Circuit::x - 1};
+
+            const auto y_idx = y(g);
+            if (y_idx == 0)
+                circuit[y_idx][x(g)].connectors.clear(dst(g, first_layer));
+            else
+                circuit[y_idx][x(g)].connectors.clear(dst(g, other_layer));
+        }
+    }
+
+    template <typename Circuit, typename Generator> void extend(Circuit& circuit, Generator& g, std::size_t count) {
+        std::uniform_int_distribution<std::size_t> x{0, Circuit::x - 1};
+        std::uniform_int_distribution<std::size_t> y{0, Circuit::y - 1};
+
+        // mutate connectors
+        for (std::size_t i = 0; i != count; ++i) {
+            using uniform_distribution = std::uniform_int_distribution<unsigned>;
+
+            uniform_distribution dst;
+            uniform_distribution::param_type first_layer{0, circuit.input() - 1};
+            uniform_distribution::param_type other_layer{0, Circuit::x - 1};
+
+            const auto y_idx = y(g);
+            if (y_idx == 0)
+                circuit[y_idx][x(g)].connectors.set(dst(g, first_layer));
+            else
+                circuit[y_idx][x(g)].connectors.set(dst(g, other_layer));
+        }
+    }
+
     struct basic_initializer {
         basic_initializer(json const&, fn_set function_set)
             : _function_set(std::move(function_set)) {}

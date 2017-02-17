@@ -4,6 +4,7 @@
 
 #include "local_search.h"
 #include "simulated_annealing.h"
+#include "vns.h"
 
 #include <eacirc/circuit/backend.h>
 #include <eacirc/circuit/circuit.h>
@@ -43,6 +44,14 @@ namespace solvers {
                     seed,
                     float(solver.at("initial-temperature")),
                     float(solver.at("cooling-ratio")));
+        if (sol_type == "variable-neighbourhood-search" ||
+            sol_type == "variable-neighborhood-search" || sol_type == "vns")
+            return std::make_unique<vns<Circuit, ini, mut, eva>>(
+                    Circuit(tv_size),
+                    ini(config.at("initializer"), function_set),
+                    mut(config.at("mutator"), function_set),
+                    evaluators::make_evaluator<Circuit>(config.at("evaluator")),
+                    seed);
         else
             throw std::runtime_error("no such solver named [" + sol_type + "] is avalable");
     }
