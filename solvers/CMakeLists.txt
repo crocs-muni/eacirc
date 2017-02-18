@@ -4,6 +4,7 @@ add_library(solvers STATIC
     local_search
     simulated_annealing
     vns
+    gls
     solver_factory
     )
 

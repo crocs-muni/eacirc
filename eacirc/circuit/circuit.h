@@ -53,6 +53,13 @@ namespace circuit {
             return _layers[i];
         }
 
+        std::size_t count_connectors() {
+            std::size_t count = 0;
+            for (auto l : _layers)
+                count += l.count_connectors();
+            return count;
+        }
+
     private:
         layers _layers;
         unsigned _input;

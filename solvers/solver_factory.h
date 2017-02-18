@@ -52,6 +52,13 @@ namespace solvers {
                     mut(config.at("mutator"), function_set),
                     evaluators::make_evaluator<Circuit>(config.at("evaluator")),
                     seed);
+        if (sol_type == "guided-local-search" || sol_type == "gls")
+            return std::make_unique<vns<Circuit, ini, mut, eva>>(
+                    Circuit(tv_size),
+                    ini(config.at("initializer"), function_set),
+                    mut(config.at("mutator"), function_set),
+                    evaluators::make_evaluator<Circuit>(config.at("evaluator")),
+                    seed);
         else
             throw std::runtime_error("no such solver named [" + sol_type + "] is avalable");
     }
