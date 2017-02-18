@@ -120,7 +120,7 @@ namespace circuit {
 
         void set(unsigned i) {
             ASSERT(i < size);
-            _mask &= (1u << i);
+            _mask |= (1u << i);
         }
 
         void flip(unsigned i) {
