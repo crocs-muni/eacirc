@@ -115,7 +115,7 @@ template <typename Iterator> struct step_iterator {
 
     auto operator>=(step_iterator const& rhs) const
             -> _impl::enable_if_random_access_t<Iterator, bool> {
-        return !(this < rhs);
+        return !(*this < rhs);
     }
 
     auto operator<=(step_iterator const& rhs) const
@@ -231,7 +231,7 @@ template <typename Iterator> struct view_iterator {
 
     auto operator>=(view_iterator const& rhs) const
             -> _impl::enable_if_random_access_t<Iterator, bool> {
-        return !(this < rhs);
+        return !(*this < rhs);
     }
 
     auto operator<=(view_iterator const& rhs) const
