@@ -62,11 +62,10 @@ namespace solvers {
             if (std::abs(_neighbour.score - _solution.score) < 0.00001) {
                 double score_s = _extended_evaluator->apply(_solution.genotype);
                 double score_n = _extended_evaluator->apply(_neighbour.genotype);
-                if (std::abs(score_s - score_n) < 0.00001) {
-                    _mutator.apply(_neighbour.genotype, _generator);
+                if (score_s <= score_n) {
+                    _solution = std::move(_neighbour);
                 }
-            }
-            if (_solution <= _neighbour) {
+            } else if (_solution <= _neighbour) {
                 _solution = std::move(_neighbour);
             }
             _scores.emplace_back(_solution.score);

@@ -176,4 +176,24 @@ namespace evaluators {
         throw std::runtime_error("requested block cipher named \"" + type +
                                  "\" is either broken or does not exists");
     }
+
+    template <typename Circuit> struct penalization_evaluator : evaluator<Circuit> {
+        penalization_evaluator(const json& config)
+            : _internal_evaluator(make_evaluator<Circuit>(config)) {}
+
+        void change_datasets(dataset const& a, dataset const& b) {
+            _internal_evaluator->change_datasets(a, b);
+        }
+
+        double apply(Circuit const& circuit) {
+            double fitness = _internal_evaluator->apply(circuit);
+            std::size_t connectors = circuit.count_connectors();
+            double penalization = double(connectors) / 264.0;
+            fitness -= penalization;
+            return std::max(fitness, 0.0); // TODO move on sigmoid?
+        }
+
+    private:
+        std::unique_ptr<evaluator<Circuit>> _internal_evaluator;
+    };
 }; // namespace evaluators
