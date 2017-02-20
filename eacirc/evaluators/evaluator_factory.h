@@ -177,7 +177,7 @@ namespace evaluators {
                                  "\" is either broken or does not exists");
     }
 
-    template <typename Circuit> struct penalization_evaluator : evaluator<Circuit> {
+    /*template <typename Circuit> struct penalization_evaluator : evaluator<Circuit> {
         penalization_evaluator(const json& config)
             : _internal_evaluator(make_evaluator<Circuit>(config)) {}
 
@@ -195,5 +195,5 @@ namespace evaluators {
 
     private:
         std::unique_ptr<evaluator<Circuit>> _internal_evaluator;
-    };
+    };*/
 }; // namespace evaluators

@@ -49,7 +49,6 @@ namespace solvers {
         Initializer _initializer;
         Mutator _mutator;
         std::unique_ptr<Evaluator> _basic_evaluator;
-        std::unique_ptr<Evaluator> _extended_evaluator;
         Generator _generator;
 
         std::vector<double> _scores;
@@ -60,9 +59,7 @@ namespace solvers {
 
             _neighbour.score = _basic_evaluator->apply(_neighbour.genotype);
             if (std::abs(_neighbour.score - _solution.score) < 0.00001) {
-                double score_s = _extended_evaluator->apply(_solution.genotype);
-                double score_n = _extended_evaluator->apply(_neighbour.genotype);
-                if (score_s <= score_n) {
+                if (_solution.genotype.count_connectors() <= _neighbour.genotype.count_connectors()) {
                     _solution = std::move(_neighbour);
                 }
             } else if (_solution <= _neighbour) {
