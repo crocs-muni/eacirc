@@ -17,6 +17,21 @@ Further tools are:
 
 For more information and details see [project wiki pages](http://github.com/petrs/EACirc/wiki/Home).
 
+## Quickstart
+
+Requirements are gcc5 (clang3.6), git and cmake 3.4.
+
+### Sample build on Metacentrum
+
+```Bash
+module add gcc-5.3.0 cmake-3.6.1
+git clone git@github.com:crocs-muni/eacirc.git src
+mkdir src/build
+cd src/build
+ccmake ..
+make
+```
+
 ## Authors
 The framework is developed at the [Centre for Research on Cryptography and Security (formerly Laboratory of Security and Applied Cryptography)](https://www.fi.muni.cz/research/crocs/), [Masaryk University](http://www.muni.cz/), Brno, Czech Republic.
 
