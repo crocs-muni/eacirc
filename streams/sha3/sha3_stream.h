@@ -3,7 +3,7 @@
 #include <core/json.h>
 #include <core/stream.h>
 #include <memory>
-#include <../../core/random.h>
+#include <core/random.h>
 
 struct sha3_interface;
 
@@ -15,7 +15,6 @@ struct sha3_stream : stream {
     vec_view next() override;
 
 private:
-    const std::string _algorithm;
     const std::size_t _round;
     const std::size_t _hash_size;
 
