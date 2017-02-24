@@ -73,12 +73,18 @@ namespace solvers {
              * it would change between neighbourhoods to escape from it.
              */
             if (_neighbour.score == 0) {
-                while (_neighbour.score == 0) {
+                std::size_t i = 0;
+                while (i < 10 && _neighbour.score == 0) {
                     circuit::extend<Genotype, Generator>(_neighbour.genotype, _generator, 2);
+                    _neighbour.score = _evaluator->apply(_neighbour.genotype);
+                    ++i;
                 }
             } else if (_neighbour.score > 0.9 && _solution.score > 0.9) {
                 circuit::reduce<Genotype, Generator>(_neighbour.genotype, _generator, 2);
             }
+
+            // we need to reevaluate the solution after the changes
+            _neighbour.score = _evaluator->apply(_neighbour.genotype);
 
             if (_solution <= _neighbour)
                 _solution = std::move(_neighbour);

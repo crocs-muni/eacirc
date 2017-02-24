@@ -18,7 +18,6 @@ estream_stream::estream_stream(const json& config, default_seed_source& seeder, 
     , _source(make_stream(config.at("plaintext-type"), seeder, estream_cipher::block_size))
     , _plaintext(estream_cipher::block_size)
     , _encrypted(estream_cipher::block_size)
-    , _encrypted_decrypted(estream_cipher::block_size)
     , _algorithm(config.at("algorithm"),
                  config.at("round").is_null() ? optional<unsigned>{nullopt}
                                               : optional<unsigned>{unsigned(config.at("round"))},
