@@ -15,17 +15,23 @@ namespace block {
 
     block_stream::block_stream(const json& config, default_seed_source& seeder, std::size_t osize)
         : stream(osize)
-        , _algorithm(config.at("algorithm").get<std::string>())
         , _round(config.at("round"))
-        , _block_size(std::size_t(config.at("block-size")))
+        , _block_size(config.at("block-size"))
         , _source(make_stream(config.at("plaintext"), seeder, _block_size))
         , _iv(make_stream(config.at("iv"), seeder, _block_size))
         , _key(make_stream(config.at("key"), seeder, unsigned(config.at("key-size"))))
-        , _encryptor(make_block_cipher(_algorithm, unsigned(_round), _block_size, true))
-        , _decryptor(make_block_cipher(_algorithm, unsigned(_round), _block_size, false))
+        , _encryptor(make_block_cipher(config.at("algorithm"), unsigned(_round), unsigned(_block_size), true))
+        , _decryptor(make_block_cipher(config.at("algorithm"), unsigned(_round), unsigned(_block_size), false))
         , _data(compute_vector_size(_block_size, osize))
     {
-        logger::info() << "stream source is cipher: " << _algorithm << std::endl;
+        logger::info() << "stream source is cipher: " << config.at("algorithm") << std::endl;
+
+        if (int(config.at("round")) < 0)
+            throw std::runtime_error("The least number of rounds is 0.");
+        if (int(config.at("block-size")) < 8)
+            throw std::runtime_error("The block size is at least 8 bytes");
+        if (osize == 0)
+            throw std::runtime_error("The output size has to be at least 1 byte");
 
         /* others modes than ECB are not implemented yet
         vec_view iv_view = _iv->next();
@@ -34,8 +40,8 @@ namespace block {
         */
 
         vec_view key_view = _key->next();
-        _encryptor->keysetup(key_view.data(), key_view.size());
-        _decryptor->keysetup(key_view.data(), key_view.size());
+        _encryptor->keysetup(key_view.data(), std::uint32_t(key_view.size()));
+        _decryptor->keysetup(key_view.data(), std::uint32_t(key_view.size()));
     }
 
     block_stream::block_stream(block_stream&&) = default;
