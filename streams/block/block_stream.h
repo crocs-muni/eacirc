@@ -27,7 +27,6 @@ namespace block {
         std::unique_ptr<stream> _key;
 
         std::unique_ptr<block_cipher> _encryptor;
-        std::unique_ptr<block_cipher> _decryptor;
 
         std::vector<value_type> _data;
     };
