@@ -133,9 +133,8 @@ std::unique_ptr<stream>
 make_stream(const json& config, default_seed_source& seeder, std::size_t osize = 0) {
     const std::string type = config.at("type");
 
-    // probably unnecessary
     if (osize == 0)
-        osize = config.at("size");
+        throw std::runtime_error("Stream's osize " + type + " is not set in parent stream.");
 
     if (type == "file-stream")
         return std::make_unique<file_stream>(config, osize);

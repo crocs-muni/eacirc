@@ -3,8 +3,8 @@
 #include <core/json.h>
 #include <core/stream.h>
 #include <memory>
-#include <../../core/random.h>
-#include <../../core/logger.h>
+#include <core/random.h>
+#include <core/logger.h>
 
 namespace block {
     struct block_cipher;
@@ -19,7 +19,6 @@ namespace block {
         vec_view next() override;
 
     private:
-        const std::string _algorithm;
         const std::size_t _round;
         const std::size_t _block_size;
 
@@ -28,7 +27,6 @@ namespace block {
         std::unique_ptr<stream> _key;
 
         std::unique_ptr<block_cipher> _encryptor;
-        std::unique_ptr<block_cipher> _decryptor;
 
         std::vector<value_type> _data;
     };
