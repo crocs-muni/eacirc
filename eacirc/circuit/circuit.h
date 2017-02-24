@@ -56,7 +56,8 @@ namespace circuit {
         std::size_t count_connectors() {
             std::size_t count = 0;
             for (auto l : _layers)
-                count += l.count_connectors();
+                for (auto c : l)
+                    count += c.connectors.count_connectors();
             return count;
         }
 

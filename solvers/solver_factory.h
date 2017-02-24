@@ -5,6 +5,7 @@
 #include "local_search.h"
 #include "simulated_annealing.h"
 #include "vns.h"
+#include "gls.h"
 
 #include <eacirc/circuit/backend.h>
 #include <eacirc/circuit/circuit.h>
@@ -51,8 +52,8 @@ namespace solvers {
                     mut(config.at("mutator"), function_set),
                     evaluators::make_evaluator<Circuit>(config.at("evaluator")),
                     seed);
-        if (sol_type == "guided-local-search" || sol_type == "gls")
-            return std::make_unique<vns<Circuit, ini, mut, eva>>(
+        if (sol_type == "guided-local-search")
+            return std::make_unique<gls<Circuit, ini, mut, eva>>(
                     Circuit(tv_size),
                     ini(config.at("initializer"), function_set),
                     mut(config.at("mutator"), function_set),

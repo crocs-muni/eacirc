@@ -156,7 +156,7 @@ namespace circuit {
         }
 
         std::size_t count_connectors() {
-            return std::size_t(count_true_bits(_mask));
+            return std::size_t(_impl::count_true_bits(_mask));
         }
 
         connector_iterator<value_type> iterator() const { return _mask; }
