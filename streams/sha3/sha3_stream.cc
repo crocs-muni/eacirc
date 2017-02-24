@@ -21,7 +21,7 @@ hash_data(sha3_interface& hasher, const I& data, std::uint8_t* hash, const std::
     if (status != 0)
         throw std::runtime_error("cannot initialize hash (code: " + to_string(status) + ")");
 
-    status = hasher.Update(&(*data.begin()), 8 * (data.end() - data.begin()));
+    status = hasher.Update(&(*data.begin()), 8 * (data.size()));
     if (status != 0)
         throw std::runtime_error("cannot update the hash (code: " + to_string(status) + ")");
 
@@ -46,11 +46,11 @@ sha3_stream::sha3_stream(sha3_stream&&) = default;
 sha3_stream::~sha3_stream() = default;
 
 vec_view sha3_stream::next() {
-
-    for (auto beg = _data.begin(); beg != _data.end(); beg += _hash_size) {
+    auto data = _data.data();
+    for (std::size_t i = 0; i < _data.size(); i += _hash_size) {
         vec_view view = _source->next();
 
-        hash_data(*_hasher, view, &(*beg), _hash_size);
+        hash_data(*_hasher, view, &data[i], _hash_size);
     }
 
     return make_view(_data.cbegin(), osize());
