@@ -44,8 +44,7 @@ namespace solvers {
                     seed,
                     float(solver.at("initial-temperature")),
                     float(solver.at("cooling-ratio")));
-        if (sol_type == "variable-neighbourhood-search" ||
-            sol_type == "variable-neighborhood-search" || sol_type == "vns")
+        if (sol_type == "variable-neighbourhood-search")
             return std::make_unique<vns<Circuit, ini, mut, eva>>(
                     Circuit(tv_size),
                     ini(config.at("initializer"), function_set),

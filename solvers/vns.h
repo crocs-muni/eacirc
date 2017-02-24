@@ -80,6 +80,9 @@ namespace solvers {
                 circuit::reduce<Genotype, Generator>(_neighbour.genotype, _generator, 2);
             }
 
+            // we need to reevaluate the solution after the changes
+            _neighbour.score = _evaluator->apply(_neighbour.genotype);
+
             if (_solution <= _neighbour)
                 _solution = std::move(_neighbour);
 
