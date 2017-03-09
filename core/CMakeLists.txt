@@ -1,4 +1,5 @@
 add_library(core STATIC
+    builtins
     cmd
     dataset
     debug
