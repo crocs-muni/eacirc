@@ -2,37 +2,82 @@
 
 #include <type_traits>
 
+namespace core {
+
 /**
- * @brief variadic logical AND metafunction
+  * @brief negation<B>
+  */
+
+template <typename B> struct negation : std::integral_constant<bool, !B::value> {};
+
+/**
+ * @brief conjunction<...B>
  */
 
 template <typename...> struct conjunction : std::true_type {};
 template <typename B, typename... Bs>
-struct conjunction<B, Bs...> : std::conditional<B::value, conjunction<Bs...>, B>::type {};
+struct conjunction<B, Bs...>
+    : std::conditional<B::value, conjunction<Bs...>, std::false_type>::type {};
 
 /**
- * @brief variadic logical OR metafunction
+ * @brief disjunction<...B>
  */
 
 template <typename...> struct disjunction : std::false_type {};
 template <typename B, typename... Bs>
-struct disjunction<B, Bs...> : std::conditional<B::value, B, disjunction<Bs...>>::type {};
+struct disjunction<B, Bs...>
+    : std::conditional<B::value, std::true_type, disjunction<Bs...>>::type {};
 
 /**
- * @brief logical NOT metafunction
+ * @brief is_specialization<Concrete, Abstract>
  */
-template <typename B> struct negation : std::integral_constant<bool, !B::value> {};
+
+template <typename, template <typename...> class> struct is_specialization : std::false_type {};
+
+template <template <typename...> class T, typename... Args>
+struct is_specialization<T<Args...>, T> : std::true_type {};
 
 /**
- * @brief checks element \a E for belonging to the set \a Set
+ * @brief contains<E , ...Set>
  */
 
 template <typename E, typename... Set> struct contains : disjunction<std::is_same<E, Set>...> {};
 
 /**
- * @brief checks whether every element is unique in the given parameter pack
+ * @brief all_same<...T>
  */
+
+template <typename...> struct all_same : std::true_type {};
+template <typename T1, typename T2, typename... Ts>
+struct all_same<T1, T2, Ts...>
+    : std::conditional<std::is_same<T1, T2>::value, all_same<T2, Ts...>, std::false_type>::type {};
+
+/**
+  * @brief all_unique<...T>
+  */
 
 template <typename...> struct all_unique : std::true_type {};
 template <typename T, typename... Ts>
 struct all_unique<T, Ts...> : conjunction<negation<contains<T, Ts...>>, all_unique<Ts...>> {};
+
+/**
+  * @brief fst<...T>
+  */
+
+template <typename T1, typename...> struct fst { using type = T1; };
+
+/**
+* @brief snd<...T>
+*/
+
+template <typename T1, typename T2, typename...> struct snd { using type = T2; };
+
+/**
+ * @brief max
+ */
+template <unsigned...> struct max { constexpr static unsigned value = 0; };
+template <unsigned V, unsigned... Vs> struct max<V, Vs...> {
+  constexpr static unsigned value = (V > max<Vs...>::value) ? V : max<Vs...>::value;
+};
+
+} // namespace core
