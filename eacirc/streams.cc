@@ -41,7 +41,7 @@ namespace _impl {
         rng_stream(Seeder&& seeder, const std::size_t osize)
             : stream(osize)
             , _rng(std::forward<Seeder>(seeder))
-            , _data(osize) { }
+            , _data(osize) {}
 
         vec_view next() override {
             std::generate_n(_data.data(), osize(), [this]() {
@@ -129,6 +129,42 @@ private:
     std::vector<value_type> _data;
 };
 
+/**
+ * @brief Stream for testing strict avalanche criterion
+ *
+ * The vector consists 2 parts of same length. The first part is random,
+ * the second is copy of the first with one flipped bit
+ */
+template <typename Generator> struct rng_stream : stream {
+    template <typename Seeder>
+    rng_stream(Seeder&& seeder, const std::size_t osize)
+        : stream(osize)
+        , _rng(std::forward<Seeder>(seeder))
+        , _data(osize) {
+        if (osize % 2 == 1)
+            throw std::runtime_error(
+                    "Stream's osize has to be even (so it contains 2 vectors of same legth).");
+    }
+
+    vec_view next() override {
+        std::generate_n(_data.data(), osize() / 2, [this]() {
+            return std::uniform_int_distribution<std::uint8_t>()(_rng);
+        });
+
+        std::copy_n(_data.begin(), osize() / 2, _data.begin() + osize() / 2);
+
+        std::uniform_int_distribution<std::size_t> dist{0, osize() / 2 * 8};
+        std::size_t pos = dist(_rng) + osize() / 2 * 8;
+
+        _data[pos / 8] ^= (1 << (pos % 8));
+        return make_cview(_data);
+    }
+
+private:
+    Generator _rng;
+    std::vector<value_type> _data;
+};
+
 std::unique_ptr<stream>
 make_stream(const json& config, default_seed_source& seeder, std::size_t osize = 0) {
     const std::string type = config.at("type");
@@ -147,6 +183,8 @@ make_stream(const json& config, default_seed_source& seeder, std::size_t osize =
     else if (type == "mt19937-stream")
         return std::make_unique<mt19937_stream>(seeder, osize);
     else if (type == "pcg32-stream")
+        return std::make_unique<pcg32_stream>(seeder, osize);
+    else if (type == "sac-pcg32")
         return std::make_unique<pcg32_stream>(seeder, osize);
 #ifdef BUILD_estream
     else if (type == "estream")
