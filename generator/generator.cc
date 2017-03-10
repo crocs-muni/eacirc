@@ -1,5 +1,4 @@
 #include "generator.h"
-#include "version.h"
 #include <core/logger.h>
 #include <core/random.h>
 #include <fstream>

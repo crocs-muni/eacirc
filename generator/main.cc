@@ -1,5 +1,5 @@
 #include "generator.h"
-#include "version.h"
+#include "../eacirc/version.h"
 #include <core/cmd.h>
 #include <core/logger.h>
 #include <limits>
