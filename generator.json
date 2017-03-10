@@ -1,6 +1,6 @@
 {
-    "notes" : "./block/AES_r03",
-    "seed" : null,
+    "notes" : "An example generator json for 3 rounds AES. It generates 10k of 16 B test vectors, using default seeding value 1fe40505e131963c.",
+    "seed" : "1fe40505e131963c",
 
     "tv-size" : 16,
     "tv-count" : 10000,
@@ -23,4 +23,4 @@
             "type" : "false-stream"
         }
     }
- }
+}
