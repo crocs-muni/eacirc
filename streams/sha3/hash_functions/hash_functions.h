@@ -47,6 +47,6 @@
 // #include "TIB3/Tib_sha3.h"
 #include "Tangle2/Tangle2_sha3.h"
 #include "Twister/Twister_sha3.h"
-#include "Vortex/Vortex_sha3.h"
+//#include "Vortex/Vortex_sha3.h"
 #include "WaMM/Wamm_sha3.h"
 #include "Waterfall/Waterfall_sha3.h"

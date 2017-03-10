@@ -96,9 +96,10 @@ namespace circuit {
         }
 
         fn_set(json const& object)
-            : _size(0) {
+            : _size(0)
+            , _samples{} {
             if (_samples.size() < object.size())
-                throw std::runtime_error("more function are listet than possible");
+                throw std::runtime_error("more function are listed than possible");
 
             for (auto& item : object) {
                 _samples[_size] = from_string(item);

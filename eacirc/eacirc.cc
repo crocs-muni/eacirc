@@ -7,6 +7,8 @@
 #include <pcg/pcg_random.hpp>
 
 #include "circuit/backend.h"
+#include "core/stream.h"
+#include "eacirc/streams.h"
 #include "streams.h"
 
 static std::ifstream open_config_file(std::string path) {
@@ -33,8 +35,10 @@ eacirc::eacirc(json const& config)
     seed_seq_from<pcg32> main_seeder(_seed);
 
     {
-        _stream_a = make_stream(config.at("stream-a"), main_seeder);
-        _stream_b = make_stream(config.at("stream-b"), main_seeder);
+        logger::info() << "stream a: type: " << config.at("stream-a").at("type") << std::endl;
+        _stream_a = make_stream(config.at("stream-a"), main_seeder, _tv_size);
+        logger::info() << "stream b: type: " << config.at("stream-b").at("type") << std::endl;
+        _stream_b = make_stream(config.at("stream-b"), main_seeder, _tv_size);
     }
 
     {
@@ -53,14 +57,11 @@ void eacirc::run() {
     dataset a{_tv_size, _tv_count};
     dataset b{_tv_size, _tv_count};
 
-    _stream_a->read(a);
-    _stream_b->read(b);
-
     for (std::size_t i = 0; i != _num_of_epochs; ++i) {
         _backend->train(a, b);
 
-        _stream_a->read(a);
-        _stream_b->read(b);
+        stream_to_dataset(a, _stream_a);
+        stream_to_dataset(b, _stream_b);
 
         pvalues.emplace_back(_backend->test(a, b));
     }
@@ -86,5 +87,11 @@ void eacirc::run() {
                        << "% interval -> uniformity hypothesis accepted" << std::endl;
     }
 
-    logger::info() << "the last p-value is: " << pvalues.back() << std::endl;
+    dataset final_a{_tv_size, _tv_count * _num_of_epochs};
+    dataset final_b{_tv_size, _tv_count * _num_of_epochs};
+
+    stream_to_dataset(final_a, _stream_a);
+    stream_to_dataset(final_b, _stream_b);
+
+    logger::info() << "The p-value of the last individual is: " << _backend->test(final_a, final_b) << std::endl;
 }
