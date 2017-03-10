@@ -5,36 +5,14 @@
 
 #include <core/dataset.h>
 #include <core/json.h>
+#include <core/builtins.h>
 
 //#include <eacirc/circuit/circuit.h>
 #include <eacirc/circuit/interpreter.h>
 
 #include "../statistics.h"
 
-#ifdef _MSC_VER
-#include <intrin.h>
-#endif
 
-namespace _impl {
-
-    int count_true_bits(std::uint8_t x) {
-#ifdef __GNUC__
-        return __builtin_popcount(x);
-#elif _MSC_VER
-        return __popcnt16(x);
-#else
-#warning "CAUTION! Unsupported compiler! Slow trivial implementation is used"
-        int count = 0;
-        while (x) {
-            if (x % 2)
-                ++count;
-            x >>= 1;
-        }
-        return count;
-#endif
-    }
-
-} // namespace _impl
 
 namespace evaluators {
 
@@ -114,7 +92,7 @@ namespace evaluators {
 
             for (auto& out_vec : outputs) {
                 for (auto byte : out_vec) {
-                    count += _impl::count_true_bits(byte);
+                    count += core::builtins::count_true_bits(byte);
                 }
             }
             return count;
