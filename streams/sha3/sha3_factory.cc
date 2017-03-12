@@ -62,9 +62,7 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     }
     if (name == "SHAvite3")       return std::make_unique<SHAvite>(rounds);
     if (name == "SIMD")           return std::make_unique<Simd>(rounds);
-    if (name == "Skein") {        _check_rounds(name, rounds);
-                                  return std::make_unique<Skein>();
-    }
+    if (name == "Skein")          return std::make_unique<Skein>(rounds);
     if (name == "SpectralHash") { _check_rounds(name, rounds);
                                   return std::make_unique<SpectralHash>();
     }

@@ -33,18 +33,21 @@ typedef struct
     hashState;
 
 private:
-hashState skeinState;
+    hashState skeinState;
+    const size_t _num_rounds;
 
 public:
-/* "incremental" hashing API */
-int Init  (int hashbitlen);
-int Update(const BitSequence *data, DataLength databitlen);
-int Final (BitSequence *hashval);
+    // 256b and 512b has same rounds, only 1024 has 80 rounds
+    Skein(const int num_rounds=SKEIN_256_ROUNDS_TOTAL)
+        : _num_rounds(num_rounds) {}
+    /* "incremental" hashing API */
+    int Init  (int hashbitlen);
+    int Update(const BitSequence *data, DataLength databitlen);
+    int Final (BitSequence *hashval);
 
-/* "all-in-one" call */
-int Hash  (int hashbitlen,   const BitSequence *data, 
-                  DataLength databitlen,  BitSequence *hashval);
-
+    /* "all-in-one" call */
+    int Hash  (int hashbitlen,   const BitSequence *data,
+                      DataLength databitlen,  BitSequence *hashval);
 
 /*
 ** Re-define the compile-time constants below to change the selection
