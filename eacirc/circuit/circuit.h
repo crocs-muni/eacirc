@@ -31,7 +31,7 @@ namespace circuit {
         using const_iterator = typename layers::const_iterator;
 
         circuit(unsigned input)
-            : _input(input) {}
+            : _input(input), _input_used{true} {}
 
         circuit(circuit&&) = default;
         circuit(circuit const&) = default;
@@ -57,7 +57,7 @@ namespace circuit {
             return _layers[i];
         }
 
-        void dump_to_graph(const std::string &filename) {
+        void dump_to_graph(const std::string &filename) const {
             std::ofstream of(filename);
 
             // graph header
@@ -66,8 +66,13 @@ namespace circuit {
 
             // node specification
             // input nodes
-            of << "{ rank=same;" << std::endl << "node [color=goldenrod1];" << std::endl;
+            of << "{ rank=same;" << std::endl;
             for (std::size_t slot = 0; slot < _input; ++slot) {
+                if (_input_used[slot]) {
+                    of << "node [color=chartreuse3];" << std::endl;
+                } else {
+                    of << "node [color=chartreuse1];" << std::endl;
+                }
                 of << "\"-1_" << slot << "\"[label=\"" << "IN" << "\\n" << slot << "\"];" << std::endl;
             }
             of << "}" << std::endl;
@@ -88,6 +93,11 @@ namespace circuit {
 
                 std::size_t slot_num = 0;
                 for (auto n : l) {
+                    if (n.used) {
+                        of << "node [color=lightblue3];" << std::endl;
+                    } else {
+                        of << "node [color=lightblue1];" << std::endl;
+                    }
                     of << "\"" << layer_num << "_" << slot_num << "\"[label=\"";
                     of << to_string(n.function) << "\\n" << int(n.argument) << "\"];" << std::endl;
                     ++slot_num;
@@ -159,9 +169,50 @@ namespace circuit {
             of.close();
         }
 
+        void prune() {
+            // BFS - set all nodes unvisited
+            for (auto &l : _layers)
+                for (auto &n : l)
+                    n.used = false;
+            for (auto &u : _input_used)
+                u = false;
+
+            // the single output node is used
+            _layers[_layers.size() - 1][0].used = true;
+
+
+            for (std::size_t l_i = _layers.size(); l_i != 0; --l_i) {
+                for (auto &n : _layers[l_i-1]) {
+                    if (!n.used) {
+                        n.connectors = 0u;
+                        continue;
+                    }
+
+                    std::size_t arity = fn_arity(n.function);
+                    auto it = n.connectors.iterator();
+
+                    while (arity != 0 && it.has_next()) {
+                        if (l_i == 1) {
+                            _input_used[it] = true;
+                        } else {
+                            _layers[l_i - 2][it].used = true;
+                        }
+                        --arity;
+                        it.next();
+                    }
+
+                    while (it.has_next()) {
+                        n.connectors.clear(it);
+                        it.next();
+                    }
+                }
+            }
+        }
+
     private:
         layers _layers;
         unsigned _input;
+        std::array<bool, x> _input_used;
     };
 
 } // namespace circuit
