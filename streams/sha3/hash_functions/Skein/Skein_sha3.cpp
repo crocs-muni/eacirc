@@ -13,18 +13,18 @@ int Skein::Init(int hashbitlen)
         {
         Skein_Assert(hashbitlen > 0,BAD_HASHLEN);
         skeinState.statebits = 64*SKEIN_256_STATE_WORDS;
-        return Skein_256_Init(&skeinState.u.ctx_256,(size_t) hashbitlen);
+        return Skein_256_Init(&skeinState.u.ctx_256,(size_t) hashbitlen, _num_rounds);
         }
 #endif
     if (hashbitlen <= SKEIN_512_NIST_MAX_HASHBITS)
         {
         skeinState.statebits = 64*SKEIN_512_STATE_WORDS;
-        return Skein_512_Init(&skeinState.u.ctx_512,(size_t) hashbitlen);
+        return Skein_512_Init(&skeinState.u.ctx_512,(size_t) hashbitlen, _num_rounds);
         }
     else
         {
         skeinState.statebits = 64*SKEIN1024_STATE_WORDS;
-        return Skein1024_Init(&skeinState.u.ctx1024,(size_t) hashbitlen);
+        return Skein1024_Init(&skeinState.u.ctx1024,(size_t) hashbitlen, _num_rounds);
         }
     }
 
@@ -40,9 +40,9 @@ int Skein::Update(const BitSequence *data, DataLength databitlen)
         {
         switch ((skeinState.statebits >> 8) & 3)
             {
-            case 2:  return Skein_512_Update(&skeinState.u.ctx_512,data,databitlen >> 3);
-            case 1:  return Skein_256_Update(&skeinState.u.ctx_256,data,databitlen >> 3);
-            case 0:  return Skein1024_Update(&skeinState.u.ctx1024,data,databitlen >> 3);
+            case 2:  return Skein_512_Update(&skeinState.u.ctx_512,data,databitlen >> 3, _num_rounds);
+            case 1:  return Skein_256_Update(&skeinState.u.ctx_256,data,databitlen >> 3, _num_rounds);
+            case 0:  return Skein1024_Update(&skeinState.u.ctx1024,data,databitlen >> 3, _num_rounds);
             default: return FAIL;
             }
         }
@@ -56,14 +56,14 @@ int Skein::Update(const BitSequence *data, DataLength databitlen)
 
         switch ((skeinState.statebits >> 8) & 3)
             {
-            case 2:  Skein_512_Update(&skeinState.u.ctx_512,data,bCnt-1); /* process all but the final byte    */
-                     Skein_512_Update(&skeinState.u.ctx_512,&b  ,  1   ); /* process the (masked) partial byte */
+            case 2:  Skein_512_Update(&skeinState.u.ctx_512,data,bCnt-1, _num_rounds); /* process all but the final byte    */
+                     Skein_512_Update(&skeinState.u.ctx_512,&b  ,  1   , _num_rounds); /* process the (masked) partial byte */
                      break;
-            case 1:  Skein_256_Update(&skeinState.u.ctx_256,data,bCnt-1); /* process all but the final byte    */
-                     Skein_256_Update(&skeinState.u.ctx_256,&b  ,  1   ); /* process the (masked) partial byte */
+            case 1:  Skein_256_Update(&skeinState.u.ctx_256,data,bCnt-1, _num_rounds); /* process all but the final byte    */
+                     Skein_256_Update(&skeinState.u.ctx_256,&b  ,  1   , _num_rounds); /* process the (masked) partial byte */
                      break;
-            case 0:  Skein1024_Update(&skeinState.u.ctx1024,data,bCnt-1); /* process all but the final byte    */
-                     Skein1024_Update(&skeinState.u.ctx1024,&b  ,  1   ); /* process the (masked) partial byte */
+            case 0:  Skein1024_Update(&skeinState.u.ctx1024,data,bCnt-1, _num_rounds); /* process all but the final byte    */
+                     Skein1024_Update(&skeinState.u.ctx1024,&b  ,  1   , _num_rounds); /* process the (masked) partial byte */
                      break;
             default: return FAIL;
             }
@@ -80,9 +80,9 @@ int Skein::Final(BitSequence *hashval)
     Skein_Assert(skeinState.statebits % 256 == 0 && (skeinState.statebits-256) < 1024,FAIL);
     switch ((skeinState.statebits >> 8) & 3)
         {
-        case 2:  return Skein_512_Final(&skeinState.u.ctx_512,hashval);
-        case 1:  return Skein_256_Final(&skeinState.u.ctx_256,hashval);
-        case 0:  return Skein1024_Final(&skeinState.u.ctx1024,hashval);
+        case 2:  return Skein_512_Final(&skeinState.u.ctx_512,hashval, _num_rounds);
+        case 1:  return Skein_256_Final(&skeinState.u.ctx_256,hashval, _num_rounds);
+        case 0:  return Skein1024_Final(&skeinState.u.ctx1024,hashval, _num_rounds);
         default: return FAIL;
         }
     }
