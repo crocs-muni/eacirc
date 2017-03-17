@@ -36,6 +36,10 @@ namespace circuit {
             return _solver->reevaluate(a, b);
         }
 
+//        void dump_to_graph(const std::string &filename) override {
+//            _solver.dump_to_graph(filename);
+//        }
+
     private:
         using ini = basic_initializer;
         using mut = basic_mutator;

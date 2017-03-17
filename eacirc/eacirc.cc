@@ -93,5 +93,7 @@ void eacirc::run() {
     stream_to_dataset(final_a, _stream_a);
     stream_to_dataset(final_b, _stream_b);
 
+    //_backend->dump_to_graph("circuit.dot");
+
     logger::info() << "The p-value of the last individual is: " << _backend->test(final_a, final_b) << std::endl;
 }

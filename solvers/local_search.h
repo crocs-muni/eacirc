@@ -28,6 +28,7 @@ namespace solvers {
         double run(std::uint64_t generations) {
             for (std::uint64_t i = 0; i != generations; ++i)
                 _step();
+            dump_to_graph("circuit.dot");
             return _solution.score;
         }
 
@@ -40,6 +41,12 @@ namespace solvers {
 
         auto scores() const -> view<std::vector<double>::const_iterator> {
             return make_view(_scores);
+        }
+
+        void dump_to_graph(const std::string &filename) {
+            _solution.genotype.dump_to_graph(filename);
+            _solution.genotype.prune();
+            _solution.genotype.dump_to_graph("pruned_" + filename);
         }
 
     private:
