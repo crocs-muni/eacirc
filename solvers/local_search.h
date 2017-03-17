@@ -45,8 +45,9 @@ namespace solvers {
 
         void dump_to_graph(const std::string &filename) {
             _solution.genotype.dump_to_graph(filename);
-            _solution.genotype.prune();
-            _solution.genotype.dump_to_graph("pruned_" + filename);
+            auto copy = _solution;
+            copy.genotype.prune();
+            copy.genotype.dump_to_graph("pruned_" + filename);
         }
 
     private:
