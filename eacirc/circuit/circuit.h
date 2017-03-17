@@ -31,7 +31,7 @@ namespace circuit {
         using const_iterator = typename layers::const_iterator;
 
         circuit(unsigned input)
-            : _input(input), _input_used{true} {}
+            : _input(input), _input_used(input, true) {}
 
         circuit(circuit&&) = default;
         circuit(circuit const&) = default;
@@ -174,13 +174,14 @@ namespace circuit {
             for (auto &l : _layers)
                 for (auto &n : l)
                     n.used = false;
-            for (auto &u : _input_used)
+            for (auto &&u : _input_used) // C++ specialization of std::vector<bool> - proxy iterator
                 u = false;
 
             // the single output node is used
             _layers[_layers.size() - 1][0].used = true;
 
 
+            // l_i is by 1 more, than current layer number, to hold even for input layer
             for (std::size_t l_i = _layers.size(); l_i != 0; --l_i) {
                 for (auto &n : _layers[l_i-1]) {
                     if (!n.used) {
@@ -212,7 +213,7 @@ namespace circuit {
     private:
         layers _layers;
         unsigned _input;
-        std::array<bool, x> _input_used;
+        std::vector<bool> _input_used;
     };
 
 } // namespace circuit
