@@ -458,13 +458,13 @@ Tangle::Hash(int hashbitlen, const BitSequence *data, DataLength databitlen, Bit
 void Tangle::FuncTangle(hashState * state, const BitSequence * message)
 {
 	unsigned char p[144],q[144],s[144];
-	unsigned short r,t;
+    unsigned short r,t,k;
 	unsigned int W[288];
 	unsigned int h[32];
 	unsigned int Xa[8];
 	unsigned int Xb[8];
 	unsigned int *M;
-	unsigned int B,C;
+    unsigned int B,C,D;
 
 	M = (unsigned int *)message;
 
@@ -489,123 +489,165 @@ void Tangle::FuncTangle(hashState * state, const BitSequence * message)
 		
 	/* iteration & extraction */
 
-	t=0;
-	while(t<(state->rounds*2))
-	{
-		/* even */
+    for(k=0; k<state->rounds/2; k++)
+        {
+            t = k*4;
+            Xb[0] = Xa[0] ^ Xa[3] ^ Xa[6] ^ Xa[7];
+            Xb[1] = Xa[0] ^ Xa[1] ^ Xa[3] ^ Xa[6];
+            Xb[2] = Xa[0] ^ Xa[1] ^ Xa[3] ^ Xa[4] ^ Xa[5];
+            Xb[3] = Xa[4] ^ Xa[5] ^ Xa[6] ^ Xa[7];
+            Xb[4] = Xa[0] ^ Xa[2] ^ Xa[7];
+            Xb[5] = Xa[2] ^ Xa[5] ^ Xa[6] ^ Xa[7];
+            Xb[6] = Xa[2] ^ Xa[3] ^ Xa[4] ^ Xa[6] ^ Xa[7];
+            Xb[7] = Xa[0] ^ Xa[4] ^ Xa[6];
 
-		/* iterate */
-		Xb[0] = Xa[6] ^ Xa[7];
-		Xb[1] = Xa[0] ^ Xa[1] ^ Xa[3];
-		Xb[2] = Xa[4] ^ Xa[5];
+            for(int i = t; i <= t+3; i++){
+                W[i] = 0;
+            }
 
-		Xb[3] = Xb[2] ^ Xb[0];
-		Xb[4] = Xa[0] ^ Xa[2] ^ Xa[7];
-		Xb[5] = Xa[2] ^ Xa[5] ^ Xb[0];
-		Xb[6] = Xa[2] ^ Xa[3] ^ Xa[4] ^ Xb[0];
-		Xb[7] = Xa[0] ^ Xa[4] ^ Xa[6];
-		
-		Xb[2] ^= Xb[1];
-		Xb[0] ^= Xa[0] ^ Xa[3];
-		Xb[1] ^= Xa[6];
-		
-				
-		/* extract */
-		W[t]	= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t	& 255]) + M[t	& 127];
-		W[t+1]	= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]) + M[t+1 & 127];
-		W[t+2]	= TANGLE_F1(Xb[4], Xb[5],TANGLE_K[t+2 & 255]) + M[t+2 & 127];
-		W[t+3]	= TANGLE_F2(Xb[6], Xb[7],TANGLE_K[t+3 & 255]) + M[t+3 & 127];
+            if(_extract1){
+                W[t]	+= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t & 255]);
+                W[t+1]	+= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]);
+                W[t+2]	+= TANGLE_F1(Xb[4], Xb[5],TANGLE_K[t+2 & 255]);
+                W[t+3]	+= TANGLE_F2(Xb[6], Xb[7],TANGLE_K[t+3 & 255]);
+            }
+            if(_extract2){
+                W[t]	+= M[t	& 127];
+                W[t+1]	+= M[t+1 & 127];
+                W[t+2]	+= M[t+2 & 127];
+                W[t+3]	+= M[t+3 & 127];
+            }
+            Xa[0] = Xb[0];
+            Xa[1] = Xb[1];
+            Xa[2] = Xb[2];
+            Xa[3] = Xb[3];
+            Xa[4] = Xb[4];
+            Xa[5] = Xb[5];
+            Xa[6] = Xb[6];
+            Xa[7] = Xb[7];
 
-		/* odd */
+        }
+    if(state->rounds % 2 == 1){
+        t+=4;
 
-		/* iterate */
-		Xa[0] = Xb[6] ^ Xb[7];
-		Xa[1] = Xb[0] ^ Xb[1] ^ Xb[3];
-		Xa[2] = Xb[4] ^ Xb[5];
+        Xb[0] = Xa[0] ^ Xa[3] ^ Xa[6] ^ Xa[7];
+        Xb[1] = Xa[0] ^ Xa[1] ^ Xa[3] ^ Xa[6];
+        Xb[2] = Xa[0] ^ Xa[1] ^ Xa[3] ^ Xa[4] ^ Xa[5];
+        Xb[3] = Xa[4] ^ Xa[5] ^ Xa[6] ^ Xa[7];
+        Xb[4] = Xa[0] ^ Xa[2] ^ Xa[7];
+        Xb[5] = Xa[2] ^ Xa[5] ^ Xa[6] ^ Xa[7];
+        Xb[6] = Xa[2] ^ Xa[3] ^ Xa[4] ^ Xa[6] ^ Xa[7];
+        Xb[7] = Xa[0] ^ Xa[4] ^ Xa[6];
 
-		Xa[3] = Xa[2] ^ Xa[0];
-		Xa[4] = Xb[0] ^ Xb[2] ^ Xb[7];
-		Xa[5] = Xb[2] ^ Xb[5] ^ Xa[0];
-		Xa[6] = Xb[2] ^ Xb[3] ^ Xb[4] ^ Xa[0];
-		Xa[7] = Xb[0] ^ Xb[4] ^ Xb[6];
-		
-		Xa[2] ^= Xa[1];
-		Xa[0] ^= Xb[0] ^ Xb[3];
-		Xa[1] ^= Xb[6];
-		
-		/* extract */
-		W[t+4]	= TANGLE_F1(Xa[0], Xa[1],TANGLE_K[t+4	& 255]) + M[t+4	& 127];
-		W[t+5]	= TANGLE_F2(Xa[2], Xa[3],TANGLE_K[t+5 & 255]) + M[t+5 & 127];
-		W[t+6]	= TANGLE_F1(Xa[4], Xa[5],TANGLE_K[t+6 & 255]) + M[t+6 & 127];
-		W[t+7]	= TANGLE_F2(Xa[6], Xa[7],TANGLE_K[t+7 & 255]) + M[t+7 & 127];
-		
-		t+=8;
-	}
+        for(int i = t; i <= t+1; i++){
+            W[i] = 0;
+        }
 
-	
-	/*
-	Round Function
-	*/
+        if(_extract1){
+            W[t]	+= TANGLE_F1(Xb[0], Xb[1],TANGLE_K[t & 255]);
+            W[t+1]	+= TANGLE_F2(Xb[2], Xb[3],TANGLE_K[t+1 & 255]);
+        }
+        if(_extract2){
+            W[t]	+= M[t	& 127];
+            W[t+1]	+= M[t+1 & 127];
+        }
+    }
+        /*
+        Round Function
+        */
 
-	/* pre-compute s, p & q */
-	
+        /* pre-compute s, p & q */
 
-	C = W[0] + W[1];
-	C ^= C>>16;
-	C ^= C>>8;
-	s[0] = TANGLE_SBOX[(unsigned char)(C & 0xFF)];
-	p[0] = s[0] & 15;
-	q[0] = s[0] >> 4;
+        C = 0;
+        if(_c1) C = W[0] + W[1];
+        if(_c2) C ^= C>>16;
+        if(_c3) C ^= C>>8;
+        s[0] = TANGLE_SBOX[(unsigned char)(C & 0xFF)];
+        p[0] = s[0];
+        if(_p) p[0] &= 15;
+        q[0] = s[0];
+        if(_q) q[0] >>= 4;
 
-	for(r=1;r<state->rounds;r++) 
-	{
-		C = W[r*2] + W[r*2+1]; 
-		C ^= C>>16; 
-		C ^= C>>8;
-		s[r] = s[r-1] ^ TANGLE_SBOX[(unsigned char)(C & 0xFF)]; 
-		p[r] = s[r] & 15; 
-		q[r] = s[r] >> 4;
-	}
-		
+        for(r=1;r<state->rounds;r++)
+        {
+            if(_c1) C = W[r*2] + W[r*2+1];
+            if(_c2) C ^= C>>16;
+            if(_c3) C ^= C>>8;
+            s[r] = TANGLE_SBOX[(unsigned char)(C & 0xFF)];
+            if(_s) s[r] ^= s[r-1];
+            p[r] = s[r];
+            if(_p) p[r] &= 15;
+            q[r] = s[r];
+            if(_q) q[r] >>= 4;
+        }
 
-	/* perform round */
 
-	r=0;
-	while(r<state->rounds)
-	{
-		/* even */
-		B = TANGLE_F1(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16])) + W[(r*2)+1];
-		h[(r+16) & 31] ^= TANGLE_F1(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16])) + W[r*2] + TANGLE_K[s[r]] + B;
-		h[r & 31] += B;
-		r++;
+        /* perform round */
 
-		/* odd */
-		B = TANGLE_F2(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16])) + W[(r*2)+1];
-		h[(r+16) & 31] ^= TANGLE_F2(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16])) + W[r*2] + TANGLE_K[s[r]] + B;
-		h[r & 31] += B;
-		r++;
-	}
+        r=0;
+            while(r<state->rounds)
+            {
+                /* even */
+                if((r % 2)==0){
+                B = 0;
+                if(_b1){
+                    B += TANGLE_F1(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16]));
+                }if(_b2){
+                    B += W[(r*2)+1];
+                }
 
-	/* chain hash values */
-	for(r=0; r<32; r++) state->H[r] += h[r];
-	
+                D = 0;
+                if(_xorTangleF){
+                    D += TANGLE_F1(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16]));
+                }
+                if(_xorW){
+                    D += W[r*2];
+                }
+                if(_xorTangleK){
+                    D += TANGLE_K[s[r]];
+                }
+                if(_xorB){
+                    D += B;
+                }
+                if(_xor1) h[(r+16) & 31] ^= D;
 
-}
+                if(_add){
+                    h[r & 31] += B;
+                }
+                r++;
+                }
+                else{
+                /* odd */
+                B = 0;
+                if(_b1){
+                    B += TANGLE_F2(h[q[r]],h[(r+8) & 31],TANGLE_FR2(h[p[r]+16]));
+                }if(_b2){
+                    B += W[(r*2)+1];
+                }
 
-Tangle::Tangle(const int numRounds) {
-	if (numRounds == -1) {
-		tangleNumRounds224 = TANGLE_DEFAULT_ROUNDS_224;
-		tangleNumRounds256 = TANGLE_DEFAULT_ROUNDS_256;
-		tangleNumRounds384 = TANGLE_DEFAULT_ROUNDS_384;
-		tangleNumRounds512 = TANGLE_DEFAULT_ROUNDS_512;
-		tangleNumRounds768 = TANGLE_DEFAULT_ROUNDS_768;
-		tangleNumRounds1024 = TANGLE_DEFAULT_ROUNDS_1024;
-	} else {
-		tangleNumRounds224 = numRounds;
-		tangleNumRounds256 = numRounds;
-		tangleNumRounds384 = numRounds;
-		tangleNumRounds512 = numRounds;
-		tangleNumRounds768 = numRounds;
-		tangleNumRounds1024 = numRounds;
-	}
-}
+                D = 0;
+                if(_xorTangleF){
+                    D += TANGLE_F2(h[p[r]], h[r & 31], TANGLE_FR1(h[q[r]+16]));
+                }
+                if(_xorW){
+                    D += W[r*2];
+                }
+                if(_xorTangleK){
+                    D += TANGLE_K[s[r]];
+                }
+                if(_xorB){
+                    D += B;
+                }
+                if(_xor1) h[(r+16) & 31] ^= D;
+                if(_add){
+                    h[r & 31] += B;
+                }
+                r++;
+                }
+            }
+
+        /* chain hash values */
+        for(r=0; r<32; r++) state->H[r] += h[r];
+
+
+    }

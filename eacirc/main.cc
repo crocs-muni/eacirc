@@ -34,7 +34,7 @@ int main(const int argc, const char** argv) try {
         test_environment();
 
         eacirc app(cfg.config);
-        app.run();
+        app.gen();
     }
 
     return 0;

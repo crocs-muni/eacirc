@@ -4,6 +4,7 @@
 #include <core/logger.h>
 #include <core/random.h>
 #include <fstream>
+#include <iostream>
 #include <pcg/pcg_random.hpp>
 
 #include "circuit/backend.h"
@@ -48,6 +49,26 @@ eacirc::eacirc(json const& config)
         else
             throw std::runtime_error("no backend named [" + backend_type + "] is available");
     }
+}
+
+void eacirc::gen(){
+    std::vector<double> pvalues;
+    pvalues.reserve(_num_of_epochs);
+
+    dataset a{_tv_size, _tv_count};
+    dataset b{_tv_size, _tv_count};
+
+    _stream_a->read(a);
+    _stream_b->read(b);
+
+
+    std::string fileName = "output.bin";
+    std::ofstream outputStream;
+    outputStream.open(fileName, std::ios::binary | std::ios::trunc);
+    outputStream.write((char*) a.rawdata(), a.rawsize());
+
+
+    outputStream.close();
 }
 
 void eacirc::run() {

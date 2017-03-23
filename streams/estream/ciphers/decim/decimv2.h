@@ -36,20 +36,27 @@
 
 
 /* update the LFSR (shift the bits, input new bit) */
-void decim_lfsr_clock(DECIM_ctx *ctx);
+void decim_lfsr_clock(DECIM_ctx *ctx, std::uint64_t clock);
+void decim_lfsr_clock_init(DECIM_ctx *ctx);
 
 /* this function computes the boolean function on the LFSR state */
-void decim_lfsr_filter(DECIM_ctx *ctx);
+void decim_lfsr_filter(DECIM_ctx *ctx, std::uint64_t LFSR01, std::uint64_t LFSR02, std::uint64_t LFSR03, std::uint64_t LFSR04);
+void decim_lfsr_filter_init(DECIM_ctx *ctx);
 
-void decim_absg(DECIM_ctx *ctx, u8 bit);
+
+void decim_absg(DECIM_ctx *ctx, u8 bit, std::uint64_t ABSG01, std::uint64_t ABSG02, std::uint64_t ABSG03, std::uint64_t ABSG04);
+void decim_absg_init(DECIM_ctx *ctx, u8 bit);
+
 
 /* clock the LFSR for the IV injection
  * apply the  boolean function
  * compute the next bit of the LFSR
  * update the LFSR state*/ 
-void decim_lfsr_init(DECIM_ctx *ctx);
+void decim_lfsr_init(DECIM_ctx* ctx, std::uint64_t LFSR01, std::uint64_t LFSR02, std::uint64_t LFSR03, std::uint64_t LFSR04, std::uint64_t clock);
 
-void decim_step(DECIM_ctx *ctx);
+void decim_step(DECIM_ctx* ctx, std::uint64_t LFSR01, std::uint64_t LFSR02, std::uint64_t LFSR03, std::uint64_t LFSR04, std::uint64_t clock, std::uint64_t ABSG01, std::uint64_t ABSG02, std::uint64_t ABSG03, std::uint64_t ABSG04);
+void decim_step_init(DECIM_ctx *ctx);
+
 
 /* when we got enough bits of key stream
  * pack it into a key stream byte
