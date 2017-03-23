@@ -55,12 +55,12 @@ static estream_keytype create_keytype(const std::string& ivtype) {
 }
 
 static std::unique_ptr<estream_interface>
-create_cipher(const std::string& name, optional<unsigned> round, const std::uint64_t heatmap) {
+create_cipher(const std::string& name, core::optional<unsigned> round, const std::uint64_t heatmap) {
     // clang-format off
     if (name == "ABC")              return std::make_unique<ECRYPT_ABC>();
     if (name == "Achterbahn")       return std::make_unique<ECRYPT_Achterbahn>();
     if (name == "CryptMT")          return std::make_unique<ECRYPT_Cryptmt>();
-    if (name == "DECIM")            return std::make_unique<ECRYPT_Decim>(!round ? 8 : *round);
+    if (name == "DECIM")            return std::make_unique<ECRYPT_Decim>(!round ? 8 : *round, heatmap);
     if (name == "DICING")           return std::make_unique<ECRYPT_Dicing>();
     if (name == "Dragon")           return std::make_unique<ECRYPT_Dragon>();
     if (name == "Edon80")           return std::make_unique<ECRYPT_Edon80>();

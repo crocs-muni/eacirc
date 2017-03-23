@@ -22,6 +22,8 @@ struct eacirc {
 
     void run();
 
+    void gen();
+
 private:
     const json _config;
     const seed _seed;

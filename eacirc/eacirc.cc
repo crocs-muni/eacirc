@@ -58,8 +58,10 @@ void eacirc::gen(){
     dataset a{_tv_size, _tv_count};
     dataset b{_tv_size, _tv_count};
 
-    _stream_a->read(a);
-    _stream_b->read(b);
+    _backend->train(a, b);
+
+    stream_to_dataset(a, _stream_a);
+    stream_to_dataset(b, _stream_b);
 
 
     std::string fileName = "output.bin";

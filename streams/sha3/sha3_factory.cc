@@ -75,7 +75,7 @@ std::unique_ptr<sha3_interface> sha3_factory::create(const std::string& name, un
     if (name == "Tangle")         return std::make_unique<Tangle>(rounds, heatmap);
     // if (name == "TIB3")           return std::make_unique<Tib>(rounds);
     if (name == "Twister")        return std::make_unique<Twister>(rounds);
-    if (name == "Vortex")         return std::make_unique<Vortex>(rounds);
+    //if (name == "Vortex")         return std::make_unique<Vortex>(rounds);
     if (name == "WaMM")           return std::make_unique<WaMM>(rounds);
     if (name == "Waterfall")      return std::make_unique<Waterfall>(rounds);
     if (name == "Tangle2")        return std::make_unique<Tangle2>(rounds);
