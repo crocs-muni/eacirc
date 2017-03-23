@@ -1,4 +1,5 @@
 add_library(core STATIC
+    builtins
     cmd
     dataset
     debug
@@ -8,6 +9,7 @@ add_library(core STATIC
     memory
     optional
     random
+    statistics
     stream
     traits
     variant
