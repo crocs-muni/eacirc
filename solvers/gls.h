@@ -68,9 +68,11 @@ namespace solvers {
 
             _neighbour.score = _basic_evaluator->apply(_neighbour.genotype);
             if (std::abs(_neighbour.score - _solution.score) < 0.00001) {
-                if (_solution.genotype.count_connectors() <= _neighbour.genotype.count_connectors()) {
+                if (_neighbour.score == 0 && _solution.genotype.count_connectors() <= _neighbour.genotype.count_connectors())
                     _solution = std::move(_neighbour);
-                }
+                else if (_neighbour.score > 0.9 && _solution.genotype.count_connectors() >= _neighbour.genotype.count_connectors())
+                    _solution = std::move(_neighbour);
+
             } else if (_solution <= _neighbour) {
                 _solution = std::move(_neighbour);
             }
