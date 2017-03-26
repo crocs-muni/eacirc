@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/debug.h>
+#include <eacirc-core/debug.h>
 #include <cstdint>
 
 namespace circuit {

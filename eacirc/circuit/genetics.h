@@ -4,8 +4,8 @@
 #include "circuit.h"
 #include "interpreter.h"
 #include <algorithm>
-#include <core/dataset.h>
-#include <core/json.h>
+#include <eacirc-core/dataset.h>
+#include <eacirc-core/json.h>
 #include <random>
 
 namespace circuit {

@@ -1,6 +1,3 @@
-include(build_stream)
-include(detect_version)
-
 add_executable(eacirc main.cc
     backend
     circuit/backend
@@ -11,15 +8,12 @@ add_executable(eacirc main.cc
     circuit/genetics
     circuit/interpreter
     eacirc
-    seed
     statistics
-    streams
-    version
     )
-target_link_libraries(eacirc core solvers)
 
-detect_version(version.h)
+target_link_libraries(eacirc eacirc-streams-lib eacirc-core solvers)
 
-build_stream(estream)
-build_stream(sha3)
-build_stream(block)
+build_stream(eacirc estream)
+build_stream(eacirc sha3)
+build_stream(eacirc block)
+
