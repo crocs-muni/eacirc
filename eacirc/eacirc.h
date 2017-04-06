@@ -32,6 +32,7 @@ private:
     const unsigned _significance_level;
     const unsigned _tv_size;
     const std::uint64_t _tv_count;
+    const std::string _outname;
 
     std::unique_ptr<backend> _backend;
     std::unique_ptr<stream> _stream_a;

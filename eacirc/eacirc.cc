@@ -19,6 +19,17 @@ static std::ifstream open_config_file(std::string path) {
     return file;
 }
 
+
+static std::string out_name(json const& config) {
+    std::stringstream ss;
+    std::string a = config.at("stream-a").at("algorithm");
+    ss << a << "_r";
+    ss << std::setw(2) << std::setfill('0') << config.at("stream-a").at("round");
+    ss << "_h" << config.at("stream-a").at("heatmap");
+    ss << ".bin";
+    return ss.str();
+}
+
 eacirc::eacirc(std::string config)
     : eacirc(open_config_file(config)) {}
 
@@ -28,6 +39,7 @@ eacirc::eacirc(json const& config)
     , _num_of_epochs(config.at("num-of-epochs"))
     , _significance_level(config.at("significance-level"))
     , _tv_size(config.at("tv-size"))
+    , _outname(out_name(config))
     , _tv_count(config.at("tv-count")) {
     logger::info() << "eacirc framework version: " << VERSION_TAG << std::endl;
     logger::info() << "current date: " << logger::date() << std::endl;
@@ -51,6 +63,7 @@ eacirc::eacirc(json const& config)
     }
 }
 
+
 void eacirc::gen(){
     std::vector<double> pvalues;
     pvalues.reserve(_num_of_epochs);
@@ -64,7 +77,7 @@ void eacirc::gen(){
     stream_to_dataset(b, _stream_b);
 
 
-    std::string fileName = "output.bin";
+    std::string fileName = _outname;
     std::ofstream outputStream;
     outputStream.open(fileName, std::ios::binary | std::ios::trunc);
     outputStream.write((char*) a.rawdata(), a.rawsize());
