@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/debug.h>
-#include <core/json.h>
+#include <eacirc-core/debug.h>
+#include <eacirc-core/json.h>
 #include <random>
 #include <string>
 

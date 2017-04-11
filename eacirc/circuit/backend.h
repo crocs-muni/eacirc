@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../backend.h"
-#include <core/json.h>
-#include <core/random.h>
+#include <eacirc-core/json.h>
+#include <eacirc-core/random.h>
 #include <memory>
 
 namespace circuit {

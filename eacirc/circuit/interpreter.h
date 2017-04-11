@@ -1,8 +1,8 @@
 #pragma once
 
 #include "circuit.h"
-#include <core/debug.h>
-#include <core/view.h>
+#include <eacirc-core/debug.h>
+#include <eacirc-core/view.h>
 #include <limits>
 
 namespace circuit {

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "individual.h"
-#include <core/dataset.h>
-#include <core/random.h>
-#include <core/view.h>
+#include <eacirc-core/dataset.h>
+#include <eacirc-core/random.h>
+#include <eacirc-core/view.h>
 
 namespace solvers {
 
