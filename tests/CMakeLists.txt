@@ -6,4 +6,4 @@ add_executable(tests main.cc
         settings
         )
 
-target_link_libraries(tests catch core)
+target_link_libraries(tests catch eacirc-core)

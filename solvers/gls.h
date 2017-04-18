@@ -2,9 +2,6 @@
 
 #include "individual.h"
 #include "solvers.h"
-#include <core/dataset.h>
-#include <core/random.h>
-#include <core/view.h>
 
 namespace solvers {
 

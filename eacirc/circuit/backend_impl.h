@@ -6,7 +6,7 @@
 #include <eacirc/evaluators/evaluator_factory.h>
 #include "solvers/solver_factory.h"
 #include "solvers/solvers.h"
-#include <core/memory.h>
+#include <eacirc-core/memory.h>
 #include <fstream>
 
 namespace circuit {

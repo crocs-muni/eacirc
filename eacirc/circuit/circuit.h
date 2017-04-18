@@ -2,7 +2,7 @@
 
 #include "connectors.h"
 #include "functions.h"
-#include <core/vec.h>
+#include <eacirc-core/vec.h>
 
 #include <iostream>
 #include <fstream>

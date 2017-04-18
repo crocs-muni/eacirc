@@ -1,11 +1,11 @@
 #pragma once
 
-#include <core/memory.h>
+#include <eacirc-core/memory.h>
 #include <memory>
 
-#include <core/dataset.h>
-#include <core/json.h>
-#include <core/builtins.h>
+#include <eacirc-core/dataset.h>
+#include <eacirc-core/json.h>
+#include <eacirc-core/builtins.h>
 
 //#include <eacirc/circuit/circuit.h>
 #include <eacirc/circuit/interpreter.h>

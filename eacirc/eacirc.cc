@@ -1,15 +1,14 @@
 #include "eacirc.h"
 #include "statistics.h"
-#include "version.h"
-#include <core/logger.h>
-#include <core/random.h>
+#include <eacirc-core/version.h>
+#include <eacirc-core/logger.h>
+#include <eacirc-core/random.h>
 #include <fstream>
 #include <pcg/pcg_random.hpp>
 
 #include "circuit/backend.h"
-#include "core/stream.h"
-#include "eacirc/streams.h"
-#include "streams.h"
+#include <eacirc-streams/stream.h>
+#include <eacirc-streams/streams.h>
 
 static std::ifstream open_config_file(std::string path) {
     std::ifstream file(path);

@@ -12,8 +12,8 @@
 #include <eacirc/circuit/genetics.h>
 #include <eacirc/evaluators/evaluator_factory.h>
 
-#include <core/memory.h>
-#include <core/random.h>
+#include <eacirc-core/memory.h>
+#include <eacirc-core/random.h>
 
 namespace solvers {
 

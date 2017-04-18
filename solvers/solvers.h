@@ -2,7 +2,9 @@
 
 #include "individual.h"
 
-#include <core/dataset.h>
+#include <eacirc-core/dataset.h>
+#include <eacirc-core/random.h>
+#include <eacirc-core/view.h>
 
 namespace solvers {
 
