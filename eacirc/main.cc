@@ -11,15 +11,11 @@ void test_environment() {
         throw std::range_error("Unsigned char does not have 8 bits");
 }
 
-struct config {
-    bool help = false;
-    bool version = false;
-    std::string config = "config.json";
-};
-
-static cmd<config> options{{"-h", "--help", "display help message", &config::help},
-                           {"-v", "--version", "display program version", &config::version},
-                           {"-c", "--config", "specify the config file to load", &config::config}};
+static cmd<eacirc::cmd_options> options{{"-h", "--help", "display help message", &eacirc::cmd_options::help},
+                           {"-v", "--version", "display program version", &eacirc::cmd_options::version},
+                           {"-c", "--config", "specify the config file to load", &eacirc::cmd_options::config},
+                           {"-npvals", "--no-pvals", "specify whether not to generate pvals.txt file", &eacirc::cmd_options::not_produce_pvals},
+                           {"-nscores", "--no-scores", "specify whether not to generate scores.txt file", &eacirc::cmd_options::not_produce_scores}};
 
 int main(const int argc, const char** argv) try {
     auto cfg = options.parse(make_view(argv, argc));
@@ -33,7 +29,7 @@ int main(const int argc, const char** argv) try {
     } else {
         test_environment();
 
-        eacirc app(cfg.config);
+        eacirc app(cfg);
         app.run();
     }
 
