@@ -1,5 +1,15 @@
 cmake_minimum_required(VERSION 3.4)
 project(eacirc)
+
+find_package(Git)
+
+if (NOT EXISTS eacirc-streams/CMakeLists.txt)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/eacirc-streams/eacirc-core/cmake)
 
 include(build_stream)
