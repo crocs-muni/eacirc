@@ -12,5 +12,5 @@ set_target_properties(solvers PROPERTIES
     )
 
 target_link_libraries(solvers
-    core
+    eacirc-core
     )

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "backend.h"
-#include "seed.h"
-#include <core/json.h>
-#include <core/stream.h>
+#include <eacirc-core/seed.h>
+#include <eacirc-core/json.h>
+#include <eacirc-streams/stream.h>
 #include <memory>
 
 struct eacirc {

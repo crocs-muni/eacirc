@@ -1,0 +1,26 @@
+{
+    "notes" : "An example generator json for 3 rounds AES. It generates 10k of 16 B test vectors, using default seeding value 1fe40505e131963c.",
+    "seed" : "1fe40505e131963c",
+
+    "tv-size" : 16,
+    "tv-count" : 10000,
+    "stream" : {
+        "type" : "block",
+        "generator" : "pcg32",
+        "init-frequency" : "only-once",
+        "algorithm" : "AES",
+        "round" : 3,
+        "block-size" : 16,
+        "plaintext" : {
+            "type" : "counter"
+        },
+        "key-size" : 16,
+        "key" : {
+            "type" : "pcg32-stream"
+        },
+        "mode" : "ECB",
+        "iv" : {
+            "type" : "false-stream"
+        }
+    }
+}

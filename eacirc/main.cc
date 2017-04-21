@@ -1,7 +1,7 @@
 #include "eacirc.h"
-#include "version.h"
-#include <core/cmd.h>
-#include <core/logger.h>
+#include <eacirc-core/version.h>
+#include <eacirc-core/cmd.h>
+#include <eacirc-core/logger.h>
 #include <limits>
 
 void test_environment() {

@@ -1,0 +1,3 @@
+[submodule "eacirc-streams"]
+	path = eacirc-streams
+	url = https://github.com/crocs-muni/eacirc-streams.git

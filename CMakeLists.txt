@@ -1,7 +1,18 @@
 cmake_minimum_required(VERSION 3.4)
 project(eacirc)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+find_package(Git)
+
+if (NOT EXISTS eacirc-streams/CMakeLists.txt)
+    execute_process(
+            COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endif()
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/eacirc-streams/eacirc-core/cmake)
+
+include(build_stream)
 
 # === Set CXX flags ===
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
@@ -14,19 +25,13 @@ else()
 endif()
 
 # === targets ===
-add_subdirectory(core)
+add_subdirectory(eacirc-streams)
+
 add_subdirectory(eacirc)
 add_subdirectory(solvers)
 
-add_subdirectory(streams/estream)
-add_subdirectory(streams/sha3)
-add_subdirectory(streams/block)
-
-add_subdirectory(external/json)
-add_subdirectory(external/pcg-cpp-0.98)
-
 add_custom_target(config SOURCES
-    .travis.yml
-    appveyor.yml
-    config.json
-    )
+        .travis.yml
+        appveyor.yml
+        config.json
+        )

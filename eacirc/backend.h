@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/dataset.h>
+#include <eacirc-core/dataset.h>
 
 struct backend {
     virtual ~backend() = default;

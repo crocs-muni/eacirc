@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/debug.h>
-#include <core/json.h>
+#include <eacirc-core/debug.h>
+#include <eacirc-core/json.h>
 #include <random>
 #include <string>
 
@@ -86,6 +86,29 @@ namespace circuit {
         if (str == to_string(fn::MASK))
             return fn::MASK;
         throw std::invalid_argument("such function does not exist");
+    }
+
+    std::size_t fn_arity(fn f) {
+        switch (f) {
+        case fn::CONS:
+            return 0;
+        case fn::NOP:
+        case fn::NOT:
+        case fn::MASK:
+        case fn::SHIL:
+        case fn::SHIR:
+        case fn::ROTL:
+        case fn::ROTR:
+            return 1;
+        case fn::NAND:
+        case fn::OR:
+        case fn::AND:
+        case fn::XOR:
+        case fn::NOR:
+            return 0xFFFF;
+        case fn::_Size:
+            return 0;
+        }
     }
 
     struct fn_set {

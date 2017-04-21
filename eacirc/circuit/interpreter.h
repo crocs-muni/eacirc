@@ -1,8 +1,8 @@
 #pragma once
 
 #include "circuit.h"
-#include <core/debug.h>
-#include <core/view.h>
+#include <eacirc-core/debug.h>
+#include <eacirc-core/view.h>
 #include <limits>
 
 namespace circuit {
@@ -21,11 +21,12 @@ namespace circuit {
                 auto o = _out.begin();
                 for (auto const& node : layer)
                     *o++ = execute(node);
-                std::swap(_in, _out);
+                std::swap(_in, _out); // note this swap, so final output is in _in
             }
 
             output out;
-            std::copy_n(_out.begin(), out.size(), out.begin());
+            // output is taken from _in due to the swap
+            std::copy_n(_in.begin(), out.size(), out.begin());
             return out;
         }
 
