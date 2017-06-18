@@ -12,9 +12,9 @@ namespace solvers {
               typename Mutator,
               typename Evaluator,
               typename Generator = default_random_generator>
-    struct local_search {
+    struct guided_local_search {
         template <typename Sseq>
-        local_search(Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed)
+        guided_local_search(Genotype&& gen, Initializer&& ini, Mutator&& mut, Evaluator&& eva, Sseq&& seed)
             : _solution(std::move(gen))
             , _neighbour(_solution)
             , _initializer(std::move(ini))
@@ -57,10 +57,20 @@ namespace solvers {
             _mutator.apply(_neighbour.genotype, _generator);
 
             _neighbour.score = _evaluator.apply(_neighbour.genotype);
-            if (_solution <= _neighbour) {
+            if (double_equality(_neighbour.score, _solution.score)) {
+                if (_neighbour.score == 0 && _solution.genotype.count_connectors() <= _neighbour.genotype.count_connectors())
+                    _solution = std::move(_neighbour);
+                else if (_neighbour.score > 0.9 && _solution.genotype.count_connectors() >= _neighbour.genotype.count_connectors())
+                    _solution = std::move(_neighbour);
+
+            } else if (_solution <= _neighbour) {
                 _solution = std::move(_neighbour);
             }
             _scores.emplace_back(_solution.score);
+        }
+
+        bool double_equality(double a, double b) const {
+            return std::abs(a - b) < std::numeric_limits<double>::epsilon();
         }
     };
 

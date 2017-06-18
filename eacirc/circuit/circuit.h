@@ -57,6 +57,14 @@ namespace circuit {
             return _layers[i];
         }
 
+        std::size_t count_connectors() {
+            std::size_t count = 0;
+            for (auto l : _layers)
+                for (auto c : l)
+                    count += c.connectors.count_connectors();
+            return count;
+        }
+
         void dump_to_graph(const std::string &filename) const {
             std::ofstream of(filename);
 

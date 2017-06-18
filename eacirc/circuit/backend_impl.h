@@ -5,7 +5,7 @@
 #include "genetics.h"
 #include <eacirc-core/memory.h>
 #include <fstream>
-#include <solvers/local_search.h>
+#include <solvers/guided_local_search.h>
 
 namespace circuit {
 
@@ -44,7 +44,7 @@ namespace circuit {
 
         fn_set _function_set;
         std::uint64_t _num_of_generations;
-        solvers::local_search<Circuit, ini, mut, eva> _solver;
+        solvers::guided_local_search<Circuit, ini, mut, eva> _solver;
     };
 
     std::unique_ptr<backend>

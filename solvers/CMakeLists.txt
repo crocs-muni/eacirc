@@ -1,6 +1,6 @@
 add_library(solvers STATIC
     individual
-    local_search
+    guided_local_search
     )
 
 target_include_directories(solvers INTERFACE

@@ -75,6 +75,24 @@ namespace circuit {
 #endif
         }
 
+
+        int count_true_bits(std::uint8_t x) {
+#ifdef __GNUC__
+            return __builtin_popcount(x);
+#elif _MSC_VER
+            return __popcnt16(x);
+#else
+#warning "CAUTION! Unsupported compiler! Slow trivial implementation is used"
+            int count = 0;
+            while (x) {
+                if (x % 2)
+                    ++count;
+                x >>= 1;
+            }
+            return count;
+#endif
+        }
+
         int count_trailing_zeros(std::uint16_t x) {
             return count_trailing_zeros(static_cast<std::uint32_t>(x));
         }
@@ -131,6 +149,10 @@ namespace circuit {
         void clear(unsigned i) {
             ASSERT(i < size);
             _mask &= ~(1u << i);
+        }
+
+        std::size_t count_connectors() {
+            return std::size_t(_impl::count_true_bits(_mask));
         }
 
         connector_iterator<value_type> iterator() const { return _mask; }
