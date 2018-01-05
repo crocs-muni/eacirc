@@ -25,7 +25,7 @@ Requirements are gcc5 (clang3.6), git and cmake 3.4.
 
 ```Bash
 module add gcc-5.3.0 cmake-3.6.1
-git clone git@github.com:crocs-muni/eacirc.git src
+git clone --recursive git@github.com:crocs-muni/eacirc.git src
 mkdir src/build
 cd src/build
 ccmake ..
